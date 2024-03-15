@@ -2,13 +2,8 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "backend/src/server.js",
   "scripts": {
-    "start": "npm-run-all -p start-backend-prod start-frontend",
-    "start-backend-prod": "node ./dist/backend/main.js",
-    "start-backend-dev": "node ./dist/backend/main.js",
-    "start-frontend": "npm run preview-build",
-    "preview-build": "cd frontend && npm run preview",
     "start-redis": "redis-server",
     "dev-frontend": "cd frontend && npx tailwindcss -i ./src/index.css -o ./dist/output.css && npm run dev",
     "dev-backend": "nodemon backend/src/server.js",
@@ -16,6 +11,7 @@
     "build-frontend": "cd frontend && npx tailwindcss -i ./src/index.css -o ./dist/output.css && cd .. && npm install & npm install --prefix frontend & npm run build --prefix frontend",
     "build-backend-prod": "npm install && webpack --config webpack.production.config.js --mode production",
     "build-backend-dev": "npm install &&webpack --config webpack.development.config.js --mode development"
+
   },
   "author": "",
   "license": "ISC",
