@@ -3,13 +3,13 @@ const winston = require('winston');
 
 //  creating separate transports for 'info' and 'error' levels 
 const infoTransport = new winston.transports.File({
-    filename:'info.log', 
+    filename:'../info.log', 
     level:'info'
 })
 
 
 const errorTransport = new winston.transports.File({
-    filename:'error.log',
+    filename:'../error.log',
     level:'error'
 })
 
@@ -34,7 +34,8 @@ function requestLogger(req, res, next) {
     logger.log('error', err.message, { timestamp: Date.now() });
     next(err);
   }
+
   module.exports = { 
     requestLogger,
      errorLogger
-     };
+};
