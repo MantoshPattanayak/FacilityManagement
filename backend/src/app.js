@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 7100 
 const cors = require('cors');
 var cookieParser = require('cookie-parser')
+const {requestLogger,errorLogger}=require('./middlewares/logger.middlewares')
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
@@ -10,20 +11,35 @@ app.use(cors({
 }))
 
 app.use(express.json({limit:"16kb"}))
+
+// here in the express.urlencoded i.e. extended is equal to true means inside object we can give another object
 app.use(express.urlencoded({
     extended:true,
     limit:"16kb"
 }))
-// here in the express.urlencoded i.e. extended is equal to true means inside object we can give another object
-
-
-app.use(express.static("public"))
 
 //  here to access the public assets like images, folders
+app.use(express.static("public"))
 
-app.use(cookieParser())
 
 //  Here cookie parser is used to do crud operation in the user cookie by the server
+app.use(cookieParser())
+
+// Use the informational logger middleware before all route handlers
+app.use(requestLogger);
+
+
+
+//  put all your route handlers here
+
+
+
+
+
+
+// Use error logger middleware after all route handlers
+app.use(errorLogger);
+
 
 module.exports = {
     app
