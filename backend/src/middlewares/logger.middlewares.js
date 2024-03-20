@@ -3,13 +3,13 @@ const winston = require('winston');
 
 //  creating separate transports for 'info' and 'error' levels 
 const infoTransport = new winston.transports.File({
-    filename:'../info.log', 
+    filename:'../logs/info.log', 
     level:'info'
 })
 
 
 const errorTransport = new winston.transports.File({
-    filename:'../error.log',
+    filename:'../logs/error.log',
     level:'error'
 })
 
