@@ -11,7 +11,6 @@
     "build-frontend": "cd frontend && npx tailwindcss -i ./src/index.css -o ./dist/output.css && cd .. && npm install & npm install --prefix frontend & npm run build --prefix frontend",
     "build-backend-prod": "npm install && webpack --config webpack.production.config.js --mode production",
     "build-backend-dev": "npm install &&webpack --config webpack.development.config.js --mode development"
-
   },
   "author": "",
   "license": "ISC",
@@ -43,7 +42,8 @@
     "sequelize": "^6.37.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "webpack-node-externals": "^3.0.0"
+    "webpack-node-externals": "^3.0.0",
+    "winston": "^3.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
