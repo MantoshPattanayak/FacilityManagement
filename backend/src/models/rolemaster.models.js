@@ -1,53 +1,21 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
+const sequelize = new Sequelize('sqlite::memory:'); //change this to mysql
 
-const User = sequelize.define('publicUser', {
+const RoleMaster = sequelize.define('rolemaster', {
   // Model attributes are defined here
-  userMasterId:{
+  roleId:{
     type:DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
   },
-  roleId:{
-    type:DataTypes.INTEGER
+  roleCode:{
+    type:DataTypes.STRING(150),
+    allowNull:false
   },
-  title:{
-    type:DataTypes.STRING(5)
+  roleName:{
+    type:DataTypes.STRING(150),
+    allowNull:false
   },
-  firstName: {
-    type: DataTypes.STRING(50),
-    allowNull: false
-  },
-  middleName: {
-    type: DataTypes.STRING(50)
-    // allowNull defaults to true
-  },
-
-  lastName: {
-    type: DataTypes.STRING(50)
-    // allowNull defaults to true
-  },
-  userName:{
-    type:DataTypes.STRING(50)
-  },
-  password:{
-    type:DataTypes.STRING(50)
-  },
-  phoneNo:{
-    type:DataTypes.STRING(15)
-  },
-  altPhoneNo:{
-    type: DataTypes.STRING(50)
-  },
-  emailId:{
-    type:DataTypes.STRING(50)
-  },
-  profilePicture:{
-    type:DataTypes.STRING(255)
-  },
-  lastLogin:{
-    type: DataTypes.DATE // Define the column as DATE type
-},
   status:{
     type: DataTypes.INTEGER // Define the column as DATE type
 },
