@@ -1,7 +1,7 @@
-const{Sequelize,DataTypes} = require('sequelize');
-const sequelize = new Sequelize()
+module.exports = (sequelize,DataTypes)=>{
 
-const Facility = sequelize.define('facilitymaster',{
+
+const FacilityMaster = sequelize.define('facilitymaster',{
     facilitymasterId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
@@ -64,7 +64,7 @@ const Facility = sequelize.define('facilitymaster',{
     createdOn: {
         type: DataTypes.DATE, // Define the column as DATE type
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
     },
     updatedBy:{
         type:DataTypes.INTEGER
@@ -80,3 +80,5 @@ const Facility = sequelize.define('facilitymaster',{
     }
 
 })
+return FacilityMaster
+}
