@@ -15,7 +15,10 @@ const PaymentMethod = sequelize.define('paymentmethod',{
     },
     isEnabled:{
         type:DataTypes.BOOLEAN(80)
-    }
+    },  
+    status:{
+        type: DataTypes.INTEGER // Define the column as DATE type
+    },
 
 
 })

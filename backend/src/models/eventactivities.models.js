@@ -7,6 +7,9 @@ const EventActivities = sequelize.define('eventactivities',{
         autoIncrement:true,
         primaryKey:true
     },
+    facilityMasterId:{
+        type:DataTypes.INTEGER
+    },
     eventName:{
         type:DataTypes.STRING(50)
     },
@@ -29,7 +32,7 @@ const EventActivities = sequelize.define('eventactivities',{
         type:DataTypes.STRING(255)
     },
     ticketSalesEnabled:{
-        type:DataTypes.INTEGER
+        type:DataTypes.BOOLEAN
     },
     ticketPrice:{
         type:DataTypes.DECIMAL
@@ -57,7 +60,7 @@ const EventActivities = sequelize.define('eventactivities',{
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
     },
-    updateBy:{
+    updatedBy:{
         type:DataTypes.INTEGER
     },
     updatedOn: {

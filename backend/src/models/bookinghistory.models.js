@@ -7,7 +7,7 @@ const BookingHistory = sequelize.define('bookinghistory',{
         autoIncrement:true,
         primaryKey:true
     },
-    facilityId:{
+    facilityamsterId:{
         type:DataTypes.INTEGER
     },
     amenityId:{
@@ -27,7 +27,7 @@ const BookingHistory = sequelize.define('bookinghistory',{
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
     },
-    updateBy:{
+    updatedBy:{
         type:DataTypes.INTEGER
     },
     updatedOn: {
