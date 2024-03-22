@@ -1,0 +1,256 @@
+.table-div-resource {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+}
+
+.table-div-resource-top {
+    display: flex;
+    /* flex-direction: row; */
+    align-items: center;
+    gap: 550px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.table-div-resource-top-searchfilter{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.table-div-resource-top-searchfilter-entries {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 12px;
+}
+
+.table-div-resource-top-searchfilter-entries select {
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.table-div-resource-top-searchfilter-search {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 4px 6px;
+    border-width: 1px;
+    border-radius: 4px;
+    border-color: #9E9E9E;
+    background-color: #F9F9F9;
+}
+
+.table-div-resource-top-searchfilter-search img {
+    width: 16px;
+    height: 16px;
+}
+
+.table-div-resource-top-searchfilter-search input {
+    background-color: #F9F9F9;
+    border: none; /* Remove border */
+    outline: none; /* Remove outline */
+}
+
+.searchfilter-text {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+}
+
+
+.addResource {
+    background-color: cornflowerblue;
+    padding: 4px;
+    border-radius: 4px;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+}
+
+.table-div-resource .table-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+
+.table-div-resource .table-section::-webkit-scrollbar {
+    width: 5px;
+}
+
+.table-div-resource .table-section::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.table-div-resource .table-section::-webkit-scrollbar-thumb {
+    background-color: rgb(103, 126, 150);
+    border-radius: 4px;
+}
+
+.table-div-resource .table-section thead th{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 15px;
+    padding: 15px;
+    background-color: #EBF9F1;
+    color: #212121;
+    position: sticky;
+    top: 0;
+}
+
+.table-div-resource .table-section table tbody tr td{
+    padding: 10px;
+}
+
+.table-div-resource .table-section table tr:nth-child(2n+1) {
+    background-color: #f0f0f0;
+}
+
+.table-div-resource .table-section table tr:nth-child(2n):hover {
+    background-color: #f0f0f0;
+}
+
+.table-div-resource .table-section tbody td {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+}
+
+/* For Oneplus devices */
+/* @media (max-width: 1440px) and (min-width:2560px){
+    .table-div-resource-top {
+        gap: 140px;
+    }
+} */
+
+@media (max-width:1024px) {
+    .table-div-resource-top {
+        gap: 240px;
+    }
+}
+
+@media (max-width: 992px){
+    .table-div-resource-top {
+        gap: 240px; /*270px for 992px mx-width*/
+    }
+
+    .table-div-resource-top-searchfilter{
+        gap: 2px;
+        font-size: 14px;
+        line-height: 15px;
+    }
+
+    .addResource {
+        padding: 6px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 15px;
+    }
+
+    .table-div-resource .table-section thead th{
+        font-size: 16px;
+        line-height: 15px;
+        padding: 12px;
+    }
+
+    .table-div-resource .table-section tbody td {
+        font-size: 15px;
+        line-height: 15px;
+    }
+}
+
+@media (max-width: 768px){
+    .table-div-resource-top {
+        gap: 200px;
+    }
+
+    .table-div-resource-top-searchfilter{
+        gap: 2px;
+        font-size: 14px;
+        line-height: 15px;
+    }
+
+    .addResource {
+        padding: 6px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 15px;
+    }
+
+    .table-div-resource .table-section thead th{
+        font-size: 14px;
+        line-height: 15px;
+        padding: 12px;
+    }
+
+    .table-div-resource .table-section tbody td {
+        font-size: 13px;
+        line-height: 15px;
+    }
+}
+
+@media (max-width: 640px){
+    .table-div-resource-top {
+        gap: 10px;
+    }
+
+    .table-div-resource-top {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .table-div-resource-top-searchfilter{
+        flex-direction: column;
+        gap: 2px;
+        font-size: 8px;
+        line-height: 15px;
+    }
+
+    .addResource {
+        padding: 2px;
+        border-radius: 4px;
+        font-size: 8px;
+        font-weight: 500;
+        line-height: 15px;
+    }
+
+    .table-div-resource .table-section thead th{
+        font-size: 9px;
+        line-height: 15px;
+        padding: 10px;
+    }
+
+    .table-div-resource .table-section tbody td {
+        font-size: 8px;
+        line-height: 15px;
+    }
+}
