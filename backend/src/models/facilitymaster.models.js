@@ -1,14 +1,11 @@
 const{Sequelize,DataTypes} = require('sequelize');
 const sequelize = new Sequelize()
 
-const Facility = sequelize.define('facilities',{
-    facilityId:{
+const Facility = sequelize.define('facilitymaster',{
+    facilitymasterId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
         primaryKey:true
-    },
-    facilityMasterId:{
-        type:DataTypes.INTEGER
     },
     facilityname:{
         type:DataTypes.STRING(255)
@@ -16,20 +13,8 @@ const Facility = sequelize.define('facilities',{
     ownership:{
         type:DataTypes.STRING(50)
     },
-    facilityTypeId:{
-        type:DataTypes.INTEGER
-    },
     scheme:{
         type:DataTypes.STRING(20)
-    },
-    areaAcres:{
-        type:DataTypes.DECIMAL
-    },
-    latitude:{
-        type:DataTypes.DECIMAL
-    },
-    longitude:{
-        type:DataTypes.DECIMAL
     },
     address:{
         type:DataTypes.STRING(255)
@@ -67,13 +52,13 @@ const Facility = sequelize.define('facilities',{
     sat:{
         type:DataTypes.INTEGER
     },
-    privateUserId:{
-        type:DataTypes.INTEGER
-    },
     additionalDetails:{
         type:DataTypes.STRING(255)
     },
     createdBy:{
+        type:DataTypes.INTEGER
+    },
+    privateUserId:{
         type:DataTypes.INTEGER
     },
     createdOn: {

@@ -28,7 +28,7 @@ const ParkInventoryFacilities = sequelize.define('parkinventoryfacilities',{
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
     },
-    updateBy:{
+    updatedBy:{
         type:DataTypes.INTEGER
     },
     updatedOn: {
