@@ -1,5 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:'); //change this to mysql
+module.exports = (sequelize,DataTypes)=>{
 
 const RoleMaster = sequelize.define('rolemaster', {
   // Model attributes are defined here
@@ -28,7 +27,7 @@ const RoleMaster = sequelize.define('rolemaster', {
   createdOn: {
     type: DataTypes.DATE, // Define the column as DATE type
     allowNull: false,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
+    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
   },
   updatedBy:{
     type:DataTypes.INTEGER
@@ -45,3 +44,6 @@ const RoleMaster = sequelize.define('rolemaster', {
  
 }
 );
+
+return RoleMaster
+}

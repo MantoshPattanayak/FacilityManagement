@@ -1,5 +1,4 @@
-const {Sequelize,DataTypes} = require('sequelize')
-const sequelize = new Sequelize('sqlite::memory')
+module.exports = (sequelize,DataTypes)=>{
 
 const PaymentMethod = sequelize.define('paymentmethod',{
     methodId : {
@@ -22,3 +21,5 @@ const PaymentMethod = sequelize.define('paymentmethod',{
 
 
 })
+return PaymentMethod
+}

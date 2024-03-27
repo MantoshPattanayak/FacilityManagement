@@ -1,6 +1,4 @@
-const {Sequelize , DataTypes} = require('sequelize')
-
-const sequelize = new Sequelize('')
+module.exports = (sequelize,DataTypes)=>{
 
 const ServiceFacility = sequelize.define('servicefacilities',{
     seriviceFacilityId:{
@@ -23,7 +21,7 @@ const ServiceFacility = sequelize.define('servicefacilities',{
     createdOn: {
         type: DataTypes.DATE, // Define the column as DATE type
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
     },
     updatedBy:{
         type:DataTypes.INTEGER
@@ -40,3 +38,6 @@ const ServiceFacility = sequelize.define('servicefacilities',{
 
 
 })
+
+return ServiceFacility
+}
