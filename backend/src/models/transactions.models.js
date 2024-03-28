@@ -1,6 +1,5 @@
-const {Sequelize, DataTypes} = require('sequelize')
+module.exports = (sequelize,DataTypes)=>{
 
-const sequelize = new Sequelize();
 
 const Transaction = sequelize.define('transaction',{
     transactionId:{
@@ -29,7 +28,7 @@ const Transaction = sequelize.define('transaction',{
     createdOn: {
         type: DataTypes.DATE, // Define the column as DATE type
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
     },
     updatedBy:{
         type:DataTypes.INTEGER
@@ -45,3 +44,7 @@ const Transaction = sequelize.define('transaction',{
     }
 
 })
+
+return Transaction
+
+}
