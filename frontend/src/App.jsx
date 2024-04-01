@@ -2,15 +2,37 @@ import { useState } from 'react'
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ListOfRoles from './components/Admin/UAC/Role/ListOfRoles';
+// Admin Header
+import AdminHeader from './common/AdminHeader';
+// Import Footer 
+import Footer from './common/Footer';
+// Import here Partice Page
+import ParticePage from './components/Admin/MDM/FacilityRegistration/ParPage';
+// here import list of resources
+// import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
+
+// Import common Table
+import CommonTable from './common/CommonTable';
 
 function App() {
 
   return (
     <>
       <BrowserRouter>
+      <div>
+        <AdminHeader/>
+        {/* dummy page */}
         <Routes>
-          <Route path='/' element={<ListOfRoles />} />
+          <Route path='/common/ParticePage' element={<ParticePage />} />
         </Routes>
+    
+ 
+        {/* here common  table */}
+        <Routes>
+          <Route path='/common/CommonTable' element={<CommonTable />} />
+        </Routes>
+        <Footer/>
+      </div>
       </BrowserRouter>
     </>
   )
