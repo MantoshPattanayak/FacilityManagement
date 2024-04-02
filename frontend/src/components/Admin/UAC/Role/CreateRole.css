@@ -1,0 +1,54 @@
+
+
+.input-fields {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+  }
+  .input-fields{
+    margin-top: 50px;
+  }
+  .input-field {
+    margin-right: 18px;  /* Add some space between label-input pairs */
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-field label {
+    margin-right: 10px; /* Space between label and input */
+  }
+  
+  .input-field input {
+    margin-top: 10px;
+  }
+  
+  .buttons {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .cancel-btn button {
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 5px;
+  }
+  
+  .create-btn button {
+    border: 1px solid #ddd;
+    background-color: #00B562;
+    color: #fff;
+    padding: 8px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 5px;
+  }
+  
