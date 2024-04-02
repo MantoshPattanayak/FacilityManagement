@@ -1,0 +1,193 @@
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main container */
+.container-1 {
+  margin-top: 75px;
+  width: 70vw;
+  background-color: #ffffff;
+  margin-left: 15%;
+}
+
+/* Header */
+.header-role {
+  width: 70vw;
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  height: 10vh;
+  background-color: #00B5621A;
+}
+
+.rectangle {
+  height: 100%;
+  width: 10px;
+  background-color: #299342;
+  border-radius: 10px;
+}
+
+.roles h1 {
+  font-size: 25px;
+  font-weight: 300;
+  margin-left: 10px;
+}
+
+/* Container 2 */
+.container-2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Create new role button */
+.button-newrole {
+  margin-left: 5px;
+  margin-top: 15px;
+  float: left;
+}
+
+.btn-newrole {
+  background-color: rgb(244, 239, 239);
+  border: 1px solid black;
+  border-radius: 10px;
+  color: rgb(28, 27, 27);
+  padding: 7px 14px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+/* Search bar */
+.search_input_field-2 {
+  padding: 5px;
+  width: 40vh;
+  border: 1px solid #5a5c5a;
+  border-radius: 10px;
+  transition: border-color 0.3s;
+}
+
+.search-bar {
+  height: 3vw;
+  width: 25vw;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+/* Table */
+.table {
+  margin-top: 15px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #d1ead4;
+}
+
+.status-column {
+  display: flex;
+  align-items: center;
+}
+
+.active-icon {
+  color: #67da5d; /* Green for active */
+  margin-right: 5px;
+}
+
+.inactive-icon {
+  color: #ff3333; /* Red for inactive */
+  margin-right: 5px;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination button {
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  color: black;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+
+.pagination button:hover {
+  background-color: #ddd;
+}
+
+.pagination .active-page {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  /* Adjust container width for smaller screens */
+  .container-1 {
+    width: 90vw;
+    margin-left: 5%;
+  }
+
+  /* Adjust width of search bar */
+  .search-bar {
+    width: 60vw;
+  }
+
+  /* Make table responsive */
+  .table {
+    overflow-x: auto;
+    display: block;
+  }
+
+  th, td {
+    white-space: nowrap;
+  }
+
+  .status-column {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Further adjustments for smaller screens */
+  .container-1 {
+    width: 95vw;
+    margin-left: 2.5%;
+  }
+
+  .roles h1 {
+    font-size: 20px;
+  }
+
+  .btn-newrole {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  .search_input_field-2 {
+    width: 50vw;
+  }
+}
