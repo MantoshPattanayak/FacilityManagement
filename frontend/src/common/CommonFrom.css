@@ -1,0 +1,92 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+
+    /* Converted from 20px to 2vh */
+    max-width: 100%;
+    width: 100vw;
+    /* Changed to vw, and adjusted for centering */
+    margin: 0 auto;
+    /* Center the container */
+    margin-top: 10vh;
+}
+
+.form-heading {
+
+    padding: 2.5vw;
+    /* Converted from 20px to 2.5vw */
+}
+
+.form-heading h2 {
+    margin-bottom: 1.5vw;
+    /* Converted from 10px to 1.5vw */
+    min-width: 84vw;
+    background-color: green;
+    color: white;
+    height: 5.5vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+}
+
+.form-row {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 1vw;
+    max-width: 100%;
+    width: 100vw;
+    justify-content: space-between;
+    padding-inline: 1vw;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 0.5vw;
+    /* Converted from 5px to 0.5vw */
+}
+
+input[type="text"] {
+    width: 28vw;
+    /* Converted from 100px to 8.33vw */
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+}
+
+/* Media query for tablets and larger screens */
+@media screen and (min-width: 768px) {
+    .form-row {
+        flex-wrap: wrap;
+    }
+
+    .form-group {
+        flex-basis: calc(33.333% - 1vw);
+        /* Three items per row with gap */
+    }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 767px) {
+    .form-row {
+        flex-direction: column;
+        gap: 1.5vw;
+        /* Increased gap for better spacing */
+    }
+
+    .form-group {
+        width: 100%;
+        /* Full width for smaller screens */
+    }
+
+    input[type="text"] {
+        width: 100%;
+        /* Full width input */
+    }
+}
