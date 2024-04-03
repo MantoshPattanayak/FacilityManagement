@@ -1,10 +1,18 @@
 const express = require('express')
 const app = express();
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../../.env') })
+
 const port = process.env.PORT || 7100 
 const cors = require('cors');
 var cookieParser = require('cookie-parser')
+let api_version = process.env.API_VERSION;
+
+
 const {requestLogger,errorLogger}=require('./middlewares/logger.middlewares')
 
+
+const maproute = require('./routes/api/' + api_version +'/configuration/facilites')
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials:true
@@ -28,7 +36,7 @@ app.use(cookieParser())
 // Use the informational logger middleware before all route handlers
 app.use(requestLogger);
 
-
+app.use('/mapData',maproute)
 
 //  put all your route handlers here
 
