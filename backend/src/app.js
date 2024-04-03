@@ -13,6 +13,9 @@ const {requestLogger,errorLogger}=require('./middlewares/logger.middlewares')
 
 
 const maproute = require('./routes/api/' + api_version +'/configuration/facilites')
+const authRoutes = require('./routes/api/' + api_version +'/auth/user');
+
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials:true
@@ -37,6 +40,8 @@ app.use(cookieParser())
 app.use(requestLogger);
 
 app.use('/mapData',maproute)
+app.use('/auth', authRoutes);
+
 
 //  put all your route handlers here
 

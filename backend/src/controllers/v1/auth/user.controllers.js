@@ -3,8 +3,13 @@ let statusCode = require("../../../utils/statusCode");
 const bcrypt = require('bcrypt')
 const user = db.publicuser;
 
+
 const {encrypt} = require('../../../middlewares/encryption.middlewares')
 const {decrypt} = require('../../../middlewares/decryption.middlewares')
+const passport = require('passport')
+require('../../../config/passport')
+app.use(passport.initialize());
+
 
 let signUp = async (req,res)=>{
     const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
@@ -92,9 +97,35 @@ let signUp = async (req,res)=>{
 };
 
 
+let googleAuthenticationCallback = async (req,res)=>{
+  if (req.user.requiresMobileVerification) {
+    // Prompt user to enter mobile number
+    const { email, name,photo } = req.user;
+    const redirectUrl = '/collect-mobile';
+    res.json({ email, name, photo, redirectUrl });
+  } else {
+    // User already exists, redirect to profile
+    res.redirect('/profile');
+  }
+}
+
+
+let facebookAuthenticationCallback = async(req,res)=>{
+  if (req.user.requiresMobileVerification) {
+    // Prompt user to enter mobile number
+    const { email, name,photo } = req.user;
+    const redirectUrl = '/collect-mobile';
+    res.json({ email, name, photo, redirectUrl });  
+  } else {
+    // User already exists, redirect to profile
+    res.redirect('/profile');
+  }
+}
 
 
 
 module.exports = {
-  signUp
+  signUp,
+  googleAuthenticationCallback,
+  facebookAuthenticationCallback
 }

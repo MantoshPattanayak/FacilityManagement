@@ -53,6 +53,12 @@ const PublicUser = sequelize.define('publicuser', {
   remarks:{
     type: DataTypes.STRING(255)
   },
+  googleId:{
+    type: DataTypes.STRING
+  },
+  facebookId:{
+    type:DataTypes.STRING
+  },
   createdBy:{
     type:DataTypes.INTEGER
   },
