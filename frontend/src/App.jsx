@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './utils/ProtectedRoutes';
 import ListOfRoles from './components/Admin/UAC/Role/ListOfRoles';
 import CreateRole from './components/Admin/UAC/Role/CreateRole';
 import EditRole from './components/Admin/UAC/Role/EditRole';
-
+import UnauthorizedPage from './common/Unauthorized';
 
 //Public Header
-
-
+// import PublicHeader from './common/PublicHeader'
 // Admin Header
 import AdminHeader from './common/AdminHeader';
 // Import Footer 
@@ -23,36 +23,25 @@ import ParticePage from './components/Admin/MDM/FacilityRegistration/ParPage';
 
 
 
-// Import common Table
-import CommonTable from './common/CommonTable';
-
 function App() {
-
+  let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
   return (
     <>
-    {/* PUBLIC SECTION */}
+      {/* PUBLIC SECTION */}
       <BrowserRouter>
-      <div>
-
-      {/* <PublicHeader/> */}
-      
-      <Routes>
-
-          <Route path='/' element={<Home />} />
-
-          <Route path='/common/ParticePage' element={<ParticePage/>} />
-
-          <Route path='/common/CommonTable' element={<CommonTable />} />
-
-          <Route path='/UAC/Role/ListOfRoles' element={<ListOfRoles/>} />
-
-          <Route path='/UAC/Role/CreateRole' element={<CreateRole/>} />
-
-          <Route path='/UAC/Role/EditRole' element={<EditRole/>} />
-        </Routes>
-
-        <Footer/>
-      </div>
+        <div>
+          {/* <AdminHeader /> */}
+          <Routes>
+            {/* HOME */}
+            <Route path='/' element={<Home />} />
+            {/* ADMIN SECTION - UAC*/}
+            <Route path='/UAC/Role/ListOfRoles' element={<ProtectedRoute><ListOfRoles /></ProtectedRoute>} />
+            <Route path='/UAC/Role/CreateRole' element={<ProtectedRoute><CreateRole /></ProtectedRoute>} />
+            <Route path='/UAC/Role/EditRole' element={<ProtectedRoute><EditRole /></ProtectedRoute>} />
+            <Route path='/unauthorized' element={<UnauthorizedPage />} />
+          </Routes>
+          {/* <Footer /> */}
+        </div>
       </BrowserRouter>
     </>
   )
