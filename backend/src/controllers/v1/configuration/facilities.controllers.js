@@ -10,7 +10,7 @@ const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch s
 
 const displayMapData = async(req,res)=>{
     try{
-        const [facilities,metadata] = await sequelize.query('select * from amabhoomi.parkfacility ')
+        const [facilities,metadata] = await sequelize.query('select * from amabhoomi.parks ')
 
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
@@ -33,7 +33,7 @@ const searchParkFacilities = async (req, res) => {
         const { searchQuery } = req.query;
         console.log(searchQuery)
         
-        const [facilites,metadata] = await sequelize.query(`select * from amabhoomi.parkfacility where LOWER(facilityName) LIKE LOWER(:searchQuery)`,{
+        const [facilites,metadata] = await sequelize.query(`select * from amabhoomi.parks where LOWER(parkName) LIKE LOWER(:searchQuery)`,{
             replacements:{searchQuery:`%${searchQuery}%`}
         })
 

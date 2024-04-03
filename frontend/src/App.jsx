@@ -14,7 +14,7 @@ import AdminHeader from './common/AdminHeader';
 // Import Footer 
 import Footer from './common/Footer';
 //import home page
-import Home from './components/Public/Home'
+import Home from './components/Public/Home';
 // Import here Partice Page
 import ParticePage from './components/Admin/MDM/FacilityRegistration/ParPage';
 // here import list of resources
