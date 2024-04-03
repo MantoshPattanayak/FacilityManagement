@@ -97,6 +97,10 @@ const CommonFrom = () => {
         {/* Two more similar rows for Heading 1 */}
       </div>
       {/* Two more similar headings */}
+      <div className="buttons-container">
+        <button className="approve-button">Approve</button>
+        <button className="cancel-button">Cancel</button>
+      </div>
     </div>
   );
 };
