@@ -7,7 +7,8 @@ const sequelize = new Sequelize(
   db.USER, 
   db.PASSWORD, {
     host: db.HOST,
-    dialect: db.DIALECT
+    dialect: db.DIALECT,
+    logging:false
 });
 
 // Test the connection
@@ -22,7 +23,7 @@ sequelize.authenticate()
   const db1 ={}
   db1.Sequelize = Sequelize
   db1.sequelize = sequelize
-  
+  db1.DataTypes = DataTypes
 
   db1.amenitiesmaster = require('./amenitiesmaster.models')(sequelize,DataTypes)
   db1.publicuser = require('./publicuser.models')(sequelize,DataTypes)
@@ -50,7 +51,7 @@ sequelize.authenticate()
 
 
   db1.sequelize.sync({
-    force: true
+    force: false
   })
 
 module.exports = db1;
