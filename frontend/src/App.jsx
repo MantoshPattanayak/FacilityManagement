@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './utils/ProtectedRoutes';
 import ListOfRoles from './components/Admin/UAC/Role/ListOfRoles';
 import CreateRole from './components/Admin/UAC/Role/CreateRole';
 import EditRole from './components/Admin/UAC/Role/EditRole';
-
+import UnauthorizedPage from './common/Unauthorized';
 
 //Public Header
-import PublicHeader from './common/PublicHeader'
+// import PublicHeader from './common/PublicHeader'
 // Admin Header
 import AdminHeader from './common/AdminHeader';
 // Import Footer 
 import Footer from './common/Footer';
 //import home page
-import Home from './components/Public/Home'
+import Home from './components/Public/Home';
 // Import here Partice Page
 import ParticePage from './components/Admin/MDM/FacilityRegistration/ParPage';
 // here import list of resources
@@ -22,59 +23,25 @@ import ParticePage from './components/Admin/MDM/FacilityRegistration/ParPage';
 
 
 
-// Import common Table
-import CommonTable from './common/CommonTable';
-
 function App() {
-
+  let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
   return (
     <>
-    {/* PUBLIC SECTION */}
+      {/* PUBLIC SECTION */}
       <BrowserRouter>
-      <div>
-
-      <PublicHeader/>
-      
-      <Routes>
-
-          <Route path='/public/Home' element={<Home />} />
-      
-        </Routes>
- 
-
-
-
-{/* ADMIN SECTION */}
-        {/* <AdminHeader/> */}
-
-        {/* dummy page */}
-        <Routes>
-          <Route path='/common/ParticePage' element={<ParticePage/>} />
-        </Routes>
-    
- 
-        {/* here common  table */}
-        <Routes>
-          <Route path='/common/CommonTable' element={<CommonTable />} />
-        </Routes>
-
-        {/* here UAC */}
-        <Routes>
-          <Route path='/UAC/Role/ListOfRoles' element={<ListOfRoles/>} />
-        </Routes>
-
-        {/* here UAC create role */}
-        <Routes>
-          <Route path='/UAC/Role/CreateRole' element={<CreateRole/>} />
-        </Routes>
-
-        {/* here UAC create role */}
-        <Routes>
-          <Route path='/UAC/Role/EditRole' element={<EditRole/>} />
-        </Routes>
-
-        <Footer/>
-      </div>
+        <div>
+          {/* <AdminHeader /> */}
+          <Routes>
+            {/* HOME */}
+            <Route path='/' element={<Home />} />
+            {/* ADMIN SECTION - UAC*/}
+            <Route path='/UAC/Role/ListOfRoles' element={<ProtectedRoute><ListOfRoles /></ProtectedRoute>} />
+            <Route path='/UAC/Role/CreateRole' element={<ProtectedRoute><CreateRole /></ProtectedRoute>} />
+            <Route path='/UAC/Role/EditRole' element={<ProtectedRoute><EditRole /></ProtectedRoute>} />
+            <Route path='/unauthorized' element={<UnauthorizedPage />} />
+          </Routes>
+          {/* <Footer /> */}
+        </div>
       </BrowserRouter>
     </>
   )

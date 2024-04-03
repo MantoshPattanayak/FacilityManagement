@@ -1,23 +1,14 @@
 /* css of table */
 
 .Main_Conatiner_table{
-  margin-top: 40px;
+  margin-top: 70px;
 }
 .table_Container{
   
     overflow-y: auto;
     max-height: 700px;
 }
-.text_Name_Table{
 
-  font-weight: 600;
-  font-size: 25px
- 
-
-}
-.text_Name_Table:hover{
-color: #000000;
-}
   .search_text_conatiner{
     display: flex;
     justify-content: space-between;

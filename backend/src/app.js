@@ -2,16 +2,17 @@ const express = require('express')
 const app = express();
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../../.env') })
-
 const port = process.env.PORT || 7100 
+
 const cors = require('cors');
 var cookieParser = require('cookie-parser')
 let api_version = process.env.API_VERSION;
 
+require('dotenv').config({path: path.resolve(__dirname, '../../.env') })
 
 const {requestLogger,errorLogger}=require('./middlewares/logger.middlewares')
 
-
+console.log(port,'port')
 const maproute = require('./routes/api/' + api_version +'/configuration/facilites')
 const authRoutes = require('./routes/api/' + api_version +'/auth/user');
 
