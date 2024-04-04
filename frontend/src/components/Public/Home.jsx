@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import './Home.css';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
@@ -16,7 +15,6 @@ const Home = () => {
         async function fecthMapData(){
           try{
             let res= await axiosHttpClient('MAP_DISPLAY_DATA' , 'get');
-
             console.log("here get data", res)
             setmapdata(res.data.data)
           
@@ -30,7 +28,9 @@ const Home = () => {
             fecthMapData()
           }, [])
 
-
+const Home = () => {
+  const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
+  const defaultCenter = { lat: 20.2961, lng: 85.8245 };
 
   return (
     <>
