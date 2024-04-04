@@ -1,0 +1,23 @@
+/* SearchDropdown.css */
+
+/* The search field */
+
+
+#myInput {
+    box-sizing: border-box;
+    width: 24vw;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: #ececef;
+}
+
+
+
+
+
+/* Change color of dropdown links on hover */
+.dropdown-content-child:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
