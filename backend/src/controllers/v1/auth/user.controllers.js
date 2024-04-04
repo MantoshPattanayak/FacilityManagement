@@ -56,7 +56,7 @@ let generateOTPHandler = async (req,res)=> {
 
 let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
   try {
-    let {mobileNo, otp} = req.body
+    let {mobileNo, otp,} = req.body
       // Call the API to verify OTP
       const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
 
