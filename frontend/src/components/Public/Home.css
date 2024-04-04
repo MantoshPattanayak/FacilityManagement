@@ -32,27 +32,19 @@
     color: #fff;
   }
   
+.section1{
+  display: flex;
+  justify-content: space-between;
+}
 
-  .dropbtn {
-    border: none;
-    outline: none;
-    color: #fff;
-    padding: 5px 15px;
-    /* Adjust padding as needed */
-    background-color: inherit;
-    font-family: inherit;
-    font-size: 20px;
-  }
   
   .card {
     position: absolute;
-    /* display: flex; */
+ 
     justify-content: center;
     align-items: center;
     top: 200px;
     left: 60px;
-  
-  
   }
   
 
@@ -64,18 +56,22 @@
   
   .heading p {
     color: #0FA958;
-    font-size: 60px;
+    font-size: 70px;
     padding-top: 20px;
+    font-weight: 700;
   }
  
+  .Explore_text{
+    font-size: 35px;
+    font-weight: 600;
+  }
 
   
   .para {
     padding-top: 50px;
-      font-size: 25px;
-      /* margin-bottom: 20px;  */
-      position: relative; 
-      top: -60px;   
+    font-size: 25px;
+    position: relative; 
+    top: -60px;   
   
   }
 
@@ -89,7 +85,7 @@
 
   .card-2{
     position: absolute;
-    /* display: flex; */
+ 
     justify-content: center;
     align-items: center;
     top: 200px;
@@ -117,4 +113,5 @@
     border: 1px solid #5a5c5a;
     border-radius: 10px;
     transition: border-color 0.3s;
-margin-bottom: 5px;  }
+    margin-bottom: 5px; 
+ }
