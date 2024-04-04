@@ -5,7 +5,7 @@ function decryptdata(val){
     let iv = process.env.IV
     let parsedKey = CryptoJS.enc.Base64.parse(key)
     let parsediv = CryptoJS.enc.Base64.parse(iv)
-    return CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.utf8)
+    return CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8)
 }
 
 
