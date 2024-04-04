@@ -14,6 +14,15 @@
     justify-content: space-between;
     padding: 12px;
     }
+
+    .search_field_button {
+      border: 1px solid #00000033;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      padding: 10px 15px;
+    }
    
     .search_input_field {
       padding: 5px;

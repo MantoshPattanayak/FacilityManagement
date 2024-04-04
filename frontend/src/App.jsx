@@ -6,6 +6,8 @@ import ListOfRoles from './components/Admin/UAC/Role/ListOfRoles';
 import CreateRole from './components/Admin/UAC/Role/CreateRole';
 import EditRole from './components/Admin/UAC/Role/EditRole';
 import UnauthorizedPage from './common/Unauthorized';
+import ListOfUsers from './components/Admin/UAC/User/ListOfUsers';
+import CreateNewUser from './components/Admin/UAC/User/CreateNewUser';
 
 //Public Header
 // import PublicHeader from './common/PublicHeader'
@@ -38,6 +40,8 @@ function App() {
             <Route path='/UAC/Role/ListOfRoles' element={<ProtectedRoute><ListOfRoles /></ProtectedRoute>} />
             <Route path='/UAC/Role/CreateRole' element={<ProtectedRoute><CreateRole /></ProtectedRoute>} />
             <Route path='/UAC/Role/EditRole' element={<ProtectedRoute><EditRole /></ProtectedRoute>} />
+            <Route path='/UAC/Users/ListOfUsers' element={<ProtectedRoute><ListOfUsers /></ProtectedRoute>} />
+            <Route path='/UAC/Users/Create' element={<ProtectedRoute><CreateNewUser /></ProtectedRoute>} />
             <Route path='/unauthorized' element={<UnauthorizedPage />} />
           </Routes>
           {/* <Footer /> */}
