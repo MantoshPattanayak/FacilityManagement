@@ -7,7 +7,7 @@ import EditRole from './components/Admin/UAC/Role/EditRole';
 
 
 //Public Header
-import PublicHeader from './common/PublicHeader'
+// import PublicHeader from './common/PublicHeader'
 // Admin Header
 import AdminHeader from './common/AdminHeader';
 // Import Footer 
@@ -33,7 +33,7 @@ function App() {
       <BrowserRouter>
       <div>
 
-      <PublicHeader/>
+      <AdminHeader/>
       
       <Routes>
 

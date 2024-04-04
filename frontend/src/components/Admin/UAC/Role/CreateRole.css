@@ -1,54 +1,83 @@
+.container-1 {
+  box-sizing: border-box;
 
+  width: 70vw;
+  margin-left: 15%;
+}
+
+.header-role {
+  display: flex;
+  width: 70vw;
+  height: 10vh;
+  background-color: #d1dcd0;
+  margin-top: 10%;
+}
+
+.rectangle {
+  height: 100%;
+  width: 10px;
+  border-radius: 10px;
+  background-color: #16bd2d;
+}
+
+.roles h1 {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 7%;
+  margin-left: 5px;
+  
+}
 
 .input-fields {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap; 
-  }
-  .input-fields{
-    margin-top: 50px;
-  }
-  .input-field {
-    margin-right: 18px;  /* Add some space between label-input pairs */
-    display: flex;
-    align-items: center;
-  }
-  
-  .input-field label {
-    margin-right: 10px; /* Space between label and input */
-  }
-  
-  .input-field input {
-    margin-top: 10px;
-  }
-  
-  .buttons {
-    margin-top: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .cancel-btn button {
-    border: 1px solid #ddd;
-    background-color: #f2f2f2;
-    color: black;
-    padding: 8px 16px;
-    text-decoration: none;
-    cursor: pointer;
-    margin: 0 5px;
-    border-radius: 5px;
-  }
-  
-  .create-btn button {
-    border: 1px solid #ddd;
-    background-color: #00B562;
-    color: #fff;
-    padding: 8px 16px;
-    text-decoration: none;
-    cursor: pointer;
-    margin: 0 5px;
-    border-radius: 5px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.input-field {
+  margin-right: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.input-field label {
+  margin-right: 10px;
+}
+
+.input-field input {
+  margin-top: 10px;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.buttons {
+  margin-top: 50px;
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+}
+
+.cancel-btn button {
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  color: black;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+
+.create-btn button {
+  border: 1px solid #ddd;
+  background-color: #00B562;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 5px;
+  border-radius: 5px;
+}
