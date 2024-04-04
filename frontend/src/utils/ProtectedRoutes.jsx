@@ -34,9 +34,9 @@ const ProtectedRoute = ({children}) => {
 
     sessionStorage.setItem('isAuthorized', isAuthorized);
 
-    if(!isAuthorized) {
-        return <Navigate to="/unauthorized" state={{ from: location}} replace />
-    }
+    // if(!isAuthorized) {
+    //     return <Navigate to="/unauthorized" state={{ from: location}} replace />
+    // }
  return children
 };
 

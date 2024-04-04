@@ -57,6 +57,16 @@ label {
     font-weight: bold;
 }
 
+select {
+    width: 24vw;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+    /* outline: 0px; */
+}
+
 input[type="text"] {
     width: 24vw;
     /* Converted from 100px to 8.33vw */
@@ -71,7 +81,7 @@ input[type="text"] {
 
 .buttons-container {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     /* align-items: center; */
     margin-top: 2vh;
     width: 84vw;
