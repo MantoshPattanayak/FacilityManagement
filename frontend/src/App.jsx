@@ -6,7 +6,7 @@ import CreateRole from "./components/Admin/UAC/Role/CreateRole";
 import EditRole from "./components/Admin/UAC/Role/EditRole";
 
 //Public Header
-import PublicHeader from "./common/PublicHeader";
+// import PublicHeader from "./common/PublicHeader";
 // Admin Header
 import AdminHeader from "./common/AdminHeader";
 // Import Footer
@@ -15,6 +15,7 @@ import Footer from "./common/Footer";
 import Home from "./components/Public/Home";
 // Import here Partice Page
 import ParticePage from "./components/Admin/MDM/FacilityRegistration/ParPage";
+
 // here import list of resources
 // import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 // here Import the role list table'
@@ -24,13 +25,19 @@ import CommonFrom from "./common/CommonFrom";
 // Import common Table
 import CommonTable from "./common/CommonTable";
 
+import RoleResourceMappingList from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList";
+
+import CreateRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping";
+
+import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown";
+
 function App() {
   return (
     <>
       {/* PUBLIC SECTION */}
       <BrowserRouter>
         <div>
-          <PublicHeader />
+          {/* <PublicHeader /> */}
 
           <Routes>
             <Route path="/public/Home" element={<Home />} />
@@ -68,6 +75,30 @@ function App() {
           <Routes>
             <Route path="/Common/CommonFrom" element={<CommonFrom />} />
           </Routes>
+
+          {/* here UAC create RoleResourceMappingList */}
+          <Routes>
+            <Route
+              path="/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList"
+              element={<RoleResourceMappingList />}
+            />
+          </Routes>
+
+          {/* here UAC create CreateRoleResourceMapping */}
+          <Routes>
+            <Route
+              path="/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping"
+              element={<CreateRoleResourceMapping />}
+            />
+          </Routes>
+
+          <Routes>
+            <Route
+              path="/UAC/AccessControl/RoleResourceMapping/SearchDropdown"
+              element={<SearchDropdown />}
+            />
+          </Routes>
+
           <Footer />
         </div>
       </BrowserRouter>
