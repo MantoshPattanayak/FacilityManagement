@@ -1,6 +1,6 @@
-const db = require('../../../models/index')
+const db = require("../../../models/index");
 let statusCode = require("../../../utils/statusCode");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 const user = db.publicuser;
 
 
@@ -91,14 +91,13 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 let signUp = async (req,res)=>{
  try{
   let generateOtpForMobile = await generateOTP(decrypt(phoneNo))
+  const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
+ 
 
 
-    const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
-
-
-    const decryptUserName = decrypt(userName);
-    const decryptEmailId = decrypt(email);
-    const decryptPhoneNumber = decrypt(phoneNo);
+  const decryptUserName = decrypt(userName);
+  const decryptEmailId = decrypt(email);
+  const decryptPhoneNumber = decrypt(phoneNo);
 
    const checkDuplicateMobile= await user.findAll({
       where:{
@@ -121,14 +120,16 @@ let signUp = async (req,res)=>{
     let updatedOn =  new Date();
     let createdOn = new Date();
     let deletedOn = new Date();
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    let createdBy= req.user.id;
-    let updatedBy = req.user.id;
 
+
+
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  let createdBy = req.user.id;
+  let updatedBy = req.user.id;
 
     // Create a new user record in the database
-   
+
     const uploadDir = process.env.UPLOAD_DIR;
 
     // Ensure that the base64-encoded image data is correctly decoded before writing it to the file. Use the following code to decode the base64 data:
@@ -157,9 +158,8 @@ let signUp = async (req,res)=>{
       userImagePath2 = `/publicUsers/${userId}_driver_image.png`;
     }
 
-
     const newUser = await user.create({
-      roleId:roleId,
+      roleId: roleId,
       title: title,
       firstName: firstName,
       middleName: middleName,
@@ -179,20 +179,20 @@ let signUp = async (req,res)=>{
       updatedOn: new Date(), // Set current timestamp for updatedOn
       // Ensure to set other fields accordingly
       deletedBy: null,
-      deletedOn:null
-  });
-    
-
-
+      deletedOn: null,
+    });
 
     // Return success response
-    res.status(201).json({ message: 'User created successfully', user: newUser });
+    res
+      .status(201)
+      .json({ message: "User created successfully", user: newUser });
   } catch (error) {
     // Handle errors
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 
 let googleAuthenticationCallback = async (req,res)=>{
@@ -228,3 +228,8 @@ module.exports = {
   verifyOTPHandlerWithGenerateToken
  
 }
+
+module.exports = {
+  signUp,
+};
+
