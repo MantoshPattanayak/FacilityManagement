@@ -51,7 +51,7 @@ sequelize.authenticate()
 
 
   db1.sequelize.sync({
-    force: false
+    force: true
   })
 
 module.exports = db1;

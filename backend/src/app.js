@@ -15,6 +15,7 @@ const {requestLogger,errorLogger}=require('./middlewares/logger.middlewares')
 console.log(port,'port')
 const maproute = require('./routes/api/' + api_version +'/configuration/facilites')
 const authRoutes = require('./routes/api/' + api_version +'/auth/user');
+const userDetails = require('./routes/api/' + api_version +'/configuration/userDetails');
 
 
 app.use(cors({
@@ -23,6 +24,7 @@ app.use(cors({
 }))
 
 app.use(express.json({limit:"16kb"}))
+// app.use(passport.initialize());
 
 // here in the express.urlencoded i.e. extended is equal to true means inside object we can give another object
 app.use(express.urlencoded({
@@ -42,6 +44,7 @@ app.use(requestLogger);
 
 app.use('/mapData',maproute)
 app.use('/auth', authRoutes);
+app.use('/userDetails',userDetails)
 
 
 //  put all your route handlers here

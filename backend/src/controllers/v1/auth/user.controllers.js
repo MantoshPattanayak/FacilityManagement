@@ -10,7 +10,6 @@ const {generateOTP,verifyOTP} = require('../../../utils/mobileOtpGenerateAndVeri
 
 const passport = require('passport')
 require('../../../config/passport')
-app.use(passport.initialize());
 
 
 const { Op } = require("sequelize");
