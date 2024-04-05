@@ -1,155 +1,306 @@
 
-import React, { useState } from 'react';
-import '../Role/ListOfRoles.css';
-import { FaSearch, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import { BsThreeDotsVertical } from "react-icons/bs";
-import CreateRole from './CreateRole'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import AdminHeader from '../../../../common/AdminHeader';
+import "../../../../common/CommonTable.css"
+import "./ListOfRoles.css"
 
-
-export default function ListOfRoles() {
-  const roles = [
-    {
-      serialNo: 1, roleCode: 'R001', roleDescription: 'Admin', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 2, roleCode: 'R002', roleDescription: 'User', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 3, roleCode: 'R003', roleDescription: 'Guest', status: 'Inactive', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 4, roleCode: 'R004', roleDescription: 'Manager', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 5, roleCode: 'R005', roleDescription: 'Admin', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 6, roleCode: 'R006', roleDescription: 'User', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 7, roleCode: 'R007', roleDescription: 'Guest', status: 'Inactive', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 8, roleCode: 'R008', roleDescription: 'Manager', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 9, roleCode: 'R009', roleDescription: 'Admin', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 10, roleCode: 'R0010', roleDescription: 'User', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 11, roleCode: 'R0011', roleDescription: 'Guest', status: 'Inactive', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 12, roleCode: 'R0012', roleDescription: 'Manager', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 13, roleCode: 'R001', roleDescription: 'Admin', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 14, roleCode: 'R002', roleDescription: 'User', status: 'Active', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 15, roleCode: 'R003', roleDescription: 'Guest', status: 'Inactive', action: <BsThreeDotsVertical />
-    },
-    {
-      serialNo: 16, roleCode: 'R004', roleDescription: 'Manager', status: 'Active', action: <BsThreeDotsVertical />
-    },
-  ];
-
+const ListOfRoles = () => {
+  const [roleListData, setRoleListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const [itemsPerPage] = useState(5); // Change as needed for items per page
+  const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    getRoleListData();
+  }, []);
+
+  // Function to fetch role list data
+  async function getRoleListData() {
+    try {
+      let res = await axios.post('here api', {
+        page: currentPage, // Send current page number
+        search: searchTerm // Send search term if needed
+      });
+      console.log("here Response", res.data);
+      setRoleListData(res.data); // Update role list data
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Function to handle page change
+  const handlePageChange = (type) => {
+    switch (type) {
+      case 'start':
+        setCurrentPage(1);
+        break;
+      case 'previous':
+        setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+        break;
+      case 'next':
+        setCurrentPage((prev) => (prev < Math.ceil(roleListData.length / itemsPerPage) ? prev + 1 : prev));
+        break;
+      case 'last':
+        setCurrentPage(Math.ceil(roleListData.length / itemsPerPage));
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Function to handle search input change
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // Apply pagination logic to slice the data for the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentRoles = roles.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(roles.length / itemsPerPage);
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const goToPrevPage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
-  };
-
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
+  const currentItems = roleListData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div className="container-1">
+    <div className="Main_Conatiner_table">
+
       <div className="header-role">
         <div className="rectangle"></div>
         <div className="roles">
-          <h1><b>Role List</b></h1>
+          <h1><b> Role List</b></h1>
         </div>
       </div>
 
-      <div className="container-2">
-        {/* Create new role button */}
-        <div className="button-newrole">
-          <button  className="btn-newrole">Create new role</button>
-        </div>
-
-        {/* Search bar */}
-        <div className="search-bar">
-          <input type="search" className='search_input_field-2'  name="Searchbar" placeholder="Search..." id="" />
-          <FaSearch />
-        </div>
+      <div className="search_text_conatiner">
+        <button className='create-role-btn'>Create new Role</button>
+        <input
+          type="text"
+          className="search_input_field"
+          placeholder="Search..."
+          id="myInput"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
       </div>
 
-      <div>
-        <table className="table">
-          <thead className="heading">
+
+      <div className="table_Container">
+        <table >
+          <thead>
             <tr>
-              <th>Serial No</th>
-              <th>Role Code</th>
-              <th>Role Description</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th scope="col">Name</th>
+              <th scope="col">Number</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Due</th>
             </tr>
           </thead>
-          <tbody>
-            {currentRoles.map((role, index) => (
+          <tbody >
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">sgssh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">ramtosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">menttosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">pentosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">chentosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">peltosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">debtosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">loktosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">rajtosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">manatosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">vaginatosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">penustosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">deeptosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+            <tr>
+              <td data-label="Name">Mantosh</td>
+              <td data-label="Number"   >78928766211</td>
+              <td data-label="Amount ">9201</td>
+              <td data-label="Due">211</td>
+            </tr>
+
+            {/* fro dynamic data */}
+            {currentItems.map((item, index) => (
               <tr key={index}>
-                <td>{role.serialNo}</td>
-                <td>{role.roleCode}</td>
-                <td>{role.roleDescription}</td>
-                <td className="status-column">
-                  {role.status === 'Active' ? (
-                    <FaCheckCircle className="active-icon" />
-                  ) : (
-                    <FaTimesCircle className="inactive-icon" />
-                  )}
-                  {role.status}
-                </td>
-                <td>{role.action}</td>
+                <td>{item.serialNo}</td>
+                <td>{item.roleCode}</td>
+                <td>{item.roleDescription}</td>
+                <td>{item.status}</td>
+                <td>{item.action}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
+      {/* Pagination */}
       <div className="pagination">
-        <button onClick={goToPrevPage} disabled={currentPage === 1}>
-          Prev
-        </button>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => paginate(index + 1)}
-            className={currentPage === index + 1 ? 'active-page' : ''}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button onClick={goToNextPage} disabled={currentPage === totalPages}>
-          Next
-        </button>
+        <button onClick={() => handlePageChange('start')}>Start</button>
+        <button onClick={() => handlePageChange('previous')}>Previous</button>
+        <button onClick={() => handlePageChange('next')}>Next</button>
+        <button onClick={() => handlePageChange('last')}>Last</button>
       </div>
     </div>
   );
-}
+};
+
+export default ListOfRoles;
+
+
+
+

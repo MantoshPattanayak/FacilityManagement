@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -19,6 +20,7 @@ const maproute = require("./routes/api/" +
 
 const roleroute = require("./routes/api/" + api_version + "/auth/role");
 
+console.log(port, "port");
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,

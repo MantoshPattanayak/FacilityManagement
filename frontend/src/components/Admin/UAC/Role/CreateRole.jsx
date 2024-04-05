@@ -1,11 +1,11 @@
 import React from 'react';
 import '../Role/CreateRole.css';
+import Footer from '../../../../common/Footer';
 
 const CreateRole = () => {
   return (
-   
     <div className='container-1'>
-
+      
       <div className="header-role">
         <div className="rectangle"></div>
         <div className="roles">
@@ -38,8 +38,7 @@ const CreateRole = () => {
       </div>
 
     </div>
-
-
+   
   );
 };
 

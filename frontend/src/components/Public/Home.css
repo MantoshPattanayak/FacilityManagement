@@ -5,15 +5,16 @@
   }
   
   body {
+    padding: 0;
     margin: 0;
     display: flex;
     place-items: center;
-    /* min-width: 320px; */
     min-height: 100vh;
   }
   
   #section-1 {
     background-image: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+
   }
   
  
@@ -21,8 +22,6 @@
     background-image: url('../Public/ama_bhoomi_bgi.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    height: 100vh;
-    width: 100vw;
     position: relative;
     opacity: 90%;
 }
@@ -33,27 +32,19 @@
     color: #fff;
   }
   
+.section1{
+  display: flex;
+  justify-content: space-between;
+}
 
-  .dropbtn {
-    border: none;
-    outline: none;
-    color: #fff;
-    padding: 5px 15px;
-    /* Adjust padding as needed */
-    background-color: inherit;
-    font-family: inherit;
-    font-size: 20px;
-  }
   
   .card {
     position: absolute;
-    /* display: flex; */
+ 
     justify-content: center;
     align-items: center;
-    top: 115px;
+    top: 200px;
     left: 60px;
-  
-  
   }
   
 
@@ -66,21 +57,21 @@
   .heading p {
     color: #0FA958;
     font-size: 70px;
+    padding-top: 20px;
+    font-weight: 700;
   }
  
-  
-  .logo-heading {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 10px;
+  .Explore_text{
+    font-size: 35px;
+    font-weight: 600;
   }
+
   
   .para {
     padding-top: 50px;
-      font-size: 25px;
-      /* margin-bottom: 20px;  */
-      position: relative; 
-      top: -60px;   
+    font-size: 25px;
+    position: relative; 
+    top: -60px;   
   
   }
 
@@ -91,3 +82,36 @@
     border-radius: 18px;
     transition: border-color 0.3s;
   }
+
+  .card-2{
+    position: absolute;
+ 
+    justify-content: center;
+    align-items: center;
+    top: 200px;
+  
+    left: 55%;
+    padding-top: 45px;
+
+  }
+  .heading-about{
+    font-size: 30px;
+    color: #0be671;
+    padding-top: 20px;
+  }
+  .about-para{
+    padding-top: 25px;
+  }
+
+  .map-container{
+   padding: 25px 75px 25px 75px;
+   
+  }
+  .search-map{
+    padding: 5px;
+    width: 45vh;
+    border: 1px solid #5a5c5a;
+    border-radius: 10px;
+    transition: border-color 0.3s;
+    margin-bottom: 5px; 
+ }

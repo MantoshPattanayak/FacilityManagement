@@ -16,4 +16,4 @@ const dataLength = {
     EMAIL                       : 50,
 }
 
-export default {regex, dataLength};
+export {regex, dataLength};
