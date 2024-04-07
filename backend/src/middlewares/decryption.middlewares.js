@@ -1,6 +1,6 @@
 let CryptoJS = require('crypto-js')
 
-function decryptdata(val){
+let decryptdata= async(val)=>{
     let key = process.env.Encrypt_Decrypt_key
     let iv = process.env.IV
     let parsedKey = CryptoJS.enc.Base64.parse(key)
