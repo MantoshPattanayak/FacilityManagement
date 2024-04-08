@@ -1,77 +1,211 @@
-import React from "react";
-import "./CreateNewUser.css";
-const CreateNewUser = () => {
-  return (
-    <div>
-      <div className="form-heading">
-        <div className="heading">
-          <h2>Heading 1</h2>
-        </div>
-        <div className="form-grid">
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="input1">Title</label>
-              <select id="input1" className="selectInput">
-                <option value="" disabled selected>
-                  Select a title
-                </option>
-                <option value="Mr.">Mr.</option>
-                <option value="Mrs.">Mrs.</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="input2">Full Name</label>
-              <input type="text" id="input2" placeholder="Full Name" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="input3">User Name</label>
-              <input type="text" id="input3" placeholder="User Name" />
-            </div>
-          </div>
-          {/* End of form-row */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="input1">Mobile Number</label>
-              <input type="text" id="input1" placeholder="Mobile Number" />
-            </div>
+import { useState, useEffect } from 'react';
+import AdminHeader from '../../../../common/AdminHeader';
+import Footer from '../../../../common/Footer';
+import '../../../../common/CommonFrom.css';
+import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
+import axiosHttpClient from '../../../../utils/axios';
+import api from '../../../../utils/api';
 
-            <div className="form-group">
-              <label htmlFor="input2">Role</label>
-              <select id="input2" className="selectInput">
-                <option value="" disabled selected>
-                  Select a Role
-                </option>
-                <option value="Role1">Role1</option>
-                <option value="Role2">Role2</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="input3">Email Id</label>
-              <input type="text" id="input3" placeholder="Input 3" />
-            </div>
-          </div>
-          {/* End of form-row */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="input2">Status</label>
-              <select id="input3" className="selectInput">
-                <option value="" disabled selected>
-                  Select a Status
-                </option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        {/* End of form-grid */}
-        <div className="buttomContainer">
-          <button className="resetbutton">Reset</button>
-          <button className="submitButton">Submit</button>
-        </div>
-      </div>
-    </div>
-  );
-};
+export default function CreateNewUser() {
 
-export default CreateNewUser;
+    let initialFormData = {
+        title: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        mobileNumber: '',
+        altMobileNumber: '',
+        emailID: '',
+        role: ''
+    };
+
+    const [formData, setFormData] = useState({
+        title: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        mobileNumber: '',
+        altMobileNumber: '',
+        emailID: '',
+        role: ''
+    });
+
+    const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+
+    }, [])
+
+    function validateUserInput(data) {
+        let errors = {};
+
+        if(data.title){
+            // continue
+        }
+        else {
+            errors.title = "Please provide salutation."
+        }
+
+        if(data.firstName){
+            if(!regex.NAME.test(data.firstName)){
+                errors.firstName = "First name is incorrect."
+            }
+        }
+        else {
+            errors.firstName = "Please provide first name."
+        }
+
+        if(data.middleName){
+            if(!regex.NAME.test(data.middleName)){
+                errors.middleName = "Middle name is incorrect."
+            }
+        }
+        else {
+            errors.middleName = "Please provide middle name."
+        }
+
+        if(data.lastName){
+            if(!regex.NAME.test(data.lastName)){
+                errors.lastName = "Last name is incorrect."
+            }
+        }
+        else {
+            errors.lastName = "Please provide last name."
+        }
+
+        if(data.mobileNumber){
+            if(!regex.PHONE_NUMBER.test(data.mobileNumber)){
+                errors.mobileNumber = "Last name is incorrect."
+            }
+        }
+        else {
+            errors.mobileNumber = "Please provide mobile number."
+        }
+
+        if(data.emailID){
+            if(!regex.EMAIL.test(data.emailID)){
+                errors.emailID = "Email ID is incorrect."
+            }
+        }
+        else {
+            errors.emailID = "Please provide email id."
+        }
+
+        if(data.role){
+            // continue
+        }
+        else {
+            errors.role = "Please provide role."
+        }
+
+        return errors;
+    }
+
+    function handleChange(e) {
+        e.preventDefault();
+
+        let { name, value } = e.target;
+        setFormData({...formData, [name]: value});
+        console.log('formData', formData);
+        return;
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        setErrors({});
+
+        let errors = validateUserInput(formData);
+
+        if(errors.length <= 0){
+            try {
+                let response = await axiosHttpClient(api.ADMIN_MODULE_CREATE_USER, 'post', formData);
+
+                console.log(response.data);
+            }
+            catch(error) {
+                console.error(error);
+            }
+        }
+        else{
+            setErrors(errors);
+        }
+    }
+
+    function clearForm (e) {
+        // e.preventDefault();
+        console.log('cancel form')
+        setFormData(initialFormData);
+        return;
+    }
+
+    return (
+        <div>
+            <AdminHeader />
+            <div className="form-container">
+                <div className="form-heading">
+                    <h2>Create new user</h2>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="input1">Salutation</label>
+                            <select name='title' value={formData.title} onChange={handleChange}>
+                                <option value={''}>Select</option>
+                                <option value={'Mr'}>Mr</option>
+                                <option value={'Ms'}>Ms</option>
+                                <option value={'Mrs'}>Mrs</option>
+                            </select>
+                            {/* <input type="text" id="input1" placeholder="Input 1" /> */}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">First name</label>
+                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input3">Middle name</label>
+                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="input1">Last name</label>
+                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">Mobile number</label>
+                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input3">Alternate mobile number</label>
+                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="input1">Email ID</label>
+                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" maxLength={dataLength.EMAIL} onChange={handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">Role</label>
+                            <select name='role' value={formData.role} onChange={handleChange}>
+                                <option value={''}>Select</option>
+                                <option value={'BDA Admin'}>BDA Admin</option>
+                                <option value={'Park Admin'}>Park Admin</option>
+                            </select>
+                        </div>
+                        {/* <div className="form-group">
+                            <label htmlFor="input3">Label 3:</label>
+                            <input type="text" id="input3" placeholder="Input 3" />
+                        </div> */}
+                    </div>
+                    {/* Two more similar rows for Heading 1 */}
+                </div>
+
+                <div className="buttons-container">
+                    <button className="approve-button" onClick={handleSubmit}>Submit</button>
+                    <button className="cancel-button" onClick={clearForm}>Cancel</button>
+                </div>
+            </div>
+            <Footer />
+        </div>
+    )
+}

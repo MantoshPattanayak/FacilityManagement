@@ -44,7 +44,7 @@ const axiosHttpClient = async (url, method, data) => {
         // it is passed to then/catch
         transformResponse: [function (data) {
             // Do whatever you want to transform the data
-    
+            data = JSON.parse(data);
             return data;
         }],
         data
@@ -53,75 +53,78 @@ const axiosHttpClient = async (url, method, data) => {
     return response;
 }
 
-useEffect(() => {
-    const requestIntercept = axiosHttpClient.interceptors.request.use(
-        config => {
-            if(!config.headers['Authorization']){
-                config.headers['Authorization'] = `Bearer ${sessionStorage.getItem('auth-token')}`;
-            }
-            return config;
-        }, (error) => Promise.reject(error)
-    );
 
-    const responseIntercept = axiosHttpClient.interceptors.response.use((resp) => resp, async (err) => {
+// useEffect(() => {
+//     const requestIntercept = axiosHttpClient.interceptors.request.use(
+//         config => {
+//             if(!config.headers['Authorization']){
+//                 config.headers['Authorization'] = `Bearer ${sessionStorage.getItem('auth-token')}`;
+//             }
+//             return config;
+//         }, (error) => Promise.reject(error)
+//     );
 
-        const origReqConfig = err.config;
+//     const responseIntercept = axiosHttpClient.interceptors.response.use((resp) => resp, async (err) => {
+
+//         const origReqConfig = err.config;
         
-        if(err.response.status >= 500 && _retry_count < 4) {
-            _retry_count++;
-            return wait(timeDelay(_retry_count)).then(() => instance.request(origReqConfig))
-        }
+//         if(err.response.status >= 500 && _retry_count < 4) {
+//             _retry_count++;
+//             return wait(timeDelay(_retry_count)).then(() => instance.request(origReqConfig))
+//         }
     
-        if(err.response.status === 401 && origReqConfig.headers.hasOwnProperty('Authorization')) {
-            const rtoken = localStorage.getItem('refresh-token') || ''
-            if(rtoken && _retry_count < 4) {
+//         if(err.response.status === 401 && origReqConfig.headers.hasOwnProperty('Authorization')) {
+//             const rtoken = localStorage.getItem('refresh-token') || ''
+//             if(rtoken && _retry_count < 4) {
                 
-                _retry_count++;
+//                 _retry_count++;
     
-                delete origReqConfig.headers['Authorization']
+//                 delete origReqConfig.headers['Authorization']
     
-                _retry = refresh(rtoken)
-                    .finally(() => _retry = null)
-                    .catch(error => Promise.reject(error))
+//                 _retry = refresh(rtoken)
+//                     .finally(() => _retry = null)
+//                     .catch(error => Promise.reject(error))
                 
-                return _retry.then((token) => {
-                    origReqConfig.headers['Authorization'] = `Bearer ${token}`
-                    return instance.request(origReqConfig)
-                })
-            }
-        }
-        return Promise.reject(err)
-    });
+//                 return _retry.then((token) => {
+//                     origReqConfig.headers['Authorization'] = `Bearer ${token}`
+//                     return instance.request(origReqConfig)
+//                 })
+//             }
+//         }
+//         return Promise.reject(err)
+//     });
 
-    return (() => {
-        axiosHttpClient.interceptors.request.eject(requestIntercept);
-        axiosHttpClient.interceptors.response.eject(responseIntercept);
-    })
+//     return (() => {
+//         axiosHttpClient.interceptors.request.eject(requestIntercept);
+//         axiosHttpClient.interceptors.response.eject(responseIntercept);
+//     })
 
-}, [refresh])
+// }, [])
+
+// useEffect(() => {}, [refresh]);
 
 
 
-const refresh = async (rtoken) => {
+// const refresh = async (rtoken) => {
     
-    let _rtoken = ''
-    let _token = ''
+//     let _rtoken = ''
+//     let _token = ''
 
-    try {
-        let response = await axiosHttpClient('/refresh-token', 'post', {
-            refreshToken: rtoken
-        });
+//     try {
+//         let response = await axiosHttpClient('/refresh-token', 'post', {
+//             refreshToken: rtoken
+//         });
 
-        _rtoken = response.data.rtoken
-        _token = response.data.token
+//         _rtoken = response.data.rtoken
+//         _token = response.data.token
       
-        localStorage.setItem('refresh-token', _rtoken)
-        sessionStorage.setItem('auth-token', _token)
-    } catch(error) {
-        console.log(error)
-    } finally {
-        return _token
-    }
-}
+//         localStorage.setItem('refresh-token', _rtoken)
+//         sessionStorage.setItem('auth-token', _token)
+//     } catch(error) {
+//         console.log(error)
+//     } finally {
+//         return _token
+//     }
+// }
 
 export default axiosHttpClient;
