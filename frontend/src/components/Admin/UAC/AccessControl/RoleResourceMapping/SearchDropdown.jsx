@@ -1,6 +1,8 @@
 // SearchDropdown.jsx
 import "./SearchDropdown.css";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 const SearchDropdown = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -28,13 +30,18 @@ const SearchDropdown = () => {
 
   return (
     <div className="search-dropdown">
-      <input
-        type="text"
-        placeholder="Search.."
-        id="myInput"
-        onClick={toggleDropdown}
-        onKeyUp={filterFunction}
-      />
+      <div className="inside-search-dropdown">
+        <input
+          type="text"
+          placeholder="Search.."
+          id="myInput"
+          onClick={toggleDropdown}
+          onKeyUp={filterFunction}
+        />
+        <div className="dropicon">
+          <FontAwesomeIcon icon={faAngleDown} />
+        </div>
+      </div>
       {isDropdownVisible && (
         <div id="myDropdown" className="dropdown-content">
           <div className="dropdown-content-child" href="#about">

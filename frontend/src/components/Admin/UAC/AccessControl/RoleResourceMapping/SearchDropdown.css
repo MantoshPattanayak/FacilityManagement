@@ -1,18 +1,41 @@
 /* SearchDropdown.css */
-
-/* The search field */
-
+.search-dropdown {
+    max-width: 100%;
+    width: 100vw;
+}
 
 #myInput {
     box-sizing: border-box;
+
+    /* padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: #ececef; */
     width: 24vw;
+    height: 4.6vh;
+    padding: 0.625vw;
+    /* border: 0.0833vw solid #ccc; */
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+}
+
+.inside-search-dropdown {
+    box-sizing: border-box;
+    width: 24vw;
+    height: 6vh;
     padding: 0.625vw;
     border: 0.0833vw solid #ccc;
     border-radius: 0.417vw;
     background-color: #ececef;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
-
+.dropicon {
+    margin-left: 1vw;
+}
 
 
 
@@ -20,4 +43,35 @@
 .dropdown-content-child:hover {
     background-color: #f1f1f1;
     cursor: pointer;
+}
+
+@media screen and (max-width: 1024px) {
+    .inside-search-dropdown {
+        height: 4vh;
+    }
+
+    #myInput {
+        width: 20vw;
+        height: 3vh;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .inside-search-dropdown {
+        height: 4vh;
+        width: 28vw;
+    }
+
+    #myInput {
+        width: 18vw;
+        height: 3vh;
+        width: 23vw;
+    }
+
+    .dropicon svg {
+        size: 1em;
+        height: 1.6vh;
+        width: 1.1vh;
+        padding-bottom: 0.5vh;
+    }
 }
