@@ -4,6 +4,8 @@ import axios from 'axios';
 import AdminHeader from '../../../../common/AdminHeader';
 import "../../../../common/CommonTable.css"
 import "./ListOfRoles.css"
+import { IoIosSearch } from "react-icons/io";
+
 
 const ListOfRoles = () => {
   const [roleListData, setRoleListData] = useState([]);
@@ -71,6 +73,7 @@ const ListOfRoles = () => {
 
       <div className="search_text_conatiner">
         <button className='create-role-btn'>Create new Role</button>
+       
         <input
           type="text"
           className="search_input_field"
@@ -79,6 +82,7 @@ const ListOfRoles = () => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
+       
       </div>
 
 
