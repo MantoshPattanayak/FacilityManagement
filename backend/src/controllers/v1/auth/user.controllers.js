@@ -3,39 +3,131 @@ let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
 const user = db.publicuser;
 
-const { encrypt } = require("../../../middlewares/encryption.middlewares");
-const { decrypt } = require("../../../middlewares/decryption.middlewares");
 
-let signUp = async (req, res) => {
-  const {
-    userName,
-    email,
-    password,
-    roleId,
-    title,
-    firstName,
-    middleName,
-    lastName,
-    phoneNo,
-    altPhoneNo,
-    userImage,
-    remarks,
-  } = req.body;
+const {encrypt} = require('../../../middlewares/encryption.middlewares')
+const {decrypt} = require('../../../middlewares/decryption.middlewares')
+const {generateOTP,verifyOTP} = require('../../../utils/mobileOtpGenerateAndVerify')
+
+const passport = require('passport')
+require('../../../config/passport')
+
+
+const { Op } = require("sequelize");
+
+let generateOTPHandler = async (req,res)=> {
+  try {
+    // if anyone first time logs in through google or facebook here it will skip that first step i.e. to check if mobile no. already exist or not. it will directly verify the mobile no  
+    let {mobileNo,googleId,facebookId} = req.body
+      const response = await generateOTP(mobileNo);
+      let checkIfMobileExistOrNot = await user.findAll({
+        where:{
+          phoneNo:{
+            [Op.eq]:mobileNo
+          }
+        }
+      })
+
+      if(checkIfMobileExistOrNot.length==0 && !(googleId) && !(facebookId)){
+        return res.status(statusCode.CONFLICT.code).json({
+          message:"Please create your profile first"
+        })
+      }
+      // Check if the response indicates success
+      if (response && response.status === 'OK') {
+          // OTP generated successfully
+          return res.status(statusCode.SUCCESS.code).json({
+            message: 'otp generated successfully'
+          })
+      } else {
+          // OTP generation failed
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message: 'Failed to generate OTP. Please try again later.'
+          })
+      }
+  } catch (error) {
+      console.error('Error generating OTP:', error);
+      // Handle error
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: 'Error generating OTP. Please try again later.'
+      })
+  }
+}
+
+let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
+  try {
+    let {mobileNo, otp,} = req.body
+      // Call the API to verify OTP
+      const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
+
+      // Check if OTP verification was successful
+      if (response && response.status === 'OK') {
+          // OTP verified successfully
+          // Check if the user exists in the database
+          let user = await getUserByMobileNumber(mobileNo); // Replace with your function to retrieve user by mobile number from the database
+
+          // If user doesn't exist, create a new user
+          if (!user) {
+              // Create new user
+              user = await createUser({ mobileNo }); // Replace with your function to create a new user in the database
+          }
+
+          // Generate tokens for the user
+          const { id, user_name, email_id } = user;
+          const { accessToken, refreshToken } = await generateTokens({ id, user_name, email_id });
+
+          // Return the generated tokens
+          return { accessToken, refreshToken };
+      } else {
+          // OTP verification failed
+          throw new Error('OTP verification failed');
+      }
+  } catch (error) {
+      console.error('Error verifying OTP and generating tokens:', error);
+      throw error; // Forward the error to the caller
+  }
+}
+
+
+let signUp = async (req,res)=>{
+ try{
+  let generateOtpForMobile = await generateOTP(decrypt(phoneNo))
+  const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
+ 
+
 
   const decryptUserName = decrypt(userName);
   const decryptEmailId = decrypt(email);
   const decryptPhoneNumber = decrypt(phoneNo);
 
-  let lastLogin = new Date();
-  let updatedOn = new Date();
-  let createdOn = new Date();
-  let deletedOn = new Date();
+   const checkDuplicateMobile= await user.findAll({
+      where:{
+        phoneNo:{
+          [Op.eq]:decryptPhoneNumber
+        }
+        
+      }
+    })
+
+    if(checkDuplicateMobile>0){
+      return res.status(statusCode.CONFLICT.code).json({
+        message:"This mobile is already allocated to existing user"
+      })
+    }
+
+
+    
+    let lastLogin = new Date();
+    let updatedOn =  new Date();
+    let createdOn = new Date();
+    let deletedOn = new Date();
+
+
+
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
   let createdBy = req.user.id;
   let updatedBy = req.user.id;
 
-  try {
     // Create a new user record in the database
 
     const uploadDir = process.env.UPLOAD_DIR;
@@ -101,6 +193,43 @@ let signUp = async (req, res) => {
   }
 };
 
+
+
+let googleAuthenticationCallback = async (req,res)=>{
+  if (req.user.requiresMobileVerification) {
+    // Prompt user to enter mobile number
+    const { email, name,photo } = req.user;
+    const redirectUrl = '/collect-mobile';
+    res.json({ email, name, photo, redirectUrl });
+  } else {
+    // User already exists, redirect to profile
+    res.redirect('/profile');
+  }
+}
+
+
+let facebookAuthenticationCallback = async(req,res)=>{
+  if (req.user.requiresMobileVerification) {
+    // Prompt user to enter mobile number
+    const { email, name,photo } = req.user;
+    const redirectUrl = '/collect-mobile';
+    res.json({ email, name, photo, redirectUrl });  
+  } else {
+    // User already exists, redirect to profile
+    res.redirect('/profile');
+  }
+}
+
+module.exports = {
+  signUp,
+  googleAuthenticationCallback,
+  facebookAuthenticationCallback,
+  generateOTPHandler,
+  verifyOTPHandlerWithGenerateToken
+ 
+}
+
 module.exports = {
   signUp,
 };
+

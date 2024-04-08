@@ -13,17 +13,9 @@ const PrivateUser = sequelize.define('privateuser', {
   title:{
     type:DataTypes.STRING(5)
   },
-  firstName: {
-    type: DataTypes.STRING(50),
+  fullName: {
+    type: DataTypes.STRING(90),
     allowNull: false
-  },
-  middleName: {
-    type: DataTypes.STRING(50)
-    // allowNull defaults to true
-  },
-  lastName: {
-    type: DataTypes.STRING(50)
-    // allowNull defaults to true
   },
   userName:{
     type:DataTypes.STRING(50)
@@ -31,10 +23,10 @@ const PrivateUser = sequelize.define('privateuser', {
   password:{
     type:DataTypes.STRING(50)
   },
-  phoneNo:{
+  contactNo:{
     type:DataTypes.STRING(15)
   },
-  altPhoneNo:{
+  altContactNo:{
     type: DataTypes.STRING(50)
   },
   emailId:{
@@ -51,11 +43,18 @@ const PrivateUser = sequelize.define('privateuser', {
   lastLogin:{
     type: DataTypes.DATE // Define the column as DATE type
 },
-  status:{
+  statusId:{
     type: DataTypes.INTEGER // Define the column as DATE type
 },
   remarks:{
     type: DataTypes.STRING(255)
+  },
+  changePwdFlag:{
+    type: DataTypes.BOOLEAN,
+
+  },
+  gender:{
+    type:DataTypes.INTEGER
   },
   createdBy:{
     type:DataTypes.INTEGER

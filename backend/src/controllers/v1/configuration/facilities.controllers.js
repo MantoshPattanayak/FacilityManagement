@@ -4,6 +4,7 @@ const statusCode = require('../../../utils/statusCode');
 const  QueryTypes= db.QueryTypes
 const sequelize = db.sequelize
 const stausCode = require('../../../utils/statusCode')
+
 const { Client } = require('@elastic/elasticsearch');
 const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch server URL
 
