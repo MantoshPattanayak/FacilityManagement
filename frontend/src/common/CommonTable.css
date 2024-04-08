@@ -1,12 +1,13 @@
 /* css of table */
 
-.Main_Conatiner_table{
+.Main_Conatiner_table {
   margin-top: 70px;
 }
-.table_Container{
-  
-    overflow-y: auto;
-    max-height: 700px;
+
+.table_Container {
+
+  overflow-y: auto;
+  max-height: 700px;
 }
 
   .search_text_conatiner{
@@ -37,14 +38,6 @@
       border-color: #3a3b3a; 
   }
 
-  /* Style the placeholder text */
-  .search_input_field::placeholder {
-      color: #999; 
-      font-style: italic; 
-  }
-  .search_input_field:focus {
-    width: 35vh;
-  }
 table {
   border: 1px solid #ccc;
   border-collapse: collapse;
@@ -78,15 +71,18 @@ table th {
   position: sticky;
   top: 0;
   background-color: #3e82ff;
-  color:#f8f8f8;
+  color: #f8f8f8;
 
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #ffffff; /* Specify the background color for odd rows */
+  background-color: #ffffff;
+  /* Specify the background color for odd rows */
 }
+
 tbody tr:nth-child(even) {
-  background-color: #f0f0f0; /* Specify the background color for even rows */
+  background-color: #f0f0f0;
+  /* Specify the background color for even rows */
 }
 
 
@@ -101,7 +97,7 @@ tbody tr:nth-child(even) {
   table caption {
     font-size: 1.3em;
   }
-  
+
   table thead {
     border: none;
     clip: rect(0 0 0 0);
@@ -112,20 +108,20 @@ tbody tr:nth-child(even) {
     position: absolute;
     width: 1px;
   }
-  
+
   table tr {
     border-bottom: 3px solid #ddd;
     display: block;
     margin-bottom: .625em;
   }
-  
+
   table td {
     border-bottom: 1px solid #ddd;
     display: block;
     font-size: .8em;
     text-align: right;
   }
-  
+
   table td::before {
     /*
     * aria-label has no advantage, it won't be read inside a table
@@ -136,7 +132,7 @@ tbody tr:nth-child(even) {
     font-weight: bold;
     text-transform: uppercase;
   }
-  
+
   table td:last-child {
     border-bottom: 0;
   }

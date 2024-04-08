@@ -1,0 +1,107 @@
+.form-heading {
+    max-width: 100%;
+    width: 98vw;
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading {
+    height: 8vh;
+    margin-bottom: 5vh;
+}
+
+.heading h2 {
+    height: 8vh;
+}
+
+
+.selectInput {
+    text-transform: none;
+    width: 24vw;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+    color: gray;
+}
+
+.buttomContainer {
+    max-width: 90%;
+    width: 90vw;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+}
+
+/* .resetButton {
+    padding: 1em;
+    background-color: green;
+    color: white;
+} */
+
+/* Basic styling for the button */
+
+.submitButton {
+    background-color: green;
+    padding: 6px;
+    color: white;
+    border-radius: 7px;
+    background-image: none;
+}
+
+.resetbutton {
+    background-color: rgba(218 218 218 / 72%);
+    padding: 6px;
+    color: rgb(16, 16, 16);
+    border-radius: 7px;
+    background-image: none;
+}
+
+
+
+
+@media screen and (max-width: 1024px) {
+    .form-heading {
+        max-width: 100%;
+        width: 100vw;
+        margin-top: -20vh;
+    }
+
+    .heading {
+        height: 4vh;
+    }
+
+    .heading h2 {
+        height: 4vh;
+    }
+
+    /* .selectInput option {
+        width: 4vw;
+    } */
+
+}
+
+@media screen and (max-width: 760px) {
+    .form-heading {
+        max-width: 100%;
+        width: 100vw;
+        margin-top: 7vh;
+    }
+
+    .heading {
+        height: 4vh;
+    }
+
+    .heading h2 {
+        height: 4vh;
+    }
+
+    .selectInput {
+        width: 82vw;
+    }
+
+}

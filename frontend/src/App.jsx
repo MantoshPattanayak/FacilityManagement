@@ -10,7 +10,7 @@ import ListOfUsers from './components/Admin/UAC/User/ListOfUsers';
 import CreateNewUser from './components/Admin/UAC/User/CreateNewUser';
 
 //Public Header
-// import PublicHeader from './common/PublicHeader'
+// import PublicHeader from "./common/PublicHeader";
 // Admin Header
 import AdminHeader from './common/AdminHeader';
 // Import Footer 
@@ -18,12 +18,19 @@ import Footer from './common/Footer';
 //import home page
 import Home from './components/Public/Home';
 // Import here Partice Page
-import ParticePage from './components/Admin/MDM/FacilityRegistration/ParPage';
+import ParticePage from "./components/Admin/MDM/FacilityRegistration/ParPage";
+
 // here import list of resources
 // import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 // here Import the role list table'
 
 
+
+import RoleResourceMappingList from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList";
+
+import CreateRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping";
+
+import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown";
 
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
