@@ -12,11 +12,8 @@ const userresource = db.userresource;
 
 
 let dataload = async (req, res) => {
-    let client;
     try {
-        client = await db.connect();
-
-        let userDataLoad = await client.query(` select 
+       let userDataLoad = await sequelize.query(` select 
         pu.privateUserId as userId,
         pu.fullName as userName,
         pu.emailId as email,

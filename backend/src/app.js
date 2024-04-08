@@ -17,9 +17,10 @@ const {
 
 
 const maproute = require('./routes/api/' + api_version +'/configuration/facilites')
-const authRoutes = require('./routes/api/' + api_version +'/auth/user');
+// const authRoutes = require('./routes/api/' + api_version +'/auth/user');
 const userDetails = require('./routes/api/' + api_version +'/configuration/userDetails');
-
+// const roleResource = require('./routes/api/' + api_version +'/configuration/roleResource')
+const userResource = require('./routes/api/' + api_version +'/configuration/userResource')
 
 
 const roleroute = require("./routes/api/" + api_version + "/auth/role");
@@ -54,11 +55,11 @@ app.use(cookieParser());
 app.use(requestLogger);
 
 app.use('/mapData',maproute)
-app.use('/auth', authRoutes);
+// app.use('/auth', authRoutes);
 app.use('/userDetails',userDetails)
-
-
-app.use("/role", roleroute);
+// app.use('/roleResource',roleResource)
+app.use('/userResource',userResource)
+// app.use("/role", roleroute);
 
 
 //  put all your route handlers here
@@ -67,5 +68,5 @@ app.use("/role", roleroute);
 app.use(errorLogger);
 
 module.exports = {
-  app,
+  app
 };

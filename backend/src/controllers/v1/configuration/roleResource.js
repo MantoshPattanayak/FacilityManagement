@@ -169,9 +169,8 @@ const insertRoleResource = async (req, res) => {
 
 
 let updateRoleResource = async (req, res) => {
-    let client;
     try {
-        client = await db.connect();
+   
         let { id, status } = req.body;
         let user = req.user.id;
         let date = 'NOW()';
