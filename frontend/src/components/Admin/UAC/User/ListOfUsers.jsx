@@ -49,7 +49,10 @@ export default function ListOfUsers() {
         <>
             <AdminHeader />
             <div className="Main_Conatiner_table">
-                <h1 className="text_Name_Table">List of Users</h1>
+                <div className='table-heading'>
+                    <h2 className="table-heading">List of Users</h2>
+                </div>
+                
                 <div className="search_text_conatiner">
                     <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button>
                     <input type="text" className="search_input_field" placeholder="Search..." />
@@ -76,7 +79,7 @@ export default function ListOfUsers() {
                                             <td data-label="Number">{data.number}</td>
                                             <td data-label="Email">{data.email}</td>
                                             <td data-label="Role">{data.role}</td>
-                                            <td data-label="Status">{data.status}, {data.actionList}</td>
+                                            <td data-label="Status">{data.status}</td>
                                             <td data-label="Action">
                                                 <button type="button" className='w-full' onClick={(e) => actionOptions(data.id)}><FontAwesomeIcon icon={faEllipsisVertical} /></button>
                                                 
