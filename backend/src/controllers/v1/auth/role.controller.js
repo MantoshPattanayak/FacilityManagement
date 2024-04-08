@@ -3,7 +3,7 @@ const statusCode = require("../../../utils/statusCode");
 
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
-
+const role = db.rolemaster
 //get
 const roleId = async (req, res) => {
   try {
@@ -23,51 +23,51 @@ const roleId = async (req, res) => {
 };
 
 //Insert
-const createRole = (req, res) => {
+const createRole =async (req, res) => {
   // store the request body in a user object
-  const role = {
-    roleId: req.body.roleId,
-    roleCode: req.body.roleCode,
-    roleName: req.body.roleName,
-    status: req.body.status,
-    remark: req.body.remark,
-  };
-
-  // check if the request body is empty
-  if (
-    !createRole.roleId ||
-    !createRole.roleCode ||
-    !createRole.roleName ||
-    !createRole.status ||
-    !createRole.remark
-  ) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
-
   // Save User in the database
   try {
-    User.create(role)
-      .then((role) => {
-        res.status(201).json(user);
+    console.log('hfkd')
+    let createRole;
+    const {roleCode,roleName}= req.body  
+
+  console.log("create Role",  roleName, roleCode)
+
+  // check if the request body is empty
+  if (roleCode && roleName) {
+    console.log('jfd', roleCode, roleName)
+
+     createRole = await role.create({
+      roleCode:roleCode,
+      roleName:roleName
+    })
+    if(createRole){
+      console.log('ja',createRole)
+      return res.status(statusCode.SUCCESS.code).json({
+        message:"Role created successfully"
       })
-      .catch((err) => {
-        res.status(500).json({
-          message:
-            err.message || "Some error occurred while creating the Role.",
-        });
-      });
-  } catch (error) {
-    res.status(500).json({
-      message:
-        error.message ||
-        "Some internal error occurred while creating the Role.",
-    });
-    throw new Error(error);
+    }
+    return res.status(statusCode.BAD_REQUEST.code).json({
+      message:"Role is not created"
+    })
+  }
+  else{
+    return res.status(statusCode.BAD_REQUEST.code).json({
+      message:"please provide all required details"
+    })
+  }
+ 
+ 
+ 
+  } 
+  catch (error) {
+  return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+    message: error.message
+  })
+   
   }
 };
+
 //Update
 const updateRole = (req, res) => {
   const role = {

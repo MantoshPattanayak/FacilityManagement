@@ -3,15 +3,56 @@
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   
   }
-  
-  body {
-    padding: 0;
-    margin: 0;
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(270.04deg, rgba(0, 0, 0, 0.42) 57.13%, rgba(0, 0, 0, 0) 92.62%);
+    color: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     display: flex;
-    place-items: center;
-    min-height: 100vh;
+    justify-content: space-between;
+    align-items: center;
   }
   
+  .logo_img {
+    height: 10vh; /* Set the desired height for the logo */
+  }
+  
+  .fixed-header h1 {
+    margin: 0;
+  }
+  
+  .fixed-header nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end; /* Align the navigation to the right */
+  }
+  
+  .fixed-header nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .fixed-header nav ul li:last-child {
+    margin-right: 0;
+  }
+  
+  .fixed-header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .content {
+    margin-top: 80px; /* Adjust this value to match the height of your fixed header */
+    padding: 20px;
+    /* Additional styles for content if needed */
+  }
+
   #section-1 {
     background-image: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
 
@@ -23,95 +64,227 @@
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;
-    opacity: 90%;
-}
-  header {
-    position: relative;
+    opacity: 100%;
     height: 100vh;
-    width: 100vw;
-    color: #fff;
-  }
-  
-.section1{
+}
+.landing_page_contant{
   display: flex;
   justify-content: space-between;
+  padding: 40px;
+
+}
+.about_Conatiner{
+  margin-top: 200px;
+}
+.about_Conatiner h1{
+  font-size: 30px;
+  color: #07bc00;
+  font-weight: 700;
+}
+.about_Conatiner p{
+  font-size: 20px;
+  color: #fff;
+  font-weight: 600;
+}
+.Search_Conatiner{
+  margin-top: 200px;
+}
+.Search_Conatiner h1{
+  font-size: 60px;
+  color: #07be00;
+  font-weight: 700;
+}
+.Search_Conatiner h2{
+font-size: 40px;
+color: #ffffff;
+font-weight: 600;
+}
+.typing-animation {
+  overflow: hidden; 
+  white-space: nowrap; 
+ 
+  animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 
-  
-  .card {
-    position: absolute;
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #000; 
+  }
+}
+
+/* search input filed */
+.search-input {
+  padding: 10px; /* Adjust padding as needed */
+  margin-top: 20px; /* Adjust spacing as needed */
+  border: 2px solid #ccc; /* Border color */
+  transition: border-color 0.3s ease; /* Smooth transition */
+}
+.search-input[type=text]{
+  width: 60%;
+  box-sizing: border-box;
+  border: 2px solid #01a725;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: white;
+  background-image: url('../../assets/search-icon.png');
+  background-position: 2px 4px; 
+  background-repeat: no-repeat;
+
+}
+.search-input:focus {
+  outline: none; /* Remove default focus outline */
+  border-color: #005aa4; /* Change border color on focus */
+  width: 65%;
+}
+
+/* Here Map section */
+.map-container{
+  padding: 60px;
+
+}
+
+/* Activity Css */
+.Activity_Section {
+
+  padding: 60px;
  
-    justify-content: center;
-    align-items: center;
-    top: 200px;
-    left: 60px;
-  }
-  
+}
+
+.Activity {
+  position: relative;
+  display: inline-block;
+  padding-left: 20px;
+  font-size: 35px;
 
   
-  .heading {
-    display: flex;
-    align-items: center;
-  }
+
+}
+
+.Activity::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px; /* Adjust thickness of the line */
+  background-color: #58b80a; /* Line color */
+}
+
+.Activity_container{
+  display: flex;
+  background-color: #EEF3F6;
+ justify-content: space-evenly;
+ padding: 60px;
+
+}
+
+.text_right{
+  display: flex;
+  padding: 30px;
+  gap: 20px;
   
-  .heading p {
-    color: #0FA958;
-    font-size: 70px;
-    padding-top: 20px;
-    font-weight: 700;
-  }
+}
+.activity_text{
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #212121;
+}
+.activity_text:hover{
+  color: #016e19;
+}
+
+.Activity_Data{
+  display: flex;
+
+  background-color: #EEF3F6;
+  justify-content: space-around;
+  gap: 2px;
+  height: 20vh;
+}
+.Actvity_pure_data{
+
+  height: 15vh;
+padding: 20px;}
+.Actvity_pure_data h1{
+  font-size: 50px;
+  color: #038a20;
+  font-weight: 600;
+
+}
+.Actvity_pure_data p{
+  font-size: 30px;
+   font-style: oblique;
+   color: #2e2e2e;
+   font-weight: 500;
+}
+
+
+/* Notice Section */
+.Notice_Section{
+  padding: 60px;
+  
+}
+.Notice_Container{
+  padding: 30px;
+  background-color: #EEF3F6;
+
+}
+.notice_Name{
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+.notice_Name h1{
+  font-size: 15px;
+  font-weight: 600;
+  color: #3f3f3f;
+}
+
+/* Review and Feedback section */
+.Review_Feedback_section{
+  padding: 40px;
+}
+.App_rating{
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+
+  
+}
+.App_rating-item{
+  display: flex;
+   border: 10px 20px 30px red;
  
-  .Explore_text{
-    font-size: 35px;
-    font-weight: 600;
-  }
 
-  
-  .para {
-    padding-top: 50px;
-    font-size: 25px;
-    position: relative; 
-    top: -60px;   
-  
-  }
-
-  .input-search{
-    padding: 5px;
-    width: 55vh;
-    border: 1px solid #5a5c5a;
-    border-radius: 18px;
-    transition: border-color 0.3s;
-  }
-
-  .card-2{
-    position: absolute;
  
-    justify-content: center;
-    align-items: center;
-    top: 200px;
-  
-    left: 55%;
-    padding-top: 45px;
+}
+.Rating_data{
+  padding: 10px;
 
-  }
-  .heading-about{
-    font-size: 30px;
-    color: #0be671;
-    padding-top: 20px;
-  }
-  .about-para{
-    padding-top: 25px;
-  }
+}
+.Name_rating{
+  display: flex;
+  margin: 10px;
 
-  .map-container{
-   padding: 25px 75px 25px 75px;
-   
-  }
-  .search-map{
-    padding: 5px;
-    width: 45vh;
-    border: 1px solid #5a5c5a;
-    border-radius: 10px;
-    transition: border-color 0.3s;
-    margin-bottom: 5px; 
- }
+
+}
+.raing_img{
+  height: 3vh;
+  margin: 10px;
+
+}
+
+.center{text-align: center;}

@@ -36,7 +36,7 @@ const axiosHttpClient = async (url, method, data) => {
         headers,
         transformRequest: [function (data, headers) {
             // Do whatever you want to transform the data
-    
+            data = JSON.stringify(data);
             return data;
         }],
         

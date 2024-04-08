@@ -1,0 +1,24 @@
+.form-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: self-end;
+}
+
+.checkBox {
+    display: block;
+    width: 24vw;
+}
+
+@media screen and (max-width: 760px) {
+    .form-row {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .checkboxLabel {
+        font-weight: bold;
+        font-size: small;
+
+    }
+}

@@ -1,0 +1,119 @@
+.container-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10vh;
+}
+
+.headingHeader {
+    max-width: 100%;
+    width: 100vw;
+    /* align-items: center; */
+    display: flex;
+    justify-content: center;
+}
+
+.heading {
+    max-width: 100%;
+    width: 95vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+.heading-title {
+    font-size: large;
+    font-weight: bold;
+    color: green;
+}
+
+
+.create-role-resource-mapping-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* align-items: center; */
+    padding: 20px;
+    max-width: 100%;
+    width: 95vw;
+}
+
+.left-container {
+    border: 1px solid black;
+    max-width: 50vw;
+    width: 50vw;
+    max-height: 40vh;
+    height: 40vh;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    padding: 2vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+}
+
+
+.ChildCheckBox {
+    padding-left: 2vw;
+}
+
+
+
+/* Add a scrollbar to the right side of the left container */
+.left-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Customize scrollbar track */
+.left-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Customize scrollbar thumb */
+.left-container::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.right-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 4vw;
+}
+
+
+@media (max-width: 768px) {
+
+    /* Styles for screens smaller than 768px (mobile) */
+    .container-parent {
+        flex-direction: column;
+        /* Reverse order on mobile */
+        margin-top: -12vh;
+    }
+
+
+    .create-role-resource-mapping-container {
+        flex-direction: row;
+        justify-content: space-between;
+        /* Stack components vertically on mobile */
+    }
+
+    .left-container,
+    .right-container {
+        width: 40vw;
+        /* Make each container full width on mobile */
+    }
+
+    .left-container {
+        height: 28vh;
+        max-width: 40vw;
+        /* Remove max-height to allow content to flow */
+        overflow-y: auto;
+        overflow-x: auto;
+
+    }
+
+    .right-container {
+        width: 30vw;
+    }
+}

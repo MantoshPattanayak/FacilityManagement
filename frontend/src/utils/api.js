@@ -5,7 +5,8 @@ const api = {
     SIGNUP_API: '/auth/signup',
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
-    ADMIN_MODULE_CREATE_USER: '/uac/createuser'
+    ADMIN_MODULE_CREATE_USER: '/uac/createuser',
+    CreateRole:'/role/createRole'
 }
 
 export default api;
