@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import "./AdminHeader.css";
-import APP_LOGO from "../assets/ama-bhoomi-app-logo.png";
+import APP_LOGO from "../assets/ama-bhoomi_logo.png";
 
 const AdminHeader = () => {
   const [isMenuActive, setMenuActive] = useState(false);
