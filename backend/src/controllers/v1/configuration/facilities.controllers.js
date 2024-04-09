@@ -11,11 +11,24 @@ const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch s
 
 const displayMapData = async(req,res)=>{
     try{
+        let givenReq = req.body.givenReq?req.body.givenReq:null
+        console.log(givenReq,'givenReq ')
+
         const [facilities,metadata] = await sequelize.query('select * from amabhoomi.parks ')
 
+        let matchedData = facilities;
+        if(givenReq){
+             matchedData = facilities.filter((mapData)=>
+                mapData.parkName.toLowerCase().includes(givenReq.toLowerCase())
+            )
+            
+            console.log(matchedData,'matchedData')
+
+        }
+  
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:facilities
+            data:matchedData
         })
 
 
