@@ -6,7 +6,10 @@ const api = {
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
     ADMIN_MODULE_CREATE_USER: '/uac/createuser',
-    CreateRole:'/role/createRole'
+    CreateRole:'/role/createRole',
+    // Recourece Api
+    viewUserResource:'/userResource/viewUserResource'
+   
 }
 
 export default api;

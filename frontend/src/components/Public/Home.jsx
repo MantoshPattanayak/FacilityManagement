@@ -14,7 +14,7 @@ import Notice_Arrow from "../../assets/Notice_Arrow.png"
 import PlayStore from "../../assets/sm-playstore 1.png"
 import apple from "../../assets/apple.png"
 import Rating_icon from "../../assets/Rating_icon.png"
-
+import parkLOgo from "../../assets/park_logo.png"
 const Home = () => {
   const[mapdata, setmapdata]=useState([])
   const [selectedParkId, setSelectedParkId] = useState(null);
@@ -108,9 +108,9 @@ const Home = () => {
         </header>
        <div className='landing_page_contant'>
            <span className='Search_Conatiner'>
-            <h1>AMA BHOOMI</h1>
-            <h2  className='typing-animation'>Explore, Book and Enjoy Open Spaces </h2>
-            <input  className='search-input' type='text' name="       search" placeholder="       Search by Name and Location"></input>
+              <h1>AMA BHOOMI</h1>
+              <h2  className='typing-animation'>Explore, Book and Enjoy Open Spaces </h2>
+              <input  className='search-input' type='text' name="       search" placeholder="       Search by Name and Location"></input>
            </span>
             
            <span className='about_Conatiner'>
@@ -125,7 +125,14 @@ const Home = () => {
 
       {/* Google Maps */}
       <section className="map-container">
-       
+         <div className='Search_functionality'>
+          <input className='search-input1' type='text' placeholder='search here...'></input>
+          <span> 
+            <button className='button' type='button'><img className='park_logo' src={parkLOgo}></img></button>
+            <button  className='button' type='button'><img className='park_logo' src={parkLOgo}></img></button>
+            <button className='button'  type='button'><img className='park_logo' src={parkLOgo}></img></button>
+            </span>
+         </div>
         <LoadScript googleMapsApiKey={apiKey}>
           <GoogleMap
             mapContainerStyle={{ height: '400px', width: '100%' }}
