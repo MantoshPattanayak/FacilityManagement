@@ -139,7 +139,7 @@ font-weight: 600;
   font-size: 15px;
   background-color: white;
   background-image: url('../../assets/search-icon.png');
-  background-position: 2px 4px; 
+  background-position: 2px 8px; 
   background-repeat: no-repeat;
 
 }
@@ -288,3 +288,18 @@ padding: 20px;}
 }
 
 .center{text-align: center;}
+
+
+
+/* here Search  */
+.Search_functionality{
+  display: flex;
+  justify-content: space-between;
+}
+.park_logo{
+  border-radius: 50px;
+  height: 8vh;
+ 
+}
+.button{border-radius: 50px;
+height: 0vh;}

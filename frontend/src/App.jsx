@@ -10,6 +10,7 @@ import ListOfUsers from './components/Admin/UAC/User/ListOfUsers';
 import CreateNewUser from './components/Admin/UAC/User/CreateNewUser';
 import EditUser from './components/Admin/UAC/User/EditUser';
 import ReviewUserRating from './components/Admin/Activity/ReviewUserRating/ReviewUserRating';
+import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -55,6 +56,7 @@ function App() {
             <Route path='/UAC/Users/Create' element={<ProtectedRoute><CreateNewUser /></ProtectedRoute>} />
             <Route path='/UAC/Users/Edit' element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
             <Route path='/unauthorized' element={<UnauthorizedPage />} />
+            <Route path='UAC/ListOfResources' element={<ListOfResources/>} />
           </Routes>
           {/* <Footer /> */}
         </div>
