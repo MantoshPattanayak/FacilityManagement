@@ -19,16 +19,19 @@ const Home = () => {
   const[mapdata, setmapdata]=useState([])
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const [givenReq, setGivenReq] = useState(null);
   const counterRef = useRef(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao'; 
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey=Math.random();
  
-      // here Post the data
+      // here get  the data of location 
         async function fecthMapData(){
           try{
-            let res= await axiosHttpClient('MAP_DISPLAY_DATA' , 'get');
+            let res= await axiosHttpClient('MAP_DISPLAY_DATA' , 'post', {
+              givenReq: givenReq,
+            });
 
             console.log("here get data", res)
             setmapdata(res.data.data)
@@ -41,7 +44,39 @@ const Home = () => {
           // here Update the data
           useEffect(()=>{
             fecthMapData()
-          }, [])
+          }, [ givenReq])
+
+          // here Search Funcation 
+          async function searchFunction(e) {
+            e.preventDefault();
+            try {
+           
+              let res = await axiosHttpClient("/busmaster/viewList", "post", {
+             
+                givenReq: givenReq
+              });
+              setmapdata(res.data.data)
+       
+            } catch (error) {
+              console.error(error);
+          
+            }
+          }
+      
+          function handleChange(e) {
+            let { name, value } = e.target;
+            switch (name) {
+              case "givenReq":
+                value = e.target.value.replace(/^\s*/, "");
+                setGivenReq(value);
+            }
+          }
+
+
+
+      
+  
+    
 
   // Function to handle marker click
     const handleMarkerClick = (parkId) => {
@@ -125,14 +160,20 @@ const Home = () => {
 
       {/* Google Maps */}
       <section className="map-container">
-         <div className='Search_functionality'>
-          <input className='search-input1' type='text' placeholder='search here...'></input>
-          <span> 
-            <button className='button' type='button'><img className='park_logo' src={parkLOgo}></img></button>
-            <button  className='button' type='button'><img className='park_logo' src={parkLOgo}></img></button>
-            <button className='button'  type='button'><img className='park_logo' src={parkLOgo}></img></button>
-            </span>
-         </div>
+       <div className='flex'> 
+        <input type='text' placeholder='Please Enter the Location '
+          name="givenReq"
+          id="givenReq"
+          value={givenReq}
+          onChange={handleChange}
+        ></input>
+        <button type='button'
+        onClick={searchFunction}
+        > Search here </button>
+       </div>
+
+         
+         
         <LoadScript googleMapsApiKey={apiKey}>
           <GoogleMap
             mapContainerStyle={{ height: '400px', width: '100%' }}
