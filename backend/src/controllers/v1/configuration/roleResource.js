@@ -22,7 +22,7 @@ let dataload = async (req, res) => {
             if (resourceData.length > 0) {
                 let encryptRoleData = roleData.map(async(role)=>({
                     ...role,
-                    roleId: role.roleId,
+                    roleId: await encrypt(role.roleId),
                     roleName:await encrypt(role.roleName),
                     roleCode: await encrypt(role.roleCode),
 
@@ -30,7 +30,7 @@ let dataload = async (req, res) => {
 
                 let encryptResourceData = resourceData.map(async(resource)=>({
                     ...resource,
-                    parentId: resource.parentId,
+                    parentId: await encrypt(resource.parentId),
                     parent:await encrypt(resource.parent),
                     child: await encrypt(resource.child)
                 }))
@@ -62,9 +62,9 @@ const insertRoleResource = async (req, res) => {
         let date = new Date();
         // Check for duplicates in all resources using raw query with join
         const duplicateCheckQuery = `
-        SELECT rr.role_id, rr.resource_id
-        FROM role_resource rr
-        INNER JOIN resource_master rm ON rr.resource_id = rm.id
+        SELECT rr.roleId, rr.resourceId
+        FROM roleresource rr
+        INNER JOIN resourcemaster rm ON rr.resource_id = rm.id
         WHERE rr.role_id = :roleId AND rr.resource_id IN (:resourceList)
         `;
 
@@ -203,7 +203,7 @@ let updateRoleResource = async (req, res) => {
 let viewId = async (req, res) => {  
     try {
         let roleResourceId = req.params.id;
-
+        let encryptViewRoleResourcData;
         let query =
         `select 
         role_resource1.roleResourceId, 
@@ -226,8 +226,9 @@ let viewId = async (req, res) => {
         });
         
         if(viewRoleResourceData.length>0){
-            let encryptViewRoleResourcData = viewRoleResourceData.map(async(roleData)=>({
+            encryptViewRoleResourcData = viewRoleResourceData.map(async(roleData)=>({
                 ...roleData,
+                roleResourceId:await encrypt(roleData.roleResourceId),
                 role: await encrypt(roleData.roleName),
                 resourceName: await encrypt(roleData.resourceName),
                 parentResourceName: await encrypt(roleData.parentResourceName)

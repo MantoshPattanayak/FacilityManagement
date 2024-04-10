@@ -8,7 +8,9 @@ const api = {
     ADMIN_MODULE_CREATE_USER: '/uac/createuser',
     CreateRole:'/role/createRole',
     // Recourece Api
-    viewUserResource:'/userResource/viewUserResource'
+    viewUserResource:'/userResource/viewUserResource',
+    // here Search Loaction Api
+    SearchLoaction_map:'/mapData/searchParkFacilities'
    
 }
 

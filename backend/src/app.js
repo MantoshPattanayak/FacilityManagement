@@ -21,7 +21,9 @@ const maproute = require("./routes/api/" +
 const userDetails = require("./routes/api/" +
   api_version +
   "/configuration/userDetails");
-// const roleResource = require('./routes/api/' + api_version +'/configuration/roleResource')
+const roleResource = require("./routes/api/" +
+  api_version +
+  "/configuration/roleResource");
 const userResource = require("./routes/api/" +
   api_version +
   "/configuration/userResource");
@@ -64,10 +66,10 @@ app.use(requestLogger);
 app.use("/mapData", maproute);
 // app.use('/auth', authRoutes);
 app.use("/userDetails", userDetails);
-// app.use('/roleResource',roleResource)
+app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
-// app.use("/role", roleroute);
-app.use("/resource", resource);
+app.use("/role", roleroute);
+
 //  put all your route handlers here
 
 // Use error logger middleware after all route handlers
