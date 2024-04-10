@@ -14,18 +14,26 @@ const {
   errorLogger,
 } = require("./middlewares/logger.middlewares");
 
-
-
-const maproute = require('./routes/api/' + api_version +'/configuration/facilites')
+const maproute = require("./routes/api/" +
+  api_version +
+  "/configuration/facilites");
 // const authRoutes = require('./routes/api/' + api_version +'/auth/user');
-const userDetails = require('./routes/api/' + api_version +'/configuration/userDetails');
+const userDetails = require("./routes/api/" +
+  api_version +
+  "/configuration/userDetails");
 // const roleResource = require('./routes/api/' + api_version +'/configuration/roleResource')
-const userResource = require('./routes/api/' + api_version +'/configuration/userResource')
-
+const userResource = require("./routes/api/" +
+  api_version +
+  "/configuration/userResource");
 
 const roleroute = require("./routes/api/" + api_version + "/auth/role");
+const resource = require("./routes/api/" +
+  api_version +
+  "/configuration/resource");
+const r = require("./routes/");
 
 console.log(port, "port");
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
@@ -33,8 +41,7 @@ app.use(
   })
 );
 
-
-app.use(express.json({limit:"16kb"}))
+app.use(express.json({ limit: "16kb" }));
 // app.use(passport.initialize());
 
 // here in the express.urlencoded i.e. extended is equal to true means inside object we can give another object
@@ -54,19 +61,18 @@ app.use(cookieParser());
 // Use the informational logger middleware before all route handlers
 app.use(requestLogger);
 
-app.use('/mapData',maproute)
+app.use("/mapData", maproute);
 // app.use('/auth', authRoutes);
-app.use('/userDetails',userDetails)
+app.use("/userDetails", userDetails);
 // app.use('/roleResource',roleResource)
-app.use('/userResource',userResource)
+app.use("/userResource", userResource);
 // app.use("/role", roleroute);
-
-
+app.use("/resource", resource);
 //  put all your route handlers here
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
 module.exports = {
-  app
+  app,
 };
