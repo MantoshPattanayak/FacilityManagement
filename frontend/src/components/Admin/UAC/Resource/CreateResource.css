@@ -38,7 +38,7 @@
   margin-bottom: 0;
 }
 
-.input-fields {
+.createresource-input-fields {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -83,7 +83,6 @@
 
 .submit-btn {
   background-color:  #00B562;
-  ;
   color: white;
 }
 

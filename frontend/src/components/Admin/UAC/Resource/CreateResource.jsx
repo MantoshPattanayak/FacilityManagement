@@ -3,7 +3,7 @@ import '../Resource/CreateResource.css';
 
 const CreateResource = () => {
   return (
-    <div className='container'>
+    <div className='container-1'>
       {/* HEADER CREATION FOR RESOURCE LIST */}
       <div className="header-role">
         <div className="rectangle"></div>
@@ -20,12 +20,12 @@ const CreateResource = () => {
         <div className="form">
           <div className="fields">
             <div className="title"><h3>Resource Name</h3></div>
-            <input type="text" name="name" placeholder='Resource Name' id="" className="input-fields" />
+            <input type="text" name="name" placeholder='Resource Name' id="" className="createresource-input-fields" />
           </div>
 
           <div className="fields">
             <div className="title"><h3>Resource Description</h3></div>
-            <input type="text" name="name" placeholder='Resource Description' id="" className="input-fields"/>
+            <input type="text" name="name" placeholder='Resource Description' id="" className="createresource-input-fields"/>
           </div>
 
           <div className="fields">
@@ -37,7 +37,7 @@ const CreateResource = () => {
 
           <div className="fields">
             <div className="title"><h3>Parent Resource Name</h3></div>
-            <select name="cars" id="cars" className="input-fields">
+            <select name="cars" id="cars" className="createresource-input-fields">
               <option value="Dashboard">Dashboard</option>
               <option value="mainforce">mainforce</option>
               <option value="mercedes">mercedes</option>
@@ -47,12 +47,12 @@ const CreateResource = () => {
 
           <div className="fields">
             <div className="title"><h3>Path</h3></div>
-            <input type="text" name="name" placeholder='Enter Path Ex- (/path12)' id="" className="input-fields" />
+            <input type="text" name="name" placeholder='Enter Path Ex- (/path12)' id="" className="createresource-input-fields" />
           </div>
 
           <div className="fields">
             <div className="title"><h3>Show in Order</h3></div>
-            <input type="number" name="number" id="" defaultValue={0} className="input-fields"/>
+            <input type="number" name="number" id="" defaultValue={0} className="createresource-input-fields"/>
           </div>
         </div>
 
