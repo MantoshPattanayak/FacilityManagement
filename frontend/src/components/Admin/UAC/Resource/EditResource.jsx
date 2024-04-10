@@ -1,7 +1,7 @@
 import React from 'react'
 const CreateResource = () => {
   return (
-    <div className='container'>
+    <div className='container-1'>
       {/* HEADER CREATION FOR RESOURCE LIST */}
       <div className="header-role">
         <div className="rectangle"></div>

@@ -64,11 +64,11 @@ select {
     border: 0.0833vw solid #ccc;
     border-radius: 0.417vw;
     background-color: ghostwhite;
-    /* outline: 0px; */
+   
 }
 
 input[type="text"] {
-    width: 24vw;
+    /* width: 24vw; */
     /* Converted from 100px to 8.33vw */
     padding: 0.625vw;
     /* Converted from 5px to 0.625vw */
