@@ -10,7 +10,7 @@ const {generateOTP,verifyOTP} = require('../../../utils/mobileOtpGenerateAndVeri
 
 const passport = require('passport')
 require('../../../config/passport')
-
+const generateToken= require('../../../utils/generateToken')
 
 const { Op } = require("sequelize");
 
@@ -183,16 +183,113 @@ let signUp = async (req,res)=>{
     });
 
     // Return success response
-    res
-      .status(201)
-      .json({ message: "User created successfully", user: newUser });
-  } catch (error) {
+    return res.status(statusCode.SUCCESS.code).json({
+      message:"User created successfully", user: newUser 
+    })
+
+  } catch (err) {
     // Handle errors
-    console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
   }
 };
 
+let login = async(req,res)=>{
+
+  try{
+
+    let mobileNo = req.body.mobileNo?req.body.mobilNo:null;
+
+    let emailId = req.body.emailId?req.body.emailId:null;
+
+    let password = req.body.password?req.body.password:null;
+
+    let lastLoginTime = new Date();
+    if(emailId&&password){
+      emailId= await decrypt(emailId)
+      password = await decrypt(password)
+      // check whether the credentials are valid or not 
+      // Finding one record
+      const isUserExist = await user.findOne({
+            where: {
+              emailId:emailId
+        }
+      })
+
+        if(isUserExist){
+          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+          if(isPasswordSame){
+            let generateAccessToken = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+            const options = {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: true
+          };
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+            where :{
+              userId:isUserExist.userId
+            }
+          })
+            //menu items list fetch
+            let query = await sequelize.query(`
+            select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicUser pu inner join roleResource rr on rr.roleId = pu.roleId
+            inner join       
+            select rr.resource_id , rm.name, rr.parent_resource_id, rm.order_in, rm."path" 
+            from admin.user_master um
+            inner join admin.role_resource rr on rr.role_id = um.role_id
+            inner join admin.resource_master rm on rr.resource_id = rm.id and rr.status_id = 1
+            where um.id = $1 and rr.status_id = 1 and rm.status_id = 1
+            order by rm.order_in`, [users.rows[0].id]
+        );
+
+        let dataJSON = new Array();
+
+        //create parent data json without child data 
+        for (let i = 0; i < query.rows.length; i++) {
+            if (query.rows[i].parent_resource_id === null) {
+                dataJSON.push({
+                    id: query.rows[i].resource_id,
+                    name: query.rows[i].name,
+                    order_in: query.rows[i].order_in,
+                    path: query.rows[i].path,
+                    children: new Array()
+                })
+            }
+        }
+
+          }
+
+          else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:"Invalid Password"
+            })
+          }
+        }
+
+
+   
+}
+
+    else if(mobileNo&&password){
+      mobileNo= await decrypt(mobileNo)
+      password = await decrypt(password)
+    }
+
+    else if(mobileNo){
+      mobileNo= await decrypt(mobileNo)
+
+    }
+
+  }
+  catch(err){
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+
+
+}
 
 
 let googleAuthenticationCallback = async (req,res)=>{
@@ -231,5 +328,6 @@ module.exports = {
 
 module.exports = {
   signUp,
+  login
 };
 

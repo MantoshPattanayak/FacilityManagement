@@ -19,7 +19,10 @@ const displayMapData = async(req,res)=>{
         let matchedData = facilities;
         if(givenReq){
              matchedData = facilities.filter((mapData)=>
-                mapData.parkName.toLowerCase().includes(givenReq.toLowerCase())
+                mapData.parkName.toLowerCase().includes(givenReq.toLowerCase())||
+                mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase())||
+                mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase())||
+                mapData.areaAcres.includes(givenReq)
             )
             
             console.log(matchedData,'matchedData')
