@@ -4,7 +4,7 @@
     align-items: center;
     /* Converted from 20px to 2vh */
     max-width: 100%;
-    width: 100vw;
+    width: 100%;
     /* Changed to vw, and adjusted for centering */
     margin: 0 auto;
     /* Center the container */
@@ -19,6 +19,20 @@
     flex-direction: column;
     align-items: center;
     /* Converted from 20px to 2.5vw */
+}
+
+.form-container h1 {
+    margin-bottom: 1.5vw;
+    /* Converted from 10px to 1.5vw */
+    min-width: 90vw;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
 }
 
 .form-heading h2 {
@@ -48,16 +62,17 @@
 .form-group {
     display: flex;
     flex-direction: column;
+    line-height: 1.5  ;
 }
 
-label {
+.form-heading label {
     margin-bottom: 0.5vw;
     /* Converted from 5px to 0.5vw */
     color: #595959;
     font-weight: bold;
 }
 
-select {
+.form-heading select {
     width: 24vw;
     height: 100%;
     padding: 0.625vw;
@@ -67,9 +82,47 @@ select {
    
 }
 
-input[type="text"] {
+.form-heading input[type="text"] {
     /* width: 24vw; */
     /* Converted from 100px to 8.33vw */
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+    background-color: ghostwhite;
+}
+
+.form-heading input[type="button"] {
+    width: 25%;
+    /* Converted from 100px to 8.33vw */
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+    background-color: ghostwhite;
+    cursor: pointer;
+}
+
+.form-heading .div-border {
+    /* Converted from 100px to 8.33vw */
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+    background-color: ghostwhite;
+}
+
+.form-heading input[type="text"]:disabled,  .form-heading textarea:disabled {
+    background-color: rgb(241, 241, 241);
+}
+
+.form-container textarea {
     padding: 0.625vw;
     /* Converted from 5px to 0.625vw */
     border: 0.0833vw solid #ccc;
@@ -82,14 +135,14 @@ input[type="text"] {
 .buttons-container {
     display: flex;
     /* justify-content: space-between; */
-    /* align-items: center; */
+    /* align-items: flex-start; */
     margin-top: 2vh;
-    width: 84vw;
+    width: 90vw;
 }
 
 .approve-button,
 .cancel-button {
-    padding: 0.8em 2em;
+    padding: 0.8em 1em;
     margin: 0.5em;
     /* Adjusted margin */
     border: none;
@@ -105,6 +158,15 @@ input[type="text"] {
 .cancel-button {
     background-color: red;
     color: white;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 10rem;
+    grid-row-gap: 10px;
+    width: 100%;
 }
 
 /* Media query for tablets and larger screens */
@@ -154,5 +216,29 @@ input[type="text"] {
     input[type="text"] {
         width: 100%;
         /* Full width input */
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .form-heading h2 {
+        margin-bottom: 1.5vw;
+        min-width: 90vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+
+    .form-heading {
+        max-width: 90vw;
+    }
+
+    .form-container {
+        width: 90%;
+        font-size: small;
+    }
+
+    .approve-button,
+    .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
     }
 }
