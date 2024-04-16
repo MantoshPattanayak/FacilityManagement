@@ -2,6 +2,7 @@ const db = require("../../../models/index");
 let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
 const user = db.publicuser;
+const { sequelize,Sequelize } = require('../../../models')
 
 
 const {encrypt} = require('../../../middlewares/encryption.middlewares')
@@ -18,20 +19,9 @@ let generateOTPHandler = async (req,res)=> {
   try {
     // if anyone first time logs in through google or facebook here it will skip that first step i.e. to check if mobile no. already exist or not. it will directly verify the mobile no  
     let {mobileNo,googleId,facebookId} = req.body
-      const response = await generateOTP(mobileNo);
-      let checkIfMobileExistOrNot = await user.findAll({
-        where:{
-          phoneNo:{
-            [Op.eq]:mobileNo
-          }
-        }
-      })
 
-      if(checkIfMobileExistOrNot.length==0 && !(googleId) && !(facebookId)){
-        return res.status(statusCode.CONFLICT.code).json({
-          message:"Please create your profile first"
-        })
-      }
+      const response = await generateOTP(mobileNo);
+
       // Check if the response indicates success
       if (response && response.status === 'OK') {
           // OTP generated successfully
@@ -53,9 +43,8 @@ let generateOTPHandler = async (req,res)=> {
   }
 }
 
-let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
+let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
   try {
-    let {mobileNo, otp,} = req.body
       // Call the API to verify OTP
       const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
 
@@ -63,27 +52,29 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
       if (response && response.status === 'OK') {
           // OTP verified successfully
           // Check if the user exists in the database
-          let user = await getUserByMobileNumber(mobileNo); // Replace with your function to retrieve user by mobile number from the database
-
-          // If user doesn't exist, create a new user
-          if (!user) {
-              // Create new user
-              user = await createUser({ mobileNo }); // Replace with your function to create a new user in the database
-          }
-
-          // Generate tokens for the user
-          const { id, user_name, email_id } = user;
-          const { accessToken, refreshToken } = await generateTokens({ id, user_name, email_id });
-
+          let isUserExist = await user.findOne({
+            where:{
+              contactNo:mobileNo
+            }
+          })
+        // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+        if(!isUserExist){
+         return{
+          error:'Please render the signup page'
+         }
+        }
           // Return the generated tokens
-          return { accessToken, refreshToken };
+          return null;
       } else {
           // OTP verification failed
-          throw new Error('OTP verification failed');
-      }
-  } catch (error) {
-      console.error('Error verifying OTP and generating tokens:', error);
-      throw error; // Forward the error to the caller
+          return{
+            error:'OTP verification failed'
+          }      
+        }
+  } catch (err) {
+    return{
+      error:`Error verifying OTP :${err}`
+    }
   }
 }
 
@@ -205,59 +196,99 @@ let login = async(req,res)=>{
 
     let password = req.body.password?req.body.password:null;
 
+    let otp = req.body.otp?req.body.otp:null;
+
     let lastLoginTime = new Date();
-    if(emailId&&password){
-      emailId= await decrypt(emailId)
-      password = await decrypt(password)
-      // check whether the credentials are valid or not 
-      // Finding one record
-      const isUserExist = await user.findOne({
-            where: {
-              emailId:emailId
+    if(emailId && password || mobileNo && password)
+    {
+
+      let isUserExist;
+      
+      if(emailId){
+
+        emailId= await decrypt(emailId)
+
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          emailId:emailId
         }
-      })
+        })
+
+      }
+      if(mobileNo){
+
+        mobileNo = await decrypt(mobileNo)
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          contactNo:mobileNo
+        }
+        })
+      }
+
+
+      password = await decrypt(password)
+      
 
         if(isUserExist){
           const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
           if(isPasswordSame){
-            let generateAccessToken = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
+            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
             const options = {
               httpOnly: true,
               sameSite: 'none',
               secure: true
           };
+
           let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
             where :{
               userId:isUserExist.userId
             }
           })
             //menu items list fetch
-            let query = await sequelize.query(`
-            select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicUser pu inner join roleResource rr on rr.roleId = pu.roleId
-            inner join       
-            select rr.resource_id , rm.name, rr.parent_resource_id, rm.order_in, rm."path" 
-            from admin.user_master um
-            inner join admin.role_resource rr on rr.role_id = um.role_id
-            inner join admin.resource_master rm on rr.resource_id = rm.id and rr.status_id = 1
-            where um.id = $1 and rr.status_id = 1 and rm.status_id = 1
-            order by rm.order_in`, [users.rows[0].id]
-        );
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`
+
+            let menuListItems = await sequelize.query(menuListItemQuery,{
+              replacements:{
+                userId:isUserExist.userId
+              },
+              type: QueryTypes.SELECT
+            })
+ 
 
         let dataJSON = new Array();
-
         //create parent data json without child data 
-        for (let i = 0; i < query.rows.length; i++) {
-            if (query.rows[i].parent_resource_id === null) {
+        for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId === null) {
                 dataJSON.push({
-                    id: query.rows[i].resource_id,
-                    name: query.rows[i].name,
-                    order_in: query.rows[i].order_in,
-                    path: query.rows[i].path,
+                    id: menuListItems[i].resourceId,
+                    name: menuListItems[i].name,
+                    orderIn: menuListItems[i].orderIn,
+                    path: menuListItems[i].path,
                     children: new Array()
                 })
             }
         }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
 
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
           }
 
           else{
@@ -271,13 +302,96 @@ let login = async(req,res)=>{
    
 }
 
-    else if(mobileNo&&password){
+  
+    else if(mobileNo && otp){
       mobileNo= await decrypt(mobileNo)
-      password = await decrypt(password)
-    }
+      let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
+      if(verifyOtp?.error=='Please render the signup page'){
 
-    else if(mobileNo){
-      mobileNo= await decrypt(mobileNo)
+        return res.status(statusCode.SUCCESS.code).json({
+          message:'please render the signup page'
+        })
+
+      }
+      else if(verifyOtp?.error){
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message:'Otp verification failed'
+        })
+      }
+
+      if(mobileNo){
+
+        mobileNo = await decrypt(mobileNo)
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          contactNo:mobileNo
+        }
+        })
+      }
+
+
+      password = await decrypt(password)
+      
+
+        if(isUserExist){
+          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+          if(isPasswordSame){
+
+            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
+            const options = {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: true
+          };
+
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+            where :{
+              userId:isUserExist.userId
+            }
+          })
+            //menu items list fetch
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`
+
+            let menuListItems = await sequelize.query(menuListItemQuery,{
+              replacements:{
+                userId:isUserExist.userId
+              },
+              type: QueryTypes.SELECT
+            })
+ 
+
+        let dataJSON = new Array();
+        //create parent data json without child data 
+        for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId === null) {
+                dataJSON.push({
+                    id: menuListItems[i].resourceId,
+                    name: menuListItems[i].name,
+                    orderIn: menuListItems[i].orderIn,
+                    path: menuListItems[i].path,
+                    children: new Array()
+                })
+            }
+        }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
+
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+          }
+
 
     }
 
