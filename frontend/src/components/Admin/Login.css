@@ -31,18 +31,22 @@
 }
 
 .submit-btn {
-  width: 100%;
-  padding: 10px;
+
+  padding: 10px 20px;
   background-color: #2ec157;
   border: none;
   border-radius: 5px;
   color: white;
   font-size: 16px;
   cursor: pointer;
+  
 }
 
 .submit-btn:hover {
   background-color: #29a745;
+}
+.error {
+  color: red;
 }
 
 .extra-options {
