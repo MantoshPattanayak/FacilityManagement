@@ -15,18 +15,17 @@ const Footer=()=>{
         <div className="footer_container"> 
               <div className="footer_child">
                 <span className="AMA_BHOOMI_details">
-                    <a href="#"><h1 className="Name_Ama"> AMA BHOOMI</h1></a>   
+                    <a href="#"><h1 className="Name_Ama">AMA BHOOMI</h1></a>   
                     <a href="#"><p className="about">About</p></a>   
                     <a href="#"><p className="about"> Contact</p></a>   
                     <a href="#"><p className="about">Partner with Us</p></a>   
-                    <a href="#"><p className="about"> Grievance / Feedback</p></a>   
-                    
+                    <a href="#"><p className="about"> Grievance / Feedback</p></a>
                 </span>
                 <span>
                     <img className="footer_img"  src={Footer_image}></img>
                 </span>
                 <span className="social_media"> 
-                <h1 className="flow_us">    Follow us on Social Media</h1>
+                <h1 className="flow_us">Follow us on Social Media</h1>
                    <div className="social_Media_div">
                    <img className="social" src={insta}></img>
                    <img   className="social" src={facebook}></img>

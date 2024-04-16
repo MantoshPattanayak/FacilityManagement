@@ -11,6 +11,7 @@ import CreateNewUser from './components/Admin/UAC/User/CreateNewUser';
 import EditUser from './components/Admin/UAC/User/EditUser';
 import ReviewUserRating from './components/Admin/Activity/ReviewUserRating/ReviewUserRating';
 import ReviewEventDetailsList from './components/Admin/Activity/ReviewEventDetails/ReviewEventDetailsList';
+import EventDetailsPage from './components/Admin/Activity/ReviewEventDetails/EventDetailsPage';
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -49,6 +50,7 @@ function App() {
             {/* ADMIN SECTION - Activity */}
             <Route path='/Activity/ReviewUserRating' element={<ProtectedRoute><ReviewUserRating /></ProtectedRoute>} />
             <Route path='/Activity/ReviewEventDetailsList' element={<ProtectedRoute><ReviewEventDetailsList /></ProtectedRoute>} />
+            <Route path='/Activity/EventDetailsPage' element={<ProtectedRoute><EventDetailsPage /></ProtectedRoute>} />
             {/* ADMIN SECTION - UAC*/}
             <Route path='/UAC/Role/ListOfRoles' element={<ProtectedRoute><ListOfRoles /></ProtectedRoute>} />
             <Route path='/UAC/Role/CreateRole' element={<ProtectedRoute><CreateRole /></ProtectedRoute>} />
