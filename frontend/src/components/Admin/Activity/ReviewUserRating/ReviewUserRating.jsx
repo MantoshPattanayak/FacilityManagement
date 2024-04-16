@@ -8,7 +8,6 @@ import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function ReviewUserRating() {
-  const [isClickedOutsideActionList, setIsClickedOutsideActionList] = useState(false);
 
   let tableDummyData = [
     { id: 1, name: 'ABC', review: 'Deserunt occaecat culpa veniam commodo.', datePosted: '08/04/2024', status: 'Pending', actionList: false },
@@ -30,6 +29,10 @@ export default function ReviewUserRating() {
   useEffect(() => {
 
   }, [tableData]);
+
+  useEffect(() => {
+    document.title = 'Ama Bhoomi - Review User ratings';
+  }, []);
 
   function actionOptions(dataID) {
     let newTableData = JSON.parse(JSON.stringify(tableData));
@@ -59,8 +62,9 @@ export default function ReviewUserRating() {
   return (
     <div>
       <AdminHeader />
-      <div className="Main_Conatiner_table">
-        <div className='table-heading'>
+      <div className="Main_Conatiner_table mt-12">
+        <div>
+          <div className='table-heading'>
           <h2 className="table-heading">Review user rating and comments</h2>
         </div>
 
@@ -92,14 +96,14 @@ export default function ReviewUserRating() {
                         data-label="Status"
                       ><p className={`${setStatusColor(data.status)}`}>{data.status}</p></td>
                       <td data-label="Action">
-                        <button type="button" className='w-full' onClick={(e) => actionOptions(data.id)}><FontAwesomeIcon icon={faEllipsisVertical} /></button>
+                        <button type="button" className='w-full' onClick={(e) => actionOptions(data.id)}><FontAwesomeIcon className='actionList' icon={faEllipsisVertical} /></button>
 
                         {
                           data.actionList &&
                           (
-                            <span className='actionList border rounded-[9px] border-black z-50 lg:left-[80%] md:left-[79%] absolute border-[#00000033] bg-white flex flex-col'>
-                              <button className='p-1'>Publish</button>
-                              <button className='p-1'>Delete</button>
+                            <span className='actionList border rounded-[9px] border-black z-50 lg:left-[80%] md:left-[79%] absolute border-[#00000033] bg-white flex flex-col align-middle justify-center'>
+                              <button className='p-1 actionList'>Publish</button>
+                              <button className='p-1 actionList'>Delete</button>
                             </span>
                           )
                         }
@@ -111,6 +115,8 @@ export default function ReviewUserRating() {
             </tbody>
           </table>
         </div>
+        </div>
+        
       </div>
       <Footer />
     </div>

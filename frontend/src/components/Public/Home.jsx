@@ -14,21 +14,24 @@ import Notice_Arrow from "../../assets/Notice_Arrow.png"
 import PlayStore from "../../assets/sm-playstore 1.png"
 import apple from "../../assets/apple.png"
 import Rating_icon from "../../assets/Rating_icon.png"
-
+import parkLOgo from "../../assets/park_logo.png"
 const Home = () => {
   const[mapdata, setmapdata]=useState([])
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const [givenReq, setGivenReq] = useState(null);
   const counterRef = useRef(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao'; 
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey=Math.random();
  
-      // here Post the data
+      // here get  the data of location 
         async function fecthMapData(){
           try{
-            let res= await axiosHttpClient('MAP_DISPLAY_DATA' , 'get');
+            let res= await axiosHttpClient('MAP_DISPLAY_DATA' , 'post', {
+              givenReq: givenReq,
+            });
 
             console.log("here get data", res)
             setmapdata(res.data.data)
@@ -41,7 +44,39 @@ const Home = () => {
           // here Update the data
           useEffect(()=>{
             fecthMapData()
-          }, [])
+          }, [ givenReq])
+
+          // here Search Funcation 
+          async function searchFunction(e) {
+            e.preventDefault();
+            try {
+           
+              let res = await axiosHttpClient("/busmaster/viewList", "post", {
+             
+                givenReq: givenReq
+              });
+              setmapdata(res.data.data)
+       
+            } catch (error) {
+              console.error(error);
+          
+            }
+          }
+      
+          function handleChange(e) {
+            let { name, value } = e.target;
+            switch (name) {
+              case "givenReq":
+                value = e.target.value.replace(/^\s*/, "");
+                setGivenReq(value);
+            }
+          }
+
+
+
+      
+  
+    
 
   // Function to handle marker click
     const handleMarkerClick = (parkId) => {
@@ -108,9 +143,9 @@ const Home = () => {
         </header>
        <div className='landing_page_contant'>
            <span className='Search_Conatiner'>
-            <h1>AMA BHOOMI</h1>
-            <h2  className='typing-animation'>Explore, Book and Enjoy Open Spaces </h2>
-            <input  className='search-input' type='text' name="       search" placeholder="       Search by Name and Location"></input>
+              <h1>AMA BHOOMI</h1>
+              <h2  className='typing-animation'>Explore, Book and Enjoy Open Spaces </h2>
+              <input  className='search-input' type='text' name="       search" placeholder="       Search by Name and Location"></input>
            </span>
             
            <span className='about_Conatiner'>
@@ -125,7 +160,20 @@ const Home = () => {
 
       {/* Google Maps */}
       <section className="map-container">
-       
+       <div className='flex'> 
+        <input type='text' placeholder='Please Enter the Location '
+          name="givenReq"
+          id="givenReq"
+          value={givenReq}
+          onChange={handleChange}
+        ></input>
+        <button type='button'
+        onClick={searchFunction}
+        > Search here </button>
+       </div>
+
+         
+         
         <LoadScript googleMapsApiKey={apiKey}>
           <GoogleMap
             mapContainerStyle={{ height: '400px', width: '100%' }}

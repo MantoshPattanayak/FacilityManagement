@@ -4,7 +4,7 @@ let api_version = process.env.API_VERSION;
 
 let facilities = require('../../../../controllers/'+api_version+'/configuration/facilities.controllers')
 
-router.get('/displayMapData',facilities.displayMapData)
+router.post('/displayMapData',facilities.displayMapData)
 router.get('/searchParkFacilities',facilities.searchParkFacilities)
 
 
