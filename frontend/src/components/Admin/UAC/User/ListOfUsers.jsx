@@ -5,6 +5,7 @@ import Footer from '../../../../common/Footer';
 import { Link, useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import { encryptData } from '../../../../utils/encryptData';
+import axiosHttpClient from '../../../../utils/axios';
 
 export default function ListOfUsers() {
 
@@ -27,9 +28,20 @@ export default function ListOfUsers() {
 
     const [tableData, setTableData] = useState(tableDummyData);
 
+    async function fetchListOfRoleData() {
+        try {
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'get');
+
+            console.log(res);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
-      
-    }, [tableData]);
+        fetchListOfRoleData();
+    }, []);
     
 
     function actionOptions(dataID) {
