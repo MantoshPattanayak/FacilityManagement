@@ -1,8 +1,9 @@
 .footer_container{
+    width:auto;
    background-color: #fff;
     margin-top: 40px;
-    width: 100%;
-    padding: 10px;
+    width: 100vw;
+
 }
 .footer_child{
     display: flex;
@@ -75,50 +76,4 @@
     color: rgb(0, 44, 147);
     font-size: 15px;
     font-weight: 500;
-}
-
-@media screen and (max-width: 575px) {
-    .footer_container {
-        width: 100%;
-    }
-    .social_Media_div{
-        padding: 10px;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .social {
-        padding: 5px;
-        height: 4vh;
-        box-shadow: 0.3px 0.3px 0.1px rgb(3, 222, 3);
-    }
-
-    .tree_img {
-        height: 5vh;
-    }
-
-    .footer_img {
-        height: 10vh;
-    }
-
-    .flow_us{
-        font-size: 12px;
-    }
-
-    .Name_Ama{
-        font-size: 25px;
-    }
-
-    .about{
-        font-size: 12px;
-    }
-    .about:hover{
-        font-size: 14px;
-    }
-
-    .footer_button_name {
-        padding: 10px;
-        font-size: 9px;
-        gap: 2px;   
-    }
 }
