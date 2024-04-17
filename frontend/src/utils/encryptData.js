@@ -13,5 +13,7 @@ export function encryptData (val) {
 export function decryptdata (val) {
     let parsedKey = CryptoJS.enc.Base64.parse(key);
     let parsediv = CryptoJS.enc.Base64.parse(iv);
-    return JSON.parse(CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8));
+
+    return CryptoJS.AES.decrypt(JSON.parse(val),parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8);
 }
+
