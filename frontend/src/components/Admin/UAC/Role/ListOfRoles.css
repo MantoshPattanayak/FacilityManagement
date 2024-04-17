@@ -41,19 +41,21 @@
 
 /* Table styles */
 .Main_Conatiner_table {
-  width: 70vw;
+  width: 70vw; /* Content width excluding AdminHeader and Footer */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  margin-left: 20%;
+  padding: 0 20px; /* Added padding for better spacing */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .table_Container {
   overflow-y: auto;
   max-height: 700px;
+  width: 100%; /* Ensure table container takes full width */
 }
 
 .search_text_conatiner {
@@ -184,10 +186,17 @@ tbody tr:nth-child(even) {
   .create-role-btn {
     width: 100%;
     margin-right: 0;
+    margin-bottom: 10px;
   }
 
   .Main_Conatiner_table {
-    width: 90vw;
+    width: 90%;
+    padding: 0 10px; /* Adjusted padding for smaller screens */
+  }
+
+  .table_Container {
+    overflow-x: auto; /* Added horizontal scroll for small screens */
+    max-width: 100%;
   }
 
   .pagination {
