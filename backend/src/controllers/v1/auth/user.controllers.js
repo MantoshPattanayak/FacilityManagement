@@ -1,7 +1,10 @@
 const db = require("../../../models/index");
 let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
-const user = db.publicuser;
+const publicUser = db.publicuser;
+const privateUser = db.privateuser;
+
+const { sequelize,Sequelize } = require('../../../models')
 
 
 const {encrypt} = require('../../../middlewares/encryption.middlewares')
@@ -10,7 +13,7 @@ const {generateOTP,verifyOTP} = require('../../../utils/mobileOtpGenerateAndVeri
 
 const passport = require('passport')
 require('../../../config/passport')
-
+const generateToken= require('../../../utils/generateToken')
 
 const { Op } = require("sequelize");
 
@@ -18,20 +21,9 @@ let generateOTPHandler = async (req,res)=> {
   try {
     // if anyone first time logs in through google or facebook here it will skip that first step i.e. to check if mobile no. already exist or not. it will directly verify the mobile no  
     let {mobileNo,googleId,facebookId} = req.body
-      const response = await generateOTP(mobileNo);
-      let checkIfMobileExistOrNot = await user.findAll({
-        where:{
-          phoneNo:{
-            [Op.eq]:mobileNo
-          }
-        }
-      })
 
-      if(checkIfMobileExistOrNot.length==0 && !(googleId) && !(facebookId)){
-        return res.status(statusCode.CONFLICT.code).json({
-          message:"Please create your profile first"
-        })
-      }
+      const response = await generateOTP(mobileNo);
+
       // Check if the response indicates success
       if (response && response.status === 'OK') {
           // OTP generated successfully
@@ -53,9 +45,8 @@ let generateOTPHandler = async (req,res)=> {
   }
 }
 
-let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
+let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
   try {
-    let {mobileNo, otp,} = req.body
       // Call the API to verify OTP
       const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
 
@@ -63,27 +54,29 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
       if (response && response.status === 'OK') {
           // OTP verified successfully
           // Check if the user exists in the database
-          let user = await getUserByMobileNumber(mobileNo); // Replace with your function to retrieve user by mobile number from the database
-
-          // If user doesn't exist, create a new user
-          if (!user) {
-              // Create new user
-              user = await createUser({ mobileNo }); // Replace with your function to create a new user in the database
-          }
-
-          // Generate tokens for the user
-          const { id, user_name, email_id } = user;
-          const { accessToken, refreshToken } = await generateTokens({ id, user_name, email_id });
-
+          let isUserExist = await publicUser.findOne({
+            where:{
+              contactNo:mobileNo
+            }
+          })
+        // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+        if(!isUserExist){
+         return{
+          error:'Please render the signup page'
+         }
+        }
           // Return the generated tokens
-          return { accessToken, refreshToken };
+          return null;
       } else {
           // OTP verification failed
-          throw new Error('OTP verification failed');
-      }
-  } catch (error) {
-      console.error('Error verifying OTP and generating tokens:', error);
-      throw error; // Forward the error to the caller
+          return{
+            error:'OTP verification failed'
+          }      
+        }
+  } catch (err) {
+    return{
+      error:`Error verifying OTP :${err}`
+    }
   }
 }
 
@@ -99,7 +92,7 @@ let signUp = async (req,res)=>{
   const decryptEmailId = decrypt(email);
   const decryptPhoneNumber = decrypt(phoneNo);
 
-   const checkDuplicateMobile= await user.findAll({
+   const checkDuplicateMobile= await publicUser.findAll({
       where:{
         phoneNo:{
           [Op.eq]:decryptPhoneNumber
@@ -158,7 +151,7 @@ let signUp = async (req,res)=>{
       userImagePath2 = `/publicUsers/${userId}_driver_image.png`;
     }
 
-    const newUser = await user.create({
+    const newUser = await publicUser.create({
       roleId: roleId,
       title: title,
       firstName: firstName,
@@ -183,53 +176,498 @@ let signUp = async (req,res)=>{
     });
 
     // Return success response
-    res
-      .status(201)
-      .json({ message: "User created successfully", user: newUser });
-  } catch (error) {
+    return res.status(statusCode.SUCCESS.code).json({
+      message:"User created successfully", user: newUser 
+    })
+
+  } catch (err) {
     // Handle errors
-    console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
   }
 };
 
 
+let publicLogin = async(req,res)=>{
 
-let googleAuthenticationCallback = async (req,res)=>{
-  if (req.user.requiresMobileVerification) {
-    // Prompt user to enter mobile number
-    const { email, name,photo } = req.user;
-    const redirectUrl = '/collect-mobile';
-    res.json({ email, name, photo, redirectUrl });
-  } else {
-    // User already exists, redirect to profile
-    res.redirect('/profile');
-  }
-}
+  try{
+
+    let mobileNo = req.body.mobileNo?req.body.mobilNo:null;
+
+    let emailId = req.body.emailId?req.body.emailId:null;
+
+    let password = req.body.password?req.body.password:null;
+
+    let otp = req.body.otp?req.body.otp:null;
+
+    let lastLoginTime = new Date();
+    if(emailId && password || mobileNo && password)
+    {
+
+      let isUserExist;
+      
+      if(emailId){
+
+        emailId= await decrypt(emailId)
+
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          emailId:emailId
+        }
+        })
+
+      }
+      if(mobileNo){
+
+        mobileNo = await decrypt(mobileNo)
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          contactNo:mobileNo
+        }
+        })
+      }
 
 
-let facebookAuthenticationCallback = async(req,res)=>{
-  if (req.user.requiresMobileVerification) {
-    // Prompt user to enter mobile number
-    const { email, name,photo } = req.user;
-    const redirectUrl = '/collect-mobile';
-    res.json({ email, name, photo, redirectUrl });  
-  } else {
-    // User already exists, redirect to profile
-    res.redirect('/profile');
-  }
-}
+      password = await decrypt(password)
+      
 
-module.exports = {
-  signUp,
-  googleAuthenticationCallback,
-  facebookAuthenticationCallback,
-  generateOTPHandler,
-  verifyOTPHandlerWithGenerateToken
+        if(isUserExist){
+          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+          if(isPasswordSame){
+
+            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
+            const options = {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: true
+          };
+
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+            where :{
+              userId:isUserExist.userId
+            }
+          })
+            //menu items list fetch
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`
+
+            let menuListItems = await sequelize.query(menuListItemQuery,{
+              replacements:{
+                userId:isUserExist.userId
+              },
+              type: QueryTypes.SELECT
+            })
  
+
+        let dataJSON = new Array();
+        //create parent data json without child data 
+        for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId === null) {
+                dataJSON.push({
+                    id: menuListItems[i].resourceId,
+                    name: menuListItems[i].name,
+                    orderIn: menuListItems[i].orderIn,
+                    path: menuListItems[i].path,
+                    children: new Array()
+                })
+            }
+        }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
+
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        // bearer is actually set in the first to tell that  this token is used for the authentication purposes
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+          }
+
+          else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:"Invalid Password"
+            })
+          }
+        }
+
+
+   
 }
+
+  
+    else if(mobileNo && otp){
+      mobileNo= await decrypt(mobileNo)
+      let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
+      if(verifyOtp?.error=='Please render the signup page'){
+
+        return res.status(statusCode.SUCCESS.code).json({
+          message:'please render the signup page'
+        })
+
+      }
+      else if(verifyOtp?.error){
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message:'Otp verification failed'
+        })
+      }
+
+      if(mobileNo){
+
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          contactNo:mobileNo
+        }
+        })
+      }
+
+        if(isUserExist){
+          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+      
+
+            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
+            const options = {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: true
+          };
+
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+            where :{
+              userId:isUserExist.userId
+            }
+          })
+            //menu items list fetch
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`
+
+            let menuListItems = await sequelize.query(menuListItemQuery,{
+              replacements:{
+                userId:isUserExist.userId
+              },
+              type: QueryTypes.SELECT
+            })
+ 
+
+        let dataJSON = new Array();
+        //create parent data json without child data 
+        for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId === null) {
+                dataJSON.push({
+                    id: menuListItems[i].resourceId,
+                    name: menuListItems[i].name,
+                    orderIn: menuListItems[i].orderIn,
+                    path: menuListItems[i].path,
+                    children: new Array()
+                })
+            }
+        }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
+
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+          
+
+
+    }
+
+  }
+}
+  catch(err){
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+
+
+}
+let privateLogin = async(req,res)=>{
+
+  try{
+
+    let mobileNo = req.body.mobileNo?req.body.mobilNo:null;
+
+    let emailId = req.body.emailId?req.body.emailId:null;
+
+    let password = req.body.password?req.body.password:null;
+
+    
+
+    let lastLoginTime = new Date();
+
+    if(emailId && password || mobileNo && password)
+    {
+
+      let isUserExist;
+      
+      if(emailId){
+
+        emailId= await decrypt(emailId)
+
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await privateUser.findOne({
+        where: {
+          emailId:emailId
+        }
+        })
+
+      }
+      if(mobileNo){
+
+        mobileNo = await decrypt(mobileNo)
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          contactNo:mobileNo
+        }
+        })
+      }
+
+
+      password = await decrypt(password)
+      
+
+        if(isUserExist){
+          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+          if(isPasswordSame){
+
+            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
+            const options = {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: true
+          };
+
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+            where :{
+              userId:isUserExist.userId
+            }
+          })
+            //menu items list fetch
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`
+
+            let menuListItems = await sequelize.query(menuListItemQuery,{
+              replacements:{
+                userId:isUserExist.userId
+              },
+              type: QueryTypes.SELECT
+            })
+ 
+
+        let dataJSON = new Array();
+        //create parent data json without child data 
+        for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId === null) {
+                dataJSON.push({
+                    id: menuListItems[i].resourceId,
+                    name: menuListItems[i].name,
+                    orderIn: menuListItems[i].orderIn,
+                    path: menuListItems[i].path,
+                    children: new Array()
+                })
+            }
+        }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
+
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        // bearer is actually set in the first to tell that  this token is used for the authentication purposes
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+          }
+
+          else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:"Invalid Password"
+            })
+          }
+        }
+
+
+   
+}
+
+  
+    else if(mobileNo && otp){
+      mobileNo= await decrypt(mobileNo)
+      let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
+      if(verifyOtp?.error=='Please render the signup page'){
+
+        return res.status(statusCode.SUCCESS.code).json({
+          message:'please render the signup page'
+        })
+
+      }
+      else if(verifyOtp?.error){
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message:'Otp verification failed'
+        })
+      }
+
+      if(mobileNo){
+
+        // check whether the credentials are valid or not 
+        // Finding one record
+        
+       isUserExist = await user.findOne({
+        where: {
+          contactNo:mobileNo
+        }
+        })
+      }
+
+        if(isUserExist){
+          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+      
+
+            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+
+            const options = {
+              httpOnly: true,
+              sameSite: 'none',
+              secure: true
+          };
+
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+            where :{
+              userId:isUserExist.userId
+            }
+          })
+            //menu items list fetch
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`
+
+            let menuListItems = await sequelize.query(menuListItemQuery,{
+              replacements:{
+                userId:isUserExist.userId
+              },
+              type: QueryTypes.SELECT
+            })
+ 
+
+        let dataJSON = new Array();
+        //create parent data json without child data 
+        for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId === null) {
+                dataJSON.push({
+                    id: menuListItems[i].resourceId,
+                    name: menuListItems[i].name,
+                    orderIn: menuListItems[i].orderIn,
+                    path: menuListItems[i].path,
+                    children: new Array()
+                })
+            }
+        }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
+
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+          
+
+
+    }
+
+  }
+}
+  catch(err){
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+
+
+}
+let logout = async (req, res) => {
+  const options = {
+      expires: new Date(Date.now() - 1), // Expire the cookie immediately
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true
+  };
+  // Clear both access token and refresh token cookies
+  res.clearCookie('accessToken', options);
+  res.clearCookie('refreshToken', options);
+
+  res.status(statusCode.SUCCESS.code).json({ message: 'Logged out successfully', sessionExpired: true });
+}
+
+// let googleAuthenticationCallback = async (req,res)=>{
+//   if (req.user.requiresMobileVerification) {
+//     // Prompt user to enter mobile number
+//     const { email, name,photo } = req.user;
+//     const redirectUrl = '/collect-mobile';
+//     res.json({ email, name, photo, redirectUrl });
+//   } else {
+//     // User already exists, redirect to profile
+//     res.redirect('/profile');
+//   }
+// }
+
+
+// let facebookAuthenticationCallback = async(req,res)=>{
+//   if (req.user.requiresMobileVerification) {
+//     // Prompt user to enter mobile number
+//     const { email, name,photo } = req.user;
+//     const redirectUrl = '/collect-mobile';
+//     res.json({ email, name, photo, redirectUrl });  
+//   } else {
+//     // User already exists, redirect to profile
+//     res.redirect('/profile');
+//   }
+// }
 
 module.exports = {
   signUp,
-};
+  // googleAuthenticationCallback,
+  // facebookAuthenticationCallback,
+  generateOTPHandler,
+  verifyOTPHandlerWithGenerateToken,
+ publicLogin,
+ logout
+}
 
