@@ -1,79 +1,124 @@
 .footer_container{
-    width:auto;
-   background-color: #fff;
-    margin-top: 40px;
-    width: 100vw;
-
-}
-.footer_child{
-    display: flex;
-    justify-content: space-between;
-}
-
-.footer_button_name{
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    color: #212121;
-    font-size: 15px;
-    font-weight: 400;
-}
-.button_name:hover{
-    color: rgb(1, 152, 1);
-    font-weight: 500;
-}
-.Name_Ama{
-    color: rgb(1, 152, 1);
-    font-size: 40px;
-    font-weight: 700;
-    text-shadow: -2px 2px 2px rgb(3, 164, 19);
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
-}
-.flow_us{
-    color: #212121;
-    font-size: 17px;
-    font-weight: 500;
-
-}
-.about{
-    font-size: 14px;
-    color: #212121;
-    font-weight: 500;
-    text-align: start; 
-}
-.about:hover{
-    color: rgb(49, 141, 0);
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.footer_img{
-    height: 20vh;
-    -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
-    
-}
-.tree_img{
-    height: 10vh;
-    -webkit-box-reflect: right;
-    -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
-
-    
-}
-
-.social_Media_div{
-    display: flex;
-    justify-content: space-between;
-    padding: 15px;
-}
-.social{
-    padding: 5px;
-    height: 4vh;
-    box-shadow: 0.3px 0.3px 0.1px rgb(3, 222, 3);
-}
-
-.soul_name{
-    text-align: center;
-    color: rgb(0, 44, 147);
-    font-size: 15px;
-    font-weight: 500;
-}
+    background-color: #fff;
+     margin-top: 40px;
+     width: 100%;
+     padding: 10px;
+ }
+ .footer_child{
+     display: flex;
+     justify-content: space-between;
+ }
+ 
+ .footer_button_name{
+     display: flex;
+     justify-content: space-between;
+     padding: 20px;
+     color: #212121;
+     font-size: 15px;
+     font-weight: 400;
+ }
+ .button_name:hover{
+     color: rgb(1, 152, 1);
+     font-weight: 500;
+ }
+ .Name_Ama{
+     color: rgb(1, 152, 1);
+     font-size: 40px;
+     font-weight: 700;
+     text-shadow: -2px 2px 2px rgb(3, 164, 19);
+     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
+ }
+ .flow_us{
+     color: #212121;
+     font-size: 17px;
+     font-weight: 500;
+ 
+ }
+ .about{
+     font-size: 14px;
+     color: #212121;
+     font-weight: 500;
+     text-align: start; 
+ }
+ .about:hover{
+     color: rgb(49, 141, 0);
+     font-size: 16px;
+     font-weight: 600;
+ }
+ 
+ .footer_img{
+     height: 20vh;
+     -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+     
+ }
+ .tree_img{
+     height: 10vh;
+     -webkit-box-reflect: right;
+     -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+ 
+     
+ }
+ 
+ .social_Media_div{
+     display: flex;
+     justify-content: space-between;
+     padding: 15px;
+ }
+ .social{
+     padding: 5px;
+     height: 4vh;
+     box-shadow: 0.3px 0.3px 0.1px rgb(3, 222, 3);
+ }
+ 
+ .soul_name{
+     text-align: center;
+     color: rgb(0, 44, 147);
+     font-size: 15px;
+     font-weight: 500;
+ }
+ 
+ @media screen and (max-width: 575px) {
+     .footer_container {
+         width: 100%;
+     }
+     .social_Media_div{
+         padding: 10px;
+         display: grid;
+         grid-template-columns: repeat(2, 1fr);
+     }
+ 
+     .social {
+         padding: 5px;
+         height: 4vh;
+         box-shadow: 0.3px 0.3px 0.1px rgb(3, 222, 3);
+     }
+ 
+     .tree_img {
+         height: 5vh;
+     }
+ 
+     .footer_img {
+         height: 10vh;
+     }
+ 
+     .flow_us{
+         font-size: 12px;
+     }
+ 
+     .Name_Ama{
+         font-size: 25px;
+     }
+ 
+     .about{
+         font-size: 12px;
+     }
+     .about:hover{
+         font-size: 14px;
+     }
+ 
+     .footer_button_name {
+         padding: 10px;
+         font-size: 9px;
+         gap: 2px;   
+     }
+ }
