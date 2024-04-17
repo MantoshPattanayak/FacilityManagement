@@ -107,6 +107,11 @@ input[type="text"] {
     color: white;
 }
 
+.error-message {
+    color: red;
+    font-size: 12px;
+}
+
 /* Media query for tablets and larger screens */
 @media screen and (min-width: 768px) {
 
