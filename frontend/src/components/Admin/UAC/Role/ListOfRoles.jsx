@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminHeader from '../../../../common/AdminHeader';
+import Footer from '../../../../common/Footer';
 import "../../../../common/CommonTable.css"
 import "./ListOfRoles.css"
 import { IoIosSearch } from "react-icons/io";
@@ -10,8 +10,6 @@ const ListOfRoles = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Change as needed for items per page
   const [searchTerm, setSearchTerm] = useState('');
-
-
 
   // Function to fetch role list data
   async function getRoleListData() {
@@ -26,7 +24,8 @@ const ListOfRoles = () => {
       console.log(error);
     }
   }
-    useEffect(() => {
+
+  useEffect(() => {
     getRoleListData();
   }, []);
 
@@ -61,77 +60,61 @@ const ListOfRoles = () => {
   const currentItems = roleListData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div className="Main_Conatiner_table">
-
-      <div className="header-role">
-        <div className="rectangle"></div>
-        <div className="roles">
-          <h1><b> Role List</b></h1>
+    <div className="ListOfRoles">
+      <AdminHeader/>
+      <div className='Main_Conatiner_table'>
+        <div className="header-role">
+          <div className="rectangle"></div>
+          <div className="roles">
+            <h1><b>Role List</b></h1>
+          </div>
+        </div>
+        <div className="search_text_conatiner">
+          <button className='create-role-btn'>Create new Role</button>
+          <input
+            type="text"
+            className="search_input_field"
+            placeholder="Search..."
+            id="myInput"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
+        <div className="table_Container">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Serial No</th>
+                <th scope="col">Role Name</th>
+                <th scope="col">Role Code</th>
+                <th scope="col">Update</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* For dynamic data */}
+              {currentItems.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.serialNo}</td>
+                  <td>{item.roleCode}</td>
+                  <td>{item.roleDescription}</td>
+                  <td>{item.status}</td>
+                  <td>{item.action}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Pagination */}
+        <div className="pagination">
+          <button onClick={() => handlePageChange('start')}>Start</button>
+          <button onClick={() => handlePageChange('previous')}>Previous</button>
+          <button onClick={() => handlePageChange('next')}>Next</button>
+          <button onClick={() => handlePageChange('last')}>Last</button>
         </div>
       </div>
-
-      <div className="search_text_conatiner">
-        <button className='create-role-btn'>Create new Role</button>
-       
-        <input
-          type="text"
-          className="search_input_field"
-          placeholder="Search..."
-          id="myInput"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-       
-      </div>
-
-
-      <div className="table_Container">
-        <table >
-          <thead>
-            <tr>
-              <th scope="col">Serial No</th>
-              <th scope="col">Role Name</th>
-              <th scope="col">Role Code</th>
-              <th scope="col">Update</th>
-              
-            </tr>
-          </thead>
-          <tbody >
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-         
-            </tr>
-           
-
-            {/* fro dynamic data */}
-            {currentItems.map((item, index) => (
-              <tr key={index}>
-                <td>{item.serialNo}</td>
-                <td>{item.roleCode}</td>
-                <td>{item.roleDescription}</td>
-                <td>{item.status}</td>
-                <td>{item.action}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="pagination">
-        <button onClick={() => handlePageChange('start')}>Start</button>
-        <button onClick={() => handlePageChange('previous')}>Previous</button>
-        <button onClick={() => handlePageChange('next')}>Next</button>
-        <button onClick={() => handlePageChange('last')}>Last</button>
-      </div>
+      <Footer/>
     </div>
   );
 };
 
 export default ListOfRoles;
-
-
-
-
