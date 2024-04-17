@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../Role/CreateRole.css';
 import Footer from '../../../../common/Footer';
 import axiosHttpClient from '../../../../utils/axios';
+import api from '../../../../utils/api';
 const CreateRole = () => {
   // here To add Bus Schedule
     const[PostRoleData, setPostRoleData]=useState({
@@ -20,7 +21,7 @@ const CreateRole = () => {
     //handle funcation of OnClick on the submit from
     const HandleCreate = async () => {
       try {
-        let res = await axiosHttpClient('CreateRole', 'post', {
+        let res = await axiosHttpClient(api.ROLE_CREATE_API, 'post', {
           roleName: PostRoleData.roleName || null,
           roleCode: PostRoleData.roleCode || null
         });

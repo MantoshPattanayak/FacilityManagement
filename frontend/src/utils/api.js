@@ -5,13 +5,33 @@ const api = {
     SIGNUP_API: '/auth/signup',
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
-    ADMIN_MODULE_CREATE_USER: '/uac/createuser',
-    CreateRole:'/role/createRole',
     // Recourece Api
-    viewUserResource:'/userResource/viewUserResource',
+    RESOURCE_VIEW_BY_ID_API: '/resource/getResourceById', //get /resource//getResourceById/:id 
     // here Search Loaction Api
-    SearchLoaction_map:'/mapData/searchParkFacilities'
-   
+    SearchLoaction_map:'/mapData/searchParkFacilities',
+    //User-Resource
+    USER_RESOURCE_DATALOAD_API: '/userResource/dataLoad', //get
+    USER_RESOURCE_CREATE_API: '/userResource/insertUserResource', //post
+    USER_RESOURCE_VIEW_API: '/userResource/viewUserResource', //get
+    USER_RESOURCE_AUTOSUGGEST_API: '/userResource/autoSuggestionUserResource', //get
+    //User
+    ADMIN_USER_CREATE_API: '/userDetails/createUser', //post
+    ADMIN_USER_VIEW_BY_ID_API: '/userDetails/getUserById/',   //get /userDetails/getUserById/:id
+    ADMIN_USER_VIEW_API: '/userDetails/viewList',   //get
+    ADMIN_USER_INITIALDATA_API: '/userDetails/fetchInitialData',    //get
+    ADMIN_USER_UPDATE_API: '/userDetails/updateUserData',   //put
+    ADMIN_USER_AUTOSUGGEST_API: '/userDetails/autoSuggestionForUserSearch/',   //get /userDetails/autoSuggestionForUserSearch/:givenReq
+    //Role
+    ROLE_VIEW_BY_ID_API: '/role/',   //get /role/:roleId
+    ROLE_UPDATE_API: '/role/updateRole/',  //put /role/update-profile/:id
+    ROLE_CREATE_API: '/role/createRole',    //post
+    //Role-Resource
+    ROLE_RESOURCE_DATALOAD_API: '/roleResource/dataLoad', //get
+    ROLE_RESOURCE_CREATE_API: '/roleResource/insertRoleResource',   //post
+    ROLE_RESOURCE_VIEW_API: '/roleResource/viewRoleResource',   //get
+    ROLE_RESOURCE_AUTOSUGGEST_API: '/roleResource/autoSuggestionRoleResource',    //get /roleResource/autoSuggestionRoleResource/:givenReq
+    ROLE_RESOURCE_UPDATE_API: '/roleResource/updateRoleResource',   //put   /roleResource/updateRoleResource/:id
+    ROLE_RESOURCE_VIEW_BY_ID_API: '/roleResource/',   //get   /roleResource/viewId/:id
 }
 
 export default api;
