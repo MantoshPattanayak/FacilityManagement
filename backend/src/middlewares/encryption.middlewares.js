@@ -12,4 +12,4 @@ let encryptData = async (value)=>{
 
 module.exports = {
     encryptData
-}                                                                                                                                                                                                                                                                                                                            
+}

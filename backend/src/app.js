@@ -28,11 +28,11 @@ const userResource = require("./routes/api/" +
   api_version +
   "/configuration/userResource");
 
-const roleroute = require("./routes/api/" + api_version + "/auth/role");
+const roleroute = require("./routes/api/" + api_version + "/configuration/role");
 const resource = require("./routes/api/" +
   api_version +
   "/configuration/resource");
-const r = require("./routes/");
+
 
 console.log(port, "port");
 
@@ -69,7 +69,7 @@ app.use("/userDetails", userDetails);
 app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
-
+app.use("/resource",resource)
 //  put all your route handlers here
 
 // Use error logger middleware after all route handlers
