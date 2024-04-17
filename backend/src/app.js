@@ -32,8 +32,6 @@ const roleroute = require("./routes/api/" + api_version + "/configuration/role")
 const resource = require("./routes/api/" +
   api_version +
   "/configuration/resource");
-
-
 console.log(port, "port");
 
 app.use(
