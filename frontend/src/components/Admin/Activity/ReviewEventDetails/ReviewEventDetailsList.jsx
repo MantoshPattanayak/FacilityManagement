@@ -1,10 +1,10 @@
 import React from 'react';
 import AdminHeader from '../../../../common/AdminHeader';
 import Footer from '../../../../common/Footer';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import './ReviewEventDetailsList.css';
 import eventPhoto from '../../../../assets/ama_bhoomi_bg.jpg';
 
@@ -12,16 +12,16 @@ export default function ReviewEventDetailsList() {
 
     const tabList = [
         {
-            tabName: 'Hosting Requests',
-            active: true,
+            tabName : 'Hosting Requests',
+            active : true,
         },
         {
-            tabName: 'Approved',
-            active: false,
+            tabName : 'Approved',
+            active : false,
         },
         {
-            tabName: 'Rejected',
-            active: false,
+            tabName : 'Rejected',
+            active : false,
         }
     ];
 
@@ -29,64 +29,64 @@ export default function ReviewEventDetailsList() {
 
     const eventDetailsData = [
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '09:35 AM',
-            createdDate: '2024-04-15T09:35:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '09:35 AM',
+            createdDate : '2024-04-15T09:35:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '09:45 AM',
-            createdDate: '2024-04-15T09:45:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '09:45 AM',
+            createdDate : '2024-04-15T09:45:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '09:55 AM',
-            createdDate: '2024-04-15T09:55:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '09:55 AM',
+            createdDate : '2024-04-15T09:55:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '10:05 AM',
-            createdDate: '2024-04-15T10:05:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '10:05 AM',
+            createdDate : '2024-04-15T10:05:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '11:15 AM',
-            createdDate: '2024-04-14T11:15:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '11:15 AM',
+            createdDate : '2024-04-14T11:15:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '11:25 AM',
-            createdDate: '2024-04-14T11:25:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '11:25 AM',
+            createdDate : '2024-04-14T11:25:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '11:35 AM',
-            createdDate: '2024-04-14T11:35:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '11:35 AM',
+            createdDate : '2024-04-14T11:35:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '11:45 AM',
-            createdDate: '2024-04-14T11:45:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '11:45 AM',
+            createdDate : '2024-04-14T11:45:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '11:55 AM',
-            createdDate: '2024-04-14T11:55:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '11:55 AM',
+            createdDate : '2024-04-14T11:55:23.410',
         },
         {
-            eventName: 'International Odissi Dance Festival',
-            eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
-            bookedTiming: '12:05 PM',
-            createdDate: '2024-04-14T12:05:23.410',
+            eventName : 'International Odissi Dance Festival',
+            eventAddress : 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
+            bookedTiming : '12:05 PM',
+            createdDate : '2024-04-14T12:05:23.410',
         },
     ]
 
@@ -96,13 +96,13 @@ export default function ReviewEventDetailsList() {
 
     }, [tab]);
 
-    function calculateTime(dataTime) {
+    function calculateTime (dataTime) {
         let currentDateTime = new Date();
         let inputDateTime = new Date(dataTime);
 
-        let differenceDateTime = Math.floor((currentDateTime - inputDateTime) / (1000 * 60 * 60));
+        let differenceDateTime = Math.floor((currentDateTime - inputDateTime)/(1000 * 60 * 60));
 
-        if (differenceDateTime < 1) {
+        if(differenceDateTime < 1) {
             differenceDateTime = Math.floor(((currentDateTime - inputDateTime) % (1000 * 60 * 60)) / (1000 * 60));
         }
         // console.log('difference datetime', {currentDateTime, inputDateTime, differenceDateTime});
@@ -115,7 +115,7 @@ export default function ReviewEventDetailsList() {
         let tabListCopy = JSON.parse(JSON.stringify(tab));
 
         tabListCopy.forEach((tab) => {
-            if (tab.tabName == name)
+            if(tab.tabName == name)
                 tab.active = true;
             else tab.active = false;
         });
@@ -135,21 +135,22 @@ export default function ReviewEventDetailsList() {
                 </div>
 
                 <div className="search_text_conatiner justify-end">
+                    {/* <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button> */}
                     <input type="text" className="search_input_field" placeholder="Search..." />
                 </div>
 
                 <div className='eventdetails-tab'>
                     {
                         tab?.length > 0 && tab.map((tabData) => {
-                            if (tabData.active) {
-                                return (
+                            if(tabData.active){
+                                return(
                                     <div className='active' onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
                                         <button onClick={(e) => manageCurrentTab(e, tabData.tabName)}>{tabData.tabName}</button>
                                     </div>
                                 )
                             }
-                            else {
-                                return (
+                            else{
+                                return(
                                     <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
                                         <button onClick={(e) => manageCurrentTab(e, tabData.tabName)}>{tabData.tabName}</button>
                                     </div>
@@ -169,20 +170,11 @@ export default function ReviewEventDetailsList() {
                                     <div className='eventdetails-details'>
                                         <div>{event.eventName}</div>
                                         <div>{event.eventAddress}</div>
-                                        <div className='flex justify-between'>
+                                        <div>
                                             <div>Booked at {event.bookedTiming}</div>
-                                            <div><FontAwesomeIcon icon={faClock} /> {calculateTime(event.createdDate)} ago</div>
+                                            <div>{calculateTime(event.createdDate)} ago</div>
                                         </div>
-                                        {/* <div><button className='eventdetails-eventbutton' onClick={navigateToDetailsPage(event.eventName)}>Event details</button></div> */}
-                                        <Link
-                                            className='eventdetails-eventbutton'
-                                            to={{ 
-                                                pathname: '/Activity/EventDetailsPage',
-                                                search: '?eventId=456'
-                                            }}
-                                        >
-                                            Event Details
-                                        </Link>
+                                        <div><button className='eventdetails-eventbutton'>Event details</button></div>
                                     </div>
                                 </div>
                             )
