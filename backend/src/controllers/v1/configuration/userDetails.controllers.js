@@ -61,8 +61,6 @@ let autoSuggestionForUserSearch = async(req,res)=> {
     }
   };
     
-  
-
 let viewList = async (req, res) => {
     try {
       let givenReqEncrypted = req.body.givenReq ? req.body.givenReq: null; // Convert givenReq to lowercase

@@ -39,8 +39,8 @@
 
 .input-field {
   margin-right: 18px;
-
- 
+  display: flex;
+  align-items: center;
 }
 
 .input-field label {

@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import AdminHeader from '../../../../common/AdminHeader';
 import Footer from '../../../../common/Footer';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
+import { encryptData } from '../../../../utils/encryptData';
+import axiosHttpClient from '../../../../utils/axios';
 
 export default function ListOfUsers() {
 
@@ -26,9 +28,20 @@ export default function ListOfUsers() {
 
     const [tableData, setTableData] = useState(tableDummyData);
 
+    async function fetchListOfRoleData() {
+        try {
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'get');
+
+            console.log(res);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
-      
-    }, [tableData]);
+        fetchListOfRoleData();
+    }, []);
     
 
     function actionOptions(dataID) {
@@ -43,6 +56,11 @@ export default function ListOfUsers() {
         setTableData(newTableData);
 
         return;
+    }
+
+    function encryptDataId(id) {
+        let res = encryptData(id);
+        return res;
     }
 
     return (
@@ -67,7 +85,8 @@ export default function ListOfUsers() {
                                 <th scope="col">Email Address</th>
                                 <th scope="col">Role</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">View</th>
+                                <th scope="col">Edit</th>
                             </tr>
                         </thead>
                         <tbody >
@@ -80,18 +99,25 @@ export default function ListOfUsers() {
                                             <td data-label="Email">{data.email}</td>
                                             <td data-label="Role">{data.role}</td>
                                             <td data-label="Status">{data.status}</td>
-                                            <td data-label="Action">
-                                                <button type="button" className='w-full' onClick={(e) => actionOptions(data.id)}><FontAwesomeIcon icon={faEllipsisVertical} /></button>
-                                                
-                                                {
-                                                    data.actionList && 
-                                                    (
-                                                        <span className='border rounded-[9px] border-black z-50 left-[91%] absolute border-[#00000033] bg-white flex flex-col'>
-                                                            <button className='p-1 border-b'>View</button>
-                                                            <button className='p-1'>Edit</button>
-                                                        </span>
-                                                    )
-                                                }
+                                            <td data-label="View">
+                                                <Link
+                                                    to={{ 
+                                                        pathname: '/UAC/Users/Edit',
+                                                        search: `?userId=${encryptDataId(data.id)}&action=view`
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faEye} />
+                                                </Link>
+                                            </td>
+                                            <td data-label="Edit">
+                                                <Link
+                                                    to={{ 
+                                                        pathname: '/UAC/Users/Edit',
+                                                        search: `?userId=${encryptDataId(data.id)}&action=edit`
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faPenToSquare} />
+                                                </Link>
                                             </td>
                                         </tr>
                                     )

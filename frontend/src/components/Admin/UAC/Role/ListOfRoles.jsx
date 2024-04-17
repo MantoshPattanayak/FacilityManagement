@@ -5,17 +5,13 @@ import AdminHeader from '../../../../common/AdminHeader';
 import "../../../../common/CommonTable.css"
 import "./ListOfRoles.css"
 import { IoIosSearch } from "react-icons/io";
-
-
 const ListOfRoles = () => {
   const [roleListData, setRoleListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Change as needed for items per page
   const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    getRoleListData();
-  }, []);
+
 
   // Function to fetch role list data
   async function getRoleListData() {
@@ -30,6 +26,9 @@ const ListOfRoles = () => {
       console.log(error);
     }
   }
+    useEffect(() => {
+    getRoleListData();
+  }, []);
 
   // Function to handle page change
   const handlePageChange = (type) => {
@@ -90,10 +89,11 @@ const ListOfRoles = () => {
         <table >
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Number</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Due</th>
+              <th scope="col">Serial No</th>
+              <th scope="col">Role Name</th>
+              <th scope="col">Role Code</th>
+              <th scope="col">Update</th>
+              
             </tr>
           </thead>
           <tbody >
@@ -101,182 +101,9 @@ const ListOfRoles = () => {
               <td data-label="Name">Mantosh</td>
               <td data-label="Number"   >78928766211</td>
               <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
+         
             </tr>
-            <tr>
-              <td data-label="Name">sgssh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">ramtosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">menttosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">pentosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">chentosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">peltosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">debtosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">loktosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">rajtosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">manatosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">vaginatosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">penustosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">deeptosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
+           
 
             {/* fro dynamic data */}
             {currentItems.map((item, index) => (

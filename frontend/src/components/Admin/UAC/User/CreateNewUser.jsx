@@ -4,7 +4,7 @@ import Footer from '../../../../common/Footer';
 import '../../../../common/CommonFrom.css';
 import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../../../utils/axios';
-import api from '../../../../utils/api';
+import { encryptData } from '../../../../utils/encryptData';
 
 export default function CreateNewUser() {
 
@@ -43,7 +43,7 @@ export default function CreateNewUser() {
             // continue
         }
         else {
-            errors.title = "Please provide salutation."
+            errors.title = "Please provide Title."
         }
 
         if(data.firstName){
@@ -61,7 +61,7 @@ export default function CreateNewUser() {
             }
         }
         else {
-            errors.middleName = "Please provide middle name."
+            // errors.middleName = "Please provide middle name."
         }
 
         if(data.lastName){
@@ -97,7 +97,6 @@ export default function CreateNewUser() {
         else {
             errors.role = "Please provide role."
         }
-
         return errors;
     }
 
@@ -116,10 +115,13 @@ export default function CreateNewUser() {
         setErrors({});
 
         let errors = validateUserInput(formData);
-
-        if(errors.length <= 0){
+        
+        if(Object.keys(errors).length <= 0){
             try {
-                let response = await axiosHttpClient(api.ADMIN_MODULE_CREATE_USER, 'post', formData);
+
+                let encyptedData = encryptData(formData);
+
+                let response = await axiosHttpClient('ADMIN_USER_CREATE_API', 'post', encyptedData);
 
                 console.log(response.data);
             }
@@ -129,6 +131,7 @@ export default function CreateNewUser() {
         }
         else{
             setErrors(errors);
+            console.log('errors', errors);
         }
     }
 
@@ -145,59 +148,57 @@ export default function CreateNewUser() {
             <div className="form-container">
                 <div className="form-heading">
                     <h2>Create new user</h2>
-                    <div className="form-row">
+                    <div className="grid grid-rows-2 grid-cols-2 gap-x-8 gap-y-6 w-[100%]">
                         <div className="form-group">
-                            <label htmlFor="input1">Salutation</label>
+                            <label htmlFor="input1">Title<span className='text-red-500'>*</span></label>
                             <select name='title' value={formData.title} onChange={handleChange}>
                                 <option value={''}>Select</option>
                                 <option value={'Mr'}>Mr</option>
                                 <option value={'Ms'}>Ms</option>
                                 <option value={'Mrs'}>Mrs</option>
                             </select>
-                            {/* <input type="text" id="input1" placeholder="Input 1" /> */}
+                            { errors.title && <p className='error-message'>{errors.title}</p> }
                         </div>
                         <div className="form-group">
-                            <label htmlFor="input2">First name</label>
+                            <label htmlFor="input2">First name<span className='text-red-500'>*</span></label>
                             <input type="text" name='firstName' value={formData.firstName} placeholder="First name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            { errors.firstName && <p className='error-message'>{errors.firstName}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Middle name</label>
                             <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            { errors.middleName && <p className='error-message'>{errors.middleName}</p> }
                         </div>
-                    </div>
-                    <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="input1">Last name</label>
+                            <label htmlFor="input1">Last name<span className='text-red-500'>*</span></label>
                             <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            { errors.lastName && <p className='error-message'>{errors.lastName}</p> }
                         </div>
                         <div className="form-group">
-                            <label htmlFor="input2">Mobile number</label>
+                            <label htmlFor="input2">Mobile number<span className='text-red-500'>*</span></label>
                             <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                            { errors.mobileNumber && <p className='error-message'>{errors.mobileNumber}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Alternate mobile number</label>
                             <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                            { errors.altMobileNumber && <p className='error-message'>{errors.altMobileNumber}</p> }
                         </div>
-                    </div>
-                    <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="input1">Email ID</label>
+                            <label htmlFor="input1">Email ID<span className='text-red-500'>*</span></label>
                             <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" maxLength={dataLength.EMAIL} onChange={handleChange}/>
+                            { errors.emailID && <p className='error-message'>{errors.emailID}</p> }
                         </div>
                         <div className="form-group">
-                            <label htmlFor="input2">Role</label>
+                            <label htmlFor="input2">Role<span className='text-red-500'>*</span></label>
                             <select name='role' value={formData.role} onChange={handleChange}>
                                 <option value={''}>Select</option>
                                 <option value={'BDA Admin'}>BDA Admin</option>
                                 <option value={'Park Admin'}>Park Admin</option>
                             </select>
+                            { errors.role && <p className='error-message'>{errors.role}</p> }
                         </div>
-                        {/* <div className="form-group">
-                            <label htmlFor="input3">Label 3:</label>
-                            <input type="text" id="input3" placeholder="Input 3" />
-                        </div> */}
                     </div>
-                    {/* Two more similar rows for Heading 1 */}
                 </div>
 
                 <div className="buttons-container">
