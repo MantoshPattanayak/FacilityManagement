@@ -1,10 +1,9 @@
 .container-1 {
   box-sizing: border-box;
-
   width: 70vw;
   margin-left: 15%;
 }
-
+/* Common header used in every page start*/
 .header-role {
   display: flex;
   width: 70vw;
@@ -12,6 +11,22 @@
   background-color: #d1dcd0;
   margin-top: 10%;
 }
+@media screen and (max-width: 1000px ) {
+  .header-role{
+    margin-top: 15%;
+  }
+}
+@media screen and (max-width: 660px ) {
+  .header-role{
+    margin-top: 20%;
+  }
+}
+@media screen and (max-width: 500px ) {
+  .header-role{
+    margin-top: 30%;
+  }
+}
+/* Common header used in every page END*/
 
 .rectangle {
   height: 100%;
@@ -81,3 +96,4 @@
   margin: 0 5px;
   border-radius: 5px;
 }
+
