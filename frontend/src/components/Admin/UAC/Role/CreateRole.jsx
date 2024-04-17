@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import React, { useState } from 'react';
 import '../Role/CreateRole.css';
 import Footer from '../../../../common/Footer';
 import axiosHttpClient from '../../../../utils/axios';
@@ -69,12 +68,12 @@ import 'react-toastify/dist/ReactToastify.css';
       <div className="header-role">
         <div className="rectangle"></div>
         <div className="roles">
-          <h1><b>Create Role</b></h1>
+          <h1><b>Jaydev vatika, Bhubaneswar</b></h1>
         </div>
       </div>
-
-      {/* input fields */}
-      <form onSubmit={HandleCreate}>
+      
+      {/* Input fields */}
+      <form onSubmit={handleCreate}>
         <div className="input-fields">
           <div className="input-field">
             <label htmlFor="roleName">Role Name:</label>
@@ -84,33 +83,36 @@ import 'react-toastify/dist/ReactToastify.css';
               name='roleName'
               className='search_input_field-2'
               placeholder=''
-              onChange={CreateHandler}
-              value={PostRoleData.roleName}
+              onChange={handleChange}
+              value={postRoleData.roleName}
             />
-               {ShowError.roleName && <p className="text-red-700">{ShowError.roleName}</p>}
           </div>
           <div className="input-field">
             <label htmlFor="roleCode">Role Code:</label>
-            <input type="text" id="roleName" name='roleCode' className='search_input_field-2' placeholder=''
-            onChange={CreateHandler}
-            value={PostRoleData.roleCode}
+            <input
+              type="text"
+              id="roleCode"
+              name='roleCode'
+              className='search_input_field-2'
+              placeholder=''
+              onChange={handleChange}
+              value={postRoleData.roleCode}
             />
-            {ShowError.roleCode && <p className="text-red-700">{ShowError.roleCode}</p>}
           </div>
         </div>
 
-  <div className="buttons">
-    {/* <!-- Cancel button --> */}
-    <div className="cancel-btn">
-      <button>Cancel</button>
-    </div>
-
-    {/* <!-- Create button --> */}
-    <div className="create-btn">
-    <button >Create</button>
-    </div>
-  </div>
-</form>
+        <div className="buttons">
+          {/* Cancel button */}
+          <div className="cancel-btn">
+            <button>Cancel</button>
+          </div>
+          {/* Create button */}
+          <div className="create-btn">
+            <button>Create</button>
+          </div>
+        </div>
+      </form>
+      <ToastContainer />
     </div>
   );
 };
