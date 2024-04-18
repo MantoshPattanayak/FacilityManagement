@@ -30,9 +30,8 @@ import ParticePage from "./components/Admin/MDM/FacilityRegistration/ParPage";
 
 
 import RoleResourceMappingList from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList";
-
 import CreateRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping";
-
+import EditRoleResourceMapping from '../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/EditRoleResourceMapping';
 import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown";
 
 function App() {
@@ -56,6 +55,9 @@ function App() {
             <Route path='/UAC/Users/ListOfUsers' element={<ProtectedRoute><ListOfUsers /></ProtectedRoute>} />
             <Route path='/UAC/Users/Create' element={<ProtectedRoute><CreateNewUser /></ProtectedRoute>} />
             <Route path='/UAC/Users/Edit' element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
+            <Route path='/UAC/RoleResource/Create' element={<ProtectedRoute><CreateRoleResourceMapping /></ProtectedRoute>} />
+            <Route path='/UAC/RoleResource/ListOfRoleResources' element={<ProtectedRoute><RoleResourceMappingList /></ProtectedRoute>} />
+            <Route path='/UAC/RoleResource/Edit' element={<ProtectedRoute><EditRoleResourceMapping /></ProtectedRoute>} />
             <Route path='/unauthorized' element={<UnauthorizedPage />} />
           </Routes>
           {/* <Footer /> */}

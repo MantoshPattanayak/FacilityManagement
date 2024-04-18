@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AdminHeader from '../../../../common/AdminHeader';
 import Footer from '../../../../common/Footer';
 import '../../../../common/CommonFrom.css';
@@ -7,6 +8,8 @@ import axiosHttpClient from '../../../../utils/axios';
 import { encryptData } from '../../../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 export default function CreateNewUser() {
 
@@ -33,9 +36,21 @@ export default function CreateNewUser() {
     });
 
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
+        async function fetchInitialData() {
+            try {
+                let res = await axiosHttpClient('ADMIN_USER_INITIALDATA_API', 'get');
 
+                console.log(res.data);
+            }
+            catch(error) {
+                console.error(error);
+            }
+        }
+
+        fetchInitialData();
     }, [])
 
     function validateUserInput(data) {
@@ -154,6 +169,14 @@ export default function CreateNewUser() {
             <div className="form-container">
                 <div className="form-heading">
                     <h2>Create new user</h2>
+                    <div className="flex flex-col-reverse items-end w-[100%]">
+                        <button
+                        className='back-button'
+                            onClick={(e) => navigate(-1)}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+                        </button>
+                    </div>
                     <div className="grid grid-rows-2 grid-cols-2 gap-x-8 gap-y-6 w-[100%]">
                         <div className="form-group">
                             <label htmlFor="input1">Title<span className='text-red-500'>*</span></label>
