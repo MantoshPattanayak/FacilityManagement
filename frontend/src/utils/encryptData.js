@@ -10,10 +10,10 @@ export function encryptData (val) {
     return CryptoJS.AES.encrypt(JSON.stringify(val),parsedKey,{iv:parsediv}).toString();
 }
 
-export function decryptdata (val) {
+export function decryptData (val) {
     let parsedKey = CryptoJS.enc.Base64.parse(key);
     let parsediv = CryptoJS.enc.Base64.parse(iv);
 
-    return CryptoJS.AES.decrypt(JSON.parse(val),parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8));
 }
 

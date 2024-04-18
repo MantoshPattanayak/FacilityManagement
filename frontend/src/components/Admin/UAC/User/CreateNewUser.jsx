@@ -5,6 +5,8 @@ import '../../../../common/CommonFrom.css';
 import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../../../utils/axios';
 import { encryptData } from '../../../../utils/encryptData';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function CreateNewUser() {
 
@@ -121,17 +123,20 @@ export default function CreateNewUser() {
 
                 let encyptedData = encryptData(formData);
 
-                let response = await axiosHttpClient('ADMIN_USER_CREATE_API', 'post', encyptedData);
+                let response = await axiosHttpClient('ADMIN_USER_CREATE_API', 'post', encyptedData, null);
 
                 console.log(response.data);
+                toast.success('New user created successfully.');
             }
             catch(error) {
                 console.error(error);
+                toast.error('User creation failed. Please try again.');
             }
         }
         else{
             setErrors(errors);
             console.log('errors', errors);
+            toast.error('User creation failed. Please try again.');
         }
     }
 
@@ -139,6 +144,7 @@ export default function CreateNewUser() {
         // e.preventDefault();
         console.log('cancel form')
         setFormData(initialFormData);
+        setErrors({});
         return;
     }
 
@@ -161,32 +167,32 @@ export default function CreateNewUser() {
                         </div>
                         <div className="form-group">
                             <label htmlFor="input2">First name<span className='text-red-500'>*</span></label>
-                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange}/>
                             { errors.firstName && <p className='error-message'>{errors.firstName}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Middle name</label>
-                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange}/>
                             { errors.middleName && <p className='error-message'>{errors.middleName}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input1">Last name<span className='text-red-500'>*</span></label>
-                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange}/>
                             { errors.lastName && <p className='error-message'>{errors.lastName}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input2">Mobile number<span className='text-red-500'>*</span></label>
-                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" autoComplete='off' maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
                             { errors.mobileNumber && <p className='error-message'>{errors.mobileNumber}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Alternate mobile number</label>
-                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" autoComplete='off' maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
                             { errors.altMobileNumber && <p className='error-message'>{errors.altMobileNumber}</p> }
                         </div>
                         <div className="form-group">
                             <label htmlFor="input1">Email ID<span className='text-red-500'>*</span></label>
-                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" maxLength={dataLength.EMAIL} onChange={handleChange}/>
+                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" autoComplete='off' maxLength={dataLength.EMAIL} onChange={handleChange}/>
                             { errors.emailID && <p className='error-message'>{errors.emailID}</p> }
                         </div>
                         <div className="form-group">
@@ -206,6 +212,7 @@ export default function CreateNewUser() {
                     <button className="cancel-button" onClick={clearForm}>Cancel</button>
                 </div>
             </div>
+            <ToastContainer />
             <Footer />
         </div>
     )
