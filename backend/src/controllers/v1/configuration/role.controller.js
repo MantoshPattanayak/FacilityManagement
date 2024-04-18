@@ -8,7 +8,7 @@ const role = db.rolemaster
 const roleId = async (req, res) => {
   try {
     const [rolemasters, metadata] = await sequelize.query(
-      "select * from amabhoomi.rolemasters "
+      "select * from amabhoomi.rolemasters"
     );
 
     return res.status(statusCode.SUCCESS.code).json({
@@ -42,7 +42,8 @@ const createRole =async (req, res) => {
       roleName:roleName
     })
     if(createRole){
-      console.log('ja',createRole)
+      console.log('ja')
+
       return res.status(statusCode.SUCCESS.code).json({
         message:"Role created successfully"
       })
@@ -70,22 +71,27 @@ const createRole =async (req, res) => {
 
 //Update
 const updateRole = (req, res) => {
-  const role = {
-    roleId: req.body.roleId,
-    roleCode: req.body.roleCode,
-    roleName: req.body.roleName,
-    status: req.body.status,
-    remark: req.body.remark,
-  };
-  if (!role.roleId || !role.roleCode || !role.roleName) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
+
   try {
-    User.update(role, {
-      where: { id: req.params.id },
+    const  {
+      roleId,
+      roleCode,
+      roleName,
+      status,
+      remark
+    } = req.body;
+    if (!roleId && !roleCode && !roleName) {
+      res.status(statusCode.BAD_REQUEST.code).json({
+        message: "Content can not be empty!",
+      });
+      return;
+    }
+
+    role.update({
+      roleCode:roleCode,
+      roleName:roleName
+    }, {
+      where: { roleId: req.body.roleId },
     })
       .then((num) => {
         if (num == 1) {

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(150),
       allowNull: false,
     },
-    status: {
+    statusId: {
       type: DataTypes.INTEGER, // Define the column as DATE type
     },
     remarks: {
