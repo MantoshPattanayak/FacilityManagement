@@ -52,7 +52,7 @@ sequelize.authenticate()
   db1.gendermaster = require('./gendermaster.models')(sequelize,DataTypes)
 
   db1.sequelize.sync({
-    force: true
+    force: false
   })
 
 module.exports = db1;
