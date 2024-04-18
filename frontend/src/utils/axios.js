@@ -30,7 +30,7 @@ const axiosHttpClient = async (url, method, data, searchParams) => {
     const { baseURL, headers, urlTimeout } = instance();
 
     let response = await axios({
-        baseURL: searchParams ? baseURL + api[url] + `${searchParams}` : baseURL + api[url],
+        baseURL: searchParams ? baseURL + api[url] + `/${searchParams}` : baseURL + api[url],
         timeout: urlTimeout,
         method,
         headers,

@@ -42,7 +42,7 @@ const createRole =async (req, res) => {
       roleName:roleName
     })
     if(createRole){
-      console.log('ja')
+      console.log('ja', createRole)
 
       return res.status(statusCode.SUCCESS.code).json({
         message:"Role created successfully"

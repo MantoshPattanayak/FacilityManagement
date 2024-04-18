@@ -50,6 +50,7 @@
   min-height: 100vh;
   padding: 0 20px; /* Added padding for better spacing */
   box-sizing: border-box; /* Include padding in width calculation */
+     
 }
 
 .table_Container {
