@@ -1,63 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AdminHeader from '../../../../common/AdminHeader';
 import Footer from '../../../../common/Footer';
 import "../../../../common/CommonTable.css"
 import "./ListOfRoles.css"
-import { IoIosSearch } from "react-icons/io";
+import axiosHttpClient from '../../../../utils/axios';
+// icon using fontawesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { encryptData } from '../../../../utils/encryptData';
 const ListOfRoles = () => {
+  let navigate = useNavigate();
   const [roleListData, setRoleListData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Change as needed for items per page
-  const [searchTerm, setSearchTerm] = useState('');
+
 
   // Function to fetch role list data
-  async function getRoleListData() {
-    try {
-      let res = await axios.post('here api', {
-        page: currentPage, // Send current page number
-        search: searchTerm // Send search term if needed
-      });
-      console.log("here Response", res.data);
-      setRoleListData(res.data); // Update role list data
-    } catch (error) {
-      console.log(error);
+      async function getRoleListData() {
+        try {
+          let res = await axiosHttpClient('ROLE_VIEW_API','post', {
+            // page: currentPage, // Send current page number
+            // search: searchTerm // Send search term if needed
+          });
+          console.log("here Response", res);
+          setRoleListData(res.data.Role); // Update role list data
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      useEffect(() => {
+        getRoleListData()
+      }, []);
+
+      function encryptDataId(id) {
+        let res = encryptData(id);
+        return res;
     }
-  }
 
-  useEffect(() => {
-    getRoleListData();
-  }, []);
-
-  // Function to handle page change
-  const handlePageChange = (type) => {
-    switch (type) {
-      case 'start':
-        setCurrentPage(1);
-        break;
-      case 'previous':
-        setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-        break;
-      case 'next':
-        setCurrentPage((prev) => (prev < Math.ceil(roleListData.length / itemsPerPage) ? prev + 1 : prev));
-        break;
-      case 'last':
-        setCurrentPage(Math.ceil(roleListData.length / itemsPerPage));
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Function to handle search input change
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  // Apply pagination logic to slice the data for the current page
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = roleListData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="ListOfRoles">
@@ -76,31 +55,40 @@ const ListOfRoles = () => {
             className="search_input_field"
             placeholder="Search..."
             id="myInput"
-            value={searchTerm}
-            onChange={handleSearchChange}
+            // value={searchTerm}
+            // onChange={handleSearchChange}
           />
         </div>
         <div className="table_Container">
           <table>
             <thead>
               <tr>
-                <th scope="col">Serial No</th>
+               
                 <th scope="col">Role Name</th>
                 <th scope="col">Role Code</th>
                 <th scope="col">Update</th>
               </tr>
             </thead>
             <tbody>
-              {/* For dynamic data */}
-              {currentItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.serialNo}</td>
-                  <td>{item.roleCode}</td>
-                  <td>{item.roleDescription}</td>
-                  <td>{item.status}</td>
-                  <td>{item.action}</td>
-                </tr>
-              ))}
+                  {
+                    roleListData?.length > 0 && roleListData?.map((item, index) =>{
+                      return (<tr key={index}>
+                        <td>{item.roleName}</td>
+                        <td>{item.roleCode}</td>
+                        <td>
+                        <Link
+                                         to={{ 
+                                        pathname: '/UAC/Role/EditRole',
+                                        search: `?userId=${encryptDataId(item.roleId)}&action=view`
+                                      }}
+                                     >
+                                    <FontAwesomeIcon icon={faEye} />
+                                 </Link>
+                        </td>
+                      </tr>)
+
+                    })
+                  }
             </tbody>
           </table>
         </div>

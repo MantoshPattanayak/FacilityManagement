@@ -31,6 +31,7 @@ const CreateRole = () => {
         toast.success("Role created successfully");
         setPostRoleData({ roleName: "", roleCode: "" });
       } else {
+        // here Foreach for iterate the all input fields 
         Object.values(errors).forEach(error => {
           toast.error(error);
         });
