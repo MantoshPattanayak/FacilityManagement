@@ -140,12 +140,14 @@ let createUser = async (req,res)=>{
         
             const pwdFlag = false;
         
-            const { title, fullName, userName, password, mobileNumber, emailId, role, status, gender } = req.body;
+            const { title, fullName, userName, password, mobileNumber,alternateMobileNo,emailId, roleId, statusId, genderId } = await decrypt(req.body);
 
             const encryptTitle = await encrypt(title);
             const encryptfullName =await  encrypt(fullName);
             const encryptUserName= await encrypt(userName);
-            const encryptMobileNumber = await encrypt(mobileNumber);
+            const encryptMobileNumber =  await encrypt(mobileNumber);
+            const encryptAlternateMobileNumber =  await encrypt(alternateMobileNo);
+
             const encryptemailId = await encrypt(emailId);
        
 
@@ -156,20 +158,26 @@ let createUser = async (req,res)=>{
             const existingUserMobile = await UserMaster.findOne({ where: { contactNo: encryptMobileNumber } });
             const existingUserEmail = await UserMaster.findOne({ where: { emailId: encryptemailId } });
             const existingUserName = await UserMaster.findOne({ where: { userName: encryptUserName } });
-        
+            const existingAlternateUserMobile = await UserMaster.findOne({ where: { contactNo: encryptAlternateMobileNumber } });
+
             if (existingUserMobile) {
                 return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same contact_no" })
             } else if (existingUserEmail) {
                 return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same email_id" })
             } else if (existingUserName) {
                 return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same user_name" })
-            } else {
+            } 
+            else if(existingAlternateUserMobile){
+              return res.status(statusCode.CONFLICT.code).json({ message: "User already exist with given alternate contact no " })
+
+            }else {
               const hashedPassword = await bcrypt.hash(password, 10); // Use 10 rounds for hashing
         
               const newUser = await UserMaster.create({
                 title:encryptTitle, fullName: encryptfullName, contactNo: encryptMobileNumber, emailId: encryptemailId,
                 userName: encryptUserName, password: hashedPassword, changePwdFlag: pwdFlag,
-                roleId: role, statusId: status, genderId: gender,
+                roleId: roleId, statusId: statusId, genderId: genderId,
+                alterateContactNo:alternateMobileNo,
                 createdDt: new Date(), createdBy: createdBy, updatedDt: new Date(), updatedBy: updatedBy
               });
         
@@ -187,7 +195,7 @@ let createUser = async (req,res)=>{
 
 let updateUserData = async (req,res)=>{
     try{
-        const { title, fullName, userName, mobileNumber, emailId, roleId, statusId, genderId } = req.body;
+        const { title, fullName, userName, mobileNumber,alternateMobileNo, emailId, roleId, statusId, genderId } = await decrypt(req.body);
 
 
         const encryptTitle = await encrypt(title);
@@ -195,7 +203,7 @@ let updateUserData = async (req,res)=>{
         const encryptUserName= await encrypt(userName);
         const encryptMobileNumber = await encrypt(mobileNumber);
         const encryptemailId = await encrypt(emailId);
-
+        const encryptAlternateMobileNo = await encrypt(alternateMobileNo)
         let updatedValueObject ={};
 
         const getUser = await user.findOne({
@@ -234,6 +242,20 @@ let updateUserData = async (req,res)=>{
                   }
                 updatedValueObject.mobileNo=encryptMobileNumber
             }
+
+            if(await decrypt(getUser.contactNo)!=alternateMobileNo){
+              let checkIsAlternateMobileAlreadyPresent = await user.findOne({
+                  where:{
+                      contactNo:encryptAlternateMobileNo
+                  }
+                })
+                if(checkIsAlternateMobileAlreadyPresent){
+                  return res.status(statusCode.CONFLICT.code).json({
+                      message:"This mobile no is already assigned to a existing user"
+                  })
+                }
+              updatedValueObject.mobileNo=encryptMobileNumber
+          }
             if(await decrypt(getUser.title)!=title){
                 updatedValueObject.title = encryptTitle
             }
@@ -308,7 +330,7 @@ let getUserById = async (req,res)=>{
     //         genderId:genderId
 
         // }))
-        return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: specificUser }); 
+        return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: await encrypt(specificUser) }); 
     }
     catch(err){
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message:err.message})
@@ -347,7 +369,7 @@ let fetchInitialData = async (req,res)=>{
         return res.status(statusCode.SUCCESS.code).json({
             message:"All initial data to be populated in the dropdown",
             Role: roleData, 
-            Status: statusData,
+            Status:statusData,
             gender: genderData
         })
 
