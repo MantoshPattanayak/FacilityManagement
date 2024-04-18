@@ -48,7 +48,8 @@ sequelize.authenticate()
   db1.statusmaster =require('./statusmaster.models')(sequelize,DataTypes)
   db1.transaction =require('./transactions.models')(sequelize,DataTypes)
   db1.transactiondetails = require('./transactiondetails.models')(sequelize,DataTypes)
-
+  db1.userresource = require('./userresource.models')(sequelize,DataTypes)
+  db1.gendermaster = require('./gendermaster.models')(sequelize,DataTypes)
 
   db1.sequelize.sync({
     force: true
