@@ -1,299 +1,95 @@
 import "../../../../../common/CommonTable.css";
+import AdminHeader from "../../../../../common/AdminHeader";
+import Footer from "../../../../../common/Footer";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosHttpClient from "../../../../../utils/axios";
 
 const RoleResourceMappingList = () => {
-  return (
-    <div className="Main_Conatiner_table">
-      <div className="search_text_conatiner">
-        <h1 className="text_Name_Table">Role Resource Mapping List</h1>
-        <input
-          type="text"
-          className="search_input_field"
-          placeholder="Search..."
-          id="myInput"
-        />
-      </div>
+  const [tableData, setTableData] = useState([]);
+  const [givenReq, setGivenReq] = useState();
+  const navigate = useNavigate();
 
-      <div className="table_Container">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Serial No</th>
-              <th scope="col">Role Name</th>
-              <th scope="col">Resource Name</th>
-              <th scope="col">Parent Resource Name</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-            <tr>
-              <td data-label="Serial No">01</td>
-              <td data-label="Role Name">Display Control Manager</td>
-              <td data-label="Resource Name">Dashboard</td>
-              <td data-label="Parent Resource Name">Activity</td>
-              <td data-label="Status">ACTIVE</td>
-              <td data-label="Action">Edit</td>
-            </tr>
-          </tbody>
-        </table>
+  async function fetchRoleResourceMappingListData() {
+    try {
+      let res = await axiosHttpClient('ROLE_RESOURCE_VIEW_API', 'get');
+
+      console.log('response', res.data);
+    }
+    catch(error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchRoleResourceMappingListData();
+  }, [])
+
+  return (
+    <>
+      <AdminHeader />
+      <div className="Main_Conatiner_table">
+        <div className='table-heading'>
+          <h2 className="table-heading">List of User-Resource</h2>
+        </div>
+
+        <div className="search_text_conatiner">
+          <button className='search_field_button' onClick={() => navigate('/UAC/RoleResource/Create')}>Create new user-resource mapping</button>
+          <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+          {/* <SearchDropdown /> */}
+        </div>
+
+        <div className="table_Container">
+          <table >
+            <thead>
+              <tr>
+                <th scope="col">Role Name</th>
+                <th scope="col">Resource Name</th>
+                <th scope="col">Parent Resource Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">View</th>
+                <th scope="col">Edit</th>
+              </tr>
+            </thead>
+            <tbody >
+              {
+                tableData?.length > 0 && tableData?.map((data) => {
+                  return (
+                    <tr key={data.id}>
+                      <td data-label="Name">{data.userName}</td>
+                      <td data-label="Number">{data.resourceName}</td>
+                      <td data-label="Email">{data.parentResourceName}</td>
+                      <td data-label="Status">{data.status}</td>
+                      <td data-label="View">
+                        <Link
+                          to={{
+                            pathname: '/UAC/RoleResource/Edit',
+                            search: `?roleResourceId=${encryptDataId(data.id)}&action=view`
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEye} />
+                        </Link>
+                      </td>
+                      <td data-label="Edit">
+                        <Link
+                          to={{
+                            pathname: '/UAC/RoleResource/Edit',
+                            search: `?roleResourceId=${encryptDataId(data.id)}&action=edit`
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPenToSquare} />
+                        </Link>
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 export default RoleResourceMappingList;
