@@ -81,37 +81,32 @@ const updateRole = (req, res) => {
       remark
     } = req.body;
     if (!roleId && !roleCode && !roleName) {
-      res.status(statusCode.BAD_REQUEST.code).json({
+      return res.status(statusCode.BAD_REQUEST.code).json({
         message: "Content can not be empty!",
       });
-      return;
+      
     }
 
-    role.update({
+    const [roleDataCount,RoleDataDetails]=role.update({
       roleCode:roleCode,
       roleName:roleName
     }, {
-      where: { roleId: req.body.roleId },
+      where: { roleId: roleId },
     })
-      .then((num) => {
-        if (num == 1) {
-          res.status(200).json({
-            message: "Role was updated successfully.",
-          });
-        } else {
-          res.status(404).json({
-            message: `Cannot update Role with id=${req.params.id}. Maybe User was not found or req.body is empty!`,
-          });
-        }
-      })
-      .catch((err) => {
-        res.status(500).json({
-          message: "Error updating Role with id=" + req.params.id,
-        });
+     if(roleDataCount.length>=1){
+      return res.status(statusCode.SUCCESS.code).json({
+        message: "Data updated successfully",
       });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    throw new Error(error);
+     }
+     else{
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: "Data is not updated successfully",
+      })
+     }
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message: err.message,
+    })
   }
 };
 
