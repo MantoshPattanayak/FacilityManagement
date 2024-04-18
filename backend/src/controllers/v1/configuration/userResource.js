@@ -201,7 +201,7 @@ let viewUserResource = async (req, res) => {
             rm.description,
             (
                 SELECT rm1.name
-                FROM amabhoomi.resourcemaster rm1
+                FROM amabhoomi.resourcemasters rm1
                 WHERE rm1.resourceId = rm.parentResourceId
             ) AS parentResourceName,
             sm.statusCode

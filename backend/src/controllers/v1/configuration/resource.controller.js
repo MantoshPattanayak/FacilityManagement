@@ -13,7 +13,7 @@ let getResourceById = async (req, res) => {
       `select name,description,hasSubMenu,icon,iconId,iconType,orderIn,Path,status,remark from amabhoomi.resourcemaster where privateuserid= ?`,
       {
         replacements: [resourceId], // Pass the parameter value as an array
-        type: Sequelize.QueryTypes.SELECT,
+        type: sequelize.QueryTypes.SELECT,
       }
     );
     return res
