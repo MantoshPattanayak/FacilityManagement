@@ -70,7 +70,7 @@ const createRole =async (req, res) => {
 };
 
 //Update
-const updateRole = (req, res) => {
+const updateRole = async (req, res) => {
 
   try {
     const  {
@@ -86,14 +86,19 @@ const updateRole = (req, res) => {
       });
       
     }
+    console.log('fdlkjfd')
 
-    const [roleDataCount,RoleDataDetails]=role.update({
+    const [roleDataCount,roleDataDetails]=await role.update({
       roleCode:roleCode,
       roleName:roleName
     }, {
-      where: { roleId: roleId },
+      where: { roleId: roleId }
     })
-     if(roleDataCount.length>=1){
+    console.log('f',roleDataCount,roleDataDetails)
+
+    console.log(roleDataDetails,'details')
+
+     if(roleDataCount>=1){
       return res.status(statusCode.SUCCESS.code).json({
         message: "Data updated successfully",
       });
