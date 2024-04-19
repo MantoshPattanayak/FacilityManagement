@@ -35,21 +35,22 @@ const createResource = async (req, res) => {
       orderIn,
       path,
       status,
+      parentResourceId,
       remarks,
     } = req.body;
     // check if the request body is empty
-    if (
-      name &&
-      description &&
-      hasSubMenu &&
-      icon &&
-      iconId &&
-      iconType &&
-      orderIn &&
-      path &&
-      status &&
-      remarks
-    ) {
+    // if (
+    //   name &&
+    //   description &&
+    //   hasSubMenu &&
+    //   icon &&
+    //   iconId &&
+    //   iconType &&
+    //   orderIn &&
+    //   path &&
+    //   status &&
+    //   remarks
+    // ) {
       createResource = await resource.create({
         name: name,
         description: description,
@@ -59,8 +60,9 @@ const createResource = async (req, res) => {
         iconType: iconType,
         orderIn: orderIn,
         path: path,
-        status: status,
+        statusId: status,
         remarks: remarks,
+        parentResourceId:parentResourceId
       });
       if (createResource) {
         return res.status(statusCode.SUCCESS.code).json({
@@ -70,87 +72,81 @@ const createResource = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST.code).json({
         message: "Resource is not created",
       });
-    } else {
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message: "please provide all required details",
-      });
-    }
+    // } else {
+    //   return res.status(statusCode.BAD_REQUEST.code).json({
+    //     message: "please provide all required details",
+    //   });
+    // }
   } catch (error) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });
   }
 };
-const updateResource = (req, res) => {
+const updateResource = async (req, res) => {
   try {
+    console.log('21')
     const {
       resourceId,
       name,
       description,
       hasSubMenu,
-      icon,
-      iconId,
-      iconType,
       orderIn,
       path,
-      status,
-      remarks,
+      statusId,
+      parentResourceId,
+      isParent
     } = req.body;
 
-    if (
-      !resourceId ||
-      (!name &&
-        !description &&
-        !hasSubMenu &&
-        !icon &&
-        !iconId &&
-        !iconType &&
-        !orderIn &&
-        !path &&
-        !status &&
-        !remarks)
-    ) {
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message:
-          "Invalid request. Please provide resourceId and at least one field to update.",
-      });
+    let params={}
+    
+    let findResourcWithTheGivenId = await resource.findOne({
+      where:{
+        resourceId:resourceId
+      }
+    })
+    
+    if(findResourcWithTheGivenId.name!=name){
+      console.log('1')
+      params.name=name
+    }
+    else if(findResourcWithTheGivenId.description!=description){
+      params.description=description
+    }
+    else if(findResourcWithTheGivenId.parentResourceId!=parentResourceId && isParent){
+      params.parentResourceId = parentResourceId
+    }
+    else if(findResourcWithTheGivenId.hasSubMenu!=hasSubMenu){
+      params.hasSubMenu = hasSubMenu
+
+    }
+    else if(findResourcWithTheGivenId.path!=path){
+      params.path = path
+    }
+    else if(findResourcWithTheGivenId.orderIn!=orderIn){
+      params.orderIn = orderIn
+    }
+    else if(findResourcWithTheGivenId.statusId != statusId){
+      params.statusId = statusId
     }
 
-    resource
-      .update(
-        {
-          name: name,
-          description: description,
-          hasSubMenu: hasSubMenu,
-          icon: icon,
-          iconId: iconId,
-          iconType: iconType,
-          orderIn: orderIn,
-          path: path,
-          status: status,
-          remarks: remarks,
-        },
-        {
-          where: { resourceId: resourceId },
-        }
-      )
-      .then((num) => {
-        if (num == 1) {
-          return res.status(statusCode.SUCCESS.code).json({
-            message: "Resource was updated successfully.",
-          });
-        } else {
-          return res.status(statusCode.NOT_FOUND.code).json({
-            message: `Cannot update Resource with id=${resourceId}. Maybe Resource was not found or request body is empty.`,
-          });
-        }
-      })
-      .catch((err) => {
-        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message: "Error updating Resource with id=" + resourceId,
-          error: err.message,
-        });
-      });
+// console.log('resource',findResourcWithTheGivenId)
+
+    let [updateResourceCount,updateResourceData] =  await resource
+    .update(
+      params,
+      {
+        where: { resourceId: resourceId },
+        returning:true
+      }
+    )
+
+    
+
+    
+    console.log(updateResourceData,'fsdfsd',updateResourceCount)
+
+     
   } catch (error) {
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
