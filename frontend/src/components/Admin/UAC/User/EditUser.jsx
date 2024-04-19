@@ -5,8 +5,19 @@ import '../../../../common/CommonFrom.css';
 import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../../../utils/axios';
 import api from '../../../../utils/api';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { decryptData } from '../../../../utils/encryptData';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 export default function EditUser() {
+
+    const location = useLocation();
+    const userId = decryptData(new URLSearchParams(location.search).get('userId'));
+    const action = new URLSearchParams(location.search).get('action');
+    const navigate = useNavigate();
 
     let initialFormData = {
         title: '',
@@ -19,26 +30,51 @@ export default function EditUser() {
         role: ''
     };
 
+    let modifiedFormData = {
+        title: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        mobileNumber: '',
+        altMobileNumber: '',
+        emailID: '',
+        role: ''
+    }
+
     const [formData, setFormData] = useState(initialFormData);
 
     const [errors, setErrors] = useState({});
 
-    useEffect(() => {
+    async function fetchUserDetails() {
+        try {
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_BY_ID_API', 'get', null, userId);
 
+            console.log('response', res);
+            setFormData(res.data.data);
+
+            modifiedFormData = JSON.parse(JSON.stringify(res.data.data));
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchUserDetails();
     }, [])
 
     function validateUserInput(data) {
         let errors = {};
 
-        if(data.title){
+        if (data.title) {
             // continue
         }
         else {
             errors.title = "Please provide salutation."
         }
 
-        if(data.firstName){
-            if(!regex.NAME.test(data.firstName)){
+        if (data.firstName) {
+            if (!regex.NAME.test(data.firstName)) {
                 errors.firstName = "First name is incorrect."
             }
         }
@@ -46,17 +82,17 @@ export default function EditUser() {
             errors.firstName = "Please provide first name."
         }
 
-        if(data.middleName){
-            if(!regex.NAME.test(data.middleName)){
+        if (data.middleName) {
+            if (!regex.NAME.test(data.middleName)) {
                 errors.middleName = "Middle name is incorrect."
             }
         }
         else {
-            errors.middleName = "Please provide middle name."
+            // errors.middleName = "Please provide middle name."
         }
 
-        if(data.lastName){
-            if(!regex.NAME.test(data.lastName)){
+        if (data.lastName) {
+            if (!regex.NAME.test(data.lastName)) {
                 errors.lastName = "Last name is incorrect."
             }
         }
@@ -64,8 +100,8 @@ export default function EditUser() {
             errors.lastName = "Please provide last name."
         }
 
-        if(data.mobileNumber){
-            if(!regex.PHONE_NUMBER.test(data.mobileNumber)){
+        if (data.mobileNumber) {
+            if (!regex.PHONE_NUMBER.test(data.mobileNumber)) {
                 errors.mobileNumber = "Last name is incorrect."
             }
         }
@@ -73,8 +109,8 @@ export default function EditUser() {
             errors.mobileNumber = "Please provide mobile number."
         }
 
-        if(data.emailID){
-            if(!regex.EMAIL.test(data.emailID)){
+        if (data.emailID) {
+            if (!regex.EMAIL.test(data.emailID)) {
                 errors.emailID = "Email ID is incorrect."
             }
         }
@@ -82,7 +118,7 @@ export default function EditUser() {
             errors.emailID = "Please provide email id."
         }
 
-        if(data.role){
+        if (data.role) {
             // continue
         }
         else {
@@ -96,7 +132,7 @@ export default function EditUser() {
         e.preventDefault();
 
         let { name, value } = e.target;
-        setFormData({...formData, [name]: value});
+        setFormData({ ...formData, [name]: value });
         console.log('formData', formData);
         return;
     }
@@ -108,22 +144,25 @@ export default function EditUser() {
 
         let errors = validateUserInput(formData);
 
-        if(errors.length <= 0){
+        if (errors.length <= 0) {
             try {
-                let response = await axiosHttpClient(api.ADMIN_MODULE_CREATE_USER, 'post', formData);
+                let response = await axiosHttpClient('ADMIN_USER_UPDATE_API', 'post', formData, null);
 
                 console.log(response.data);
+                toast.success('User details updated successfully.');
             }
-            catch(error) {
+            catch (error) {
                 console.error(error);
+                toast.error('User details updation failed. Please try again.');
             }
         }
-        else{
+        else {
             setErrors(errors);
+            toast.error('User details updation failed. Please try again.');
         }
     }
 
-    function clearForm (e) {
+    function clearForm(e) {
         // e.preventDefault();
         console.log('cancel form')
         setFormData(initialFormData);
@@ -135,67 +174,74 @@ export default function EditUser() {
             <AdminHeader />
             <div className="form-container">
                 <div className="form-heading">
-                    <h2>Edit user</h2>
-                    <div className="form-row">
+                    <h2>{action == 'view' ? "View User" : "Edit User"}</h2>
+                    <div className="flex flex-col-reverse items-end w-[100%]">
+                        <button
+                        className='back-button'
+                            onClick={(e) => navigate(-1)}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+                        </button>
+                    </div>
+                    <div className="grid grid-rows-2 grid-cols-2 gap-x-8 gap-y-6 w-[100%]">
                         <div className="form-group">
-                            <label htmlFor="input1">Salutation</label>
-                            <select name='title' value={formData.title} onChange={handleChange}>
+                            <label htmlFor="input1">Title<span className='text-red-500'>*</span></label>
+                            <select name='title' value={formData.title} onChange={handleChange} disabled={action == 'view' ? true : false}>
                                 <option value={''}>Select</option>
                                 <option value={'Mr'}>Mr</option>
                                 <option value={'Ms'}>Ms</option>
                                 <option value={'Mrs'}>Mrs</option>
                             </select>
-                            {/* <input type="text" id="input1" placeholder="Input 1" /> */}
+                            {errors.title && <p className='error-message'>{errors.title}</p>}
                         </div>
                         <div className="form-group">
-                            <label htmlFor="input2">First name</label>
-                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            <label htmlFor="input2">First name<span className='text-red-500'>*</span></label>
+                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            {errors.firstName && <p className='error-message'>{errors.firstName}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Middle name</label>
-                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" maxLength={dataLength.NAME} onChange={handleChange}/>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="input1">Last name</label>
-                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" maxLength={dataLength.NAME} onChange={handleChange}/>
+                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            {errors.middleName && <p className='error-message'>{errors.middleName}</p>}
                         </div>
                         <div className="form-group">
-                            <label htmlFor="input2">Mobile number</label>
-                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
+                            <label htmlFor="input1">Last name<span className='text-red-500'>*</span></label>
+                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            {errors.lastName && <p className='error-message'>{errors.lastName}</p>}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">Mobile number<span className='text-red-500'>*</span></label>
+                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" autoComplete='off' maxLength={dataLength.PHONE_NUMBER} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            {errors.mobileNumber && <p className='error-message'>{errors.mobileNumber}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Alternate mobile number</label>
-                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange}/>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="input1">Email ID</label>
-                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" maxLength={dataLength.EMAIL} onChange={handleChange}/>
+                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" autoComplete='off' maxLength={dataLength.PHONE_NUMBER} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            {errors.altMobileNumber && <p className='error-message'>{errors.altMobileNumber}</p>}
                         </div>
                         <div className="form-group">
-                            <label htmlFor="input2">Role</label>
-                            <select name='role' value={formData.role} onChange={handleChange}>
+                            <label htmlFor="input1">Email ID<span className='text-red-500'>*</span></label>
+                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" autoComplete='off' maxLength={dataLength.EMAIL} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            {errors.emailID && <p className='error-message'>{errors.emailID}</p>}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">Role<span className='text-red-500'>*</span></label>
+                            <select name='role' value={formData.role} onChange={handleChange} disabled={action == 'view' ? true : false}>
                                 <option value={''}>Select</option>
                                 <option value={'BDA Admin'}>BDA Admin</option>
                                 <option value={'Park Admin'}>Park Admin</option>
                             </select>
+                            {errors.role && <p className='error-message'>{errors.role}</p>}
                         </div>
-                        {/* <div className="form-group">
-                            <label htmlFor="input3">Label 3:</label>
-                            <input type="text" id="input3" placeholder="Input 3" />
-                        </div> */}
                     </div>
-                    {/* Two more similar rows for Heading 1 */}
                 </div>
-                
+
                 <div className="buttons-container">
-                    <button type='submit' className="approve-button" onClick={handleSubmit}>Submit</button>
-                    <button type='submit' className="cancel-button" onClick={clearForm}>Cancel</button>
+                    <button type='submit' className="approve-button" onClick={handleSubmit} disabled={action == 'view' ? true : false}>Submit</button>
+                    {/* <button type='submit' className="cancel-button" onClick={clearForm} disabled={action == 'view' ? true : false}>Cancel</button> */}
                 </div>
             </div>
+            <ToastContainer />
             <Footer />
         </div>
     )

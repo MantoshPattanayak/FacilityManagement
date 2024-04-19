@@ -14,9 +14,12 @@ const RoleResource = sequelize.define('roleresource', {
     type:DataTypes.STRING(150),
     allowNull:false
   },
-  status:{
+  statusId:{
     type: DataTypes.INTEGER // Define the column as DATE type
 },
+  parentResourceId:{
+    type:DataTypes.INTEGER
+  },
   remarks:{
     type: DataTypes.STRING(255)
   },

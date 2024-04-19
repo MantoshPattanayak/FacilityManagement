@@ -50,7 +50,6 @@
     display: flex;
     gap: 10px;
     font-size: 16px;
-    line-height: 27px;
 }
 
 .eventdetails-photo {
@@ -69,7 +68,7 @@
 }
 
 .eventdetails-eventbutton {
-    padding: 4px;
+    padding: 5px;
     border: none;
     border-radius: 4px;
     cursor: pointer;

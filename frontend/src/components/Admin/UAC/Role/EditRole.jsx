@@ -1,13 +1,17 @@
 import React from 'react'
-
+import AdminHeader from '../../../../common/AdminHeader';
+import Footer from '../../../../common/Footer';
 const EditRole = () => {
   return (
+    <div>
+      <AdminHeader/>
+  
     <div className='container-1'>
 
     <div className="header-role">
       <div className="rectangle"></div>
       <div className="roles">
-        <h1><b>Jaydev vatika, Bhubaneswar</b></h1>
+        <h1><b>Update Role</b></h1>
       </div>
     </div>
 
@@ -35,6 +39,8 @@ const EditRole = () => {
       </div>
     </div>
 
+  </div>
+<Footer/>
   </div>
   )
 }

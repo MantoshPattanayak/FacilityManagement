@@ -9,14 +9,14 @@ const user =db.privateuser
 let autoSuggestionForUserSearch = async(req,res)=> {
     try{
         const givenReq = req.query.givenReq ? req.body.givenReq: null;
-        const decryptGivenReq = await decrypt(givenReq).toLowerCase();
+        // const decryptGivenReq = await decrypt(givenReq).toLowerCase();
 
     let allUsersDataQuery = `SELECT COUNT(*) OVER() AS totalCount,
     pu.privateUserId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.contactNo, 
-    rm.roleName, sm.status
-    FROM amabhoomi.rolemaster rm
-    LEFT JOIN amabhoomi.privateuser pu ON pu.roleid = rm.id
-    INNER JOIN statusmaster sm ON sm.statusId = rm.status`;
+    rm.roleName, sm.statusCode
+    FROM amabhoomi.rolemasters rm
+    LEFT JOIN amabhoomi.privateusers pu ON pu.roleid = rm.id
+    INNER JOIN statusmasters sm ON sm.statusId = rm.statusId`;
 
   let allUsersData = await sequelize.query(allUsersDataQuery, {
     type: Sequelize.QueryTypes.SELECT
@@ -31,56 +31,57 @@ let autoSuggestionForUserSearch = async(req,res)=> {
         contactNo: await decrypt(userData.contactNo)
       }));
 
-    const matchedSuggestions = decryptedUsers.filter(userData =>
-            userData.privateUserId.includes(decryptGivenReq) ||
-            userData.title.toLowerCase().includes(decryptGivenReq) ||
-            userData.fullName.toLowerCase().includes(decryptGivenReq) ||
-            userData.emailId.toLowerCase().includes(decryptGivenReq) ||
-            userData.userName.toLowerCase().includes(decryptGivenReq) ||
-            userData.contactNo.toLowerCase().includes(decryptGivenReq) ||
-            userData.roleName.toLowerCase().includes(decryptGivenReq) ||
-            userData.status.toLowerCase().includes(decryptGivenReq)
-    );
+      let matchedSuggestions = decryptedUsers;
 
-    const encryptedData = matchedSuggestions.map(async (userData) => ({
-        ...userData,
-        title: await encrypt(userData.title),
-        fullName: await encrypt(userData.fullName),
-        emailId: await encrypt(userData.emailId),
-        userName: await encrypt(userData.userName),
-        contactNo: await encrypt(userData.contactNo),
-        roleName: await encrypt(userData.roleName),
-        status: await encrypt(userData.status)
-      }));
+      if(givenReq){
+     matchedSuggestions = decryptedUsers.filter(userData =>
+            userData.privateUserId.includes(givenReq) ||
+            userData.title.toLowerCase().includes(givenReq) ||
+            userData.fullName.toLowerCase().includes(givenReq) ||
+            userData.emailId.toLowerCase().includes(givenReq) ||
+            userData.userName.toLowerCase().includes(givenReq) ||
+            userData.contactNo.toLowerCase().includes(givenReq) ||
+            userData.roleName.toLowerCase().includes(givenReq) ||
+            userData.status.toLowerCase().includes(givenReq)
+    );
+  }
+    // const encryptedData = matchedSuggestions.map(async (userData) => ({
+    //     ...userData,
+    //     title: await encrypt(userData.title),
+    //     fullName: await encrypt(userData.fullName),
+    //     emailId: await encrypt(userData.emailId),
+    //     userName: await encrypt(userData.userName),
+    //     contactNo: await encrypt(userData.contactNo),
+    //     roleName: await encrypt(userData.roleName),
+    //     status: await encrypt(userData.status)
+    //   }));
     return res.status(statusCode.SUCCESS.code).json({
         message: 'All users data',
-        data: encryptedData
+        data: matchedSuggestions
       });
     } catch (err) {
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
     }
   };
     
-  
-
 let viewList = async (req, res) => {
     try {
-      let givenReqEncrypted = req.body.givenReq ? req.body.givenReq: null; // Convert givenReq to lowercase
+      let givenReq = req.body.givenReq ? req.body.givenReq: null; // Convert givenReq to lowercase
       let limit = req.body.page_size ? req.body.page_size : 500;
       let page = req.body.page_number ? req.body.page_number : 1;
       let offset = (page - 1) * limit;
       let params = [];
       let getAllUsersQuery = `SELECT COUNT(*) OVER() AS totalCount,
         pu.privateUserId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.contactNo, 
-        rm.roleName, sm.status
-        FROM amabhoomi.rolemaster rm
-        LEFT JOIN amabhoomi.privateuser pu ON pu.roleid = rm.id
-        INNER JOIN statusmaster sm ON sm.statusId = rm.status`;
+        rm.roleName, sm.statusCode
+        FROM amabhoomi.rolemasters rm
+        LEFT JOIN amabhoomi.privateusers pu ON pu.roleid = rm.id
+        INNER JOIN statusmasters sm ON sm.statusId = rm.statusId`;
   
       let getAllUsers = await sequelize.query(getAllUsersQuery, {
         type: Sequelize.QueryTypes.SELECT
       });
-      let givenReqDecrypted = await decrypt(givenReqEncrypted).toLowerCase() 
+      // let givenReqDecrypted = await decrypt(givenReqEncrypted).toLowerCase() 
   
       // Decrypt all encrypted fields
       let decryptedUsers = getAllUsers.map(async(userData) => ({
@@ -95,37 +96,38 @@ let viewList = async (req, res) => {
       // Filter data based on the encrypted search term
       let filteredUsers = decryptedUsers;
 
-      if (givenReqDecrypted) {
+      if (givenReq) {
         filteredUsers = decryptedUsers.filter(userData =>
-          userData.privateUserId.includes(givenReqDecrypted) ||
-          userData.title.toLowerCase().includes(givenReqDecrypted) ||
-          userData.fullName.toLowerCase().includes(givenReqDecrypted) ||
-          userData.emailId.toLowerCase().includes(givenReqDecrypted) ||
-          userData.userName.toLowerCase().includes(givenReqDecrypted) ||
-          userData.contactNo.toLowerCase().includes(givenReqDecrypted) ||
-          userData.roleName.toLowerCase().includes(givenReqDecrypted) ||
-          userData.status.toLowerCase().includes(givenReqDecrypted)
+          userData.privateUserId.includes(givenReq) ||
+          userData.title.toLowerCase().includes(givenReq) ||
+          userData.fullName.toLowerCase().includes(givenReq) ||
+          userData.emailId.toLowerCase().includes(givenReq) ||
+          userData.userName.toLowerCase().includes(givenReq) ||
+          userData.contactNo.toLowerCase().includes(givenReq) ||
+          userData.roleName.toLowerCase().includes(givenReq) ||
+          userData.statusCode.toLowerCase().includes(givenReq)
         );
       }
   
       // Paginate the filtered data
       let paginatedUsers = filteredUsers.slice(offset, offset + limit);
         // Encrypt the data before sending it to the client
-      const encryptedData = paginatedUsers.map(async (userData) => ({
-        ...userData,
-        title: await encrypt(userData.title),
-        fullName: await encrypt(userData.fullName),
-        emailId: await encrypt(userData.emailId),
-        userName: await encrypt(userData.userName),
-        contactNo: await encrypt(userData.contactNo),
-        roleName: await encrypt(userData.roleName),
-        status:await encrypt(userData.status)
-      }));
+
+      // const encryptedData = paginatedUsers.map(async (userData) => ({
+      //   ...userData,
+      //   title: await encrypt(userData.title),
+      //   fullName: await encrypt(userData.fullName),
+      //   emailId: await encrypt(userData.emailId),
+      //   userName: await encrypt(userData.userName),
+      //   contactNo: await encrypt(userData.contactNo),
+      //   roleName: await encrypt(userData.roleName),
+      //   status:await encrypt(userData.status)
+      // }));
   
 
       return res.status(statusCode.SUCCESS.code).json({
         message: 'All users data',
-        data: encryptedData
+        data: paginatedUsers
       });
     } catch (err) {
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
@@ -138,37 +140,44 @@ let createUser = async (req,res)=>{
         
             const pwdFlag = false;
         
-            const { title, fullName, userName, password, mobileNumber, emailId, role, status, gender } = req.body;
+            const { title, fullName, userName, password, mobileNumber,alternateMobileNo,emailId, roleId, statusId, genderId } = await decrypt(req.body);
 
-            const decryptTitle = await decrypt(title);
-            const decryptfullName =await  decrypt(fullName);
-            const decryptUserName= await decrypt(userName);
-            const decryptPassword = await decrypt(password);
-            const decryptMobileNumber = await decrypt(mobileNumber);
-            const decryptemailId = await decrypt(emailId);
+            const encryptTitle = await encrypt(title);
+            const encryptfullName =await  encrypt(fullName);
+            const encryptUserName= await encrypt(userName);
+            const encryptMobileNumber =  await encrypt(mobileNumber);
+            const encryptAlternateMobileNumber =  await encrypt(alternateMobileNo);
+
+            const encryptemailId = await encrypt(emailId);
        
 
             const salt = 5;
             const createdBy = req.user.id||1;
             const updatedBy = req.user.id||1;
             console.log('1')
-            const existingUserMobile = await UserMaster.findOne({ where: { contactNo: mobileNumber } });
-            const existingUserEmail = await UserMaster.findOne({ where: { emailId: emailId } });
-            const existingUserName = await UserMaster.findOne({ where: { userName: userName } });
-        
+            const existingUserMobile = await UserMaster.findOne({ where: { contactNo: encryptMobileNumber } });
+            const existingUserEmail = await UserMaster.findOne({ where: { emailId: encryptemailId } });
+            const existingUserName = await UserMaster.findOne({ where: { userName: encryptUserName } });
+            const existingAlternateUserMobile = await UserMaster.findOne({ where: { contactNo: encryptAlternateMobileNumber } });
+
             if (existingUserMobile) {
                 return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same contact_no" })
             } else if (existingUserEmail) {
                 return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same email_id" })
             } else if (existingUserName) {
                 return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same user_name" })
-            } else {
+            } 
+            else if(existingAlternateUserMobile){
+              return res.status(statusCode.CONFLICT.code).json({ message: "User already exist with given alternate contact no " })
+
+            }else {
               const hashedPassword = await bcrypt.hash(password, 10); // Use 10 rounds for hashing
         
               const newUser = await UserMaster.create({
-                title:title, fullName: fullName, contactNo: mobileNumber, emailId: emailId,
-                userName: userName, password: hashedPassword, changePwdFlag: pwdFlag,
-                roleId: role, statusId: status, genderId: gender,
+                title:encryptTitle, fullName: encryptfullName, contactNo: encryptMobileNumber, emailId: encryptemailId,
+                userName: encryptUserName, password: hashedPassword, changePwdFlag: pwdFlag,
+                roleId: roleId, statusId: statusId, genderId: genderId,
+                alterateContactNo:alternateMobileNo,
                 createdDt: new Date(), createdBy: createdBy, updatedDt: new Date(), updatedBy: updatedBy
               });
         
@@ -186,32 +195,44 @@ let createUser = async (req,res)=>{
 
 let updateUserData = async (req,res)=>{
     try{
-        const { title, fullName, userName, mobileNumber, emailId, role, status, gender } = req.body;
-        const decryptTitle = decrypt(title);
-        const decryptFullName = decrypt(fullName)
-        const decryptUserName = decrypt(userName)
-        const decryptMobileNumber = decrypt(mobileNumber)
-        const decryptEmailId = decrypt(emailId);
+        const { title, fullName, userName, mobileNumber,alternateMobileNo, emailId, roleId, statusId, genderId } = await decrypt(req.body);
 
+
+        const encryptTitle = await encrypt(title);
+        const encryptfullName =await  encrypt(fullName);
+        const encryptUserName= await encrypt(userName);
+        const encryptMobileNumber = await encrypt(mobileNumber);
+        const encryptemailId = await encrypt(emailId);
+        const encryptAlternateMobileNo = await encrypt(alternateMobileNo)
         let updatedValueObject ={};
 
         const getUser = await user.findOne({
             where:{
-                userName:userName
+                userName:encryptUserName
             }
         })
 
         if(getUser){
-            if(await decrypt(getUser.fullName)!=decryptFullName){
-                updatedValueObject.fullName = fullName
+            if(await decrypt(getUser.fullName)!=fullName){
+                updatedValueObject.fullName = encryptfullName
             }
-            if(await decrypt(getUser.userName)!=decryptUserName){
-                updatedValueObject.userName = userName
+            if(await decrypt(getUser.userName)!=userName){
+              let checkIsUsernameAlreadyPresent = await user.findOne({
+                where:{
+                    contactNo:encryptUserName
+                }
+              })
+              if(checkIsUsernameAlreadyPresent){
+                return res.status(statusCode.CONFLICT.code).json({
+                    message:"This username is already existing "
+                })
+              }
+                updatedValueObject.userName = encryptUserName
             }
-            if(await decrypt(getUser.contactNo)!=decryptMobileNumber){
+            if(await decrypt(getUser.contactNo)!=mobileNumber){
                 let checkIsMobileAlreadyPresent = await user.findOne({
                     where:{
-                        contactNo:mobileNumber
+                        contactNo:encryptMobileNumber
                     }
                   })
                   if(checkIsMobileAlreadyPresent){
@@ -219,16 +240,30 @@ let updateUserData = async (req,res)=>{
                         message:"This mobile no is already assigned to a existing user"
                     })
                   }
-                updatedValueObject.mobileNo=mobileNumber
+                updatedValueObject.mobileNo=encryptMobileNumber
             }
-            if(await decrypt(getUser.title)!=decryptTitle){
-                updatedValueObject.title = title
+
+            if(await decrypt(getUser.contactNo)!=alternateMobileNo){
+              let checkIsAlternateMobileAlreadyPresent = await user.findOne({
+                  where:{
+                      contactNo:encryptAlternateMobileNo
+                  }
+                })
+                if(checkIsAlternateMobileAlreadyPresent){
+                  return res.status(statusCode.CONFLICT.code).json({
+                      message:"This mobile no is already assigned to a existing user"
+                  })
+                }
+              updatedValueObject.mobileNo=encryptMobileNumber
+          }
+            if(await decrypt(getUser.title)!=title){
+                updatedValueObject.title = encryptTitle
             }
-             if(await decrypt(getUser.emailId)!=decryptEmailId){
+             if(await decrypt(getUser.emailId)!=emailId){
 
               let checkIsEmailAlreadyPresent = await user.findOne({
                 where:{
-                    emailId:emailId
+                    emailId:encryptemailId
                 }
               })
               if(checkIsEmailAlreadyPresent){
@@ -236,16 +271,16 @@ let updateUserData = async (req,res)=>{
                     message:"This email id is already assigned to a existing user"
                 })
               }
-                updatedValueObject.emailId = emailId
+                updatedValueObject.emailId = encryptemailId
             }
-            if(getUser.roleId!=role){
-                updatedValueObject.roleId = role
+            if(getUser.roleId!=roleId){
+                updatedValueObject.roleId = roleId
             }
-            if(getUser.statusId != status){
-                updatedValueObject.statusId = status
+            if(getUser.statusId != statusId){
+                updatedValueObject.statusId = statusId
             }
-            if(getUser.gender!=gender){
-                updatedValueObject.gender = gender
+            if(getUser.gender!=genderId){
+                updatedValueObject.gender = genderId
             }
 
             let [updatedValueCounts,updatedMetaData ] = await user.update(updatedValueObject,{
@@ -295,7 +330,7 @@ let getUserById = async (req,res)=>{
     //         genderId:genderId
 
         // }))
-        return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: specificUser }); 
+        return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: await encrypt(specificUser) }); 
     }
     catch(err){
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message:err.message})
@@ -305,36 +340,36 @@ let getUserById = async (req,res)=>{
 
 let fetchInitialData = async (req,res)=>{
     try{
-        let roleData = await sequelize.query(`select  roleId, roleCode, roleName from amabhoomi.rolemaster `,{type: Sequelize.QueryTypes.SELECT})
+        let roleData = await sequelize.query(`select  roleId, roleCode, roleName from amabhoomi.rolemasters `,{type: Sequelize.QueryTypes.SELECT})
 
-        let statusData = await sequelize.query(`select status,statusCode, description from amabhoomi.statusmaster`,{type: Sequelize.QueryTypes.SELECT})
+        let statusData = await sequelize.query(`select status,statusCode, description from amabhoomi.statusmasters`,{type: Sequelize.QueryTypes.SELECT})
 
-        let genderData = await sequelize.query(`select gender, code, description from amabhoomi.gendermaster`,{type: Sequelize.QueryTypes.SELECT})
+        let genderData = await sequelize.query(`select gender, code, description from amabhoomi.gendermasters`,{type: Sequelize.QueryTypes.SELECT})
 
-        roleData = roleData.map(async(role)=>({
-            roleId:role.roleId,
-            roleName:await encrypt(role.roleName),
-            roleCode:await encrypt(role.roleCode)
-        }))
+        // roleData = roleData.map(async(role)=>({
+        //     roleId:role.roleId,
+        //     roleName:await encrypt(role.roleName),
+        //     roleCode:await encrypt(role.roleCode)
+        // }))
 
-        genderData = genderData.map(async(genderValue)=>({
-            gender:genderValue.gender,
-            code:await encrypt(genderValue.code),
-            description:await encrypt(genderValue.description)
+        // genderData = genderData.map(async(genderValue)=>({
+        //     gender:genderValue.gender,
+        //     code:await encrypt(genderValue.code),
+        //     description:await encrypt(genderValue.description)
 
 
-        }))
+        // }))
 
-        statusData = statusData.map(async(statusData)=>({
-            status:statusData.status,
-            statusCode:await encrypt(statusData.statusCode),
-            description:await encrypt(statusData.description)
-        }))
+        // statusData = statusData.map(async(statusData)=>({
+        //     status:statusData.status,
+        //     statusCode:await encrypt(statusData.statusCode),
+        //     description:await encrypt(statusData.description)
+        // }))
 
         return res.status(statusCode.SUCCESS.code).json({
             message:"All initial data to be populated in the dropdown",
             Role: roleData, 
-            Status: statusData,
+            Status:statusData,
             gender: genderData
         })
 

@@ -26,11 +26,11 @@ export function resetRetry() {
     _retry_count = 0
 }
 
-const axiosHttpClient = async (url, method, data) => {
+const axiosHttpClient = async (url, method, data, searchParams) => {
     const { baseURL, headers, urlTimeout } = instance();
 
     let response = await axios({
-        baseURL: baseURL + api[url],
+        baseURL: searchParams ? baseURL + api[url] + `/${searchParams}` : baseURL + api[url],
         timeout: urlTimeout,
         method,
         headers,

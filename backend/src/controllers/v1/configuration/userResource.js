@@ -15,16 +15,17 @@ let dataload = async (req, res) => {
     try {
        let userDataLoad = await sequelize.query(` select 
         pu.privateUserId as userId,
-        pu.fullName as userName,
+        pu.fullName as fullName,
+        pu.userName as userName
         pu.emailId as email,
         pu.contactNo as contact,
         rm.roleCode as Role,
         sm.statusCode  as status, 
         gm.genderCode as gender 
-        from amabhoomi.privateuser pu 
-        inner join amabhoomi.rolemaster rm on rm.roleId=pu.roleId 
-        inner join admin.statusmaster sm on sm.statusId =pu.statusId 
-        left join admin.gendermaster gm on gm.genderId=pu.genderId
+        from amabhoomi.privateusers pu 
+        inner join amabhoomi.rolemasters rm on rm.roleId=pu.roleId 
+        inner join amabhoomi.statusmasters sm on sm.statusId =pu.statusId 
+        left join amabhoomi.gendermasters gm on gm.genderId=pu.genderId
         order by pu.privateUserId`);
 
         if (userDataLoad.length > 0) {
@@ -33,25 +34,25 @@ let dataload = async (req, res) => {
 
             if (resourceData.length > 0) {
 
-                let encryptUserDataLoad = userDataLoad.map(async(userData)=>({
-                    ...userData,
-                    roleCode:await encrypt(userData.roleCode),
-                    statusCode:await encrypt(userData.statusCode),
-                    genderCode:await encrypt(userData.genderCode)
+                // let encryptUserDataLoad = userDataLoad.map(async(userData)=>({
+                //     ...userData,
+                //     roleCode:await encrypt(userData.roleCode),
+                //     statusCode:await encrypt(userData.statusCode),
+                //     genderCode:await encrypt(userData.genderCode)
 
-                }))
+                // }))
 
-                let encryptResourceData = resourceData.map(async(resource)=>({
-                    ...resource,
-                    parentId: resource.parentId,
-                    parent:await encrypt(resource.parent),
-                    child: await encrypt(resource.child)
-                }))
+                // let encryptResourceData = resourceData.map(async(resource)=>({
+                //     ...resource,
+                //     parentId: resource.parentId,
+                //     parent:await encrypt(resource.parent),
+                //     child: await encrypt(resource.child)
+                // }))
                 res.status(statusCode.SUCCESS.code).json({
                     message1: 'user data',
-                    userData: encryptUserDataLoad,
+                    userData: userDataLoad,
                     message2: 'resource data',
-                    resourceData: encryptResourceData
+                    resourceData: resourceData
                 });
             } else {
                 res.status(statusCode.NOTFOUND.code).json({ message2: 'resource data not found' });
@@ -71,7 +72,7 @@ let insertUserResource = async (req, res) => {
     let client;
     try {
         client = await db.connect();
-        let userid = req.body.user;
+        let userId = req.body.user;
         let status = req.body.status;
         let user = req.user.id;
         let date = 'now()';
@@ -81,13 +82,13 @@ let insertUserResource = async (req, res) => {
         // Check for duplicates in all resources
         let duplicateCheckQuery = `
             SELECT ur.userid, ur.resourceid, rm.name
-            FROM admin.user_resource ur
-            INNER JOIN admin.resource_master rm ON ur.resourceid = rm.id
-            WHERE ur.userid = :userid AND ur.resourceid IN(:resourceList)
+            FROM amabhoomi.userresources ur
+            INNER JOIN amabhoomi.resourcemasters rm ON ur.resourceId = rm.resourceId
+            WHERE ur.userId = :userId AND ur.resourceId IN(:resourceList)
         `;
 
         let duplicateCheckResult = await sequelize.query(duplicateCheckQuery,  {
-            replacements: { userid, resourceList },
+            replacements: { userId, resourceList },
             type: QueryTypes.SELECT
             });
 
@@ -99,13 +100,13 @@ let insertUserResource = async (req, res) => {
          for (let i = 0; i < resourceArray.length; i++) {
             const query = await userresource.findOne({
               attributes: ['parentResourceId'],
-              where: { id: resourceList[i] }
+              where: { userResourceId: resourceList[i] }
             });
 
          if (query.parentResourceId !== null) {
             // Child resource handling
             const result = await userresource.create({
-              userid,
+              userId:userId,
               resourceid: resourceList[i],
               parentresourceid: query.parentResourceId,
               statusid: status,
@@ -118,8 +119,8 @@ let insertUserResource = async (req, res) => {
             console.log('parent resource id', query.parentResourceId);
     
             const verifyRoleResource1 = await userresource.findOne({
-              attributes: ['userid', 'resourceid'],
-              where: { userid, resourceid: query.parentResourceId },
+              attributes: ['userId', 'resourceId'],
+              where: { userId, resourceid: query.parentResourceId },
               transaction,
             });
     
@@ -128,13 +129,13 @@ let insertUserResource = async (req, res) => {
             if (result) {
               if (!verifyRoleResource1) {
                 const result1 = await userresource.create({
-                  userid,
-                  resourceid: query.parentResourceId,
-                  statusid: status,
-                  createdby: user,
-                  createddt: date,
-                  updatedby: user,
-                  updateddt: date,
+                  userId,
+                  resourceId: query.parentResourceId,
+                  statusId: status,
+                  createdBy: user,
+                  createdDt: date,
+                  updatedBy: user,
+                  updatedDt: date,
                 }, { transaction });
     
                 if (!result1) {
@@ -149,14 +150,14 @@ let insertUserResource = async (req, res) => {
           } else {
             // Handle non-child resource
             const result = await userresource.create({
-              userid,
+              userId:userId,
               resourceid: resourceList[i],
-              parentresourceid: query.parentResourceId,
-              statusid: status,
-              createdby: user,
-              createddt: date,
-              updatedby: user,
-              updateddt: date,
+              parentResourceId: query.parentResourceId,
+              statusId: status,
+              createdBy: user,
+              createdDt: date,
+              updatedBy: user,
+              updatedDt: date,
             }, { transaction });
     
             if (!result) {
@@ -200,18 +201,18 @@ let viewUserResource = async (req, res) => {
             rm.description,
             (
                 SELECT rm1.name
-                FROM amabhoomi.resourcemaster rm1
+                FROM amabhoomi.resourcemasters rm1
                 WHERE rm1.resourceId = rm.parentResourceId
             ) AS parentResourceName,
             sm.statusCode
             FROM 
-            amabhoomi.userresource ur
+            amabhoomi.userresources ur
             INNER JOIN 
-            amabhoomi.privateuser pu ON pu.privateUserId = ur.userId 
+            amabhoomi.privateusers pu ON pu.privateUserId = ur.userId 
             INNER JOIN 
-            amabhoomi.resourcemaster rm ON rm.resourceId = ur.resourceId
+            amabhoomi.resourcemasters rm ON rm.resourceId = ur.resourceId
             LEFT JOIN
-            amabhoomi.statusmaster sm ON sm.statusId=ur.statusId
+            amabhoomi.statusmasters sm ON sm.statusId=ur.statusId
             `;
 
 
@@ -219,39 +220,39 @@ let viewUserResource = async (req, res) => {
             type:Sequelize.QueryTypes.SELECT
         })
 
-        let decryptViewUserResourceData = viewUserResourceData.map(async(userData)=>({
-            ...userData,
-           fullName: await decrypt(userData.fullName),
-           userName: await decrypt(userData.userName)
-        }))
+        // let decryptViewUserResourceData = viewUserResourceData.map(async(userData)=>({
+        //     ...userData,
+        //    fullName: await decrypt(userData.fullName),
+        //    userName: await decrypt(userData.userName)
+        // }))
 
-        let matchedData = decryptViewUserResourceData;
+        let matchedData = viewUserResourceData;
 
-        if(decryptGivenReq){
-            matchedData = decryptViewUserResourceData.filter((allData)=>
-                allData.userResourceId.includes(decryptGivenReq)||
-                allData.fullName.includes(decryptGivenReq)||
-                allData.userName.includes(decryptGivenReq)||
-                allData.name.includes(decryptGivenReq)||
-                allData.description.includes(decryptGivenReq)||
-                allData.parentResourceName.includes(decryptGivenReq)||
-                allData.statusCode.includes(decryptGivenReq)
+        if(givenReq){
+            matchedData = viewUserResourceData.filter((allData)=>
+                allData.userResourceId.includes(givenReq)||
+                allData.fullName.includes(givenReq)||
+                allData.userName.includes(givenReq)||
+                allData.name.includes(givenReq)||
+                allData.description.includes(givenReq)||
+                allData.parentResourceName.includes(givenReq)||
+                allData.statusCode.includes(givenReq)
             )
            }
            let paginatedUserResources = matchedData.slice(offset,limit+offset)
        
-           let encryptUserResources = paginatedUserResources.map(async(allData)=>({
-            ...allData,
-            fullName: await encrypt(allData.fullName),
-            userName: await encrypt(allData.userName),
-            name:await encrypt(allData.name),
-            description: await encrypt(allData.description),
-            parentResourceName: await encrypt(allData.parentResourceName),
-            statusCode: await encrypt(allData.statusCode)
+        //    let encryptUserResources = paginatedUserResources.map(async(allData)=>({
+        //     ...allData,
+        //     fullName: await encrypt(allData.fullName),
+        //     userName: await encrypt(allData.userName),
+        //     name:await encrypt(allData.name),
+        //     description: await encrypt(allData.description),
+        //     parentResourceName: await encrypt(allData.parentResourceName),
+        //     statusCode: await encrypt(allData.statusCode)
 
-           }))
+        //    }))
 
-        return res.status(statusCode.SUCCESS.code).json({ mesaage: 'user resource mapping list data', data: encryptUserResources });
+        return res.status(statusCode.SUCCESS.code).json({ mesaage: 'user resource mapping list data', data: paginatedUserResources });
    
     }
     catch (err) {
@@ -265,7 +266,7 @@ let autoSuggestionUserResource = async (req, res) => {
     try {
       
         const givenReq = req.body.givenReq ? req.body.givenReq: null;
-        const decryptGivenReq = await decrypt(givenReq).toLowerCase();
+        // const decryptGivenReq = await decrypt(givenReq).toLowerCase();
       
 
         let query =
@@ -277,18 +278,18 @@ let autoSuggestionUserResource = async (req, res) => {
             rm.description,
             (
                 SELECT rm1.name
-                FROM amabhoomi.resourcemaster rm1
+                FROM amabhoomi.resourcemasters rm1
                 WHERE rm1.resourceId = rm.parentResourceId
             ) AS parentResourceName,
             sm.statusCode
             FROM 
-            amabhoomi.userresource ur
+            amabhoomi.userresources ur
             INNER JOIN 
-            amabhoomi.privateuser pu ON pu.privateUserId = ur.userId 
+            amabhoomi.privateusers pu ON pu.privateUserId = ur.userId 
             INNER JOIN 
-            amabhoomi.resourcemaster rm ON rm.resourceId = ur.resourceId
+            amabhoomi.resourcemasters rm ON rm.resourceId = ur.resourceId
             LEFT JOIN
-            amabhoomi.statusmaster sm ON sm.statusId=ur.statusId
+            amabhoomi.statusmasters sm ON sm.statusId=ur.statusId
             `;
 
 
@@ -296,38 +297,38 @@ let autoSuggestionUserResource = async (req, res) => {
             type:Sequelize.QueryTypes.SELECT
         })
 
-        let decryptViewUserResourceData = viewUserResourceData.map(async(userData)=>({
-            ...userData,
-           fullName: await decrypt(userData.fullName),
-           userName: await decrypt(userData.userName)
-        }))
+        // let decryptViewUserResourceData = viewUserResourceData.map(async(userData)=>({
+        //     ...userData,
+        //    fullName: await decrypt(userData.fullName),
+        //    userName: await decrypt(userData.userName)
+        // }))
 
-        let matchedData = decryptViewUserResourceData;
+        let matchedData = viewUserResourceData;
 
-        if(decryptGivenReq){
-            matchedData = decryptViewUserResourceData.filter((allData)=>
-                allData.userResourceId.includes(decryptGivenReq)||
-                allData.fullName.includes(decryptGivenReq)||
-                allData.userName.includes(decryptGivenReq)||
-                allData.name.includes(decryptGivenReq)||
-                allData.description.includes(decryptGivenReq)||
-                allData.parentResourceName.includes(decryptGivenReq)||
-                allData.statusCode.includes(decryptGivenReq)
+        if(givenReq){
+            matchedData = viewUserResourceData.filter((allData)=>
+                allData.userResourceId.includes(givenReq)||
+                allData.fullName.includes(givenReq)||
+                allData.userName.includes(givenReq)||
+                allData.name.includes(givenReq)||
+                allData.description.includes(givenReq)||
+                allData.parentResourceName.includes(givenReq)||
+                allData.statusCode.includes(givenReq)
             )
            }
        
-           let encryptUserResources = matchedData.map(async(allData)=>({
-            ...allData,
-            fullName: await encrypt(allData.fullName),
-            userName: await encrypt(allData.userName),
-            name:await encrypt(allData.name),
-            description: await encrypt(allData.description),
-            parentResourceName: await encrypt(allData.parentResourceName),
-            statusCode: await encrypt(allData.statusCode)
+        //    let encryptUserResources = matchedData.map(async(allData)=>({
+        //     ...allData,
+        //     fullName: await encrypt(allData.fullName),
+        //     userName: await encrypt(allData.userName),
+        //     name:await encrypt(allData.name),
+        //     description: await encrypt(allData.description),
+        //     parentResourceName: await encrypt(allData.parentResourceName),
+        //     statusCode: await encrypt(allData.statusCode)
 
-           }))
+        //    }))
 
-        return res.status(statusCode.SUCCESS.code).json({ mesaage: 'user resource mapping list data', data: encryptUserResources });
+        return res.status(statusCode.SUCCESS.code).json({ mesaage: 'user resource mapping list data', data: matchedData });
    
     }
     catch (err) {
