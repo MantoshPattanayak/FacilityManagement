@@ -84,24 +84,30 @@ let viewList = async (req, res) => {
       let getAllUsers = await sequelize.query(getAllUsersQuery, {
         type: Sequelize.QueryTypes.SELECT
       });
-      // console.log(getAllUsers,'getAllUsers');
+      console.log(getAllUsers,'getAllUsers');
       // let givenReqDecrypted = await decrypt(givenReqEncrypted).toLowerCase() 
   
       // Decrypt all encrypted fields
-      let decryptedUsers = await Promise.all(getAllUsers.map(async(userData) => ({
+      let decryptedUsers = await Promise.all(getAllUsers.map(async(userData) => {
+        if (!userData || !userData.title || !userData.fullName || !userData.emailId || !userData.userName || !userData.contactNo) {
+          return userData; // Skip decryption if userData or its fields are null or undefined
+        }
+      return{
         ...userData,
         title: await decrypt(userData.title),
         fullName: await decrypt(userData.fullName),
         emailId: await decrypt(userData.emailId),
         userName:await decrypt(userData.userName),
         contactNo: await decrypt(userData.contactNo)
-      })));
+    }
+      }));
       
+      console.log('g')
       console.log(decryptedUsers, 'decryptedUsers')
       // Filter data based on the encrypted search term
       let filteredUsers = decryptedUsers;
     
-
+      console.log('5')
       if (givenReq) {
         givenReq = givenReq.toLowerCase();
 
