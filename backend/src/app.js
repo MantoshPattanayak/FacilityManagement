@@ -29,7 +29,7 @@ const userResource = require("./routes/api/" +
   "/configuration/userResource");
 
 const roleroute = require("./routes/api/" + api_version + "/auth/role");
-const resource = require("./routes/api/" +
+const resourceroute = require("./routes/api/" +
   api_version +
   "/configuration/resource");
 
@@ -68,6 +68,7 @@ app.use("/userDetails", userDetails);
 app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
+app.use("/resource", resourceroute);
 
 //  put all your route handlers here
 
