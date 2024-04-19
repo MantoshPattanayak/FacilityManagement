@@ -8,7 +8,6 @@ const {
 } = require('../../../middlewares/encryption.middlewares')
 const user =db.privateuser
 
-
 let autoSuggestionForUserSearch = async(req,res)=> {
     try{
         const givenReq = req.query.givenReq ? req.body.givenReq: null;
@@ -144,15 +143,28 @@ let viewList = async (req, res) => {
     }
   };
   
+  let generatePassword = async(length)=>{
+    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let password = ""
+    for(let i= 0;i<length;i++){
+      let randomIndex = Math.floor(Math.random()*charset.length)
+      password+=charset[randomIndex]
+    }
+    return password
+  }
 
 let createUser = async (req,res)=>{
     try{
         
             const pwdFlag = false;
-        
-            const { title, fullName, userName, password, mobileNumber,alternateMobileNo,emailId, roleId, statusId, genderId } = await decrypt(req.body);
 
-            console.log(title, fullName, userName, password, mobileNumber,alternateMobileNo,emailId, roleId, statusId, genderId, 'input')
+            
+            const { title, fullName, userName, mobileNumber,alternateMobileNo,emailId, roleId, statusId, genderId } = req.body;
+
+            console.log(title, fullName, userName, mobileNumber,alternateMobileNo,emailId, roleId, statusId, genderId, 'input')
+
+            let password = await generatePassword(8)
+
             const encryptTitle = await encrypt(title);
             const encryptfullName =await encrypt(fullName);
             const encryptUserName= await encrypt(userName);
