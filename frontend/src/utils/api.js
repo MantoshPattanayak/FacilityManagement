@@ -6,7 +6,10 @@ const api = {
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
     // Recourece Api
-    RESOURCE_VIEW_BY_ID_API: '/resource/getResourceById', //get /resource//getResourceById/:id 
+    RESOURCE_VIEW_BY_ID_API: '/resource/resourceId', //get /resource//resourceId/:id
+    RESOURCE_CREATE_API: '/resource/createResource',    //POST
+    RESOURCE_UPDATE_API: '/resource/updateResource',    //PUT
+    RESOURCE_VIEWLIST_API: '/resource/viewResources',   //POST
     // here Search Loaction Api
     SearchLoaction_map:'/mapData/searchParkFacilities',
     //User-Resource
@@ -22,10 +25,10 @@ const api = {
     ADMIN_USER_UPDATE_API: '/userDetails/updateUserData',   //put
     ADMIN_USER_AUTOSUGGEST_API: '/userDetails/autoSuggestionForUserSearch/',   //get /userDetails/autoSuggestionForUserSearch/:givenReq
     //Role
-    ROLE_VIEW_BY_ID_API: '/role/roleId',   //get /role/roleId/:roleId
+    ROLE_VIEW_BY_ID_API: '/role/',   //get /role/:roleId
     ROLE_UPDATE_API: '/role/updateRole/',  //put /role/update-profile/:id
     ROLE_CREATE_API: '/role/createRole',    //post
-    ROLE_VIEW_API:'/role/viewRole/', // /role/view
+    ROLE_VIEW_API:'/role/viewRole/', //post /role/view
     //Role-Resource
     ROLE_RESOURCE_DATALOAD_API: '/roleResource/dataLoad', //get
     ROLE_RESOURCE_CREATE_API: '/roleResource/insertRoleResource',   //post

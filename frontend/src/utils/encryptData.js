@@ -8,12 +8,9 @@ export function encryptData (val) {
     let parsedKey = CryptoJS.enc.Base64.parse(key);
     let parsediv = CryptoJS.enc.Base64.parse(iv);
     let encryptedData = null;
-    if (typeof val === 'string' && val !== null) {
-        encryptedData = CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8);
-    }
-    else {
-        encryptedData = CryptoJS.AES.encrypt(JSON.stringify(val),parsedKey,{iv:parsediv}).toString();
-    }
+    
+    if(val == null || val == '')    return null;
+    encryptedData = CryptoJS.AES.encrypt(JSON.stringify(val),parsedKey,{iv:parsediv}).toString();
     return encryptedData;
 }
 
@@ -21,12 +18,11 @@ export function decryptData (val) {
     let parsedKey = CryptoJS.enc.Base64.parse(key);
     let parsediv = CryptoJS.enc.Base64.parse(iv);
     let decryptedData = null;
-    if (typeof val === 'string' && val !== null) {
-        decryptedData = CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8);
-    }
-    else {
-        decryptedData = JSON.parse(CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8));
-    }
+
+    if(val == null || val == '')    return;
+
+    decryptedData = CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8);
+    
+    // console.log('decryptData', val, typeof val, decryptedData);
     return decryptedData;
 }
-

@@ -27,7 +27,8 @@ export default function EditUser() {
         mobileNumber: '',
         altMobileNumber: '',
         emailID: '',
-        role: ''
+        role: '',
+        status: ''
     };
 
     let modifiedFormData = {
@@ -38,10 +39,12 @@ export default function EditUser() {
         mobileNumber: '',
         altMobileNumber: '',
         emailID: '',
-        role: ''
+        role: '',
+        status: ''
     }
 
     const [formData, setFormData] = useState(initialFormData);
+    const [roleList, setRoleList] = useState([]);
 
     const [errors, setErrors] = useState({});
 
@@ -49,22 +52,55 @@ export default function EditUser() {
         try {
             let res = await axiosHttpClient('ADMIN_USER_VIEW_BY_ID_API', 'get', null, userId);
 
-            console.log('response', res);
-            setFormData(res.data.data);
+            // console.log('response', res.data.data[0]);
 
-            modifiedFormData = JSON.parse(JSON.stringify(res.data.data));
+            let title = decryptData(res.data.data[0].title);
+            let fullName = decryptData(res.data.data[0].fullName).split(' ');
+            let emailId = decryptData(res.data.data[0].emailId);
+            let status = (res.data.data[0].statusId);
+            let mobileNumber = decryptData(res.data.data[0].contactNo);
+            let altMobileNumber = decryptData(res.data.data[0].altContactNo);
+            let role = (res.data.data[0].roleId);
+
+            console.log({title, fullName, emailId, status, mobileNumber, role});
+
+            setFormData({
+                title: title || '',
+                firstName: fullName[0] || '',
+                middleName: fullName[1] || '',
+                lastName: fullName[-1] || '',
+                mobileNumber: mobileNumber || '',
+                altMobileNumber: altMobileNumber || '',
+                emailID: emailId || '',
+                role: role || '',
+                status: status || ''
+            })
         }
         catch (error) {
             console.error(error);
         }
     }
 
+    async function fetchInitialData() {
+        try {
+            let res = await axiosHttpClient('ADMIN_USER_INITIALDATA_API', 'get');
+
+            console.log(res.data);
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         fetchUserDetails();
+        fetchInitialData();
     }, [])
 
     function validateUserInput(data) {
         let errors = {};
+
+        console.log(data);
 
         if (data.title) {
             // continue
@@ -233,11 +269,20 @@ export default function EditUser() {
                             </select>
                             {errors.role && <p className='error-message'>{errors.role}</p>}
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">Status<span className='text-red-500'>*</span></label>
+                            <select name='role' value={formData.status} onChange={handleChange} disabled={action == 'view' ? true : false}>
+                                <option value={''}>Select</option>
+                                <option value={'1'}>Active</option>
+                                <option value={'0'}>Inactive</option>
+                            </select>
+                            {errors.role && <p className='error-message'>{errors.role}</p>}
+                        </div>
                     </div>
                 </div>
 
                 <div className="buttons-container">
-                    <button type='submit' className="approve-button" onClick={handleSubmit} disabled={action == 'view' ? true : false}>Submit</button>
+                    <button type='submit' className={`approve-button ${(action == 'view') ? 'hidden' : ''}`} onClick={handleSubmit} disabled={action == 'view' ? true : false}>Submit</button>
                     {/* <button type='submit' className="cancel-button" onClick={clearForm} disabled={action == 'view' ? true : false}>Cancel</button> */}
                 </div>
             </div>
