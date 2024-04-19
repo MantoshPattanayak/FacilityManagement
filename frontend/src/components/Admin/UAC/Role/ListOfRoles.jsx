@@ -49,7 +49,7 @@ const ListOfRoles = () => {
           </div>
         </div>
         <div className="search_text_conatiner">
-          <button className='create-role-btn'>Create new Role</button>
+          <button className='create-role-btn' onClick={() => navigate('/UAC/Role/CreateRole')}>Create new Role</button>
           <input
             type="text"
             className="search_input_field"
@@ -66,7 +66,9 @@ const ListOfRoles = () => {
                
                 <th scope="col">Role Name</th>
                 <th scope="col">Role Code</th>
-                <th scope="col">Update</th>
+                <th scope="col">View</th>
+                <th scope="col">Edit </th>
+               
               </tr>
             </thead>
             <tbody>
@@ -79,11 +81,21 @@ const ListOfRoles = () => {
                         <Link
                                          to={{ 
                                         pathname: '/UAC/Role/EditRole',
-                                        search: `?userId=${encryptDataId(item.roleId)}&action=view`
+                                        search: `?roleId=${encryptDataId(item.roleId)}&action=view`
                                       }}
                                      >
                                     <FontAwesomeIcon icon={faEye} />
                                  </Link>
+                        </td>
+                        <td>
+                        <Link
+                            to={{
+                              pathname: '/UAC/Role/EditRole',
+                             search: `?roleId=${encryptDataId(item.roleId)}&action=edit`
+                                 }}
+                                   >
+                                   <FontAwesomeIcon icon={faPenToSquare} />
+                                   </Link>
                         </td>
                       </tr>)
 
