@@ -28,13 +28,8 @@ const userResource = require("./routes/api/" +
   api_version +
   "/configuration/userResource");
 
-<<<<<<< HEAD
 const roleroute = require("./routes/api/" + api_version + "/auth/role");
 const resourceroute = require("./routes/api/" +
-=======
-const roleroute = require("./routes/api/" + api_version + "/configuration/role");
-const resource = require("./routes/api/" +
->>>>>>> 68a4485ffb1002a46146255079cc235bb684755c
   api_version +
   "/configuration/resource");
 console.log(port, "port");
