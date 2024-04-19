@@ -67,12 +67,8 @@ app.use("/userDetails", userDetails);
 app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
-<<<<<<< HEAD
 app.use("/resource", resourceroute);
 
-=======
-app.use("/resource",resource)
->>>>>>> 68a4485ffb1002a46146255079cc235bb684755c
 //  put all your route handlers here
 
 // Use error logger middleware after all route handlers
