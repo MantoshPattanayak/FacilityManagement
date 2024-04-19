@@ -8,7 +8,7 @@ router.post('/createUser',userDetails.createUser)
 
 router.get('/getUserById/:id',userDetails.getUserById)
 
-router.get('/viewList',userDetails.viewList)
+router.post('/viewList',userDetails.viewList)
 
 router.get('/fetchInitialData',userDetails.fetchInitialData)
 

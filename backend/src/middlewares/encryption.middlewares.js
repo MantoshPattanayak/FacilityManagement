@@ -1,6 +1,6 @@
 var CryptoJS = require("crypto-js");
 
-let encryptData = async (value)=>{
+let encrypt = async (val)=>{
     let key = process.env.Encrypt_Decrypt_key
     let iv= process.env.IV
     let parsedKey = CryptoJS.enc.Base64.parse(key)
@@ -11,5 +11,5 @@ let encryptData = async (value)=>{
 }
 
 module.exports = {
-    encryptData
+    encrypt
 }
