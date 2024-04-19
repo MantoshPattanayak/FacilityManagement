@@ -1,8 +1,35 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../RoleResourceMapping/CreateRoleResourceMapping.css";
 import SearchDropdown from "../RoleResourceMapping/SearchDropdown";
+import axiosHttpClient from "../../../../../utils/axios";
 
 const CreateUserResourceMapping = () => {
+  // const[Postdata, setPostdata]=({
+
+  // })
+
+  // async function CreateUserRole(){
+  //   try{
+  //     let res=await axiosHttpClient('here Api ', 'post', {
+
+  //     })
+  //     console.log("here Api Response ", res)
+  //   }
+  //   catch(err){
+  //     console.log("here Api error ", err)
+  //   }
+  // }
+
+  // // UseEffect of Update the data means call the api 
+  // useEffect(()=>{
+  //   CreateUserRole()
+  // }, [])
+
+
+
+
+
+
   return (
     <div className="container-parent">
       <div className="headingHeader">
@@ -70,8 +97,21 @@ const CreateUserResourceMapping = () => {
           </div>
         </div>
         <div className="right-container">
-          {/* Dropdown component goes here */}
-          <SearchDropdown />
+           <select>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            <option> 1</option>
+            
+           </select>
         </div>
       </div>
     </div>
