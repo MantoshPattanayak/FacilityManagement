@@ -7,8 +7,9 @@ const role = db.rolemaster
 //get
 const roleId = async (req, res) => {
   try {
-    let roleId = req.params.roleId?req.params.roleId:null;
-    
+    console.log(1);
+    let roleId = req.params.roleId ? req.params.roleId:1;
+    console.log('roleId', roleId);
    const rolemasters = await role.findOne({
     where:{
       roleId: roleId
