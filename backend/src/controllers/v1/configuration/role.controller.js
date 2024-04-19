@@ -7,9 +7,13 @@ const role = db.rolemaster
 //get
 const roleId = async (req, res) => {
   try {
-    const [rolemasters, metadata] = await sequelize.query(
-      "select * from amabhoomi.rolemasters"
-    );
+    let roleId = req.body.roleId?req.body.roleId:null;
+    
+   const rolemasters = await role.findOne({
+    where:{
+      roleId: roleId
+    }
+   })
 
     return res.status(statusCode.SUCCESS.code).json({
       message: `All roles`,
