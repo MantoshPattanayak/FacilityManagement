@@ -16,8 +16,8 @@ const api = {
     USER_RESOURCE_AUTOSUGGEST_API: '/userResource/autoSuggestionUserResource', //get
     //User
     ADMIN_USER_CREATE_API: '/userDetails/createUser', //post
-    ADMIN_USER_VIEW_BY_ID_API: '/userDetails/getUserById/',   //get /userDetails/getUserById/:id
-    ADMIN_USER_VIEW_API: '/userDetails/viewList',   //get
+    ADMIN_USER_VIEW_BY_ID_API: '/userDetails/getUserById',   //get /userDetails/getUserById/:id
+    ADMIN_USER_VIEW_API: '/userDetails/viewList',   //post
     ADMIN_USER_INITIALDATA_API: '/userDetails/fetchInitialData',    //get
     ADMIN_USER_UPDATE_API: '/userDetails/updateUserData',   //put
     ADMIN_USER_AUTOSUGGEST_API: '/userDetails/autoSuggestionForUserSearch/',   //get /userDetails/autoSuggestionForUserSearch/:givenReq
