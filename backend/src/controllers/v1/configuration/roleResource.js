@@ -174,7 +174,7 @@ let updateRoleResource = async (req, res) => {
     try {
    
         let { id, statusId } = req.body;
-        let user = req.user.id;
+        let user = req.user?.id||1;
         let date = 'NOW()';
 
         let  [updateTheStatusOfRoleCount,updateTheStatusOfRole] = await roleresource.update({statusId:statusId},{
@@ -212,7 +212,7 @@ let viewId = async (req, res) => {
         role1.roleName as role, 
         rm.name as resourceName, 
         rm2.name as parentResourceName, 
-        sm.id as status
+        sm.statusId as status
         from amabhoomi.rolemasters role1
         inner join amabhoomi.roleresources role_resource1 on role1.roleId = role_resource1.roleId
         inner join amabhoomi.resourcemasters rm on role_resource1.resourceId = rm.resourceId
@@ -307,7 +307,7 @@ let viewRoleResource = async (req, res) => {
 
 let autoSuggestionForRoleResourceSearch = async(req,res)=> {
     try{
-        const givenReq = req.query.givenReq ? req.query.givenReq: null;
+        const givenReq = req.params.givenReq ? req.params.givenReq: null;
         // const decryptGivenReq = await decrypt(givenReq).toLowerCase();
 
     let roleResourceDataQuery = `select count(*) over() as totalCount,
@@ -330,10 +330,10 @@ let autoSuggestionForRoleResourceSearch = async(req,res)=> {
   let findMatchRes = roleResourceData
   if(givenReq){
    findMatchRes = roleResourceData.filter((allData)=>
-       allData.roleResourceId.includes(givenReq)||
-       allData.role.includes(givenReq)||
-       allData.resourceName.includes(givenReq)||
-       allData.status.includes(givenReq)
+    //    allData.roleResourceId.includes(givenReq)||
+       allData.role.toLowerCase().includes(givenReq)||
+       allData.resourceName.toLowerCase().includes(givenReq)||
+       allData.status.toLowerCase().includes(givenReq)
    )
   }
   
