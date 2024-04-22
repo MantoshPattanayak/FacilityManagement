@@ -8,4 +8,7 @@ router.get("/resourceId/:id", resource.resourceId);
 router.post("/createResource", resource.createResource);
 router.put("/updateResource", resource.updateResource);
 router.post("/viewResources", resource.viewResources);
+router.get("/dataLoadResource", resource.dataLoadResource);
+router.get("/isParent", resource.isParent);
+
 module.exports = router;

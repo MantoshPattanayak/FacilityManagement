@@ -3,6 +3,7 @@ const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const resource = db.resourcemaster;
+const Sequelize = db.Sequelize
 
 const resourceId = async (req, res) => {
   try {
@@ -136,12 +137,20 @@ const updateResource = async (req, res) => {
     .update(
       params,
       {
-        where: { resourceId: resourceId },
-        returning:true
+        where: { resourceId: resourceId }
       }
     )
 
-    
+    if(updateResourceCount>=0){
+      return res.status(statusCode.SUCCESS.code).json({
+        message:"Data is updated successfully"
+      })
+    }
+    else{
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:"Data is not updated "
+      })
+    }
 
     
     console.log(updateResourceData,'fsdfsd',updateResourceCount)
@@ -184,9 +193,86 @@ const viewResources = async (req, res) => {
   }
 };
 
+
+let dataLoadResource = async (req, res) => {
+  let client;
+  try {
+      try {
+          const query1 = await resource.findAll({
+            attributes: [
+              [Sequelize.fn('DISTINCT', Sequelize.col('parentResourceId')), 'parentResourceId']
+              // Replace 'columnName' with the actual column name you want to find distinct values for
+            ]
+          });
+          const query2 = await resource.findAll({
+            attributes: [
+              [Sequelize.fn('DISTINCT', Sequelize.col('hasSubMenu')), 'hasSubMenu']
+              // Replace 'columnName' with the actual column name you want to find distinct values for
+            ]
+          });
+          const query3 = await resource.findAll({
+            attributes: [
+              [Sequelize.fn('DISTINCT', Sequelize.col('icon')), 'icon']
+              // Replace 'columnName' with the actual column name you want to find distinct values for
+            ]
+          });
+          const query4 = await resource.findAll({
+            attributes: [
+              [Sequelize.fn('DISTINCT', Sequelize.col('statusId')), 'statusId']
+              // Replace 'columnName' with the actual column name you want to find distinct values for
+            ]
+          });
+
+
+          res.status(statusCode.SUCCESS.code).json({ parentResourceId: query1, hasSubMenu: query2, icon: query3, status: query4 });
+
+      } catch (err) {
+          res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
+      }
+  } catch (e) {
+      res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: e.message });
+  }
+  finally {
+      // Always release the connection, whether there was an error or not
+      if (client) {
+          client.release();
+      }
+  }
+}
+
+
+let isParent = async (req, res) => {
+  let client;
+  try {
+    
+      const query1 = await resource.findAll({
+        where: {
+          parentResourceId: null
+        },
+        order: [
+          ['orderIn', 'ASC']
+        ]
+      });    
+
+  if (query1.length> 0) {
+          res.status(statusCode.SUCCESS.code).json({ message: 'parent data', data: query1 });
+      }
+  } catch (err) {
+      res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
+  }
+  finally {
+      // Always release the connection, whether there was an error or not
+      if (client) {
+          client.release();
+      }
+  }
+}
+
 module.exports = {
   resourceId,
   createResource,
   updateResource,
   viewResources,
+  dataLoadResource,
+  isParent
 };
