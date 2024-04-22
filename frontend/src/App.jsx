@@ -35,6 +35,9 @@ import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessContro
 import CreateUserResourceMapping from './components/Admin/UAC/AccessControl/UserResourceMapping/CreateUserResourceMapping';
 import UserResourceMappingList from './components/Admin/UAC/AccessControl/UserResourceMapping/UserResourceMappingList';
 
+// Resource
+import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
+
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
   return (
@@ -56,7 +59,8 @@ function App() {
             <Route path='/UAC/Users/ListOfUsers' element={<ProtectedRoute><ListOfUsers /></ProtectedRoute>} />
             <Route path='/UAC/Users/Create' element={<ProtectedRoute><CreateNewUser /></ProtectedRoute>} />
             <Route path='/UAC/Users/Edit' element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
-            
+            {/* Recource */}
+            <Route path='/UAC/Resources/ListOfResources' element={<ProtectedRoute><ListOfResources/></ProtectedRoute>} />
             {/* user Recource */}
             <Route path='/UAC/Users/CreateUserResourceMapping' element={<ProtectedRoute><CreateUserResourceMapping /></ProtectedRoute>} />
             <Route path='/UAC/Users/UserResourceMappingList' element={<ProtectedRoute><UserResourceMappingList/></ProtectedRoute>} />
