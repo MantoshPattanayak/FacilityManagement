@@ -170,7 +170,8 @@ const viewResources = async (req, res) => {
     let limit = req.body.page_size ? req.body.page_size : 50;
     let page = req.body.page_number ? req.body.page_number : 1;
     let offset = (page - 1) * limit;
-    let showAllResources = await sequelize.query(`    
+    console.log('1')
+    let [showAllResources] = await sequelize.query(`    
     SELECT 
     rm.resourceId, 
     rm.name, 
@@ -184,7 +185,7 @@ const viewResources = async (req, res) => {
 FROM 
     amabhoomi.resourcemasters rm  
 LEFT JOIN 
-    amabhoomi.resourcemasters rm1 ON rm.parentResourceId = rm1.resourceId  -- Corrected typo: resourcId to resourceId
+    amabhoomi.resourcemasters rm1 ON rm.parentResourceId = rm1.resourceId  
 INNER JOIN 
     amabhoomi.statusmasters sm ON sm.statusId = rm.statusId 
 ORDER BY 
@@ -192,13 +193,13 @@ ORDER BY
 
     `);
 
-
+  console.log(showAllResources,'all resources')
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
     if (givenReq) {
       showAllResources = showAllResources.filter(
         (resourceData) =>
           resourceData.resourceId.includes(givenReq) ||
-          resourceData.name.includes(givenReq)
+          resourceData.name.toLowerCase().includes(givenReq)
       );
     }
     let paginatedshowAllResources = showAllResources.slice(

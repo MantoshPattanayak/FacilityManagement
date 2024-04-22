@@ -9,6 +9,7 @@ const roleresource = db.roleresource
 const resourcemaster = db.resourcemaster
 const user = db.privateuser
 const userresource = db.userresource;
+const QueryTypes = db.QueryTypes
 
 
 let dataload = async (req, res) => {
@@ -69,12 +70,10 @@ let dataload = async (req, res) => {
 
 
 let insertUserResource = async (req, res) => {
-    let client;
     try {
-        client = await db.connect();
-        let userId = req.body.user;
+        let userId = req.body.userId;
         let status = req.body.status;
-        let user = req.user.id;
+        let user = req.user?.id||1;
         let date = 'now()';
         let {resourceList} = req.body;
 
@@ -95,48 +94,54 @@ let insertUserResource = async (req, res) => {
         // Check for any duplicates
         if (duplicateCheckResult.length > 0) {
             const duplicateResources = duplicateCheckResult.map(row => row.name);
-            return res.status(statusCode.CONFLICT.code).json({ message: 'Some resources are already mapped with the role', data: duplicateResources });
+            return res.status(statusCode.CONFLICT.code).json({ message: 'Some resources are already mapped with the user', data: duplicateResources });
          }
-         for (let i = 0; i < resourceArray.length; i++) {
-            const query = await userresource.findOne({
+               // Flag to track success
+               let successFlag = true;
+               
+         for (let i = 0; i < resourceList.length; i++) {
+            const query = await resourcemaster.findOne({
               attributes: ['parentResourceId'],
-              where: { userResourceId: resourceList[i] }
+              where: { resourceId: resourceList[i] }
             });
 
+            console.log('2')
          if (query.parentResourceId !== null) {
             // Child resource handling
+            console.log('3')
             const result = await userresource.create({
               userId:userId,
-              resourceid: resourceList[i],
-              parentresourceid: query.parentResourceId,
-              statusid: status,
-              createdby: user,
-              createddt: date,
-              updatedby: user,
-              updateddt: date,
+              resourceId: resourceList[i],
+              parentresourceId: query.parentResourceId,
+              statusId: status,
+              createdBy: user,
+              createdDt: date,
+              updatedBy: user,
+              updatedDt: date,
             });
-    
+            console.log('4')
             console.log('parent resource id', query.parentResourceId);
     
             const verifyRoleResource1 = await userresource.findOne({
               attributes: ['userId', 'resourceId'],
               where: { userId, resourceid: query.parentResourceId },
-              transaction,
+       
             });
-    
+         
+
             console.log(verifyRoleResource1);
     
             if (result) {
               if (!verifyRoleResource1) {
                 const result1 = await userresource.create({
-                  userId,
+                  userId:userId,
                   resourceId: query.parentResourceId,
                   statusId: status,
                   createdBy: user,
                   createdDt: date,
                   updatedBy: user,
                   updatedDt: date,
-                }, { transaction });
+                });
     
                 if (!result1) {
                   successFlag = false;
@@ -151,14 +156,14 @@ let insertUserResource = async (req, res) => {
             // Handle non-child resource
             const result = await userresource.create({
               userId:userId,
-              resourceid: resourceList[i],
-              parentResourceId: query.parentResourceId,
+              resourceId: resourceList[i],
+              parentResourceId:query.parentResourceId,
               statusId: status,
               createdBy: user,
               createdDt: date,
               updatedBy: user,
               updatedDt: date,
-            }, { transaction });
+            });
     
             if (!result) {
               successFlag = false;
