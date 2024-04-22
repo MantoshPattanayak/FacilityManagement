@@ -12,7 +12,7 @@ router.get('/viewRoleResource',roleResource.viewRoleResource)
 
 router.get('/autoSuggestionRoleResource/:givenReq',roleResource.autoSuggestionForRoleResourceSearch)
 
-router.put('/updateRoleResource/:id',roleResource.updateRoleResource)
+router.put('/updateRoleResource',roleResource.updateRoleResource)
 
 router.get('/viewId/:id',roleResource.viewId)
 
