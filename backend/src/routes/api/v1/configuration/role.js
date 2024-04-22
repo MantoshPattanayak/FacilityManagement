@@ -7,8 +7,8 @@ let role = require("../../../../controllers/" +
   api_version +
   "/configuration/role.controller");
 
-router.get("/roleId", role.roleId);
-router.put("/update-profile/:id", role.updateRole);
+router.get("/roleId/:roleId", role.roleId);
+router.put("/updateRole", role.updateRole);
 router.post("/createRole", role.createRole);
 router.post("/viewRole", role.viewRole);
 

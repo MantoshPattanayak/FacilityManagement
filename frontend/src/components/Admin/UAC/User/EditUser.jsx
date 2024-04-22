@@ -5,16 +5,19 @@ import '../../../../common/CommonFrom.css';
 import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../../../utils/axios';
 import api from '../../../../utils/api';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { decryptData } from '../../../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 export default function EditUser() {
 
     const location = useLocation();
     const userId = decryptData(new URLSearchParams(location.search).get('userId'));
     const action = new URLSearchParams(location.search).get('action');
+    const navigate = useNavigate();
 
     let initialFormData = {
         title: '',
@@ -24,7 +27,8 @@ export default function EditUser() {
         mobileNumber: '',
         altMobileNumber: '',
         emailID: '',
-        role: ''
+        role: '',
+        status: ''
     };
 
     let modifiedFormData = {
@@ -35,10 +39,12 @@ export default function EditUser() {
         mobileNumber: '',
         altMobileNumber: '',
         emailID: '',
-        role: ''
+        role: '',
+        status: ''
     }
 
     const [formData, setFormData] = useState(initialFormData);
+    const [roleList, setRoleList] = useState([]);
 
     const [errors, setErrors] = useState({});
 
@@ -46,22 +52,55 @@ export default function EditUser() {
         try {
             let res = await axiosHttpClient('ADMIN_USER_VIEW_BY_ID_API', 'get', null, userId);
 
-            console.log('response', res);
-            setFormData(res.data.data);
+            // console.log('response', res.data.data[0]);
 
-            modifiedFormData = JSON.parse(JSON.stringify(res.data.data));
+            let title = decryptData(res.data.data[0].title);
+            let fullName = decryptData(res.data.data[0].fullName).split(' ');
+            let emailId = decryptData(res.data.data[0].emailId);
+            let status = (res.data.data[0].statusId);
+            let mobileNumber = decryptData(res.data.data[0].contactNo);
+            let altMobileNumber = decryptData(res.data.data[0].altContactNo);
+            let role = (res.data.data[0].roleId);
+
+            console.log({title, fullName, emailId, status, mobileNumber, role});
+
+            setFormData({
+                title: title || '',
+                firstName: fullName[0] || '',
+                middleName: fullName[1] || '',
+                lastName: fullName[-1] || '',
+                mobileNumber: mobileNumber || '',
+                altMobileNumber: altMobileNumber || '',
+                emailID: emailId || '',
+                role: role || '',
+                status: status || ''
+            })
         }
         catch (error) {
             console.error(error);
         }
     }
 
+    async function fetchInitialData() {
+        try {
+            let res = await axiosHttpClient('ADMIN_USER_INITIALDATA_API', 'get');
+
+            console.log(res.data);
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         fetchUserDetails();
+        fetchInitialData();
     }, [])
 
     function validateUserInput(data) {
         let errors = {};
+
+        console.log(data);
 
         if (data.title) {
             // continue
@@ -172,6 +211,14 @@ export default function EditUser() {
             <div className="form-container">
                 <div className="form-heading">
                     <h2>{action == 'view' ? "View User" : "Edit User"}</h2>
+                    <div className="flex flex-col-reverse items-end w-[100%]">
+                        <button
+                        className='back-button'
+                            onClick={(e) => navigate(-1)}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+                        </button>
+                    </div>
                     <div className="grid grid-rows-2 grid-cols-2 gap-x-8 gap-y-6 w-[100%]">
                         <div className="form-group">
                             <label htmlFor="input1">Title<span className='text-red-500'>*</span></label>
@@ -222,11 +269,20 @@ export default function EditUser() {
                             </select>
                             {errors.role && <p className='error-message'>{errors.role}</p>}
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="input2">Status<span className='text-red-500'>*</span></label>
+                            <select name='role' value={formData.status} onChange={handleChange} disabled={action == 'view' ? true : false}>
+                                <option value={''}>Select</option>
+                                <option value={'1'}>Active</option>
+                                <option value={'0'}>Inactive</option>
+                            </select>
+                            {errors.role && <p className='error-message'>{errors.role}</p>}
+                        </div>
                     </div>
                 </div>
 
                 <div className="buttons-container">
-                    <button type='submit' className="approve-button" onClick={handleSubmit} disabled={action == 'view' ? true : false}>Submit</button>
+                    <button type='submit' className={`approve-button ${(action == 'view') ? 'hidden' : ''}`} onClick={handleSubmit} disabled={action == 'view' ? true : false}>Submit</button>
                     {/* <button type='submit' className="cancel-button" onClick={clearForm} disabled={action == 'view' ? true : false}>Cancel</button> */}
                 </div>
             </div>

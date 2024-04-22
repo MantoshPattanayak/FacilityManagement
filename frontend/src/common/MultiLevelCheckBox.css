@@ -1,0 +1,57 @@
+.react-checkbox-tree .rct-checkbox {
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+    align-items: center;
+
+
+}
+
+.react-checkbox-tree .rct-checkbox.rct-icon-check {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+
+.react-checkbox-tree .rct-title {
+    font-size: 18px;
+}
+
+.react-checkbox-tree .rct-node {
+    padding-left: 20px;
+}
+
+.react-checkbox-tree .rct-icon {
+    font-size: 34px;
+}
+
+.chechbox-tree {
+    display: flex;
+    float: right;
+    margin-left: 90px;
+    padding: 30px;
+    margin: 10px;
+
+}
+
+.btn {
+
+
+    background-color: #007bff;
+    /* Blue background color */
+    color: #fff;
+    /* White text color */
+    display: flex;
+    float: right;
+    border: none;
+    /* Remove border */
+    padding: 10px 20px;
+    /* Add padding */
+    transition: background-color 0.3s;
+    border-radius: 15px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+}

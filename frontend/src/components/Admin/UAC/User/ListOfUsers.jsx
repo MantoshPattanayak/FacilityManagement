@@ -1,15 +1,18 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPenToSquare, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import AdminHeader from '../../../../common/AdminHeader';
 import Footer from '../../../../common/Footer';
 import { Link, useNavigate } from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { encryptData } from '../../../../utils/encryptData';
 import axiosHttpClient from '../../../../utils/axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import '../../../Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown.css';
 
 export default function ListOfUsers() {
 
     let navigate = useNavigate();
+    let limit = 10;
+    let page = 1;
 
     let tableDummyData = [
         { id: 1, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
@@ -26,13 +29,28 @@ export default function ListOfUsers() {
         { id: 12, name: 'ABC', number: '975XXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
     ];
 
-    const [tableData, setTableData] = useState(tableDummyData);
+    const [tableData, setTableData] = useState([]);
+    const [searchOptions, setSearchOptions] = useState([]);
+    const [givenReq, setGivenReq] = useState();
 
-    async function fetchListOfRoleData() {
+    async function fetchListOfUserData() {
         try {
-            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'get');
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post', {
+                limit: 50, page: 1
+            });
+            setTableData(res.data.data);
+            console.log(res.data.data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
-            console.log(res);
+    async function autoSuggest(givenReq) {
+        try {
+            let res = await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get', null, givenReq);
+            console.log(res.data.data);
+            setSearchOptions(res.data.data);
         }
         catch (error) {
             console.error(error);
@@ -40,23 +58,14 @@ export default function ListOfUsers() {
     }
 
     useEffect(() => {
-        fetchListOfRoleData();
+        fetchListOfUserData();
     }, []);
-    
 
-    function actionOptions(dataID) {
-        let newTableData = JSON.parse(JSON.stringify(tableData));
+    useEffect(() => {
+        if(givenReq != null)
+            autoSuggest(givenReq);
+    }, [givenReq]);
 
-        newTableData.forEach((data) => {
-            (data.id == dataID) ? data.actionList = true : data.actionList = false;
-        });
-
-        console.log('1',newTableData);
-
-        setTableData(newTableData);
-
-        return;
-    }
 
     function encryptDataId(id) {
         let res = encryptData(id);
@@ -70,10 +79,11 @@ export default function ListOfUsers() {
                 <div className='table-heading'>
                     <h2 className="table-heading">List of Users</h2>
                 </div>
-                
+
                 <div className="search_text_conatiner">
                     <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button>
-                    <input type="text" className="search_input_field" placeholder="Search..." />
+                    <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+                    {/* <SearchDropdown /> */}
                 </div>
 
                 <div className="table_Container">
@@ -92,18 +102,18 @@ export default function ListOfUsers() {
                         <tbody >
                             {
                                 tableData?.length > 0 && tableData?.map((data) => {
-                                    return(
-                                        <tr key={data.id}>
-                                            <td data-label="Name">{data.name}</td>
-                                            <td data-label="Number">{data.number}</td>
-                                            <td data-label="Email">{data.email}</td>
-                                            <td data-label="Role">{data.role}</td>
+                                    return (
+                                        <tr key={data.privateUserId}>
+                                            <td data-label="Name">{data.fullName}</td>
+                                            <td data-label="Number">{data.contactNo}</td>
+                                            <td data-label="Email">{data.emailId}</td>
+                                            <td data-label="Role">{data.roleName}</td>
                                             <td data-label="Status">{data.status}</td>
                                             <td data-label="View">
                                                 <Link
-                                                    to={{ 
+                                                    to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encryptDataId(data.id)}&action=view`
+                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=view`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faEye} />
@@ -111,9 +121,9 @@ export default function ListOfUsers() {
                                             </td>
                                             <td data-label="Edit">
                                                 <Link
-                                                    to={{ 
+                                                    to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encryptDataId(data.id)}&action=edit`
+                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=edit`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faPenToSquare} />
@@ -132,4 +142,74 @@ export default function ListOfUsers() {
     )
 }
 
+
+const SearchDropdown = () => {
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+    const toggleDropdown = () => {
+        setIsDropdownVisible(!isDropdownVisible);
+    };
+
+    const filterFunction = () => {
+        let input, filter, div, a, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        // a = div.getElementsByTagName("a");
+        a = div.getElementsByClassName("dropdown-content-child");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    };
+
+    return (
+        <div className="search-dropdown">
+            <div className="inside-search-dropdown">
+                <input
+                    type="text"
+                    placeholder="Search.."
+                    id="myInput"
+                    onClick={toggleDropdown}
+                    onKeyUp={filterFunction}
+                />
+                <div className="dropicon">
+                    <FontAwesomeIcon icon={faAngleDown} />
+                </div>
+            </div>
+            {
+                isDropdownVisible &&
+                (
+                    <div id="myDropdown" className="dropdown-content">
+                        <div className="dropdown-content-child" href="#about">
+                            About
+                        </div>
+                        <div className="dropdown-content-child" href="#base">
+                            Base
+                        </div>
+                        <div className="dropdown-content-child" href="#blog">
+                            Blog
+                        </div>
+                        <div className="dropdown-content-child" href="#contact">
+                            Contact
+                        </div>
+                        <div className="dropdown-content-child" href="#custom">
+                            Custom
+                        </div>
+                        <div className="dropdown-content-child" href="#support">
+                            Support
+                        </div>
+                        <div className="dropdown-content-child" href="#tools">
+                            Tools
+                        </div>
+                    </div>
+                )
+            }
+        </div>
+    );
+};
 

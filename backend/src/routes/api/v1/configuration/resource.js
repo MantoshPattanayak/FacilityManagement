@@ -4,6 +4,11 @@ let api_version = process.env.API_VERSION;
 const resource = require("../../../../controllers/" +
   api_version +
   "/configuration/resource.controller");
-router.get("/getResourceById/:id", resource.getResourceById);
+router.get("/resourceId/:id", resource.resourceId);
+router.post("/createResource", resource.createResource);
+router.put("/updateResource", resource.updateResource);
+router.post("/viewResources", resource.viewResources);
+router.get("/dataLoadResource", resource.dataLoadResource);
+router.get("/isParent", resource.isParent);
 
 module.exports = router;

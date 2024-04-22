@@ -7,10 +7,16 @@ const role = db.rolemaster
 //get
 const roleId = async (req, res) => {
   try {
-    const [rolemasters, metadata] = await sequelize.query(
-      "select * from amabhoomi.rolemasters"
-    );
+    console.log(1);
+    let roleId = req.params.roleId ? req.params.roleId:1;
+    console.log('roleId', roleId);
+   const rolemasters = await role.findOne({
+    where:{
+      roleId: roleId
+    }
+   })
 
+   console.log(rolemasters,'rolemasters data')
     return res.status(statusCode.SUCCESS.code).json({
       message: `All roles`,
       data: rolemasters,
@@ -70,7 +76,7 @@ const createRole =async (req, res) => {
 };
 
 //Update
-const updateRole = (req, res) => {
+const updateRole = async (req, res) => {
 
   try {
     const  {
@@ -81,37 +87,37 @@ const updateRole = (req, res) => {
       remark
     } = req.body;
     if (!roleId && !roleCode && !roleName) {
-      res.status(statusCode.BAD_REQUEST.code).json({
+      return res.status(statusCode.BAD_REQUEST.code).json({
         message: "Content can not be empty!",
       });
-      return;
+      
     }
+    console.log('fdlkjfd')
 
-    role.update({
+    const [roleDataCount,roleDataDetails]=await role.update({
       roleCode:roleCode,
       roleName:roleName
     }, {
-      where: { roleId: req.body.roleId },
+      where: { roleId: roleId }
     })
-      .then((num) => {
-        if (num == 1) {
-          res.status(200).json({
-            message: "Role was updated successfully.",
-          });
-        } else {
-          res.status(404).json({
-            message: `Cannot update Role with id=${req.params.id}. Maybe User was not found or req.body is empty!`,
-          });
-        }
-      })
-      .catch((err) => {
-        res.status(500).json({
-          message: "Error updating Role with id=" + req.params.id,
-        });
+    console.log('f',roleDataCount,roleDataDetails)
+
+    console.log(roleDataDetails,'details')
+
+     if(roleDataCount>=1){
+      return res.status(statusCode.SUCCESS.code).json({
+        message: "Data updated successfully",
       });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    throw new Error(error);
+     }
+     else{
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: "Data is not updated successfully",
+      })
+     }
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message: err.message,
+    })
   }
 };
 

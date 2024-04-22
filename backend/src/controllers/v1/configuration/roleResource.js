@@ -58,12 +58,12 @@ const insertRoleResource = async (req, res) => {
         let { role: roleId, statusId, resourceList } = req.body;
         // resourceList = await decrypt(resourceList)
         // status = await decrypt(status)
-        let user = req.user.id||1; // Assuming user Id is stored in req.user.id
+        let user = req.user?.id||1; // Assuming user Id is stored in req.user.id
         let date = new Date();
         // Check for duplicates in all resources using raw query with join
         const duplicateCheckQuery = `
         SELECT rr.roleId, rr.resourceId
-        FROM roleresource rr
+        FROM roleresources rr
         INNER JOIN resourcemasters rm ON rr.resourceId = rm.resourceId
         WHERE rr.roleId = :roleId AND rr.resourceId IN (:resourceList)
         `;
@@ -261,7 +261,7 @@ let viewRoleResource = async (req, res) => {
         rm.name as resourceName, 
         rm2.name as parentResourceName, 
         sm.statusId as status
-        from amabhoomi.rolemaster role1
+        from amabhoomi.rolemasters role1
         inner join amabhoomi.roleresources role_resource1 on role1.roleId = role_resource1.roleId
         inner join amabhoomi.resourcemasters rm on role_resource1.resourceId = rm.resourceId
         left join amabhoomi.resourcemasters rm2 on role_resource1.parentResourceId = rm2.resourceId
