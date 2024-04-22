@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require('sequelize');
+const {Sequelize,DataTypes,QueryTypes} = require('sequelize');
 const db=require('../config/db')
 // console.log(db,'db credentials')
 
@@ -24,6 +24,7 @@ sequelize.authenticate()
   db1.Sequelize = Sequelize
   db1.sequelize = sequelize
   db1.DataTypes = DataTypes
+  db1.QueryTypes = QueryTypes
 
   db1.amenitiesmaster = require('./amenitiesmaster.models')(sequelize,DataTypes)
   db1.publicuser = require('./publicuser.models')(sequelize,DataTypes)

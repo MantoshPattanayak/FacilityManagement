@@ -4,10 +4,9 @@ const db = require('../../../models')
 const decrypt  = require('../../../middlewares/decryption.middlewares')
 const encrypt = require('../../../middlewares/encryption.middlewares')
 const role =db.rolemaster
-const resource = db.resourcemaster
 const roleresource = db.roleresource
 const resourcemaster = db.resourcemaster
-
+const QueryTypes = db.QueryTypes
 let dataload = async (req, res) => {
     try {
         let roleData = await role.findAll({
@@ -15,7 +14,7 @@ let dataload = async (req, res) => {
           });
         if (roleData.length > 0) {
 
-            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm."name" as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2."name" as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.status = 1 order by parentOrder, childOrder`,
+            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm.name as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2.name as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.statusId = 1 order by parentOrder, childOrder`,
             {type: Sequelize.QueryTypes.SELECT}
             );
             
@@ -55,7 +54,9 @@ let dataload = async (req, res) => {
 
 const insertRoleResource = async (req, res) => {
     try {
+        console.log('req.body',req.body)
         let { role: roleId, statusId, resourceList } = req.body;
+    
         // resourceList = await decrypt(resourceList)
         // status = await decrypt(status)
         let user = req.user?.id||1; // Assuming user Id is stored in req.user.id
@@ -72,6 +73,7 @@ const insertRoleResource = async (req, res) => {
         replacements: { roleId, resourceList },
         type: QueryTypes.SELECT
         });
+        console.log('duplicate check result', duplicateCheckResult)
 
         // Check for any duplicates
         if (duplicateCheckResult.length > 0) {
@@ -82,7 +84,7 @@ const insertRoleResource = async (req, res) => {
         let successFlag = true;
 
         for (let i = 0; i < resourceList.length; i++) {
-            const resource = await resource.findOne({ where: { id: resourceList[i] } });
+            const resource = await resourcemaster.findOne({ where: { resourceId: resourceList[i] } });
 
             if(resource.parentResourceId != null){
                    // Insert into role_resource table
@@ -103,7 +105,7 @@ const insertRoleResource = async (req, res) => {
                 const verifyRoleResource1 = await roleresource.findOne({
                     where: {
                         roleId: roleId,
-                        resourceId: parentResourceId
+                        resourceId: resource.parentResourceId
                     }
                 });
                 if (!verifyRoleResource1) {
