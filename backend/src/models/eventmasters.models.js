@@ -1,6 +1,6 @@
 module.exports = (sequelize,DataTypes)=>{
 
-const EventActivities = sequelize.define('eventactivities',{
+const EventMasters = sequelize.define('eventmasters',{
     eventId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
@@ -73,5 +73,5 @@ const EventActivities = sequelize.define('eventactivities',{
     }
 
 })
-return EventActivities
+return EventMasters
 }
