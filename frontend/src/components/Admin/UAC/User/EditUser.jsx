@@ -86,6 +86,7 @@ export default function EditUser() {
             let res = await axiosHttpClient('ADMIN_USER_INITIALDATA_API', 'get');
 
             console.log(res.data);
+            setRoleList(res.data.Role);
         }
         catch(error) {
             console.error(error);
@@ -198,12 +199,12 @@ export default function EditUser() {
         }
     }
 
-    function clearForm(e) {
-        // e.preventDefault();
-        console.log('cancel form')
-        setFormData(initialFormData);
-        return;
-    }
+    // function clearForm(e) {
+    //     // e.preventDefault();
+    //     console.log('cancel form')
+    //     setFormData(initialFormData);
+    //     return;
+    // }
 
     return (
         <div>
@@ -264,14 +265,26 @@ export default function EditUser() {
                             <label htmlFor="input2">Role<span className='text-red-500'>*</span></label>
                             <select name='role' value={formData.role} onChange={handleChange} disabled={action == 'view' ? true : false}>
                                 <option value={''}>Select</option>
-                                <option value={'BDA Admin'}>BDA Admin</option>
-                                <option value={'Park Admin'}>Park Admin</option>
+                                {
+                                    roleList?.length > 0 && roleList.map((role, index) => {
+                                        if(role.roleId == formData.role){
+                                            return(
+                                                <option key={index} value={role.roleId} selected>{role.roleName}</option>
+                                            )
+                                        }
+                                        else{
+                                            return(
+                                                <option key={index} value={role.roleId}>{role.roleName}</option>
+                                            )
+                                        }
+                                    })
+                                }
                             </select>
                             {errors.role && <p className='error-message'>{errors.role}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input2">Status<span className='text-red-500'>*</span></label>
-                            <select name='role' value={formData.status} onChange={handleChange} disabled={action == 'view' ? true : false}>
+                            <select name='status' value={formData.status} onChange={handleChange} disabled={action == 'view' ? true : false}>
                                 <option value={''}>Select</option>
                                 <option value={'1'}>Active</option>
                                 <option value={'0'}>Inactive</option>
