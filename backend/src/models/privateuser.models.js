@@ -53,7 +53,7 @@ const PrivateUser = sequelize.define('privateuser', {
     type: DataTypes.BOOLEAN,
 
   },
-  gender:{
+  genderId:{
     type:DataTypes.INTEGER
   },
   createdBy:{

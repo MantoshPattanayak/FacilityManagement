@@ -26,13 +26,16 @@ const ResourceMaster = sequelize.define('resourcemaster', {
   iconType:{
     type:DataTypes.STRING(255)
   },
+  parentResourceId:{
+    type:DataTypes.INTEGER
+  },
   orderIn:{
     type:DataTypes.INTEGER
   },
   path:{
     type:DataTypes.STRING
   },
-  status:{
+  statusId:{
     type: DataTypes.INTEGER // Define the column as DATE type
   },
   remarks:{

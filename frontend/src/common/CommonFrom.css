@@ -169,6 +169,16 @@
     width: 100%;
 }
 
+.error-message{
+    color: red;
+    font-size: 14px;
+}
+
+.approve-button:disabled,
+.cancel-button:disabled {
+    background-color: gray;
+}
+
 /* Media query for tablets and larger screens */
 @media screen and (min-width: 768px) {
 

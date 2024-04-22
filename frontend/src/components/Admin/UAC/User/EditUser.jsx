@@ -6,12 +6,14 @@ import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../../../utils/axios';
 import api from '../../../../utils/api';
 import { useLocation } from 'react-router-dom';
-import { decryptdata } from '../../../../utils/encryptData';
+import { decryptData } from '../../../../utils/encryptData';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function EditUser() {
 
     const location = useLocation();
-    const userId = new URLSearchParams(location.search).get('userId');
+    const userId = decryptData(new URLSearchParams(location.search).get('userId'));
     const action = new URLSearchParams(location.search).get('action');
 
     let initialFormData = {
@@ -25,15 +27,29 @@ export default function EditUser() {
         role: ''
     };
 
+    let modifiedFormData = {
+        title: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        mobileNumber: '',
+        altMobileNumber: '',
+        emailID: '',
+        role: ''
+    }
+
     const [formData, setFormData] = useState(initialFormData);
 
     const [errors, setErrors] = useState({});
 
     async function fetchUserDetails() {
         try {
-            let res = await axiosHttpClient('ADMIN_USER_VIEW_BY_ID_API', 'get', null, decryptdata(userId));
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_BY_ID_API', 'get', null, userId);
 
             console.log('response', res);
+            setFormData(res.data.data);
+
+            modifiedFormData = JSON.parse(JSON.stringify(res.data.data));
         }
         catch (error) {
             console.error(error);
@@ -41,7 +57,7 @@ export default function EditUser() {
     }
 
     useEffect(() => {
-
+        fetchUserDetails();
     }, [])
 
     function validateUserInput(data) {
@@ -69,7 +85,7 @@ export default function EditUser() {
             }
         }
         else {
-            errors.middleName = "Please provide middle name."
+            // errors.middleName = "Please provide middle name."
         }
 
         if (data.lastName) {
@@ -127,16 +143,19 @@ export default function EditUser() {
 
         if (errors.length <= 0) {
             try {
-                let response = await axiosHttpClient(api.ADMIN_MODULE_CREATE_USER, 'post', formData);
+                let response = await axiosHttpClient('ADMIN_USER_UPDATE_API', 'post', formData, null);
 
                 console.log(response.data);
+                toast.success('User details updated successfully.');
             }
             catch (error) {
                 console.error(error);
+                toast.error('User details updation failed. Please try again.');
             }
         }
         else {
             setErrors(errors);
+            toast.error('User details updation failed. Please try again.');
         }
     }
 
@@ -166,32 +185,32 @@ export default function EditUser() {
                         </div>
                         <div className="form-group">
                             <label htmlFor="input2">First name<span className='text-red-500'>*</span></label>
-                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            <input type="text" name='firstName' value={formData.firstName} placeholder="First name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
                             {errors.firstName && <p className='error-message'>{errors.firstName}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Middle name</label>
-                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            <input type="text" name='middleName' value={formData.middleName} placeholder="Middle name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
                             {errors.middleName && <p className='error-message'>{errors.middleName}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input1">Last name<span className='text-red-500'>*</span></label>
-                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            <input type="text" name='lastName' value={formData.lastName} placeholder="Last name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? true : false}/>
                             {errors.lastName && <p className='error-message'>{errors.lastName}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input2">Mobile number<span className='text-red-500'>*</span></label>
-                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            <input type="text" name='mobileNumber' value={formData.mobileNumber} placeholder="Mobile number" autoComplete='off' maxLength={dataLength.PHONE_NUMBER} onChange={handleChange} disabled={action == 'view' ? true : false}/>
                             {errors.mobileNumber && <p className='error-message'>{errors.mobileNumber}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input3">Alternate mobile number</label>
-                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" maxLength={dataLength.PHONE_NUMBER} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            <input type="text" name='altMobileNumber' value={formData.altMobileNumber} placeholder="Alternate mobile number" autoComplete='off' maxLength={dataLength.PHONE_NUMBER} onChange={handleChange} disabled={action == 'view' ? true : false}/>
                             {errors.altMobileNumber && <p className='error-message'>{errors.altMobileNumber}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input1">Email ID<span className='text-red-500'>*</span></label>
-                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" maxLength={dataLength.EMAIL} onChange={handleChange} disabled={action == 'view' ? true : false}/>
+                            <input type="text" name='emailID' value={formData.emailID} placeholder="Email ID" autoComplete='off' maxLength={dataLength.EMAIL} onChange={handleChange} disabled={action == 'view' ? true : false}/>
                             {errors.emailID && <p className='error-message'>{errors.emailID}</p>}
                         </div>
                         <div className="form-group">
@@ -208,9 +227,10 @@ export default function EditUser() {
 
                 <div className="buttons-container">
                     <button type='submit' className="approve-button" onClick={handleSubmit} disabled={action == 'view' ? true : false}>Submit</button>
-                    <button type='submit' className="cancel-button" onClick={clearForm} disabled={action == 'view' ? true : false}>Cancel</button>
+                    {/* <button type='submit' className="cancel-button" onClick={clearForm} disabled={action == 'view' ? true : false}>Cancel</button> */}
                 </div>
             </div>
+            <ToastContainer />
             <Footer />
         </div>
     )
