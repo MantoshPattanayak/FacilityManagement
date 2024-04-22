@@ -39,6 +39,7 @@ const createResource = async (req, res) => {
       parentResourceId,
       remarks,
     } = req.body;
+    console.log("heee ", req.body)
     // check if the request body is empty
     // if (
     //   name &&
