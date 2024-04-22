@@ -1,5 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import axiosHttpClient from '../../../../utils/axios'
 const CreateResource = () => {
+  
+
+
+
+
+
+
+
+  // here Get the data
+
+    async function DisplayData(){
+      try{
+        let res= await axiosHttpClient('here api', 'get')
+        console.log("here get the Response of Display the data", res)
+      }
+      catch(err){
+        console.log("here is error", err)
+      }
+    }
+
+  // useEffect for Update the daata (Means call the api)
+      useEffect(()=>{
+        DisplayData()
+      }, [])
   return (
     <div className='container-1'>
       {/* HEADER CREATION FOR RESOURCE LIST */}
