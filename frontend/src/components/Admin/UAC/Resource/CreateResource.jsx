@@ -41,7 +41,7 @@ const CreateResource = () => {
               <option value="Dashboard">Dashboard</option>
               <option value="mainforce">mainforce</option>
               <option value="mercedes">mercedes</option>
-              <option value="durex">durex</option>
+              <option value="durex">durex</option>  
             </select>
           </div>
 

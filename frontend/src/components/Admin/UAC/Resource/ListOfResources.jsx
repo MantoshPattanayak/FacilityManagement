@@ -3,61 +3,43 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import './ListOfResources.css';
-import SearchIcon from '../../../../assets/search-icon.png'
+
+
+// here import axios for fetch the data from api
+import axiosHttpClient from '../../../../utils/axios';
 
 export default function ListOfResources() {
-    const [roleListData, setRoleListData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(5); // Change as needed for items per page
-    const [searchTerm, setSearchTerm] = useState('');
-  
-    useEffect(() => {
-      getRoleListData();
-    }, []);
-  
-    // Function to fetch role list data
-    async function getRoleListData() {
-      try {
-        let res = await axios.post('here api', {
-          page: currentPage, // Send current page number
-          search: searchTerm // Send search term if needed
-        });
-        console.log("here Response", res.data);
-        setRoleListData(res.data); // Update role list data
-      } catch (error) {
-        console.log(error);
+const [ListOfResources, setListofResources] =useState([])
+
+
+  // here call api ( Get the data from api) -----------------------------------
+      async function GetListOfResources(){
+        try{
+          let res= await axiosHttpClient('Viw_Recourece_AP', 'POST')
+          console.log("here Response get data ", res);
+        }
+        catch(err){
+          console.log("here Error get data ", err)
+        }
       }
-    }
-  
-    // Function to handle page change
-    const handlePageChange = (type) => {
-      switch (type) {
-        case 'start':
-          setCurrentPage(1);
-          break;
-        case 'previous':
-          setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-          break;
-        case 'next':
-          setCurrentPage((prev) => (prev < Math.ceil(roleListData.length / itemsPerPage) ? prev + 1 : prev));
-          break;
-        case 'last':
-          setCurrentPage(Math.ceil(roleListData.length / itemsPerPage));
-          break;
-        default:
-          break;
-      }
-    };
-  
-    // Function to handle search input change
-    const handleSearchChange = (event) => {
-      setSearchTerm(event.target.value);
-    };
-  
-    // Apply pagination logic to slice the data for the current page
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = roleListData.slice(indexOfFirstItem, indexOfLastItem);
+
+// use useEffect for Update data ----------------------------------------------
+
+     useEffect(()=>{
+      GetListOfResources()
+     }, [])
+
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <div className='container'>
@@ -78,8 +60,8 @@ export default function ListOfResources() {
                     className="search_input_field"
                     placeholder="Search..."
                     id="myInput"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
+                    // value={searchTerm}
+                    // onChange={handleSearchChange}
                 />
             </div>
 
@@ -99,161 +81,9 @@ export default function ListOfResources() {
             </tr>
           </thead>
           <tbody >
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-              <td data-label="Due">211</td>
-              <td data-label="Due">active</td>
-              <td data-label="Due">edit</td>
-            </tr>
-            <tr>
-              <td data-label="Name">sgssh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">ramtosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">menttosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">pentosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">chentosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">peltosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">debtosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">loktosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">rajtosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">manatosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">vaginatosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">penustosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">deeptosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number"   >78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-
-
-            {/* fro dynamic data */}
-            {currentItems.map((item, index) => (
-              <tr key={index}>
-                <td>{item.serialNo}</td>
-                <td>{item.resourceName}</td>
-                <td>{item.parentResourceName}</td>
-                <td>{item.path}</td>
-                <td>{item.order}</td>
-                <td>{item.status}</td>
-                <td>{item.action}</td>
-              </tr>
-            ))}
+           <tr>
+            <td></td>
+           </tr>
           </tbody>
         </table>
       </div>
