@@ -1,7 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Resource/CreateResource.css';
+import axiosHttpClient from '../../../../utils/axios';
 
 const CreateResource = () => {
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [resourecName, setResourceName] = useState("");
+  const [resourceDescription, setResourceDescription] = useState("");
+  const [parentResource, setParentResource] = useState("");
+  const [level, setLevel] = useState(0);
+  const [subMenu, setSubMenu] = useState("");
+  const [path, setPath] = useState("");
+  const [order, setOrder] = useState(0);
+  const [status, setStatus] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [parentResourceList, setParentResourceList] = useState([]);
+
+
+
+
+  // here Post the data of CreateResource-----------------------------------
+ async function postCreateResource(){
+  try{
+    let res= await axiosHttpClient('here Api for Post the data', 'post', data, null)
+
+    console.log("here Post the data",res)
+  }
+  catch(err){
+    console.log("here Error", err)  }
+ }
+
+
+  // here Get the data for Drop Down-----------------------------------
+
+  async function GetResouceDataDropdoewn(){
+      try{
+        let res= await axiosHttpClient("here api", 'get')
+      console.log("here Response of get data in Drop Down",res)
+      }
+      catch(err){
+        console.log("here is error of get data in Drop Down",err)
+      }
+  }
+
+  // UseEffect for Update the data--------------------------------
+    useEffect(()=>{
+      GetResouceDataDropdoewn()
+        postCreateResource()
+    }, [])
+
   return (
     <div className='container-1'>
       {/* HEADER CREATION FOR RESOURCE LIST */}

@@ -9,14 +9,15 @@ import './ListOfResources.css';
 import axiosHttpClient from '../../../../utils/axios';
 
 export default function ListOfResources() {
+
+  
 const [ListOfResources, setListofResources] =useState([])
-
-
   // here call api ( Get the data from api) -----------------------------------
       async function GetListOfResources(){
         try{
-          let res= await axiosHttpClient('Viw_Recourece_AP', 'POST')
-          console.log("here Response get data ", res);
+          let res= await axiosHttpClient('RESOURCE_VIEWLIST_API', 'post')
+          console.log("here Response get data ",res);
+          setListofResources(res.data.Resource)
         }
         catch(err){
           console.log("here Error get data ", err)
@@ -26,7 +27,7 @@ const [ListOfResources, setListofResources] =useState([])
 // use useEffect for Update data ----------------------------------------------
 
      useEffect(()=>{
-      GetListOfResources()
+          GetListOfResources()
      }, [])
 
 
@@ -71,20 +72,29 @@ const [ListOfResources, setListofResources] =useState([])
         <table >
           <thead>
             <tr>
-              <th scope="col">Serial No</th>
               <th scope="col">Resource Name</th>
               <th scope="col">Parent Resource Name</th>
               <th scope="col">Path</th>
               <th scope="col">order</th>
               <th scope="col">Status</th>
-              <th scope="col">Action</th>
+              <th scope="col">View</th>
+              <th scope="col">Update</th>
             </tr>
           </thead>
-          <tbody >
-           <tr>
-            <td></td>
-           </tr>
-          </tbody>
+          <tbody>
+              {ListOfResources?.length > 0 && ListOfResources.map((item, index) => {
+                return (
+                  <tr key={index}>
+                      <td>{item.name}</td>
+                      <td>{item.parentResourceName }</td>
+                      <td>{item.path }</td>
+                      <td>{item.order}</td>
+                      <td>{item.status}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+
         </table>
       </div>
 
