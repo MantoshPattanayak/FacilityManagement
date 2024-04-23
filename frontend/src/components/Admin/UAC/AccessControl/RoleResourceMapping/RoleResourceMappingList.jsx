@@ -30,11 +30,11 @@ const RoleResourceMappingList = () => {
       <AdminHeader />
       <div className="Main_Conatiner_table">
         <div className='table-heading'>
-          <h2 className="table-heading">List of User-Resource</h2>
+          <h2 className="table-heading">List of Role-Resource</h2>
         </div>
 
         <div className="search_text_conatiner">
-          <button className='search_field_button' onClick={() => navigate('/UAC/RoleResource/Create')}>Create new user-resource mapping</button>
+          <button className='search_field_button' onClick={() => navigate('/UAC/RoleResource/Create')}>Create new role-resource mapping</button>
           <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
           {/* <SearchDropdown /> */}
         </div>

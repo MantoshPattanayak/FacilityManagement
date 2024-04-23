@@ -1,6 +1,6 @@
 module.exports = (sequelize,DataTypes)=>{
 
-const EventMasters = sequelize.define('eventmasters',{
+const EventMasters = sequelize.define('eventactivities',{
     eventId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
