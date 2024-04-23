@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import '../Resource/CreateResource.css';
 import axiosHttpClient from '../../../../utils/axios';
-
+// Import Toast ----------------------------------------------------------------
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom';
 const CreateResource = () => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [description, setDescription] = useState("");
@@ -11,55 +14,56 @@ const CreateResource = () => {
   const [name, setName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [parentResourceList, setParentResourceList] = useState([]);
-
-  const HandleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const parentResourceValue = formData.get('parent');
-
-    if (isCheckboxChecked) {
-      if (!name || !description || !orderIn || !path) {
-        setErrorMessage("All fields are required!!");
-        return;
-      } else {
-        await insertResourceData(name, description, "", path, orderIn);
+  // navigate the page --------------------------------------------------------------
+  let navigate = useNavigate();
+// Handle Submit (Onclcik of from )--------------------------------------------------
+        const HandleSubmit = async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const parentResourceValue = formData.get('parent');
+              if (isCheckboxChecked) {
+                if (!name || !description || !orderIn || !path) {
+                  setErrorMessage("All fields are required!!");
+                  return;
+                } else {
+                  await insertResourceData(name, description, "", path, orderIn);
+                }
+              } else {
+                if (!name || !description || !orderIn || !path || !parentResourceValue) {
+                  setErrorMessage("All fields are required!!");
+                  return;
+                } else {
+                  await insertResourceData(name, description, parentResourceValue, path, orderIn);
+                }
+              }
+        }
+// Here POST the data () ----------------------------------------------------------------------------
+      const insertResourceData = async (name, description, parentResource, path, orderIn) => {
+        try {
+          let res = await axiosHttpClient('RESOURCE_CREATE_API', 'post', {
+            name: name,
+            description: description,
+            orderIn: orderIn,
+            path: path,
+            parentResourceId: parentResource || null,
+          })
+          console.log("Response:", res);
+          toast.success("Role created successfully");
+        } catch (err) {
+          console.error("Error:", err);
+// ----------------------Toast -----------------------------
+          toast.error("Failed to create role. Please try again.");
+          setErrorMessage(err.message);
+        }
       }
-    } else {
-      if (!name || !description || !orderIn || !path || !parentResourceValue) {
-        setErrorMessage("All fields are required!!");
-        return;
-      } else {
-        await insertResourceData(name, description, parentResourceValue, path, orderIn);
+// Handle (Check - Checkbox)--------------------------------------------------------------------
+      const handleCheckboxChange = () => {
+        setIsCheckboxChecked(!isCheckboxChecked);
+        if (isCheckboxChecked) {
+          setParentResource("");
+        }
       }
-    }
-  }
-
-  const insertResourceData = async (name, description, parentResource, path, orderIn) => {
-    try {
-      let res = await axiosHttpClient('RESOURCE_CREATE_API', 'post', {
-        name: name,
-        description: description,
-        orderIn: orderIn,
-        path: path,
-        parentResourceId: parentResource
-      })
-      console.log("Response:", res);
-    } catch (err) {
-      console.error("Error:", err);
-      setErrorMessage(err.message);
-    }
-  }
-
-  const handleCheckboxChange = () => {
-    setIsCheckboxChecked(!isCheckboxChecked);
-    if (isCheckboxChecked) {
-      setParentResource("");
-    }
-  }
-
-
-  // here get resoruce data
+  // here get resoruce data ----------------------------------------------------------
   async function getResourceDataDropdown() {
     try {
       const res = await axiosHttpClient('RESOURCE_NAME_DROPDOWN', 'get')
@@ -71,10 +75,11 @@ const CreateResource = () => {
     }
   }
 
+// UseEffect for Update or Call the Api -------------------------------------------------------------
   useEffect(() => {
     getResourceDataDropdown();
   }, []);
-
+//-----------------------------------------------------------------------------------------------------------------------------
   return (
     <div className='container-1'>
       {/* HEADER CREATION FOR RESOURCE LIST */}
@@ -86,7 +91,7 @@ const CreateResource = () => {
       </div>
       {/* Back button  */}
       <div className="back-btn">
-        <button className="btn">Back</button>
+      <button className="btn" onClick={() => navigate('/UAC/Resources/ListOfResources')}>Back</button>
       </div>
       {/* Form having inputs field */}
       <form onSubmit={HandleSubmit}>
@@ -142,7 +147,7 @@ const CreateResource = () => {
               <option value="">Select Parent Resource</option>
               {parentResourceList?.map((value, idx) => {
                 return (
-                  <option key={idx} value={value.id}>
+                  <option key={idx} value={value.resourceId}>
                     {value.name}
                   </option>
                 );
@@ -186,6 +191,7 @@ const CreateResource = () => {
 
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
+      <ToastContainer />
     </div>
   );
 };
