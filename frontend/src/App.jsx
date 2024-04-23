@@ -68,6 +68,9 @@ function App() {
             {/* user Recource */}
             <Route path='/UAC/Users/CreateUserResourceMapping' element={<ProtectedRoute><CreateUserResourceMapping /></ProtectedRoute>} />
             <Route path='/UAC/Users/UserResourceMappingList' element={<ProtectedRoute><UserResourceMappingList/></ProtectedRoute>} />
+            {/* Role-Resource mapping  */}
+            <Route path='/UAC/RoleResource/Create' element={<ProtectedRoute><CreateRoleResourceMapping /></ProtectedRoute>} />
+            <Route path='/UAC/RoleResource/View' element={<ProtectedRoute><RoleResourceMappingList /></ProtectedRoute>} />
             <Route path='/unauthorized' element={<UnauthorizedPage />} />
 
           </Routes>

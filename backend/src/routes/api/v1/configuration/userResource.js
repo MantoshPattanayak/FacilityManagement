@@ -7,7 +7,7 @@ router.get('/dataLoad',userResource.dataload);
 
 router.post('/insertUserResource',userResource.insertUserResource)
 
-router.get('/viewUserResource',userResource.viewUserResource)
+router.post('/viewUserResource',userResource.viewUserResource)
 
 router.get('/autoSuggestionUserResource/:givenReq',userResource.autoSuggestionUserResource)
 
