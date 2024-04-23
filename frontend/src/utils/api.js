@@ -10,6 +10,7 @@ const api = {
     RESOURCE_CREATE_API: '/resource/createResource',    //POST
     RESOURCE_UPDATE_API: '/resource/updateResource',    //PUT
     RESOURCE_VIEWLIST_API: '/resource/viewResources',   //POST
+    RESOURCE_NAME_DROPDOWN:'/resource/isParent', // GET
     // here Search Loaction Api
     SearchLoaction_map:'/mapData/searchParkFacilities',
     //User-Resource
