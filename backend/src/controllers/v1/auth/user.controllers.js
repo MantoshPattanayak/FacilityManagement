@@ -3,6 +3,7 @@ let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
 const publicUser = db.publicuser;
 const privateUser = db.privateuser;
+const admin = require('firebase-admin');
 
 const { sequelize,Sequelize } = require('../../../models')
 
@@ -19,8 +20,7 @@ const { Op } = require("sequelize");
 
 let generateOTPHandler = async (req,res)=> {
   try {
-    // if anyone first time logs in through google or facebook here it will skip that first step i.e. to check if mobile no. already exist or not. it will directly verify the mobile no  
-    let {mobileNo,googleId,facebookId} = req.body
+    let {mobileNo} = req.body
 
       const response = await generateOTP(mobileNo);
 
@@ -66,7 +66,7 @@ let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
          }
         }
           // Return the generated tokens
-          return null;
+          return null;  
       } else {
           // OTP verification failed
           return{
@@ -83,102 +83,98 @@ let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
 
 let signUp = async (req,res)=>{
  try{
-  let generateOtpForMobile = await generateOTP(decrypt(phoneNo))
-  const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
- 
+    const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
+    const decryptUserName = decrypt(userName);
+    const decryptEmailId = decrypt(email);
+    const decryptPhoneNumber = decrypt(phoneNo);
 
-
-  const decryptUserName = decrypt(userName);
-  const decryptEmailId = decrypt(email);
-  const decryptPhoneNumber = decrypt(phoneNo);
-
-   const checkDuplicateMobile= await publicUser.findAll({
-      where:{
-        phoneNo:{
-          [Op.eq]:decryptPhoneNumber
+    const checkDuplicateMobile= await publicUser.findAll({
+        where:{
+          phoneNo:{
+            [Op.eq]:decryptPhoneNumber
+          }
+          
         }
-        
-      }
-    })
-
-    if(checkDuplicateMobile>0){
-      return res.status(statusCode.CONFLICT.code).json({
-        message:"This mobile is already allocated to existing user"
       })
-    }
 
-
-    
-    let lastLogin = new Date();
-    let updatedOn =  new Date();
-    let createdOn = new Date();
-    let deletedOn = new Date();
-
-
-
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
-  let createdBy = req.user.id;
-  let updatedBy = req.user.id;
-
-    // Create a new user record in the database
-
-    const uploadDir = process.env.UPLOAD_DIR;
-
-    // Ensure that the base64-encoded image data is correctly decoded before writing it to the file. Use the following code to decode the base64 data:
-    const base64Data = userImage
-      ? userImage.replace(/^data:image\/\w+;base64,/, "")
-      : null;
-    console.log(base64Data, "3434559");
-
-    // Convert Base64 to Buffer for driver image
-    const userImageBuffer = omnerImage
-      ? Buffer.from(base64Data, "base64")
-      : null;
-    let userImagePath = null;
-    let userImagePath2 = null;
-    // Save the driver image to the specified path
-    console.log(userImageBuffer, "fhsifhskhk");
-    if (userImageBuffer) {
-      const userDocDir = path.join(uploadDir, "publicUsers"); // Path to drivers directory
-      // Ensure the drivers directory exists
-      if (!fs.existsSync(userDocDir)) {
-        fs.mkdirSync(userDocDir, { recursive: true });
+      if(checkDuplicateMobile>0){
+        return res.status(statusCode.CONFLICT.code).json({
+          message:"This mobile is already allocated to existing user"
+        })
       }
-      userImagePath = `${uploadDir}/publicUsers/${userId}_user_image.png`; // Set your desired file name
 
-      fs.writeFileSync(userImagePath, userImageBuffer);
-      userImagePath2 = `/publicUsers/${userId}_driver_image.png`;
-    }
 
-    const newUser = await publicUser.create({
-      roleId: roleId,
-      title: title,
-      firstName: firstName,
-      middleName: middleName,
-      lastName: lastName,
-      userName: userName,
-      password: hashedPassword,
-      phoneNo: phoneNo,
-      altPhoneNo: altPhoneNo,
-      emailId: email,
-      profilePicture: userImagePath, // Assuming profilePicture is the field for storing the image path
-      lastLogin: new Date(), // Example of setting a default value
-      status: 1, // Example of setting a default value
-      remarks: remarks,
-      createdBy: createdBy,
-      updatedBy: updatedBy,
-      createdOn: new Date(), // Set current timestamp for createdOn
-      updatedOn: new Date(), // Set current timestamp for updatedOn
-      // Ensure to set other fields accordingly
-      deletedBy: null,
-      deletedOn: null,
-    });
+      
+      let lastLogin = new Date();
+      let updatedOn =  new Date();
+      let createdOn = new Date();
+      let deletedOn = new Date();
 
-    // Return success response
-    return res.status(statusCode.SUCCESS.code).json({
-      message:"User created successfully", user: newUser 
-    })
+
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    let createdBy = req.user.id;
+    let updatedBy = req.user.id;
+
+      // Create a new user record in the database
+
+      const uploadDir = process.env.UPLOAD_DIR;
+
+      // Ensure that the base64-encoded image data is correctly decoded before writing it to the file. Use the following code to decode the base64 data:
+      const base64Data = userImage
+        ? userImage.replace(/^data:image\/\w+;base64,/, "")
+        : null;
+      console.log(base64Data, "3434559");
+
+      // Convert Base64 to Buffer for driver image
+      const userImageBuffer = omnerImage
+        ? Buffer.from(base64Data, "base64")
+        : null;
+      let userImagePath = null;
+      let userImagePath2 = null;
+      // Save the driver image to the specified path
+      console.log(userImageBuffer, "fhsifhskhk");
+      if (userImageBuffer) {
+        const userDocDir = path.join(uploadDir, "publicUsers"); // Path to drivers directory
+        // Ensure the drivers directory exists
+        if (!fs.existsSync(userDocDir)) {
+          fs.mkdirSync(userDocDir, { recursive: true });
+        }
+        userImagePath = `${uploadDir}/publicUsers/${userId}_user_image.png`; // Set your desired file name
+
+        fs.writeFileSync(userImagePath, userImageBuffer);
+        userImagePath2 = `/publicUsers/${userId}_driver_image.png`;
+      }
+
+      const newUser = await publicUser.create({
+        roleId: roleId,
+        title: title,
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        userName: userName,
+        password: hashedPassword,
+        phoneNo: phoneNo,
+        altPhoneNo: altPhoneNo,
+        emailId: email,
+        profilePicture: userImagePath, // Assuming profilePicture is the field for storing the image path
+        lastLogin: new Date(), // Example of setting a default value
+        status: 1, // Example of setting a default value
+        remarks: remarks,
+        createdBy: createdBy,
+        updatedBy: updatedBy,
+        createdOn: new Date(), // Set current timestamp for createdOn
+        updatedOn: new Date(), // Set current timestamp for updatedOn
+        // Ensure to set other fields accordingly
+        deletedBy: null,
+        deletedOn: null,
+      });
+
+      // Return success response
+      return res.status(statusCode.SUCCESS.code).json({
+        message:"User created successfully", user: newUser 
+      })
 
   } catch (err) {
     // Handle errors
@@ -310,6 +306,7 @@ let publicLogin = async(req,res)=>{
   
     else if(mobileNo && otp){
       mobileNo= await decrypt(mobileNo)
+      let isUserExist;
       let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
       if(verifyOtp?.error=='Please render the signup page'){
 
@@ -318,13 +315,13 @@ let publicLogin = async(req,res)=>{
         })
 
       }
-      else if(verifyOtp?.error){
+      if(verifyOtp?.error){
         return res.status(statusCode.BAD_REQUEST.code).json({
           message:'Otp verification failed'
         })
       }
 
-      if(mobileNo){
+      if(verifyOtp==null){
 
         // check whether the credentials are valid or not 
         // Finding one record
@@ -344,7 +341,6 @@ let publicLogin = async(req,res)=>{
 
             const options = {
               httpOnly: true,
-              sameSite: 'none',
               secure: true
           };
 
@@ -523,8 +519,6 @@ let privateLogin = async(req,res)=>{
 
    
 }
-
-  
     else if(mobileNo && otp){
       mobileNo= await decrypt(mobileNo)
       let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
@@ -623,17 +617,21 @@ let privateLogin = async(req,res)=>{
 
 }
 let logout = async (req, res) => {
-  const options = {
-      expires: new Date(Date.now() - 1), // Expire the cookie immediately
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true
-  };
-  // Clear both access token and refresh token cookies
-  res.clearCookie('accessToken', options);
-  res.clearCookie('refreshToken', options);
+   try {
+     const options = {
+         expires: new Date(Date.now() - 1), // Expire the cookie immediately
+         httpOnly: true,
+         secure: true
+     };
+     // Clear both access token and refresh token cookies
+     res.clearCookie('accessToken', options);
+     res.clearCookie('refreshToken', options);
+ 
+   res.status(statusCode.SUCCESS.code).json({ message: 'Logged out successfully', sessionExpired: true });
+   } catch (err) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message, sessionExpired: true });
 
-  res.status(statusCode.SUCCESS.code).json({ message: 'Logged out successfully', sessionExpired: true });
+   }
 }
 
 // let googleAuthenticationCallback = async (req,res)=>{

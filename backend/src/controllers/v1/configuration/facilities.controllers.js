@@ -21,8 +21,7 @@ const displayMapData = async(req,res)=>{
              matchedData = facilities.filter((mapData)=>
                 mapData.parkName.toLowerCase().includes(givenReq.toLowerCase())||
                 mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase())||
-                mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase())||
-                mapData.areaAcres.includes(givenReq)
+                mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase())
             )
             
             console.log(matchedData,'matchedData')
