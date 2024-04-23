@@ -4,10 +4,9 @@ const db = require('../../../models')
 const decrypt  = require('../../../middlewares/decryption.middlewares')
 const encrypt = require('../../../middlewares/encryption.middlewares')
 const role =db.rolemaster
-const resource = db.resourcemaster
 const roleresource = db.roleresource
 const resourcemaster = db.resourcemaster
-
+const QueryTypes = db.QueryTypes
 let dataload = async (req, res) => {
     try {
         let roleData = await role.findAll({
@@ -15,7 +14,7 @@ let dataload = async (req, res) => {
           });
         if (roleData.length > 0) {
 
-            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm."name" as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2."name" as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.status = 1 order by parentOrder, childOrder`,
+            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm.name as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2.name as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.statusId = 1 order by parentOrder, childOrder`,
             {type: Sequelize.QueryTypes.SELECT}
             );
             
@@ -55,10 +54,12 @@ let dataload = async (req, res) => {
 
 const insertRoleResource = async (req, res) => {
     try {
+        console.log('req.body',req.body)
         let { role: roleId, statusId, resourceList } = req.body;
+    
         // resourceList = await decrypt(resourceList)
         // status = await decrypt(status)
-        let user = req.user.id||1; // Assuming user Id is stored in req.user.id
+        let user = req.user?.id||1; // Assuming user Id is stored in req.user.id
         let date = new Date();
         // Check for duplicates in all resources using raw query with join
         const duplicateCheckQuery = `
@@ -72,6 +73,7 @@ const insertRoleResource = async (req, res) => {
         replacements: { roleId, resourceList },
         type: QueryTypes.SELECT
         });
+        console.log('duplicate check result', duplicateCheckResult)
 
         // Check for any duplicates
         if (duplicateCheckResult.length > 0) {
@@ -82,7 +84,7 @@ const insertRoleResource = async (req, res) => {
         let successFlag = true;
 
         for (let i = 0; i < resourceList.length; i++) {
-            const resource = await resource.findOne({ where: { id: resourceList[i] } });
+            const resource = await resourcemaster.findOne({ where: { resourceId: resourceList[i] } });
 
             if(resource.parentResourceId != null){
                    // Insert into role_resource table
@@ -103,7 +105,7 @@ const insertRoleResource = async (req, res) => {
                 const verifyRoleResource1 = await roleresource.findOne({
                     where: {
                         roleId: roleId,
-                        resourceId: parentResourceId
+                        resourceId: resource.parentResourceId
                     }
                 });
                 if (!verifyRoleResource1) {
@@ -172,7 +174,7 @@ let updateRoleResource = async (req, res) => {
     try {
    
         let { id, statusId } = req.body;
-        let user = req.user.id;
+        let user = req.user?.id||1;
         let date = 'NOW()';
 
         let  [updateTheStatusOfRoleCount,updateTheStatusOfRole] = await roleresource.update({statusId:statusId},{
@@ -210,7 +212,7 @@ let viewId = async (req, res) => {
         role1.roleName as role, 
         rm.name as resourceName, 
         rm2.name as parentResourceName, 
-        sm.id as status
+        sm.statusId as status
         from amabhoomi.rolemasters role1
         inner join amabhoomi.roleresources role_resource1 on role1.roleId = role_resource1.roleId
         inner join amabhoomi.resourcemasters rm on role_resource1.resourceId = rm.resourceId
@@ -305,7 +307,7 @@ let viewRoleResource = async (req, res) => {
 
 let autoSuggestionForRoleResourceSearch = async(req,res)=> {
     try{
-        const givenReq = req.query.givenReq ? req.query.givenReq: null;
+        const givenReq = req.params.givenReq ? req.params.givenReq: null;
         // const decryptGivenReq = await decrypt(givenReq).toLowerCase();
 
     let roleResourceDataQuery = `select count(*) over() as totalCount,
@@ -328,10 +330,10 @@ let autoSuggestionForRoleResourceSearch = async(req,res)=> {
   let findMatchRes = roleResourceData
   if(givenReq){
    findMatchRes = roleResourceData.filter((allData)=>
-       allData.roleResourceId.includes(givenReq)||
-       allData.role.includes(givenReq)||
-       allData.resourceName.includes(givenReq)||
-       allData.status.includes(givenReq)
+    //    allData.roleResourceId.includes(givenReq)||
+       allData.role.toLowerCase().includes(givenReq)||
+       allData.resourceName.toLowerCase().includes(givenReq)||
+       allData.status.toLowerCase().includes(givenReq)
    )
   }
   

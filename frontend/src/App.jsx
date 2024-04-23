@@ -26,13 +26,18 @@ import ParticePage from "./components/Admin/MDM/FacilityRegistration/ParPage";
 // here import list of resources
 // import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 // here Import the role list table'
-
-
-
 import RoleResourceMappingList from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList";
+
 import CreateRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping";
-import EditRoleResourceMapping from '../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/EditRoleResourceMapping';
+
 import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown";
+//user Resource
+import CreateUserResourceMapping from './components/Admin/UAC/AccessControl/UserResourceMapping/CreateUserResourceMapping';
+import UserResourceMappingList from './components/Admin/UAC/AccessControl/UserResourceMapping/UserResourceMappingList';
+
+// Resource
+import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
+import CreateResource from './components/Admin/UAC/Resource/CreateResource';
 
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
@@ -55,10 +60,17 @@ function App() {
             <Route path='/UAC/Users/ListOfUsers' element={<ProtectedRoute><ListOfUsers /></ProtectedRoute>} />
             <Route path='/UAC/Users/Create' element={<ProtectedRoute><CreateNewUser /></ProtectedRoute>} />
             <Route path='/UAC/Users/Edit' element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
+            {/* Recource */}
+            <Route path='/UAC/Resources/ListOfResources' element={<ProtectedRoute><ListOfResources/></ProtectedRoute>} />
+            <Route path='/UAC/Resources/CreateResource' element={<ProtectedRoute><CreateResource/></ProtectedRoute>} />
+            {/* user Recource */}
+            <Route path='/UAC/Users/CreateUserResourceMapping' element={<ProtectedRoute><CreateUserResourceMapping /></ProtectedRoute>} />
+            <Route path='/UAC/Users/UserResourceMappingList' element={<ProtectedRoute><UserResourceMappingList/></ProtectedRoute>} />
+            {/* Role-Resource mapping  */}
             <Route path='/UAC/RoleResource/Create' element={<ProtectedRoute><CreateRoleResourceMapping /></ProtectedRoute>} />
-            <Route path='/UAC/RoleResource/ListOfRoleResources' element={<ProtectedRoute><RoleResourceMappingList /></ProtectedRoute>} />
-            <Route path='/UAC/RoleResource/Edit' element={<ProtectedRoute><EditRoleResourceMapping /></ProtectedRoute>} />
+            <Route path='/UAC/RoleResource/View' element={<ProtectedRoute><RoleResourceMappingList /></ProtectedRoute>} />
             <Route path='/unauthorized' element={<UnauthorizedPage />} />
+
           </Routes>
           {/* <Footer /> */}
         </div>

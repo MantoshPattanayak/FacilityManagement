@@ -28,10 +28,17 @@ const userResource = require("./routes/api/" +
   api_version +
   "/configuration/userResource");
 
+<<<<<<< HEAD
 const roleroute = require("./routes/api/" + api_version + "/auth/role");
+=======
+const roleroute = require("./routes/api/" + api_version + "/configuration/role");
+>>>>>>> 3d05fc668d68806b210df3cd1744e3f29662b1da
 const resourceroute = require("./routes/api/" +
   api_version +
   "/configuration/resource");
+
+const reviewEventBookingRoute = require('./routes/api/' + api_version + '/activity/reviewEventBooking');
+
 console.log(port, "port");
 
 app.use(
@@ -70,6 +77,9 @@ app.use("/role", roleroute);
 app.use("/resource", resourceroute);
 
 //  put all your route handlers here
+
+//activity routes
+app.use('/reviewEvents', reviewEventBookingRoute);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);

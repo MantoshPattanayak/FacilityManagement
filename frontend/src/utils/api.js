@@ -6,7 +6,11 @@ const api = {
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
     // Recourece Api
-    RESOURCE_VIEW_BY_ID_API: '/resource/getResourceById', //get /resource//getResourceById/:id 
+    RESOURCE_VIEW_BY_ID_API: '/resource/resourceId', //get /resource//resourceId/:id
+    RESOURCE_CREATE_API: '/resource/createResource',    //POST
+    RESOURCE_UPDATE_API: '/resource/updateResource',    //PUT
+    RESOURCE_VIEWLIST_API: '/resource/viewResources',   //POST
+    RESOURCE_NAME_DROPDOWN:'/resource/isParent', // GET
     // here Search Loaction Api
     SearchLoaction_map:'/mapData/searchParkFacilities',
     //User-Resource
@@ -16,8 +20,8 @@ const api = {
     USER_RESOURCE_AUTOSUGGEST_API: '/userResource/autoSuggestionUserResource', //get
     //User
     ADMIN_USER_CREATE_API: '/userDetails/createUser', //post
-    ADMIN_USER_VIEW_BY_ID_API: '/userDetails/getUserById/',   //get /userDetails/getUserById/:id
-    ADMIN_USER_VIEW_API: '/userDetails/viewList',   //get
+    ADMIN_USER_VIEW_BY_ID_API: '/userDetails/getUserById',   //get /userDetails/getUserById/:id
+    ADMIN_USER_VIEW_API: '/userDetails/viewList',   //post
     ADMIN_USER_INITIALDATA_API: '/userDetails/fetchInitialData',    //get
     ADMIN_USER_UPDATE_API: '/userDetails/updateUserData',   //put
     ADMIN_USER_AUTOSUGGEST_API: '/userDetails/autoSuggestionForUserSearch/',   //get /userDetails/autoSuggestionForUserSearch/:givenReq
