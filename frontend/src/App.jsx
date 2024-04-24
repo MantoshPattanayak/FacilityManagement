@@ -38,6 +38,9 @@ import UserResourceMappingList from './components/Admin/UAC/AccessControl/UserRe
 // Resource
 import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 import CreateResource from './components/Admin/UAC/Resource/CreateResource';
+import EditDisplayResource from './components/Admin/UAC/Resource/EditResource';
+
+import { Details, Payment, Search } from './components/Public/BookParks/index';
 
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
@@ -50,6 +53,9 @@ function App() {
           <Routes>
             {/* HOME */}
             <Route path='/' element={<Home />} />
+            <Route path='/parks/search' element={<Search />} />
+            <Route path='/parks/details' element={<Details />} />
+            <Route path='/parks/payment' element={<Payment />} />
             {/* ADMIN SECTION - Activity */}
             <Route path='/Activity/ReviewUserRating' element={<ProtectedRoute><ReviewUserRating /></ProtectedRoute>} />
             <Route path='/Activity/ReviewEventDetailsList' element={<ProtectedRoute><ReviewEventDetailsList /></ProtectedRoute>} />
@@ -63,6 +69,7 @@ function App() {
             {/* Recource */}
             <Route path='/UAC/Resources/ListOfResources' element={<ProtectedRoute><ListOfResources/></ProtectedRoute>} />
             <Route path='/UAC/Resources/CreateResource' element={<ProtectedRoute><CreateResource/></ProtectedRoute>} />
+            <Route path='/UAC/Resources/EditDisplayResource' element={<ProtectedRoute><EditDisplayResource/></ProtectedRoute>} />
             {/* user Recource */}
             <Route path='/UAC/Users/CreateUserResourceMapping' element={<ProtectedRoute><CreateUserResourceMapping /></ProtectedRoute>} />
             <Route path='/UAC/Users/UserResourceMappingList' element={<ProtectedRoute><UserResourceMappingList/></ProtectedRoute>} />
