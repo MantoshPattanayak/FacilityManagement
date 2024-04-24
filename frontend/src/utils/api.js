@@ -37,6 +37,10 @@ const api = {
     ROLE_RESOURCE_AUTOSUGGEST_API: '/roleResource/autoSuggestionRoleResource',    //get /roleResource/autoSuggestionRoleResource/:givenReq
     ROLE_RESOURCE_UPDATE_API: '/roleResource/updateRoleResource',   //put   /roleResource/updateRoleResource/:id
     ROLE_RESOURCE_VIEW_BY_ID_API: '/roleResource/',   //get   /roleResource/viewId/:id
+    //Review Event Booking
+    REVIEW_EVENTS_VIEWLIST_API: '/reviewEvents/viewList',   //post
+    REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
+    REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction' //put /reviewEvents/performAction/id
 }
 
 export default api;
