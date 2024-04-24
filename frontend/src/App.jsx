@@ -38,6 +38,7 @@ import UserResourceMappingList from './components/Admin/UAC/AccessControl/UserRe
 // Resource
 import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 import CreateResource from './components/Admin/UAC/Resource/CreateResource';
+import EditDisplayResource from './components/Admin/UAC/Resource/EditResource';
 
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
@@ -63,6 +64,7 @@ function App() {
             {/* Recource */}
             <Route path='/UAC/Resources/ListOfResources' element={<ProtectedRoute><ListOfResources/></ProtectedRoute>} />
             <Route path='/UAC/Resources/CreateResource' element={<ProtectedRoute><CreateResource/></ProtectedRoute>} />
+            <Route path='/UAC/Resources/EditDisplayResource' element={<ProtectedRoute><EditDisplayResource/></ProtectedRoute>} />
             {/* user Recource */}
             <Route path='/UAC/Users/CreateUserResourceMapping' element={<ProtectedRoute><CreateUserResourceMapping /></ProtectedRoute>} />
             <Route path='/UAC/Users/UserResourceMappingList' element={<ProtectedRoute><UserResourceMappingList/></ProtectedRoute>} />

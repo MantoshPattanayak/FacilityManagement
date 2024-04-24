@@ -28,7 +28,11 @@ const userResource = require("./routes/api/" +
   api_version +
   "/configuration/userResource");
 
+<<<<<<< HEAD
+const roleroute = require("./routes/api/" + api_version + "/auth/role");
+=======
 const roleroute = require("./routes/api/" + api_version + "/configuration/role");
+>>>>>>> 3d05fc668d68806b210df3cd1744e3f29662b1da
 const resourceroute = require("./routes/api/" +
   api_version +
   "/configuration/resource");
