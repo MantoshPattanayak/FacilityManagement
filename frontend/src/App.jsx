@@ -40,6 +40,8 @@ import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 import CreateResource from './components/Admin/UAC/Resource/CreateResource';
 import EditDisplayResource from './components/Admin/UAC/Resource/EditResource';
 
+import { Details, Payment, Search } from './components/Public/BookParks/index';
+
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
   return (
@@ -51,6 +53,9 @@ function App() {
           <Routes>
             {/* HOME */}
             <Route path='/' element={<Home />} />
+            <Route path='/parks/search' element={<Search />} />
+            <Route path='/parks/details' element={<Details />} />
+            <Route path='/parks/payment' element={<Payment />} />
             {/* ADMIN SECTION - Activity */}
             <Route path='/Activity/ReviewUserRating' element={<ProtectedRoute><ReviewUserRating /></ProtectedRoute>} />
             <Route path='/Activity/ReviewEventDetailsList' element={<ProtectedRoute><ReviewEventDetailsList /></ProtectedRoute>} />
