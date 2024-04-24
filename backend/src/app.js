@@ -14,10 +14,12 @@ const {
   errorLogger,
 } = require("./middlewares/logger.middlewares");
 
+// const authRoutes= require('./routes/api/'+api_version+'/auth/user')
+
 const maproute = require("./routes/api/" +
   api_version +
   "/configuration/facilites");
-// const authRoutes = require('./routes/api/' + api_version +'/auth/user');
+const authRoutes = require('./routes/api/' + api_version +'/auth/user');
 const userDetails = require("./routes/api/" +
   api_version +
   "/configuration/userDetails");
@@ -65,7 +67,7 @@ app.use(cookieParser());
 app.use(requestLogger);
 
 app.use("/mapData", maproute);
-// app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use("/userDetails", userDetails);
 app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
