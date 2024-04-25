@@ -82,16 +82,27 @@ const viewParkDetails = async(req,res)=>{
         let facilityTypeId = req.body.facilityTypeId?req.body.facilityTypeId:null
         console.log(givenReq,'givenReq ')
 
-       
-        const facility = `select facilityName,facilityTypeId,case 
+        facility = `select facilityName,facilityTypeId,case 
+        when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
+        else 'closed'
+        end as status, address,latitude,longitude,areaAcres 
+        from amabhoomi.facilities f `
+   
+        const [facilities,metadata] = await sequelize.query(facility,{
+            replacements:[new Date()]
+        })
+
+       if(facilityTypeId){
+         facility = `select facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres 
         from amabhoomi.facilities f where facilityTypeId=?`
-
+       
         const [facilities,metadata] = await sequelize.query(facility,{
             replacements:[new Date(),facilityTypeId]
         })
+    }
 
         let matchedData = facilities;
         if(givenReq){
