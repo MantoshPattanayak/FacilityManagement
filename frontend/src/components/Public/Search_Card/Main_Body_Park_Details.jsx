@@ -9,328 +9,93 @@ import AdminHeader from "../../../common/AdminHeader"
 import Park_Logo from "../../../assets/Ground_logo.png"
 import MultiPark from "../../../assets/ama_bhoomi_multipurpose_grounds_logo-removebg-preview.png"
 import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png"
+// Data Not available Icon
+import No_Data_icon from "../../../assets/No_Data_icon.png"
 import { useEffect, useState } from "react"
 const Main_Body_Park_Details=()=>{
-// Use state
+// Use state ------------------------------------------------------------------
 const[DisPlayParkData, setDisPlayParkData]=useState([])
+// useSate for search -----------------------------------------------------------
+const [givenReq, setGivenReq] = useState('');
+// for Faciltiy ----------------------------------------------------------------
+const [facilityTypeId, setFacilityTypeId] = useState(null);
 //Here (Post the data)----------------------------------------------------------------
-    async function GetParkDetails(){
+async function GetParkDetails(){
             try{
-                let res= await axiosHttpClient('here Api', 'post', {
-
+                let res= await axiosHttpClient('View_Park_Data', 'post', {
+                    givenReq: givenReq,
+                    facilityTypeId: facilityTypeId
                 })
                 console.log("here Response of Park", res)
-                setDisPlayParkData(res.data)
+                setDisPlayParkData(res.data.data)
             }
             catch(err){
                 console.log("here Error of Park", err)
             }
-    }
+}
+// Function to handle setting facility type ID and updating search input value ---------------------------
+    const handleParkLogoClick = (typeid) => {
+            setFacilityTypeId(typeid) // Set facility ex typeid-1,typeid-2,typeid-3
+            console.log("here type id", typeid)
+            GetParkDetails()
+        };
 // useEffect for Update the data (Call the Api) ------------------------------------------------
-    useEffect(()=>{
-        GetParkDetails()  
-    }, [])
+        useEffect(()=>{
+            GetParkDetails()  
+        }, [givenReq])
 
 
 //Return here------------------------------------------------------------------------------------------------------------
-        return(
-            <div className="main__body__park">
+     return(
+        <div className="main__body__park">
                     {/* here Header -----------------------------------------------------*/}
                     <AdminHeader />
                     {/* here Search  Bar  -------------------------------------------------- */}
                      <div className="Search_container">
                             <span className="Input_text_conatiner">
-                               <input type="text" placeholder={`Search by Name or ID...`}/>
+                               <input type="text" placeholder='  Search here........................'
+                                  name="givenReq"
+                                  id="givenReq"
+                                  value={givenReq}
+                                  onChange={(e) => setGivenReq(e.target.value)}
+                               />
                             </span>
+                            {/* Here ButTON Container (Pass the id 1,2,3) */}
                             <span className="Button_Container">
-                            <img className="h-14" src={Park_Logo}></img>
-                            <img className="h-14" src={MultiPark}></img>
-                            <img className="h-14" src={Event_img}></img>
+                                <button onClick={() => handleParkLogoClick(1)} ><img className="h-14" src={Park_Logo}  alt="Park Logo"></img></button> 
+                                <button onClick={() => handleParkLogoClick(2)} > <img className="h-14" src={MultiPark}></img></button>  
+                                <button onClick={() => handleParkLogoClick(3)}><img className="h-14" src={Event_img}></img></button>   
                             </span>
-                       
                      </div>
                      <span className="text_name_park">
                         <h1 className="name_park"> Park Nearby</h1>
                      </span>
                     {/* Card Container Here -------------------------------------------- */}
-                        <div className="card-container">
-                            
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
+                    <div className="card-container">
+                                        {DisPlayParkData.length > 0 ? (
+                                            DisPlayParkData.map((item, index) => (
+                                                <div className="Park_card" key={index}>
+                                                    <img className="Card_img" src={Cardimg} alt="Park" />
+                                                    <div className="card_text">
+                                                        <span className="Name_location">
+                                                            <h2 className="park_name">{item.facilityName}</h2>
+                                                            <h3 className="park_location">{item.address}</h3>
+                                                        </span>
+                                                        <span className="Avil_Dis">
+                                                            <button className="Avilable">{item.status}</button>
+                                                            <h3 className="distance">30KM</h3>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            // Here Show the Msg if (Data is Not available ) --------------------------------
+                                            <div className="no-data-message">
+                                                <img src={No_Data_icon}></img>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                 <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="Park_card">
-                                    <img className="Card_img" src={Cardimg} alt="Park" />
-                                    <div className="card_text">
-                                        <span className="Name_location">
-                                            <h2 className="park_name">Patia Park</h2>
-                                            <h3 className="park_location">Bhubaneswar</h3>
-                                        </span>
-                                        <span className="Avil_Dis">
-                                            <button className="Avilable">Open</button>
-                                            <h3 className="distance">30KM</h3>
-                                        </span>
-                                    </div>
-                                </div>
-                         </div>
-            </div>
+        </div>
         )
     }
 
