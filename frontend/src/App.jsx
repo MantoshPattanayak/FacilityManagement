@@ -40,7 +40,8 @@ import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
 import CreateResource from './components/Admin/UAC/Resource/CreateResource';
 import EditDisplayResource from './components/Admin/UAC/Resource/EditResource';
 
-import { Details, Payment, Search } from './components/Public/BookParks/index';
+// here User details ( Search Card )-----------------------------------------------------------------------------
+import Main_Body_Park_Details from './components/Public/Search_Card/Main_Body_Park_Details';
 
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
@@ -52,10 +53,9 @@ function App() {
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
-            <Route path='/' element={<Home />} />
-            <Route path='/parks/search' element={<Search />} />
-            <Route path='/parks/details' element={<Details />} />
-            <Route path='/parks/payment' element={<Payment />} />
+            <Route path='/' element={<Main_Body_Park_Details />} />
+            {/* use Section  */}
+
             {/* ADMIN SECTION - Activity */}
             <Route path='/Activity/ReviewUserRating' element={<ProtectedRoute><ReviewUserRating /></ProtectedRoute>} />
             <Route path='/Activity/ReviewEventDetailsList' element={<ProtectedRoute><ReviewEventDetailsList /></ProtectedRoute>} />
