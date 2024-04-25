@@ -10,4 +10,6 @@ router.get('/searchParkFacilities',facilities.searchParkFacilities)
 
 router.post('/viewParkDetails',facilities.viewParkDetails)
 
+router.get('/viewParkById/:facilityId',facilities.viewParkById)
+
 module.exports = router
