@@ -110,8 +110,7 @@ const viewParkDetails = async(req,res)=>{
                 (mapData.facilityName && mapData.facilityName.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Scheme && mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Ownership && mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase()))||
-              
-                // (mapData.parkId && mapData.parkId.toString()==givenReq)
+                (mapData.status && mapData.status.toLowerCase().includes(givenReq.toLowerCase()))||
                 (!isNaN(Number(givenReq)) && (
                     (mapData.areaAcres && Math.abs(parseFloat(mapData.areaAcres) - parseFloat(givenReq)) < 0.1) ||
                     (mapData.latitude && Math.abs(parseFloat(mapData.latitude) - parseFloat(givenReq)) < 0.1) ||
@@ -139,8 +138,19 @@ const viewParkDetails = async(req,res)=>{
 }
 
 
+const viewParkById = async (req,res)=>{
+    try{
+
+    }
+    catch(err){
+
+    }
+}
+
+
 module.exports ={
     displayMapData,
     searchParkFacilities,
-    viewParkDetails
+    viewParkDetails,
+    viewParkById
 }
