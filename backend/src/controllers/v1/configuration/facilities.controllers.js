@@ -140,7 +140,7 @@ const viewParkDetails = async(req,res)=>{
 
 const viewParkById = async (req,res)=>{
     try{
-
+        
     }
     catch(err){
 
