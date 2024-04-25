@@ -8,5 +8,6 @@ router.post('/displayMapData',facilities.displayMapData)
 
 router.get('/searchParkFacilities',facilities.searchParkFacilities)
 
+router.post('/viewParkDetails',facilities.viewParkDetails)
 
 module.exports = router

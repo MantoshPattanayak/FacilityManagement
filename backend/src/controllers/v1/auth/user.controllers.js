@@ -3,7 +3,7 @@ let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
 const publicUser = db.publicuser;
 const privateUser = db.privateuser;
-const admin = require('firebase-admin');
+// const admin = require('firebase-admin');
 
 const { sequelize,Sequelize } = require('../../../models')
 
@@ -18,13 +18,13 @@ const generateToken= require('../../../utils/generateToken')
 const { Op } = require("sequelize");
 
 // Initialize Firebase Admin SDK
-var serviceAccount = require("D:/AmaBhoomiProject/amabhoomi-25a8a-firebase-adminsdk-ggc8d-a61a7fdad5.json");
+// var serviceAccount = require("D:/AmaBhoomiProject/amabhoomi-25a8a-firebase-adminsdk-ggc8d-a61a7fdad5.json");
 
 const { request } = require("express");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
 
 // let generateOTPHandler = async (req,res)=> {
 //   try {
@@ -90,30 +90,30 @@ admin.initializeApp({
 
 
 // Endpoint to request OTP
- let requestOTP = async (req, res) => {
-  try {
-    const { mobileNo } = req.body;
+//  let requestOTP = async (req, res) => {
+//   try {
+//     const { mobileNo } = req.body;
 
-    await admin.auth().generatePhoneVerificationCode(mobileNo);
-    res.status(statusCode.SUCCESS.code).json({ message: 'OTP sent successfully' });
-  } catch (err) {
-    console.error('Error sending OTP:', err);
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: 'Failed to send OTP' });
-  }
-};
+//     await admin.auth().generatePhoneVerificationCode(mobileNo);
+//     res.status(statusCode.SUCCESS.code).json({ message: 'OTP sent successfully' });
+//   } catch (err) {
+//     console.error('Error sending OTP:', err);
+//     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: 'Failed to send OTP' });
+//   }
+// };
 
 // Endpoint to verify OTP
- let verifyOTP = async (req, res) => {
-  try {
-    const { mobileNo, otp } = req.body;
-    const userCredential = await admin.auth().signInWithPhoneNumber(mobileNo, otp);
-    console.log('User authenticated:', userCredential.user);
-    res.status(statusCode.SUCCESS.code).json({ message: 'OTP verified successfully' });
-  } catch (err) {
-    console.error('Error verifying OTP:', err);
-    res.status(statusCode.BAD_REQUEST.code).json({ message: 'Invalid OTP' });
-  }
-};
+//  let verifyOTP = async (req, res) => {
+//   try {
+//     const { mobileNo, otp } = req.body;
+//     const userCredential = await admin.auth().signInWithPhoneNumber(mobileNo, otp);
+//     console.log('User authenticated:', userCredential.user);
+//     res.status(statusCode.SUCCESS.code).json({ message: 'OTP verified successfully' });
+//   } catch (err) {
+//     console.error('Error verifying OTP:', err);
+//     res.status(statusCode.BAD_REQUEST.code).json({ message: 'Invalid OTP' });
+//   }
+// };
 
 
 let signUp = async (req,res)=>{
@@ -700,7 +700,7 @@ module.exports = {
   // verifyOTPHandlerWithGenerateToken,
  publicLogin,
  logout,
- requestOTP,
- verifyOTP
+//  requestOTP,
+//  verifyOTP
 }
 

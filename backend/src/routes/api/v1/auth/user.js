@@ -29,8 +29,8 @@ const authController = require('../../../../controllers/'+api_version+'/auth/use
 // );
 
 
-router.post('/requestOtp',authController.requestOTP);
-router.post('/verifyOtp',authController.verifyOTP)
+// router.post('/requestOtp',authController.requestOTP);
+// router.post('/verifyOtp',authController.verifyOTP)
 
 
 module.exports = router
