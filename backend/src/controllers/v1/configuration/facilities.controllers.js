@@ -81,6 +81,7 @@ const viewParkDetails = async(req,res)=>{
         let givenReq = req.body.givenReq?req.body.givenReq:null
         let facilityTypeId = req.body.facilityTypeId?req.body.facilityTypeId:null
         console.log(givenReq,'givenReq ')
+        console.log("fileid", facilityTypeId)
 
         facility = `select facilityName,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'

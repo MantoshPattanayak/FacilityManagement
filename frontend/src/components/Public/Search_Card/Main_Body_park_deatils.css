@@ -39,21 +39,21 @@
 }
 
 .park_name {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 600;
     color: #212121;
     font-style: normal;
     margin-bottom: 5px;
 }
 
-.park_location {
-    font-size: 14px;
+.ark_location{
+    font-size: 7px;
     color: #2f2f2f;
-    margin-bottom: 10px;
+   
 }
 
 .distance {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 500;
     margin-bottom: 10px;
 }

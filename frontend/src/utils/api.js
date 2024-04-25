@@ -5,6 +5,9 @@ const api = {
     SIGNUP_API: '/auth/signup',
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
+
+    // Park_Booking(Search) Page
+     View_Park_Data:'/mapData/viewParkDetails',
     // Recourece Api
     RESOURCE_VIEW_BY_ID_API: '/resource/resourceId', //get /resource//resourceId/:id
     RESOURCE_CREATE_API: '/resource/createResource',    //POST
