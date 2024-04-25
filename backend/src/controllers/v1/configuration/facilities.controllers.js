@@ -140,9 +140,52 @@ const viewParkDetails = async(req,res)=>{
 
 const viewParkById = async (req,res)=>{
     try{
+        let facilityId = req.params.facilityId? req.params.facilityId:null;
+        if(facilityId){
+            let fetchTheFacilitiesDetailsQuery = `select facilityName,facilityTypeId,case 
+            when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
+            else 'closed'
+            end as status, address,latitude,longitude,areaAcres 
+            from amabhoomi.facilities f where facilityId = ? `
+           let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
+        {
+            replacements:[new Date(), facilityId]
+        })
+
+        let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
+        eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where facilityMasterId=? and ticketSalesEnabled =1 `
+
+        let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
+            {
+                replacements:[facilityId]
+            })
+
+        let fethAmenitiesDataQuery =  `select am.amenityName from amabhoomi.facilityamenities fa inner join amabhoomi.amenitymasters am on am.amenityId = fa.amenityId  where fa.facilityId = ? and fa.status=1`
+        let fethAmenitiesDetailsDataData = await sequelize.query(fethAmenitiesDataQuery,
+            {
+                replacements:[facilityId]
+            })
         
+
+        let fetchServicesDataQuery = `select s.code from amabhoomi.services s inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.serviceFacilityId =? and sf.status =1`
+        let fetchServicesDetailsData = await sequelize.query(fetchServicesDataQuery,
+            {
+                replacements:[facilityId]
+            })
+        return res.status(statusCode.SUCCESS.code).json({message:
+            "These are the required Data",
+           facilitiesData: fetchTheFacilitiesDetailsData,
+           eventDetails:fetchEventDetailsData,
+            amenitiesData:fethAmenitiesDetailsDataData,
+            serviceData:fetchServicesDetailsData
+        })
+        }
+        else{
+            return res.status(statusCode.BAD_REQUEST.code).json({message:"please provide the facility type id"})
+        }
     }
     catch(err){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
 
     }
 }
