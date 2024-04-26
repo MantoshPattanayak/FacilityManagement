@@ -163,8 +163,8 @@ let signUp = async (req,res)=>{
         : null;
       console.log(base64Data, "3434559");
 
-      // Convert Base64 to Buffer for driver image
-      const userImageBuffer = ownerImage
+      // Convert Base64 to Buffer for user image
+      const userImageBuffer = userImage
         ? Buffer.from(base64Data, "base64")
         : null;
 
