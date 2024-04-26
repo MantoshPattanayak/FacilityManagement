@@ -26,67 +26,67 @@ const { request } = require("express");
 //   credential: admin.credential.cert(serviceAccount)
 // });
 
-// let generateOTPHandler = async (req,res)=> {
-//   try {
-//     let {mobileNo} = req.body
+let generateOTPHandler = async (req,res)=> {
+  try {
+    let {mobileNo} = req.body
 
-//       const response = await generateOTP(mobileNo);
+      const response = await generateOTP(mobileNo);
 
-//       // Check if the response indicates success
-//       if (response && response.status === 'OK') {
-//           // OTP generated successfully
-//           return res.status(statusCode.SUCCESS.code).json({
-//             message: 'otp generated successfully'
-//           })
-//       } else {
-//           // OTP generation failed
-//           return res.status(statusCode.BAD_REQUEST.code).json({
-//             message: 'Failed to generate OTP. Please try again later.'
-//           })
-//       }
-//   } catch (error) {
-//       console.error('Error generating OTP:', error);
-//       // Handle error
-//       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-//         message: 'Error generating OTP. Please try again later.'
-//       })
-//   }
-// }
+      // Check if the response indicates success
+      if (response && response.status === 'OK') {
+          // OTP generated successfully
+          return res.status(statusCode.SUCCESS.code).json({
+            message: 'otp generated successfully'
+          })
+      } else {
+          // OTP generation failed
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message: 'Failed to generate OTP. Please try again later.'
+          })
+      }
+  } catch (error) {
+      console.error('Error generating OTP:', error);
+      // Handle error
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: 'Error generating OTP. Please try again later.'
+      })
+  }
+}
 
-// let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
-//   try {
-//       // Call the API to verify OTP
-//       const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
+let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
+  try {
+      // Call the API to verify OTP
+      const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
 
-//       // Check if OTP verification was successful
-//       if (response && response.status === 'OK') {
-//           // OTP verified successfully
-//           // Check if the user exists in the database
-//           let isUserExist = await publicUser.findOne({
-//             where:{
-//               contactNo:mobileNo
-//             }
-//           })
-//         // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
-//         if(!isUserExist){
-//          return{
-//           error:'Please render the signup page'
-//          }
-//         }
-//           // Return the generated tokens
-//           return null;  
-//       } else {
-//           // OTP verification failed
-//           return{
-//             error:'OTP verification failed'
-//           }      
-//         }
-//   } catch (err) {
-//     return{
-//       error:`Error verifying OTP :${err}`
-//     }
-//   }
-// }
+      // Check if OTP verification was successful
+      if (response && response.status === 'OK') {
+          // OTP verified successfully
+          // Check if the user exists in the database
+          let isUserExist = await publicUser.findOne({
+            where:{
+              contactNo:mobileNo
+            }
+          })
+        // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+        if(!isUserExist){
+         return{
+          error:'Please render the signup page'
+         }
+        }
+          // Return the generated tokens
+          return null;  
+      } else {
+          // OTP verification failed
+          return{
+            error:'OTP verification failed'
+          }      
+        }
+  } catch (err) {
+    return{
+      error:`Error verifying OTP :${err}`
+    }
+  }
+}
 
 
 // Endpoint to request OTP
@@ -118,7 +118,7 @@ const { request } = require("express");
 
 let signUp = async (req,res)=>{
  try{
-    const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
+    const {email, password,firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,language,activities} = req.body;
     const decryptUserName = decrypt(userName);
     const decryptEmailId = decrypt(email);
     const decryptPhoneNumber = decrypt(phoneNo);
@@ -186,17 +186,15 @@ let signUp = async (req,res)=>{
       }
 
       const newUser = await publicUser.create({
-        roleId: roleId,
-        title: title,
         firstName: firstName,
         middleName: middleName,
         lastName: lastName,
-        userName: userName,
+        userName: email,
         password: hashedPassword,
         phoneNo: phoneNo,
-        altPhoneNo: altPhoneNo,
         emailId: email,
         profilePicture: userImagePath, // Assuming profilePicture is the field for storing the image path
+        language:language,
         lastLogin: new Date(), // Example of setting a default value
         statusId: 1, // Example of setting a default value
         createdOn: new Date(), // Set current timestamp for createdOn
@@ -703,6 +701,7 @@ module.exports = {
   // verifyOTPHandlerWithGenerateToken,
  publicLogin,
  logout,
+ privateLogin
 //  requestOTP,
 //  verifyOTP
 }
