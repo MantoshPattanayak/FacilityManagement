@@ -83,26 +83,28 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
-        facility = `select facilityName,facilityTypeId,case 
+        let facility = `select facilityName,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, address,latitude,longitude,areaAcres 
         from amabhoomi.facilities f `
    
-        const [facilities,metadata] = await sequelize.query(facility,{
+        let facilities = await sequelize.query(facility,{
             replacements:[new Date()]
         })
 
        if(facilityTypeId){
+        console.log(1)
          facility = `select facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres 
         from amabhoomi.facilities f where facilityTypeId=?`
        
-        const [facilities,metadata] = await sequelize.query(facility,{
+        facilities = await sequelize.query(facility,{
             replacements:[new Date(),facilityTypeId]
         })
+        console.log(2,facilities)
     }
 
         let matchedData = facilities;
@@ -126,7 +128,7 @@ const viewParkDetails = async(req,res)=>{
   
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:matchedData
+            data:matchedData[0]
         })
 
 
