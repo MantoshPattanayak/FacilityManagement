@@ -42,7 +42,7 @@ import EditDisplayResource from './components/Admin/UAC/Resource/EditResource';
 
 // here User details ( Search Card )-----------------------------------------------------------------------------
 import Main_Body_Park_Details from './components/Public/Search_Card/Main_Body_Park_Details';
-
+import Sub_Park_Details from './components/Public/Search_Card/Sub_Park_Details';
 function App() {
   let isAuthorized = sessionStorage.getItem('isAuthorized') || false;
   return (
@@ -54,6 +54,7 @@ function App() {
           <Routes>
             {/* HOME */}
             <Route path='/' element={<Main_Body_Park_Details />} />
+            <Route path='/Sub_Park_Details' element={<Sub_Park_Details/>} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
