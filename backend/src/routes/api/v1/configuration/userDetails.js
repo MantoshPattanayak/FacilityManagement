@@ -16,7 +16,9 @@ router.put('/updateUserData',userDetails.updateUserData)
 
 router.get('/autoSuggestionForUserSearch/:givenReq',userDetails.autoSuggestionForUserSearch)
 
+router.post('/profile/viewBookings', userDetails.viewBookings);
 
+router.get('/profile/initalFilterDataForBooking', userDetails.initalFilterDataForBooking);
 
 
 module.exports = router
