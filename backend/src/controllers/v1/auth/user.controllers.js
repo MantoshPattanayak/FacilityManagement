@@ -126,7 +126,7 @@ let signUp = async (req,res)=>{
     const checkDuplicateMobile= await publicUser.findAll({
         where:{
           phoneNo:{
-            [Op.eq]:decryptPhoneNumber
+            [Op.eq]:phoneNo
           }
           
         }
@@ -157,19 +157,22 @@ let signUp = async (req,res)=>{
       const uploadDir = process.env.UPLOAD_DIR;
 
       // Ensure that the base64-encoded image data is correctly decoded before writing it to the file. Use the following code to decode the base64 data:
+      
       const base64Data = userImage
         ? userImage.replace(/^data:image\/\w+;base64,/, "")
         : null;
       console.log(base64Data, "3434559");
 
       // Convert Base64 to Buffer for driver image
-      const userImageBuffer = omnerImage
+      const userImageBuffer = ownerImage
         ? Buffer.from(base64Data, "base64")
         : null;
+
       let userImagePath = null;
       let userImagePath2 = null;
       // Save the driver image to the specified path
       console.log(userImageBuffer, "fhsifhskhk");
+      
       if (userImageBuffer) {
         const userDocDir = path.join(uploadDir, "publicUsers"); // Path to drivers directory
         // Ensure the drivers directory exists
@@ -179,7 +182,7 @@ let signUp = async (req,res)=>{
         userImagePath = `${uploadDir}/publicUsers/${userId}_user_image.png`; // Set your desired file name
 
         fs.writeFileSync(userImagePath, userImageBuffer);
-        userImagePath2 = `/publicUsers/${userId}_driver_image.png`;
+        userImagePath2 = `/publicUsers/${userId}_user_image.png`;
       }
 
       const newUser = await publicUser.create({
