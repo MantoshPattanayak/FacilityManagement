@@ -32,5 +32,6 @@ const authController = require('../../../../controllers/'+api_version+'/auth/use
 // router.post('/requestOtp',authController.requestOTP);
 // router.post('/verifyOtp',authController.verifyOTP)
 
+router.post('/signup',authController.signUp)
 
 module.exports = router
