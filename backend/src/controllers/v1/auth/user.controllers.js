@@ -53,6 +53,33 @@ const { request } = require("express");
 //   }
 // }
 
+let generateOTPHandler = async (req,res)=> {
+  try {
+    console.log('1')
+    let {mobileNo} = req.body
+    let length=4
+    let numberValue = '1234567890'
+
+    let otp="";
+    for(let i=0;i<length;i++){
+      let otpIndex = Math.floor(Math.random()*numberValue.length)
+      otp += numberValue[otpIndex]
+    }
+    // OTP generated successfully
+    return res.status(statusCode.SUCCESS.code).json({
+            message: 'otp generated successfully', otp:otp
+     })
+      
+      
+  } catch (error) {
+      console.error('Error generating OTP:', error);
+      // Handle error
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: 'Error generating OTP. Please try again later.'
+      })
+  }
+}
+
 // let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
 //   try {
 //       // Call the API to verify OTP
@@ -88,6 +115,42 @@ const { request } = require("express");
 //   }
 // }
 
+let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
+  try {
+      // Call the API to verify OTP
+      // const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
+
+      // Check if OTP verification was successful
+      console.log(1,req.body)
+      let {mobileNo,otp}=req.body
+      if (otp) {
+          // OTP verified successfully
+          // Check if the user exists in the database
+          let isUserExist = await publicUser.findOne({
+            where:{
+              phoneNo:mobileNo
+            }
+          })
+          console.log(isUserExist,'check user')
+        // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+        if(!isUserExist){
+          return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page"});  
+
+        }
+          // Return the generated tokens
+          return res.status(statusCode.SUCCESS.code).json({message:"please render the login page"});  
+      } else {
+          // OTP verification failed
+          return res.status(statusCode.BAD_REQUEST.code).json({message:'OTP verification failed'});   
+        }
+  } catch (err) {
+   
+      return res.status(statusCode.BAD_REQUEST.code).json({message:err.message}); 
+ 
+   
+  }
+}
+
 
 // Endpoint to request OTP
 //  let requestOTP = async (req, res) => {
@@ -118,7 +181,8 @@ const { request } = require("express");
 
 let signUp = async (req,res)=>{
  try{
-    const { userName, email, password,roleId,title, firstName,middleName,lastName,phoneNo,altPhoneNo,userImage,remarks} = req.body;
+  console.log('1')
+    const {email, password,firstName,middleName,lastName,phoneNo,userImage,language,activities} = req.body;
     const decryptUserName = decrypt(userName);
     const decryptEmailId = decrypt(email);
     const decryptPhoneNumber = decrypt(phoneNo);
@@ -126,7 +190,7 @@ let signUp = async (req,res)=>{
     const checkDuplicateMobile= await publicUser.findAll({
         where:{
           phoneNo:{
-            [Op.eq]:decryptPhoneNumber
+            [Op.eq]:phoneNo
           }
           
         }
@@ -157,43 +221,44 @@ let signUp = async (req,res)=>{
       const uploadDir = process.env.UPLOAD_DIR;
 
       // Ensure that the base64-encoded image data is correctly decoded before writing it to the file. Use the following code to decode the base64 data:
+      
       const base64Data = userImage
         ? userImage.replace(/^data:image\/\w+;base64,/, "")
         : null;
       console.log(base64Data, "3434559");
 
-      // Convert Base64 to Buffer for driver image
-      const userImageBuffer = omnerImage
+      // Convert Base64 to Buffer for user image
+      const userImageBuffer = userImage
         ? Buffer.from(base64Data, "base64")
         : null;
+
       let userImagePath = null;
       let userImagePath2 = null;
-      // Save the driver image to the specified path
+      // Save the user image to the specified path
       console.log(userImageBuffer, "fhsifhskhk");
+      
       if (userImageBuffer) {
-        const userDocDir = path.join(uploadDir, "publicUsers"); // Path to drivers directory
-        // Ensure the drivers directory exists
+        const userDocDir = path.join(uploadDir, "publicUsers"); // Path to users directory
+        // Ensure the users directory exists
         if (!fs.existsSync(userDocDir)) {
           fs.mkdirSync(userDocDir, { recursive: true });
         }
         userImagePath = `${uploadDir}/publicUsers/${userId}_user_image.png`; // Set your desired file name
 
         fs.writeFileSync(userImagePath, userImageBuffer);
-        userImagePath2 = `/publicUsers/${userId}_driver_image.png`;
+        userImagePath2 = `/publicUsers/${userId}_user_image.png`;
       }
 
       const newUser = await publicUser.create({
-        roleId: roleId,
-        title: title,
         firstName: firstName,
         middleName: middleName,
         lastName: lastName,
-        userName: userName,
+        userName: email,
         password: hashedPassword,
         phoneNo: phoneNo,
-        altPhoneNo: altPhoneNo,
         emailId: email,
         profilePicture: userImagePath, // Assuming profilePicture is the field for storing the image path
+        language:language,
         lastLogin: new Date(), // Example of setting a default value
         statusId: 1, // Example of setting a default value
         createdOn: new Date(), // Set current timestamp for createdOn
@@ -700,6 +765,9 @@ module.exports = {
   // verifyOTPHandlerWithGenerateToken,
  publicLogin,
  logout,
+ privateLogin,
+ generateOTPHandler,
+ verifyOTPHandlerWithGenerateToken
 //  requestOTP,
 //  verifyOTP
 }
