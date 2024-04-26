@@ -33,8 +33,10 @@ const StatusMaster = sequelize.define('statusmaster', {
   },
   deletedOn: {
     type: DataTypes.DATE // Define the column as DATE type
+  },
+  parentStatusCode: {
+    type: DataTypes.STRING(100)
   }
- 
 }
 );
 return StatusMaster
