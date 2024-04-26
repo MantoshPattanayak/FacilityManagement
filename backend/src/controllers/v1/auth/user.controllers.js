@@ -163,19 +163,19 @@ let signUp = async (req,res)=>{
         : null;
       console.log(base64Data, "3434559");
 
-      // Convert Base64 to Buffer for driver image
-      const userImageBuffer = ownerImage
+      // Convert Base64 to Buffer for user image
+      const userImageBuffer = userImage
         ? Buffer.from(base64Data, "base64")
         : null;
 
       let userImagePath = null;
       let userImagePath2 = null;
-      // Save the driver image to the specified path
+      // Save the user image to the specified path
       console.log(userImageBuffer, "fhsifhskhk");
       
       if (userImageBuffer) {
-        const userDocDir = path.join(uploadDir, "publicUsers"); // Path to drivers directory
-        // Ensure the drivers directory exists
+        const userDocDir = path.join(uploadDir, "publicUsers"); // Path to users directory
+        // Ensure the users directory exists
         if (!fs.existsSync(userDocDir)) {
           fs.mkdirSync(userDocDir, { recursive: true });
         }
