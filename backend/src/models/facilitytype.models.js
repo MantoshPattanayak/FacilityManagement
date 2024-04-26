@@ -12,7 +12,7 @@ const FacilityType = sequelize.define('facilitytype',{
     description:{
         type:DataTypes.STRING(255)
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{
