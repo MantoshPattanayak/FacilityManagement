@@ -50,6 +50,7 @@ sequelize.authenticate()
   db1.gendermaster = require('./gendermaster.models')(sequelize,DataTypes)
   db1.file = require('./file.models')(sequelize,DataTypes)
   db1.fileattachment = require('./fileattachment.models')(sequelize,DataTypes)
+  db1.bookmarks = require('./userbookmarks.models')(sequelize, DataTypes)
 
   db1.sequelize.sync({
     force: false
