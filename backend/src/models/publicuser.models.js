@@ -7,12 +7,6 @@ const PublicUser = sequelize.define('publicuser', {
     autoIncrement: true,
     primaryKey: true
   },
-  roleId:{
-    type:DataTypes.INTEGER
-  },
-  title:{
-    type:DataTypes.STRING(5)
-  },
   firstName: {
     type: DataTypes.STRING(50),
     allowNull: false
@@ -35,14 +29,14 @@ const PublicUser = sequelize.define('publicuser', {
   phoneNo:{
     type:DataTypes.STRING(15)
   },
-  altPhoneNo:{
-    type: DataTypes.STRING(50)
-  },
   emailId:{
     type:DataTypes.STRING(50)
   },
   profilePicture:{
     type:DataTypes.STRING(255)
+  },
+  language:{
+    type:DataTypes.STRING(80)
   },
   lastLogin:{
     type: DataTypes.DATE // Define the column as DATE type

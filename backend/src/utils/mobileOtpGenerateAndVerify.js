@@ -11,18 +11,24 @@ async function generateOTP(mobileNumber) {
 
 
 
-async function verifyOTP(mobileNumber, otp) {
+async function verify1OTP(mobileNumber, otp) {
     const apiKey = 'YOUR_API_KEY';
     const response = await fetch(`https://www.fast2sms.com/dev/verify?authorization=${apiKey}&otp=${otp}&sender_id=FSTSMS&message_id=YOUR_MESSAGE_ID&mobile=${mobileNumber}&checksum=YOUR_CHECKSUM`);
     const data = await response.json();
     return data;
 }
     
+
+
+
+
+
+
    
 
 
 
 module.exports={
     generateOTP,
-    verifyOTP
+    verify1OTP
 }
