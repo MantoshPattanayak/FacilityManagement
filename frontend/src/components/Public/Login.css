@@ -1,0 +1,40 @@
+/* Add this CSS to your Login.css file */
+
+.login-options{
+display: flex;
+align-items: center;
+}
+.forgot-password {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 14px;
+    color:#007bff ;
+}
+
+/* Login with OTP */
+.login-otp {
+    margin-top: 10px;
+    margin-left: auto;
+    font-size: 14px;
+    color:#007bff ;
+}
+
+/* I don't have an account */
+.no-account {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.no-account p {
+    margin-bottom: 10px;
+}
+
+.no-account a {
+    font-weight: bold;
+    color: #007bff; /* Adjust color as needed */
+    text-decoration: none;
+}
+
+.no-account a:hover {
+    text-decoration: underline;
+}
