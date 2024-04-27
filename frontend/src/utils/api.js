@@ -1,8 +1,8 @@
 // to be maintained by backend developers
 
 const api = {
-    LOGIN_API: '/auth/login',
-    SIGNUP_API: '/auth/signup',
+    PUBLIC_LOGIN_API: '/auth/publicLogin',
+    PUBLIC_SIGNUP_API: '/auth/signUp',
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
 

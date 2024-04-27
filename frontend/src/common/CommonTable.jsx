@@ -6,7 +6,7 @@ const CommonTable = () => {
   return (
     <div className="Main_Conatiner_table">
       <div className="search_text_conatiner">
-        <h1 className="text_Name_Table">Common Table</h1>
+      <button className='create-role-btn'>Create new Button</button>
 
         <input
           type="text"

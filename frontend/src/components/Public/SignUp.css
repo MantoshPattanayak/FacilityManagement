@@ -1,0 +1,197 @@
+/* Common styles for all containers */
+.signup-container, .profile-setup-container {
+    box-sizing: border-box;
+    width: 90%; /* Adjust width for responsiveness */
+    max-width: 400px; /* Set maximum width */
+    margin: auto; 
+    margin-top: 10vh; /* Adjust margin for vertical centering */
+    border: 1px solid rgb(86, 85, 85);
+    border-radius: 5px;
+    padding: 20px; /* Add padding */
+    margin-top: 10%;
+}
+@media screen and ( max-width:700px) {
+    .signup-container, .profile-setup-container{
+        margin-top: 20%;
+    }
+    
+}
+@media screen and ( max-width:360px) {
+    .signup-container, .profile-setup-container{
+        margin-top: 30%;
+    }
+    
+}
+
+/* Styles for heading text */
+.heading-text h1 {
+    font-size: 1.5rem; /* Responsive font size */
+    font-weight: 600;
+    margin-top: 7%;
+    text-align: center; /* Center align heading */
+}
+
+/* Styles for icons */
+.icon {
+    float: right;
+}
+
+/* Styles for text */
+.text p {
+    color: rgb(110, 110, 110);
+    font-size: 1rem; /* Responsive font size */
+    font-weight: 500;
+    margin-top: 3%;
+    text-align: center; /* Center align text */
+}
+
+/* Styles for input fields */
+.input-field {
+    width: 100%; /* Make input fields full width */
+    height: 40px; /* Increase height for better visibility */
+    border: 1px solid black;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-sizing: border-box; /* Ensure padding and border are included in width */
+}
+
+/* Styles for OTP buttons */
+.otp-btn {
+    width: 100%; /* Make buttons full width */
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    background-color: #00B562;
+    color: #fff;
+    padding: 10px 0; /* Increase padding for better tap targets */
+    text-align: center; /* Center align button text */
+    cursor: pointer;
+    border-radius: 5px;
+}
+/* style for email varification in user profile creation */
+.email-varification{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ .email-otp-btn{
+    width: 20%; 
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    background-color: #00B562;
+    color: #fff;
+    padding: 0px 2px;
+    text-align: center; 
+    cursor: pointer;
+    border-radius: 5px;
+}
+#input-otp{
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 90px;
+    margin-top: 10px;
+    margin-left: 35%;
+}
+
+/* Styles for resend OTP text */
+.resend-otp {
+    font-weight: 400;
+    color: rgb(85, 85, 85);
+    text-align: center; /* Center align text */
+    margin-top: 10px;
+}
+
+/* Styles for profile picture */
+.profile-picture {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+    margin-top: 20px;
+}
+
+.user-logo {
+    font-size: 3rem; /* Responsive font size */
+}
+
+.add-image {
+    font-size: 1rem; /* Responsive font size */
+    cursor: pointer;
+    margin-top: 5px; /* Adjust spacing */
+    text-align: center; /* Center align text */
+}
+
+/* Hide input file button */
+.input-image {
+    display: none;
+}
+
+/* Styles for name fields */
+.name-field {
+    margin-top: 20px; /* Increase spacing between fields */
+}
+
+.name-field label {
+    display: block; /* Ensure labels are on top of input fields */
+    margin-bottom: 5px; /* Add space below labels */
+}
+
+/* Styles for select dropdown */
+.input-field[type="text"] {
+    -webkit-appearance: none; /* Remove default arrow for select */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Add custom arrow */
+    background-repeat: no-repeat;
+    background-position-x: calc(100% - 10px); /* Position arrow on the right side */
+    background-position-y: center;
+    padding-right: 30px; /* Ensure space for arrow */
+}
+
+/* Styles for preferred activity buttons */
+.preferred-activity {
+    margin-top: 10%;
+}
+
+.preffered-activity span {
+    font-size: 1rem; /* Responsive font size */
+    font-weight: 500;
+}
+
+.activity {
+    display: flex;
+    flex-wrap: wrap; 
+    margin-top: 10px;
+    justify-content: center; 
+}
+
+.activity-btn {
+    border: 1px solid black;
+    padding: 8px 15px; 
+    border-radius: 5px;
+    margin: 5px;
+}
+.activity-btn:hover{
+    background-color: #00B562;
+    transition: 0.5s;
+}
+
+/* Media queries for responsiveness */
+@media only screen and (max-width: 768px) {
+   
+    .signup-container, .profile-setup-container {
+        width: 90%;
+        max-width: 90%; 
+    }
+}
+
+/* css for validation of form */
+
+.input-error {
+    border-color: red;
+}
+
+/* Style for error messages */
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}

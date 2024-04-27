@@ -1,0 +1,48 @@
+.container-dashboard{
+    padding: 0;
+    margin: 0;
+    width: 85vw;
+    box-sizing: border-box;
+    margin-top: 100px;
+    margin-left: 7%;
+
+}
+.heading h2{
+    font-size: 25px;
+}
+.activity-name p{
+    margin-top: 15px;
+    font-size: 19px;
+    color: rgb(49, 49, 49);
+    font-weight: 500;
+}
+.activity-container{
+    height: 40%;
+    margin-top: 7%;
+
+}
+.popular-activity{
+    width: 30vw;
+}
+.popular-activity p{
+    font-size:larger;
+    font-weight: 500;
+}
+.activities{
+    width: 30vw;
+    border: 1.2px solid rgb(62, 62, 62);
+    border-radius: 3px;
+  
+ 
+}
+.activities-btn{
+    background-color: #04AA6D; /* Green */
+    border: 10px solid white;
+    color: white;
+    padding: 3px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 15px;
+}
