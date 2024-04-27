@@ -1,4 +1,4 @@
-const {Sequelize,DataTypes} = require('sequelize');
+const {Sequelize,DataTypes,QueryTypes} = require('sequelize');
 const db=require('../config/db')
 // console.log(db,'db credentials')
 
@@ -24,6 +24,7 @@ sequelize.authenticate()
   db1.Sequelize = Sequelize
   db1.sequelize = sequelize
   db1.DataTypes = DataTypes
+  db1.QueryTypes = QueryTypes
 
   db1.amenitiesmaster = require('./amenitiesmaster.models')(sequelize,DataTypes)
   db1.publicuser = require('./publicuser.models')(sequelize,DataTypes)
@@ -32,11 +33,8 @@ sequelize.authenticate()
   db1.authsessions = require('./authsessions.models')(sequelize,DataTypes)
   db1.bookinghistory = require('./bookinghistory.models')(sequelize,DataTypes)
   db1.cart=require('./cart.models')(sequelize,DataTypes)
-  db1.eventactivities=require('./eventactivities.models')(sequelize,DataTypes)
-  db1.facilitymaster=require('./facilitymaster.models')(sequelize,DataTypes)
   db1.facilities=require('./facilities.models')(sequelize,DataTypes)
   db1.facilitytype=require('./facilitytype.models')(sequelize,DataTypes)
-  db1.feedback=require('./feedback.models')(sequelize,DataTypes)
   db1.parkinventory=require('./parkinventory.models')(sequelize,DataTypes)
   db1.parkinventoryfacilities=require('./parkinventoryfacilities.models')(sequelize,DataTypes)
   db1.payment=require('./payment.models')(sequelize,DataTypes)
@@ -50,9 +48,12 @@ sequelize.authenticate()
   db1.transactiondetails = require('./transactiondetails.models')(sequelize,DataTypes)
   db1.userresource = require('./userresource.models')(sequelize,DataTypes)
   db1.gendermaster = require('./gendermaster.models')(sequelize,DataTypes)
+  db1.file = require('./file.models')(sequelize,DataTypes)
+  db1.fileattachment = require('./fileattachment.models')(sequelize,DataTypes)
+  db1.bookmarks = require('./userbookmarks.models')(sequelize, DataTypes)
 
-  db1.sequelize.sync({
-    force: false
+  db1.publicuser.sync({
+    force: true
   })
 
 module.exports = db1;

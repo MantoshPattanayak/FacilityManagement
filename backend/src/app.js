@@ -14,10 +14,12 @@ const {
   errorLogger,
 } = require("./middlewares/logger.middlewares");
 
+// const authRoutes= require('./routes/api/'+api_version+'/auth/user')
+
 const maproute = require("./routes/api/" +
   api_version +
   "/configuration/facilites");
-// const authRoutes = require('./routes/api/' + api_version +'/auth/user');
+const authRoutes = require("./routes/api/" + api_version + "/auth/user");
 const userDetails = require("./routes/api/" +
   api_version +
   "/configuration/userDetails");
@@ -28,10 +30,18 @@ const userResource = require("./routes/api/" +
   api_version +
   "/configuration/userResource");
 
-const roleroute = require("./routes/api/" + api_version + "/configuration/role");
+const roleroute = require("./routes/api/" +
+  api_version +
+  "/configuration/role");
 const resourceroute = require("./routes/api/" +
   api_version +
   "/configuration/resource");
+
+const reviewEventBookingRoute = require("./routes/api/" +
+  api_version +
+  "/activity/reviewEventBooking");
+const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
+
 console.log(port, "port");
 
 app.use(
@@ -62,14 +72,17 @@ app.use(cookieParser());
 app.use(requestLogger);
 
 app.use("/mapData", maproute);
-// app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
 app.use("/userDetails", userDetails);
 app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
 app.use("/resource", resourceroute);
-
+app.use("/pulicUser", publicUser);
 //  put all your route handlers here
+
+//activity routes
+app.use("/reviewEvents", reviewEventBookingRoute);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);

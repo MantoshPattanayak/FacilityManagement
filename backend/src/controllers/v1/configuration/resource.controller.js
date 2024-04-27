@@ -39,6 +39,7 @@ const createResource = async (req, res) => {
       parentResourceId,
       remarks,
     } = req.body;
+    console.log("heee ", req.body)
     // check if the request body is empty
     // if (
     //   name &&
@@ -169,13 +170,36 @@ const viewResources = async (req, res) => {
     let limit = req.body.page_size ? req.body.page_size : 50;
     let page = req.body.page_number ? req.body.page_number : 1;
     let offset = (page - 1) * limit;
-    let showAllResources = await resource.findAll({});
+    console.log('1')
+    let [showAllResources] = await sequelize.query(`    
+    SELECT 
+    rm.resourceId, 
+    rm.name, 
+    rm.description, 
+    rm.hasSubMenu, 
+    rm.parentResourceId, 
+    rm1.name as parentResourceName, 
+    rm.orderIn as 'order',  
+    rm.path, 
+    sm.statusCode as status
+FROM 
+    amabhoomi.resourcemasters rm  
+LEFT JOIN 
+    amabhoomi.resourcemasters rm1 ON rm.parentResourceId = rm1.resourceId  
+INNER JOIN 
+    amabhoomi.statusmasters sm ON sm.statusId = rm.statusId 
+ORDER BY 
+    rm.resourceId DESC
+
+    `);
+
+  console.log(showAllResources,'all resources')
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
     if (givenReq) {
       showAllResources = showAllResources.filter(
         (resourceData) =>
           resourceData.resourceId.includes(givenReq) ||
-          resourceData.name.includes(givenReq)
+          resourceData.name.toLowerCase().includes(givenReq)
       );
     }
     let paginatedshowAllResources = showAllResources.slice(

@@ -1,14 +1,15 @@
 const { sequelize,Sequelize } = require('../../../models')
 const statusCode = require('../../../utils/statusCode')
 const db = require('../../../models')
-const decrypt  = require('../../../middlewares/decryption.middlewares')
-const encrypt = require('../../../middlewares/encryption.middlewares')
+const {decrypt}  = require('../../../middlewares/decryption.middlewares')
+const {encrypt} = require('../../../middlewares/encryption.middlewares')
 const role =db.rolemaster
 const resource = db.resourcemaster
 const roleresource = db.roleresource
 const resourcemaster = db.resourcemaster
 const user = db.privateuser
 const userresource = db.userresource;
+const QueryTypes = db.QueryTypes
 
 
 let dataload = async (req, res) => {
@@ -16,11 +17,11 @@ let dataload = async (req, res) => {
        let userDataLoad = await sequelize.query(` select 
         pu.privateUserId as userId,
         pu.fullName as fullName,
-        pu.userName as userName
+        pu.userName as userName,
         pu.emailId as email,
         pu.contactNo as contact,
         rm.roleCode as Role,
-        sm.statusCode  as status, 
+        sm.statusCode as status, 
         gm.genderCode as gender 
         from amabhoomi.privateusers pu 
         inner join amabhoomi.rolemasters rm on rm.roleId=pu.roleId 
@@ -29,7 +30,7 @@ let dataload = async (req, res) => {
         order by pu.privateUserId`);
 
         if (userDataLoad.length > 0) {
-            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm."name" as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2."name" as child, rm2.orderIn as childOrder from amabhoomi.resourcemaster rm left join amabhoomi.resourcemaster rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.status = 1 order by parentOrder, childOrder`,
+            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm.name as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2.name as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.statusId = 1 order by parentOrder, childOrder`,
             {type: Sequelize.QueryTypes.SELECT});
 
             if (resourceData.length > 0) {
@@ -69,12 +70,10 @@ let dataload = async (req, res) => {
 
 
 let insertUserResource = async (req, res) => {
-    let client;
     try {
-        client = await db.connect();
-        let userId = req.body.user;
+        let userId = req.body.userId;
         let status = req.body.status;
-        let user = req.user.id;
+        let user = req.user?.id||1;
         let date = 'now()';
         let {resourceList} = req.body;
 
@@ -95,48 +94,54 @@ let insertUserResource = async (req, res) => {
         // Check for any duplicates
         if (duplicateCheckResult.length > 0) {
             const duplicateResources = duplicateCheckResult.map(row => row.name);
-            return res.status(statusCode.CONFLICT.code).json({ message: 'Some resources are already mapped with the role', data: duplicateResources });
+            return res.status(statusCode.CONFLICT.code).json({ message: 'Some resources are already mapped with the user', data: duplicateResources });
          }
-         for (let i = 0; i < resourceArray.length; i++) {
-            const query = await userresource.findOne({
+               // Flag to track success
+               let successFlag = true;
+               
+         for (let i = 0; i < resourceList.length; i++) {
+            const query = await resourcemaster.findOne({
               attributes: ['parentResourceId'],
-              where: { userResourceId: resourceList[i] }
+              where: { resourceId: resourceList[i] }
             });
 
+            console.log('2')
          if (query.parentResourceId !== null) {
             // Child resource handling
+            console.log('3')
             const result = await userresource.create({
               userId:userId,
-              resourceid: resourceList[i],
-              parentresourceid: query.parentResourceId,
-              statusid: status,
-              createdby: user,
-              createddt: date,
-              updatedby: user,
-              updateddt: date,
+              resourceId: resourceList[i],
+              parentresourceId: query.parentResourceId,
+              statusId: status,
+              createdBy: user,
+              createdDt: date,
+              updatedBy: user,
+              updatedDt: date,
             });
-    
+            console.log('4')
             console.log('parent resource id', query.parentResourceId);
     
             const verifyRoleResource1 = await userresource.findOne({
               attributes: ['userId', 'resourceId'],
               where: { userId, resourceid: query.parentResourceId },
-              transaction,
+       
             });
-    
+         
+
             console.log(verifyRoleResource1);
     
             if (result) {
               if (!verifyRoleResource1) {
                 const result1 = await userresource.create({
-                  userId,
+                  userId:userId,
                   resourceId: query.parentResourceId,
                   statusId: status,
                   createdBy: user,
                   createdDt: date,
                   updatedBy: user,
                   updatedDt: date,
-                }, { transaction });
+                });
     
                 if (!result1) {
                   successFlag = false;
@@ -151,14 +156,14 @@ let insertUserResource = async (req, res) => {
             // Handle non-child resource
             const result = await userresource.create({
               userId:userId,
-              resourceid: resourceList[i],
-              parentResourceId: query.parentResourceId,
+              resourceId: resourceList[i],
+              parentResourceId:query.parentResourceId,
               statusId: status,
               createdBy: user,
               createdDt: date,
               updatedBy: user,
               updatedDt: date,
-            }, { transaction });
+            });
     
             if (!result) {
               successFlag = false;
@@ -184,17 +189,18 @@ let insertUserResource = async (req, res) => {
 let viewUserResource = async (req, res) => {
 
     try {
+      console.log('1')
         let limit = (req.body.page_size) ? req.body.page_size : 50;
         let page = (req.body.page_number) ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
       
-        const givenReq = req.body.givenReq ? req.body.givenReq: null;
-        const decryptGivenReq = await decrypt(givenReq).toLowerCase();
+        const givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase(): null;
+      
       
 
         let query =
             `SELECT 
-            ur.userResourcId,
+            ur.userResourceId,
             pu.fullName,
             pu.userName,
             rm.name,
@@ -219,6 +225,7 @@ let viewUserResource = async (req, res) => {
         let viewUserResourceData = await sequelize.query(query,{
             type:Sequelize.QueryTypes.SELECT
         })
+        console.log(viewUserResourceData,'viewUserResourceData')
 
         // let decryptViewUserResourceData = viewUserResourceData.map(async(userData)=>({
         //     ...userData,
@@ -265,13 +272,13 @@ let autoSuggestionUserResource = async (req, res) => {
 
     try {
       
-        const givenReq = req.body.givenReq ? req.body.givenReq: null;
+        const givenReq = req.params.givenReq ? req.params.givenReq.toLowerCase(): null;
         // const decryptGivenReq = await decrypt(givenReq).toLowerCase();
       
 
         let query =
             `SELECT 
-            ur.userResourcId,
+            ur.userResourceId,
             pu.fullName,
             pu.userName,
             rm.name,
@@ -297,23 +304,29 @@ let autoSuggestionUserResource = async (req, res) => {
             type:Sequelize.QueryTypes.SELECT
         })
 
-        // let decryptViewUserResourceData = viewUserResourceData.map(async(userData)=>({
-        //     ...userData,
-        //    fullName: await decrypt(userData.fullName),
-        //    userName: await decrypt(userData.userName)
-        // }))
+        let decryptViewUserResourceData = await Promise.all(viewUserResourceData.map(async(userData)=>{
+          if(!userData||!userData.fullName||!userData.userName){
+            return userData
+          }
+          return {
+            ...userData,
+            fullName: await decrypt(userData.fullName),
+            userName: await decrypt(userData.userName)
+          }
 
+        }))
         let matchedData = viewUserResourceData;
+        console.log('matched data', decryptViewUserResourceData)
 
         if(givenReq){
-            matchedData = viewUserResourceData.filter((allData)=>
-                allData.userResourceId.includes(givenReq)||
-                allData.fullName.includes(givenReq)||
-                allData.userName.includes(givenReq)||
-                allData.name.includes(givenReq)||
-                allData.description.includes(givenReq)||
-                allData.parentResourceName.includes(givenReq)||
-                allData.statusCode.includes(givenReq)
+            matchedData = decryptViewUserResourceData.filter((allData)=>
+            (allData.userResourceId && (allData.userResourceId.toString() === givenReq))||
+            (allData.fullName && allData.fullName.toLowerCase().includes(givenReq.toLowerCase())) ||
+            (allData.userName && allData.userName.toLowerCase().includes(givenReq.toLowerCase())) ||
+            (allData.name && allData.name.toLowerCase().includes(givenReq.toLowerCase())) ||
+            (allData.description && allData.description.toLowerCase().includes(givenReq.toLowerCase())) ||
+            (allData.parentResourceName && allData.parentResourceName.toLowerCase().includes(givenReq.toLowerCase())) ||
+            (allData.statusCode && allData.statusCode.toLowerCase().includes(givenReq.toLowerCase()))
             )
            }
        
