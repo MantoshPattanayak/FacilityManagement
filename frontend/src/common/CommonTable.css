@@ -9,6 +9,22 @@
   overflow-y: auto;
   max-height: 700px;
 }
+.create-role-btn {
+  background-color: #fdfdfd;
+  border: 1px solid black;
+  border-radius: 10px;
+  color: rgb(12, 12, 12);
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.create-role-btn:hover {
+  background-color: #00B562;
+  transition: 0.5s;
+}
 
   .search_text_conatiner{
     display: flex;

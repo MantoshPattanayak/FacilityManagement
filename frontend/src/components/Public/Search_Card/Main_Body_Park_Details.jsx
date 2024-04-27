@@ -12,6 +12,10 @@ import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png"
 // Data Not available Icon
 import No_Data_icon from "../../../assets/No_Data_icon.png"
 import { useEffect, useState } from "react"
+//  Import here to encrptData ------------------------------------------
+import { Link, useNavigate } from 'react-router-dom';
+
+import { encryptData } from "../../../utils/encryptData"
 const Main_Body_Park_Details=()=>{
 // Use state ------------------------------------------------------------------
 const[DisPlayParkData, setDisPlayParkData]=useState([])
@@ -19,6 +23,8 @@ const[DisPlayParkData, setDisPlayParkData]=useState([])
 const [givenReq, setGivenReq] = useState('');
 // for Faciltiy ----------------------------------------------------------------
 const [facilityTypeId, setFacilityTypeId] = useState(null);
+// Use Navigate for Navigate the page ----------------------------------------------
+let navigate = useNavigate();
 //Here (Post the data)----------------------------------------------------------------
 async function GetParkDetails(){
             try{
@@ -39,6 +45,11 @@ async function GetParkDetails(){
             console.log("here type id", typeid)
             GetParkDetails()
         };
+ // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
+ function encryptDataId(id) {
+    let res = encryptData(id);
+    return res;
+}
 // useEffect for Update the data (Call the Api) ------------------------------------------------
         useEffect(()=>{
             GetParkDetails()  
@@ -74,6 +85,13 @@ async function GetParkDetails(){
                     <div className="card-container">
                                         {DisPlayParkData.length > 0 ? (
                                             DisPlayParkData.map((item, index) => (
+                                                // Navigate the sub_manu_page according to id------------------
+                                                <Link
+                                                    to={{ 
+                                                        pathname: '/Sub_Park_Details',
+                                                        search: `?facilityTypeId=${encryptDataId(item.facilityTypeId)}&action=view`
+                                                    }}
+                                                >
                                                 <div className="Park_card" key={index}>
                                                     <img className="Card_img" src={Cardimg} alt="Park" />
                                                     <div className="card_text">
@@ -87,6 +105,7 @@ async function GetParkDetails(){
                                                         </span>
                                                     </div>
                                                 </div>
+                                                </Link>  
                                             ))
                                         ) : (
                                             // Here Show the Msg if (Data is Not available ) --------------------------------
