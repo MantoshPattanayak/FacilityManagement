@@ -22,6 +22,8 @@ import ReviewEventDetailsList from './components/Admin/Activity/ReviewEventDetai
 //import public files here
 import SignUp from './components/Public/SignUp';
 import Login from './components/Public/Login';
+//import BookParks files here
+import Book_Now from './components/Public/BookParks/Book_Now';
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -66,6 +68,9 @@ function App() {
             {/* HOME */}
             <Route path='/' element={<Main_Body_Park_Details />} />
             <Route path='/Sub_Park_Details' element={<Sub_Park_Details/>} />
+            {/* Public (Book Parks)  */}
+            <Route path='/BookParks/Book_Now' element={<ProtectedRoute><Book_Now /></ProtectedRoute>} />
+
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
