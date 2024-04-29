@@ -1,6 +1,7 @@
 import { useState, useEffect , useRef} from "react";
 import "./Sub_Park_Details.css"
-// Here Import Admin Header ------------------------------------
+// Here Import Admin Header AND fOOTER ------------------------------------
+import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
 
 // Location icon and image all types of image---------------------------------------------
@@ -195,7 +196,8 @@ return(
                                         </div>
 
                                 </div>
-
+                 {/*-------------------------------------------- Here Footer---------------------------------------------- */}
+                <CommonFooter/>
 
    </div>
  )
