@@ -177,10 +177,10 @@ const viewParkById = async (req,res)=>{
             })
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
-           facilitiesData: fetchTheFacilitiesDetailsData,
-           eventDetails:fetchEventDetailsData,
-            amenitiesData:fethAmenitiesDetailsDataData,
-            serviceData:fetchServicesDetailsData
+           facilitiesData: fetchTheFacilitiesDetailsData[0],
+           eventDetails:fetchEventDetailsData[0],
+            amenitiesData:fethAmenitiesDetailsDataData[0],
+            serviceData:fetchServicesDetailsData[0]
         })
         }
         else{

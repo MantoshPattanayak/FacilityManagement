@@ -1,13 +1,14 @@
 // to be maintained by backend developers
 
 const api = {
-    LOGIN_API: '/auth/login',
-    SIGNUP_API: '/auth/signup',
+    PUBLIC_LOGIN_API: '/auth/publicLogin',
+    PUBLIC_SIGNUP_API: '/auth/signUp',
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
 
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
+      View_By_ParkId:'/mapData/viewParkById',          
     // Recourece Api
     RESOURCE_VIEW_BY_ID_API: '/resource/resourceId', //get /resource//resourceId/:id
     RESOURCE_CREATE_API: '/resource/createResource',    //POST
@@ -43,7 +44,9 @@ const api = {
     //Review Event Booking
     REVIEW_EVENTS_VIEWLIST_API: '/reviewEvents/viewList',   //post
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
-    REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction' //put /reviewEvents/performAction/id
+    REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
+    //Bookmark
+    BOOKMARK_FACILITY_EVENTS_API: '/userDetails/bookmarkingAddAction',  //post
 }
 
 export default api;

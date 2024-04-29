@@ -1,16 +1,64 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef} from "react";
 import "./Sub_Park_Details.css"
 // Here Import Admin Header ------------------------------------
 import AdminHeader from "../../../common/AdminHeader";
+
 // Location icon and image all types of image---------------------------------------------
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
 import Park_img from "../../../assets/park_img1.jpg"
+import Yoga_img from "../../../assets/Yoga_img.png"
 import Google_map from "../../../assets/Google_map.jpg"
 import correct_icon from "../../../assets/Correct_icon.png"
 import Phone_icon from "../../../assets/Phone_icon.png"
+// Import Aixos method---------------------------------------------
+import axiosHttpClient from "../../../utils/axios";
+// Import Navigate and Crypto -----------------------------------
+import { useLocation, useNavigate } from 'react-router-dom';
+import { decryptData } from "../../../utils/encryptData";
 // Here Funcation of Sub_park_details------------------------------------------
   const Sub_Park_Details=()=>{
+// UseSate for get data -------------------------------------
+  const[ServiceData, setServiceData]=useState([]);
+  const [amenitiesData, setAmenitiesData] = useState([]);
 
+//here Location / crypto and navigate the page---------------
+     const location = useLocation();
+    const facilityTypeId = decryptData(new URLSearchParams(location.search).get('facilityTypeId'));
+    const action = new URLSearchParams(location.search).get('action');
+    const navigate = useNavigate();
+
+// Here Get the data of Sub_park_details------------------------------------------
+    async function getSub_park_details(){
+        try{
+            let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityTypeId)
+               
+            console.log("here Response", res)
+            setServiceData(res.data.ServiceData)
+            setAmenitiesData(res.data.amenitiesData);
+        }
+        catch(err){
+            console.log("here Error", err)
+        }
+    }
+// UseEffect for Update the data---------------------------------------------
+useEffect(()=>{
+    getSub_park_details()
+}, [])
+//Image swap  conatiner ------------------------------------------------
+ const containerRef = useRef(null);
+ const [currentIndex, setCurrentIndex] = useState(0);
+ 
+ useEffect(() => {
+   const container = containerRef.current;
+   const interval = setInterval(() => {
+     const newIndex = (currentIndex + 1) % 10;
+     setCurrentIndex(newIndex);
+     container.scrollLeft = newIndex * container.offsetWidth;
+   }, 4000); // Change box set every 3 seconds
+ 
+   return () => clearInterval(interval);
+ }, [currentIndex]);
+  
 // Here Return Function ------------------------------------------------------------
             return(
                 <div className="Sub_Manu_Conatiner">
@@ -45,62 +93,39 @@ import Phone_icon from "../../../assets/Phone_icon.png"
                 {/* -----------------------------services------------------------------------------ */}
                        <div className="Service_Now_conatiner">
                           <h1 className="Service_text">Services</h1>
-                            <div className="Service_Avilable">
-                                <div class="service_item"> 
-                                    <img className="service_Avil_img" src={Park_img}></img>
-                                    <p class="service_name">Park Service</p>
+                          {ServiceData && ServiceData.length >0 &&  ServiceData.map((item, index)=>{
+                                <div className="Service_Avilable" key={index}>
+                                    <div className="service_item"> 
+                                    <img className="service_Avil_img" src={Park_img}  />
+                                    <p className="service_name">{item.code}</p>
                                 </div>
-                                <div class="service_item"> 
-                                    <img className="service_Avil_img" src={Park_img}></img>
-                                    <p class="service_name">Park Service</p>
                                 </div>
-                                <div class="service_item"> 
-                                    <img className="service_Avil_img" src={Park_img}></img>
-                                    <p class="service_name">Park Service</p>
-                                </div>
-                                <div class="service_item"> 
-                                    <img className="service_Avil_img" src={Park_img}></img>
-                                    <p class="service_name">Park Service</p>
-                                </div>
-                                <div class="service_item"> 
-                                    <img className="service_Avil_img" src={Park_img}></img>
-                                    <p class="service_name">Park Service</p>
-                                </div>
-                                  
-                            </div>
+                          })}
+                              
+                           
                        </div>
 
                 {/* --------------------------- Amenities ------------------------------------------*/}
                 <div className="Amenities_Main_conatiner">
                     <h1 className="Service_text">Amenities</h1>
                     <div className="Amenities-Data">
-                               <span className="flex gap-2">
-                                    <img className="Correct_icon" src={correct_icon}></img>
-                                    <h1 className="Amenities_name">Park</h1>
-                               </span>
-                               <span className="flex gap-2">
-                                    <img className="Correct_icon" src={correct_icon}></img>
-                                    <h1 className="Amenities_name">Park</h1>
-                               </span>
-                               <span className="flex gap-2">
-                                    <img className="Correct_icon" src={correct_icon}></img>
-                                    <h1 className="Amenities_name">Park</h1>
-                               </span>
-                               <span className="flex gap-2">
-                                    <img className="Correct_icon" src={correct_icon}></img>
-                                    <h1 className="Amenities_name">Park</h1>
-                               </span>
-                               <span className="flex gap-2">
-                                    <img className="Correct_icon" src={correct_icon}></img>
-                                    <h1 className="Amenities_name">Park</h1>
-                               </span>
-                               <span className="flex gap-2">
-                                    <img className="Correct_icon" src={correct_icon}></img>
-                                    <h1 className="Amenities_name">Park</h1>
-                               </span>
+                        {amenitiesData
+                        .flatMap((group) => group) // Flatten the array of arrays
+                        .filter((item, index, self) => self.findIndex((t) => t.amenityName === item.amenityName) === index) // Filter unique items
+                        .map((item, index) => (
+                            <span className="flex gap-2" key={index}>
+                            <img
+                                className="Correct_icon"
+                                src={correct_icon}
+                                alt={`Amenity icon ${index}`}
+                            />
+                            <h1 className="Amenities_name">{item.amenityName}</h1>
+                            </span>
+                        ))}
+                    </div>
                     </div>
 
-                </div>
+
                 {/* -------------------------- Here About -------------------------------------------- */}
                 <div className="About_Conatiner">
                    <h1 className="Service_text">About</h1>
@@ -118,6 +143,131 @@ import Phone_icon from "../../../assets/Phone_icon.png"
              {/* -------------------------Event Available ----------------------------------------------------------- */}
              <div className="Event_Available_main_conatiner">
                  <h1 className="Service_text">Event Available</h1>
+                 <div className="Sub_Park_Details">
+                 <div className="carousel-container" ref={containerRef}>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                        <div className="carousel-slide">
+                            <img className="Yoga_image" src={Yoga_img}></img>
+                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
+                            <span className="Yoga_date_time">
+                                    <h1 className="Yoga_date">22 Mar 2024</h1>
+                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
+                            </span>
+                        </div>
+                     
+                </div>
+                    </div>
              </div>
 
 

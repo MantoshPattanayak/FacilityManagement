@@ -240,3 +240,64 @@
  .Event_Available_main_conatiner{
     padding: 40px;
  }
+ .Sub_Park_Details {
+    overflow: hidden; /* Hide overflow to prevent horizontal scrollbar */
+  }
+  
+  .carousel-container {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Snap to each slide */
+    scroll-behavior: smooth; /* Smooth scrolling effect */
+    width: 100%; /* Full width */
+    height: auto; /* Full height */
+    padding: 20px;
+  }
+  
+  .carousel-slide {
+    flex: 0 0 30%; /* Each slide takes up 30% of the container width */
+    width: 20%; /* Each slide takes up 30% of the container width */
+    height: 100%; /* Each slide takes up full height of the container */
+    scroll-snap-align: start; /* Align slides to the start of the container */
+   
+
+    align-items: center;
+    border: 2px solid rgb(1, 129, 16);
+    margin: 0 5px; /* Space between boxes */
+    background-color:#E0F8E5;
+    border-radius: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+     transition: background-color 0.3s ease;
+  }
+  .carousel-slide:hover{
+    background-color:#fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow effect */
+    transition: background-color 0.3s ease;
+    border: 1px solid rgb(11, 11, 11);
+
+  }
+  .Yoga_image{
+    width: 59vh;
+    height: 20vh;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    
+  }
+  .Name_yoga{
+    font-size: 25px;
+    color: #019f13;
+    font-weight: 600;
+  }
+  .Yoga_date_time{
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px;
+  }
+  .Yoga_date{
+    font-size: 20px;
+    font-weight: 600;
+  }
+.Yoga_time{
+    font-size: 20px;
+    font-weight: 600;
+}
