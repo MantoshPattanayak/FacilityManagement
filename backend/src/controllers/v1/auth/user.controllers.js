@@ -56,7 +56,14 @@ const { request } = require("express");
 let generateOTPHandler = async (req,res)=> {
   try {
     console.log('1')
+    const encryptedBody = req.body.encryptedBody;
+
     let {mobileNo} = req.body
+    console.log('2',encryptedBody)
+
+    let decrypt1 = await decrypt(encryptedBody)
+    console.log('3',decrypt1)
+    console.log(req.body.encryptedBody,'1',encryptedData)
     let length=4
     let numberValue = '1234567890'
 
@@ -384,7 +391,7 @@ let publicLogin = async(req,res)=>{
 
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken, menuItems: dataJSON });
           }
 
           else{

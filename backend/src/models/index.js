@@ -51,9 +51,9 @@ sequelize.authenticate()
   db1.file = require('./file.models')(sequelize,DataTypes)
   db1.fileattachment = require('./fileattachment.models')(sequelize,DataTypes)
   db1.bookmarks = require('./userbookmarks.models')(sequelize, DataTypes)
-
+  db1.device = require('./device.models')(sequelize,DataTypes);
   db1.publicuser.sync({
-    force: true
+    force: false
   })
 
 module.exports = db1;
