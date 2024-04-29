@@ -31,6 +31,8 @@ import Book_Now from './components/Public/BookParks/Book_Now';
 import AdminHeader from './common/AdminHeader';
 // Import Footer 
 import Footer from './common/Footer';
+// Import Common Footer 
+import CommonFooter from './common/CommonFooter';
 //import home page
 import Home from './components/Public/Home';
 // Import here Partice Page
@@ -70,6 +72,9 @@ function App() {
             <Route path='/Sub_Park_Details' element={<Sub_Park_Details/>} />
             {/* Public (Book Parks)  */}
             <Route path='/BookParks/Book_Now' element={<ProtectedRoute><Book_Now /></ProtectedRoute>} />
+            {/* Common Footer final */}
+            <Route path='/common/CommonFooter' element={<ProtectedRoute><CommonFooter /></ProtectedRoute>} />
+
 
             {/* use Section  */}
 

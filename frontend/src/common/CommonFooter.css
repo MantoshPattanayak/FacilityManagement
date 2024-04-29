@@ -1,0 +1,86 @@
+.footer-container {
+    background-color: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .left-section {
+    width: 60%;
+  }
+  
+  .ama-bhoomi-info h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  .app-download p{
+    margin-top: 10px;
+    font-size: large;
+    font-weight: 500;
+    float: left;
+  }
+  .app-download input[type="text"] {
+    width: 50%;
+    height: 30px;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    /* float: left; */
+  }
+  .app-store-icons img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+  }
+  
+  .right-section  .middle-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .right-section  .middle-section ul li {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .middle-section ul li {
+    text-align: center;
+  }
+  
+  .right-section ul li {
+    text-align: right;
+  }
+  
+.middle-right-section {
+    width: 15%;
+    text-align: center;
+  }
+  
+  .middle-right-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .middle-right-section ul li {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+  .app-store-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    margin-top: 28px;
+  }
+  
+  .app-store-icons img {
+    width: 100px;
+    margin-right: 10px; 
+  }
+  
+
+  
