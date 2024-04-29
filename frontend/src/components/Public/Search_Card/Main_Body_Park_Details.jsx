@@ -7,16 +7,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 // Axios for Call the API --------------------------------
 import axiosHttpClient from "../../../utils/axios"
-// Here Admin Header---------------------------- ----------------
+// Here Admin Header and footer---------------------------- ----------------
 import AdminHeader from "../../../common/AdminHeader"
+import CommonFooter from "../../../common/CommonFooter";
 // Import Logo here ------------------------------ ------------------------------
 import Park_Logo from "../../../assets/Ground_logo.png"
 import MultiPark from "../../../assets/ama_bhoomi_multipurpose_grounds_logo-removebg-preview.png"
 import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png"
-// Data Not available Icon
+// Data Not available Icon ---------------------------------------------------------------
 import No_Data_icon from "../../../assets/No_Data_icon.png"
 import { useEffect, useState } from "react"
-//  Import here to encrptData ------------------------------------------
+// Import here to encrptData ------------------------------------------
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptData } from "../../../utils/encryptData"
 const Main_Body_Park_Details=()=>{
@@ -53,9 +54,20 @@ async function GetParkDetails(){
     let res = encryptData(id);
     return res;
 }
+// Get the data for autoSuggestion  --------------------------------------------------------
+    async function getAutoSuggest(){
+        try{
+            let res= await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get' ,null,  givenReq)
+               console.log("here Response of Auto  Suggest", res)
+        }
+        catch(err){
+            console.log("here error", err)
+        }
+    }
 // useEffect for Update the data (Call the Api) ------------------------------------------------
         useEffect(()=>{
             GetParkDetails()  
+            getAutoSuggest()
         }, [givenReq,facilityTypeId])
 //Return here------------------------------------------------------------------------------------------------------------
      return(
@@ -169,6 +181,7 @@ async function GetParkDetails(){
                                             </div>
                                         )}
                           </div>
+                          <CommonFooter/>
         </div>
         )
     }

@@ -107,7 +107,7 @@ const viewParkDetails = async(req,res)=>{
         console.log(2,facilities)
     }
 
-        let matchedData = facilities;
+        let matchedData = facilities[0];
         if(givenReq){
              matchedData = facilities[0].filter((mapData)=>
                 (mapData.facilityName && mapData.facilityName.toLowerCase().includes(givenReq.toLowerCase()))||
@@ -128,7 +128,7 @@ const viewParkDetails = async(req,res)=>{
   
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:matchedData[0]
+            data:matchedData
         })
 
 
