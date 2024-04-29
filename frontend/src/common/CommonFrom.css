@@ -38,7 +38,7 @@
 .form-heading h2 {
     margin-bottom: 1.5vw;
     /* Converted from 10px to 1.5vw */
-    min-width: 90vw;
+    /* min-width: 5vw; */
     background-color: green;
     color: black;
     font-weight: bold;

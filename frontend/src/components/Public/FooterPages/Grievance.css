@@ -1,0 +1,145 @@
+*{
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-weight:600;
+}
+.grievenceForm {
+    width: 100%;
+    display: flex;
+    /* background-color: pink; */
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.heading h2 {
+    margin-bottom: 1.5vw;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+.grievenceForm p{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.radiobutton{
+    display: flex;
+    width: 20vw;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.grievanceContainer {
+    width: 970px;
+    display: flex;
+    /* background-color: aquamarine; */
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    height: auto;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 962px;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.form-group {
+    width: 456px;
+}
+
+.form-group2 {
+    width: 962px;
+}
+
+.form-group input {
+    width: 456px;
+    height: 42px;
+    border: 1px solid rgb(0, 0, 0, 30%);
+    padding-left: 10px;
+}
+
+.form-group2 input {
+    width: 962px;
+    height: 110px;
+    border: 1px solid rgb(0, 0, 0, 30%);
+    padding-left: 10px;
+    display: flex;
+    justify-content: start;
+}
+
+.levelCheckBox {
+    display: flex;
+    flex-direction: row;
+    width: 456px;
+    justify-content: space-between;
+}
+
+.checkboxLev {
+    display: flex;
+    flex-direction: row;
+    height: 21px;
+    font-size: 16px;
+    width: auto;
+    gap: 17px;
+    justify-content: space-between;
+    /* background-color: yellow; */
+    align-items: center;
+}
+
+#checkBox1 {
+    height: 17px;
+    width: 17px;
+}
+
+.inputButton{
+    display: flex;
+}
+
+.inputButton input{
+    width: 330px;
+}
+.inputButton button{
+    width: 126px;
+    background-color: #3DDE5C;
+    color: white;
+}
+
+.captcha input{
+    width: 358px;
+}
+
+.captcha div{
+    width: 98px;
+    background-color: #E9ECEF;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #EEEBEB;
+}
+
+.captcha{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.submitbutton{
+    width: 116px;
+    height: 42px;
+    background-color: #1C71D9;
+    border: 2px solid #1C71D9;
+    color: white;
+    border-radius: 6px;
+}
