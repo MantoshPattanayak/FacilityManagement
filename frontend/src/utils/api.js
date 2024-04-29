@@ -44,7 +44,9 @@ const api = {
     //Review Event Booking
     REVIEW_EVENTS_VIEWLIST_API: '/reviewEvents/viewList',   //post
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
-    REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction' //put /reviewEvents/performAction/id
+    REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
+    //Bookmark
+    BOOKMARK_FACILITY_EVENTS_API: '/userDetails/bookmarkingAddAction',  //post
 }
 
 export default api;
