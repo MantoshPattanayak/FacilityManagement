@@ -5,25 +5,30 @@ const {decrypt}  = require('../../../middlewares/decryption.middlewares')
 const {encrypt} = require('../../../middlewares/encryption.middlewares')
 const QueryTypes = db.QueryTypes
 const Payment =db.payment
-let { instance } = require('../../../config/razorpay.config.js');
+let  instance  = require('../../../config/razorpay.config.js');
 let crypto = require('crypto');
 
  
 const checkout = async (req, res) => {
-  const options = {
-    amount: Number(req.body.amount * 100),
-    currency: "INR",
-  };
-  const order = await instance.orders.create(options);
-
-  res.status(200).json({
-    success: true,
-    order,
-  });
+  try{
+    const options = {
+      amount: Number(req.body.amount * 100),
+      currency: "INR",
+    };
+    const order = await instance.orders.create(options);
+  
+    res.status(200).json({
+      success: true,
+      order,
+    });
+  }catch(err){
+    res.status(500).json({message: err.message});
+  }  
 };
 
 const paymentVerification = async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+  try{
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
     req.body;
 
   const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -41,11 +46,26 @@ const paymentVerification = async (req, res) => {
         razorpay_payment_id: razorpay_payment_id,
         razorpay_signature: razorpay_signature
       });
- 
+      if(insertPayment){
+        return res.status(200).json({
+          message:'Payment done successfully',
+          success: true
+        });
+      }else{
+        return res.status(400).json({
+          message:'Payment Failed',
+          success: true
+        });
+      }
+     
   } else {
-    res.status(400).json({
-      success: false,
+    return res.status(400).json({
+      message:'Inavlaid payment request',
+      success: false
     });
+  }
+  }catch(err){
+    res.status(500).json({message: err.message});
   }
 };
 
