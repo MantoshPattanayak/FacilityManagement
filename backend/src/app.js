@@ -42,6 +42,8 @@ const reviewEventBookingRoute = require("./routes/api/" +
   "/activity/reviewEventBooking");
 const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
+const razorPayPayment = require("./routes/api/" +api_version +"/payment/razorPayPayment");
+
 console.log(port, "port");
 
 app.use(
@@ -79,6 +81,8 @@ app.use("/userResource", userResource);
 app.use("/role", roleroute);
 app.use("/resource", resourceroute);
 app.use("/pulicUser", publicUser);
+
+app.use("/razorPayPayment",razorPayPayment);
 //  put all your route handlers here
 
 //activity routes
