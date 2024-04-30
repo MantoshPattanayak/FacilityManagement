@@ -192,7 +192,7 @@ let signUp = async (req,res)=>{
   console.log('1')
   console.log(req.body,'req.body')
 
-    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNumber:phoneNo,userImage,encryptLanguage:language,activities} = req.body;
+    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,activities} = req.body;
     // const decryptUserName = decrypt(userName);
     // const decryptEmailId = decrypt(email);
     // const decryptPhoneNumber = decrypt(phoneNo);
@@ -205,7 +205,7 @@ let signUp = async (req,res)=>{
           
         }
       })
-      console.log('password check')
+      console.log('password check',phoneNo)
 
       if(checkDuplicateMobile){
         return res.status(statusCode.CONFLICT.code).json({
@@ -317,7 +317,7 @@ let publicLogin = async(req,res)=>{
 
   try{
 
-    let {mobileNo,encryptEmail:emailId,encryptPassword:password}= req.body
+    let {encryptMobile:mobileNo,encryptEmail:emailId,encryptPassword:password}= req.body
 
     let otp = req.body.otp?req.body.otp:null;
     let userAgent =  req.headers['user-agent'];
@@ -347,16 +347,16 @@ let publicLogin = async(req,res)=>{
       }
       if(mobileNo){
         console.log('mobileNo',mobileNo)
-        mobileNo = await decrypt(mobileNo)
+        // mobileNo = await decrypt(mobileNo)
         // check whether the credentials are valid or not 
         // Finding one record
         
        isUserExist = await publicUser.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
-        console.log('2')
+        console.log('2 mobile no', isUserExist, 'phoneNumber',mobileNo)
       }
 
 
@@ -590,7 +590,7 @@ let publicLogin = async(req,res)=>{
         
        isUserExist = await publicUser.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
       }
@@ -705,7 +705,7 @@ let privateLogin = async(req,res)=>{
         
        isUserExist = await user.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
       }
@@ -805,7 +805,7 @@ let privateLogin = async(req,res)=>{
         
        isUserExist = await user.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
       }
