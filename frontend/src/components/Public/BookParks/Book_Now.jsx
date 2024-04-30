@@ -108,7 +108,7 @@ const Book_Now = () => {
         {/* Add to cart button */}
         <div className="button">
             <button className="addtocart-btn">
-                Add to Cart
+               Processed to payment
             </button>
         </div>
      </div>

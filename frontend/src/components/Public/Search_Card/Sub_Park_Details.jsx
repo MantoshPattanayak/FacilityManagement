@@ -16,6 +16,10 @@ import axiosHttpClient from "../../../utils/axios";
 // Import Navigate and Crypto -----------------------------------
 import { useLocation, useNavigate } from 'react-router-dom';
 import { decryptData } from "../../../utils/encryptData";
+// Import here to encrptData ------------------------------------------
+
+import { Link } from "react-router-dom";
+import { encryptData } from "../../../utils/encryptData";
 // Google MAP --------------------------------
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 // Here Funcation of Sub_park_details------------------------------------------
@@ -24,11 +28,13 @@ import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/ap
   const[ServiceData, setServiceData]=useState([]);
   const [amenitiesData, setAmenitiesData] = useState([]);
   const[EventAvailable, setEventAvailable] = useState([])
-const[FacilitiesData, setFacilitiesData] = useState([])
+ const[FacilitiesData, setFacilitiesData] = useState([])
+// here Check Login Status------------------------------------
+const[LoginStatus, setLoginStatus] = useState([0])
 
 //here Location / crypto and navigate the page---------------
      const location = useLocation();
-    const facilityTypeId = decryptData(new URLSearchParams(location.search).get('facilityTypeId'));
+    const facilityId= decryptData(new URLSearchParams(location.search).get('facilityId'));
     const action = new URLSearchParams(location.search).get('action');
     const navigate = useNavigate();
 // Here Map Api keys ------------------------------------------------------------
@@ -41,7 +47,7 @@ const[FacilitiesData, setFacilitiesData] = useState([])
 // Here Get the data of Sub_park_details------------------------------------------
     async function getSub_park_details(){
         try{
-            let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityTypeId)
+            let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
                
             console.log("here Response", res)
             setServiceData(res.data.serviceData)
@@ -53,14 +59,30 @@ const[FacilitiesData, setFacilitiesData] = useState([])
             console.log("here Error", err)
         }
     }
+// For Find Out the Status of Login Page -------------------------------
+
+
+
+
+
+
+
+
+
+
 // UseEffect for Update the data---------------------------------------------
         useEffect(()=>{
             getSub_park_details()
         }, [])
+ // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
+ function encryptDataId(id) {
+    let res = encryptData(id);
+    return res;
+}
+
 //Image swap  conatiner ------------------------------------------------
             const containerRef = useRef(null);
             const [currentIndex, setCurrentIndex] = useState(0);
-            
             useEffect(() => {
             const container = containerRef.current;
             const interval = setInterval(() => {
@@ -78,10 +100,10 @@ return(
                             <AdminHeader/>
                             {/* Here Heading Image (Below of header) */}
                                     <div className="Header_Img">
-                                        <h1 className="text-park">{FacilitiesData.length>0 && FacilitiesData[0].facilityName}</h1>
+                                        <h1 className="text-park">{FacilitiesData?.length>0 && FacilitiesData[0]?.facilityName}</h1>
                                         <span className="Location_text_sub_manu">
                                                 <img className="location_icon" src={Location_icon}></img>
-                                                <h1 className="text_location">{FacilitiesData.length>0 && FacilitiesData[0].address}</h1>
+                                                <h1 className="text_location">{FacilitiesData?.length>0 && FacilitiesData[0]?.address}</h1>
                                         </span>
                                     </div>
                         {/*---------------- Jsx for Map and Image ------------------- */}
@@ -94,12 +116,27 @@ return(
                                                 
                                                         <h1 className="time_text"> Timing :   7PM -  8PM</h1>
                                                         <button className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === 'open' ? 'open' : 'closed'}`}>
-                                                                {FacilitiesData.length > 0 && FacilitiesData[0].status}
+                                                                {FacilitiesData?.length > 0 && FacilitiesData[0]?.status}
                                                                 </button>
 
                                                 </span>
                                                 <span className="Button_ticket_container">
-                                                    <button class="button-9" role="button">Buy a Ticket</button>
+                                                        <Link
+                                                            to={{ 
+                                                                pathname: '/BookParks/Book_Now',
+                                                                search: `?facilityId=${encryptDataId(facilityId )}&action=view`
+                                                            }}
+                                                            className="button-9"
+                                                        >
+
+                                                           <button  role="button_by">Buy a Ticket</button>
+                                                        </Link>
+
+
+
+
+                                                    
+                                                    
                                                     <button class="button-9" role="button">Host Event</button>
                                                 </span>
                                                     <div className="Map_image">
@@ -110,7 +147,7 @@ return(
                                                                 zoom={8}
                                                             >
                                                                 {/* Render markers */}
-                                                                {FacilitiesData.map((location, index) => (
+                                                                {FacilitiesData?.map((location, index) => (
                                                                 <Marker
                                                                     key={index}
                                                                     position={{ lat: location.latitude, lng: location.longitude }}
@@ -127,7 +164,7 @@ return(
                         {/* -----------------------------services------------------------------------------ */}
                                     <div className="Service_Now_conatiner">
                                         <h1 className="Service_text">Services</h1>
-                                        {ServiceData.length > 0 && ServiceData.map((item, index) => (
+                                        {ServiceData?.length > 0 && ServiceData?.map((item, index) => (
                                                 <div className="Service_Avilable" key={index}>
                                                     <div className="service_item"> 
                                                         <img className="service_Avil_img" src={Park_img} alt="Parking" />
@@ -164,14 +201,14 @@ return(
                         {/* -------------------------- Here About -------------------------------------------- */}
                                 <div className="About_Conatiner">
                                     <h1 className="Service_text">About</h1>
-                                    <h1 className="About_text">{FacilitiesData.length>0 && FacilitiesData[0].about}</h1>
+                                    <h1 className="About_text">{FacilitiesData?.length>0 && FacilitiesData[0]?.about}</h1>
                                 </div>
                         {/* -------------------------Helpline Number ------------------------------------------ */}
                                 <div className="Helpline_number_conatine">
                                     <h1 className="Service_text">Helpline Number</h1>
                                     <div className="Contact_number">
                                         <img className="Phone_icon" src={Phone_icon}></img>
-                                        <h1 className="Number">{FacilitiesData.length>0 && FacilitiesData[0].helpNumber}</h1>
+                                        <h1 className="Number">{FacilitiesData?.length>0 && FacilitiesData[0]?.helpNumber}</h1>
                                         <h1 className="Number">9192847567</h1>
                                     </div>
                                 </div>
@@ -179,7 +216,7 @@ return(
                                 <div className="Event_Available_main_conatiner">
                                     <h1 className="Service_text">Event Available</h1>
                                     <div className="Sub_Park_Details">
-                                            {EventAvailable.length > 0 && EventAvailable.map((item, index) => {
+                                            {EventAvailable?.length > 0 && EventAvailable?.map((item, index) => {
                                                 return (
                                                     <div className="carousel-container" ref={containerRef} key={index}>
                                                         <div className="carousel-slide">

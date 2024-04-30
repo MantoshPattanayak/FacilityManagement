@@ -83,7 +83,7 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
-        let facility = `select facilityName,facilityTypeId,case 
+        let facility = `select facilityId, facilityName,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, address,latitude,longitude,areaAcres 
@@ -95,7 +95,7 @@ const viewParkDetails = async(req,res)=>{
 
        if(facilityTypeId){
         console.log(1)
-         facility = `select facilityName,facilityTypeId,case 
+         facility = `select facilityId, facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres 
@@ -145,7 +145,7 @@ const viewParkById = async (req,res)=>{
     try{
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         if(facilityId){
-            let fetchTheFacilitiesDetailsQuery = `select facilityName,facilityTypeId,case 
+            let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
             end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo 
