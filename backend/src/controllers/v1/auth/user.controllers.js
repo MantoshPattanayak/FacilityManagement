@@ -196,6 +196,7 @@ let signUp = async (req,res)=>{
     // const decryptUserName = decrypt(userName);
     // const decryptEmailId = decrypt(email);
     // const decryptPhoneNumber = decrypt(phoneNo);
+ 
     password = await decrypt(password)
     let checkDuplicateMobile= await publicUser.findOne({
         where:{

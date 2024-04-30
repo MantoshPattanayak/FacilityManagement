@@ -95,6 +95,7 @@ function App() {
             />
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
+            <Route path="/login/SignUp" element={<SignUp/>} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
