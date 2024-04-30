@@ -2,11 +2,11 @@ module.exports = (sequelize,DataTypes)=>{
     let Device = sequelize.define('device',{
         deviceId:{
             type:DataTypes.INTEGER,
-            allowNull:false,
-            // autoIncrement:true
+            primaryKey:true,
+            autoIncrement:true
         },
         sessionId:{
-            type:DataTypes.INTEGER
+            type:DataTypes.INTEGER,
 
         },
         deviceName:{
@@ -15,6 +15,9 @@ module.exports = (sequelize,DataTypes)=>{
         deviceType:{
             type:DataTypes.STRING
         }
-    })
+    },
+{
+    timestamps:false
+})
     return Device
 }

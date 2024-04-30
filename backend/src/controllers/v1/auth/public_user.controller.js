@@ -4,6 +4,7 @@ const public_user = db.publicuser;
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const Sequelize = db.Sequelize;
+const facilityType = db.facilitytype
 const updatepublic_user = async (req, res) => {
   try {
     const {
@@ -123,7 +124,26 @@ const viewpublic_user = async (req, res) => {
     });
   }
 };
+
+let homePage = async(req,res)=>{
+  try {
+    // 1) fetch data w.r.t nearby location and facility
+    // 2) fetch facility w.r.t to the playgrounds,parks,multipurpose grounds, Greenways,waterways
+    // 3) show the map data with respect to parks, playgrounds,multipurposegrounds, greenways, waterways show the facility near by and search facility,name,locality
+    // 4)show the notifications
+    // 5)Current events 
+    // 6) explore new activities for all
+    // 7) Gallery images for all
+    let givenReq = req.body.givenReq?req.body.givenReq:null;
+
+    let firstFetchAllFacilityType = await facilityType.findAll({attributes:[facilitytypeId, code, description,statusId]}) 
+
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
+  }
+}
 module.exports = {
   updatepublic_user,
   viewpublic_user,
+  homePage
 };

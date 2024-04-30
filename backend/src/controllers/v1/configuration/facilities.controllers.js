@@ -83,7 +83,7 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
-        let facility = `select facilityname,facilityTypeId,case 
+        let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
@@ -140,12 +140,22 @@ const viewParkDetails = async(req,res)=>{
         
 }
 
+const autoSuggestionForViewParkDetails = async (req,res)=>{
+    try {
+        let givenReq = req.params.givenReq?req.params.givenReq:null;
+
+    } catch (err) {
+       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:err.message
+       }) 
+    }
+}
 
 const viewParkById = async (req,res)=>{
     try{
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         if(facilityId){
-            let fetchTheFacilitiesDetailsQuery = `select facilityName,facilityTypeId,case 
+            let fetchTheFacilitiesDetailsQuery = `select faclilityId, facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
             end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo 

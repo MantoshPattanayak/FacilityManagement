@@ -355,17 +355,17 @@ let getUserById = async (req, res) => {
     }
     );
 
-    //    let userEncryptedData = specificUser.map(async(user)=>({
-    //         title: await encrypt(user.title),
-    //         fullName:await encrypt(user.fullName),
-    //         emailId:await encrypt(user.emailId),
-    //         userName:await encrypt(user.userName),
-    //         contactNo:await encrypt(user.contactNo),
-    //         roleId:roleId,
-    //         statusId:statusId,
-    //         genderId:genderId
-
-    // }))
+       let userEncryptedData = await Promise.all(specificUser.map(async(user)=>{
+        return{
+          ...user,
+          title: await decrypt(user.title),
+          fullName:await decrypt(user.fullName),
+          emailId:await decrypt(user.emailId),
+          userName:await decrypt(user.userName),
+          contactNo:await decrypt(user.contactNo)
+        }
+     
+    }))
 
     return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: specificUser });
   }

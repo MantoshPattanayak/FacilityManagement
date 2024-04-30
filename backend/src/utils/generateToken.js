@@ -1,12 +1,12 @@
 let jwt = require('jsonwebtoken');
 let encrypt= require('../middlewares/encryption.middlewares')
-let decrypt= require('../middlewares/encryption.middlewares')
+let {decrypt}= require('../middlewares/encryption.middlewares')
 
 //Generate an access token and a refresh token for this database user
-async function jwtTokens({ userId, userName, emailId }) {
+async function jwtTokens(userId, userName, emailId ) {
   try{
-
-  const user = { userId, userName:await decrypt(userName), emailId: await decrypt(emailId) };
+  console.log(userId, userName,emailId,'token data')
+  const user = { userId, userName, emailId};
   console.log(userId, userName, emailId);
 
 
@@ -21,7 +21,7 @@ async function jwtTokens({ userId, userName, emailId }) {
 }
 
 catch (err) {
-  return res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
+console.log(err,'error')
 } 
 }
 
