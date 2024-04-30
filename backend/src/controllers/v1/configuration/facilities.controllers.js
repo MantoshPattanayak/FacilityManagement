@@ -83,10 +83,10 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
-        let facility = `select facilityName,facilityTypeId,case 
+        let facility = `select facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
-        end as status, address,latitude,longitude,areaAcres 
+        end as status, address,latitude,longitude,areaAcres,ownership 
         from amabhoomi.facilities f `
    
         let facilities = await sequelize.query(facility,{
@@ -94,11 +94,11 @@ const viewParkDetails = async(req,res)=>{
         })
 
        if(facilityTypeId){
-        console.log(1)
-         facility = `select facilityName,facilityTypeId,case 
+        console.log(1,facilityTypeId)
+         facility = `select facilityId,facilityname,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-        end as status, address,latitude,longitude,areaAcres 
+        end as status, address,latitude,longitude,areaAcres,ownership 
         from amabhoomi.facilities f where facilityTypeId=?`
        
         facilities = await sequelize.query(facility,{
@@ -107,12 +107,12 @@ const viewParkDetails = async(req,res)=>{
         console.log(2,facilities)
     }
 
-        let matchedData = facilities;
+        let matchedData = facilities[0];
         if(givenReq){
-             matchedData = facilities.filter((mapData)=>
-                (mapData.facilityName && mapData.facilityName.toLowerCase().includes(givenReq.toLowerCase()))||
-                (mapData.Scheme && mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase()))||
-                (mapData.Ownership && mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase()))||
+             matchedData = facilities[0].filter((mapData)=>
+                (mapData.facilityname && mapData.facilityname.toLowerCase().includes(givenReq.toLowerCase()))||
+                (mapData.scheme && mapData.scheme.toLowerCase().includes(givenReq.toLowerCase()))||
+                (mapData.ownership && mapData.ownership.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.status && mapData.status.toLowerCase().includes(givenReq.toLowerCase()))||
                 (!isNaN(Number(givenReq)) && (
                     (mapData.areaAcres && Math.abs(parseFloat(mapData.areaAcres) - parseFloat(givenReq)) < 0.1) ||
@@ -128,7 +128,7 @@ const viewParkDetails = async(req,res)=>{
   
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:matchedData[0]
+            data:matchedData
         })
 
 

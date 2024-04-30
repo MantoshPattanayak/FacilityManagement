@@ -56,14 +56,13 @@ const { request } = require("express");
 let generateOTPHandler = async (req,res)=> {
   try {
     console.log('1')
-    const encryptedBody = req.body.encryptedBody;
 
-    let {mobileNo} = req.body
-    console.log('2',encryptedBody)
+    let {encryptedBody} = req.body
+    console.log('2',req.body)
 
     let decrypt1 = await decrypt(encryptedBody)
     console.log('3',decrypt1)
-    console.log(req.body.encryptedBody,'1',encryptedData)
+    console.log(req.body.encryptedBody,'1',encryptedBody)
     let length=4
     let numberValue = '1234567890'
 
@@ -299,44 +298,48 @@ let publicLogin = async(req,res)=>{
 
     let otp = req.body.otp?req.body.otp:null;
 
+    console.log(req.body,'req.body')
     let lastLoginTime = new Date();
     if(emailId && password || mobileNo && password)
     {
-
+      console.log('f')
       let isUserExist;
       
       if(emailId){
 
-        emailId= await decrypt(emailId)
+        // emailId= await decrypt(emailId)
 
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await user.findOne({
+       isUserExist = await publicUser.findOne({
         where: {
           emailId:emailId
         }
         })
 
+        console.log('fj')
       }
       if(mobileNo){
-
-        mobileNo = await decrypt(mobileNo)
+        console.log('mobileNo',mobileNo)
+        // mobileNo = await decrypt(mobileNo)
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await user.findOne({
+       isUserExist = await publicUser.findOne({
         where: {
           contactNo:mobileNo
         }
         })
+        console.log('2')
       }
 
 
-      password = await decrypt(password)
+      // password = await decrypt(password)
       
 
         if(isUserExist){
+          console.log('21')
           const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
           if(isPasswordSame){
 
@@ -400,6 +403,12 @@ let publicLogin = async(req,res)=>{
             })
           }
         }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:"User does not exist"
+          })
+        }
+
 
 
    
@@ -428,7 +437,7 @@ let publicLogin = async(req,res)=>{
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await user.findOne({
+       isUserExist = await publicUser.findOne({
         where: {
           contactNo:mobileNo
         }
@@ -446,7 +455,7 @@ let publicLogin = async(req,res)=>{
               secure: true
           };
 
-          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+          let updateLastLoginTime =  await publicUser.update({lastLogin:lastLoginTime},{
             where :{
               userId:isUserExist.userId
             }
