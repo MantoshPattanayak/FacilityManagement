@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null
         },
         startDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.TIME,
             defaultValue: null
         },
         endDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.TIME,
             defaultValue: null
         },
         statusId: {
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null
         },
         amount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             defaultValue: null
         },
         paymentstatus: {

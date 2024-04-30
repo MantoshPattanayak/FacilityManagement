@@ -9,7 +9,7 @@ const statusmasters = db.statusmaster;
 const useractivitymasters = db.useractivitymasters;
 
 let parkBooking = async (req, res) => {
-    try{
+    try {
         /**
          * @facilitytype park
          */
@@ -34,21 +34,52 @@ let parkBooking = async (req, res) => {
             bookingDate,
             startTime,
             durationInHours
-        });
+        }, 'before change');
 
-        let endDate = new Date(startTime);
-        endDate.setHours(endDate.getHours() + durationInHours);
+        // Function to add hours to a time string
+        function addHoursToTime(timeString, hoursToAdd) {
+            // Parse the time string into hours and minutes
+            const [hours, minutes] = timeString.split(':').map(Number);
+            console.log({hours, minutes, hoursToAdd});
+
+            // Add the hours
+            let newHours = (hours + hoursToAdd) % 24;
+
+            // Ensure newHours is in the range [0, 23]
+            newHours = newHours < 0 ? newHours + 24 : newHours;
+
+            // Format the result back into a time string
+            const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            console.log(newTimeString);
+
+            return newTimeString;
+        }
+
+        const endTime = addHoursToTime(startTime, Number(durationInHours) );
+
+        console.log({
+            facilityId,
+            totalMembers,
+            amount,
+            activityPreference,
+            otherActivities,
+            bookingDate,
+            startTime,
+            endTime,
+            durationInHours
+        }, 'after change');
 
         let statusList = await statusmasters.findAll({ where: { parentStatusCode: 'PAYMENT_STATUS' } });
 
         // console.log(statusList[0].dataValues);
 
-        let paidStatusCode = statusList.filter((status) => {return status.dataValues.statusCode == 'COMPLETED'})[0].dataValues.statusId;
+        let paidStatusCode = statusList.filter((status) => { return status.dataValues.statusCode == 'COMPLETED' })[0].dataValues.statusId;
 
         // console.log('paid', paidStatusCode);
-        
-        bookingTransaction();
 
+        bookingTransaction();
+        // res.status(200).json({message: 'Booking details submitted!'})
+        
         async function bookingTransaction() {
             let transaction;
             try {
@@ -59,17 +90,17 @@ let parkBooking = async (req, res) => {
                     totalMembers: totalMembers,
                     otherActivities: otherActivities,
                     bookingDate: bookingDate,
-                    startDate: new Date(startTime),
-                    endDate: endDate,
+                    startDate: startTime,
+                    endDate: endTime,
                     amount: amount,
                     statusId: 1,
                     paymentstatus: '',
                     createdBy: userId
                 }, { transaction });
-        
-                // console.log('newParkBooking', newParkBooking);
-                
-                for(let i = 0; i < activityPreference.length; i++){
+
+                console.log('newParkBooking', newParkBooking);
+
+                for (let i = 0; i < activityPreference.length; i++) {
                     const newParkBookingActivityPreference = await userbookingactivities.create({
                         facilityBookingId: newParkBooking.dataValues.facilityBookingId,
                         userActivityId: activityPreference[i],
@@ -85,7 +116,7 @@ let parkBooking = async (req, res) => {
                     data: newParkBooking
                 })
             }
-            catch(error) {
+            catch (error) {
                 if (transaction) await transaction.rollback();
 
                 console.error('Error creating user park booking:', error);
@@ -96,7 +127,7 @@ let parkBooking = async (req, res) => {
             }
         }
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -116,13 +147,13 @@ let parkBookingFormInitialData = async (req, res) => {
         //         createdBy: 1
         //     })
         // }
-        
+
         res.status(statusCode.SUCCESS.code).json({
             message: 'Park booking form initial data',
             data: userActivityMaster
         })
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
