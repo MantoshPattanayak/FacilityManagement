@@ -46,7 +46,13 @@ const api = {
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
     REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
     //Bookmark
-    BOOKMARK_FACILITY_EVENTS_API: '/userDetails/bookmarkingAddAction',  //post
+    ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post
+    REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post
+    VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post
+
+    //PARK-BOOK API
+    PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park',  //post
+    PARK_BOOK_SUBMIT_API: '/booking/park-book-initialdata',   //get
 }
 
 export default api;

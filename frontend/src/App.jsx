@@ -89,7 +89,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
+            {/* Public User Login */}
+            <Route path="/login-signup" element={<Login />} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
