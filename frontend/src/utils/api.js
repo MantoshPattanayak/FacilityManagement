@@ -53,6 +53,8 @@ const api = {
     //PARK-BOOK API
     PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park',  //post
     PARK_BOOK_SUBMIT_API: '/booking/park-book-initialdata',   //get
+    // User Loging/singUp-------------------------------
+    User_Login:'/auth/publicLogin',    // Post
 }
 
 export default api;
