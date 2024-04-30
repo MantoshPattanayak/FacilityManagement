@@ -7,6 +7,11 @@ import axiosHttpClient from '../../utils/axios';
 import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
 import mp_ground_logo from "../../assets/multipurpose-ground-logo.png";
+import galleryImg from "../../assets/gallery1.png"
+import adImg from "../../assets/ad.png"
+import Footer from "../../common/Footer.jsx"
+import badminton from "../../assets/explore new activity badminton.png";
+import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 
 // Location icon and image all types of image---------------------------------------------
 // import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
@@ -83,21 +88,22 @@ const Landing = () => {
         },
         {
             game: 'Cricket',
-            parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park']
+            parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'IG Park']
         },
         {
             game: 'Football',
-            parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park']
+            parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Gopabandhu Park']
         },
         {
             game: 'Yoga',
-            parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park']
+            parks: ['Buddha JAyanti Park']
         }
     ];
 
     const handleGameClick = (index) => {
-        setSelectedGame(index);
+        setSelectedActivity(index === selectedActivity ? null : index);
     };
+
 
 
     return (
@@ -271,7 +277,7 @@ const Landing = () => {
             <div className="notice2">
                 <div class="notice2-container">
                     <span>Whats New</span>
-                    <marquee behavior="" direction="right">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eum quia error placeat recusandae hic, nostrum doloremque nihil ducimus repellendus ea eius architecto doloribus sed.</marquee>
+                    <marquee behavior="" direction="left">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eum quia error placeat recusandae hic, nostrum doloremque nihil ducimus repellendus ea eius architecto doloribus sed.</marquee>
                 </div>
             </div>
 
@@ -281,157 +287,6 @@ const Landing = () => {
             <div className="Event_Available_main_conatiner">
                 <h1 className="Service_text">Event Available</h1>
                 <div className="Sub_Park_Details">
-                    {/* <div className="carousel-container" ref={containerRef}>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <div className='carousel-slide-location'>
-                                <FontAwesomeIcon icon={faSearch} className="os-icon" />
-                                <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-                            </div>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <div className='carousel-slide-location'>
-                                <FontAwesomeIcon icon={faSearch} className="os-icon" />
-                                <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-                            </div>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide2">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <div className="carousel-slide-text">
-                                <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                                <div className='carousel-slide-location'>
-                                    <FontAwesomeIcon icon={faSearch} className="os-icon" />
-                                    <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-                                </div>
-                                <span className="Yoga_date_time">
-                                    <h1 className="Yoga_date">22 Mar 2024</h1>
-                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                                </span>
-                            </div>
-                        </div>
-                        <div className="carousel-slide2">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <div className="carousel-slide-text">
-                                <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                                <div className='carousel-slide-location'>
-                                    <FontAwesomeIcon icon={faSearch} className="os-icon" />
-                                    <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-                                </div>
-                                <span className="Yoga_date_time">
-                                    <h1 className="Yoga_date">22 Mar 2024</h1>
-                                    <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                                </span>
-                            </div>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-                        <div className="carousel-slide">
-                            <img className="Yoga_image" src={Yoga_img}></img>
-                            <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                            <span className="Yoga_date_time">
-                                <h1 className="Yoga_date">22 Mar 2024</h1>
-                                <h1 className="Yoga_time">7:00 AM - 10:00AM</h1>
-                            </span>
-                        </div>
-
-                    </div> */}
                     <div className="carousel-container" ref={containerRef}>
                         <div className="carousel-slide2">
                             <img className="Yoga_image" src={Yoga_img}></img>
@@ -539,33 +394,118 @@ const Landing = () => {
             {/*------------ Explore new activities----------- */}
 
             <div className="exploreNewAct-Parent-Container">
-                <div className='exploreNewAct'>
-                    <div className="exploreNewAct-Header">
-                        <div className="whiteHeader"></div>
-                        <h1>Explore New Activities</h1>
-                    </div>
+                <div className="exploreNewAct-Header">
+                    <div className="whiteHeader"></div>
+                    <h1>Explore New Activities</h1>
+                </div>
+                <div className='exploreNewAct-outer'>
+                    <div className='exploreNewAct'>
 
-                    <div className="newActivites">
+
                         {/* Mapping through the exploreNewActivities data */}
-                        {exploreNewActivies.map((activity, index) => (
-                            <div
-                                key={index}
-                                className={`activity ${selectedActivity === index ? 'selected' : ''}`}
-                                onClick={() => handleGameClick(index)} // Set selected activity on click
-                            >
-                                {activity.game}
-                                {selectedActivity === index && (
-                                    <div className="parkList">
-                                        {activity.parks.map((park, idx) => (
-                                            <p key={idx}>{park}</p>
-                                        ))}
-                                    </div>
-                                )}
+                        <div className="exploreNewAct-firstDiv">
+                            {exploreNewActivies.map((activity, index) => (
+                                <button
+                                    key={index}
+                                    className={`activity ${selectedActivity === index ? 'selected' : ''}`}
+                                    onClick={() => handleGameClick(index)} // Set selected activity on click
+                                >
+                                    {activity.game}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="image-secondDiv">
+                            <img src={badminton} alt="" />
+                            <div className="exploreNewAct-secondDiv">
+                                {exploreNewActivies.map((activity, index) => (
+                                    selectedActivity === index && (
+                                        <div className="parkList" key={index}>
+                                            {activity.parks.map((park, idx) => (
+                                                <div className="parkItem" key={idx}>
+                                                    <p>{park}</p>
+                                                    <button className="bookButton">Book</button>
+                                                    <FontAwesomeIcon icon={faBookmark} className="bookmarkIcon" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )
+                                ))}
                             </div>
-                        ))}
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
+
+            <div className="Event_Available_main_conatiner">
+                <h1 className="Service_text">Gallery</h1>
+                <div className="Sub_Park_Details">
+                    <div className="carousel-container">
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
+
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
+
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
+
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
+
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
+
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
+
+                        <div className="carousel-slide3"><div className="overlay">
+                            <img className="Gallery_image" src={galleryImg} ></img>
+                            <div class="overlay-text">Your text description here</div>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
+
+            {/* ------------Avatisement section -------------------------------------------------------------------------------------*/}
+
+            <div className="avatisement-Border">
+                <div className="avatisement-Content">
+                    <img src={adImg} alt="" className="avatisement-Image" />
+                </div>
+            </div>
+
+
+            <div className="footer">
+                <Footer />
+            </div>
+
         </div>
     )
 }
