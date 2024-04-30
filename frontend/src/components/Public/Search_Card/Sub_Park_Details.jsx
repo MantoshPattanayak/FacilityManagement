@@ -32,25 +32,26 @@ const Sub_Park_Details = () => {
     // here Check Login Status------------------------------------
     const [LoginStatus, setLoginStatus] = useState([0])
 
-    //here Location / crypto and navigate the page---------------
-    const location = useLocation();
-    const facilityId = decryptData(new URLSearchParams(location.search).get('facilityId'));
+//here Location / crypto and navigate the page---------------
+     const location = useLocation();
+    const facilityId= decryptData(new URLSearchParams(location.search).get('facilityId'));
     const action = new URLSearchParams(location.search).get('action');
     const navigate = useNavigate();
     const isUserLoggedIn = sessionStorage.getItem('isUserLoggedIn') || 0;
     const [toRoute, setToRoute] = useState();
     // Here Map Api keys ------------------------------------------------------------
 
-    const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
+    const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao'; 
     const defaultCenter = { lat: 20.2961, lng: 85.8245 };
     let randomKey = Math.random();
 
 
-    // Here Get the data of Sub_park_details------------------------------------------
-    async function getSub_park_details() {
-        try {
-            let res = await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
-
+// Here Get the data of Sub_park_details------------------------------------------
+    async function getSub_park_details(){
+        console.log('facilityId', facilityId);
+        try{
+            let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
+               
             console.log("here Response", res)
             setServiceData(res.data.serviceData)
             setAmenitiesData(res.data.amenitiesData);
@@ -61,6 +62,7 @@ const Sub_Park_Details = () => {
             console.log("here Error", err)
         }
     }
+// For Find Out the Status of Login Page -----------------------------------
     // For Find Out the Status of Login Page -------------------------------
 
 
@@ -126,6 +128,18 @@ const Sub_Park_Details = () => {
                             {FacilitiesData?.length > 0 && FacilitiesData[0]?.status}
                         </button>
 
+                                                </span>
+                                                <span className="Button_ticket_container">
+                                                        <Link
+                                                            to={{ 
+                                                                pathname: '/BookParks/Book_Now',
+                                                                search: `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}&action=view`
+                                                            }}
+                                                            className="button-9"
+                                                        >
+
+                                                           <button  role="button_by">Buy a Ticket</button>
+                                                        </Link>
                     </span>
                     <span className="Button_ticket_container">
                         <Link

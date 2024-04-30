@@ -1,12 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../Public/BookParks/Book_Now.css';
 import AdminHeader from '../../../common/AdminHeader';
 import Footer from '../../../common/Footer'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'; // Import the icon
+// Import Aixos method---------------------------------------------
+import axiosHttpClient from "../../../utils/axios";
+// Import Navigate and Crypto -----------------------------------
+import { useLocation, useNavigate } from 'react-router-dom';
+import { decryptData } from "../../../utils/encryptData";
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
+  // UseSate for get data -------------------------------------
+
+ const[FacilitiesData, setFacilitiesData] = useState([])
+  //here Location / crypto and navigate the page---------------
+  const location = useLocation();
+  const facilityId= decryptData(new URLSearchParams(location.search).get('facilityId'));
+  const action = new URLSearchParams(location.search).get('action');
+  const navigate = useNavigate();
+// Here Get the data of Sub_park_details------------------------------------------
+async function getSub_park_details(){
+  console.log('facilityId', facilityId);
+  try{
+      let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
+         
+      console.log("here Response", res)
+      setFacilitiesData(res.data.facilitiesData)
+     
+
+  }
+  catch(err){
+      console.log("here Error", err)
+  }
+}
+// UseEffect for Update/Call API--------------------------------
+  useEffect(()=>{
+    getSub_park_details()
+  },[])
+
 
   // Function to handle game button click
   const handleGameClick = (game) => {
@@ -24,10 +57,10 @@ const Book_Now = () => {
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading">
-            Buddha Jayanti Park
+           <h1> {FacilitiesData?.length>0 && FacilitiesData[0]?.facilityName}</h1>
           </div>
           <div className="address">
-           <p> Neeladri Vihar, Chandrashekharpur, Bhubaneswar.</p>
+           <p> {FacilitiesData?.length>0 && FacilitiesData[0]?.address}</p>
           </div>
 
           <div className="input-fields">
