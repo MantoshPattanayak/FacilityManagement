@@ -86,7 +86,7 @@ const viewParkDetails = async(req,res)=>{
         let facility = `select facilityId, facilityName,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
-        end as status, address,latitude,longitude,areaAcres 
+        end as status, address,latitude,longitude,areaAcres,ownership 
         from amabhoomi.facilities f `
    
         let facilities = await sequelize.query(facility,{
@@ -98,7 +98,7 @@ const viewParkDetails = async(req,res)=>{
          facility = `select facilityId, facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-        end as status, address,latitude,longitude,areaAcres 
+        end as status, address,latitude,longitude,areaAcres,ownership 
         from amabhoomi.facilities f where facilityTypeId=?`
        
         facilities = await sequelize.query(facility,{
@@ -110,7 +110,7 @@ const viewParkDetails = async(req,res)=>{
         let matchedData = facilities[0];
         if(givenReq){
              matchedData = facilities[0].filter((mapData)=>
-                (mapData.facilityName && mapData.facilityName.toLowerCase().includes(givenReq.toLowerCase()))||
+                (mapData.facilityname && mapData.facilityname.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Scheme && mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Ownership && mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.status && mapData.status.toLowerCase().includes(givenReq.toLowerCase()))||
@@ -140,6 +140,16 @@ const viewParkDetails = async(req,res)=>{
         
 }
 
+const autoSuggestionForViewParkDetails = async (req,res)=>{
+    try {
+        let givenReq = req.params.givenReq?req.params.givenReq:null;
+
+    } catch (err) {
+       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:err.message
+       }) 
+    }
+}
 
 const viewParkById = async (req,res)=>{
     try{

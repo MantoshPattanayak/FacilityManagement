@@ -3,6 +3,8 @@ let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
 const publicUser = db.publicuser;
 const privateUser = db.privateuser;
+let authSessions = db.authsessions
+let deviceLogin = db.device
 // const admin = require('firebase-admin');
 
 const { sequelize,Sequelize } = require('../../../models')
@@ -56,7 +58,13 @@ const { request } = require("express");
 let generateOTPHandler = async (req,res)=> {
   try {
     console.log('1')
-    let {mobileNo} = req.body
+
+    let {encryptedBody} = req.body
+    console.log('2',req.body)
+
+    let decrypt1 = await decrypt(encryptedBody)
+    console.log('3',decrypt1)
+    console.log(req.body.encryptedBody,'1',encryptedBody)
     let length=4
     let numberValue = '1234567890'
 
@@ -182,12 +190,14 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 let signUp = async (req,res)=>{
  try{
   console.log('1')
-    const {email, password,firstName,middleName,lastName,phoneNo,userImage,language,activities} = req.body;
-    const decryptUserName = decrypt(userName);
-    const decryptEmailId = decrypt(email);
-    const decryptPhoneNumber = decrypt(phoneNo);
+  console.log(req.body,'req.body')
 
-    const checkDuplicateMobile= await publicUser.findAll({
+    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,activities} = req.body;
+    // const decryptUserName = decrypt(userName);
+    // const decryptEmailId = decrypt(email);
+    // const decryptPhoneNumber = decrypt(phoneNo);
+    password = await decrypt(password)
+    let checkDuplicateMobile= await publicUser.findOne({
         where:{
           phoneNo:{
             [Op.eq]:phoneNo
@@ -195,26 +205,25 @@ let signUp = async (req,res)=>{
           
         }
       })
+      console.log('password check',phoneNo)
 
-      if(checkDuplicateMobile>0){
+      if(checkDuplicateMobile){
         return res.status(statusCode.CONFLICT.code).json({
           message:"This mobile is already allocated to existing user"
         })
       }
 
+      console.log(checkDuplicateMobile,'check duplicate mobile')
 
       
       let lastLogin = new Date();
-      let updatedOn =  new Date();
-      let createdOn = new Date();
-      let deletedOn = new Date();
+  
 
 
 
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
-      let createdBy = req.user.id;
-      let updatedBy = req.user.id;
+   
 
       // Create a new user record in the database
 
@@ -279,61 +288,92 @@ let signUp = async (req,res)=>{
   }
 };
 
+function parseUserAgent(userAgent) {
+  let deviceType = 'Unknown';
+  let deviceName = 'Unknown Device';
+
+  // Check if the User-Agent string contains patterns indicative of specific device types
+  if (userAgent.includes('Windows')) {
+      deviceType = 'Desktop';
+      deviceName = 'Windows PC';
+  } else if (userAgent.includes('Macintosh')) {
+      deviceType = 'Desktop';
+      deviceName = 'Mac';
+  } else if (userAgent.includes('Linux')) {
+      deviceType = 'Desktop';
+      deviceName = 'Linux PC';
+  } else if (userAgent.includes('Android')) {
+      deviceType = 'Mobile';
+      deviceName = 'Android Device';
+  } else if (userAgent.includes('iPhone') || userAgent.includes('iPad') || userAgent.includes('iPod')) {
+      deviceType = 'Mobile';
+      deviceName = 'iOS Device';
+  }
+
+  return { deviceType, deviceName };
+}
 
 let publicLogin = async(req,res)=>{
 
   try{
 
-    let mobileNo = req.body.mobileNo?req.body.mobilNo:null;
-
-    let emailId = req.body.emailId?req.body.emailId:null;
-
-    let password = req.body.password?req.body.password:null;
+    let {encryptMobile:mobileNo,encryptEmail:emailId,encryptPassword:password}= req.body
 
     let otp = req.body.otp?req.body.otp:null;
+    let userAgent =  req.headers['user-agent'];
+    let deviceInfo = parseUserAgent(userAgent)
 
+    console.log(req.body,'req.body')
     let lastLoginTime = new Date();
     if(emailId && password || mobileNo && password)
     {
-
+      console.log('f')
       let isUserExist;
       
       if(emailId){
 
-        emailId= await decrypt(emailId)
+        // emailId= await decrypt(emailId)
 
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await user.findOne({
+       isUserExist = await publicUser.findOne({
         where: {
           emailId:emailId
         }
         })
 
+        console.log('fj')
       }
       if(mobileNo){
-
-        mobileNo = await decrypt(mobileNo)
+        console.log('mobileNo',mobileNo)
+        // mobileNo = await decrypt(mobileNo)
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await user.findOne({
+       isUserExist = await publicUser.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
+        console.log('2 mobile no', isUserExist, 'phoneNumber',mobileNo)
       }
 
 
       password = await decrypt(password)
       
-
+      console.log(password,'password')
         if(isUserExist){
-          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
+          // console.log('21',isUserExist)
+          const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
           if(isPasswordSame){
+            console.log('isUserExist.publicUserId,isUserExist.userName, isUserExist.emailId',isUserExist.publicUserId, isUserExist.userName, isUserExist.emailId)
+            const userName = await decrypt(isUserExist.userName)
+            const emailId = await decrypt(isUserExist.emailId)
+            const publicUserId = isUserExist.publicUserId
+            console.log(isUserExist.publicUserId,userName,emailId)
 
-            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+            let {accessToken,refreshToken} = await generateToken(publicUserId,userName,emailId)
 
             const options = {
               httpOnly: true,
@@ -341,38 +381,159 @@ let publicLogin = async(req,res)=>{
               secure: true
           };
 
-          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+          let updateLastLoginTime =  await publicUser.update({lastLogin:lastLoginTime},{
             where :{
-              userId:isUserExist.userId
+              publicUserId:isUserExist.publicUserId
             }
           })
-            //menu items list fetch
-            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
-            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
-            order by rm.orderIn`
+          // check for active session
 
-            let menuListItems = await sequelize.query(menuListItemQuery,{
-              replacements:{
-                userId:isUserExist.userId
-              },
-              type: QueryTypes.SELECT
+          let checkForActiveSession = await authSessions.findOne({where:{
+           [Op.and] :[{userId:isUserExist.publicUserId},
+            {active:1}]
+          }})
+          // if active
+          if(checkForActiveSession){
+
+            let updateTheSessionToInactive = await authSessions.update({active:0},{
+              where:{
+                sessionId:checkForActiveSession.sessionId}
             })
+              // after inactive
+              if(updateTheSessionToInactive.length>0){
+                // check if it is present in the device table or not
+                let checkDeviceForParticularSession = await deviceLogin.findOne({
+                  where:{
+                    sessionId:checkForActiveSession.sessionId
+                  }
+                })
+                if(checkDeviceForParticularSession){
+                  if(checkDeviceForParticularSession.deviceName==deviceInfo.deviceName && checkDeviceForParticularSession.deviceType == db.deviceInfo.deviceType ){
+                    // insert to session table first 
+                    let insertToAuthSession = await authSessions.create({
+                      lastActivity:new Date(),
+                      active:1,
+                      deviceId:checkDeviceForParticularSession.deviceId,
+                      userId:isUserExist.publicUserId
+                    })
+                    // then update the session id in the device table
+                    let updateTheDeviceTable = await deviceLogin.update({
+                      sessionId:insertToAuthSession.sessionId
+                    },{
+                      where:{
+                        deviceId:checkDeviceForParticularSession.deviceId
+                      }
+                    })
+                  }
+                  else{
+                    // insert to device table 
+                    let insertToDeviceTable = await deviceLogin.create({
+                      deviceType:deviceInfo.deviceType,
+                      deviceName:deviceInfo.deviceName,
+                    
+                    })
+
+                    // Insert to session table
+                    let insertToAuthSession = await authSessions.create({
+                      lastActivity:new Date(),
+                      active:1,
+                      deviceId:insertToDeviceTable.deviceId,
+                      userId:isUserExist.publicUserId
+                    })
+                    // update the session id in the device table
+                    let updateSessionIdInDeviceTable = await deviceLogin.update({
+                      sessionId:insertToAuthSession.sessionId
+                    },{
+                      where:{
+                        deviceId:insertToDeviceTable.deviceId
+                      }
+                    })
+                  }
+                 
+                }
+                else{
+                    // insert to device table 
+                    let insertToDeviceTable = await deviceLogin.create({
+                      deviceType:deviceInfo.deviceType,
+                      deviceName:deviceInfo.deviceName,
+                    
+                    })
+
+                    // Insert to session table
+                    let insertToAuthSession = await authSessions.create({
+                      lastActivity:new Date(),
+                      active:1,
+                      deviceId:insertToDeviceTable.deviceId,
+                      userId:isUserExist.publicUserId
+                    })
+                    // update the session id in the device table
+                    let updateSessionIdInDeviceTable = await deviceLogin.update({
+                      sessionId:insertToAuthSession.sessionId
+                    },{
+                      where:{
+                        deviceId:insertToDeviceTable.deviceId
+                      }
+                    })
+
+                }
+              }
+              else{
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:"Internal server error"})
+              }
+            
+          }
+          else{
+              // insert to device table 
+              let insertToDeviceTable = await deviceLogin.create({
+                deviceType:deviceInfo.deviceType,
+                deviceName:deviceInfo.deviceName,
+              
+              })
+
+              // Insert to session table
+              let insertToAuthSession = await authSessions.create({
+                lastActivity:new Date(),
+                active:1,
+                deviceId:insertToDeviceTable.deviceId,
+                userId:isUserExist.publicUserId
+              })
+              // update the session id in the device table
+              let updateSessionIdInDeviceTable = await deviceLogin.update({
+                sessionId:insertToAuthSession.sessionId
+              },{
+                where:{
+                  deviceId:insertToDeviceTable.deviceId
+                }
+              })
+
+          }
+            //menu items list fetch
+        //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+        //     inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+        //     where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+        //     order by rm.orderIn`
+
+        //     let menuListItems = await sequelize.query(menuListItemQuery,{
+        //       replacements:{
+        //         userId:isUserExist.userId
+        //       },
+        //       type: QueryTypes.SELECT
+        //     })
  
 
-        let dataJSON = new Array();
-        //create parent data json without child data 
-        for (let i = 0; i < menuListItems.length; i++) {
-            if (menuListItems[i].parentResourceId === null) {
-                dataJSON.push({
-                    id: menuListItems[i].resourceId,
-                    name: menuListItems[i].name,
-                    orderIn: menuListItems[i].orderIn,
-                    path: menuListItems[i].path,
-                    children: new Array()
-                })
-            }
-        }
+        // let dataJSON = new Array();
+        // //create parent data json without child data 
+        // for (let i = 0; i < menuListItems.length; i++) {
+        //     if (menuListItems[i].parentResourceId === null) {
+        //         dataJSON.push({
+        //             id: menuListItems[i].resourceId,
+        //             name: menuListItems[i].name,
+        //             orderIn: menuListItems[i].orderIn,
+        //             path: menuListItems[i].path,
+        //             children: new Array()
+        //         })
+        //     }
+        // }
         
         // Set the access token in an HTTP-only cookie named 'accessToken'
         res.cookie('accessToken', accessToken,options);
@@ -384,7 +545,7 @@ let publicLogin = async(req,res)=>{
 
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,  }); //menuItems: dataJSON
           }
 
           else{
@@ -393,6 +554,12 @@ let publicLogin = async(req,res)=>{
             })
           }
         }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:"User does not exist"
+          })
+        }
+
 
 
    
@@ -421,9 +588,9 @@ let publicLogin = async(req,res)=>{
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await user.findOne({
+       isUserExist = await publicUser.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
       }
@@ -439,7 +606,7 @@ let publicLogin = async(req,res)=>{
               secure: true
           };
 
-          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
+          let updateLastLoginTime =  await publicUser.update({lastLogin:lastLoginTime},{
             where :{
               userId:isUserExist.userId
             }
@@ -538,7 +705,7 @@ let privateLogin = async(req,res)=>{
         
        isUserExist = await user.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
       }
@@ -638,7 +805,7 @@ let privateLogin = async(req,res)=>{
         
        isUserExist = await user.findOne({
         where: {
-          contactNo:mobileNo
+          phoneNo:mobileNo
         }
         })
       }
