@@ -316,6 +316,7 @@ function parseUserAgent(userAgent) {
 let publicLogin = async(req,res)=>{
 
   try{
+    console.log("here Response", req.body)
 
     let {encryptMobile:mobileNo,encryptEmail:emailId,encryptPassword:password}= req.body
 
@@ -362,7 +363,7 @@ let publicLogin = async(req,res)=>{
 
       password = await decrypt(password)
       
-      console.log(password,'password')
+      
         if(isUserExist){
           // console.log('21',isUserExist)
           const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
