@@ -88,11 +88,12 @@ const Book_Now = () => {
             <input type="text" name="other-activities" id="" className='input-field-otheractivities' />
            </div>
 
+         
            <div className="date">
            <label htmlFor="">Date :</label>
             <input type="date" name="date" id="" className='input-field-date'/>
-           </div>
-      
+           </div><br />
+         
 
         <div className="start-time">
         <label htmlFor=""> Start Time :</label>
@@ -110,13 +111,15 @@ const Book_Now = () => {
                 Add to Cart
             </button>
         </div>
-        </div>
+     </div>
+
         <div className="cart-container">
           <div className="cart-icon">
             <FontAwesomeIcon icon={faCartShopping} />
             <p>Cart is empty</p>
           </div>
         </div>
+        
       </div>
       <Footer/>
     </div>

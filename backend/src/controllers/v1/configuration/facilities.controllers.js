@@ -111,8 +111,8 @@ const viewParkDetails = async(req,res)=>{
         if(givenReq){
              matchedData = facilities[0].filter((mapData)=>
                 (mapData.facilityname && mapData.facilityname.toLowerCase().includes(givenReq.toLowerCase()))||
-                (mapData.scheme && mapData.scheme.toLowerCase().includes(givenReq.toLowerCase()))||
-                (mapData.ownership && mapData.ownership.toLowerCase().includes(givenReq.toLowerCase()))||
+                (mapData.Scheme && mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase()))||
+                (mapData.Ownership && mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.status && mapData.status.toLowerCase().includes(givenReq.toLowerCase()))||
                 (!isNaN(Number(givenReq)) && (
                     (mapData.areaAcres && Math.abs(parseFloat(mapData.areaAcres) - parseFloat(givenReq)) < 0.1) ||
@@ -148,7 +148,7 @@ const viewParkById = async (req,res)=>{
             let fetchTheFacilitiesDetailsQuery = `select facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-            end as status, address,latitude,longitude,areaAcres 
+            end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo 
             from amabhoomi.facilities f where facilityId = ? `
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
@@ -156,7 +156,7 @@ const viewParkById = async (req,res)=>{
         })
 
         let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
-        eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where facilityMasterId=? and ticketSalesEnabled =1 `
+        eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where facilityId=? and ticketSalesEnabled =1 `
 
         let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
             {
@@ -170,7 +170,7 @@ const viewParkById = async (req,res)=>{
             })
         
 
-        let fetchServicesDataQuery = `select s.code from amabhoomi.services s inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.serviceFacilityId =? and sf.status =1`
+        let fetchServicesDataQuery = `select s.code from amabhoomi.services s inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.serviceFacilityId =? and sf.statusId =1`
         let fetchServicesDetailsData = await sequelize.query(fetchServicesDataQuery,
             {
                 replacements:[facilityId]

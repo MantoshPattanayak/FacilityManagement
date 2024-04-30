@@ -1,3 +1,4 @@
+/* Default styles */
 .booknow-container {
     width: 56vw;
     height: 120vh;
@@ -5,17 +6,16 @@
     margin-left: 20%;
     box-sizing: border-box;
   }
+  
   .park-container {
     width: 35vw;
-    height: 100vh;
+    height: 110vh;
     border: 1px solid rgb(193, 191, 191);
     border-radius: 5px;
     float: left;
   }
-
-/* Cart div */
-
-.cart-container {
+  
+  .cart-container {
     height: 150px;
     width: 110px;
     display: flex;
@@ -23,23 +23,26 @@
     align-items: center;
     margin-right: 60px;
     border: 1px solid rgb(186, 184, 184);
-}
-
-/* Cart icon */
-.cart-container svg {
+  }
+  
+  .cart-container svg {
     height: 100px;
     width: 100px;
-}
+  }
+  
   .heading {
     font-size: larger;
     font-weight: 600;
   }
-  .address p{
+  
+  .address p {
     color: rgb(81, 86, 92);
   }
-  .input-fields{
+  
+  .input-fields {
     float: left;
   }
+  
   .member-input {
     border: 1px solid black;
     border-radius: 5px;
@@ -47,21 +50,26 @@
     height: 30px;
     margin-left: 10px;
   }
+  
   .input-fields p {
     margin-right: 20px;
     font-size: large;
     font-weight: 600;
   }
+  
   .activity-preference {
     margin-top: 20%;
   }
+  
   .activity-preference span {
     font-size: large;
     font-weight: 600;
   }
+  
   .games {
     margin-top: 10px;
   }
+  
   .game-btn {
     margin-right: 10px;
     background-color: #ffffff;
@@ -72,9 +80,10 @@
     cursor: pointer;
     margin: 7px;
   }
+  
   /* Add hover effect */
-.game-btn:hover {
-    background-color:#19ba62;
+  .game-btn:hover {
+    background-color: #19ba62;
   }
   
   /* Add selected style */
@@ -86,50 +95,58 @@
     margin-top: 10px;
     padding: 8px;
   }
-  .other-activities label{
+  
+  .other-activities label {
     font-size: large;
     font-weight: 500;
   }
-  .input-field-otheractivities{
+  
+  .input-field-otheractivities {
     width: 100%;
     height: 38px;
     border: 1px solid black;
     border-radius: 5px;
   }
-  .input-field-date{
+  
+  .input-field-date {
     margin-top: 13px;
     margin-left: 5px;
-    width: 210px;
+    width: 289px;
     height: 38px;
     border: 1px solid black;
     border-radius: 5px;
   }
-  .date label{
+  
+  .date label {
     font-size: large;
     font-weight: 500;
   }
-  .date input{
-   margin-left: 11%;
+  
+  .date input {
+    margin-left: 11%;
   }
-  .start-time label{
+  
+  .start-time label {
     font-size: large;
     font-weight: 500;
   }
-  .duration input{
-       margin-left: 4%;
+  
+  .duration input {
+    margin-left: 4%;
   }
-
-  .duration label{
+  
+  .duration label {
     font-size: large;
     font-weight: 500;
   }
-
-  .button{
-    margin-top: 0px;
+  
+  .button {
+    margin-top: 10px;
     padding: 7px;
   }
-  .addtocart-btn{
-    background-color: #04AA6D; /* Green */
+  
+  .addtocart-btn {
+    background-color: #04aa6d; /* Green */
     border: 1px solid white;
     border-radius: 5px;
     width: 100%;
@@ -140,3 +157,114 @@
     display: inline-block;
     font-size: 16px;
   }
+  
+  /* Media queries */
+  @media screen and (max-width: 768px) {
+    .input-field-date,
+    .start-time input,
+    .duration input {
+      width: 100%;
+    }
+    .booknow-container {
+      width: 90%;
+      margin: 10% auto;
+    }
+  
+    .park-container,
+    .cart-container {
+      width: 100%;
+      float: none;
+      margin-right: 0;
+    }
+  
+    .park-container {
+      margin-bottom: 20px;
+    }
+  
+    .input-fields p {
+      margin-right: 10px;
+    }
+  
+    .game-btn {
+      margin-right: 5px;
+    }
+  
+    .other-activities label,
+    .date label,
+    .start-time label,
+    .duration label {
+      font-size: medium;
+    }
+  
+    .member-input,
+    .input-field-otheractivities,
+    .input-field-date {
+      width: 100%;
+    }
+    .input-field-date{
+        margin-top: 30px;
+    }
+  }
+  
+  @media screen and (max-width: 450px){
+
+    .input-field-date,
+    .start-time input,
+    .duration input {
+      width: 100%; /* Make inputs full width */
+      margin-top: 10px; /* Add some space between sections */
+    }
+  
+    /* Adjust label font size for smaller screens */
+    .date label,
+    .start-time label,
+    .duration label {
+      font-size: small;
+    }
+    .booknow-container{
+        margin-top: 90px;
+    }
+    .activity-preference{
+        margin-top: 100px;
+    }
+  }
+
+  
+@media screen and (max-width: 1111px) {
+    /* .date label,
+    .start-time label,
+    .duration label {
+      display: block; 
+      margin-bottom: -34px;
+      padding-bottom: 0px;
+    } */
+  
+    .date input,
+    .start-time input,
+    .duration input {
+      width: calc(100% - 110px); /* Make inputs full width minus space for labels */
+    
+      float: right;
+    }
+.start-time label{
+    margin-top: 40px;
+}
+.duration label{
+    margin-top: 50px;
+}
+.addtocart-btn{
+    margin-top: 20px;
+    padding: 7px;
+  }
+  }
+  
+  /* Additional media query for smaller screens */
+  @media screen and (max-width: 768px) {
+    .date input,
+    .start-time input,
+    .duration input {
+      width: 100%; /* Make inputs full width on smaller screens */
+    }
+  }
+  
+

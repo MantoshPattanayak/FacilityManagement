@@ -9,6 +9,7 @@ const {
 const user = db.privateuser
 const facilityTypeMaster = db.facilitytype;
 const statusCodeMaster = db.statusmaster;
+const bookmarks = db.bookmarks;
 
 let autoSuggestionForUserSearch = async (req, res) => {
   try {
@@ -555,6 +556,86 @@ let initalFilterDataForBooking = async (req, res) => {
   }
 }
 
+let bookmarkingAddAction = async (req, res) => {
+  try {
+    let userId = req.user?.id || 1;
+    let facilityId = req.body.facilityId;
+    let eventId = req.body.eventId;
+
+    if(facilityId) {
+      const newUserBookmark = await bookmarks.create({
+        publicUserId: userId,
+        facilityId: facilityId,
+        statusId: 1,
+        createdDt: new Date(), 
+        createdBy: userId
+      });
+
+      console.log('newUserBookmark', newUserBookmark);
+      res.status(statusCode.SUCCESS.code).json({
+        message: 'New bookmark added!'
+      })
+    }
+    else if(eventId){
+      const newUserBookmark = await bookmarks.create({
+        publicUserId: userId,
+        eventId: eventId,
+        statusId: 1,
+        createdDt: new Date(), 
+        createdBy: userId
+      });
+
+      console.log('newUserBookmark', newUserBookmark);
+      res.status(statusCode.SUCCESS.code).json({
+        message: 'New bookmark added!'
+      })
+    }
+    else {
+      res.status(statusCode.BAD_REQUEST.code).json({
+        message: 'Bookmarking failed!'
+      })
+    }
+  }
+  catch (error) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
+  }
+}
+
+let bookmarkingRemoveAction = async (req, res) => {
+  try {
+    let userId = req.user?.id || 1;
+    let bookmarkId = req.body.bookmarkId;
+    let facilityId = req.body.facilityId;
+    let eventId = req.body.eventId;
+
+    const numUpdated = await bookmarks.update({ statusId: 2 }, { where: { bookmarkId: bookmarkId } });
+
+    if(numUpdated > 0) {
+      res.status(statusCode.SUCCESS.code).json({
+        message: 'Bookmark removed!'
+      })
+    }
+    else{
+      res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: 'Bookmark removal failed!'
+      })
+    }
+  }
+  catch (error) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
+  }
+}
+
+let viewBookmarksListForUser = async (req, res) => {
+  try {
+    let userId = req.user?.id || 1;
+    let 
+  }
+  catch (error) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
+  }
+}
+
 module.exports = {
   viewList,
   createUser,
@@ -563,5 +644,7 @@ module.exports = {
   fetchInitialData,
   autoSuggestionForUserSearch,
   viewBookings,
-  initalFilterDataForBooking
+  initalFilterDataForBooking,
+  bookmarkingAddAction,
+  bookmarkingRemoveAction
 }

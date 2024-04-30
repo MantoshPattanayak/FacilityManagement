@@ -1,232 +1,306 @@
+import "../../../../../common/CommonTable.css";
+import Footer from "../../../../../common/Footer";
+import "./UserResourceMappingList.css";
+const UserResourceMappingList = () => {
+  return (
+    <div>
+      <div className="Main_Conatiner_table">
+        <div className="table-heading ">
+          <h1 className="text_Name_Table">Role Resource Mapping List</h1>
+        </div>
 
+        <div className="search_text_conatiner">
+          <input
+            type="text"
+            className="search_input_field"
+            placeholder="Search..."
+            id="myInput"
+          />
+        </div>
 
-import { useState, useEffect } from "react";
-import axiosHttpClient from "../../../../../utils/axios";
-const UserResourceMappingList=()=>{
- 
-    const [UserroleListData, setUserRoleListData] = useState([]);
-
-
-    // Function to fetch role list data
-        async function getUserRoleListData() {
-          try {
-            let res = await axiosHttpClient('ROLE_VIEW_API','post', {
-              // page: currentPage, // Send current page number
-              // search: searchTerm // Send search term if needed
-            });
-            console.log("here Response", res);
-            // setUserRoleListData(res.data.Role); // Update role list data
-          } catch (error) {
-            console.log(error);
-          }
-        }
-  
-        useEffect(() => {
-            getUserRoleListData();
-        }, []);
-
-
-
-
-
-        
-    return(
         <div className="table_Container">
-     
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Number</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Due</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-            <tr>
-              <td data-label="Name">Mantosh</td>
-              <td data-label="Number">78928766211</td>
-              <td data-label="Amount ">9201</td>
-              <td data-label="Due">211</td>
-            </tr>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Serial No</th>
+                <th scope="col">Role Name</th>
+                <th scope="col">Resource Name</th>
+                <th scope="col">Parent Resource Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+              <tr>
+                <td data-label="Serial No">01</td>
+                <td data-label="Role Name">Display Control Manager</td>
+                <td data-label="Resource Name">Dashboard</td>
+                <td data-label="Parent Resource Name">Activity</td>
+                <td data-label="Status">ACTIVE</td>
+                <td data-label="Action">Edit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    )
-
-}
+      <Footer />
+    </div>
+  );
+};
 export default UserResourceMappingList;

@@ -20,5 +20,9 @@ router.post('/profile/viewBookings', userDetails.viewBookings);
 
 router.get('/profile/initalFilterDataForBooking', userDetails.initalFilterDataForBooking);
 
+router.post('/bookmarkingAddAction', userDetails.bookmarkingAddAction);
+
+router.post('/bookmarkingRemoveAction', userDetails.bookmarkingRemoveAction);
+
 
 module.exports = router
