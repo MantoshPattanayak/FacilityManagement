@@ -74,8 +74,8 @@ function App() {
             <Route path='/BookParks/Book_Now' element={<ProtectedRoute><Book_Now /></ProtectedRoute>} />
             {/* Common Footer final */}
             <Route path='/common/CommonFooter' element={<ProtectedRoute><CommonFooter /></ProtectedRoute>} />
-
-
+            {/* Public User Login */}
+            <Route path='/login-signup' element={<Login />} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
