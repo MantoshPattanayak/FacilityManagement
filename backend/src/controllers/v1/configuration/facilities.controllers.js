@@ -83,7 +83,11 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
+<<<<<<< HEAD
         let facility = `select facilityId, facilityname,facilityTypeId,case 
+=======
+        let facility = `select facilityId, facilityName,facilityTypeId,case 
+>>>>>>> 7608d29df8e40f567ff21cd8ea9533c06035b09a
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
@@ -94,8 +98,13 @@ const viewParkDetails = async(req,res)=>{
         })
 
        if(facilityTypeId){
+<<<<<<< HEAD
         console.log(1,facilityTypeId)
          facility = `select facilityId,facilityname,facilityTypeId,case 
+=======
+        console.log(1)
+         facility = `select facilityId, facilityName,facilityTypeId,case 
+>>>>>>> 7608d29df8e40f567ff21cd8ea9533c06035b09a
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
@@ -155,7 +164,11 @@ const viewParkById = async (req,res)=>{
     try{
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         if(facilityId){
+<<<<<<< HEAD
             let fetchTheFacilitiesDetailsQuery = `select faclilityId, facilityName,facilityTypeId,case 
+=======
+            let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
+>>>>>>> 7608d29df8e40f567ff21cd8ea9533c06035b09a
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
             end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo 

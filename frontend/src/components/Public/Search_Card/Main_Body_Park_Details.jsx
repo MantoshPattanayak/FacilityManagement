@@ -55,19 +55,19 @@ async function GetParkDetails(){
     return res;
 }
 // Get the data for autoSuggestion  --------------------------------------------------------
-    async function getAutoSuggest(){
-        try{
-            let res= await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get' ,null,  givenReq)
-               console.log("here Response of Auto  Suggest", res)
-        }
-        catch(err){
-            console.log("here error", err)
-        }
-    }
+    // async function getAutoSuggest(){
+    //     try{
+    //         let res= await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get' ,null,  givenReq)
+    //            console.log("here Response of Auto  Suggest", res)
+    //     }
+    //     catch(err){
+    //         console.log("here error", err)
+    //     }
+    // }
 // useEffect for Update the data (Call the Api) ------------------------------------------------
         useEffect(()=>{
             GetParkDetails()  
-            getAutoSuggest()
+            // getAutoSuggest()
         }, [givenReq,facilityTypeId])
 //Return here------------------------------------------------------------------------------------------------------------
      return(
@@ -148,13 +148,13 @@ async function GetParkDetails(){
                 
                     {/* Card Container Here -------------------------------------------- */}
                           <div className="card-container">
-                                        {DisPlayParkData?.length > 0 ? (
+                                        {DisPlayParkData?.length > 0 ?     (
                                             DisPlayParkData?.map((item, index) => (
                                                 // Navigate the sub_manu_page according to id------------------
                                                 <Link
                                                     to={{ 
                                                         pathname: '/Sub_Park_Details',
-                                                        search: `?facilityTypeId=${encryptDataId(item.facilityTypeId)}&action=view`
+                                                        search: `?facilityId=${encryptDataId(item.facilityId )}&action=view`
                                                     }}
                                                 >
                                                     <div className={`${item.facilityTypeId === 1 ? 'park-card-1' : item.facilityTypeId === 2 ? 'park-card-2' : 'park-card-3'}`}
