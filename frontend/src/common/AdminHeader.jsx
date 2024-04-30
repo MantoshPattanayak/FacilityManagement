@@ -68,7 +68,7 @@ const AdminHeader = () => {
   return (
     <header className="header" id="header">
       <section className="wrapper container">
-        <a href="./index.html" className="brand">
+        <a href="/" className="brand">
           <img  className="ama_bhoomi_logo"     src={APP_LOGO} alt="App Logo" />
         </a>
         <div className="burger" id="burger" onClick={toggleMenu}>
