@@ -46,6 +46,7 @@ const[LoginStatus, setLoginStatus] = useState([0])
 
 // Here Get the data of Sub_park_details------------------------------------------
     async function getSub_park_details(){
+        console.log('facilityId', facilityId);
         try{
             let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
                
@@ -59,15 +60,7 @@ const[LoginStatus, setLoginStatus] = useState([0])
             console.log("here Error", err)
         }
     }
-// For Find Out the Status of Login Page -------------------------------
-
-
-
-
-
-
-
-
+// For Find Out the Status of Login Page -----------------------------------
 
 
 // UseEffect for Update the data---------------------------------------------
@@ -124,7 +117,7 @@ return(
                                                         <Link
                                                             to={{ 
                                                                 pathname: '/BookParks/Book_Now',
-                                                                search: `?facilityId=${encryptDataId(facilityId )}&action=view`
+                                                                search: `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}&action=view`
                                                             }}
                                                             className="button-9"
                                                         >
