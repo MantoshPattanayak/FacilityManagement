@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: null
         },
+        sportsName: {
+            type: DataTypes.INTEGER,
+            defaultValue: null 
+        },
         transactionId: {
             type: DataTypes.INTEGER,
             defaultValue: null
@@ -72,6 +76,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         deletedOn: {
             type: DataTypes.DATE,
+            defaultValue: null
+        },
+        bookingReference: {
+            type: DataTypes.STRING(255),
             defaultValue: null
         }
     });

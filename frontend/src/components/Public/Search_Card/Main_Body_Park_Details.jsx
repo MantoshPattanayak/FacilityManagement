@@ -20,6 +20,7 @@ import { useEffect, useState } from "react"
 // Import here to encrptData ------------------------------------------
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptData } from "../../../utils/encryptData"
+import PublicHeader from "../../../common/PublicHeader";
 const Main_Body_Park_Details=()=>{
 // Use state ------------------------------------------------------------------
 const[DisPlayParkData, setDisPlayParkData]=useState([])
@@ -73,7 +74,7 @@ async function GetParkDetails(){
      return(
         <div className="main__body__park">
                     {/* here Header -----------------------------------------------------*/}
-                    <AdminHeader />
+                    <PublicHeader />
                     {/* Here Below of header set image ---------------------------------------------------- */}
                     <div className={`${facilityTypeId === 1 ? 'park-body-1' : facilityTypeId === 2 ? 'park-body-2' : 'park-body-3'}`} >
                              <h1 className="name_park_img">
@@ -167,7 +168,9 @@ async function GetParkDetails(){
                                                                     <h3 className="park_location">{item.address}</h3>
                                                                 </span>
                                                                 <span className="Avil_Dis">
-                                                                    <button className="Avilable">{item.status}</button>
+                                                                    <button className={`Avilable ${item.status == 'open' ? 'text-green-500' : 'text-red-500'}`}>
+                                                                        {(item.status).charAt(0).toUpperCase() + (item.status).slice(1)}
+                                                                    </button>
                                                                     <h3 className="distance">30KM</h3>
                                                                 </span>
                                                             </div>

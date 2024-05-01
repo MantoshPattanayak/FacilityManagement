@@ -86,10 +86,11 @@ body {
     /* position: relative; */
     opacity: 100%;
     max-height: 100%;
-    height: 100%;
+
     margin-bottom: 1px;
     padding: 100px;
     width: 100vw;
+    height: 100vh;
     /* background-color: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)); */
 }
 
@@ -104,34 +105,57 @@ body {
 }
 
 .Search-Conatiner {
-    height: 320px;
+    height: 420px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 50px;
 }
 
 .Search-Conatiner h1 {
     font-weight: bold;
-    font-size: 44px;
+    font-size: 50px;
     font-family: poppins;
     color: #5ECA76;
 }
 
 .Search-Conatiner p {
     color: white;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 400;
 }
 
 .Search-Conatiner h2 {
     color: white;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
 }
 
 .typing-animation {
-    animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
-}
+    overflow: hidden; 
+    white-space: nowrap; 
+   
+    animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  
+  @keyframes blink-caret {
+    from, to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: #000; 
+    }
+  }
+  
 
 .search-bar {
     width: 441px;
@@ -487,16 +511,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-left: 150px;
+    gap: 80px;
+
+
 }
 
-.exploreNewAct {
-    display: flex;
-    width: 94%;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 15vw;
-    margin-left: 6vw;
-}
 
 .image-secondDiv {
     /* background-image:linear-gradient(rgba(0, 0, 0, 0.2)), url(../../assets/explore\ new\ activity\ badminton.png); */
@@ -505,9 +525,9 @@ body {
     /* Ensure positioning relative to this div */
     width: 100%;
     /* Adjust as needed */
-    height: 300px;
+    height:30vh;
     /* Adjust as needed */
-    background-image: url(../../assets/explore\ new\ activity\ badminton.png);
+  
     background-size: cover;
     /* Adjust as needed */
     background-position: center;
@@ -533,8 +553,8 @@ body {
 
 
 .newActivites button {
-    width: 10vw;
-    height: 6vh;
+    width: 100vw;
+
     align-items: center;
     display: flex;
     justify-content: center;
@@ -546,7 +566,7 @@ body {
 .exploreNewAct-Parent-Container {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../assets/Explore_New_Activity_background.png");
     width: 100%;
-    height: 100vh;
+    height: 70vh;
     background-size: cover;
     background-repeat: no-repeat;
 
