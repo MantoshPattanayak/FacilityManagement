@@ -25,11 +25,9 @@ import Login from "./components/Public/Login";
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
-import BookingDetails from './components/Public/UserProfile/BookingDetails';
+import BookingDetails from "./components/Public/UserProfile/BookingDetails";
 //User profile (Favorites -USER PROFILE)
 import Favorites from "./components/Public/UserProfile/Favorites";
-
-
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -38,7 +36,7 @@ import AdminHeader from "./common/AdminHeader";
 // Import Footer
 import Footer from "./common/Footer";
 // Import Common Header
-import CommonHeader from './common/CommonHeader';
+import CommonHeader from "./common/CommonHeader";
 // Import Common Footer
 import CommonFooter from "./common/CommonFooter";
 //import home page
@@ -68,6 +66,7 @@ import Main_Body_Park_Details from "./components/Public/Search_Card/Main_Body_Pa
 import Sub_Park_Details from "./components/Public/Search_Card/Sub_Park_Details";
 import PaymentHome from "./common/PaymentHome";
 import ParkPayment from "./common/ParkPayment";
+import Profile from "./components/Public/UserProfile/Profile";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -119,7 +118,7 @@ function App() {
             />
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
-            <Route path="/login/SignUp" element={<SignUp/>} />
+            <Route path="/login/SignUp" element={<SignUp />} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
@@ -288,6 +287,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* User-Profile */}
+            <Route
+              path="/Profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />
