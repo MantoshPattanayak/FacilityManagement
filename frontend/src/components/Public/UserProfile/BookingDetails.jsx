@@ -4,33 +4,37 @@ import { useState, useEffect } from 'react';
 import eventPhoto from '../../../assets/ama_bhoomi_bg.jpg';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { faEllipsisVertical, faClock, faUser , faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import CommonHeader from '../../../common/CommonHeader';
+import { faEllipsisVertical, faClock, faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import CommonFooter from '../../../common/CommonFooter';
 import axiosHttpClient from '../../../utils/axios';
+import PublicHeader from '../../../common/PublicHeader';
+// import format
 
 const BookingDetails = () => {
-    const[GetHistoryData, setHistoryData]=useState([]);  // For storing the
+    const [GetHistoryData, setHistoryData] = useState([]);  // For storing the
 
-// here Get the data of All Bookings Details-------------------------------------------
+    // here Get the data of All Bookings Details-------------------------------------------
 
-async function getBookingsDetails(){
-    try{
-        let res= await axiosHttpClient('VIEW_BOOKINGS_API', 'post', {
-            facilityType:'PARKS'
-        }, null)
-        console.log("here response of all bookings details", res)
+    async function getBookingsDetails() {
+        let tab = tabList.find((tab) => { return tab.active == true }).tabCode;
+        console.log('tab', tab);
+
+        try {
+            let res = await axiosHttpClient('VIEW_BOOKINGS_API', 'post', {
+                tabName: tab
+            }, null)
+            console.log("here response of all bookings details", res);
+            setEventDetailsData(res.data.data);
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
-    catch(err){
-        console.log(err)
-    }
-}
 
-// here UseEffect of Update the data--------------------
-useEffect(()=>{
-    getBookingsDetails()
-}, [])
+    // here UseEffect of Update the data--------------------
+    useEffect(() => {
+        getBookingsDetails()
+    }, [])
 
 
 
@@ -39,19 +43,22 @@ useEffect(()=>{
     const tabList = [
         {
             tabName: 'All Bookings',
+            tabCode: 'ALL_BOOKINGS',
             active: true,
         },
         {
             tabName: 'Cancelled',
+            tabCode: 'CANCELLED',
             active: false,
         },
         {
             tabName: 'History',
+            tabCode: 'HISTORY',
             active: false,
         }
     ];
     const [tab, setTab] = useState(tabList);
-    const eventDetailsData = [
+    const [eventDetailsData, setEventDetailsData] = useState([
         {
             eventName: 'International ',
             eventAddress: 'Janata Maidan, Chandrasekharpur, Bhubaneswar',
@@ -112,10 +119,13 @@ useEffect(()=>{
             bookedTiming: '12:05 PM',
             createdDate: '2024-04-14T12:05:23.410',
         },
-    ]
+    ]);
+
     const [eventDetails, setEventDetails] = useState(eventDetailsData);
+
     useEffect(() => {
     }, [tab]);
+
     function calculateTime(dataTime) {
         let currentDateTime = new Date();
         let inputDateTime = new Date(dataTime);
@@ -127,6 +137,7 @@ useEffect(()=>{
         let timeParams = (differenceDateTime < 1) ? ' min' : ' hour(s)';
         return differenceDateTime + timeParams;
     }
+
     function manageCurrentTab(e, name) {
         // e.preventDefault();
         let tabListCopy = JSON.parse(JSON.stringify(tab));
@@ -139,6 +150,7 @@ useEffect(()=>{
         setTab(tabListCopy);
         return;
     }
+
     const [selectedDate, setSelectedDate] = useState(''); // State to store selected date
 
     useEffect(() => {
@@ -162,14 +174,14 @@ useEffect(()=>{
     };
     return (
         <div>
-            <CommonHeader />
+            <PublicHeader />
             <div className="booking-dtails-container">
                 <div className="user-profile-section">
                     <div className="user-details">
                         <FontAwesomeIcon icon={faUser} className='icon-user' />
-                        <p>Sunidhi Chauhan</p>
+                        <p>Test User</p>
                         <p>7008765443</p>
-                        <p>sushi@gmail.com</p>
+                        <p>testuser@gmail.com</p>
                     </div>
                     <div className="buttons-profile">
                         <button className="edit-profile-btn">Edit User Profile</button>
@@ -181,70 +193,70 @@ useEffect(()=>{
                 </div>
                 <div className="right-container">
                     {/* New div with paragraph and blue border */}
-                  
+
                     {/* <div className="form-container"> */}
 
-                <div className='eventdetails-tab'>
-                    {
-                        tab?.length > 0 && tab.map((tabData) => {
-                            if (tabData.active) {
-                                return (
-                                    <div className='active' onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
-                                        <button onClick={(e) => manageCurrentTab(e, tabData.tabName)}>{tabData.tabName}</button>
-                                    </div>
-                                )
-                            }
-                            else {
-                                return (
-                                    <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
-                                        <button onClick={(e) => manageCurrentTab(e, tabData.tabName)}>{tabData.tabName}</button>
-                                    </div>
-                                )
-                            }
-                        })
-                    }
-                </div>
-                <div className='eventdetails-cardsection'>
-                    {
-                        eventDetails?.length > 0 && eventDetails.map((event) => {
-                            return (
-                                <div className='eventdetails-carddetails'>
-                                    <div className='eventdetails-photo'>
-                                        <img src={eventPhoto} />
-                                    </div>
-                                    <div className='eventdetails-details'>
-                                        <div className='eventdetails-details-eventname'>{event.eventName}</div>
-                                        <div className='eventdetails-details-eventAddress'>{event.eventAddress}</div>
-                                        <div className='flex justify-between eventdetails-details-eventTime'>
-                                            <div>Booked at {event.bookedTiming}</div>
-                                            <div><FontAwesomeIcon icon={faClock} /> {calculateTime(event.createdDate)} ago</div>
+                    <div className='eventdetails-tab'>
+                        {
+                            tab?.length > 0 && tab.map((tabData) => {
+                                if (tabData.active) {
+                                    return (
+                                        <div className='active' onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
+                                            <button onClick={(e) => manageCurrentTab(e, tabData.tabName)}>{tabData.tabName}</button>
                                         </div>
-                                        {/* <div><button className='eventdetails-eventbutton' onClick={navigateToDetailsPage(event.eventName)}>Event details</button></div> */}
-                                        <Link
-                                            className='eventdetails-eventbutton'
-                                            to={{
-                                                pathname: '/Activity/EventDetailsPage',
-                                                search: '?eventId=456'
-                                            }}
-                                        >
-                                            Event Details
-                                        </Link>
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
+                                            <button onClick={(e) => manageCurrentTab(e, tabData.tabName)}>{tabData.tabName}</button>
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
+                    </div>
+                    <div className='eventdetails-cardsection'>
+                        {
+                            eventDetailsData?.length > 0 && eventDetailsData?.map((event) => {
+                                return (
+                                    <div className='eventdetails-carddetails'>
+                                        <div className='eventdetails-photo'>
+                                            <img src={eventPhoto} />
+                                        </div>
+                                        <div className='eventdetails-details'>
+                                            <div className='eventdetails-details-eventname'>{event.name}</div>
+                                            <div className='eventdetails-details-eventAddress'>{event.location}</div>
+                                            <div className='flex justify-between eventdetails-details-eventTime'>
+                                                <div>Booking Date {event.bookingDate}</div>
+                                                <div><FontAwesomeIcon icon={faClock} /> {calculateTime(event.createdDate)} ago</div>
+                                            </div>
+                                            
+                                            <Link
+                                                className='eventdetails-eventbutton'
+                                                to={{
+                                                    pathname: '/Activity/EventDetailsPage',
+                                                    search: '?eventId=456'
+                                                }}
+                                            >
+                                                Event Details
+                                            </Link>
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })
-                    }
+                                )
+                            })
+                        }
+                    </div>
                 </div>
+
+
+
             </div>
-
-
-
-                </div>
-                <CommonFooter/>
-            </div>
+            <CommonFooter />
+        </div>
         // </div>
     )
-    
-    }
+
+}
 
 export default BookingDetails

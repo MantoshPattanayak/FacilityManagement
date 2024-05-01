@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import { encryptData } from "../../../utils/encryptData";
 // Google MAP --------------------------------
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import PublicHeader from "../../../common/PublicHeader";
 // Here Funcation of Sub_park_details------------------------------------------
 const Sub_Park_Details = () => {
     // UseSate for get data -------------------------------------
@@ -128,7 +129,8 @@ const Sub_Park_Details = () => {
     // Here Return Function ------------------------------------------------------------
     return (
         <div className="Sub_Manu_Conatiner">
-            <AdminHeader />
+            {/* here Header -----------------------------------------------------*/}
+            <PublicHeader />
             {/* Here Heading Image (Below of header) */}
             <div className="Header_Img">
                 <h1 className="text-park">{FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
