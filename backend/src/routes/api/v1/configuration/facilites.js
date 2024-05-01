@@ -12,4 +12,7 @@ router.post('/viewParkDetails',facilities.viewParkDetails)
 
 router.get('/viewParkById/:facilityId',facilities.viewParkById)
 
+
+router.post('/nearByDataInMap',facilities.nearByDataInMap)
+
 module.exports = router

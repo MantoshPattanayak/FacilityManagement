@@ -60,12 +60,14 @@ import UserResourceMappingList from "./components/Admin/UAC/AccessControl/UserRe
 import ListOfResources from "./components/Admin/UAC/Resource/ListOfResources";
 import CreateResource from "./components/Admin/UAC/Resource/CreateResource";
 import EditDisplayResource from "./components/Admin/UAC/Resource/EditResource";
-
+import Landing from "./components/Public/Landing";
 // here User details ( Search Card )-----------------------------------------------------------------------------
 import Main_Body_Park_Details from "./components/Public/Search_Card/Main_Body_Park_Details";
 import Sub_Park_Details from "./components/Public/Search_Card/Sub_Park_Details";
 import PaymentHome from "./common/PaymentHome";
 import ParkPayment from "./common/ParkPayment";
+import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
+
 import Profile from "./components/Public/UserProfile/Profile";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -77,8 +79,11 @@ function App() {
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
-            <Route path="/" element={<Main_Body_Park_Details />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
+            <Route path="/BookingDetails" element={<BookingDetails />} />
+            <Route path="/Event_hostPage" element={<Event_hostPage />} />
             {/* Public (Book Parks)  */}
             <Route
               path="/BookParks/Book_Now"
@@ -103,6 +108,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Favorites />
+                </ProtectedRoute>
+              }
+            />
+            {/* Public (ProfileHistory)  */}
+            <Route
+              path="/UserProfile/ProfileHistory"
+              element={
+                <ProtectedRoute>
+                  <ProfileHistory />
                 </ProtectedRoute>
               }
             />

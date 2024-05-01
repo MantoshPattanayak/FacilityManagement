@@ -7,7 +7,7 @@ const api = {
     MAP_SEARCH: '/mapData/searchParkFacilities',
 
     // Park_Booking(Search) Page
-     View_Park_Data:'/mapData/viewParkDetails',
+        View_Park_Data:'/mapData/viewParkDetails',
       View_By_ParkId:'/mapData/viewParkById',          
     // Recourece Api
     RESOURCE_VIEW_BY_ID_API: '/resource/resourceId', //get /resource//resourceId/:id
@@ -46,16 +46,20 @@ const api = {
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
     REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
     //Bookmark
-    ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
-    REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
-    VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate
+     ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
+     REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
+     VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate
 
     //PARK-BOOK API
     PARK_BOOK_PAGE_SUBMIT_API: '/booking/park',  //post 
     PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park-book-initialdata',   //get
     // User Loging/singUp-------------------------------
     User_Login:'/auth/publicLogin',    // Post
-    User_SingUp:'/auth/signUp'
+    User_SingUp:'/auth/signUp',
+   //User profile
+   VIEW_BOOKINGS_API: '/userDetails/profile/viewBookings', //post fromDate, toDate, bookingStatus, facilityType, sortingOrder
+   FETCH_BOOKINGS_INITIAL_FILTERDATA_API: '/userDetails/profile/initalFilterDataForBooking',   //get
+
 }
 
 export default api;

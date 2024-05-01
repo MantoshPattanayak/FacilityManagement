@@ -13,7 +13,7 @@ const Services = sequelize.define('services',{
     description:{
         type:DataTypes.STRING(255)
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{
