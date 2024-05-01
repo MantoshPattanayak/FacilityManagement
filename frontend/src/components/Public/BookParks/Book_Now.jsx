@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { decryptData } from "../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import PublicHeader from '../../../common/PublicHeader';
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -140,7 +141,7 @@ const Book_Now = () => {
   return (
     <div>
       <ToastContainer />
-      <AdminHeader />
+      <PublicHeader />
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading">

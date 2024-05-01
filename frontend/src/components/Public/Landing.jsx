@@ -12,6 +12,7 @@ import adImg from "../../assets/ad.png"
 import Footer from "../../common/Footer.jsx"
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
+import PublicHeader from '../../common/PublicHeader.jsx';
 
 // Location icon and image all types of image---------------------------------------------
 // import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
@@ -109,7 +110,8 @@ const Landing = () => {
     return (
         <div className='landingcontainer'>
             <section className="bg-img">
-                <header className="header">
+                <PublicHeader />
+                {/* <header className="header">
                     <header className="header-content">
                         <div class="logo">
 
@@ -118,14 +120,14 @@ const Landing = () => {
                             <ul>
                                 <li><a href="#">ABOUT</a></li>
                                 <li><a href="#">FAQ</a></li>
-                                <li><a href="#">FACILITIES</a></li>
+                                <li><a href="/facilities">FACILITIES</a></li>
                                 <li><a href="#">EVENTS</a></li>
                                 <li><a href="#">HOST EVENT</a></li>
-                                <li><a className='login-button' href="#">LOGIN</a></li>
+                                <li><a className='login-button' href="/login-signup">LOGIN</a></li>
                             </ul>
                         </nav>
                     </header>
-                </header>
+                </header> */}
 
                 {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
 

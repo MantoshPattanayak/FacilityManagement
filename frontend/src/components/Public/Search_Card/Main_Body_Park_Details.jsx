@@ -20,6 +20,7 @@ import { useEffect, useState } from "react"
 // Import here to encrptData ------------------------------------------
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptData } from "../../../utils/encryptData"
+import PublicHeader from "../../../common/PublicHeader";
 const Main_Body_Park_Details=()=>{
 // Use state ------------------------------------------------------------------
 const[DisPlayParkData, setDisPlayParkData]=useState([])
@@ -73,7 +74,7 @@ async function GetParkDetails(){
      return(
         <div className="main__body__park">
                     {/* here Header -----------------------------------------------------*/}
-                    <AdminHeader />
+                    <PublicHeader />
                     {/* Here Below of header set image ---------------------------------------------------- */}
                     <div className={`${facilityTypeId === 1 ? 'park-body-1' : facilityTypeId === 2 ? 'park-body-2' : 'park-body-3'}`} >
                              <h1 className="name_park_img">
