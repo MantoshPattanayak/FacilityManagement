@@ -26,6 +26,10 @@ import Login from "./components/Public/Login";
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
 import BookingDetails from './components/Public/UserProfile/BookingDetails';
+//User profile (Favorites -USER PROFILE)
+import Favorites from "./components/Public/UserProfile/Favorites";
+
+
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -85,6 +89,25 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Public (Book Details)  */}
+            <Route
+              path="/UserProfile/BookingDetails"
+              element={
+                <ProtectedRoute>
+                  <BookingDetails />
+                </ProtectedRoute>
+              }
+            />
+            {/* Public (Favorites)  */}
+            <Route
+              path="/UserProfile/Favorites"
+              element={
+                <ProtectedRoute>
+                  <Favorites />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Common Footer final */}
             <Route
               path="/common/CommonFooter"
