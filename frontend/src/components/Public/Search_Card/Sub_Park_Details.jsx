@@ -48,7 +48,7 @@ const Sub_Park_Details = () => {
 
     // Here Get the data of Sub_park_details------------------------------------------
     async function getSub_park_details() {
-        console.log('facilityId', facilityId);
+        // console.log('facilityId', facilityId);
         try {
             let res = await axiosHttpClient('View_By_ParkId', 'get', null, facilityId);
 
@@ -100,30 +100,29 @@ const Sub_Park_Details = () => {
         return () => clearInterval(interval);
     }, [currentIndex]);
 
-    function formatTiming(fromTime, toTime) {
-        console.log({fromTime, toTime})
-        if(fromTime == null || toTime == null) {
-            return;
-        }
-        else{
-            let [fromHours, fromMinutes, fromSeconds] = fromTime?.split(':') || null;
-            let [toHours, toMinutes, toSeconds] = toTime?.split(':') || null;
-            let fromAMPM = 'AM';
-            let toAMPM = 'AM';
-            // console.log("operatingTime", {fromHours, fromMinutes, fromSeconds, toHours, toMinutes, toSeconds});
+    function formatTime(time24) {   //format 24 hour time as 12 hour time
+        if (!time24) return;
+        // Parse the input time string
+        const [hours, minutes] = time24.split(':').map(Number);
 
-            if(Number(fromHours) > 12){
-                fromHours = 12 - fromHours;
-                fromAMPM = 'PM';
-            }
+        // Determine AM or PM
+        const period = hours >= 12 ? 'PM' : 'AM';
 
-            if(Number(toHours) > 12) {
-                toHours = 12 - fromHours;
-                toAMPM = 'PM';
-            }
+        // Convert hours to 12-hour format
+        const hours12 = hours % 12 || 12; // 0 should be 12 in 12-hour format
 
-            return `${fromHours}:${fromMinutes} ${fromAMPM} - ${toHours}:${toMinutes} ${toAMPM}`;
-        }
+        // Format the time string
+        const time12 = `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
+
+        return time12;
+    }
+
+    function formatDate(date) { //format input date as DD-MM-YYYY
+        if(!date)   return;
+
+        const [year, month, day] = date.split('-');
+
+        return `${day}-${month}-${year}`;
     }
 
     // Here Return Function ------------------------------------------------------------
@@ -146,7 +145,7 @@ const Sub_Park_Details = () => {
                 <div className="Map_container">
                     <span className="time_status">
 
-                        <h1 className="time_text"> Timing : {formatTiming(FacilitiesData[0]?.operatingHoursFrom || null, FacilitiesData[0]?.operatingHoursTo || null)}</h1>
+                        <h1 className="time_text"> Timing : {formatTime(FacilitiesData[0]?.operatingHoursFrom)} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}</h1>
                         <button className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === 'open' ? 'open' : 'closed'}`}>
                             {FacilitiesData?.length > 0 && FacilitiesData[0]?.status.toUpperCase()}
                         </button>
@@ -251,15 +250,15 @@ const Sub_Park_Details = () => {
                                     <img className="Yoga_image" src={Yoga_img} alt="Event"></img>
                                     <h1 className="Name_yoga"> {item.eventName}</h1>
                                     <span className="Yoga_date_time">
-                                        <h1 className="Yoga_date">Date- {item.eventDate}</h1>
-                                        <h1 className="Yoga_time">Time:- {formatTiming(item.eventStartTime, item.eventEndTime)}</h1>
+                                        <h1 className="Yoga_date">Date:-{formatDate(item.eventDate)}</h1>
+                                        <h1 className="Yoga_time">Time:-{formatTime(item.eventStartTime)} - {formatTime(item.eventEndTime)}</h1>
                                     </span>
                                 </div>
                             </div>
                         );
                     })}
                     {
-                        EventAvailable?.length == 0 && ( <p>No events.</p> )
+                        EventAvailable?.length == 0 && (<p>No events.</p>)
                     }
                 </div>
 
