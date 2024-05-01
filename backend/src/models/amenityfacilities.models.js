@@ -13,7 +13,7 @@ const FacilityAmenity = sequelize.define('facilityamenities',{
     amenityId:{
         type:DataTypes.INTEGER
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{
