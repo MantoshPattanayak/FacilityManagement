@@ -35,7 +35,7 @@ const Facility = sequelize.define('facilities',{
     address:{
         type:DataTypes.STRING(255)
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{
