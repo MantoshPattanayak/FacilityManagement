@@ -8,8 +8,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisVertical, faClock, faUser , faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import CommonHeader from '../../../common/CommonHeader';
 import CommonFooter from '../../../common/CommonFooter';
+import axiosHttpClient from '../../../utils/axios';
 
 const BookingDetails = () => {
+    const[GetHistoryData, setHistoryData]=useState([]);  // For storing the
+
+// here Get the data of All Bookings Details-------------------------------------------
+
+async function getBookingsDetails(){
+    try{
+        let res= await axiosHttpClient('VIEW_BOOKINGS_API', 'post', {
+            facilityType:'PARKS'
+        }, null)
+        console.log("here response of all bookings details", res)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+// here UseEffect of Update the data--------------------
+useEffect(()=>{
+    getBookingsDetails()
+}, [])
+
+
+
+
+
     const tabList = [
         {
             tabName: 'All Bookings',
