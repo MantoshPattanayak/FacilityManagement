@@ -18,13 +18,16 @@
     margin-top: 10px;
 }
 .today{
-    margin-top: 18px;
+    margin-top: 20px;
     width: 100%;
+    padding:2px ;
+  
 }
 .day{
     color: black;
     background-color: #A5D5B2;
-    width: 100%;
+    width: 168%;
+   
 }
 .park-name{
     margin-top: 3px;
