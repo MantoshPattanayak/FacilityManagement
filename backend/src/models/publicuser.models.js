@@ -8,35 +8,35 @@ const PublicUser = sequelize.define('publicuser', {
     primaryKey: true
   },
   firstName: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING(255),
     allowNull: false
   },
   middleName: {
-    type: DataTypes.STRING(50)
+    type: DataTypes.STRING(255)
     // allowNull defaults to true
   },
 
   lastName: {
-    type: DataTypes.STRING(50)
+    type: DataTypes.STRING(255)
     // allowNull defaults to true
   },
   userName:{
-    type:DataTypes.STRING(50)
+    type:DataTypes.STRING(255)
   },
   password:{
-    type:DataTypes.STRING(50)
+    type:DataTypes.STRING(255)
   },
   phoneNo:{
-    type:DataTypes.STRING(15)
+    type:DataTypes.STRING(255)
   },
   emailId:{
-    type:DataTypes.STRING(50)
+    type:DataTypes.STRING(255)
   },
   profilePicture:{
     type:DataTypes.STRING(255)
   },
   language:{
-    type:DataTypes.STRING(80)
+    type:DataTypes.STRING(255)
   },
   lastLogin:{
     type: DataTypes.DATE // Define the column as DATE type

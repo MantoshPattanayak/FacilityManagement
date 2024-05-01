@@ -130,7 +130,12 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
       // Check if OTP verification was successful
       console.log(1,req.body)
-      let {mobileNo,otp}=req.body
+      // let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
+      let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
+
+      // mobileNo = decrypt(mobileNo);
+      // otp = decrypt(otp);
+
       if (otp) {
           // OTP verified successfully
           // Check if the user exists in the database
