@@ -30,10 +30,12 @@ const Login = () => {
                     encryptPassword: encryptData(LogingDataPost.Password),
                 });
                 console.log('res', res);
+                sessionStorage.setItem('isUserLoggedIn', 1);
                 toast.success('Login successfully.');
             } catch (err) {
                 console.error("Error:", err);
                 toast.error('Login failed. Please try again.');
+                sessionStorage.setItem('isUserLoggedIn', 0);
             }
         } else {
             // Iterate over validation errors and display them
