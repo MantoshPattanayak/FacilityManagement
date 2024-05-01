@@ -28,7 +28,7 @@ export function decryptData (val) {
         parsedKey,
         {iv:parsediv}
     );
-    // console.log('decryptData', val, typeof val, decryptedData);
     let decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
+    // console.log('decryptedText', val, decryptedText);
     return decryptedText;
 }
