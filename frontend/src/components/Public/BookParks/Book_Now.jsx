@@ -113,7 +113,7 @@ const Book_Now = () => {
         });
       }
       catch(error) {
-        console.error(error);
+        console.log(error);
         toast.error('Booking details submission failedc.')
       }
     }
