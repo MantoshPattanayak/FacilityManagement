@@ -9,7 +9,7 @@ const ServiceFacility = sequelize.define('servicefacilities',{
     serviceId:{
         type:DataTypes.INTEGER
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{

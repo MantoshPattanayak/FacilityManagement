@@ -926,6 +926,7 @@ let logout = async (req, res) => {
 //   }
 // }
 
+
 module.exports = {
   signUp,
   // googleAuthenticationCallback,
@@ -936,8 +937,9 @@ module.exports = {
  logout,
  privateLogin,
  generateOTPHandler,
- verifyOTPHandlerWithGenerateToken
+ verifyOTPHandlerWithGenerateToken,
 //  requestOTP,
 //  verifyOTP
+
 }
 
