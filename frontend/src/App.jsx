@@ -63,6 +63,7 @@ import EditDisplayResource from "./components/Admin/UAC/Resource/EditResource";
 import Main_Body_Park_Details from "./components/Public/Search_Card/Main_Body_Park_Details";
 import Sub_Park_Details from "./components/Public/Search_Card/Sub_Park_Details";
 import PaymentHome from "./common/PaymentHome";
+import ParkPayment from "./common/ParkPayment";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -269,10 +270,18 @@ function App() {
             />
             {/* Payment-razorPay */}
             <Route
-              path="/payment"
+              path="/paymentSection"
               element={
                 <ProtectedRoute>
                   <PaymentHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ParkPayment"
+              element={
+                <ProtectedRoute>
+                  <ParkPayment />
                 </ProtectedRoute>
               }
             />
