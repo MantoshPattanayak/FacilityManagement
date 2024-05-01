@@ -1,6 +1,6 @@
 import React from 'react';
 import AppLogo from '../assets/ama-bhoomi_logo.png';
-import '../components/Public/Landing.css';
+import '../components/Public/Landing';
 
 export default function PublicHeader() {
     let isUserLoggedIn = sessionStorage.getItem('isUserLoggedIn') ? sessionStorage.getItem('isUserLoggedIn') : 0;

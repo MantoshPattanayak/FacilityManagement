@@ -83,7 +83,7 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
-        let facility = `select facilityId, facilityName,facilityTypeId,case 
+        let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
@@ -95,7 +95,7 @@ const viewParkDetails = async(req,res)=>{
 
        if(facilityTypeId){
         console.log(1)
-         facility = `select facilityId, facilityName,facilityTypeId,case 
+         facility = `select facilityId, facilityname,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
