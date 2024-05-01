@@ -1,0 +1,154 @@
+.Outside-Payment-Container {
+  padding: 80px;
+  /* height: 100vh; */
+}
+/* .Inside-Payment-Container {
+  border: 2px solid yellow;
+  padding: 14rem;
+} */
+
+.Payment-main-container {
+  min-height: 100vh;
+  /* display: grid; */
+  display: flex;
+  grid-template-columns: 1fr 1fr;
+  /* place-items: center; */
+  /* flex-direction: row; */
+  /* border: 2px solid black; */
+  border-radius: 8px;
+  gap: 40px;
+  /* gap: 20px; */
+}
+
+.Payment-methods > div > h1,
+.Payment-Input > div > h1 {
+  /* margin-top: 28px; */
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.24rem;
+  margin-bottom: 24px;
+}
+
+.Payment-methods {
+  /* overflow: hidden; */
+  padding: 2.4rem;
+  /* border: 1px solid blue; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* display: flex; */
+  /* height: 100vh; */
+}
+.PaymentButtons {
+  /* margin-top: 40px; */
+  /* display: grid; */
+  /* display: flex; */
+  /* gap: 20px; */
+  /* flex-direction: column; */
+  /* gap: 10px; */
+  /* width: 100%; */
+  /* align-items: center; */
+  /* justify-content: center; */
+}
+
+.Payment-button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom-width: 1px;
+  width: 100%;
+  text-align: left;
+  border: 0.5px solid grey;
+  margin: 6px 12px;
+}
+
+.Active-button {
+  color: #ffffff;
+  background-color: #10b981;
+  border: none;
+  /* border-radius: 5px; */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.Active-button:hover {
+  background-color: #0e8a6d; /* Darker background color on hover */
+}
+
+.Payment-Input {
+  padding: 2.4rem 9.4rem;
+  /* border: 1px solid red; */
+  width: 100%;
+}
+
+.UPI-Input-Box {
+  display: flex;
+  /* font-size: 21px; */
+  align-items: center;
+  /* flex-direction: row; */
+  gap: 20px;
+  margin-bottom: 1.2rem;
+}
+
+.UPI-Input-Box label {
+  font-weight: bold;
+}
+
+.UPI-Input-Box input[type="text"] {
+  /* Add styles to input */
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Additional styles for input placeholder */
+.UPI-Input-Box input[type="text"]::placeholder {
+  color: #999;
+}
+
+/* Additional styles for input on focus */
+.UPI-Input-Box input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.agree-Box {
+  font-size: 0.975rem;
+  line-height: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.QR-scan-Box {
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border-width: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.QR-scan-Box > p {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.payment-buttons {
+  /* text-align: center; */
+  margin: 18px 0;
+  display: flex;
+  gap: 48px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .Payment-methods {
+    display: flex;
+    width: 50%;
+  }
+}
