@@ -8,24 +8,27 @@ export function encryptData (val) {
     let parsedKey = CryptoJS.enc.Hex.parse(key);
     let parsediv = CryptoJS.enc.Hex.parse(iv);
     let encryptedData = null;
-    
     if(val == null || val == '')    return null;
-    encryptedData = CryptoJS.AES.encrypt(val,parsedKey,{iv:parsediv});
+    encryptedData = CryptoJS.AES.encrypt(val.toString(),parsedKey,{iv:parsediv});
+    // console.log('encryptedData', encryptedData);
     let ciphertext = encryptedData.ciphertext;
     let encryptedString = ciphertext.toString();
     return encryptedString;
-
 }
 
 export function decryptData (val) {
-    let parsedKey = CryptoJS.enc.Base64.parse(key);
-    let parsediv = CryptoJS.enc.Base64.parse(iv);
-    let decryptedData = null;
-
+    let parsedKey = CryptoJS.enc.Hex.parse(key);
+    let parsediv = CryptoJS.enc.Hex.parse(iv);
+    // console.log({ parsedKey, parsediv, val });
     if(val == null || val == '')    return;
-
-    decryptedData = CryptoJS.AES.decrypt(val,parsedKey,{iv:parsediv}).toString(CryptoJS.enc.Utf8);
-    
+    let ciphertext = CryptoJS.enc.Hex.parse(val.toString());
+    // console.log(ciphertext);
+    let decryptedData = CryptoJS.AES.decrypt(
+        { ciphertext: ciphertext },
+        parsedKey,
+        {iv:parsediv}
+    );
     // console.log('decryptData', val, typeof val, decryptedData);
-    return decryptedData;
+    let decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
+    return decryptedText;
 }

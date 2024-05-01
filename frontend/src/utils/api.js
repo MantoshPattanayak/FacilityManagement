@@ -46,12 +46,12 @@ const api = {
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
     REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
     //Bookmark
-    ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post
-    REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post
-    VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post
+    ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
+    REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
+    VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate
 
     //PARK-BOOK API
-    PARK_BOOK_PAGE_SUBMIT_API: '/booking/park',  //post
+    PARK_BOOK_PAGE_SUBMIT_API: '/booking/park',  //post 
     PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park-book-initialdata',   //get
     // User Loging/singUp-------------------------------
     User_Login:'/auth/publicLogin',    // Post

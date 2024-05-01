@@ -26,6 +26,10 @@ import Login from "./components/Public/Login";
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
 import BookingDetails from './components/Public/UserProfile/BookingDetails';
+//User profile (Favorites -USER PROFILE)
+import Favorites from "./components/Public/UserProfile/Favorites";
+
+
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -63,6 +67,7 @@ import EditDisplayResource from "./components/Admin/UAC/Resource/EditResource";
 import Main_Body_Park_Details from "./components/Public/Search_Card/Main_Body_Park_Details";
 import Sub_Park_Details from "./components/Public/Search_Card/Sub_Park_Details";
 import PaymentHome from "./common/PaymentHome";
+import ParkPayment from "./common/ParkPayment";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -84,6 +89,25 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Public (Book Details)  */}
+            <Route
+              path="/UserProfile/BookingDetails"
+              element={
+                <ProtectedRoute>
+                  <BookingDetails />
+                </ProtectedRoute>
+              }
+            />
+            {/* Public (Favorites)  */}
+            <Route
+              path="/UserProfile/Favorites"
+              element={
+                <ProtectedRoute>
+                  <Favorites />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Common Footer final */}
             <Route
               path="/common/CommonFooter"
@@ -269,10 +293,18 @@ function App() {
             />
             {/* Payment-razorPay */}
             <Route
-              path="/payment"
+              path="/paymentSection"
               element={
                 <ProtectedRoute>
                   <PaymentHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ParkPayment"
+              element={
+                <ProtectedRoute>
+                  <ParkPayment />
                 </ProtectedRoute>
               }
             />
