@@ -168,7 +168,9 @@ async function GetParkDetails(){
                                                                     <h3 className="park_location">{item.address}</h3>
                                                                 </span>
                                                                 <span className="Avil_Dis">
-                                                                    <button className="Avilable">{item.status}</button>
+                                                                    <button className={`Avilable ${item.status == 'open' ? 'text-green-500' : 'text-red-500'}`}>
+                                                                        {(item.status).charAt(0).toUpperCase() + (item.status).slice(1)}
+                                                                    </button>
                                                                     <h3 className="distance">30KM</h3>
                                                                 </span>
                                                             </div>
