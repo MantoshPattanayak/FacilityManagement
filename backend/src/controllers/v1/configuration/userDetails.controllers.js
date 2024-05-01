@@ -429,7 +429,7 @@ let viewBookings = async (req, res) => {
 
     let searchQuery =
       `select 
-        f.facilityname, f2.description as facilityType, f.address, fb.startDate,
+        f.facilityId, f.facilityname, f2.description as facilityType, f.address, fb.startDate,
         fb.endDate, s.statusCode, fb.sportsName, s2.statusCode as paymentStatus
       from amabhoomi.facilitybookings fb
       inner join amabhoomi.facilities f on f.facilityId = fb.facilityId
@@ -446,7 +446,7 @@ let viewBookings = async (req, res) => {
 
     let searchQueryEvents =
       `select 
-        f.eventName, f.eventCategory, f.locationName, fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
+        f.eventId, f.eventName, f.eventCategory, f.locationName, fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
       from amabhoomi.eventbookings fb
       inner join amabhoomi.eventactivities f on f.eventId = fb.eventId
       inner join amabhoomi.publicusers p on p.publicUserId = fb.createdBy
@@ -460,7 +460,7 @@ let viewBookings = async (req, res) => {
 
       let searchQueryEventHostRequest = 
       `select 
-        e.eventName, e.eventCategory, f2.facilityname, e.locationName, e.eventDate, 
+        f.hostId, e.eventName, e.eventCategory, f2.facilityname, e.locationName, e.eventDate, 
         fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
       from amabhoomi.hostbookings fb
       inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
