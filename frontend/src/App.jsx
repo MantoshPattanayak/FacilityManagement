@@ -28,6 +28,8 @@ import Book_Now from "./components/Public/BookParks/Book_Now";
 import BookingDetails from './components/Public/UserProfile/BookingDetails';
 //User profile (Favorites -USER PROFILE)
 import Favorites from "./components/Public/UserProfile/Favorites";
+//User profile (Profile History)
+import ProfileHistory from "./components/Public/UserProfile/ProfileHistory";
 
 
 
@@ -111,6 +113,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Public (ProfileHistory)  */}
+            <Route
+              path="/UserProfile/ProfileHistory"
+              element={
+                <ProtectedRoute>
+                  <ProfileHistory />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Common Footer final */}
             <Route
@@ -123,7 +134,7 @@ function App() {
             />
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
-            <Route path="/login/SignUp" element={<SignUp/>} />
+            <Route path="/login/SignUp" element={<SignUp />} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
