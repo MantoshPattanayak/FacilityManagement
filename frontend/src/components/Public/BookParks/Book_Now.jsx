@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../Public/BookParks/Book_Now.css';
 import AdminHeader from '../../../common/AdminHeader';
-import Footer from '../../../common/Footer';
+import CommonFooter from '../../../common/CommonFooter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'; // Import the icon
 // Import Aixos method---------------------------------------------
@@ -12,6 +12,7 @@ import { decryptData } from "../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import PublicHeader from '../../../common/PublicHeader';
+import { formatDate } from '../../../utils/utilityFunctions';
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -29,7 +30,7 @@ const Book_Now = () => {
     amount: '10.00',
     activityPreference: [],
     otherActivities: '',
-    bookingDate: '',
+    bookingDate: new Date().toISOString().split('T')[0],
     startTime: '',
     durationInHours: '',
     facilityId: ''
@@ -182,7 +183,7 @@ const Book_Now = () => {
 
           <div className="date">
             <label htmlFor="">Date </label>
-            <input type="date" name="bookingDate" value={formData.date} id="" className='input-field-date' onChange={handleChangeInput}/>
+            <input type="date" name="bookingDate" value={formData.bookingDate} id="" className='input-field-date' onChange={handleChangeInput}/>
           </div><br />
 
 
@@ -204,15 +205,15 @@ const Book_Now = () => {
           </div>
         </div>
 
-        <div className="cart-container">
+        {/* <div className="cart-container">
           <div className="cart-icon">
             <FontAwesomeIcon icon={faCartShopping} />
             <p>Cart is empty</p>
           </div>
-        </div>
+        </div> */}
 
       </div>
-      <Footer />
+      <CommonFooter />
     </div>
   );
 }
