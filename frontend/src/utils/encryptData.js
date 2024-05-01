@@ -19,15 +19,16 @@ export function encryptData (val) {
 export function decryptData (val) {
     let parsedKey = CryptoJS.enc.Hex.parse(key);
     let parsediv = CryptoJS.enc.Hex.parse(iv);
-    console.log({ parsedKey, parsediv, val });
+    // console.log({ parsedKey, parsediv, val });
     if(val == null || val == '')    return;
     let ciphertext = CryptoJS.enc.Hex.parse(val.toString());
-    console.log(ciphertext);
+    // console.log(ciphertext);
     let decryptedData = CryptoJS.AES.decrypt(
         { ciphertext: ciphertext },
         parsedKey,
         {iv:parsediv}
     );
-    console.log('decryptData', val, typeof val, decryptedData);
-    return decryptedData;
+    // console.log('decryptData', val, typeof val, decryptedData);
+    let decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
+    return decryptedText;
 }
