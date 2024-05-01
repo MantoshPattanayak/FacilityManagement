@@ -135,11 +135,11 @@ const Landing = () => {
                     <span className='Search-Conatiner'>
                         <h1>AMA BHOOMI</h1>
                         <span className='about'>
-                            <p>Ama Bhoomi stands for Assuring mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
+                            <p className='about_text'>Ama Bhoomi stands for Assuring mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
                         </span>
-                        <h2 className='typing-animation'>Explore, Book and Enjoy Open Spaces </h2>
+                        <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
                         <input className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
-                        <button className='view-map-button' type="button">view map</button>
+                       
                     </span>
 
                 </div>
@@ -175,7 +175,7 @@ const Landing = () => {
 
             {/* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/}
 
-            <div className="map-parentContainer">
+             <div className="map-parentContainer">
 
                 {/* --------//google map ------------------------------------------------------------------------------- */}
 
@@ -401,7 +401,7 @@ const Landing = () => {
                     <h1>Explore New Activities</h1>
                 </div>
                 <div className='exploreNewAct-outer'>
-                    <div className='exploreNewAct'>
+                    
 
 
                         {/* Mapping through the exploreNewActivities data */}
@@ -417,7 +417,7 @@ const Landing = () => {
                             ))}
                         </div>
                         <div className="image-secondDiv">
-                            <img src={badminton} alt="" />
+                            <img  className='h-80' src={badminton} alt="" />
                             <div className="exploreNewAct-secondDiv">
                                 {exploreNewActivies.map((activity, index) => (
                                     selectedActivity === index && (
@@ -437,7 +437,7 @@ const Landing = () => {
 
 
 
-                    </div>
+             
                 </div>
 
             </div>
