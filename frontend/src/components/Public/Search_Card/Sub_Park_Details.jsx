@@ -32,26 +32,26 @@ const Sub_Park_Details = () => {
     // here Check Login Status------------------------------------
     const [LoginStatus, setLoginStatus] = useState([0])
 
-//here Location / crypto and navigate the page---------------
-     const location = useLocation();
-    const facilityId= decryptData(new URLSearchParams(location.search).get('facilityId'));
+    //here Location / crypto and navigate the page---------------
+    const location = useLocation();
+    const facilityId = decryptData(new URLSearchParams(location.search).get('facilityId'));
     const action = new URLSearchParams(location.search).get('action');
     const navigate = useNavigate();
     const isUserLoggedIn = sessionStorage.getItem('isUserLoggedIn') || 0;
     const [toRoute, setToRoute] = useState();
     // Here Map Api keys ------------------------------------------------------------
 
-    const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao'; 
+    const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
     const defaultCenter = { lat: 20.2961, lng: 85.8245 };
     let randomKey = Math.random();
 
 
-// Here Get the data of Sub_park_details------------------------------------------
-    async function getSub_park_details(){
-        console.log('facilityId', facilityId);
-        try{
-            let res= await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
-               
+    // Here Get the data of Sub_park_details------------------------------------------
+    async function getSub_park_details() {
+        // console.log('facilityId', facilityId);
+        try {
+            let res = await axiosHttpClient('View_By_ParkId', 'get', null, facilityId);
+
             console.log("here Response", res)
             setServiceData(res.data.serviceData)
             setAmenitiesData(res.data.amenitiesData);
@@ -62,10 +62,8 @@ const Sub_Park_Details = () => {
             console.log("here Error", err)
         }
     }
-// For Find Out the Status of Login Page -----------------------------------
+    // For Find Out the Status of Login Page -----------------------------------
     // For Find Out the Status of Login Page -------------------------------
-
-
 
 
     useEffect(() => {
@@ -102,6 +100,30 @@ const Sub_Park_Details = () => {
         return () => clearInterval(interval);
     }, [currentIndex]);
 
+    function formatTime(time24) {   //format 24 hour time as 12 hour time
+        if (!time24) return;
+        // Parse the input time string
+        const [hours, minutes] = time24.split(':').map(Number);
+
+        // Determine AM or PM
+        const period = hours >= 12 ? 'PM' : 'AM';
+
+        // Convert hours to 12-hour format
+        const hours12 = hours % 12 || 12; // 0 should be 12 in 12-hour format
+
+        // Format the time string
+        const time12 = `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
+
+        return time12;
+    }
+
+    function formatDate(date) { //format input date as DD-MM-YYYY
+        if(!date)   return;
+
+        const [year, month, day] = date.split('-');
+
+        return `${day}-${month}-${year}`;
+    }
 
     // Here Return Function ------------------------------------------------------------
     return (
@@ -123,29 +145,18 @@ const Sub_Park_Details = () => {
                 <div className="Map_container">
                     <span className="time_status">
 
-                        <h1 className="time_text"> Timing : 7PM -  8PM</h1>
+                        <h1 className="time_text"> Timing : {formatTime(FacilitiesData[0]?.operatingHoursFrom)} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}</h1>
                         <button className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === 'open' ? 'open' : 'closed'}`}>
-                            {FacilitiesData?.length > 0 && FacilitiesData[0]?.status}
+                            {FacilitiesData?.length > 0 && FacilitiesData[0]?.status.toUpperCase()}
                         </button>
 
-                                                </span>
-                                                <span className="Button_ticket_container">
-                                                        <Link
-                                                            to={{ 
-                                                                pathname: '/BookParks/Book_Now',
-                                                                search: `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}&action=view`
-                                                            }}
-                                                            className="button-9"
-                                                        >
-
-                                                           <button  role="button_by">Buy a Ticket</button>
-                                                        </Link>
                     </span>
+
                     <span className="Button_ticket_container">
                         <Link
                             to={{
                                 pathname: `${isUserLoggedIn == 1 ? '/BookParks/Book_Now' : '/login-signup'}`,
-                                search: `${isUserLoggedIn == 1 ? '?facilityId=${encryptDataId(facilityId)' : ''}`
+                                search: `${isUserLoggedIn == 1 ? `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}` : ''}`
                             }}
                             className="button-9"
                         >
@@ -154,6 +165,7 @@ const Sub_Park_Details = () => {
 
                         <button className="button-9" role="button">Host Event</button>
                     </span>
+
                     <div className="Map_image">
                         <LoadScript googleMapsApiKey={apiKey}>
                             <GoogleMap
@@ -238,13 +250,16 @@ const Sub_Park_Details = () => {
                                     <img className="Yoga_image" src={Yoga_img} alt="Event"></img>
                                     <h1 className="Name_yoga"> {item.eventName}</h1>
                                     <span className="Yoga_date_time">
-                                        <h1 className="Yoga_date">Date -{item.eventDate}</h1>
-                                        <h1 className="Yoga_time">Time: -{item.eventStartTime + '-' + item.eventEndTime}</h1>
+                                        <h1 className="Yoga_date">Date:-{formatDate(item.eventDate)}</h1>
+                                        <h1 className="Yoga_time">Time:-{formatTime(item.eventStartTime)} - {formatTime(item.eventEndTime)}</h1>
                                     </span>
                                 </div>
                             </div>
                         );
                     })}
+                    {
+                        EventAvailable?.length == 0 && (<p>No events.</p>)
+                    }
                 </div>
 
             </div>

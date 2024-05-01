@@ -35,12 +35,12 @@
     width: 100px;
   }
   
-  .right-section  .middle-section ul {
+  .last-right-section  .middle-section ul {
     list-style-type: none;
     padding: 0;
   }
   
-  .right-section  .middle-section ul li {
+  .last-right-section  .middle-section ul li {
     margin-bottom: 5px;
     font-size: 14px;
     color: #333;
@@ -48,9 +48,10 @@
 
   .middle-section ul li {
     text-align: center;
+    color: #333;
   }
   
-  .right-section ul li {
+  .last-right-section ul li {
     text-align: right;
   }
   
@@ -83,4 +84,9 @@
   }
   
 
-  
+  @media screen and (max-width:651px) {
+    .left-section{
+        width: 100%;
+    }
+    
+  }

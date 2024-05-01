@@ -169,18 +169,21 @@ let createUser = async (req, res) => {
     const pwdFlag = false;
 
 
-    const { title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId } = req.body;
+    const { encryptTitle, encryptFullName:encryptfullName, encryptMobileNo:encryptMobileNumber, encryptAlternateMobileNo:encryptAlternateMobileNumber,encryptRole, encryptStatus,encryptUsername:encryptUserName,encryptEmailId:encryptemailId,encryptGenderId} = req.body;
 
-    console.log(title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId, 'input')
+    // console.log(title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId, 'input')
+    console.log(req.body,'req.body')
 
     let password = await generatePassword(8)
-
-    const encryptTitle = await encrypt(title);
-    const encryptfullName = await encrypt(fullName);
-    const encryptUserName = await encrypt(userName);
-    const encryptMobileNumber = await encrypt(mobileNumber);
-    const encryptAlternateMobileNumber = await encrypt(alternateMobileNo);
-    const encryptemailId = await encrypt(emailId);
+    let roleId = await decrypt(encryptRole)
+    let statusId = await decrypt(encryptStatus)
+    let genderId = await decrypt(encryptGenderId)
+    // const encryptTitle = await encrypt(title);
+    // const encryptfullName = await encrypt(fullName);
+    // const encryptUserName = await encrypt(userName);
+    // const encryptMobileNumber = await encrypt(mobileNumber);
+    // const encryptAlternateMobileNumber = await encrypt(alternateMobileNo);
+    // const encryptemailId = await encrypt(emailId);
 
     console.log("1", encryptTitle, encryptfullName, encryptMobileNumber, encryptAlternateMobileNumber)
 
@@ -211,7 +214,7 @@ let createUser = async (req, res) => {
         title: encryptTitle, fullName: encryptfullName, contactNo: encryptMobileNumber, emailId: encryptemailId,
         userName: encryptUserName, password: hashedPassword, changePwdFlag: pwdFlag,
         roleId: roleId, statusId: statusId, genderId: genderId,
-        alterateContactNo: alternateMobileNo,
+        alterateContactNo: encryptAlternateMobileNumber,
         createdDt: new Date(), createdBy: createdBy, updatedDt: new Date(), updatedBy: updatedBy
       });
 
@@ -353,17 +356,17 @@ let getUserById = async (req, res) => {
     }
     );
 
-    //    let userEncryptedData = specificUser.map(async(user)=>({
-    //         title: await encrypt(user.title),
-    //         fullName:await encrypt(user.fullName),
-    //         emailId:await encrypt(user.emailId),
-    //         userName:await encrypt(user.userName),
-    //         contactNo:await encrypt(user.contactNo),
-    //         roleId:roleId,
-    //         statusId:statusId,
-    //         genderId:genderId
-
-    // }))
+       let userEncryptedData = await Promise.all(specificUser.map(async(user)=>{
+        return{
+          ...user,
+          title: await decrypt(user.title),
+          fullName:await decrypt(user.fullName),
+          emailId:await decrypt(user.emailId),
+          userName:await decrypt(user.userName),
+          contactNo:await decrypt(user.contactNo)
+        }
+     
+    }))
 
     return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: specificUser });
   }
@@ -426,7 +429,7 @@ let viewBookings = async (req, res) => {
 
     let searchQuery =
       `select 
-        f.facilityname, f2.description as facilityType, f.address, fb.startDate,
+        f.facilityId, f.facilityname, f2.description as facilityType, f.address, fb.startDate,
         fb.endDate, s.statusCode, fb.sportsName, s2.statusCode as paymentStatus
       from amabhoomi.facilitybookings fb
       inner join amabhoomi.facilities f on f.facilityId = fb.facilityId
@@ -443,7 +446,7 @@ let viewBookings = async (req, res) => {
 
     let searchQueryEvents =
       `select 
-        f.eventName, f.eventCategory, f.locationName, fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
+        f.eventId, f.eventName, f.eventCategory, f.locationName, fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
       from amabhoomi.eventbookings fb
       inner join amabhoomi.eventactivities f on f.eventId = fb.eventId
       inner join amabhoomi.publicusers p on p.publicUserId = fb.createdBy
@@ -457,7 +460,7 @@ let viewBookings = async (req, res) => {
 
       let searchQueryEventHostRequest = 
       `select 
-        e.eventName, e.eventCategory, f2.facilityname, e.locationName, e.eventDate, 
+        f.hostId, e.eventName, e.eventCategory, f2.facilityname, e.locationName, e.eventDate, 
         fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
       from amabhoomi.hostbookings fb
       inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 

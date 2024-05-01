@@ -46,7 +46,7 @@ const CommonFooter = () => {
             <li>Feedback</li>
           </ul>
         </div>
-        <div class="right-section">
+        <div class="last-right-section">
           <ul>
             <li>Help and support</li>
             <li>social</li>

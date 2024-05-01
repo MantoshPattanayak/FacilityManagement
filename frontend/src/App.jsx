@@ -24,6 +24,8 @@ import SignUp from "./components/Public/SignUp";
 import Login from "./components/Public/Login";
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
+//User profile (Booking Details)
+import BookingDetails from './components/Public/UserProfile/BookingDetails';
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -31,6 +33,8 @@ import Book_Now from "./components/Public/BookParks/Book_Now";
 import AdminHeader from "./common/AdminHeader";
 // Import Footer
 import Footer from "./common/Footer";
+// Import Common Header
+import CommonHeader from './common/CommonHeader';
 // Import Common Footer
 import CommonFooter from "./common/CommonFooter";
 //import home page
@@ -92,6 +96,7 @@ function App() {
             />
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
+            <Route path="/login/SignUp" element={<SignUp/>} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}

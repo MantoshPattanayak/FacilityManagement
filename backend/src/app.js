@@ -54,14 +54,14 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "16kb" }));
+app.use(express.json({ limit: "20mb" }));
 // app.use(passport.initialize());
 
 // here in the express.urlencoded i.e. extended is equal to true means inside object we can give another object
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "16kb",
+    limit: "20mb",
   })
 );
 
