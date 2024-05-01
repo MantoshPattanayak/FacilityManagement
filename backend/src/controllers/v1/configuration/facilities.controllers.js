@@ -173,7 +173,7 @@ const viewParkById = async (req,res)=>{
                 replacements:[facilityId]
             })
 
-        let [fethAmenitiesDataQuery] =  `select am.amenityName from amabhoomi.facilityamenities fa inner join amabhoomi.amenitymasters am on am.amenityId = fa.amenityId  where fa.facilityId = ? and fa.statusId=1`
+        let fethAmenitiesDataQuery =  `select am.amenityName from amabhoomi.facilityamenities fa inner join amabhoomi.amenitymasters am on am.amenityId = fa.amenityId  where fa.facilityId = ? and fa.statusId=1`
         let fethAmenitiesDetailsDataData = await sequelize.query(fethAmenitiesDataQuery,
             {
                 replacements:[facilityId]
