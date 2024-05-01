@@ -1,0 +1,104 @@
+.profile--Box > h1 {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.7rem;
+}
+.profile--Box {
+  height: 100vh;
+}
+.profile--body {
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  /* row-gap: 12px; */
+  /* gap: 12px; */
+  /* justify-content: center; */
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.profile--body > p {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.profile--Insidebody {
+  /* display: flex; */
+  /* gap: 21px; */
+  /* justify-content: space-between; */
+}
+
+.profile--section > h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.profile-textPhoto {
+  /* text-align: left; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* justify-content: flex-end; */
+  gap: 21px;
+  margin: 16px 0;
+}
+
+.profile-textPhoto > h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.profile-form {
+  max-width: 600px; /* Adjust the maximum width of the form */
+  margin: 0 auto; /* Center the form horizontally */
+}
+
+/* Style for form labels */
+.profile-form label {
+  display: block; /* Display labels as block elements */
+  margin-bottom: 0.5rem; /* Add some bottom margin for spacing */
+  font-weight: bold; /* Make the labels bold */
+}
+
+/* Style for form inputs */
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"],
+.profile-form select {
+  width: 100%; /* Set the width of inputs and select to 100% */
+  padding: 0.5rem; /* Add padding for input elements */
+  margin-bottom: 1rem; /* Add bottom margin for spacing */
+  border: 1px solid #ccc; /* Add border to inputs */
+  border-radius: 5px; /* Add border radius to inputs */
+  font-size: 1rem; /* Set the font size of inputs */
+  transition: border-color 0.3s ease; /* Add transition effect for hover */
+}
+
+/* Style for form select */
+.profile-form select {
+  appearance: none; /* Remove default appearance */
+}
+
+/* Additional styling for form inputs on focus */
+.profile-form input:focus,
+.profile-form select:focus {
+  outline: none; /* Remove outline on focus */
+  border-color: #007bff; /* Change border color on focus */
+}
+
+/* Style for buttons */
+.profile-form button {
+  width: 100%; /* Set the width of buttons to 100% */
+  padding: 0.75rem; /* Add padding for buttons */
+  margin-bottom: 1rem; /* Add bottom margin for spacing */
+  border: none; /* Remove border from buttons */
+  border-radius: 5px; /* Add border radius to buttons */
+  cursor: pointer; /* Change cursor on hover */
+  font-size: 1rem; /* Set the font size of buttons */
+  transition: background-color 0.3s ease; /* Add transition effect for hover */
+}
+
+/* Additional styling for buttons on hover */
+.profile-form button:hover {
+  background-color: #28a745; /* Change background color on hover */
+}
