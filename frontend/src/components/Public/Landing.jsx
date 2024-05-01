@@ -14,25 +14,38 @@ import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import PublicHeader from '../../common/PublicHeader.jsx';
 
+
 // Location icon and image all types of image---------------------------------------------
 // import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
 // import Park_img from "../../../assets/park_img1.jpg"
 import Yoga_img from "../../assets/Yoga_img.png";
+import greenway from "../../assets/Greenway.png"
+import Blueway from "../../assets/blueways.png"
+
 // import blueWays_logo from "../../assets/ama_bhoomi_blueways_logo.jpeg";
 // import greenWays_logo from "../../assets/ama_bhoomi_greenways.jpeg";
+// import here encpty js ----------------------------------
+// Import here to encrptData ------------------------------------------
+import { Link, useNavigate } from 'react-router-dom';
+// import { encryptData } from "../../../utils/encryptData"
+import { encryptData } from '../../utils/encryptData';
 
 const Landing = () => {
     const [mapdata, setmapdata] = useState([])
     const [selectedParkId, setSelectedParkId] = useState(null);
     const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
     const [givenReq, setGivenReq] = useState(null);
+    const [facilityTypeId, setFacilityTypeId] = useState(1);
     const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
     const defaultCenter = { lat: 20.2961, lng: 85.8245 };
+    let randomKey=Math.random();
 
+// here Fetch the data -----------------------------------------------
     async function fecthMapData() {
         try {
-            let res = await axiosHttpClient('MAP_DISPLAY_DATA', 'post', {
+            let res = await axiosHttpClient('View_Park_Data', 'post', {
                 givenReq: givenReq,
+                facilityTypeId: facilityTypeId
             });
 
             console.log("here get data", res)
@@ -43,28 +56,11 @@ const Landing = () => {
             console.log(" here error", err)
         }
     }
-    // here Update the data
-    useEffect(() => {
-        fecthMapData()
-    }, [givenReq])
+    
 
-    // here Search Funcation 
-    async function searchFunction(e) {
-        e.preventDefault();
-        try {
 
-            let res = await axiosHttpClient("/busmaster/viewList", "post", {
-
-                givenReq: givenReq
-            });
-            setmapdata(res.data.data)
-
-        } catch (error) {
-            console.error(error);
-
-        }
-    }
-
+ 
+// Handle Chnage ----------------------------------------------------------------
     function handleChange(e) {
         let { name, value } = e.target;
         switch (name) {
@@ -73,6 +69,60 @@ const Landing = () => {
                 setGivenReq(value);
         }
     }
+ // Function to handle marker click ---------------------------------------------------
+ const handleMarkerClick = (parkId) => {
+    setSelectedParkId(parkId); // Set selected parkId
+    const location = mapdata.find(location => location.parkId === parkId);
+    setSelectedLocationDetails(location); // Set selected location details
+
+  };
+// Function to handle setting facility type ID and updating search input value ---------------------------
+const handleParkLogoClick = (typeid) => {
+    setFacilityTypeId(typeid) // Set facility ex typeid-1,typeid-2,typeid-3
+    console.log("here type id", typeid)
+    fecthMapData()
+
+};
+// here Handle for encrpt the data------------------------------------------
+ // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
+ function encryptDataId(id) {
+    let res = encryptData(id);
+    return res;
+}
+
+
+
+
+
+
+
+
+
+
+
+// here Update the data-----------------------------------------------
+    useEffect(() => {
+        fecthMapData()
+    }, [givenReq, facilityTypeId])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //for event Cards
@@ -111,24 +161,7 @@ const Landing = () => {
         <div className='landingcontainer'>
             <section className="bg-img">
                 <PublicHeader />
-                {/* <header className="header">
-                    <header className="header-content">
-                        <div class="logo">
-
-                        </div>
-                        <nav>
-                            <ul>
-                                <li><a href="#">ABOUT</a></li>
-                                <li><a href="#">FAQ</a></li>
-                                <li><a href="/facilities">FACILITIES</a></li>
-                                <li><a href="#">EVENTS</a></li>
-                                <li><a href="#">HOST EVENT</a></li>
-                                <li><a className='login-button' href="/login-signup">LOGIN</a></li>
-                            </ul>
-                        </nav>
-                    </header>
-                </header> */}
-
+             
                 {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
 
                 <div className='landing-page_contant'>
@@ -149,24 +182,48 @@ const Landing = () => {
 
             <div className="logo-section">
                 <div className="logos">
+                     <Link
+                            to={{ 
+                               pathname: '/facilities',
+                              search: `?facilityTypeId=${encryptDataId(1 )}`
+                             }}
+                           >
+                                <div className="icon">
+                                  <img src={park_logo} alt="" />
+                                   <h2>Parks</h2>
+                                </div>
+                         </Link>
+                    
+
+                         <Link
+                            to={{ 
+                               pathname: '/facilities',
+                              search: `?facilityTypeId=${encryptDataId(2)}`
+                             }}
+                           >
+                              <div className="icon">
+                                 <img src={playground_logo} alt="" />
+                                 <h2>Playgrounds</h2>
+                              </div>
+                            </Link>
+                            <Link
+                            to={{ 
+                               pathname: '/facilities',
+                              search: `?facilityTypeId=${encryptDataId(3)}`
+                             }}
+                           >
+                              <div className="icon">
+                                <img src={mp_ground_logo} alt="" />
+                                <h2>Multipurpose Grounds</h2>
+                              </div>
+                            </Link>
+                    
                     <div className="icon">
-                        <img src={park_logo} alt="" />
-                        <h2>Parks</h2>
-                    </div>
-                    <div className="icon">
-                        <img src={playground_logo} alt="" />
-                        <h2>Playgrounds</h2>
-                    </div>
-                    <div className="icon">
-                        <img src={mp_ground_logo} alt="" />
-                        <h2>Multipurpose Grounds</h2>
-                    </div>
-                    <div className="icon">
-                        <img src={park_logo} alt="" />
+                        <img src={greenway} alt="" />
                         <h2>Greenways</h2>
                     </div>
                     <div className="icon">
-                        <img src={park_logo} alt="" />
+                        <img src={Blueway} alt="" />
                         <h2>Waterways</h2>
                     </div>
                 </div>
@@ -181,13 +238,44 @@ const Landing = () => {
 
                 <section className="map-container2">
                     <div className='map-bar'>
-                        <div className="map-icons">
-                            <img src={park_logo} alt="" />
-                            <img src={park_logo} alt="" />
-                            <img src={park_logo} alt="" />
-                            <img src={park_logo} alt="" />
-                            <img src={park_logo} alt="" />
+                    <div className="map-icons">
+                        <div class="icon1">
+                             <button onClick={() => handleParkLogoClick(1)}>
+                                <img  src={park_logo} alt="" />
+                                <h2 className='text1'>Parks</h2>
+                            </button>    
+                           
                         </div>
+                        <div class="icon1">
+                            <button onClick={() => handleParkLogoClick(2)}>
+                            <img src={playground_logo} alt="" />
+                            <h2 className='text1'>Playgrounds</h2>
+                            </button>
+                            
+                        </div>
+                        <div class="icon1">
+                            <button onClick={() => handleParkLogoClick(3)}>
+                            <img src={mp_ground_logo} alt="" />
+                            <h2 className='text1'>Multipurpose Grounds</h2>
+                            </button>
+                          
+                        </div>
+                        <div class="icon1">
+                            <button onClick={() => handleParkLogoClick(4)}>
+                               <img src={greenway} alt="" />
+                                <h2 className='text1'>Greenways</h2>
+                            </button>
+                          
+                        </div>
+                        <div class="icon1">
+                            <button onClick={() => handleParkLogoClick(5)}>
+                               <img src={Blueway} alt="" />
+                               <h2 className='text1'>Waterways</h2>
+                            </button>
+                          
+                        </div>
+                    </div>
+
 
                         <div className="mapSearchButton">
                             <input type='text' placeholder='Please Enter the Location '
@@ -196,7 +284,7 @@ const Landing = () => {
                                 value={givenReq}
                                 onChange={handleChange}
                             ></input>
-                            <button type='button' onClick={searchFunction}>
+                            <button type='button' onClick={fecthMapData}>
                                 <FontAwesomeIcon icon={faSearch} className="os-icon" />
                             </button>
                         </div>
@@ -279,7 +367,8 @@ const Landing = () => {
             <div className="notice2">
                 <div class="notice2-container">
                     <span>Whats New</span>
-                    <marquee behavior="" direction="left">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eum quia error placeat recusandae hic, nostrum doloremque nihil ducimus repellendus ea eius architecto doloribus sed.</marquee>
+                    <marquee behavior="" direction="left">Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will inaugurate a new open park at Old Town,  
+                 "Join us for the grand opening of our new park! "  </marquee>
                 </div>
             </div>
 
