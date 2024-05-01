@@ -1,3 +1,4 @@
+const { PI } = require('aws-sdk');
 const db = require('../../../models/index');
 const statusCode = require('../../../utils/statusCode');
 
@@ -8,6 +9,7 @@ const stausCode = require('../../../utils/statusCode')
 const { Client } = require('@elastic/elasticsearch');
 const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch server URL
 
+let facilitiesTable = db.facilities;
 
 const displayMapData = async(req,res)=>{
     try{
@@ -83,7 +85,7 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId)
 
-        let facility = `select facilityId, facilityName,facilityTypeId,case 
+        let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
@@ -95,7 +97,7 @@ const viewParkDetails = async(req,res)=>{
 
        if(facilityTypeId){
         console.log(1)
-         facility = `select facilityId, facilityName,facilityTypeId,case 
+         facility = `select facilityId, facilityname,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership 
@@ -108,6 +110,7 @@ const viewParkDetails = async(req,res)=>{
     }
 
         let matchedData = facilities[0];
+        console.log('givenReq',givenReq)
         if(givenReq){
              matchedData = facilities[0].filter((mapData)=>
                 (mapData.facilityname && mapData.facilityname.toLowerCase().includes(givenReq.toLowerCase()))||
@@ -139,6 +142,8 @@ const viewParkDetails = async(req,res)=>{
     }
         
 }
+
+
 
 const autoSuggestionForViewParkDetails = async (req,res)=>{
     try {
@@ -203,10 +208,75 @@ const viewParkById = async (req,res)=>{
     }
 }
 
+let calculateDistance = (lat1, long1, lat2, long2) => {
+   
+        console.log('Input Coordinates:', lat1, long1, lat2, long2);
+
+        const earthRadius = 6371; // Earth's radius in kilometers
+        const dLat = (lat2 - lat1) * Math.PI / 180; // Convert degrees to radians
+        const dLong = (long2 - long1) * Math.PI / 180; // Convert degrees to radians
+
+        // console.log('Delta Longitude (radians):', dLong);
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLong / 2) * Math.sin(dLong / 2);
+
+        // console.log('Intermediate Calculation:', a);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = earthRadius * c; // Distance in kilometers
+
+        // console.log('Calculated Distance:', distance);
+        return distance;
+
+};
+
+const nearByDataInMap = async(req,res)=>{
+    try {
+        let {latitude,longitude,facilityTypeId,range} = req.body;
+        console.log('1')
+        // here range is bydefault set to 10
+        range = range?range:10;
+        
+        let fetchFacilities;
+        if(facilityTypeId){
+            fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address'],
+            where:{
+            facilityTypeId:facilityTypeId
+        }})
+
+        }
+        else{
+            fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address']})
+        }
+        console.log('3')
+
+        let getNearByData = [];
+        for (const data of fetchFacilities) {
+            let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
+            if (distance <= range) {
+                getNearByData.push({ facilityName: data.facilityname, distance });
+            }
+        }
+
+
+       console.log('get near by data',getNearByData)
+       return res.status(statusCode.SUCCESS.code).json({
+        message:'These are the near by data', data:getNearByData
+       })
+
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
 
 module.exports ={
     displayMapData,
     searchParkFacilities,
     viewParkDetails,
-    viewParkById
+    viewParkById,
+    nearByDataInMap
 }
