@@ -177,18 +177,18 @@ const Book_Now = () => {
 
           <div className="other-activities">
             <label htmlFor="activities">Other Activities(if any)</label>
-            <input type="text" name="otherActivities" value={formData.otherActivity} id="" className='input-field-otheractivities' onChange={handleChangeInput}/>
-          </div>
+            <input type="text" name="otherActivities" value={formData.otherActivities} id="" className='input-field-otheractivities' onChange={handleChangeInput}/>
+          </div><br />
 
 
           <div className="date">
-            <label htmlFor="">Date </label>
+            <label htmlFor="">Date :</label>
             <input type="date" name="bookingDate" value={formData.bookingDate} id="" className='input-field-date' onChange={handleChangeInput}/>
           </div><br />
 
 
           <div className="start-time">
-            <label htmlFor=""> Start Time </label>
+            <label htmlFor=""> Start Time :</label>
             <input type="time" name="startTime" value={formData.startTime} id="" className='input-field-date' onChange={handleChangeInput}/>
           </div>
 

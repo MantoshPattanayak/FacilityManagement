@@ -25,13 +25,9 @@ import Login from "./components/Public/Login";
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
-import BookingDetails from './components/Public/UserProfile/BookingDetails';
+import BookingDetails from "./components/Public/UserProfile/BookingDetails";
 //User profile (Favorites -USER PROFILE)
 import Favorites from "./components/Public/UserProfile/Favorites";
-//User profile (Profile History)
-import ProfileHistory from "./components/Public/UserProfile/ProfileHistory";
-
-
 
 //Public Header
 // import PublicHeader from "./common/PublicHeader";
@@ -40,7 +36,7 @@ import AdminHeader from "./common/AdminHeader";
 // Import Footer
 import Footer from "./common/Footer";
 // Import Common Header
-import CommonHeader from './common/CommonHeader';
+import CommonHeader from "./common/CommonHeader";
 // Import Common Footer
 import CommonFooter from "./common/CommonFooter";
 //import home page
@@ -64,7 +60,7 @@ import UserResourceMappingList from "./components/Admin/UAC/AccessControl/UserRe
 import ListOfResources from "./components/Admin/UAC/Resource/ListOfResources";
 import CreateResource from "./components/Admin/UAC/Resource/CreateResource";
 import EditDisplayResource from "./components/Admin/UAC/Resource/EditResource";
-import Landing from './components/Public/Landing';
+import Landing from "./components/Public/Landing";
 // here User details ( Search Card )-----------------------------------------------------------------------------
 import Main_Body_Park_Details from "./components/Public/Search_Card/Main_Body_Park_Details";
 import Sub_Park_Details from "./components/Public/Search_Card/Sub_Park_Details";
@@ -72,6 +68,7 @@ import PaymentHome from "./common/PaymentHome";
 import ParkPayment from "./common/ParkPayment";
 import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
 
+import Profile from "./components/Public/UserProfile/Profile";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -85,8 +82,8 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
-            <Route path="/BookingDetails" element={<BookingDetails/>} />
-            <Route path="/Event_hostPage" element={<Event_hostPage/>} />
+            <Route path="/BookingDetails" element={<BookingDetails />} />
+            <Route path="/Event_hostPage" element={<Event_hostPage />} />
             {/* Public (Book Parks)  */}
             <Route
               path="/BookParks/Book_Now"
@@ -304,6 +301,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* User-Profile */}
+            <Route
+              path="/Profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />
