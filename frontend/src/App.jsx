@@ -1,4 +1,5 @@
 import { useState } from "react";
+import instance from "../env";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./utils/ProtectedRoutes";
@@ -80,7 +81,7 @@ function App() {
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Landing />}/>
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
