@@ -69,6 +69,7 @@ import ParkPayment from "./common/ParkPayment";
 import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
 
 import Profile from "./components/Public/UserProfile/Profile";
+import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
