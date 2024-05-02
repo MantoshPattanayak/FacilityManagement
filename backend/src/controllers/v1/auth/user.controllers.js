@@ -5,6 +5,8 @@ const publicUser = db.publicuser;
 const privateUser = db.privateuser;
 let authSessions = db.authsessions
 let deviceLogin = db.device
+let otpCheck = db.otpDetails
+
 // const admin = require('firebase-admin');
 
 const { sequelize,Sequelize } = require('../../../models')
@@ -73,7 +75,11 @@ let generateOTPHandler = async (req,res)=> {
       let otpIndex = Math.floor(Math.random()*numberValue.length)
       otp += numberValue[otpIndex]
     }
+
+    // insert to otp verification table
+    
     // OTP generated successfully
+
     return res.status(statusCode.SUCCESS.code).json({
             message: 'otp generated successfully', otp:otp
      })
@@ -130,15 +136,28 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
       // Check if OTP verification was successful
       console.log(1,req.body)
-      // let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
       let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
 
-      // mobileNo = decrypt(mobileNo);
-      // otp = decrypt(otp);
+    
+      
 
-      if (otp) {
-          // OTP verified successfully
+      if (mobileNo && otp) {
+        // check if the otp is valid or not
+        let isOtpValid = await otpCheck.findOne({
+          where:{
+              expiryTime:{[Op.gte]:new Date()},
+              code:otp
+            
+          }
+        })
+        if(isOtpValid){
+          // then check if the user exist or not 
+        }
+        else{
+          
+        }
           // Check if the user exists in the database
+
           let isUserExist = await publicUser.findOne({
             where:{
               phoneNo:mobileNo
@@ -384,7 +403,6 @@ let publicLogin = async(req,res)=>{
 
             const options = {
               httpOnly: true,
-              sameSite: 'none',
               secure: true
           };
 

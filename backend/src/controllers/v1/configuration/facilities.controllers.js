@@ -241,14 +241,14 @@ const nearByDataInMap = async(req,res)=>{
         
         let fetchFacilities;
         if(facilityTypeId){
-            fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address'],
+            fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo'],
             where:{
             facilityTypeId:facilityTypeId
         }})
 
         }
         else{
-            fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address']})
+            fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo']})
         }
         console.log('3')
 
@@ -256,7 +256,7 @@ const nearByDataInMap = async(req,res)=>{
         for (const data of fetchFacilities) {
             let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
             if (distance <= range) {
-                getNearByData.push({ facilityName: data.facilityname, distance });
+                getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo});
             }
         }
 

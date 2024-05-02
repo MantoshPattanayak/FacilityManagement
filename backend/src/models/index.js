@@ -56,7 +56,10 @@ sequelize.authenticate()
   db1.userbookingactivities = require('./userbookingactivities.models')(sequelize, DataTypes)
   db1.useractivitymasters = require('./useractivitymaster.models')(sequelize, DataTypes)
   db1.device = require('./device.models')(sequelize,DataTypes);
-  db1.facilitybookings.sync({
+  db1.otpDetails = require('./otpverification.models')(sequelize,DataTypes)
+  
+  db1.languageresources = require('./languageresources.models')(sequelize, DataTypes);
+  db1.languageresources.sync({
     force: false
   })
 

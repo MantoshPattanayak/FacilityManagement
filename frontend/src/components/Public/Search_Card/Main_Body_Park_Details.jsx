@@ -19,11 +19,16 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
 import PublicHeader from "../../../common/PublicHeader";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 const Main_Body_Park_Details = () => {
   // Use state ------------------------------------------------------------------
   const [DisPlayParkData, setDisPlayParkData] = useState([]);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
+  const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage.getItem('location')) || {
+    latitude: '', longitude: ''
+  });
   // fetch facility type id
   let location = useLocation();
   let facilityIdTypeFetch = decryptData(
@@ -44,6 +49,48 @@ const Main_Body_Park_Details = () => {
       setDisPlayParkData(res.data.data);
     } catch (err) {
       console.log("here Error of Park", err);
+    }
+  }
+
+  function setUserGeoLocation(location){
+    setUserLocation(location);
+    sessionStorage.setItem('location', JSON.stringify(location));
+    return;
+  }
+
+  async function getNearbyFacilities(e){
+    e.preventDefault();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserGeoLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Handle error, e.g., display a message to the user
+        }
+      );
+
+      try{
+        let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          facilityTypeId: facilityTypeId,
+          range: ''
+        });
+        console.log('Nearby park list', res.data.data);
+        setDisPlayParkData(res.data.data);
+      }
+      catch(error){
+        console.error(error);
+      }
+    } else {
+      console.error('Geolocation is not supported by this browser');
+      toast.error('Location permission not granted.')
+      // Handle case where Geolocation API is not supported
     }
   }
   // Function to handle setting facility type ID and updating search input value ---------------------------
@@ -73,7 +120,10 @@ const Main_Body_Park_Details = () => {
     // getAutoSuggest()
   }, [givenReq, facilityTypeId]);
 
+  useEffect(() => {
 
+  }, [userLocation]);
+ 
   //Return here------------------------------------------------------------------------------------------------------------
   return (
     <div className="main__body__park">
@@ -148,7 +198,7 @@ const Main_Body_Park_Details = () => {
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
         <div className="filter_button">
-          <button class="button-59" role="button">
+          <button class="button-59" role="button" onClick={getNearbyFacilities}>
             NearBy
           </button>
           <button class="button-59" role="button">
@@ -210,10 +260,10 @@ const Main_Body_Park_Details = () => {
                           : "text-red-500"
                       }`}
                     >
-                      {item.status.charAt(0).toUpperCase() +
-                        item.status.slice(1)}
+                      {item.status?.charAt(0).toUpperCase() +
+                        item.status?.slice(1)}
                     </button>
-                    <h3 className="distance">30KM</h3>
+                    <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
                   </span>
                 </div>
               </div>
