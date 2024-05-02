@@ -26,7 +26,9 @@ const Main_Body_Park_Details = () => {
   const [givenReq, setGivenReq] = useState("");
   // fetch facility type id
   let location = useLocation();
-  let facilityType = new URLSearchParams(location.search);
+  let facilityIdTypeFetch = decryptData(
+    new URLSearchParams(location.search).get("facilityTypeId")
+  );
   // for Faciltiy ----------------------------------------------------------------
   const [facilityTypeId, setFacilityTypeId] = useState(1);
   // Use Navigate for Navigate the page ----------------------------------------------
@@ -38,7 +40,6 @@ const Main_Body_Park_Details = () => {
         givenReq: givenReq,
         facilityTypeId: facilityTypeId,
       });
-      setFacilityTypeId(facilityTypeId);
       console.log("here Response of Park", res);
       setDisPlayParkData(res.data.data);
     } catch (err) {
@@ -72,14 +73,6 @@ const Main_Body_Park_Details = () => {
     // getAutoSuggest()
   }, [givenReq, facilityTypeId]);
 
-  useEffect(() => {
-    let facilityIdTypeFetch = decryptData(
-      new URLSearchParams(location.search).get("facilityTypeId")
-    );
-    console.log("facilityIdTypeFetch", facilityIdTypeFetch);
-    // setFacilityTypeId(facilityIdTypeFetch);
-    // console.log(facilityTypeId);
-  }, []);
 
   //Return here------------------------------------------------------------------------------------------------------------
   return (

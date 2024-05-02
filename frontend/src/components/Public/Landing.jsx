@@ -1,64 +1,64 @@
-import "./Landing.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useRef } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
-import axiosHttpClient from "../../utils/axios";
+import './Landing.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect, useRef } from 'react';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import axiosHttpClient from '../../utils/axios';
 import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
 import mp_ground_logo from "../../assets/multipurpose-ground-logo.png";
-import galleryImg from "../../assets/gallery1.png";
-import adImg from "../../assets/ad.png";
-import Footer from "../../common/Footer.jsx";
+import galleryImg from "../../assets/gallery1.png"
+import adImg from "../../assets/ad.png"
+import Footer from "../../common/Footer.jsx"
 import badminton from "../../assets/explore new activity badminton.png";
-import { faBookmark } from "@fortawesome/free-regular-svg-icons";
-import PublicHeader from "../../common/PublicHeader.jsx";
-import CommonFooter from "../../common/CommonFooter.jsx";
+import { faBookmark } from '@fortawesome/free-regular-svg-icons';
+import PublicHeader from '../../common/PublicHeader.jsx';
+
 
 // Location icon and image all types of image---------------------------------------------
 // import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
 // import Park_img from "../../../assets/park_img1.jpg"
 import Yoga_img from "../../assets/Yoga_img.png";
-import greenway from "../../assets/Greenway.png";
-import Blueway from "../../assets/blueways.png";
+import greenway from "../../assets/Greenway.png"
+import Blueway from "../../assets/blueways.png"
 
 // import blueWays_logo from "../../assets/ama_bhoomi_blueways_logo.jpeg";
 // import greenWays_logo from "../../assets/ama_bhoomi_greenways.jpeg";
 // import here encpty js ----------------------------------
 // Import here to encrptData ------------------------------------------
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 // import { encryptData } from "../../../utils/encryptData"
-import { encryptData } from "../../utils/encryptData";
+import { encryptData } from '../../utils/encryptData';
 
 const Landing = () => {
-  const [mapdata, setmapdata] = useState([]);
+  const [mapdata, setmapdata] = useState([])
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
   const [givenReq, setGivenReq] = useState(null);
   const [facilityTypeId, setFacilityTypeId] = useState(1);
-  const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
+  const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
 
   // here Fetch the data -----------------------------------------------
   async function fecthMapData() {
     try {
-      let res = await axiosHttpClient("View_Park_Data", "post", {
+      let res = await axiosHttpClient('View_Park_Data', 'post', {
         givenReq: givenReq,
-        facilityTypeId: facilityTypeId,
+        facilityTypeId: facilityTypeId
       });
 
-      console.log("here get data", res);
-      setmapdata(res.data.data);
-    } catch (err) {
-      console.log(" here error", err);
+      console.log("here get data", res)
+      setmapdata(res.data.data)
+
+    }
+    catch (err) {
+      console.log(" here error", err)
     }
   }
+
+
+
 
   // Handle Chnage ----------------------------------------------------------------
   function handleChange(e) {
@@ -70,16 +70,18 @@ const Landing = () => {
     }
   }
   // Function to handle marker click ---------------------------------------------------
-  const handleMarkerClick = (parkId) => {
-    setSelectedParkId(parkId); // Set selected parkId
-    const location = mapdata.find((location) => location.parkId === parkId);
+  const handleMarkerClick = (facilityId) => {
+    setSelectedParkId(facilityId); // Set selected parkId
+    const location = mapdata.find(location => location.facilityId === facilityId);
     setSelectedLocationDetails(location); // Set selected location details
+    console.log(location);
   };
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (typeid) => {
-    setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
-    console.log("here type id", typeid);
-    fecthMapData();
+    setFacilityTypeId(typeid) // Set facility ex typeid-1,typeid-2,typeid-3
+    console.log("here type id", typeid)
+    fecthMapData()
+
   };
   // here Handle for encrpt the data------------------------------------------
   // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
@@ -90,10 +92,10 @@ const Landing = () => {
 
   // here Update the data-----------------------------------------------
   useEffect(() => {
-    fecthMapData();
-  }, [givenReq, facilityTypeId]);
+    fecthMapData()
+  }, [givenReq, facilityTypeId])
 
-  //for event Cards
+//for event Cards
   const containerRef = useRef(null);
 
   // --------------Explore new Activities-------------------------------------------------------------
@@ -102,58 +104,47 @@ const Landing = () => {
 
   const exploreNewActivies = [
     {
-      game: "Tennis",
-      parks: [
-        "Buddha JAyanti Park",
-        "Buddha JAyanti Park",
-        "Buddha JAyanti Park",
-        "Buddha JAyanti Park",
-      ],
+      game: 'Tennis',
+      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Buddha JAyanti Park', 'Buddha JAyanti Park']
     },
     {
-      game: "Cricket",
-      parks: ["Buddha JAyanti Park", "Buddha JAyanti Park", "IG Park"],
+      game: 'Cricket',
+      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'IG Park']
     },
     {
-      game: "Football",
-      parks: ["Buddha JAyanti Park", "Buddha JAyanti Park", "Gopabandhu Park"],
+      game: 'Football',
+      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Gopabandhu Park']
     },
     {
-      game: "Yoga",
-      parks: ["Buddha JAyanti Park"],
-    },
+      game: 'Yoga',
+      parks: ['Buddha JAyanti Park']
+    }
   ];
 
   const handleGameClick = (index) => {
     setSelectedActivity(index === selectedActivity ? null : index);
   };
 
+
+
   return (
-    <div className="landingcontainer">
+    <div className='landingcontainer'>
       <section className="bg-img">
         <PublicHeader />
 
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
 
-        <div className="landing-page_contant">
-          <span className="Search-Conatiner">
+        <div className='landing-page_contant'>
+          <span className='Search-Conatiner'>
             <h1>AMA BHOOMI</h1>
-            <span className="about">
-              <p className="about_text">
-                Ama Bhoomi stands for Assuring mass Access through BHubaneswar
-                Open Spaces <br></br>and Ownership Management Initiative.{" "}
-              </p>
+            <span className='about'>
+              <p className='about_text'>Ama Bhoomi stands for Assuring mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
             </span>
-            <h2 className="typing-animation">
-              Explore, Book and Enjoy Open Spaces{" "}
-            </h2>
-            <input
-              className="search-bar"
-              type="text"
-              name="search"
-              placeholder="Search by Name and Location"
-            ></input>
+            <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
+            <input className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
+
           </span>
+
         </div>
       </section>
 
@@ -163,8 +154,8 @@ const Landing = () => {
         <div className="logos">
           <Link
             to={{
-              pathname: "/facilities",
-              search: `?facilityTypeId=${encryptDataId(1)}`,
+              pathname: '/facilities',
+              search: `?facilityTypeId=${encryptDataId(1)}`
             }}
           >
             <div className="icon">
@@ -173,10 +164,11 @@ const Landing = () => {
             </div>
           </Link>
 
+
           <Link
             to={{
-              pathname: "/facilities",
-              search: `?facilityTypeId=${encryptDataId(2)}`,
+              pathname: '/facilities',
+              search: `?facilityTypeId=${encryptDataId(2)}`
             }}
           >
             <div className="icon">
@@ -186,8 +178,8 @@ const Landing = () => {
           </Link>
           <Link
             to={{
-              pathname: "/facilities",
-              search: `?facilityTypeId=${encryptDataId(3)}`,
+              pathname: '/facilities',
+              search: `?facilityTypeId=${encryptDataId(3)}`
             }}
           >
             <div className="icon">
@@ -207,64 +199,71 @@ const Landing = () => {
         </div>
       </div>
 
+
       {/* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/}
 
       <div className="map-parentContainer">
+
         {/* --------//google map ------------------------------------------------------------------------------- */}
 
         <section className="map-container2">
-          <div className="map-bar">
+          <div className='map-bar'>
             <div className="map-icons">
               <div class="icon1">
                 <button onClick={() => handleParkLogoClick(1)}>
                   <img src={park_logo} alt="" />
-                  <h2 className="text1">Parks</h2>
+                  <h2 className='text1'>Parks</h2>
                 </button>
+
               </div>
               <div class="icon1">
                 <button onClick={() => handleParkLogoClick(2)}>
                   <img src={playground_logo} alt="" />
-                  <h2 className="text1">Playgrounds</h2>
+                  <h2 className='text1'>Playgrounds</h2>
                 </button>
+
               </div>
               <div class="icon1">
                 <button onClick={() => handleParkLogoClick(3)}>
                   <img src={mp_ground_logo} alt="" />
-                  <h2 className="text1">Multipurpose Grounds</h2>
+                  <h2 className='text1'>Multipurpose Grounds</h2>
                 </button>
+
               </div>
               <div class="icon1">
                 <button onClick={() => handleParkLogoClick(4)}>
                   <img src={greenway} alt="" />
-                  <h2 className="text1">Greenways</h2>
+                  <h2 className='text1'>Greenways</h2>
                 </button>
+
               </div>
               <div class="icon1">
                 <button onClick={() => handleParkLogoClick(5)}>
                   <img src={Blueway} alt="" />
-                  <h2 className="text1">Waterways</h2>
+                  <h2 className='text1'>Waterways</h2>
                 </button>
+
               </div>
             </div>
 
+
             <div className="mapSearchButton">
-              <input
-                type="text"
-                placeholder="Please Enter the Location "
+              <input type='text' placeholder='Please Enter the Location '
                 name="givenReq"
                 id="givenReq"
                 value={givenReq}
                 onChange={handleChange}
               ></input>
-              <button type="button" onClick={fecthMapData}>
+              <button type='button' onClick={fecthMapData}>
                 <FontAwesomeIcon icon={faSearch} className="os-icon" />
               </button>
             </div>
+
           </div>
 
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
-              mapContainerStyle={{ height: "400px", width: "100%" }}
+              mapContainerStyle={{ height: '400px', width: '100%' }}
               center={defaultCenter}
               zoom={12}
             >
@@ -273,7 +272,7 @@ const Landing = () => {
                 <Marker
                   key={index}
                   position={{ lat: location.latitude, lng: location.longitude }}
-                  onClick={() => handleMarkerClick(location.parkId)} // Call handleMarkerClick function with parkId when marker is clicked
+                  onClick={() => handleMarkerClick(location.facilityId)} // Call handleMarkerClick function with parkId when marker is clicked
                 />
               ))}
 
@@ -281,27 +280,22 @@ const Landing = () => {
               {selectedLocationDetails && (
                 <InfoWindow
                   key={randomKey}
-                  position={{
-                    lat: selectedLocationDetails.latitude,
-                    lng: selectedLocationDetails.longitude,
-                  }} // Position the InfoWindow at the selected location
-                  onCloseClick={() => {
-                    setSelectedParkId(null);
-                    setSelectedLocationDetails(null);
-                  }}
+                  position={{ lat: selectedLocationDetails.latitude, lng: selectedLocationDetails.longitude }} // Position the InfoWindow at the selected location
+                  onCloseClick={() => { setSelectedParkId(null); setSelectedLocationDetails(null) }}
                 >
-                  {selectedParkId ? (
-                    <div>
-                      <h3>Park Name:{selectedLocationDetails.parkName}</h3>
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  {
+                    selectedParkId ?
+                      <div>
+                        <h3>Park Name:{selectedLocationDetails.facilityname}</h3>
+                      </div>
+                      : ''
+                  }
                 </InfoWindow>
               )}
             </GoogleMap>
           </LoadScript>
         </section>
+
 
         {/* --------Facilities Near me----------------------------------------------------- */}
 
@@ -343,13 +337,11 @@ const Landing = () => {
       <div className="notice2">
         <div class="notice2-container">
           <span>Whats New</span>
-          <marquee behavior="" direction="left">
-            Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will
-            inaugurate a new open park at Old Town, "Join us for the grand
-            opening of our new park! "{" "}
-          </marquee>
+          <marquee behavior="" direction="left">Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will inaugurate a new open park at Old Town,
+            "Join us for the grand opening of our new park! "  </marquee>
         </div>
       </div>
+
 
       {/* ------Event details card-------------------------------------------------------------------- */}
 
@@ -361,7 +353,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -375,7 +367,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -389,7 +381,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -403,7 +395,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -417,7 +409,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -431,7 +423,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -445,7 +437,7 @@ const Landing = () => {
               <img className="Yoga_image" src={Yoga_img}></img>
               <div className="carousel-slide-text">
                 <h1 className="Name_yoga">National Yoga Day Celebration</h1>
-                <div className="carousel-slide-location">
+                <div className='carousel-slide-location'>
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                   <h1>Buddha jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
                 </div>
@@ -456,6 +448,7 @@ const Landing = () => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -466,15 +459,16 @@ const Landing = () => {
           <div className="whiteHeader"></div>
           <h1>Explore New Activities</h1>
         </div>
-        <div className="exploreNewAct-outer">
+        <div className='exploreNewAct-outer'>
+
+
+
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
             {exploreNewActivies.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${
-                  selectedActivity === index ? "selected" : ""
-                }`}
+                className={`activity ${selectedActivity === index ? 'selected' : ''}`}
                 onClick={() => handleGameClick(index)} // Set selected activity on click
               >
                 {activity.game}
@@ -482,28 +476,29 @@ const Landing = () => {
             ))}
           </div>
           <div className="image-secondDiv">
-            <img className="h-80" src={badminton} alt="" />
+            <img className='h-80' src={badminton} alt="" />
             <div className="exploreNewAct-secondDiv">
-              {exploreNewActivies.map(
-                (activity, index) =>
-                  selectedActivity === index && (
-                    <div className="parkList" key={index}>
-                      {activity.parks.map((park, idx) => (
-                        <div className="parkItem" key={idx}>
-                          <p>{park}</p>
-                          <button className="bookButton">Book</button>
-                          <FontAwesomeIcon
-                            icon={faBookmark}
-                            className="bookmarkIcon"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )
-              )}
+              {exploreNewActivies.map((activity, index) => (
+                selectedActivity === index && (
+                  <div className="parkList" key={index}>
+                    {activity.parks.map((park, idx) => (
+                      <div className="parkItem" key={idx}>
+                        <p>{park}</p>
+                        <button className="bookButton">Book</button>
+                        <FontAwesomeIcon icon={faBookmark} className="bookmarkIcon" />
+                      </div>
+                    ))}
+                  </div>
+                )
+              ))}
             </div>
           </div>
+
+
+
+
         </div>
+
       </div>
 
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
@@ -512,57 +507,52 @@ const Landing = () => {
         <h1 className="Service_text">Gallery</h1>
         <div className="Sub_Park_Details">
           <div className="carousel-container">
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
 
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
 
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
 
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
 
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
 
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
 
-            <div className="carousel-slide3">
-              <div className="overlay">
-                <img className="Gallery_image" src={galleryImg}></img>
-                <div class="overlay-text">Your text description here</div>
-              </div>
+            <div className="carousel-slide3"><div className="overlay">
+              <img className="Gallery_image" src={galleryImg} ></img>
+              <div class="overlay-text">Your text description here</div>
+            </div>
             </div>
           </div>
         </div>
       </div>
+
+
 
       {/* ------------Avatisement section -------------------------------------------------------------------------------------*/}
 
@@ -572,11 +562,13 @@ const Landing = () => {
         </div>
       </div>
 
+
       <div className="footer">
-        <CommonFooter />
+        <Footer />
       </div>
+
     </div>
-  );
-};
+  )
+}
 
 export default Landing;
