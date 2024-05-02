@@ -17,45 +17,56 @@ const CommonFooter = () => {
           <div className="app-download">
             <p><a href="">Download the App</a> </p><br /><br />
             <div className="phone-input">
-              <input type="text" className='input-field-link' placeholder="Enter phone number to receive the link" icon={<FontAwesomeIcon icon={faArrowRight} />} />
+
+              <div className="input-with-icon">
+                <input
+                  type="text"
+                  className="input-field-link"
+                  placeholder="Enter phone number to receive the link"
+                />
+                 <FontAwesomeIcon icon={faArrowRight} className="input-icon" />
+              </div>
             </div>
+
             <div className="app-store-icons">
               <img src={playstoreIMG} alt="App Store" />
               <img src={appstoreIMG} alt="Google Play Store" />
             </div>
           </div>
-
         </div>
+
+        <div className="right-section">
         <div class="middle-section">
           <ul>
-            <li>Resources</li>
-            <li>Contact</li>
-            <li>Partner with us</li>
-            <li>Grievance</li>
-            <li>Feedback</li>
-            <li>twitter</li>
-            <li>facebook</li>
+            <li><a href="#"> Resources</a></li>
+            <li><a href="#">Contact</a></li>
+            <li> <a href="#">Partner with us</a> </li>
+            <li> <a href="#"> Grievance</a></li>
+            <li> <a href="#">Feedback</a> </li>
+            <li> <a href="#">twitter</a> </li>
+            <li> <a href="#">facebook</a> </li>
           </ul>
         </div>
         <div class="middle-right-section">
           <ul>
-            <li>Resources</li>
-            <li>Contact</li>
-            <li>Partner with us</li>
-            <li>Grievance</li>
-            <li>Feedback</li>
+            <li> <a href="#">Resources</a> </li>
+            <li> <a href="#">Contact</a> </li>
+            <li> <a href="#">Partner with us</a> </li>
+            <li> <a href="#">Grievance</a> </li>
+            <li> <a href="#">Feedback</a> </li>
           </ul>
         </div>
         <div class="last-right-section">
           <ul>
-            <li>Help and support</li>
-            <li>social</li>
-            <li>twitter</li>
-            <li>facebook</li>
-            <li>Feedback</li>
-            <li>Instagram</li>
-            <li>whatsapp</li>
+            <li> <a href="#">Help and support</a> </li>
+            <li> <a href="#"> social</a></li>
+            <li> <a href="#">twitter</a> </li>
+            <li> <a href="#">facebook</a> </li>
+            <li> <a href="#">Feedback</a> </li>
+            <li> <a href="#">Instagram</a> </li>
+            <li> <a href="#"> whatsapp</a></li>
           </ul>
+        </div>
         </div>
       </footer>
     </div>

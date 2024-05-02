@@ -231,13 +231,38 @@ body {
 
 .map-icons {
     display: flex;
-    width: 370px;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
 }
 
-.map-icons img {
-    height: 50px;
+.icon1 {
+    margin: 10px;
+    position: relative;
 }
+
+.text1{
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    
+    color: #013409;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.icon1 img {
+   height: 8vh;
+}
+
+.icon1:hover h2 {
+    opacity: 1;
+}
+
 
 .map-bar {
     display: flex;
@@ -361,7 +386,7 @@ body {
     display: inline-block;
     flex-shrink: 0;
     padding: 8px 20px;
-    background: #f00;
+    background: rgb(6, 63, 113);
     color: #fff;
     overflow: hidden;
     /* clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); */
@@ -517,6 +542,9 @@ body {
 
 }
 
+.badminton_img{
+    height: 20vh;
+}
 
 .image-secondDiv {
     /* background-image:linear-gradient(rgba(0, 0, 0, 0.2)), url(../../assets/explore\ new\ activity\ badminton.png); */
