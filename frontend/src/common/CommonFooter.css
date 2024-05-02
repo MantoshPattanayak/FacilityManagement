@@ -1,92 +1,151 @@
+
+.right-section {
+  width: 40%;
+    display: flex;
+    justify-content: center;
+}
+
+.middle-section,
+.middle-right-section,
+.last-right-section {
+  width: 30%; 
+}
+.middle-section,
+.middle-right-section,
+.last-right-section ul li{
+  font-size: large;
+  font-weight: 400;
+  padding:0 ;
+  margin: 5px;
+}
+.middle-section,
+.middle-right-section,
+.last-right-section ul{
+  margin: 20px;
+}
+
 .footer-container {
-    background-color: #f2f2f2;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .left-section {
-    width: 60%;
-  }
-  
+  background-color: #f2f2f2;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap when container becomes too small */
+  justify-content: space-between;
+}
+
+.left-section {
+  width: 60%;
+}
+
+
+/* Media query for screens below 800px */
+@media screen and (max-width: 800px) {
   .ama-bhoomi-info h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
+    font-size: 30px;
   }
-  .app-download p{
-    margin-top: 10px;
-    font-size: large;
-    font-weight: 500;
-    float: left;
+  .left-section,
+  .right-section {
+    width: 100%;
   }
-  .app-download input[type="text"] {
-    width: 50%;
-    height: 30px;
-    margin-top: 10px;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    /* float: left; */
+  .right-section {
+    order: 3; /* Change the order of the section to display below the left section */
   }
-  .app-store-icons img {
+  .right-section{
+   
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px;
-  }
-  
-  .last-right-section  .middle-section ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .last-right-section  .middle-section ul li {
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #333;
   }
 
-  .middle-section ul li {
-    text-align: center;
-    color: #333;
+  .middle-section,
+  .middle-right-section,
+  .last-right-section {
+    width: 100%;
   }
-  
-  .last-right-section ul li {
-    text-align: right;
-  }
-  
+  .middle-section,
+.middle-right-section,
+.last-right-section ul li{
+font-size: large;
+}
+
+}
+
+.ama-bhoomi-info h1 {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+.app-download p {
+  margin-top: 10px;
+  font-size: large;
+  font-weight: 500;
+  float: left;
+}
+
+.app-download input[type="text"] {
+  width: 50%;
+  height: 30px;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.app-store-icons img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+}
+
+.last-right-section .middle-section .middle-right-section ul {
+  list-style-type: none;
+  padding: 10;
+}
+
+.last-right-section .middle-section .middle-right-section ul li {
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+.last-right-section .middle-section .middle-right-section ul li a:hover {
+  color: black;
+  transition: 0.3s;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.middle-section ul li {
+  text-align: center;
+}
+
+.last-right-section ul li {
+  text-align: right;
+}
+
 .middle-right-section {
-    width: 15%;
-    text-align: center;
-  }
-  
-  .middle-right-section ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .middle-right-section ul li {
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #333;
-  }
-  .app-store-icons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    float: left;
-    margin-top: 28px;
-  }
-  
-  .app-store-icons img {
-    width: 100px;
-    margin-right: 10px; 
-  }
-  
+  width: 15%;
+  text-align: center;
+}
 
-  @media screen and (max-width:651px) {
-    .left-section{
-        width: 100%;
-    }
-    
-  }
+.middle-right-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.middle-right-section ul li {
+  margin-bottom: 5px;
+  /* font-size: 14px; */
+}
+
+.app-store-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+  margin-top: 28px;
+}
+
+.app-store-icons img {
+  width: 100px;
+  margin-right: 10px;
+}
