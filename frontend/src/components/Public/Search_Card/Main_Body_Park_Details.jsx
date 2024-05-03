@@ -19,11 +19,16 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
 import PublicHeader from "../../../common/PublicHeader";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 const Main_Body_Park_Details = () => {
   // Use state ------------------------------------------------------------------
   const [DisPlayParkData, setDisPlayParkData] = useState([]);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
+  const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
+    latitude: "", longitude: ""
+  });
   // fetch facility type id
   let location = useLocation();
   let facilityIdTypeFetch = decryptData(
@@ -31,6 +36,8 @@ const Main_Body_Park_Details = () => {
   );
   // for Faciltiy ----------------------------------------------------------------
   const [facilityTypeId, setFacilityTypeId] = useState(1);
+  const [selectedTab, setSelectedTab] = useState('');
+  const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
   //Here (Post the data)----------------------------------------------------------------
@@ -46,11 +53,80 @@ const Main_Body_Park_Details = () => {
       console.log("here Error of Park", err);
     }
   }
+
+  // Function to handle selectedTab button click
+  const handleTabClick = (e, tab) => {
+    // Toggle game selection
+    if (selectedTab != tab) {
+      setSelectedTab(tab);
+      // if(tab == 'Nearby') {
+        getNearbyFacilities(e);
+      // }
+    }
+    else if(selectedTab == tab) {   // if same tab selected, then clear tab selection, and show default facility data
+      setSelectedTab('');
+      GetParkDetails();
+    } 
+    else {
+      // continue
+    }
+    console.log('selectedTab', selectedTab);
+  }
+
+  function setUserGeoLocation(location){
+    setUserLocation(location);
+    sessionStorage.setItem('location', JSON.stringify(location));
+    return;
+  }
+
+  async function getNearbyFacilities(e){
+    e?.preventDefault();
+    console.log('nearby facilities', userLocation);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserGeoLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Handle error, e.g., display a message to the user
+        }
+      );
+
+      try{
+        let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          facilityTypeId: facilityTypeId,
+          range: ''
+        });
+        console.log('Nearby park list', res.data.data);
+        setDisPlayParkData(res.data.data);
+      }
+      catch(error){
+        console.error(error);
+        toast.error('Location permission not granted.')
+      }
+    } else {
+      console.error('Geolocation is not supported by this browser');
+      toast.error('Location permission not granted.')
+      // Handle case where Geolocation API is not supported
+    }
+  }
+
   // Function to handle setting facility type ID and updating search input value ---------------------------
-  const handleParkLogoClick = (typeid) => {
+  const handleParkLogoClick = (e, typeid) => {
     setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
-    console.log("here type id", typeid);
-    GetParkDetails();
+    console.log("here type id, selectedTab", {typeid, selectedTab});
+    if(!selectedTab){
+      GetParkDetails();
+    }
+    else{
+      getNearbyFacilities(e);
+    }
   };
   // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
@@ -69,11 +145,25 @@ const Main_Body_Park_Details = () => {
   // }
   // useEffect for Update the data (Call the Api) ------------------------------------------------
   useEffect(() => {
-    GetParkDetails();
+    if(selectedTab == '' || selectedTab == null){
+      console.log('facilityTypeId useeffect - tab not selected! call getParkDetails()');
+      GetParkDetails();
+    }
+    else{
+      getNearbyFacilities();
+      console.log('facilityTypeId useeffect - tab selected... not call getNearbyFacilities()');
+    }
     // getAutoSuggest()
   }, [givenReq, facilityTypeId]);
 
+  // useEffect(() => {
+  //   GetParkDetails();
+  // }, [])
 
+  useEffect(() => {
+    console.log('selectedTab useeffect - tab selected... not call getParkDetails()');
+  }, [userLocation, selectedTab]);
+ 
   //Return here------------------------------------------------------------------------------------------------------------
   return (
     <div className="main__body__park">
@@ -119,7 +209,7 @@ const Main_Body_Park_Details = () => {
         <span className="Button_Container">
           {/* Park */}
           <button
-            onClick={() => handleParkLogoClick(1)}
+            onClick={(e) => handleParkLogoClick(e, 1)}
             className="image-button"
           >
             <img className="h-14" src={Event_img} alt="Event" />
@@ -128,7 +218,7 @@ const Main_Body_Park_Details = () => {
 
           {/* Sports */}
           <button
-            onClick={() => handleParkLogoClick(2)}
+            onClick={(e) => handleParkLogoClick(e, 2)}
             className="image-button"
           >
             <img className="h-14" src={Park_Logo} alt="Sports" />
@@ -137,7 +227,7 @@ const Main_Body_Park_Details = () => {
 
           {/* Multipark */}
           <button
-            onClick={() => handleParkLogoClick(3)}
+            onClick={(e) => handleParkLogoClick(e, 3)}
             className="image-button"
           >
             <img className="h-14" src={MultiPark} alt="Multipark" />
@@ -148,7 +238,16 @@ const Main_Body_Park_Details = () => {
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
         <div className="filter_button">
-          <button class="button-59" role="button">
+          {
+            tabList?.length > 0 && tabList?.map((tab) => {
+              return (
+                <button className={`button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => {handleTabClick(e, tab)}}>
+                  {tab}
+                </button>
+              )
+            })
+          }
+          {/* <button class="button-59" role="button" onClick={(e) => {getNearbyFacilities(e); handleTabClick()}}>
             NearBy
           </button>
           <button class="button-59" role="button">
@@ -159,7 +258,7 @@ const Main_Body_Park_Details = () => {
           </button>
           <button class="button-59" role="button">
             Paid
-          </button>
+          </button> */}
         </div>
         <div className="gride_page"></div>
       </div>
@@ -210,10 +309,10 @@ const Main_Body_Park_Details = () => {
                           : "text-red-500"
                       }`}
                     >
-                      {item.status.charAt(0).toUpperCase() +
-                        item.status.slice(1)}
+                      {item.status?.charAt(0).toUpperCase() +
+                        item.status?.slice(1)}
                     </button>
-                    <h3 className="distance">30KM</h3>
+                    <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
                   </span>
                 </div>
               </div>

@@ -32,7 +32,7 @@ const Login = () => {
     const errors = validation(LogingDataPost);
     console.log(errors);
     sessionStorage.setItem("isUserLoggedIn", 1);
-    navigate(redirect + `?facilityId=${facilityId}`);
+    redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
 
     if (Object.keys(errors).length === 0) {
       try {

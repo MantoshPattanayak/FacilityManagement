@@ -80,7 +80,7 @@ body {
 }
 
 .bg-img {
-    background-image: linear-gradient(to right, #131514b5 30%, transparent), url('../Public/ama_bhoomi_bgi.jpg');
+    background-image: linear-gradient(to right, #010101b5 20%, transparent), url('../Public/ama_bhoomi_bgi.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     /* position: relative; */
@@ -115,8 +115,8 @@ body {
 .Search-Conatiner h1 {
     font-weight: bold;
     font-size: 50px;
-    font-family: poppins;
-    color: #5ECA76;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1bc33f;
 }
 
 .Search-Conatiner p {
@@ -181,11 +181,13 @@ body {
 .logo-section {
     background-color: #002009fa;
     width: 100vw;
+    height: 18vh;
 }
 
 .icon img {
-    width: 94px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
+   
 }
 
 .logo-section {
@@ -233,6 +235,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 13vh;
 }
 
 .icon1 {
@@ -242,7 +245,7 @@ body {
 
 .text1{
     position: absolute;
-    top: 90%;
+    top: 95%;
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
@@ -272,24 +275,25 @@ body {
 }
 
 .mapSearchButton input {
-    border: 1px solid gray;
+    border: 1px solid rgb(2, 54, 145);
     width: 264px;
     height: 43px;
     padding: 12px;
-    border-radius: 6px;
+
 }
 
 .mapSearchButton button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #016694;
     color: white;
     border: none;
-    border-radius: 5px;
+
     cursor: pointer;
 }
 
 .mapSearchButton button:hover {
-    background-color: #0056b3;
+    background-color: #003a69;
+    border: 1px solid rgb(0, 33, 91);
 }
 
 .mapSearchButton {
@@ -401,130 +405,6 @@ body {
 
 
 /* ------Event details card-------------------------------------------------------------------- */
-
-/* Newlyadded 
-.carousel-slide-location
-.carousel-slide-location h1 */
-
-.Event_Available_main_conatiner {
-    padding: 40px;
-    width: 94%;
-}
-
-.Sub_Park_Details {
-    overflow: hidden;
-    /* Hide overflow to prevent horizontal scrollbar */
-}
-
-.carousel-container {
-    display: flex;
-    overflow-x: auto;
-    /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory;
-    /* Snap to each slide */
-    scroll-behavior: smooth;
-    /* Smooth scrolling effect */
-    width: 100%;
-    /* Full width */
-    height: auto;
-    /* Full height */
-    padding: 20px;
-}
-
-.carousel-slide2 {
-    max-width: 284px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    flex: 0 0 30%;
-    /* Each slide takes up 30% of the container width */
-    width: 20%;
-    /* Each slide takes up 30% of the container width */
-    height: 100%;
-    /* Each slide takes up full height of the container */
-    scroll-snap-align: start;
-    /* Align slides to the start of the container */
-    width: 5vw;
-    height: auto;
-    padding-block: 10px;
-
-    align-items: center;
-    border: 2px solid rgb(1, 129, 16);
-    margin: 0 5px;
-    /* Space between boxes */
-    background-color: #E0F8E5;
-    border-radius: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    /* Add shadow effect */
-    transition: background-color 0.3s ease;
-}
-
-.carousel-slide:hover {
-    background-color: #fff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    /* Add shadow effect */
-    transition: background-color 0.3s ease;
-    border: 1px solid rgb(11, 11, 11);
-
-}
-
-.Yoga_image {
-    width: 252px;
-    height: 150px;
-    border-radius: 8px;
-}
-
-.carousel-slide-text {
-    display: flex;
-    flex-direction: column;
-    width: 252px;
-    height: auto;
-    gap: 4px;
-    justify-content: flex-start;
-}
-
-.Name_yoga {
-    font-size: 16px;
-    color: #019f13;
-    font-weight: 600;
-    max-width: 252;
-    /* Limiting the width */
-    word-wrap: break-word;
-}
-
-.carousel-slide-location {
-    display: flex;
-    width: 252px;
-    justify-content: space-between;
-}
-
-.carousel-slide-location h1 {
-    width: 230px;
-    font-size: 12px;
-    font-weight: 400;
-    white-space: nowrap;
-    /* Prevent text from wrapping */
-    overflow: hidden;
-    /* Hide any overflow */
-    text-overflow: ellipsis;
-}
-
-.Yoga_date_time {
-    width: 252px;
-    justify-content: space-between;
-    padding: 4px;
-}
-
-.Yoga_date {
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.Yoga_time {
-    font-size: 12px;
-    font-weight: 600;
-}
 
 
 
@@ -718,107 +598,14 @@ body {
 
 
 /*----------------------------------- Gallery section------------------------------------------------------------------------------------------------------- */
-
-.carousel-slide3 {
-    max-width: 284px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    flex: 0 0 30%;
-    /* Each slide takes up 30% of the container width */
-    width: 20%;
-    /* Each slide takes up 30% of the container width */
-    height: 100%;
-    /* Each slide takes up full height of the container */
-    scroll-snap-align: start;
-    /* Align slides to the start of the container */
-    width: 5vw;
-    height: auto;
-    padding-block: 10px;
-
-    align-items: center;
-    margin: 0 5px;
-    transition: background-color 0.3s ease;
+/* Custom CSS for slick carousel arrows */
+/* Custom CSS for slick carousel arrows */
+.slick-prev:before,
+.slick-next:before {
+  font-size: 90px; /* Change the font size to your desired size */
+  color: blue; /* Change the color to your desired color */
+  background-color: red;
 }
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 9;
-    opacity: 100;
-    visibility: visible;
-    transition: all 0.35s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.65);
-}
-
-.carousel-slide3 .overlay {
-    position: relative;
-}
-
-.carousel-slide3 .overlay::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Adjust the transparency as needed */
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.carousel-slide3:hover .overlay::after {
-    opacity: 1;
-}
-
-.overlay-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.carousel-slide3:hover .overlay-text {
-    opacity: 1;
-}
-
-.Gallery_image {
-    width: 284px;
-    height: 200px;
-    border-radius: 8px;
-}
-
-/* .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    transition: all 0.35s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.65);
-} */
-
-
-
-.avatisement-Border {
-    width: 94%;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-block: 50px;
-    background-color: #002009;
-}
-
 
 
 

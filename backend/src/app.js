@@ -44,6 +44,7 @@ const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
 const razorPayPayment = require("./routes/api/" +api_version +"/payment/razorPayPayment");
 const booking = require("./routes/api/" + api_version + "/booking/booking");
+const languageContent = require("./routes/api/" + api_version + "/configuration/languageContent");
 
 console.log(port, "port");
 
@@ -85,6 +86,7 @@ app.use("/pulicUser", publicUser);
 
 app.use("/razorPayPayment",razorPayPayment);
 app.use('/booking', booking);
+app.use('/languageContent', languageContent);
 //  put all your route handlers here
 
 //activity routes
