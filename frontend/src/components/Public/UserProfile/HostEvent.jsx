@@ -1,6 +1,7 @@
 import './HostEvent.css'
 const HostEvent = () => {
-    return (<div>
+    return (
+    <div>
         <div className="HostEvent_container">
             <div className="HostEvent_Heading">
                 <div className="HeadingTitle9">
@@ -104,6 +105,7 @@ const HostEvent = () => {
                 <button className="approve-button">Proceed</button>
             </div>
         </div>
-    </div>)
+    </div>
+    )
 }
 export default HostEvent;

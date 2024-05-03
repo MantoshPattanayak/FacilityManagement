@@ -68,6 +68,7 @@ import Sub_Park_Details from "./components/Public/Search_Card/Sub_Park_Details";
 import PaymentHome from "./common/PaymentHome";
 import ParkPayment from "./common/ParkPayment";
 import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
+import HostEvent from "./components/Public/UserProfile/HostEvent";
 
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
@@ -84,6 +85,7 @@ function App() {
             {/* HOME */}
             <Route path="/" element={<Landing />}/>
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
+            <Route path="/Event_hostPage" element={<Event_hostPage />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
