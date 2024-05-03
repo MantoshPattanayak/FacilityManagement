@@ -336,7 +336,6 @@ let publicLogin = async(req,res)=>{
 
     let {encryptMobile:mobileNo,encryptEmail:emailId,encryptPassword:password}= req.body
 
-    let otp = req.body.otp?req.body.otp:null;
     let userAgent =  req.headers['user-agent'];
     let deviceInfo = parseUserAgent(userAgent)
 
@@ -583,39 +582,9 @@ let publicLogin = async(req,res)=>{
 
   
     else if(mobileNo && otp){
-      mobileNo = await decrypt(mobileNo)
-      let isUserExist;
-      let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
-      if(verifyOtp?.error=='Please render the signup page'){
+          mobileNo = await decrypt(mobileNo)
 
-        return res.status(statusCode.SUCCESS.code).json({
-          message:'please render the signup page'
-        })
-
-      }
-      if(verifyOtp?.error){
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:'Otp verification failed'
-        })
-      }
-
-      if(verifyOtp==null){
-
-        // check whether the credentials are valid or not 
-        // Finding one record
-        
-       isUserExist = await publicUser.findOne({
-        where: {
-          phoneNo:mobileNo
-        }
-        })
-      }
-
-        if(isUserExist){
-          const isPasswordSame = await bcrypt.compare(password, isPasswordSame.password);
-      
-
-            let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+          let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
 
             const options = {
               httpOnly: true,
@@ -664,11 +633,7 @@ let publicLogin = async(req,res)=>{
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
         .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
-          
-
-
-    }
-
+   
   }
 }
   catch(err){
