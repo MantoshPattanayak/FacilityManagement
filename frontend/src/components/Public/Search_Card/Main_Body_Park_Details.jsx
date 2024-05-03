@@ -26,8 +26,8 @@ const Main_Body_Park_Details = () => {
   const [DisPlayParkData, setDisPlayParkData] = useState([]);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
-  const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage.getItem('location')) || {
-    latitude: '', longitude: ''
+  const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
+    latitude: "", longitude: ""
   });
   // fetch facility type id
   let location = useLocation();
@@ -36,6 +36,8 @@ const Main_Body_Park_Details = () => {
   );
   // for Faciltiy ----------------------------------------------------------------
   const [facilityTypeId, setFacilityTypeId] = useState(1);
+  const [selectedTab, setSelectedTab] = useState('');
+  const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
   //Here (Post the data)----------------------------------------------------------------
@@ -52,6 +54,25 @@ const Main_Body_Park_Details = () => {
     }
   }
 
+  // Function to handle selectedTab button click
+  const handleTabClick = (e, tab) => {
+    // Toggle game selection
+    if (selectedTab != tab) {
+      setSelectedTab(tab);
+      // if(tab == 'Nearby') {
+        getNearbyFacilities(e);
+      // }
+    }
+    else if(selectedTab == tab) {   // if same tab selected, then clear tab selection, and show default facility data
+      setSelectedTab('');
+      GetParkDetails();
+    } 
+    else {
+      // continue
+    }
+    console.log('selectedTab', selectedTab);
+  }
+
   function setUserGeoLocation(location){
     setUserLocation(location);
     sessionStorage.setItem('location', JSON.stringify(location));
@@ -59,7 +80,8 @@ const Main_Body_Park_Details = () => {
   }
 
   async function getNearbyFacilities(e){
-    e.preventDefault();
+    e?.preventDefault();
+    console.log('nearby facilities', userLocation);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -86,6 +108,7 @@ const Main_Body_Park_Details = () => {
       }
       catch(error){
         console.error(error);
+        toast.error('Location permission not granted.')
       }
     } else {
       console.error('Geolocation is not supported by this browser');
@@ -93,11 +116,17 @@ const Main_Body_Park_Details = () => {
       // Handle case where Geolocation API is not supported
     }
   }
+
   // Function to handle setting facility type ID and updating search input value ---------------------------
-  const handleParkLogoClick = (typeid) => {
+  const handleParkLogoClick = (e, typeid) => {
     setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
-    console.log("here type id", typeid);
-    GetParkDetails();
+    console.log("here type id, selectedTab", {typeid, selectedTab});
+    if(!selectedTab){
+      GetParkDetails();
+    }
+    else{
+      getNearbyFacilities(e);
+    }
   };
   // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
@@ -116,13 +145,24 @@ const Main_Body_Park_Details = () => {
   // }
   // useEffect for Update the data (Call the Api) ------------------------------------------------
   useEffect(() => {
-    GetParkDetails();
+    if(selectedTab == '' || selectedTab == null){
+      console.log('facilityTypeId useeffect - tab not selected! call getParkDetails()');
+      GetParkDetails();
+    }
+    else{
+      getNearbyFacilities();
+      console.log('facilityTypeId useeffect - tab selected... not call getNearbyFacilities()');
+    }
     // getAutoSuggest()
   }, [givenReq, facilityTypeId]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   GetParkDetails();
+  // }, [])
 
-  }, [userLocation]);
+  useEffect(() => {
+    console.log('selectedTab useeffect - tab selected... not call getParkDetails()');
+  }, [userLocation, selectedTab]);
  
   //Return here------------------------------------------------------------------------------------------------------------
   return (
@@ -169,7 +209,7 @@ const Main_Body_Park_Details = () => {
         <span className="Button_Container">
           {/* Park */}
           <button
-            onClick={() => handleParkLogoClick(1)}
+            onClick={(e) => handleParkLogoClick(e, 1)}
             className="image-button"
           >
             <img className="h-14" src={Event_img} alt="Event" />
@@ -178,7 +218,7 @@ const Main_Body_Park_Details = () => {
 
           {/* Sports */}
           <button
-            onClick={() => handleParkLogoClick(2)}
+            onClick={(e) => handleParkLogoClick(e, 2)}
             className="image-button"
           >
             <img className="h-14" src={Park_Logo} alt="Sports" />
@@ -187,7 +227,7 @@ const Main_Body_Park_Details = () => {
 
           {/* Multipark */}
           <button
-            onClick={() => handleParkLogoClick(3)}
+            onClick={(e) => handleParkLogoClick(e, 3)}
             className="image-button"
           >
             <img className="h-14" src={MultiPark} alt="Multipark" />
@@ -198,7 +238,16 @@ const Main_Body_Park_Details = () => {
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
         <div className="filter_button">
-          <button class="button-59" role="button" onClick={getNearbyFacilities}>
+          {
+            tabList?.length > 0 && tabList?.map((tab) => {
+              return (
+                <button className={`button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => {handleTabClick(e, tab)}}>
+                  {tab}
+                </button>
+              )
+            })
+          }
+          {/* <button class="button-59" role="button" onClick={(e) => {getNearbyFacilities(e); handleTabClick()}}>
             NearBy
           </button>
           <button class="button-59" role="button">
@@ -209,7 +258,7 @@ const Main_Body_Park_Details = () => {
           </button>
           <button class="button-59" role="button">
             Paid
-          </button>
+          </button> */}
         </div>
         <div className="gride_page"></div>
       </div>

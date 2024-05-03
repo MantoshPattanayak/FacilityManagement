@@ -194,7 +194,7 @@ const Book_Now = () => {
 
           <div className="duration">
             <label htmlFor="">  Duration :</label>
-            <input type="text" name="durationInHours" value={formData.durationInHours} id="" className='input-field-date' onChange={handleChangeInput}/>
+            <input type="number" name="durationInHours" value={formData.durationInHours} id="" className='input-field-date' onChange={handleChangeInput}/>
           </div>
 
           {/* Add to cart button */}
