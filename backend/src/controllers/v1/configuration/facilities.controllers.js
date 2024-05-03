@@ -238,9 +238,10 @@ const nearByDataInMap = async(req,res)=>{
         let {latitude,longitude,facilityTypeId,range,popular,free,paid} = req.body;
         console.log('1',req.body)
         // here range is bydefault set to 10
-        range = range?range:10;
+        range = range?range:20;
         let fetchFacilitiesQuery;
         let fetchFacilities;
+        
         if(facilityTypeId){
 
         //     fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo',
@@ -267,11 +268,8 @@ const nearByDataInMap = async(req,res)=>{
                  
             }
             ) 
-        console.log(fetchFacilities,'fetchFacilities')
-        return res.status(statusCode.SUCCESS.code).json({
-            message:"These are the popular park details", data:fetchFacilities[0]
-        })
-    }
+       
+        }
         if(paid){
             
             fetchFacilitiesQuery =  `select count(ft.tariffMasterId)as paidDetails,f.facilityId, f.facilityname,f.facilityTypeId,case 
@@ -287,9 +285,7 @@ const nearByDataInMap = async(req,res)=>{
                      
                 }
                 )         
-                return res.status(statusCode.SUCCESS.code).json({
-                    message:"These are the paid park details", data:fetchFacilities[0]
-                })
+               
             }
         if(free){
             console.log('27')
@@ -319,11 +315,10 @@ const nearByDataInMap = async(req,res)=>{
                      
                 }
                 )         
-                return res.status(statusCode.SUCCESS.code).json({
-                    message:"These are the free park details", data:fetchFacilities[0]
-                })
+             
 
         }
+        if(!free && !paid && !popular){
         fetchFacilitiesQuery  = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
@@ -336,9 +331,7 @@ const nearByDataInMap = async(req,res)=>{
              
         }
         )
-        return res.status(statusCode.SUCCESS.code).json({
-            message:"These are the facilities details w.r.t. its type ", data:fetchFacilities[0]
-        })
+        }
         
     }
         else
@@ -358,9 +351,7 @@ const nearByDataInMap = async(req,res)=>{
                 }
                 ) 
             
-            return res.status(statusCode.SUCCESS.code).json({
-                message:"These are the popular park details", data:fetchFacilities[0]
-            })
+        
             }
             if(paid){
                 console.log('fd')
@@ -378,9 +369,7 @@ const nearByDataInMap = async(req,res)=>{
                          
                     }
                     )         
-                    return res.status(statusCode.SUCCESS.code).json({
-                        message:"These are the paid park details", data:fetchFacilities[0]
-                    })
+                 
                 }
             if(free){
                 console.log('f')
@@ -410,13 +399,12 @@ const nearByDataInMap = async(req,res)=>{
                          
                     }
                     )         
-                    return res.status(statusCode.SUCCESS.code).json({
-                        message:"These are the free park details", data:fetchFacilities[0]
-                    })
+                  
     
             }
 
             console.log('without facility type id')
+            if(!paid && !free && !popular){
              fetchFacilitiesQuery  = `select facilityId, facilityname,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
@@ -429,6 +417,7 @@ const nearByDataInMap = async(req,res)=>{
                
             }, 
         )
+    }
             // fetchFacilities = await facilitiesTable.findAll(
             //     {attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo',
             //     [
@@ -454,7 +443,7 @@ const nearByDataInMap = async(req,res)=>{
 
     //    console.log('get near by data',getNearByData)
        return res.status(statusCode.SUCCESS.code).json({
-        message:'These are the near by data', data:fetchFacilities[0]
+        message:'These are the near by data', data:getNearByData
        })
 
     } catch (err) {
