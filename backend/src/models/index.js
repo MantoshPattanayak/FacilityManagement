@@ -59,7 +59,7 @@ sequelize.authenticate()
   db1.otpDetails = require('./otpverification.models')(sequelize,DataTypes)
   
   db1.languageresources = require('./languageresources.models')(sequelize, DataTypes);
-  db1.languageresources.sync({
+  db1.otpDetails.sync({
     force: false
   })
 
