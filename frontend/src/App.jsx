@@ -71,6 +71,7 @@ import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
 
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
+import ShimmerUI from "./components/Public/Search_Card/ShimmerUI";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -84,8 +85,9 @@ function App() {
             <Route path="/" element={<Landing />}/>
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
+            <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
-            <Route path="/Event_hostPage" element={<Event_hostPage />} />
+          
             {/* Public (Book Parks)  */}
             <Route
               path="/BookParks/Book_Now"

@@ -59,16 +59,13 @@ const { request } = require("express");
 
 let generateOTPHandler = async (req,res)=> {
   try {
-    console.log('1')
+    console.log('1',req.body)
 
-    let {encryptedBody} = req.body
-    console.log('2',req.body)
-
-    let decrypt1 = await decrypt(encryptedBody)
-    console.log('3',decrypt1)
-    console.log(req.body.encryptedBody,'1',encryptedBody)
+    let {encryptMobile:mobileNo}=req.body
     let length=4
     let numberValue = '1234567890'
+    let expiryTime = new Date();
+    expiryTime = expiryTime.setMinutes(expiryTime.getMinutes() + 5);
 
     let otp="";
     for(let i=0;i<length;i++){
@@ -76,14 +73,34 @@ let generateOTPHandler = async (req,res)=> {
       otp += numberValue[otpIndex]
     }
 
+    if(mobileNo){
+ 
     // insert to otp verification table
-    
+    let insertToOtpTable = await otpCheck.create({
+      code:await encrypt(otp),
+      expiryTime:expiryTime,
+      verified:0,
+      mobileNo:mobileNo,
+      createdDt:new Date()
+    })
     // OTP generated successfully
+    if(insertToOtpTable){
+      return res.status(statusCode.SUCCESS.code).json({
+        message: 'otp generated successfully', otp:otp
+ })
+    }
+    else{
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: 'otp generation failed'
+ })
+    }
 
-    return res.status(statusCode.SUCCESS.code).json({
-            message: 'otp generated successfully', otp:otp
-     })
-      
+    }
+    else{
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: 'please provide the mobile no'
+ })
+    }
       
   } catch (error) {
       console.error('Error generating OTP:', error);
@@ -138,42 +155,41 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
       console.log(1,req.body)
       let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
 
-    
-      
 
       if (mobileNo && otp) {
         // check if the otp is valid or not
         let isOtpValid = await otpCheck.findOne({
           where:{
               expiryTime:{[Op.gte]:new Date()},
-              code:otp
-            
+              code:otp,
+              mobileNo:mobileNo
           }
         })
         if(isOtpValid){
-          // then check if the user exist or not 
+             // Check if the user exists in the database
+             let isUserExist = await publicUser.findOne({
+              where:{
+                phoneNo:mobileNo
+              }
+            })
+            console.log(isUserExist,'check user')
+          // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+          if(!isUserExist){
+            return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page"});  
+          }
+          return res.status(statusCode.SUCCESS.code).json({message:"please render the login page"});  
+
         }
         else{
-          
-        }
-          // Check if the user exists in the database
-
-          let isUserExist = await publicUser.findOne({
-            where:{
-              phoneNo:mobileNo
-            }
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:"Invalid Otp"
           })
-          console.log(isUserExist,'check user')
-        // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
-        if(!isUserExist){
-          return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page"});  
-
         }
+       
           // Return the generated tokens
-          return res.status(statusCode.SUCCESS.code).json({message:"please render the login page"});  
       } else {
           // OTP verification failed
-          return res.status(statusCode.BAD_REQUEST.code).json({message:'OTP verification failed'});   
+          return res.status(statusCode.BAD_REQUEST.code).json({message:'Please provide the mobileNo and otp'});   
         }
   } catch (err) {
    
@@ -184,31 +200,6 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 }
 
 
-// Endpoint to request OTP
-//  let requestOTP = async (req, res) => {
-//   try {
-//     const { mobileNo } = req.body;
-
-//     await admin.auth().generatePhoneVerificationCode(mobileNo);
-//     res.status(statusCode.SUCCESS.code).json({ message: 'OTP sent successfully' });
-//   } catch (err) {
-//     console.error('Error sending OTP:', err);
-//     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: 'Failed to send OTP' });
-//   }
-// };
-
-// Endpoint to verify OTP
-//  let verifyOTP = async (req, res) => {
-//   try {
-//     const { mobileNo, otp } = req.body;
-//     const userCredential = await admin.auth().signInWithPhoneNumber(mobileNo, otp);
-//     console.log('User authenticated:', userCredential.user);
-//     res.status(statusCode.SUCCESS.code).json({ message: 'OTP verified successfully' });
-//   } catch (err) {
-//     console.error('Error verifying OTP:', err);
-//     res.status(statusCode.BAD_REQUEST.code).json({ message: 'Invalid OTP' });
-//   }
-// };
 
 
 let signUp = async (req,res)=>{
@@ -592,7 +583,7 @@ let publicLogin = async(req,res)=>{
 
   
     else if(mobileNo && otp){
-      mobileNo= await decrypt(mobileNo)
+      mobileNo = await decrypt(mobileNo)
       let isUserExist;
       let verifyOtp = await verifyOTPHandlerWithGenerateToken(mobileNo,otp)
       if(verifyOtp?.error=='Please render the signup page'){
@@ -924,45 +915,16 @@ let logout = async (req, res) => {
 }
 
 
-// let googleAuthenticationCallback = async (req,res)=>{
-//   if (req.user.requiresMobileVerification) {
-//     // Prompt user to enter mobile number
-//     const { email, name,photo } = req.user;
-//     const redirectUrl = '/collect-mobile';
-//     res.json({ email, name, photo, redirectUrl });
-//   } else {
-//     // User already exists, redirect to profile
-//     res.redirect('/profile');
-//   }
-// }
 
-
-// let facebookAuthenticationCallback = async(req,res)=>{
-//   if (req.user.requiresMobileVerification) {
-//     // Prompt user to enter mobile number
-//     const { email, name,photo } = req.user;
-//     const redirectUrl = '/collect-mobile';
-//     res.json({ email, name, photo, redirectUrl });  
-//   } else {
-//     // User already exists, redirect to profile
-//     res.redirect('/profile');
-//   }
-// }
 
 
 module.exports = {
   signUp,
-  // googleAuthenticationCallback,
-  // facebookAuthenticationCallback,
-  // generateOTPHandler,
-  // verifyOTPHandlerWithGenerateToken,
  publicLogin,
  logout,
  privateLogin,
  generateOTPHandler,
- verifyOTPHandlerWithGenerateToken,
-//  requestOTP,
-//  verifyOTP
+ verifyOTPHandlerWithGenerateToken
 
 }
 
