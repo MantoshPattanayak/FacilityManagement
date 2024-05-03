@@ -21,9 +21,13 @@ import { decryptData, encryptData } from "../../../utils/encryptData";
 import PublicHeader from "../../../common/PublicHeader";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+// impport shimmerUi------------------------------------------
+import ShimmerUI from "./ShimmerUI";
 const Main_Body_Park_Details = () => {
   // Use state ------------------------------------------------------------------
   const [DisPlayParkData, setDisPlayParkData] = useState([]);
+  // const simmerUi Loader------------------------------------------------
+  const[IsLoding, setIsLoding] = useState(false);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
   const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
@@ -44,14 +48,17 @@ const Main_Body_Park_Details = () => {
   //Here (Post the data)----------------------------------------------------------------
   async function GetParkDetails() {
     try {
+       setIsLoding(true)
       let res = await axiosHttpClient("View_Park_Data", "post", {
         givenReq: givenReq,
         facilityTypeId: facilityTypeId,
       });
       console.log("here Response of Park", res);
       setDisPlayParkData(res.data.data);
+      setIsLoding(false);
     } catch (err) {
       console.log("here Error of Park", err);
+      setIsLoding(false);
     }
   }
 
@@ -118,17 +125,21 @@ const Main_Body_Park_Details = () => {
       }
 
       try{
+        setIsLoding(true)
         let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
         console.log(res.data.message, res.data.data);
         setDisPlayParkData(res.data.data);
+        setIsLoding(false)
       }
       catch(error){
         console.error(error);
         toast.error('Location permission not granted.')
+        setIsLoding(false)
       }
     } else {
       console.error('Geolocation is not supported by this browser');
       toast.error('Location permission not granted.')
+ 
       // Handle case where Geolocation API is not supported
     }
   }
@@ -288,60 +299,59 @@ const Main_Body_Park_Details = () => {
       </span>
 
       {/* Card Container Here -------------------------------------------- */}
+
+     
       <div className="card-container">
-        {DisPlayParkData?.length > 0 ? (
-          DisPlayParkData?.map((item, index) => (
-            // Navigate the sub_manu_page according to id------------------
-            <Link
-              to={{
-                pathname: "/Sub_Park_Details",
-                search: `?facilityId=${encryptDataId(
-                  item.facilityId
-                )}&action=view`,
-              }}
+      {IsLoding ? (
+        // Show shimmer loader while data is being fetched
+        <ShimmerUI />
+      ) : DisPlayParkData?.length > 0 ? (
+        DisPlayParkData?.map((item, index) => (
+          <Link
+            key={index}
+            to={{
+              pathname: "/Sub_Park_Details",
+              search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
+            }}
+          >
+            <div
+              className={`${
+                item.facilityTypeId === 1
+                  ? "park-card-1"
+                  : item.facilityTypeId === 2
+                  ? "park-card-2"
+                  : "park-card-3"
+              }`}
             >
-              <div
-                className={`${
-                  item.facilityTypeId === 1
-                    ? "park-card-1"
-                    : item.facilityTypeId === 2
-                    ? "park-card-2"
-                    : "park-card-3"
-                }`}
-                // className={`${assignVariableCC(facilityType)}`}
-                key={index}
-              >
-                <img className="Card_img" src={Cardimg} alt="Park" />
-                <div className="card_text">
-                  <span className="Name_location">
-                    <h2 className="park_name">{item.facilityname}</h2>
-                    <h3 className="park_location">{item.address}</h3>
-                  </span>
-                  <span className="Avil_Dis">
-                    <button
-                      className={`Avilable ${
-                        item.status == "open"
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {item.status?.charAt(0).toUpperCase() +
-                        item.status?.slice(1)}
-                    </button>
-                    <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
-                  </span>
-                </div>
+              <img className="Card_img" src={Cardimg} alt="Park" />
+              <div className="card_text">
+                <span className="Name_location">
+                  <h2 className="park_name">{item.facilityname}</h2>
+                  <h3 className="park_location">{item.address}</h3>
+                </span>
+                <span className="Avil_Dis">
+                  <button
+                    className={`Avilable ${
+                      item.status == "open" ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+                  </button>
+                  <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
+                </span>
               </div>
-            </Link>
-          ))
-        ) : (
-          // Here Show the Msg if (Data is Not available ) --------------------------------
-          <div className="no-data-message">
-            <img src={No_Data_icon}></img>
-          </div>
-        )}
-      </div>
+            </div>
+          </Link>
+        ))
+      ) : (
+        // Show message if no data is available
+        <div className="no-data-message">
+          <img src={No_Data_icon} alt="No Data Found" />
+        </div>
+      )}
+    </div>
       <CommonFooter />
+      <ToastContainer/>
     </div>
   );
 };
