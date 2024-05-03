@@ -27,7 +27,8 @@ const Main_Body_Park_Details = () => {
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
   const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
-    latitude: "", longitude: ""
+    latitude: 20.3010259,
+    longitude: 85.7380521
   });
   // fetch facility type id
   let location = useLocation();
@@ -92,18 +93,33 @@ const Main_Body_Park_Details = () => {
         },
         (error) => {
           console.error('Error getting location:', error);
+          setUserGeoLocation({
+            latitude: 20.3010259,
+            longitude: 85.7380521
+          });
           // Handle error, e.g., display a message to the user
         }
       );
 
+      let bodyParams = {};
+      switch(selectedTab){    // ['Nearby', 'Popular', 'Free', 'Paid']
+        case 'Nearby':
+          bodyParams = {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+            facilityTypeId: facilityTypeId,
+            range: ''
+          }
+          break;
+        case 'Popular': bodyParams = {popular:1}; break;
+        case 'Free': bodyParams = {free:1}; break;
+        case 'Paid': bodyParams = {paid:1}; break;
+        default: break;
+      }
+
       try{
-        let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', {
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          facilityTypeId: facilityTypeId,
-          range: ''
-        });
-        console.log('Nearby park list', res.data.data);
+        let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
+        console.log(res.data.message, res.data.data);
         setDisPlayParkData(res.data.data);
       }
       catch(error){
