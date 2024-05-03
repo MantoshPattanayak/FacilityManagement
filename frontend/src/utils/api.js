@@ -5,7 +5,7 @@ const api = {
     PUBLIC_SIGNUP_API: '/auth/signUp',
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
-
+     PROFILE_DATA_VIEW_API: '/pulicUser/viewpublic_user', // post
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
      View_By_ParkId:'/mapData/viewParkById',        
