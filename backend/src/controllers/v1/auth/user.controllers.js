@@ -61,14 +61,11 @@ let generateOTPHandler = async (req,res)=> {
   try {
     console.log('1')
 
-    let {encryptedBody} = req.body
-    console.log('2',req.body)
-
-    let decrypt1 = await decrypt(encryptedBody)
-    console.log('3',decrypt1)
-    console.log(req.body.encryptedBody,'1',encryptedBody)
+    let {encryptMobileNo:mobileNo}=req.body
     let length=4
     let numberValue = '1234567890'
+    let expiryTime = new Date();
+    expiryTime = expiryTime.setMinutes(expiryTime.getMinutes() + 5);
 
     let otp="";
     for(let i=0;i<length;i++){
@@ -76,14 +73,34 @@ let generateOTPHandler = async (req,res)=> {
       otp += numberValue[otpIndex]
     }
 
+    if(mobileNo){
+ 
     // insert to otp verification table
-    
+    let insertToOtpTable = await otpCheck.create({
+      code:otp,
+      expiryTime:expiryTime,
+      verified:0,
+      mobileNo:mobileNo,
+      createdDt:new Date()
+    })
     // OTP generated successfully
+    if(insertToOtpTable){
+      return res.status(statusCode.SUCCESS.code).json({
+        message: 'otp generated successfully', otp:otp
+ })
+    }
+    else{
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: 'otp generation failed'
+ })
+    }
 
-    return res.status(statusCode.SUCCESS.code).json({
-            message: 'otp generated successfully', otp:otp
-     })
-      
+    }
+    else{
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: 'please provide the mobile no'
+ })
+    }
       
   } catch (error) {
       console.error('Error generating OTP:', error);
@@ -146,12 +163,13 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
         let isOtpValid = await otpCheck.findOne({
           where:{
               expiryTime:{[Op.gte]:new Date()},
-              code:otp
-            
+              code:otp,
+              mobileNo:mobileNo
           }
         })
         if(isOtpValid){
           // then check if the user exist or not 
+
         }
         else{
           

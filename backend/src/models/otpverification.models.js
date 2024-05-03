@@ -1,3 +1,5 @@
+const { transaction } = require(".")
+
 module.exports = (sequelize,DataTypes)=>{
     let otpverifcation = sequelize.define('otpverification',{
         id:{
@@ -16,6 +18,9 @@ module.exports = (sequelize,DataTypes)=>{
         },
         mobileNo:{
             type:DataTypes.INTEGER
+        },
+        createdDt:{
+            type:DataTypes.DATE,
         }
       
     
