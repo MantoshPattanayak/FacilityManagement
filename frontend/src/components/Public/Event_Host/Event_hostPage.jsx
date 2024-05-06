@@ -1,26 +1,80 @@
 
 import { useState, useEffect } from "react";
 import "./Event_HostPage.css"
+import axiosHttpClient from "../../../utils/axios";
 const Event_hostPage=()=>{
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
+        firstName:"",
+        lastName:"",
+        organisationPanCardNumber:"",
+        emailId:"",
+        phoneNo:"",
+        organisationName:"",
+        category:"",
+        organisationAddress:"",
+        eventDate:"",
+        eventStartDate:"",
+        eventEndDate:"",
+        Description:"",
+        // Bank Details
+   
     });
-  
+// here get the Bank Name in drop down ---------------------------------
+const[GetbankName, setGetbankName]=useState([])
+const[EventType, setEventType]=useState([])
+// handler for target the Name of Input field ------------------------------
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
     };
   
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Handle form submission
-      console.log('Form submitted:', formData);
-    };
-  
+   
+
+// here Post the data -----------------------------------------------------
+
+    async function handleSubmit(){
+        try{
+            let res= await axiosHttpClient('here Api', 'post', {
+                // organisation Details -------------
+                organisationName:formData,
+                organisationPanCardNumber:formData,
+                organisationAddress:formData,
+                // personal Details -------------------------
+                firstName:formData,
+                lastName:formData,
+                phoneNo:formData,
+                emailId:formData,
+                // Bank Details -----------------
+                BeneficiaryName:formData,
+                AccountType:formData,
+                BankName:formData,
+                AccountNumber:formData,
+                BankIFSC:formData
+
+            })
+            console.log("here Response of Post Data", res)
+        }
+        catch(err){
+            console.log("here Response", err)
+        }
+    }
+//  here Validation
+
+const validation=(value)=>{
+    const err={}
+    if(!value.organisationName){
+        err.organisationName="Organization / Individual Name is Required"
+    }
+    if(!value.organisationPanCardNumber){
+        err.organisationPanCardNumber=" organisation Pan-Card Number is Required"
+    }
+    if(!value.organisationAddress){
+        err.organisationAddress="Organisation Address is Required"
+    }
+
+    return err;
+}
     const nextStep = () => {
       setCurrentStep(currentStep + 1);
     };
@@ -29,6 +83,25 @@ const Event_hostPage=()=>{
       setCurrentStep(currentStep - 1);
     };
   
+ // here Get the Bank deatils In drop down -----------------------------------
+    async function GetBankDetails(){
+        try{
+            let res= await axiosHttpClient('Bank_details_Api', 'get')
+            console.log('here Response', res)
+            setGetbankName(res.data.bankServiceData)
+            setEventType(res.data.eventCategoryData)
+        }
+        catch(err){
+            console.log("here err", err)
+        }
+    }
+    // here Call/Update the data -----------------------------
+    useEffect(()=>{
+        GetBankDetails()  
+    }, [])
+
+
+
     return (
       <div>
         {currentStep === 1 && (
@@ -113,9 +186,16 @@ const Event_hostPage=()=>{
                         <label htmlFor="input2">Bank Name*</label>
                         <select id="input2">
                         <option value="" disabled selected hidden>Select Bank Name</option>
-                            <option value="option1">Axis Bank</option>
-                            <option value="option2">HDFC Bank</option>
-                            <option value="option3">State Bank Of India</option>
+                        {GetbankName?.length>0 && GetbankName?.map((Bankname, index)=>{
+                            return(
+                                <option key={index} value={Bankname.id}>
+                                    {Bankname.bankName}
+
+                                </option>
+                            )
+
+                        })}
+                    
                         </select>
                     </div>
                     <div className="HostEvent_Group">
@@ -171,13 +251,22 @@ const Event_hostPage=()=>{
             </div>
             <div className="HostEvent_Heading">
       
-                <div className="HostEvent_Row">
-                    <div className="HostEvent_Group">
-                        <label htmlFor="input1">Event Category</label>
-                        <input type="text" id="input1" placeholder="First Name" />
+            <div className="HostEvent_Group">
+                        <label htmlFor="input2">Event Category*</label>
+                        <select id="input2">
+                        <option value="" disabled selected hidden>Select Event Category</option>
+                        {EventType?.length>0 && EventType?.map((event, index)=>{
+                            return(
+                                <option key={index} value={event.eventCategoryId}>
+                                    {event.eventType}
+
+                                </option>
+                            )
+
+                        })}
+                    
+                        </select>
                     </div>
-                 
-                </div>
                 <div className="HostEvent_Row">
                     <div className="HostEvent_Group">
                         <label htmlFor="input1">Start Event Date</label>

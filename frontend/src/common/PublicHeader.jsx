@@ -22,7 +22,7 @@ export default function PublicHeader() {
               <a href="/">HOME</a>
             </li>
             <li>
-              <a href="#">ABOUT</a>
+              <a href="/About">ABOUT</a>
             </li>
             <li>
               <a href="#">FAQ</a>
