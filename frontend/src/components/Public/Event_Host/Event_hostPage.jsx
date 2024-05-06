@@ -32,36 +32,114 @@ const Event_hostPage=()=>{
     return (
       <div>
         {currentStep === 1 && (
-             <div class="container">
-             <div class="row justify-content-center">
-                 <div class="col-lg-6">
+             
                      <form onSubmit={nextStep} className="event-host_1st_Page">
                          <h2>Step 1</h2>
-                         <div class="form-group">
-                             <label for="firstName">First Name:</label>
-                             <input type="text" id="firstName" name="firstName" class="form-control" value={formData.firstName} onChange={handleChange} />
-                         </div>
-                         <div class="form-group">
-                             <label for="lastName">Last Name:</label>
-                             <input type="text" id="lastName" name="lastName" class="form-control" value={formData.lastName} onChange={handleChange} />
-                         </div>
-                         <div class="form-group">
-                             <label for="firstName2">First Name2:</label>
-                             <input type="text" id="firstName2" name="firstName2" class="form-control" value={formData.firstName} onChange={handleChange} />
-                         </div>
-                         <div class="form-group">
-                             <label for="lastName2">Last Name2:</label>
-                             <input type="text" id="lastName2" name="lastName2" class="form-control" value={formData.lastName} onChange={handleChange} />
-                         </div>
-                         <div class="form-group">
-                             <label for="remark">Remark:</label>
-                             <textarea id="remark" name="remark" class="form-control" value={formData.remark} onChange={handleChange}></textarea>
-                         </div>
-                         <button type="submit" class="btn btn-primary">Next</button>
+                         <div className="HostEvent_container">
+            <div className="HostEvent_Heading">
+                <div className="HeadingTitle9">
+                    <div></div>
+                    <h2>Organisation Details</h2>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Organization / Individual Name*</label>
+                        <input type="text" id="input1" placeholder="Organization / Individual Name" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Organization/Individual PAN card number*</label>
+                        <input type="text" id="input2" placeholder="Organization/Individual PAN card number" />
+                    </div>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group" id='AddressBox'>
+                        <label htmlFor="input1">Organization/Individual Address*</label>
+                        <input type="text" id="input1" placeholder="Organization/Individual Address" />
+                    </div>
+                </div>
+
+                {/* Two more similar rows for Heading 1 */}
+            </div>
+            <div className="HostEvent_Heading">
+                <div className="HeadingTitle9">
+                    <div></div>
+                    <h2>Contact Person Details</h2>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">First Name*</label>
+                        <input type="text" id="input1" placeholder="First Name" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Last Name*</label>
+                        <input type="text" id="input2" placeholder="Last Name" />
+                    </div>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Phone Number*</label>
+                        <input type="text" id="input1" placeholder="Phone Number" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Email Address*</label>
+                        <input type="text" id="input2" placeholder="Email Address" />
+                    </div>
+
+                </div>
+                {/* Two more similar rows for Heading 1 */}
+            </div>
+            <div className="HostEvent_Heading">
+                <div className="HeadingTitle9">
+                    <div></div>
+                    <h2>Bank Details</h2>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Beneficiary Name*</label>
+                        <input type="text" id="input1" placeholder="Beneficiary Name" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Account Type*</label>
+                        <select id="input2">
+                        <option value="" disabled selected hidden>Select Account Type</option>
+                            <option value="option1">Savings account</option>
+                            <option value="option2">Current account</option>
+                            <option value="option3">Fixed deposit account</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="HostEvent_Row">
+                <div className="HostEvent_Group">
+                        <label htmlFor="input2">Bank Name*</label>
+                        <select id="input2">
+                        <option value="" disabled selected hidden>Select Bank Name</option>
+                            <option value="option1">Axis Bank</option>
+                            <option value="option2">HDFC Bank</option>
+                            <option value="option3">State Bank Of India</option>
+                        </select>
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Account Number*</label>
+                        <input type="text" id="input2" placeholder="Account Number" />
+                    </div>
+
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Bank IFSC*</label>
+                        <input type="text" id="input1" placeholder="Bank IFSC" />
+                    </div>
+
+                </div>
+                {/* Two more similar rows for Heading 1 */}
+            </div>
+            {/* Two more similar headings */}
+                      <div className="buttons-container">
+                      <button type="submit" class="btn btn-primary">Next</button>
+                      </div>
+                  </div>
                      </form>
-                 </div>
-             </div>
-         </div>
+         
          
              
     
@@ -69,19 +147,110 @@ const Event_hostPage=()=>{
   
         {currentStep === 2 && (
           <form onSubmit={nextStep}>
-            <h2>Step 2</h2>
-            <label>
-              Email:
-              <input type="email" name="email" value={formData.email} onChange={handleChange} />
-            </label>
-            <br />
-            <label>
-              Password:
-              <input type="password" name="password" value={formData.password} onChange={handleChange} />
-            </label>
-            <br />
+                <div className="HostEvent_container">
+            <div className="HostEvent_Heading">
+                <div className="HeadingTitle9">
+                    <div></div>
+                    <h2>Organisation Details</h2>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Organization / Individual Name*</label>
+                        <input type="text" id="input1" placeholder="Organization / Individual Name" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Organization/Individual PAN card number*</label>
+                        <input type="text" id="input2" placeholder="Organization/Individual PAN card number" />
+                    </div>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group" id='AddressBox'>
+                        <label htmlFor="input1">Organization/Individual Address*</label>
+                        <input type="text" id="input1" placeholder="Organization/Individual Address" />
+                    </div>
+                </div>
+
+                {/* Two more similar rows for Heading 1 */}
+            </div>
+            <div className="HostEvent_Heading">
+                <div className="HeadingTitle9">
+                    <div></div>
+                    <h2>Contact Person Details</h2>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">First Name*</label>
+                        <input type="text" id="input1" placeholder="First Name" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Last Name*</label>
+                        <input type="text" id="input2" placeholder="Last Name" />
+                    </div>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Phone Number*</label>
+                        <input type="text" id="input1" placeholder="Phone Number" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Email Address*</label>
+                        <input type="text" id="input2" placeholder="Email Address" />
+                    </div>
+
+                </div>
+                {/* Two more similar rows for Heading 1 */}
+            </div>
+            <div className="HostEvent_Heading">
+                <div className="HeadingTitle9">
+                    <div></div>
+                    <h2>Bank Details</h2>
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Beneficiary Name*</label>
+                        <input type="text" id="input1" placeholder="Beneficiary Name" />
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Account Type*</label>
+                        <select id="input2">
+                        <option value="" disabled selected hidden>Select Account Type</option>
+                            <option value="option1">Savings account</option>
+                            <option value="option2">Current account</option>
+                            <option value="option3">Fixed deposit account</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="HostEvent_Row">
+                <div className="HostEvent_Group">
+                        <label htmlFor="input2">Bank Name*</label>
+                        <select id="input2">
+                        <option value="" disabled selected hidden>Select Bank Name</option>
+                            <option value="option1">Axis Bank</option>
+                            <option value="option2">HDFC Bank</option>
+                            <option value="option3">State Bank Of India</option>
+                        </select>
+                    </div>
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input2">Account Number*</label>
+                        <input type="text" id="input2" placeholder="Account Number" />
+                    </div>
+
+                </div>
+                <div className="HostEvent_Row">
+                    <div className="HostEvent_Group">
+                        <label htmlFor="input1">Bank IFSC*</label>
+                        <input type="text" id="input1" placeholder="Bank IFSC" />
+                    </div>
+
+                </div>
+                {/* Two more similar rows for Heading 1 */}
+            </div>
+            {/* Two more similar headings */}
+            <div className="buttons-container">
             <button type="button" onClick={prevStep}>Previous</button>
             <button type="submit">Next</button>
+            </div>
+        </div>
           </form>
         )}
   
