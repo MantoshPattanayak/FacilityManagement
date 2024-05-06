@@ -37,14 +37,26 @@ const resourceroute = require("./routes/api/" +
   api_version +
   "/configuration/resource");
 
+const eventactivitesroute = require("./routes/api/" +
+  api_version +
+  "/configuration/eventactivities");
+
+const hosteventdetailsroute = require("./routes/api/" +
+  api_version +
+  "/configuration/hosteventdetails");
+
 const reviewEventBookingRoute = require("./routes/api/" +
   api_version +
   "/activity/reviewEventBooking");
 const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
-const razorPayPayment = require("./routes/api/" +api_version +"/payment/razorPayPayment");
+const razorPayPayment = require("./routes/api/" +
+  api_version +
+  "/payment/razorPayPayment");
 const booking = require("./routes/api/" + api_version + "/booking/booking");
-const languageContent = require("./routes/api/" + api_version + "/configuration/languageContent");
+const languageContent = require("./routes/api/" +
+  api_version +
+  "/configuration/languageContent");
 
 console.log(port, "port");
 
@@ -82,11 +94,16 @@ app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
 app.use("/resource", resourceroute);
+//public user
 app.use("/publicUser", publicUser);
+//event activities
+app.use("/eventactivites", eventactivitesroute);
+//host event details
+app.use("/hosteventdetails", hosteventdetailsroute);
 
-app.use("/razorPayPayment",razorPayPayment);
-app.use('/booking', booking);
-app.use('/languageContent', languageContent);
+app.use("/razorPayPayment", razorPayPayment);
+app.use("/booking", booking);
+app.use("/languageContent", languageContent);
 //  put all your route handlers here
 
 //activity routes
