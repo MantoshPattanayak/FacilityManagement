@@ -95,7 +95,7 @@ app.use("/userResource", userResource);
 app.use("/role", roleroute);
 app.use("/resource", resourceroute);
 //public user
-app.use("/pulicUser", publicUser);
+app.use("/publicUser", publicUser);
 //event activities
 app.use("/eventactivites", eventactivitesroute);
 //host event details

@@ -68,15 +68,21 @@ const bankService = async (req, res) => {
     FROM 
     amabhoomi.bankservices
     `);
+
+    let findEventCategory =
+    await sequelize.query(`select eventCategoryId,eventName, eventType from
+  amabhoomi.eventcategorymasters`);
+
     return res
       .status(statusCode.SUCCESS.code)
-      .json({ message: "These are the dropdown data", data: bankService });
+      .json({ message: "These are the dropdown data", bankServiceData: bankService[0], eventCategoryData:findEventCategory[0] });
   } catch (err) {
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
   }
 };
+
 const eventDropdownData = async (req, res) => {
   try {
     let findEventCategory =
@@ -85,7 +91,7 @@ const eventDropdownData = async (req, res) => {
 
     return res
       .status(statusCode.SUCCESS.code)
-      .json({ message: "Event Category data", data: findEventCategory });
+      .json({ message: "Event Category data", data: findEventCategory[0] });
   } catch (err) {
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
