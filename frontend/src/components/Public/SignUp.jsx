@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../Public/SignUp.css';
 import AdminHeader from '../../common/AdminHeader';
 import Footer from '../../common/Footer';
+import CommonFooter from '../../common/CommonFooter';
 import { RxCross1 } from 'react-icons/rx';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { regex, dataLength } from '../../utils/regexExpAndDataLength';
@@ -346,7 +347,7 @@ const SignUp = () => {
             }
             {showSuccessPopup && <SuccessPopup />}
         
-            <Footer />
+           <CommonFooter/>
             <ToastContainer />
         </div>
     )
