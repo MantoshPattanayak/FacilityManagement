@@ -82,7 +82,7 @@ app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
 app.use("/resource", resourceroute);
-app.use("/pulicUser", publicUser);
+app.use("/publicUser", publicUser);
 
 app.use("/razorPayPayment",razorPayPayment);
 app.use('/booking', booking);
