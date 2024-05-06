@@ -155,7 +155,6 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
       console.log(1,req.body)
       let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
 
-
       if (mobileNo && otp) {
         // check if the otp is valid or not
         let isOtpValid = await otpCheck.findOne({
@@ -183,9 +182,9 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
             console.log(isUserExist,'check user')
           // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
           if(!isUserExist){
-            return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page"});  
+            return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page",decideSignUpOrLogin:0});  
           }
-          return res.status(statusCode.SUCCESS.code).json({message:"please render the login page"});  
+          return res.status(statusCode.SUCCESS.code).json({message:"please render the login page",decideSignUpOrLogin:1});  
 
         }
         else{
