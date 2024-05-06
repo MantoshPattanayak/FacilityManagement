@@ -114,7 +114,7 @@ const BookingDetails = () => {
               <button className="edit-profile-btn">Favorites</button>
               <button className="edit-profile-btn">Card Details</button>
             </div>
-            <button className="logout-button">
+            <button className="logout-button" onClick={(e) => {logOutUser(); navigate('/')}}>
               <FontAwesomeIcon icon={faRightFromBracket} />
               Logout
             </button>
@@ -170,10 +170,10 @@ const BookingDetails = () => {
                           </div>
                           <div className="flex justify-between eventdetails-details-eventTime">
                             <div>Booking Date {formatDate(event.bookingDate)}</div>
-                            <div>
+                            {/* <div>
                               <FontAwesomeIcon icon={faClock} />{" "}
                               {calculateTime(event.createdDate)} ago
-                            </div>
+                            </div> */}
                           </div>
                           {
                             event.type == 'Parks' ?
