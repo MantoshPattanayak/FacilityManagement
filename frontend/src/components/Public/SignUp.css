@@ -9,6 +9,7 @@
     border-radius: 5px;
     padding: 20px; /* Add padding */
     margin-top: 10%;
+    margin-bottom: 5%;
 }
 @media screen and ( max-width:700px) {
     .signup-container, .profile-setup-container{
