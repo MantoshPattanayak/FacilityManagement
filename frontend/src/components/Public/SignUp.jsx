@@ -15,6 +15,7 @@ import SuccessPopup from './SuccessPopup'; // Import the SuccessPopup component
 import { encryptData } from '../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import PublicHeader from '../../common/PublicHeader';
 
 
 const SignUp = () => {
@@ -22,6 +23,9 @@ const SignUp = () => {
     const [otp, setOTP] = useState(false);
     const [profile, setProfile] = useState(false);
     const [resendTimer, setResendTimer] = useState(20);
+    const [mobileNumber, setMobileNumber] = useState('');
+    const [otpVal, setOtpVal] = useState('');
+    const [decideSignUpOrLogin, setDecideSignUpOrLogin] = useState('')
     const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for controlling the success popup
     const navigate = useNavigate();
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,13 +36,10 @@ const SignUp = () => {
         lastName: "",
         email: "",
         language: "",
-        password: ""
+        password: "",
+        confirmPassword: ""
     });
-
-
-
-
-
+    const [timer, setTimer] = useState(60); // Initial timer value in seconds
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -64,61 +65,110 @@ const SignUp = () => {
             default:
                 break;
         }
-        // Update state for the respective field
-        if (name === 'password') {
-            setSignupData({ ...signupData, [name]: value });
-        } else {
-            setConfirmPassword(value);
-        }
+        // setSignupData({ ...signupData, [name]: value });
+
         setSignupData({ ...signupData, [name]: value, [`${name}Error`]: error });
     };
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            // Check if the timer value is greater than 0 before decrementing
-            if (resendTimer > 0) {
-                setResendTimer(prevTimer => prevTimer - 1);
+        let intervalId;
+        
+        // Function to decrement timer every second
+        const decrementTimer = () => {
+          setTimer(prevTimer => {
+            if (prevTimer === 0) {
+              clearInterval(intervalId);
+              return 0;
             }
-        }, 1000); // Interval of 1 second
-        // Clear the timer when the component unmounts
-        return () => clearTimeout(timer);
-    }, [resendTimer]);
+            return prevTimer - 1;
+          });
+        };
+        
+        // Start the timer when OTP is sent
+        if (otp && timer > 0) {
+          intervalId = setInterval(decrementTimer, 1000);
+        }
+    
+        // Clean up interval when component unmounts
+        return () => clearInterval(intervalId);
+      }, [otp, timer]);
 
     // Function to handle sending OTP
     async function handleSignUp(e) {
         e.preventDefault();
-        setSignup(false);
-        setOTP(true);
-        //  code to send OTP  write here
+        if(mobileNumber == '') {
+            toast.error('Please enter mobile number.');
+            return;
+        }
+
+        try{
+            let res = await axiosHttpClient('PUBLIC_SIGNUP_GENERATE_OTP_API', 'post', {
+                encryptMobile: encryptData(mobileNumber)
+            });
+            console.log('response after signup', res.data);
+            setSignup(false);
+            setOTP(true);
+            setTimer(60);
+        }
+        catch(error) {
+            console.error(error);
+            toast.error('Sign up failed. Please try again!')
+        }
     }
 
     // Function to handle verifying OTP
     async function handleOTP(e) {
         e.preventDefault();
-        setOTP(false);
-        setProfile(true);
+        if(otpVal == '') {
+            toast.error('Please enter the OTP.');
+            return;
+        }
+
+        try{
+            let res = await axiosHttpClient('PUBLIC_SIGNUP_VERIFY_OTP_API', 'post', {
+                encryptMobile: encryptData(mobileNumber),
+                encryptOtp: encryptData(otpVal)
+            });
+            console.log('response after otp entry', res.data);
+            setDecideSignUpOrLogin(res.data.decideSignUpOrLogin);
+            if(res.data.decideSignUpOrLogin == 1) {     //if user exists, then redirect to homepage
+                sessionStorage.setItem("isUserLoggedIn", 1);
+                navigate('/');
+            }
+            else{
+                sessionStorage.setItem("isUserLoggedIn", 0);
+            }
+            setOTP(false);
+            setProfile(true);
+        }
+        catch(error) {
+            console.error(error);
+            toast.error('Sign up failed. Please try again!')
+        }
     }
 
     // Function to handle profile setup
     async function handleProfile(e) {
-        e.preventDefault();
+        e?.preventDefault();
         if (!validateForm()) {
             return; // Exit if form validation fails
         }
+
         try {
             const response = await axiosHttpClient('PUBLIC_SIGNUP_API', 'post', {
                 encryptFirstName: encryptData(signupData.firstName),
                 encryptMiddleName: encryptData(signupData.middleName),
                 encryptLastName: encryptData(signupData.lastName),
-                 encryptEmail: encryptData(signupData.email),
-                 encryptLanguage: encryptData(signupData.language),
-                 encryptPassword: encryptData(signupData.password)
-             
+                encryptEmail: encryptData(signupData.email),
+                encryptLanguage: encryptData(signupData.language),
+                encryptPassword: encryptData(signupData.password),
+                encryptPhoneNo: encryptData(mobileNumber)
             });
             console.log('Response:', response.data);
             // Redirect to home page after successful registration
             toast.success('Profile Setup done successfully.');
-            navigate('/Public/Home');
+            sessionStorage.setItem("isUserLoggedIn", 1);
+            navigate('/');            
             setShowSuccessPopup(true); // Show the success popup
         } catch (error) {
             console.error('Error:', error);
@@ -126,46 +176,37 @@ const SignUp = () => {
         }
     }
 
-    /// use Effect 
-    useEffect(() => {
-        handleProfile()
-    }, [])
-
-    // Function to handle resending OTP
-    function resendOTP() {
-        setResendTimer(20);
-    }
 
     // PERFORM VALIDATION ON THE FORM
     const validateForm = () => {
-        const { firstName, lastName, email, password } = signupData;
+        const { firstName, lastName, email, password, confirmPassword } = signupData;
         // Check if fields are empty
         if (!firstName || !lastName || !email || !password) {
-            alert('All fields are required');
+            toast.error('All fields are required');
             return false;
         }
         // Validate first name
         if (!regex.NAME.test(firstName) || firstName.length > dataLength.NAME) {
-            alert('Invalid first name');
+            toast.error('Invalid first name');
             return false;
         }
         // Validate last name
         if (!regex.NAME.test(lastName) || lastName.length > dataLength.NAME) {
-            alert('Invalid last name');
+            toast.error('Invalid last name');
             return false;
         }
         // Validate email
         if (!regex.EMAIL.test(email) || email.length > dataLength.EMAIL) {
-            alert('Invalid email');
+            toast.error('Invalid email');
             return false;
         }
         // Validate password
         if (!regex.PASSWORD.test(password) || password.length > dataLength.PASSWORD) {
-            alert('Invalid password');
+            toast.error('Invalid password');
             return false;
         }
         if (password !== confirmPassword) {
-            alert('Passwords do not match');
+            toast.error('Passwords do not match');
             return false;
         }
         return true;
@@ -176,7 +217,7 @@ const SignUp = () => {
 
     return (
         <div>
-            <AdminHeader />
+            <PublicHeader />
             {
                 signup && (
                     <div className="signup-container">
@@ -188,10 +229,10 @@ const SignUp = () => {
                                 <div className="text">
                                     <p>Mobile no.</p>
                                 </div>
-                                <input className='input-field' type="text" name="Mobile" placeholder='Enter Mobile Number' />
+                                <input className='input-field' type="text" name="Mobile" value={mobileNumber} placeholder='Enter Mobile Number' onChange={(e) => setMobileNumber(e.target.value)}/>
                             </div>
-                            <div className="otp-btn">
-                                <button className="sendotp-btn" onClick={handleSignUp}>Send OTP</button>
+                            <div className="otp-btn" onClick={handleSignUp}>
+                                <button className="sendotp-btn" >Send OTP</button>
                             </div>
                         </div>
                     </div>
@@ -208,16 +249,16 @@ const SignUp = () => {
                             <div className='heading-text'> <h1>Verify</h1></div>
                             <div className="inputs">
                                 <div className="text"><p>OTP</p></div>
-                                <input className='input-field' type="text" placeholder='' />
+                                <input className='input-field' type="text" placeholder='' value={otpVal} onChange={(e) => setOtpVal(e.target.value)}/>
                             </div>
-                            <div className="otp-btn">
-                                <button className="sendotp-btn" onClick={handleOTP}>Verify OTP</button>
+                            <div className="otp-btn" onClick={handleOTP}>
+                                <button className="sendotp-btn">Verify OTP</button>
                             </div>
                             <div className="resend-otp">
-                                {resendTimer === 0 ? (
-                                    <button className="sendotp-btn" onClick={resendOTP}>Resend OTP</button>
+                                {timer === 0 ? (
+                                    <button className="sendotp-btn" onClick={handleSignUp}>Resend OTP</button>
                                 ) : (
-                                    <p>Resend OTP in {resendTimer} Sec</p>
+                                    <p>Resend OTP in {timer} Sec</p>
                                 )}
                             </div>
                         </div>
@@ -314,7 +355,7 @@ const SignUp = () => {
                                         type="password"
                                         name='confirmPassword'
                                         onChange={handleChange}
-                                        value={confirmPassword}
+                                        value={signupData.confirmPassword}
                                         placeholder='Confirm Password'
                                     />
                                     {confirmPasswordError && <p className="error-message">{confirmPasswordError}</p>}
@@ -322,7 +363,7 @@ const SignUp = () => {
                                
                             </div><br />
 
-                            <div className="preffered-activity">
+                            {false && <div className="preffered-activity">
                                 <label htmlFor=""><span>Preferred Activity</span>   (user can select multiple activities)</label>
                                 <div className="activity">
                                     <button className='activity-btn'>Yoga</button>
@@ -331,23 +372,21 @@ const SignUp = () => {
                                     <button className='activity-btn'><FontAwesomeIcon icon={faPersonSwimming} />Swimming</button>
                                     <button className='activity-btn'>Cricket</button>
                                     <button className='activity-btn'><FontAwesomeIcon icon={faFootball} />Football</button>
-                                    <button className='activity-btn'><FontAwesomeIcon icon={faVolleyball} />Voelyball</button>
+                                    <button className='activity-btn'><FontAwesomeIcon icon={faVolleyball} />Volleyball</button>
                                     <button className='activity-btn'>Badminton</button>
                                     <button className='activity-btn'>Rugby</button>                                  
-
                                 </div>
-                            </div>
-                            <div className="otp-btn">
-                                <button type='submit' className="sendotp-btn" onClick={handleProfile}>Proceed</button>
+                            </div>}
+                            <div className="otp-btn" onClick={handleProfile}>
+                                <button type='submit' className="sendotp-btn">Proceed</button>
                             </div>
                         </div>
                     </div>
-                    // </form>
                 )
             }
             {showSuccessPopup && <SuccessPopup />}
         
-           <CommonFooter/>
+            <CommonFooter/>
             <ToastContainer />
         </div>
     )

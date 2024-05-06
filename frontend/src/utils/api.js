@@ -3,6 +3,8 @@
 const api = {
     PUBLIC_LOGIN_API: '/auth/publicLogin',
     PUBLIC_SIGNUP_API: '/auth/signUp',
+    PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
+    PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
      PROFILE_DATA_VIEW_API: '/pulicUser/viewpublic_user', // post
