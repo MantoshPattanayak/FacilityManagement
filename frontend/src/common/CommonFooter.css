@@ -1,5 +1,5 @@
 
-.right-section {
+.right-section-footer {
   width: 40%;
     display: flex;
     justify-content: center;
@@ -39,6 +39,10 @@
 
 /* Media query for screens below 800px */
 @media screen and (max-width: 800px) {
+  .footer-container{
+    display: flex;
+    justify-content: center;
+  }
   .ama-bhoomi-info h1 {
     font-size: 30px;
   }
@@ -46,10 +50,10 @@
   .right-section {
     width: 100%;
   }
-  .right-section {
+  .right-section-footer {
     order: 3; /* Change the order of the section to display below the left section */
   }
-  .right-section{
+  .right-section-footer{
    
     display: flex;
     justify-content: center;
@@ -66,6 +70,9 @@
 .last-right-section ul li{
 font-size: large;
 }
+.last-right-section{
+  margin-left: 30px;
+}
 
 }
 
@@ -80,14 +87,13 @@ font-size: large;
   font-weight: 500;
   float: left;
 }
-
-.app-download input[type="text"] {
-  width: 50%;
-  height: 30px;
+.input-with-icon input[type="text"] {
+  width: 30%;
+  height: 20px;
   margin-top: 10px;
-  padding: 5px;
+  padding: 20px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px  solid #7b7b7b;
 }
 
 .app-store-icons img {

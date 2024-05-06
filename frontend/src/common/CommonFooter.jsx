@@ -35,7 +35,7 @@ const CommonFooter = () => {
           </div>
         </div>
 
-        <div className="right-section">
+        <div className="right-section-footer">
         <div class="middle-section">
           <ul>
             <li><a href="#"> Resources</a></li>
@@ -63,8 +63,7 @@ const CommonFooter = () => {
             <li> <a href="#">twitter</a> </li>
             <li> <a href="#">facebook</a> </li>
             <li> <a href="#">Feedback</a> </li>
-            <li> <a href="#">Instagram</a> </li>
-            <li> <a href="#"> whatsapp</a></li>
+           
           </ul>
         </div>
         </div>
