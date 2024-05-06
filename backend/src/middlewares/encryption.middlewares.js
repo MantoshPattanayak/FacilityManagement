@@ -3,11 +3,16 @@ var CryptoJS = require("crypto-js");
 let encrypt = async (val)=>{
     let key = process.env.Encrypt_Decrypt_key
     let iv= process.env.IV
-    let parsedKey = CryptoJS.enc.Base64.parse(key)
-    let parsediv = CryptoJS.enc.Base64.parse(iv)
+    let parsedKey = CryptoJS.enc.Hex.parse(key)
+    let parsedIv = CryptoJS.enc.Hex.parse(iv)
+    let encryptedValue = CryptoJS.AES.encrypt(val, parsedKey, { iv: parsedIv
+        });
+        
+        let ciphertext = encryptedValue.ciphertext;
+        let encryptedString = ciphertext.toString();
 
-    return CryptoJS.AES.encrypt(val,parsedKey,{iv:parsediv}).toString()
-
+        console.log('ecnrytp', encryptedString)
+        return encryptedString;
 }
 
 module.exports = {

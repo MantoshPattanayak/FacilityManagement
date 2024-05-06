@@ -1,0 +1,210 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.booking-dtails-container {
+    box-sizing: border-box;
+    width: 90vw;
+    padding: 10px;
+    margin-top: 8%;
+    margin-left: 4%;
+    display: flex;
+}
+
+.user-profile-section {
+    width: 20vw;
+    flex-shrink: 0; /* Prevent shrinking of the user profile section */
+}
+
+.icon-user {
+    width: 40px;
+    height: 40px;
+}
+
+.buttons-profile {
+    margin-top: 15px;
+}
+
+.buttons-profile button {
+    background-color: #D9D9D9;
+    border: 1px solid white;
+    padding: 10px;
+    margin: 5px;
+    color: black;
+    padding: 8px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 150px;
+}
+
+.buttons-profile button:hover {
+    background-color: #00B562;
+    transition: 0.3s;
+}
+
+.right-container-booking-details {
+    flex: 1; 
+    overflow: auto; 
+}
+
+.logout-button {
+    margin-top: 5px;
+    margin-left: 3px;
+}
+
+/* Footer */
+.common-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+@media screen and (max-width:900px){
+    .booking-dtails-container{
+        margin-top: 70px;
+    }
+}
+@media screen and (max-width:663px){
+
+    .right-container-booking-details
+    {
+        margin-left: 10vw;
+        width: 54vw;
+    }
+    .user-profile-section{
+        width: 15vw;
+    }
+
+}
+@media screen and (max-width:400px)
+{
+    .user-profile-section{
+        width: fit-content;
+    }
+
+}
+  
+/* To handle the booking timing responsiveness */
+@media screen and (max-width:972px){
+   .calculated-time{
+    margin-right: 180px;
+   }
+}
+@media screen and (max-width:972px){
+    .calculated-time{
+     margin-right: 250px;
+    }
+ }
+
+
+@media screen and (max-width: 1000px) {
+    .booking-dtails-container {
+        width: 95vw; 
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .user-profile-section {
+        width: 25vw; 
+    }
+    .right-container-booking-details {
+        width: 75vw; 
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .buttons-profile button {
+        background-color: #D9D9D9;
+        border: 1px solid white;
+        padding: 10px;
+        margin: 5px;
+        color: black;
+        padding: 7px 18px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        width: 150px;
+    }
+    .booking-dtails-container {
+        width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .user-profile-section {
+        width: 100%; 
+        margin-bottom: 10px; 
+    }
+    .right-container-booking-details {
+        width: 70vw; 
+    }
+    .eventdetails-cardsection {
+        /* display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 24px; */
+        width: 630px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        height: 90vh;
+        overflow-y: scroll;
+    }
+}
+
+
+@media screen and (max-width: 400px) {
+    .booking-dtails-container {
+        width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .user-profile-section {
+        width: 80vw; 
+    }
+    .right-container-booking-details {
+        width: 67vw; 
+    }
+}
+
+@media screen and (max-width: 575px) {
+        .eventdetails-photo img {
+            width: 80px;
+            height: 70%;
+        }
+
+
+    }
+
+
+
+    @media screen and (max-width: 400px) {
+        .booking-dtails-container {
+            width: 95vw;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .user-profile-section {
+            width: 80vw; 
+        }
+        .right-container-booking-details {
+            width: 67vw; 
+        }
+    
+        /* Keep buttons in user-profile-section in a row */
+        .buttons-profile {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    
+        /* Adjust button styles */
+        .buttons-profile button {
+            width: auto;
+            margin: 5px;
+        }
+    }
+    

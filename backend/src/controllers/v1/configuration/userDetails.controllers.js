@@ -8,6 +8,7 @@ const user = db.privateuser;
 const facilityTypeMaster = db.facilitytype;
 const statusCodeMaster = db.statusmaster;
 const bookmarks = db.bookmarks;
+const hosteventdetails = db.hosteventdetails;
 
 let autoSuggestionForUserSearch = async (req, res) => {
   try {
@@ -180,38 +181,30 @@ let createUser = async (req, res) => {
     const pwdFlag = false;
 
     const {
-      title,
-      fullName,
-      userName,
-      mobileNumber,
-      alternateMobileNo,
-      emailId,
-      roleId,
-      statusId,
-      genderId,
+      encryptTitle,
+      encryptFullName: encryptfullName,
+      encryptMobileNo: encryptMobileNumber,
+      encryptAlternateMobileNo: encryptAlternateMobileNumber,
+      encryptRole,
+      encryptStatus,
+      encryptUsername: encryptUserName,
+      encryptEmailId: encryptemailId,
+      encryptGenderId,
     } = req.body;
 
-    console.log(
-      title,
-      fullName,
-      userName,
-      mobileNumber,
-      alternateMobileNo,
-      emailId,
-      roleId,
-      statusId,
-      genderId,
-      "input"
-    );
+    // console.log(title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId, 'input')
+    console.log(req.body, "req.body");
 
     let password = await generatePassword(8);
-
-    const encryptTitle = await encrypt(title);
-    const encryptfullName = await encrypt(fullName);
-    const encryptUserName = await encrypt(userName);
-    const encryptMobileNumber = await encrypt(mobileNumber);
-    const encryptAlternateMobileNumber = await encrypt(alternateMobileNo);
-    const encryptemailId = await encrypt(emailId);
+    let roleId = await decrypt(encryptRole);
+    let statusId = await decrypt(encryptStatus);
+    let genderId = await decrypt(encryptGenderId);
+    // const encryptTitle = await encrypt(title);
+    // const encryptfullName = await encrypt(fullName);
+    // const encryptUserName = await encrypt(userName);
+    // const encryptMobileNumber = await encrypt(mobileNumber);
+    // const encryptAlternateMobileNumber = await encrypt(alternateMobileNo);
+    // const encryptemailId = await encrypt(emailId);
 
     console.log(
       "1",
@@ -271,7 +264,7 @@ let createUser = async (req, res) => {
         roleId: roleId,
         statusId: statusId,
         genderId: genderId,
-        alterateContactNo: alternateMobileNo,
+        alterateContactNo: encryptAlternateMobileNumber,
         createdDt: new Date(),
         createdBy: createdBy,
         updatedDt: new Date(),
@@ -433,17 +426,18 @@ let getUserById = async (req, res) => {
       }
     );
 
-    //    let userEncryptedData = specificUser.map(async(user)=>({
-    //         title: await encrypt(user.title),
-    //         fullName:await encrypt(user.fullName),
-    //         emailId:await encrypt(user.emailId),
-    //         userName:await encrypt(user.userName),
-    //         contactNo:await encrypt(user.contactNo),
-    //         roleId:roleId,
-    //         statusId:statusId,
-    //         genderId:genderId
-
-    // }))
+    let userEncryptedData = await Promise.all(
+      specificUser.map(async (user) => {
+        return {
+          ...user,
+          title: await decrypt(user.title),
+          fullName: await decrypt(user.fullName),
+          emailId: await decrypt(user.emailId),
+          userName: await decrypt(user.userName),
+          contactNo: await decrypt(user.contactNo),
+        };
+      })
+    );
 
     return res
       .status(statusCode.SUCCESS.code)
@@ -507,127 +501,167 @@ let fetchInitialData = async (req, res) => {
 let viewBookings = async (req, res) => {
   try {
     let userId = req.user?.id || 1;
-    let fromDate = new Date(req.body.fromDate) || new Date();
-    let toDate = new Date(req.body.toDate) || new Date();
+    let fromDate = req.body.fromDate
+      ? new Date(req.body.fromDate)
+      : null || null;
+    let toDate = req.body.toDate ? new Date(req.body.toDate) : null || null;
     let bookingStatus = req.body.bookingStatus || null;
-    let facilityType = req.body.facilityType || null; //EVENTS    EVENT_HOST_REQUEST   PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND
+    let facilityType = req.body.facilityType || null; //EVENTS-6   EVENT_HOST_REQUEST-7   PARKS -1  PLAYGROUNDS-2  MULTIPURPOSE_GROUND-3
+    let facilityTypeId = req.body.facilityTypeId || null;
     let sortingOrder = req.body.sortingOrder || "desc"; // asc or desc
+    let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS     HISTORY
 
     let searchQuery = `select 
-        f.facilityname, f2.description as facilityType, f.address, fb.startDate,
-        fb.endDate, s.statusCode, fb.sportsName, s2.statusCode as paymentStatus
+        fb.facilityBookingId as bookingId, f.facilityId as Id, f.facilityname as name, f2.description as type, f.address as location, fb.startDate,
+        fb.endDate, s.statusCode, fb.sportsName, fb.bookingDate, fb.createdOn as createdDate
       from amabhoomi.facilitybookings fb
       inner join amabhoomi.facilities f on f.facilityId = fb.facilityId
       inner join amabhoomi.facilitytypes f2 on f.facilityTypeId = f2.facilitytypeId
-      inner join amabhoomi.publicusers p on p.publicUserId = fb.createdBy
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
-      inner join amabhoomi.statusmasters s2 on s2.statusId = fb.paymentstatus
-      where p.publicUserId = ?
-      AND (? IS NULL OR CAST(fb.createdOn as DATE) >= CAST(? as DATE))
+      where fb.createdBy = ?
+      order by fb.createdOn ${sortingOrder}`;
+
+    /**
+       * AND (? IS NULL OR CAST(fb.createdOn as DATE) >= CAST(? as DATE))
       AND (? IS NULL OR CAST(fb.createdOn as DATE) <= CAST(? as DATE))
       AND (? IS NULL OR s.statusId = ?)
       AND (? IS NULL OR f2.facilityTypeId = ?)
-      order by fb.createdOn ${sortingOrder}`;
+       */
 
     let searchQueryEvents = `select 
-        f.eventName, f.eventCategory, f.locationName, fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
+        fb.eventBookingId as bookingId, f.eventId as Id, f.eventName as name, f.eventCategory, f.locationName as location, 
+        fb.bookingDate, s.statusCode, 'EVENTS' as type, fb.createdOn as createdDate
       from amabhoomi.eventbookings fb
       inner join amabhoomi.eventactivities f on f.eventId = fb.eventId
-      inner join amabhoomi.publicusers p on p.publicUserId = fb.createdBy
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
-      inner join amabhoomi.statusmasters s2 on s2.statusId = fb.paymentstatus
-      where p.publicUserId = ?
+      where fb.createdBy = ?
+      order by fb.createdOn ${sortingOrder}`;
+    /**
+       * 
       AND (? IS NULL OR CAST(fb.createdOn as DATE) >= CAST(? as DATE))
       AND (? IS NULL OR CAST(fb.createdOn as DATE) <= CAST(? as DATE))
       AND (? IS NULL OR s.statusId = ?)
-      order by fb.createdOn ${sortingOrder}`;
+       */
 
     let searchQueryEventHostRequest = `select 
-        e.eventName, e.eventCategory, f2.facilityname, e.locationName, e.eventDate, 
-        fb.bookingDate, s.statusCode, s2.statusCode as paymentstatus
+        fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategory, f2.facilityname, e.locationName as location, e.eventDate, 
+        fb.bookingDate, s.statusCode, fb.bookingDate, 'EVENT_HOST_REQUEST' as type, fb.createdOn as createdDate
       from amabhoomi.hostbookings fb
       inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
       inner join amabhoomi.eventactivities e on e.eventId = f.eventId
       inner join amabhoomi.facilities f2 on f2.facilityId = e.facilityMasterId
-      inner join amabhoomi.publicusers p on p.publicUserId = fb.createdBy
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
-      inner join amabhoomi.statusmasters s2 on s2.statusId = fb.paymentstatus
-      where p.publicUserId = ?
-      AND (? IS NULL OR CAST(fb.createdOn as DATE) >= CAST(? as DATE))
-      AND (? IS NULL OR CAST(fb.createdOn as DATE) <= CAST(? as DATE))
-      AND (? IS NULL OR s.statusId = ?)
+      where fb.createdBy = ?
       order by fb.createdOn ${sortingOrder}`;
 
-    let searchQueryResult = null;
-    console.log("1");
+    if (tabName == "ALL_BOOKINGS") {
+      let searchQueryResult = await sequelize.query(searchQuery, {
+        replacements: [userId],
+        type: Sequelize.QueryTypes.SELECT,
+      });
+      console.log("searchQueryResult", searchQueryResult);
 
-    if (
-      facilityType != "EVENTS" &&
-      facilityType != "EVENT_HOST_REQUEST" &&
-      facilityType
-    ) {
-      searchQueryResult = await sequelize.query(searchQuery, {
-        replacements: [
-          userId,
-          fromDate,
-          fromDate,
-          toDate,
-          toDate,
-          bookingStatus,
-          bookingStatus,
-          facilityType,
-          facilityType,
-        ],
+      let searchEventQueryResult = await sequelize.query(searchQueryEvents, {
+        replacements: [userId],
         type: Sequelize.QueryTypes.SELECT,
       });
 
-      res.status(statusCode.SUCCESS.code).json({
-        message:
-          "Data of all bookings for parks, playgrounds, multipurpose grounds",
-        data: searchQueryResult,
-      });
-    } else if (facilityType == "EVENTS") {
-      searchQueryResult = await sequelize.query(searchQueryEvents, {
-        replacements: [
-          userId,
-          fromDate,
-          fromDate,
-          toDate,
-          toDate,
-          bookingStatus,
-          bookingStatus,
-        ],
-        type: Sequelize.QueryTypes.SELECT,
+      let modifiedResultArray = [
+        ...searchQueryResult,
+        ...searchEventQueryResult,
+      ];
+      modifiedResultArray = modifiedResultArray.sort((a, b) => {
+        return new Date(b.bookingDate) - new Date(a.bookingDate);
       });
 
-      res.status(statusCode.SUCCESS.code).json({
-        message: "Data of all bookings for event booking",
-        data: searchQueryResult,
-      });
-    } else if (facilityType == "EVENT_HOST_REQUEST") {
-      searchQueryResult = await sequelize.query(searchQueryEventHostRequest, {
-        replacements: [
-          userId,
-          fromDate,
-          fromDate,
-          toDate,
-          toDate,
-          bookingStatus,
-          bookingStatus,
-        ],
-        type: Sequelize.QueryTypes.SELECT,
-      });
+      console.log("searchEventQueryResult", searchEventQueryResult);
 
-      res.status(statusCode.SUCCESS.code).json({
-        message: "Data of all bookings for event host request",
-        data: searchQueryResult,
-      });
+      if (searchQueryResult.length == 0 && searchEventQueryResult.length == 0) {
+        res.status(statusCode.NOTFOUND.code).json({
+          message:
+            "No bookings data found for parks, playgrounds, multi-grounds",
+          data: [],
+        });
+      } else {
+        res.status(statusCode.SUCCESS.code).json({
+          message: "All bookings of parks, playgrounds, multi-grounds",
+          data: modifiedResultArray,
+        });
+      }
+    } else if (tabName == "HISTORY") {
+      let searchQueryResult = await sequelize.query(
+        searchQueryEventHostRequest,
+        {
+          replacements: [userId],
+          type: Sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      if (searchQueryResult.length == 0) {
+        res.status(statusCode.NOTFOUND.code).json({
+          message: "No bookings data found for event host requests",
+          eventHostRequests: [],
+        });
+      } else {
+        res.status(statusCode.SUCCESS.code).json({
+          message: "All bookings for event host requests",
+          eventHostRequests: searchQueryResult,
+        });
+      }
     } else {
       res.status(statusCode.BAD_REQUEST.code).json({
-        message: "Please provide filter options.",
-        data: [],
+        message: "Tab not selected",
       });
     }
+
+    // if (facilityType != 'EVENTS' && facilityType != 'EVENT_HOST_REQUEST') {
+    //   searchQueryResult = await sequelize.query(
+    //     searchQuery,
+    //     {
+    //       replacements: [userId, fromDate, fromDate, toDate, toDate, bookingStatus, bookingStatus, facilityTypeId, facilityTypeId],
+    //       type: Sequelize.QueryTypes.SELECT
+    //     }
+    //   );
+
+    //   res.status(statusCode.SUCCESS.code).json({
+    //     message: 'Data of all bookings for parks, playgrounds, multipurpose grounds',
+    //     data: searchQueryResult
+    //   })
+    // }
+    // else if (facilityType == 'EVENTS') {
+    //   searchQueryResult = await sequelize.query(
+    //     searchQueryEvents,
+    //     {
+    //       replacements: [userId, fromDate, fromDate, toDate, toDate, bookingStatus, bookingStatus],
+    //       type: Sequelize.QueryTypes.SELECT
+    //     }
+    //   );
+
+    //   res.status(statusCode.SUCCESS.code).json({
+    //     message: 'Data of all bookings for event booking',
+    //     data: searchQueryResult
+    //   })
+    // }
+    // else if (facilityType == 'EVENT_HOST_REQUEST'){
+    //   searchQueryResult = await sequelize.query(
+    //     searchQueryEventHostRequest,
+    //     {
+    //       replacements: [userId, fromDate, fromDate, toDate, toDate, bookingStatus, bookingStatus],
+    //       type: Sequelize.QueryTypes.SELECT
+    //     }
+    //   );
+
+    //   res.status(statusCode.SUCCESS.code).json({
+    //     message: 'Data of all bookings for event host request',
+    //     data: searchQueryResult
+    //   })
+    // }
+    // else {
+    //   res.status(statusCode.BAD_REQUEST.code).json({
+    //     message: 'Please provide filter options.',
+    //     data: []
+    //   })
+    // }
   } catch (error) {
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
@@ -738,11 +772,97 @@ let bookmarkingRemoveAction = async (req, res) => {
 let viewBookmarksListForUser = async (req, res) => {
   try {
     let userId = req.user?.id || 1;
-    let;
+    let facilityType = req.body.facilityType; //EVENTS   PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND
+    let fromDate = req.body.fromDate
+      ? new Date(req.body.fromDate)
+      : null || null;
+    let toDate = req.body.toDate ? new Date(req.body.toDate) : null || null;
+
+    console.log({ userId, facilityType, fromDate, toDate });
+
+    let fetchBookmarkListForFacilitiesQuery = `  
+      select 
+        p.bookmarkId, f.facilityId, f.facilityname, f.address, f2.description as facilityType
+      from amabhoomi.publicuserbookmarks p
+      inner join amabhoomi.facilities f on p.facilityId = f.facilityId
+      inner join amabhoomi.statusmasters s on s.statusId = p.statusId and s.parentStatusCode = 'RECORD_STATUS'
+      inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityTypeId
+      where p.publicUserId = ?
+      AND (? IS NULL OR CAST(p.createdOn as DATE) >= CAST(? as DATE))
+      AND (? IS NULL OR cast(p.createdOn as DATE) <= CAST(? as DATE))
+      and s.statusCode = 'ACTIVE'
+    `;
+
+    let fetchBookmarkListForEventsQuery = `
+      select
+        p.bookmarkId, e.eventName, e.eventId, e.locationName, e.eventDate, 'Event' as facilityType
+      from amabhoomi.publicuserbookmarks p
+      inner join amabhoomi.eventactivities e on p.eventId = e.eventId
+      inner join amabhoomi.statusmasters s on s.statusId = p.statusId and s.parentStatusCode = 'RECORD_STATUS'
+      where p.publicUserId = ?
+      AND (? IS NULL OR CAST(p.createdOn as DATE) >= CAST(? as DATE))
+      AND (? IS NULL OR cast(p.createdOn as DATE) <= CAST(? as DATE))
+      and s.statusCode = 'ACTIVE'
+    `;
+
+    let searchQueryResult = null;
+
+    if (facilityType != "EVENTS" && facilityType != "EVENT_HOST_REQUEST") {
+      //search for PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND bookmarks
+      searchQueryResult = await sequelize.query(
+        fetchBookmarkListForFacilitiesQuery,
+        {
+          replacements: [userId, fromDate, fromDate, toDate, toDate],
+          type: Sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      // console.log('1 searchQueryResult', searchQueryResult);
+
+      res.status(statusCode.SUCCESS.code).json({
+        message:
+          "Data of all bookmarks for parks, playgrounds, multipurpose grounds",
+        data: searchQueryResult,
+      });
+    } else if (facilityType == "EVENTS") {
+      //EVENTS bookmarks
+      searchQueryResult = await sequelize.query(
+        fetchBookmarkListForEventsQuery,
+        {
+          replacements: [userId, fromDate, fromDate, toDate, toDate],
+          type: Sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      // console.log('2 searchQueryResult', searchQueryResult);
+
+      res.status(statusCode.SUCCESS.code).json({
+        message: "Data of all bookmarks for event booking",
+        data: searchQueryResult,
+      });
+    } else {
+      res.status(statusCode.BAD_REQUEST.code).json({
+        message: "Please provide filter options.",
+        data: [],
+      });
+    }
   } catch (error) {
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });
+  }
+};
+
+let addHostEventRequest = async (req, res) => {
+  try {
+    let { organisationName, organisationPanCard, organisationAddress } =
+      req.body;
+
+    // hosteventdetails
+  } catch (error) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message: error.message,
+    });
   }
 };
 
@@ -757,4 +877,5 @@ module.exports = {
   initalFilterDataForBooking,
   bookmarkingAddAction,
   bookmarkingRemoveAction,
+  viewBookmarksListForUser,
 };

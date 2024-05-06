@@ -24,5 +24,6 @@ router.post('/bookmarkingAddAction', userDetails.bookmarkingAddAction);
 
 router.post('/bookmarkingRemoveAction', userDetails.bookmarkingRemoveAction);
 
+router.post('/viewBookmarks', userDetails.viewBookmarksListForUser);
 
 module.exports = router

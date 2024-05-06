@@ -7,6 +7,7 @@ const Sequelize = db.Sequelize;
 const bcrypt = require("bcrypt");
 const { decrypt } = require("../../../middlewares/decryption.middlewares");
 const { encrypt } = require("../../../middlewares/encryption.middlewares");
+const facilityType = db.facilitytype;
 const updatepublic_user = async (req, res) => {
   try {
     const {
@@ -134,7 +135,58 @@ const viewpublic_user = async (req, res) => {
     });
   }
 };
+
+const homePage = async (req, res) => {
+  try {
+    console.log("12jhkfdj");
+    // 1) fetch data w.r.t nearby location and facility
+    // 2) fetch facility w.r.t to the playgrounds,parks,multipurpose grounds, Greenways,waterways
+    // 3) show the map data with respect to parks, playgrounds,multipurposegrounds, greenways, waterways show the facility near by and search facility,name,locality
+    // 4)show the notifications
+    // 5)Current events
+    // 6) explore new activities for all
+    // 7) Gallery images for all
+    let givenReq = req.body.givenReq ? req.body.givenReq : null;
+
+    let fetchAllTypeOFFacility = await facilityType.findAll({
+      attributes: ["facilitytypeId", "code", "description"],
+
+      where: {
+        statusId: 1,
+      },
+    });
+
+    let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
+    eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where ticketSalesEnabled =1 `;
+
+    let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery);
+    console.log(
+      fetchAllTypeOFFacility,
+      "fetchalltypeoffacilty",
+      fetchEventDetailsData
+    );
+
+    let fetchAllAmenities = await sequelize.query(
+      `select amenityId, amenityName, statusId from amabhoomi.amenitymasters where statusId = 1`
+    );
+    let fetchAllServices = await sequelize.query(
+      `select serviceId,code,description status from amabhoomi.services where statusId = 1`
+    );
+    return res.status(statusCode.SUCCESS.code).json({
+      message: "All home Page Data",
+      facilityTypeDetails: fetchAllTypeOFFacility,
+      eventDetailsData: fetchEventDetailsData[0],
+      amenityDetails: fetchAllAmenities[0],
+      servicesDetails: fetchAllServices[0],
+    });
+  } catch (err) {
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
+  }
+};
 module.exports = {
   updatepublic_user,
   viewpublic_user,
+  homePage,
 };

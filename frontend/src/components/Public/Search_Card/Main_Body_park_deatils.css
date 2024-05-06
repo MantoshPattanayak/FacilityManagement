@@ -1,6 +1,41 @@
 .main__body__park {
     padding-top: 50px; /* Add space at the top for the header */
 }
+.park-body-1{
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Park_BackGround_img.png");
+    height: 30vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.park-body-3{
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/MultiPark.jpg");
+    height: 30vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.park-body-2{
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Sport.png");
+    height: 30vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.name_park_img{
+    padding: 140px;
+    font-size: 40px;
+    color:white;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Card here ------------------------------------------ */
 
 .card-container {
     display: flex;
@@ -9,7 +44,15 @@
    
 }
 
-.Park_card {
+
+
+
+
+
+
+
+
+.park-card-1{
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
     width: calc(100% - 40px); /* Adjust width for padding */
     max-width: 300px; /* Limit maximum width for better responsiveness */
@@ -22,11 +65,44 @@
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.Park_card:hover {
+.park-card-1:hover {
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
+.park-card-2{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
+    width: calc(100% - 40px); /* Adjust width for padding */
+    max-width: 300px; /* Limit maximum width for better responsiveness */
+    padding: 8px;
+    gap: 14px;
+    margin: 20px;
+    border-radius: 18px;
+    background-color: #fdc7bc80;
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
 
+.park-card-2:hover {
+    background-color: rgb(246, 245, 245);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+.park-card-3{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
+    width: calc(100% - 40px); /* Adjust width for padding */
+    max-width: 300px; /* Limit maximum width for better responsiveness */
+    padding: 8px;
+    gap: 14px;
+    margin: 20px;
+    border-radius: 18px;
+    background-color: rgb(255, 240, 209);
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.park-card-3:hover {
+    background-color: rgb(246, 245, 245);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
 .Card_img {
     width: 100%;
     border-radius: 15px;
@@ -68,42 +144,167 @@
 }
 
 
-/* here Search */
+/* here Search --------------------------------------*/
 .Search_container{
     display: flex;
     justify-content: space-between;
     padding: 8px;
     gap: 14px;
     margin: 20px;
+    margin-left: 90px;
 }
-.Button_Container{
+
+/* Adjust styling to make it resemble Google's search input */
+.search-container1 {
+    position: relative;
+    width: 300px; /* Adjust width as needed */
+}
+
+/* Style the input field */
+.Search_input {
+    width: 100%;
+    padding: 8px; /* Add padding to top and bottom */
+    padding-left: 40px; /* Add more padding on the left to accommodate the icon */
+    border: 2px solid #ccc; /* Increase border thickness */
+    border-radius: 8px; /* Increase border radius for rounded corners */
+    font-size: 16px;
+    color: #333; /* Text color */
+    background-color: #f9f9f9; /* Background color */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+/* Style the search icon */
+.search-icon {
+    position: absolute;
+    top: 55%;
+    left: 10px; /* Adjust the position to the left */
+    transform: translateY(-50%);
+    color: #888;
+}
+
+/* Style the icon */
+.search-icon svg {
+    width: 20px;
+    height: auto;
+}
+
+/* Highlight border color on focus */
+.Search_input:focus {
+    border-color: #029c3d; /* Change border color on focus */
+    outline: none; /* Remove default focus outline */
+}
+
+
+.Button_Container {
     display: flex;
+}
+
+.image-button {
+    position: relative;
+}
+
+.button-text {
+    display: none;
+    position: absolute;
+    bottom: -20px; /* Adjust this value to change the distance between image and text */
+    left: 50%;
+    transform: translateX(-50%);
+    color:green;
+    font-size: 20px;
+    font-weight: 600;
+    
+}
+
+.image-button:hover .button-text {
+    display: block;
 }
 
 /* Name of Park */
 .name_park{
     font-size: 35px;
-   font-weight: 600;
+    font-weight: 600;
    color: rgb(0, 109, 0);
-   margin-left: 80px;
+    margin-left: 120px;
 }
 
 /* Search Input field */
-.Input_text_conatiner {
-    position: relative;
+
+
+/* Filter On Click of Button Free, Paid , NearBy, Popular --------------------------------------------------------- */
+
+
+.Filter_grid{
+  padding: 10px;
+  margin-left: 90px;
+  display: flex;
+  justify-content: space-between;
+}
+.gride_page{
+    margin-right: 90px;
+}
+.filter_button{
+    display: flex;
+    gap: 10px;
+}
+/* drop down */
+
+select{
+    border:none;
+    padding: 20px 20px;
+    border-radius:5px;
+  }
+  
+  select:focus{
+    outline:none;
+  }
+
+.button-59 {
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #01b116;
+  box-sizing: border-box;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  fill: #000;
+  font-family: Inter,sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  height: 35px;
+  justify-content: center;
+  outline: 0;
+  padding: 2px;
+  text-align: center;
+  min-width: 100px;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  border-radius: 10px;
+
 }
 
-.Input_text_conatiner input[type="text"] {
-    padding: 10px;
-    width: 100%;
-    border: 2px solid #ccc; /* Placeholder border color */
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none; /* Remove input outline */
+.button-59:focus {
+  color: #171e29;
 }
 
-.Input_text_conatiner input[type="text"]::placeholder {
-    color: #999; /* Placeholder text color */
-    font-style: italic; /* Italicize placeholder text */
-    font-weight: bold; /* Bold placeholder text */
+.button-59:hover {
+  border-color: rgb(4, 156, 1);
+    background-color:rgb(2, 125, 0) ;
+    color: #fff;
+  fill: #06f;
+}
+
+
+
+@media (min-width: 768px) {
+  .button-59 {
+    min-width: 100px;
+  }
+}
+
+/* here Table (List design) --------------------------- */
+.table_Container1{
+    padding: 30px;
 }

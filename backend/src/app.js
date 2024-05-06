@@ -50,6 +50,14 @@ const reviewEventBookingRoute = require("./routes/api/" +
   "/activity/reviewEventBooking");
 const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
+const razorPayPayment = require("./routes/api/" +
+  api_version +
+  "/payment/razorPayPayment");
+const booking = require("./routes/api/" + api_version + "/booking/booking");
+const languageContent = require("./routes/api/" +
+  api_version +
+  "/configuration/languageContent");
+
 console.log(port, "port");
 
 app.use(
@@ -59,14 +67,14 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "16kb" }));
+app.use(express.json({ limit: "20mb" }));
 // app.use(passport.initialize());
 
 // here in the express.urlencoded i.e. extended is equal to true means inside object we can give another object
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "16kb",
+    limit: "20mb",
   })
 );
 
@@ -92,6 +100,10 @@ app.use("/pulicUser", publicUser);
 app.use("/eventactivites", eventactivitesroute);
 //host event details
 app.use("/hosteventdetails", hosteventdetailsroute);
+
+app.use("/razorPayPayment", razorPayPayment);
+app.use("/booking", booking);
+app.use("/languageContent", languageContent);
 //  put all your route handlers here
 
 //activity routes

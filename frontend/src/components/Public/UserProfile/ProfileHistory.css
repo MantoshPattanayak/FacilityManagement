@@ -1,0 +1,35 @@
+.dropdown {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+  
+   
+}
+.average-time{
+    margin-top: 10px;
+    
+}
+.drop{
+    border: 1px solid rgb(102, 102, 102);
+    border-radius: 6px;
+    margin-left: 10px;
+}
+.total-visit{
+    margin-top: 10px;
+}
+.today{
+    margin-top: 20px;
+    width: 100%;
+    padding:2px ;
+  
+}
+.day{
+    color: black;
+    background-color: #A5D5B2;
+    width: 168%;
+   
+}
+.park-name{
+    margin-top: 3px;
+    border: 1px solid rgb(155, 153, 153);
+}

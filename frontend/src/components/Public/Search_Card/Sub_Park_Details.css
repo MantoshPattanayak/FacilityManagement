@@ -13,6 +13,7 @@
   
    
 }
+
 .text-park{
     padding-top: 90px;
     font-size: 50px;
@@ -59,6 +60,7 @@
     background-color: rgb(251, 249, 249);
     border: 2px solid #cdd1ce;
     height: 44vh;
+    width: 40vh;
 }
 .Google_map{
     width: 40vh;
@@ -77,11 +79,19 @@
     color: #484747;
 }
 .Open_Button{
-    color: #3AB757;
+ 
     font-size: 20px;
     font-weight: 700;
     border: 1px 2px soild red;
 }
+.open {
+  color: green;
+  }
+  
+.closed {
+    color: rgb(191, 42, 42);
+  }
+  
 .Button_ticket_container{
     display: flex;
     justify-content: space-around;
@@ -117,7 +127,7 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 40%;
+  width: 45%;
 }
 
 .button-9:disabled {
@@ -287,6 +297,7 @@
     font-size: 25px;
     color: #019f13;
     font-weight: 600;
+    margin: 10px;
   }
   .Yoga_date_time{
     display: flex;

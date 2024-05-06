@@ -51,9 +51,16 @@ sequelize.authenticate()
   db1.file = require('./file.models')(sequelize,DataTypes)
   db1.fileattachment = require('./fileattachment.models')(sequelize,DataTypes)
   db1.bookmarks = require('./userbookmarks.models')(sequelize, DataTypes)
-
-  db1.publicuser.sync({
-    force: true
+  db1.hosteventdetails = require('./hosteventdetails.models')(sequelize, DataTypes)
+  db1.facilitybookings = require('./facilitybookings.models')(sequelize, DataTypes)
+  db1.userbookingactivities = require('./userbookingactivities.models')(sequelize, DataTypes)
+  db1.useractivitymasters = require('./useractivitymaster.models')(sequelize, DataTypes)
+  db1.device = require('./device.models')(sequelize,DataTypes);
+  db1.otpDetails = require('./otpverification.models')(sequelize,DataTypes)
+  
+  db1.languageresources = require('./languageresources.models')(sequelize, DataTypes);
+  db1.otpDetails.sync({
+    force: false
   })
 
 module.exports = db1;

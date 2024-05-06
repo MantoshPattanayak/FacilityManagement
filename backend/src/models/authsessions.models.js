@@ -10,37 +10,17 @@ const AuthSessions = sequelize.define('authsessions',{
         type:DataTypes.INTEGER
 
     },
-    refreshToken:{
-        type:DataTypes.STRING(255),
-        unique:true,
-        allowNull:false
+    deviceId:{
+        type:DataTypes.INTEGER
     },
-    sessionExpiration:{
+    lastActivity:{
         type:DataTypes.DATE,
         allowNull:false
 
     },
-    createdBy:{
+    active:{
         type:DataTypes.INTEGER
-    },
-    createdOn: {
-        type: DataTypes.DATE, // Define the column as DATE type
-        allowNull: false,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
-    },
-    updatedBy:{
-        type:DataTypes.INTEGER
-    },
-    updatedOn: {
-        type: DataTypes.DATE // Define the column as DATE type
-    },
-    deletedBy:{
-        type:DataTypes.INTEGER
-    },
-    deletedOn: {
-        type: DataTypes.DATE // Define the column as DATE type
     }
-
     
 
 })

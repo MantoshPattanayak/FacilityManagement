@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../Public/SignUp.css';
 import AdminHeader from '../../common/AdminHeader';
 import Footer from '../../common/Footer';
+import CommonFooter from '../../common/CommonFooter';
 import { RxCross1 } from 'react-icons/rx';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { regex, dataLength } from '../../utils/regexExpAndDataLength';
@@ -10,6 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonRunning, faDumbbell, faPersonSwimming, faFootball, faVolleyball } from '@fortawesome/free-solid-svg-icons';
 import SuccessPopup from './SuccessPopup'; // Import the SuccessPopup component
+// EncrptData here --------------------------------------------------------
+import { encryptData } from '../../utils/encryptData';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const SignUp = () => {
     const [signup, setSignup] = useState(true);
@@ -28,6 +34,11 @@ const SignUp = () => {
         language: "",
         password: ""
     });
+
+
+
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -96,19 +107,22 @@ const SignUp = () => {
         }
         try {
             const response = await axiosHttpClient('PUBLIC_SIGNUP_API', 'post', {
-                firstName: signupData.firstName,
-                middleName: signupData.middleName,
-                lastName: signupData.lastName,
-                email: signupData.email,
-                language: signupData.language,
-                password: signupData.password
+                encryptFirstName: encryptData(signupData.firstName),
+                encryptMiddleName: encryptData(signupData.middleName),
+                encryptLastName: encryptData(signupData.lastName),
+                 encryptEmail: encryptData(signupData.email),
+                 encryptLanguage: encryptData(signupData.language),
+                 encryptPassword: encryptData(signupData.password)
+             
             });
             console.log('Response:', response.data);
             // Redirect to home page after successful registration
+            toast.success('Profile Setup done successfully.');
             navigate('/Public/Home');
             setShowSuccessPopup(true); // Show the success popup
         } catch (error) {
             console.error('Error:', error);
+            toast.error('Profile Setup failed. Please try again.');
         }
     }
 
@@ -156,7 +170,7 @@ const SignUp = () => {
         }
         return true;
     };
-
+// here SingUp Page (Send the Mobile Number of User)
 
 
 
@@ -305,7 +319,7 @@ const SignUp = () => {
                                     />
                                     {confirmPasswordError && <p className="error-message">{confirmPasswordError}</p>}
                                 </div>
-
+                               
                             </div><br />
 
                             <div className="preffered-activity">
@@ -332,8 +346,9 @@ const SignUp = () => {
                 )
             }
             {showSuccessPopup && <SuccessPopup />}
-
-            <Footer />
+        
+           <CommonFooter/>
+            <ToastContainer />
         </div>
     )
 }

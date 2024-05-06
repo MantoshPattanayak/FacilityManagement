@@ -1,0 +1,799 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    /* Remove default margin */
+    padding: 0;
+    /* Remove default padding */
+
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+}
+
+.landingcontainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 68px;
+    /* background: linear-gradient(270.04deg, rgba(0, 0, 0, 0.42) 57.13%, rgba(0, 0, 0, 0) 92.62%); */
+    background-color: #002009;
+    color: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-content {
+    width: 94%;
+}
+
+.header nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    /* Align the navigation to the right */
+}
+
+.header nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.header nav ul li:last-child {
+    margin-right: 0;
+}
+
+.header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.login-button {
+    width: 80px;
+    height: 34px;
+    background-color: #3AB757;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-img {
+    background-image: linear-gradient(to right, #010101b5 20%, transparent), url('../Public/ama_bhoomi_bgi.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* position: relative; */
+    opacity: 100%;
+    max-height: 100%;
+
+    margin-bottom: 1px;
+    padding: 100px;
+    width: 100vw;
+    height: 100vh;
+    /* background-color: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)); */
+}
+
+
+/*----------------- Landing Page contant -----------------------------------------------------------------------*/
+
+.landing-page_contant {
+    display: flex;
+    flex-direction: column;
+    margin-top: 54px;
+    margin-bottom: 68px;
+}
+
+.Search-Conatiner {
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px;
+}
+
+.Search-Conatiner h1 {
+    font-weight: bold;
+    font-size: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1bc33f;
+}
+
+.Search-Conatiner p {
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.Search-Conatiner h2 {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.typing-animation {
+    overflow: hidden; 
+    white-space: nowrap; 
+   
+    animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  
+  @keyframes blink-caret {
+    from, to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: #000; 
+    }
+  }
+  
+
+.search-bar {
+    width: 441px;
+    height: 32px;
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.view-map-button {
+    padding: 5px;
+    border: 1px solid white;
+    background: transparent;
+    width: 100px;
+    color: white;
+    border-radius: 10px;
+}
+
+/* ----------Logo sticker------------------------------------------------------------------------ */
+
+.logo-section {
+    background-color: #002009fa;
+    width: 100vw;
+    height: 18vh;
+}
+
+.icon img {
+    width: 100px;
+    height: 100px;
+   
+}
+
+.logo-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 44px;
+}
+
+.logos {
+    width: 700px;
+    height: 130px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    color: white;
+
+}
+
+
+/* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/
+
+.map-parentContainer {
+    width: 94%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: yellow; */
+}
+
+
+/* --------//google map ------------------------------------------------------------------------------- */
+.map-container2 {
+    width: 66%;
+    /* padding: 40px; */
+}
+
+.map-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 13vh;
+}
+
+.icon1 {
+    margin: 10px;
+    position: relative;
+}
+
+.text1{
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    
+    color: #013409;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.icon1 img {
+   height: 8vh;
+}
+
+.icon1:hover h2 {
+    opacity: 1;
+}
+
+
+.map-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0.5px solid #eeeeee;
+}
+
+.mapSearchButton input {
+    border: 1px solid rgb(2, 54, 145);
+    width: 264px;
+    height: 43px;
+    padding: 12px;
+
+}
+
+.mapSearchButton button {
+    padding: 10px 20px;
+    background-color: #016694;
+    color: white;
+    border: none;
+
+    cursor: pointer;
+}
+
+.mapSearchButton button:hover {
+    background-color: #003a69;
+    border: 1px solid rgb(0, 33, 91);
+}
+
+.mapSearchButton {
+    display: flex;
+
+}
+
+/* .LoadScript {
+    margin-top: 100px;
+} */
+
+
+/* --------Facilities Near me----------------------------------------------------- */
+
+
+.nearByFacilities {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* background-color:red; */
+    /* width: 346px; */
+    width: 28%;
+    height: 344px;
+    margin: 16px;
+}
+
+.nearByFacilities-heading {
+    display: flex;
+    /* justify-content: space-between; */
+    display: flex;
+    justify-content: space-between;
+    width: 256px;
+}
+
+.nearByFacilities-heading h1 {
+    font-weight: 700;
+    font-size: large;
+    width: 178px;
+    margin-bottom: 12px;
+}
+
+.nearByFacilities-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 60px;
+}
+
+.nearByFacilities-heading button {
+    padding: 4px;
+    border: 1px solid gainsboro;
+    margin-inline: 4px;
+    font-size: 14px;
+    border-radius: 4px;
+    height: 28px;
+}
+
+.map-facilities {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    font-size: 14px;
+    padding-inline: 12px;
+    height: 24px;
+    border-radius: 7px;
+    background-color: #CCD1D5;
+    box-flex-group: #CCD1D5;
+    border: 1px solid #CCD1D5;
+    margin-block: 12px;
+}
+
+
+/* -----Whats New Section------------------------------------------- */
+
+.notice2 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-block: 28px;
+}
+
+.notice2-container {
+    width: 94%;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-right: 50px; */
+    /* margin-left: 0px; */
+}
+
+.notice2-container span {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 8px 20px;
+    background: rgb(6, 63, 113);
+    color: #fff;
+    overflow: hidden;
+    /* clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); */
+}
+
+.marquee-content {
+    width: calc(100% - 120px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+/* ------Event details card-------------------------------------------------------------------- */
+
+
+
+/* // --------------Explore new Activities------------------------------------------------------------- */
+
+
+.exploreNewAct-outer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 150px;
+    gap: 80px;
+
+
+}
+
+.badminton_img{
+    height: 20vh;
+}
+
+.image-secondDiv {
+    /* background-image:linear-gradient(rgba(0, 0, 0, 0.2)), url(../../assets/explore\ new\ activity\ badminton.png); */
+
+    position: relative;
+    /* Ensure positioning relative to this div */
+    width: 100%;
+    /* Adjust as needed */
+    height:30vh;
+    /* Adjust as needed */
+  
+    background-size: cover;
+    /* Adjust as needed */
+    background-position: center;
+    /* Adjust as needed */
+    background-repeat: no-repeat;
+    /* Adjust as needed */
+
+}
+
+.parkList {
+    /* position: absolute; */
+    /* top: 0;
+    right: 0; */
+    background-color: #fff;
+    /* Change to desired color */
+    padding: 10px;
+    border: 1px solid #ccc;
+    display: flex;
+    /* Display parks side by side */
+    flex-direction: column;
+    /* Display parks in a column */
+}
+
+
+.newActivites button {
+    width: 100vw;
+
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-color: #858484;
+    color: white;
+    border-radius: 8px;
+}
+
+.exploreNewAct-Parent-Container {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../assets/Explore_New_Activity_background.png");
+    width: 100%;
+    height: 70vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    position: relative;
+}
+
+.exploreNewAct-Parent-Container img {
+    width: 100%;
+    height: 738px;
+}
+
+/* Header */
+.whiteHeader {
+    width: 6px;
+    height: 49px;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.exploreNewAct-Header h1 {
+    font-size: 28px;
+    color: white
+}
+
+.exploreNewAct-Header {
+    display: flex;
+    margin: 5vw;
+    align-items: center;
+    gap: 1vw;
+}
+
+.activity {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    justify-content: center;
+    width: 91px;
+    background-color: #424242;
+    color: white;
+}
+
+/* Selected activity */
+.activity.selected {
+    background-color: #ccc;
+    /* Change to desired color */
+}
+
+/* List of parks */
+.parkList {
+    /* position: absolute; */
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    /* Change to desired color */
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+/* Optional: Style individual park items */
+.parkList p {
+    margin: 5px 0;
+    width: 300px;
+}
+
+.parkItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.parkItem button {
+    font-size: 12px;
+    height: 24px;
+    width: 73px;
+    background-color: white;
+    color: black;
+}
+
+.image-secondDiv img {
+    width: 662px;
+}
+
+/* experiment */
+.image-secondDiv {
+    position: relative;
+    width: 100%;
+    /* Adjust as needed */
+    height: 300px;
+    /* Adjust as needed */
+}
+
+.image-secondDiv img {
+    width: 100%;
+    /* Ensure the image fills its container */
+    height: 100%;
+    /* Ensure the image fills its container */
+    object-fit: cover;
+    /* Adjust as needed */
+}
+
+.exploreNewAct-secondDiv {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parkList {
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent background for better readability */
+    padding: 10px;
+    border: 1px solid #ccc;
+    z-index: 1;
+    /* Ensure parks appear above the image */
+}
+
+
+/*----------------------------------- Gallery section------------------------------------------------------------------------------------------------------- */
+/* Custom CSS for slick carousel arrows */
+/* Custom CSS for slick carousel arrows */
+.slick-prev:before,
+.slick-next:before {
+  font-size: 90px; /* Change the font size to your desired size */
+  color: blue; /* Change the color to your desired color */
+  background-color: red;
+}
+
+
+
+/* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
+
+@media screen and (max-width: 1024px) {
+
+    /* --------Facilities Near me----------------------- */
+
+    .nearByFacilities-heading {
+        flex-direction: column;
+        margin-bottom: 16px;
+    }
+
+    /* ------Event details card------------------------ */
+
+    .carousel-slide2 {
+        padding-block: 4px;
+        border-radius: 8px;
+        border: 1px solid rgb(1, 129, 16);
+    }
+
+    .carousel-slide-location {
+        margin-inline: 8px;
+        width: 239px;
+    }
+
+    .carousel-slide-location h1 {
+        width: 221px;
+    }
+
+    .Yoga_image {
+        width: 238px;
+    }
+
+    .Yoga_date_time {
+        width: 243px;
+        margin-inline: 4px;
+    }
+
+
+    /*------------ Explore new activities----------- */
+    .exploreNewAct-Parent-Container {
+        height: 100%;
+    }
+}
+
+
+
+
+@media screen and (max-width: 820px) {
+
+    /* header-content  Fonnt size-------------- */
+    .header nav ul li a {
+        font-size: 12px;
+        font-family: 'Roboto';
+    }
+
+    /* landing-page_contant ------------------- */
+
+    .landing-page_contant {
+        width: 94%;
+        margin-top: 16px;
+        margin-bottom: 28px;
+    }
+
+
+    .Search-Conatiner h1 {
+        font-size: 32px;
+        font-family: 'Roboto';
+    }
+
+    .Search-Conatiner p {
+        font-size: 14px;
+    }
+
+    .Search-Conatiner h2 {
+        font-size: 18px;
+        font-family: 'Roboto';
+    }
+
+    .search-bar {
+        width: 306px;
+        height: 32px;
+        border-radius: 8px;
+        padding: 18px;
+        font-size: 12px;
+    }
+
+    .view-map-button {
+        padding: 6px;
+        width: 84px;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+
+    .Search-Conatiner {
+        height: 250px;
+    }
+
+
+
+    /* --Logo sticker---------------------------------- */
+    .logos {
+        height: 100px;
+    }
+
+    .icon img {
+        height: 60px;
+    }
+
+    .icon h2 {
+        font-size: 12px;
+    }
+
+    /* ----google map------------------------------- */
+    .map-icons img {
+        height: 32px;
+    }
+
+    .mapSearchButton button {
+        padding: 3px 10px;
+    }
+
+    .mapSearchButton input {
+        border: 1px solid gray;
+        width: 206px;
+        height: 32px;
+        font-size: 10px;
+        padding: 8px;
+        border-radius: 6px;
+    }
+
+    .mapSearchButton button svg {
+        height: 12px;
+        width: 12px;
+    }
+
+    /* -----Facilities Near me------------------------------------------------------- */
+    .nearByFacilities-heading button{
+        font-size: 10px;
+    }
+    .map-facilities {
+        height: 20px;
+    }
+
+    .map-facilities p {
+        font-size: 10px;
+        font-family: 'Roboto';
+    }
+
+    /* ------Event details card---------------------------------------------------- */
+    .Name_yoga{
+        width: 135px;
+        font-size: 14px;
+    }
+    .Yoga_image {
+        width: 156px;
+        height: 104px;
+    }
+    .Yoga_date_time {
+        width: 145px;
+        margin-inline: 4px;
+    }
+    .Yoga_date {
+        font-size: 8px;
+        font-weight: 500;
+    }
+    .Yoga_time {
+        font-size: 8px;
+        font-weight: 500;
+    }
+    .carousel-slide-location {
+        margin-inline: 3px;
+        width: 142px;
+    }
+    .carousel-slide-location svg{
+        height: 10px;
+    }
+    .carousel-slide-location h1 {
+        width: 221px;
+        font-size: 8px;
+    }
+    .carousel-slide-text{
+        width: 145px;
+        display: flex;
+        align-items: center;
+        gap: 0px;
+    }
+
+}
