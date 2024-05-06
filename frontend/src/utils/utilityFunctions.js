@@ -23,4 +23,9 @@ function formatDate(date) { //format input date as DD-MM-YYYY
     return `${day}-${month}-${year}`;
 }
 
-export { formatTime, formatDate };
+function logOutUser() {
+    sessionStorage.setItem('isUserLoggedIn', 0);
+    return;
+}
+
+export { formatTime, formatDate, logOutUser };

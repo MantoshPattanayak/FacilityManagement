@@ -549,7 +549,7 @@ let viewBookings = async (req, res) => {
       from amabhoomi.hostbookings fb
       inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
       inner join amabhoomi.eventactivities e on e.eventId = f.eventId
-      inner join amabhoomi.facilities f2 on f2.facilityId = e.facilityMasterId
+      inner join amabhoomi.facilities f2 on f2.facilityId = e.facilityId
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
       where fb.createdBy = ?
       order by fb.createdOn ${sortingOrder}`;

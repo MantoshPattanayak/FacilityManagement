@@ -38,7 +38,7 @@ export default function PublicHeader() {
             </li>
             {isUserLoggedIn == 1 ? (
               <li>
-                <a className="" href="#">
+                <a className="" href="/profile/booking-details">
                   <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
                 </a>
               </li>
