@@ -1,104 +1,135 @@
-.profile--Box > h1 {
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.7rem;
-}
-.profile--Box {
+.profile--Main-Box {
   height: 100vh;
-}
-.profile--body {
-  padding: 2.4rem;
+  padding: 3rem 5rem;
   display: flex;
   flex-direction: column;
-  /* row-gap: 12px; */
-  /* gap: 12px; */
-  /* justify-content: center; */
-  align-items: center;
-  justify-content: flex-start;
+  min-height: 100vh;
+  column-gap: 4rem;
+}
+
+.profile-leftside--Body {
   width: 100%;
+  /* border: 2px solid black; */
 }
 
-.profile--body > p {
-  font-size: 1.1rem;
-  font-weight: 600;
+.profile-about {
+  font-size: 0.9rem;
 }
 
-.profile--Insidebody {
-  /* display: flex; */
-  /* gap: 21px; */
-  /* justify-content: space-between; */
+.profile-view--Body {
+  padding: 1.25rem;
+  border-bottom-width: 2px;
+  border-color: gray;
+  /* margin: 0.94rem; */
 }
 
-.profile--section > h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
+.profile-button--Section {
+  padding: 1.25rem;
 }
-.profile-textPhoto {
-  /* text-align: left; */
+
+.profile-button--Section > li {
+  margin: 1.14rem 0;
+}
+
+.profile-button--Active {
+  background-color: rgba(0, 181, 98, 1);
+}
+
+.profile-button--Section > li > a {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /* justify-content: flex-end; */
-  gap: 21px;
-  margin: 16px 0;
+  padding: 0.5rem;
+  align-items: center;
+  /* border-radius: 0.5rem; */
+  /* color: #1d4ed8; */
+  font-weight: 500;
 }
 
-.profile-textPhoto > h1 {
-  font-size: 1.5rem;
+.profile-button--Section > li > a:hover {
+  background-color: rgba(217, 217, 217, 1);
+}
+
+/* button-section */
+/* CSS */
+.button-67 {
+  align-items: center;
+  background: #f5f5fa;
+  border-radius: 8px;
+  display: flex;
+  font-family: "Cascadia Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono",
+    monospace;
+  font-size: 1rem;
+  justify-content: center;
+  line-height: 1.5rem;
+
+  text-align: left;
+  transition: 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-67:hover {
+  background: #f8f8ff;
+  box-shadow: -15px -15px 30px 0 #fff, 15px 15px 30px 0 #1d0dca17;
+}
+
+.profile-rightside--Body {
+  padding: 1.25rem;
+  flex: 1 1 0%;
+}
+
+.profile-rightside--Body > h1 {
+  text-align: center;
   font-weight: 600;
+  font-size: 1.9rem;
+  margin-bottom: 12px;
 }
 
-.profile-form {
-  max-width: 600px; /* Adjust the maximum width of the form */
-  margin: 0 auto; /* Center the form horizontally */
+.profile-formContainer {
+  margin: 1.2rem 0;
 }
 
 /* Style for form labels */
-.profile-form label {
-  display: block; /* Display labels as block elements */
-  margin-bottom: 0.5rem; /* Add some bottom margin for spacing */
-  font-weight: bold; /* Make the labels bold */
+.profile-formContainer label,
+.profile-photoLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgb(63, 63, 70);
+  font-weight: 700;
+  line-height: 1.25rem;
+  font-size: 0.87rem;
 }
 
-/* Style for form inputs */
-.profile-form input[type="text"],
-.profile-form input[type="email"],
-.profile-form input[type="password"],
-.profile-form select {
-  width: 100%; /* Set the width of inputs and select to 100% */
-  padding: 0.5rem; /* Add padding for input elements */
-  margin-bottom: 1rem; /* Add bottom margin for spacing */
-  border: 1px solid #ccc; /* Add border to inputs */
-  border-radius: 5px; /* Add border radius to inputs */
-  font-size: 1rem; /* Set the font size of inputs */
-  transition: border-color 0.3s ease; /* Add transition effect for hover */
+.profile-form-Body > h3 {
+  font-size: large;
+  font-weight: bold;
 }
 
-/* Style for form select */
-.profile-form select {
-  appearance: none; /* Remove default appearance */
+.profile-formContainer input[type="text"],
+.profile-formContainer input[type="email"],
+.profile-formContainer input[type="password"],
+.profile-formContainer select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+@media (min-width: 768px) {
+  .button-67 {
+    padding: 24px;
+  }
 }
 
-/* Additional styling for form inputs on focus */
-.profile-form input:focus,
-.profile-form select:focus {
-  outline: none; /* Remove outline on focus */
-  border-color: #007bff; /* Change border color on focus */
-}
+/* Parent background */
+@media (min-width: 1024px) {
+  .profile--Main-Box {
+    flex-direction: row;
+  }
 
-/* Style for buttons */
-.profile-form button {
-  width: 100%; /* Set the width of buttons to 100% */
-  padding: 0.75rem; /* Add padding for buttons */
-  margin-bottom: 1rem; /* Add bottom margin for spacing */
-  border: none; /* Remove border from buttons */
-  border-radius: 5px; /* Add border radius to buttons */
-  cursor: pointer; /* Change cursor on hover */
-  font-size: 1rem; /* Set the font size of buttons */
-  transition: background-color 0.3s ease; /* Add transition effect for hover */
-}
-
-/* Additional styling for buttons on hover */
-.profile-form button:hover {
-  background-color: #28a745; /* Change background color on hover */
+  .profile-leftside--Body {
+    width: 17rem;
+  }
 }
