@@ -365,7 +365,7 @@ const SignUp = () => {
 
                             {false && <div className="preffered-activity">
                                 <label htmlFor=""><span>Preferred Activity</span>   (user can select multiple activities)</label>
-                                <div className="activity">
+                                <div className="activities-buttons">
                                     <button className='activity-btn'>Yoga</button>
                                     <button className='activity-btn'><FontAwesomeIcon icon={faPersonRunning} />Running</button>
                                     <button className='activity-btn'><FontAwesomeIcon icon={faDumbbell} />Open Gym</button>
