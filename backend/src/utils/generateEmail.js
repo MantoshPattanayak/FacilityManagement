@@ -11,9 +11,9 @@ const sendMail = async(option)=>{
     })
     const mailOptions ={
         from:process.env.mailUsername,
-        to:option(mail),
-        subject:'Verify your email address',
-        text:'write mobile number'
+        to:option.mail,
+        subject:option.subject,
+        text:option.html
     }
     await transporter.sendMail(mailOptions)
 

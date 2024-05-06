@@ -8,7 +8,6 @@ let deviceLogin = db.device
 let otpCheck = db.otpDetails
 let QueryTypes = db.QueryTypes
 // const admin = require('firebase-admin');
-
 const { sequelize,Sequelize } = require('../../../models')
 
 const {encrypt} = require('../../../middlewares/encryption.middlewares')
@@ -17,7 +16,7 @@ const {generateOTP,verify1OTP} = require('../../../utils/mobileOtpGenerateAndVer
 
 const passport = require('passport')
 require('../../../config/passport')
-const generateToken= require('../../../utils/generateToken')
+const mailToken= require('../../../middlewares/mailToken.middlewares')
 
 const { Op } = require("sequelize");
 
@@ -206,7 +205,19 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
   }
 }
 
+let sendEmailToUser = async(req,res)=>{
+  try {
+    let {email,mobileNo}= req.body
+    let firstField = email;
+    let secondField = mobileNo
 
+    
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
 
 
 let signUp = async (req,res)=>{
@@ -280,6 +291,7 @@ let signUp = async (req,res)=>{
         fs.writeFileSync(userImagePath, userImageBuffer);
         userImagePath2 = `/publicUsers/${userId}_user_image.png`;
       }
+      
 
       const newUser = await publicUser.create({
         firstName: firstName,
