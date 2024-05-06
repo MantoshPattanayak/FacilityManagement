@@ -46,11 +46,11 @@ const[EventType, setEventType]=useState([])
                 phoneNo:formData,
                 emailId:formData,
                 // Bank Details -----------------
-                BeneficiaryName:formData,
-                AccountType:formData,
-                BankName:formData,
-                AccountNumber:formData,
-                BankIFSC:formData
+                beneficiaryName:formData,
+                accountType:formData,
+                bankName:formData,
+                accountNumber:formData,
+                bankIFSC:formData
 
             })
             console.log("here Response of Post Data", res)
@@ -59,8 +59,25 @@ const[EventType, setEventType]=useState([])
             console.log("here Response", err)
         }
     }
-//  here Validation
 
+// here Prev and next page -------------------------------------------------
+const nextStep = (e) => {
+       e.preventDefault();
+    // Perform validation before moving to the next step
+    const validationErrors = validation(formData);
+    if (Object.keys(validationErrors).length === 0) {
+        // If there are no validation errors, move to the next step
+        setCurrentStep(currentStep + 1);
+    } else {
+        // If there are validation errors, display them and prevent moving to the next step
+        console.log('Validation errors:', validationErrors);
+    }
+};
+  
+    const prevStep = () => {
+      setCurrentStep(currentStep - 1);
+    };
+//  here Validation ------------------------------------------------------
 const validation=(value)=>{
     const err={}
     if(!value.organisationName){
@@ -72,16 +89,11 @@ const validation=(value)=>{
     if(!value.organisationAddress){
         err.organisationAddress="Organisation Address is Required"
     }
+ 
 
     return err;
 }
-    const nextStep = () => {
-      setCurrentStep(currentStep + 1);
-    };
-  
-    const prevStep = () => {
-      setCurrentStep(currentStep - 1);
-    };
+
   
  // here Get the Bank deatils In drop down -----------------------------------
     async function GetBankDetails(){
