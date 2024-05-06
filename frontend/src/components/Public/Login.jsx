@@ -31,8 +31,8 @@ const Login = () => {
 
     const errors = validation(LogingDataPost);
     console.log(errors);
-    sessionStorage.setItem("isUserLoggedIn", 1);
-    redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
+    // sessionStorage.setItem("isUserLoggedIn", 1);
+    // redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
 
     if (Object.keys(errors).length === 0) {
       try {
@@ -43,7 +43,7 @@ const Login = () => {
         console.log("res", res);
         sessionStorage.setItem("isUserLoggedIn", 1);
         toast.success("Login successfully.");
-        navigate(redirect + `?facilityId=${facilityId}`);
+        redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
       } catch (err) {
         console.error("Error:", err);
         toast.error("Login failed. Please try again.");
@@ -100,7 +100,7 @@ const Login = () => {
               className="input-field"
               name="Mobile"
               type="text"
-              placeholder="Enter Email/Mobile Number"
+              placeholder="Enter Mobile Number"
               autoComplete="off"
               value={LogingDataPost.Mobile}
               onChange={handleChange}
@@ -123,7 +123,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="otp-btn">
+          <div className="otp-btn" onClick={HandleSubmit}>
             <button className="sendotp-btn" type="submit">
               Login
             </button>

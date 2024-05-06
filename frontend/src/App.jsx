@@ -87,7 +87,6 @@ function App() {
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Event_hostPage" element={<Event_hostPage />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
-            <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
           
             {/* Public (Book Parks)  */}
@@ -101,7 +100,7 @@ function App() {
             />
             {/* Public (Book Details)  */}
             <Route
-              path="/UserProfile/BookingDetails"
+              path="/profile/booking-details"
               element={
                 <ProtectedRoute>
                   <BookingDetails />
@@ -127,29 +126,22 @@ function App() {
               }
             />
 
-            {/* Common Footer final */}
+            {/* User-Profile */}
             <Route
-              path="/common/CommonFooter"
+              path="/Profile"
               element={
                 <ProtectedRoute>
-                  <CommonFooter />
+                  <Profile />
                 </ProtectedRoute>
               }
             />
+
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
-            <Route
-              path="/Common/CommonTable"
-              element={
-                <ProtectedRoute>
-                  <CommonTable />
-                </ProtectedRoute>
-              }
-            />
 
             <Route
               path="/Activity/ReviewUserRating"
@@ -311,15 +303,6 @@ function App() {
               }
             />
 
-            {/* User-Profile */}
-            <Route
-              path="/Profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
             {/* Payment-razorPay */}
             <Route
               path="/paymentSection"
