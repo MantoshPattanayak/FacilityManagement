@@ -1,0 +1,16 @@
+.Child_about_container {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)), url('https://www.shutterstock.com/image-vector/street-workout-park-people-training-260nw-2124207332.jpg');
+    height: 28vh;
+    margin-top: 60px;
+    background-size: cover; /* Adjust background size */
+    background-position: center; /* Adjust background position */
+    background-repeat: no-repeat; /* Adjust background repeat */
+    /* Add any additional styling here */
+    padding: 80px;
+ 
+}
+.About{
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}

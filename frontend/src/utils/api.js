@@ -8,6 +8,8 @@ const api = {
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
      PROFILE_DATA_VIEW_API: '/pulicUser/viewpublic_user', // post
+    //  Event_Host Api -------------------------------------
+      Bank_details_Api:'/hosteventdetails/bankService', // get
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
      View_By_ParkId:'/mapData/viewParkById',        
@@ -62,6 +64,7 @@ const api = {
    //User profile
    VIEW_BOOKINGS_API: '/userDetails/profile/viewBookings', //post fromDate, toDate, bookingStatus, facilityType, sortingOrder
    FETCH_BOOKINGS_INITIAL_FILTERDATA_API: '/userDetails/profile/initalFilterDataForBooking',   //get
+
 
 }
 
