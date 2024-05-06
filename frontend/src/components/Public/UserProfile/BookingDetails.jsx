@@ -53,11 +53,11 @@ const BookingDetails = () => {
       tabCode: "ALL_BOOKINGS",
       active: true,
     },
-    {
-      tabName: "Cancelled",
-      tabCode: "CANCELLED",
-      active: false,
-    },
+    // {
+    //   tabName: "Cancelled",
+    //   tabCode: "CANCELLED",
+    //   active: false,
+    // },
     {
       tabName: "History",
       tabCode: "HISTORY",
@@ -187,7 +187,7 @@ const BookingDetails = () => {
     <div>
       <PublicHeader />
       <div className="booking-dtails-container">
-        <div className="booking-dtails-container">
+        <div className="booking-dtails-container"> 
           <div className="user-profile-section">
             <div className="user-details">
               <FontAwesomeIcon icon={faUser} className="icon-user" />

@@ -6,16 +6,17 @@ body {
 
 .booking-dtails-container {
     box-sizing: border-box;
-    width: 90vw;
+    /* width: 90vw; */
     padding: 10px;
-    margin-top: 8%;
+    margin-top: 5%;
     margin-left: 4%;
     display: flex;
 }
 
 .user-profile-section {
     width: 20vw;
-    flex-shrink: 0; /* Prevent shrinking of the user profile section */
+    flex-shrink: 0;
+    /* Prevent shrinking of the user profile section */
 }
 
 .icon-user {
@@ -47,8 +48,8 @@ body {
 }
 
 .right-container-booking-details {
-    flex: 1; 
-    overflow: auto; 
+    flex: 1;
+    overflow: auto;
 }
 
 .logout-button {
@@ -56,65 +57,97 @@ body {
     margin-left: 3px;
 }
 
+/* right section */
+.eventdetails-tab{
+    
+        display: flex;
+        justify-content: space-evenly;
+        /* width: 625px; */
+        gap: 40px;
+        width: 100%;
+        margin-bottom: 10px;
+}
+.eventdetails-cardsection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+    /* width: 630px; */
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    height: 90vh;
+    overflow-y: scroll;
+}
+
+.eventdetails-carddetails {
+    border: 1px solid #B9B9B97D;
+    /* width: 530px; */
+    height: 144px;
+    border-radius: 10px;
+    padding: 12px;
+    background: #E9E9E9;
+    display: flex;
+    gap: 10px;
+    font-size: 16px;
+}
+
+
 /* Footer */
 .common-footer {
     position: fixed;
     bottom: 0;
     width: 100%;
 }
-@media screen and (max-width:900px){
-    .booking-dtails-container{
+
+@media screen and (max-width:900px) {
+    .booking-dtails-container {
         margin-top: 70px;
     }
 }
-@media screen and (max-width:663px){
 
-    .right-container-booking-details
-    {
-        margin-left: 10vw;
-        width: 54vw;
-    }
-    .user-profile-section{
-        width: 15vw;
-    }
-
-}
-@media screen and (max-width:400px)
-{
-    .user-profile-section{
+@media screen and (max-width:400px) {
+    .user-profile-section {
         width: fit-content;
     }
 
 }
-  
+
 /* To handle the booking timing responsiveness */
-@media screen and (max-width:972px){
-   .calculated-time{
-    margin-right: 180px;
-   }
-}
-@media screen and (max-width:972px){
-    .calculated-time{
-     margin-right: 250px;
+@media screen and (max-width:972px) {
+    .calculated-time {
+        margin-right: 175px;
     }
- }
+    .right-container-booking-details{
+        width: 500px;
+    }
+}
+@media screen and (max-width: 930px) {
+    .right-container-booking-details {
+      width: calc(100% - 25vw); 
+      
+    }
+  }
+  
 
 
 @media screen and (max-width: 1000px) {
     .booking-dtails-container {
-        width: 95vw; 
+        width: 90vw;
+      
         margin-left: auto;
         margin-right: auto;
     }
+
     .user-profile-section {
-        width: 25vw; 
+        width: 25vw;
     }
+
     .right-container-booking-details {
-        width: 75vw; 
+        width: 75vw;
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 575px) {
     .buttons-profile button {
         background-color: #D9D9D9;
         border: 1px solid white;
@@ -128,6 +161,7 @@ body {
         font-size: 12px;
         width: 150px;
     }
+
     .booking-dtails-container {
         width: 95vw;
         margin-left: auto;
@@ -135,23 +169,38 @@ body {
         display: flex;
         flex-direction: column;
     }
+
     .user-profile-section {
-        width: 100%; 
-        margin-bottom: 10px; 
+        width: 100%;
+        margin-bottom: 10px;
     }
+
     .right-container-booking-details {
-        width: 70vw; 
+        width: 70vw;
     }
+
     .eventdetails-cardsection {
         /* display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         gap: 24px; */
-        width: 630px;
+        width: 387px;
         border: 1px solid rgba(0, 0, 0, 0.2);
         height: 90vh;
         overflow-y: scroll;
+    }
+    .eventdetails-carddetails {
+        border: 1px solid #B9B9B97D;
+        width: 530px;
+        margin-left: 150px;
+        height: 144px;
+        border-radius: 10px;
+        padding: 12px;
+        background: #E9E9E9;
+        display: flex;
+        gap: 10px;
+        font-size: 16px;
     }
 }
 
@@ -162,49 +211,60 @@ body {
         margin-left: auto;
         margin-right: auto;
     }
+
     .user-profile-section {
-        width: 80vw; 
+        width: 80vw;
     }
+
     .right-container-booking-details {
-        width: 67vw; 
+        width: 67vw;
+    }
+    .booking-dtails-container {
+        width: 95vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .user-profile-section {
+        width: 80vw;
+    }
+
+    .right-container-booking-details {
+        width: 67vw;
+    }
+
+    /* Keep buttons in user-profile-section in a row */
+    .buttons-profile {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Adjust button styles */
+    .buttons-profile button {
+        width: auto;
+        margin: 5px;
     }
 }
 
-@media screen and (max-width: 575px) {
-        .eventdetails-photo img {
-            width: 80px;
-            height: 70%;
-        }
-
-
+@media screen and (max-width: 700px) {
+    .eventdetails-photo img {
+        width: 80px;
+        height: 106%;
     }
 
-
-
-    @media screen and (max-width: 400px) {
-        .booking-dtails-container {
-            width: 95vw;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .user-profile-section {
-            width: 80vw; 
-        }
-        .right-container-booking-details {
-            width: 67vw; 
-        }
-    
-        /* Keep buttons in user-profile-section in a row */
-        .buttons-profile {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-    
-        /* Adjust button styles */
-        .buttons-profile button {
-            width: auto;
-            margin: 5px;
-        }
+    .eventdetails-tab {
+        width: auto;
+        gap: 20px;
     }
-    
+.calculated-time{
+    visibility: hidden;
+   margin-left: 50px;
+   font-size: 8px;
+}
+
+
+}
+
+
+
