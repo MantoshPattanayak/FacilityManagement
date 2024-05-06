@@ -6,7 +6,7 @@ const privateUser = db.privateuser;
 let authSessions = db.authsessions
 let deviceLogin = db.device
 let otpCheck = db.otpDetails
-
+let QueryTypes = db.QueryTypes
 // const admin = require('firebase-admin');
 
 const { sequelize,Sequelize } = require('../../../models')
@@ -166,6 +166,14 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
           }
         })
         if(isOtpValid){
+            let updateTheVerifiedValue = await otpCheck.update({verified:1}
+              ,{
+                where:{
+                  id:isOtpValid.id
+                }
+              }
+            )
+            console.log(updateTheVerifiedValue,'update the verified value')
              // Check if the user exists in the database
              let isUserExist = await publicUser.findOne({
               where:{
@@ -423,7 +431,7 @@ let publicLogin = async(req,res)=>{
                   }
                 })
                 if(checkDeviceForParticularSession){
-                  if(checkDeviceForParticularSession.deviceName==deviceInfo.deviceName && checkDeviceForParticularSession.deviceType == db.deviceInfo.deviceType ){
+                  if(checkDeviceForParticularSession.deviceName==deviceInfo.deviceName && checkDeviceForParticularSession.deviceType == deviceInfo.deviceType ){
                     // insert to session table first 
                     let insertToAuthSession = await authSessions.create({
                       lastActivity:new Date(),
@@ -578,13 +586,20 @@ let publicLogin = async(req,res)=>{
 
 
    
-}
+    }
 
   
-    else if(mobileNo && otp){
-          mobileNo = await decrypt(mobileNo)
+    else if(mobileNo)
+      {
+     
+     let  isUserExist = await publicUser.findOne({
+        where: {
+          phoneNo:mobileNo
+        }
+        })          
+        // mobileNo = await decrypt(mobileNo)
 
-          let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
+          let {accessToken,refreshToken} = await generateToken(isUserExist.publicUserId,isUserExist.userName, isUserExist.emailId)
 
             const options = {
               httpOnly: true,
@@ -593,36 +608,159 @@ let publicLogin = async(req,res)=>{
 
           let updateLastLoginTime =  await publicUser.update({lastLogin:lastLoginTime},{
             where :{
-              userId:isUserExist.userId
+              publicUserId:isUserExist.publicUserId
             }
           })
-            //menu items list fetch
-            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
-            inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
-            order by rm.orderIn`
+          // session and device table data start 
+               // check for active session
 
-            let menuListItems = await sequelize.query(menuListItemQuery,{
-              replacements:{
-                userId:isUserExist.userId
-              },
-              type: QueryTypes.SELECT
-            })
+          let checkForActiveSession = await authSessions.findOne({where:{
+            [Op.and] :[{userId:isUserExist.publicUserId},
+             {active:1}]
+           }})
+           // if active
+           if(checkForActiveSession){
+ 
+             let updateTheSessionToInactive = await authSessions.update({active:0},{
+               where:{
+                 sessionId:checkForActiveSession.sessionId}
+             })
+               // after inactive
+               if(updateTheSessionToInactive.length>0){
+                 // check if it is present in the device table or not
+                 let checkDeviceForParticularSession = await deviceLogin.findOne({
+                   where:{
+                     sessionId:checkForActiveSession.sessionId
+                   }
+                 })
+                 if(checkDeviceForParticularSession){
+                   if(checkDeviceForParticularSession.deviceName==deviceInfo.deviceName && checkDeviceForParticularSession.deviceType == deviceInfo.deviceType ){
+                     // insert to session table first 
+                     let insertToAuthSession = await authSessions.create({
+                       lastActivity:new Date(),
+                       active:1,
+                       deviceId:checkDeviceForParticularSession.deviceId,
+                       userId:isUserExist.publicUserId
+                     })
+                     // then update the session id in the device table
+                     let updateTheDeviceTable = await deviceLogin.update({
+                       sessionId:insertToAuthSession.sessionId
+                     },{
+                       where:{
+                         deviceId:checkDeviceForParticularSession.deviceId
+                       }
+                     })
+                   }
+                   else{
+                     // insert to device table 
+                     let insertToDeviceTable = await deviceLogin.create({
+                       deviceType:deviceInfo.deviceType,
+                       deviceName:deviceInfo.deviceName,
+                     
+                     })
+ 
+                     // Insert to session table
+                     let insertToAuthSession = await authSessions.create({
+                       lastActivity:new Date(),
+                       active:1,
+                       deviceId:insertToDeviceTable.deviceId,
+                       userId:isUserExist.publicUserId
+                     })
+                     // update the session id in the device table
+                     let updateSessionIdInDeviceTable = await deviceLogin.update({
+                       sessionId:insertToAuthSession.sessionId
+                     },{
+                       where:{
+                         deviceId:insertToDeviceTable.deviceId
+                       }
+                     })
+                   }
+                  
+                 }
+                 else{
+                     // insert to device table 
+                     let insertToDeviceTable = await deviceLogin.create({
+                       deviceType:deviceInfo.deviceType,
+                       deviceName:deviceInfo.deviceName,
+                     
+                     })
+ 
+                     // Insert to session table
+                     let insertToAuthSession = await authSessions.create({
+                       lastActivity:new Date(),
+                       active:1,
+                       deviceId:insertToDeviceTable.deviceId,
+                       userId:isUserExist.publicUserId
+                     })
+                     // update the session id in the device table
+                     let updateSessionIdInDeviceTable = await deviceLogin.update({
+                       sessionId:insertToAuthSession.sessionId
+                     },{
+                       where:{
+                         deviceId:insertToDeviceTable.deviceId
+                       }
+                     })
+ 
+                 }
+               }
+               else{
+                 return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:"Internal server error"})
+               }
+             
+           }
+           else{
+               // insert to device table 
+               let insertToDeviceTable = await deviceLogin.create({
+                 deviceType:deviceInfo.deviceType,
+                 deviceName:deviceInfo.deviceName,
+               
+               })
+ 
+               // Insert to session table
+               let insertToAuthSession = await authSessions.create({
+                 lastActivity:new Date(),
+                 active:1,
+                 deviceId:insertToDeviceTable.deviceId,
+                 userId:isUserExist.publicUserId
+               })
+               // update the session id in the device table
+               let updateSessionIdInDeviceTable = await deviceLogin.update({
+                 sessionId:insertToAuthSession.sessionId
+               },{
+                 where:{
+                   deviceId:insertToDeviceTable.deviceId
+                 }
+               })
+ 
+           }
+          // session and device table data end
+            //menu items list fetch
+        //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+        //     inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+        //     where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+        //     order by rm.orderIn`
+
+        //     let menuListItems = await sequelize.query(menuListItemQuery,{
+        //       replacements:{
+        //         userId:isUserExist.userId
+        //       },
+        //       type: QueryTypes.SELECT
+        //     })
  
 
-        let dataJSON = new Array();
-        //create parent data json without child data 
-        for (let i = 0; i < menuListItems.length; i++) {
-            if (menuListItems[i].parentResourceId === null) {
-                dataJSON.push({
-                    id: menuListItems[i].resourceId,
-                    name: menuListItems[i].name,
-                    orderIn: menuListItems[i].orderIn,
-                    path: menuListItems[i].path,
-                    children: new Array()
-                })
-            }
-        }
+        // let dataJSON = new Array();
+        // //create parent data json without child data 
+        // for (let i = 0; i < menuListItems.length; i++) {
+        //     if (menuListItems[i].parentResourceId === null) {
+        //         dataJSON.push({
+        //             id: menuListItems[i].resourceId,
+        //             name: menuListItems[i].name,
+        //             orderIn: menuListItems[i].orderIn,
+        //             path: menuListItems[i].path,
+        //             children: new Array()
+        //         })
+        //     }
+        // }
         
         // Set the access token in an HTTP-only cookie named 'accessToken'
         res.cookie('accessToken', accessToken,options);
@@ -632,7 +770,9 @@ let publicLogin = async(req,res)=>{
 
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken, menuItems: dataJSON });
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken,refreshToken:refreshToken,
+        //  menuItems: dataJSON
+         });
    
   }
 }
