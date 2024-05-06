@@ -4,6 +4,9 @@ const public_user = db.publicuser;
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const Sequelize = db.Sequelize;
+const bcrypt = require("bcrypt");
+const { decrypt } = require("../../../middlewares/decryption.middlewares");
+const { encrypt } = require("../../../middlewares/encryption.middlewares");
 const updatepublic_user = async (req, res) => {
   try {
     const {
@@ -19,18 +22,31 @@ const updatepublic_user = async (req, res) => {
       emailId,
       profilePicture,
       lastLogin,
-      googleId,
-      facebookId,
     } = req.body;
 
     let params = {};
-
+    if (existingUserName) {
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist same user_name" });
+    } else if (existingPhoneNo) {
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist same phone_no" });
+    } else if (existingAlternatePhoneNo) {
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist same alt_phone_no" });
+    } else if (existingUserEmail) {
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist with given email_id " });
+    }
     let findPublicuserWithTheGivenId = await public_user.findOne({
       where: {
         publicUserId: publicUserId,
       },
     });
-
     if (findPublicuserWithTheGivenId.title != title) {
       params.title = title;
     } else if (findPublicuserWithTheGivenId.firstName != firstName) {
@@ -53,12 +69,7 @@ const updatepublic_user = async (req, res) => {
       params.profilePicture = profilePicture;
     } else if (findPublicuserWithTheGivenId.lastLogin != lastLogin) {
       params.lastLogin = lastLogin;
-    } else if (findPublicuserWithTheGivenId.googleId != googleId) {
-      params.googleId = googleId;
-    } else if (findPublicuserWithTheGivenId.facebookId != facebookId) {
-      params.facebookId = facebookId;
     }
-
     let [updatepublicUserCount, updatepublicUserData] =
       await public_user.update(params, {
         where: { publicUserId: publicUserId },

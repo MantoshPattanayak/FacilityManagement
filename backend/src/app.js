@@ -37,6 +37,14 @@ const resourceroute = require("./routes/api/" +
   api_version +
   "/configuration/resource");
 
+const eventactivitesroute = require("./routes/api/" +
+  api_version +
+  "/configuration/eventactivities");
+
+const hosteventdetailsroute = require("./routes/api/" +
+  api_version +
+  "/configuration/hosteventdetails");
+
 const reviewEventBookingRoute = require("./routes/api/" +
   api_version +
   "/activity/reviewEventBooking");
@@ -78,7 +86,12 @@ app.use("/roleResource", roleResource);
 app.use("/userResource", userResource);
 app.use("/role", roleroute);
 app.use("/resource", resourceroute);
+//public user
 app.use("/pulicUser", publicUser);
+//event activities
+app.use("/eventactivites", eventactivitesroute);
+//host event details
+app.use("/hosteventdetails", hosteventdetailsroute);
 //  put all your route handlers here
 
 //activity routes
