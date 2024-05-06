@@ -14,3 +14,38 @@
     color: rgb(255, 255, 255);
     font-weight: 600;
 }
+.About_div {
+    text-align: center;
+}
+
+.About_heading {
+    font-size: 50px;
+    color: rgb(7, 7, 7);
+    position: relative; /* Needed for positioning the lines */
+    font-weight: 600;
+}
+
+/* Style for the lines */
+.About_heading::after {
+    content: ''; /* Empty content */
+    position: absolute; /* Position absolutely relative to the parent */
+    bottom: -1px; /* Adjust this value to control the distance of the line from the text */
+    left: 49%; /* Position the line in the center */
+    width: 90px; /* Width of the line */
+    height: 4px; /* Height of the line */
+    background-color:  #f7c409; /* Color of the line */
+    transform: translateX(-50%); /* Center the line horizontally */
+}
+.About_us_flex_conatiner{
+    display: flex;
+    justify-content: space-between;
+}
+.About_img{
+    height: 25vh;
+    padding-right: 20px;
+}
+.About_us_text_details{
+    color: #212121;
+    font-size: 20px;
+    padding-left: 30px;
+}
