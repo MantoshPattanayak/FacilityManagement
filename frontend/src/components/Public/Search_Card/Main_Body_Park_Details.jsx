@@ -30,11 +30,15 @@ const Main_Body_Park_Details = () => {
   const[IsLoding, setIsLoding] = useState(false);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
+  // State variable to track selected layout type ------------------------------
+  const [layoutType, setLayoutType] = useState('grid');
+
+// here set the latitude and longitude --------------------------------------------
   const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
     latitude: 20.3010259,
     longitude: 85.7380521
   });
-  // fetch facility type id
+  // fetch facility type id --------------------------------------------------------
   let location = useLocation();
   let facilityIdTypeFetch = decryptData(
     new URLSearchParams(location.search).get("facilityTypeId")
@@ -45,6 +49,10 @@ const Main_Body_Park_Details = () => {
   const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
+// Function to handle layout change
+    const handleLayoutChange = (e) => {
+      setLayoutType(e.target.value);
+    };
   //Here (Post the data)----------------------------------------------------------------
   async function GetParkDetails() {
     try {
@@ -62,7 +70,7 @@ const Main_Body_Park_Details = () => {
     }
   }
 
-  // Function to handle selectedTab button click
+  // Function to handle selectedTab button click  ------------------------------
   const handleTabClick = (e, tab) => {
     // Toggle game selection
     if (selectedTab != tab) {
@@ -80,13 +88,13 @@ const Main_Body_Park_Details = () => {
     }
     console.log('selectedTab', selectedTab);
   }
-
+// here set the userLocation -------------------------------------------------------
   function setUserGeoLocation(location){
     setUserLocation(location);
     sessionStorage.setItem('location', JSON.stringify(location));
     return;
   }
-
+// filter the data (near by park) -----------------------------------------------------
   async function getNearbyFacilities(e){
     e?.preventDefault();
     console.log('nearby facilities', userLocation);
@@ -287,7 +295,15 @@ const Main_Body_Park_Details = () => {
             Paid
           </button> */}
         </div>
-        <div className="gride_page"></div>
+        <div class="gride_page">
+        <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
+           <option value="grid">Grid</option>
+            <option value="list">List</option>
+            
+        </select>
+       </div>
+
+              
       </div>
       {/* Heere Name of Park, sports dyamics ---------------------------------------- */}
       <span className="text_name_park">
@@ -302,54 +318,93 @@ const Main_Body_Park_Details = () => {
 
      
       <div className="card-container">
-      {IsLoding ? (
-        // Show shimmer loader while data is being fetched
-        <ShimmerUI />
-      ) : DisPlayParkData?.length > 0 ? (
-        DisPlayParkData?.map((item, index) => (
-          <Link
-            key={index}
-            to={{
-              pathname: "/Sub_Park_Details",
-              search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
-            }}
-          >
-            <div
-              className={`${
-                item.facilityTypeId === 1
-                  ? "park-card-1"
-                  : item.facilityTypeId === 2
-                  ? "park-card-2"
-                  : "park-card-3"
-              }`}
+        {IsLoding ? (
+          // Show shimmer loader while data is being fetched
+          <ShimmerUI />
+        ) : DisPlayParkData?.length > 0 ? (
+           // Conditional rendering based on layout type
+           layoutType === 'grid' ? (
+          DisPlayParkData?.map((item, index) => (
+            <Link
+              key={index}
+              to={{
+                pathname: "/Sub_Park_Details",
+                search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
+              }}
             >
-              <img className="Card_img" src={Cardimg} alt="Park" />
-              <div className="card_text">
-                <span className="Name_location">
-                  <h2 className="park_name">{item.facilityname}</h2>
-                  <h3 className="park_location">{item.address}</h3>
-                </span>
-                <span className="Avil_Dis">
-                  <button
-                    className={`Avilable ${
-                      item.status == "open" ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
-                  </button>
-                  <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
-                </span>
+              <div
+                className={`${
+                  item.facilityTypeId === 1
+                    ? "park-card-1"
+                    : item.facilityTypeId === 2
+                    ? "park-card-2"
+                    : "park-card-3"
+                }`}
+              >
+                <img className="Card_img" src={Cardimg} alt="Park" />
+                <div className="card_text">
+                  <span className="Name_location">
+                    <h2 className="park_name">{item.facilityname}</h2>
+                    <h3 className="park_location">{item.address}</h3>
+                  </span>
+                  <span className="Avil_Dis">
+                    <button
+                      className={`Avilable ${
+                        item.status == "open" ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+                    </button>
+                    <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
+                  </span>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
         ))
+           ):(
+            // here Table data (Data in list)----------------------------------------------------------------
+            <div className="table_Container1">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Name of the Park</th>
+                        <th scope="col">Location</th>
+                        <th className="left">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
+                        <tr key={table_index}>
+                            <td data-label="Name">{table_item.facilityname}</td>
+                            <td data-label="Location">{table_item.address}</td>
+                            <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
+                                <Link
+                                    key={table_index}
+                                    to={{
+                                        pathname: "/Sub_Park_Details",
+                                        search: `?facilityId=${encryptDataId(table_item.facilityId)}&action=view`,
+                                    }}
+                                >
+                                    Details
+                                </Link>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+        
+           )
       ) : (
         // Show message if no data is available
         <div className="no-data-message">
           <img src={No_Data_icon} alt="No Data Found" />
         </div>
       )}
-    </div>
+     </div>
+
+
+
       <CommonFooter />
       <ToastContainer/>
     </div>

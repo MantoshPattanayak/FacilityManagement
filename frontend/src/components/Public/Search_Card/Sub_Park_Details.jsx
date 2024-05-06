@@ -191,10 +191,29 @@ const Sub_Park_Details = () => {
             >
               <button role="button_by">Buy a Ticket</button>
             </Link>
+   
 
-            <button className="button-9" role="button">
-              Host Event
-            </button>
+
+            <Link
+              to={{
+                pathname: `${
+                  isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                }`,
+                search: `${
+                  isUserLoggedIn == 1
+                    ? `?facilityId=${encryptDataId(
+                        FacilitiesData[0]?.facilityId
+                      )}`
+                    : `?facilityId=${encryptDataId(
+                        FacilitiesData[0]?.facilityId
+                      )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
+                }`,
+              }}
+              className="button-9"
+            >
+                  <button role="button_by">Host Event</button>
+              </Link>
+        
           </span>
 
           <div className="Map_image">
