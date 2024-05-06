@@ -363,7 +363,7 @@ const SignUp = () => {
                                
                             </div><br />
 
-                            {false && <div className="preffered-activity">
+                            <div className="preffered-activity">
                                 <label htmlFor=""><span>Preferred Activity</span>   (user can select multiple activities)</label>
                                 <div className="activities-buttons">
                                     <button className='activity-btn'>Yoga</button>
@@ -376,7 +376,7 @@ const SignUp = () => {
                                     <button className='activity-btn'>Badminton</button>
                                     <button className='activity-btn'>Rugby</button>                                  
                                 </div>
-                            </div>}
+                            </div>
                             <div className="otp-btn" onClick={handleProfile}>
                                 <button type='submit' className="sendotp-btn">Proceed</button>
                             </div>
