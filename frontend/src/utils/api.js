@@ -1,6 +1,7 @@
 // to be maintained by backend developers
 
 const api = {
+    LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
     PUBLIC_LOGIN_API: '/auth/publicLogin',
     PUBLIC_SIGNUP_API: '/auth/signUp',
     PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
@@ -51,7 +52,9 @@ const api = {
     REVIEW_EVENTS_VIEWLIST_API: '/reviewEvents/viewList',   //post
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
     REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
-    //Bookmark
+    // Public Notifications
+    VIEW_NOTIFICATIONS_LIST_API: '/publicNotifications/viewList', //post givenReq page_size page_number
+    ADD_NOTIFICATIONS_API: '/publicNotifications/add',  //post  notificationTitle, notificationContent, validFromDate, validToDate
      ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
      REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
      VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate
