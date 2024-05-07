@@ -1,0 +1,10 @@
+.ViewNotifications-Container {
+    margin: 130px auto 10px auto;
+    width: 70vw; /* Content width excluding AdminHeader and Footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 0 20px; /* Added padding for better spacing */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
