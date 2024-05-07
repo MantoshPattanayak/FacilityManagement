@@ -4,28 +4,50 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const hosteventdetails = db.hosteventdetails;
 const Sequelize = db.Sequelize;
-
+const bankDetails = db.bankDetail
 const createHosteventdetails = async (req, res) => {
   try {
+    let publicUserId =1;
+    let role =1
+    let privateUserId =1
+    if(role){
+       privateUserId=1;
+      publicUserId= 2
+    }
     let createHosteventdetails;
+    let createBankDetails;
     const {
       eventId,
       firstName,
       lastName,
       organisationPanCardNumber,
+      organisationName,
+      organisationAddress,
       emailId,
       phoneNo,
-      publicUserId,
-      privateUserId,
-      organisationName,
       category,
-      organisationAddress,
       eventDate,
       eventStartDate,
       eventEndDate,
-      Description,
+      description,
       status,
+      accountType,
+      beneficiaryName,
+      bankName,
+      bankIfsc,
+      accountNumber,
+      eventImage,
+      additionalFile
     } = req.body;
+console.log("here Reponse of Host event", req.body)
+    createBankDetails = await bankDetails.create({
+      beneficiaryName:beneficiaryName,
+      accountNumber:accountNumber,
+      accountType:accountType,
+      bankName:bankName,
+      bankIfscCode:bankIfsc
+    })
+
     createHosteventdetails = await hosteventdetails.create({
       eventId: eventId,
       firstName: firstName,
@@ -41,9 +63,10 @@ const createHosteventdetails = async (req, res) => {
       eventDate: eventDate,
       eventStartDate: eventStartDate,
       eventEndDate: eventEndDate,
-      Description: Description,
+      Description: description,
       statusId: status,
     });
+    
     console.log(createHosteventdetails);
     if (createHosteventdetails) {
       return res.status(statusCode.SUCCESS.code).json({

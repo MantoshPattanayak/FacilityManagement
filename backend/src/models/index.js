@@ -57,9 +57,10 @@ sequelize.authenticate()
   db1.useractivitymasters = require('./useractivitymaster.models')(sequelize, DataTypes)
   db1.device = require('./device.models')(sequelize,DataTypes);
   db1.otpDetails = require('./otpverification.models')(sequelize,DataTypes)
-  
+  db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
+  db1.bankDetail = require('./bankdetail.models')(sequelize,DataTypes)
   db1.languageresources = require('./languageresources.models')(sequelize, DataTypes);
-  db1.otpDetails.sync({
+  db1.publicnotifications.sync({
     force: false
   })
 

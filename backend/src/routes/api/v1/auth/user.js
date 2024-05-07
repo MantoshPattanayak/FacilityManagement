@@ -36,5 +36,7 @@ router.post('/signup',authController.signUp)
 router.post('/generateOTP',authController.generateOTPHandler)
 router.post('/verifyOTP',authController.verifyOTPHandlerWithGenerateToken)
 router.post('/publicLogin',authController.publicLogin)
+router.post('/sendEmailToUser',authController.sendEmailToUser)
+router.post('/verifyEmail',authController.verifyEmail)
 
 module.exports = router

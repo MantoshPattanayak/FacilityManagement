@@ -15,14 +15,18 @@ export default function PublicHeader() {
   return (
     <header className="header">
       <header className="header-content">
-        <div className="logo"></div>
-        <nav>
+
+        <nav className="navbar">
+        <div className="logo-ama-boomi">
+          <img src={AppLogo} alt="" className="h-[75%] absolute"/>
+        </div>
+
           <ul>
             <li>
               <a href="/">HOME</a>
             </li>
             <li>
-              <a href="#">ABOUT</a>
+              <a href="/About">ABOUT</a>
             </li>
             <li>
               <a href="#">FAQ</a>

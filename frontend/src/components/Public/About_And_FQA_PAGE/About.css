@@ -1,0 +1,66 @@
+.Child_about_container {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)), url('https://www.shutterstock.com/image-vector/street-workout-park-people-training-260nw-2124207332.jpg');
+    height: 28vh;
+    margin-top: 60px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 80px;
+}
+
+.About {
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+
+.About_div {
+    text-align: center;
+}
+
+.About_heading {
+    font-size: 50px;
+    color: rgb(7, 7, 7);
+    position: relative;
+    font-weight: 600;
+}
+
+.About_heading::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 49%;
+    width: 100px;
+    height: 4px;
+    background-color: #f7c409;
+    transform: translateX(-50%);
+}
+
+.About_us_flex_conatiner {
+    display: flex;
+    flex-direction: column; /* Change to column for small screens */
+    align-items: center; /* Center items */
+}
+
+.About_us_text_details {
+    color: #212121;
+    font-size: 20px;
+    padding: 0 20px; /* Add padding to both sides for small screens */
+    text-align: center; /* Center text */
+}
+
+.About_us_img {
+    margin-top: 20px; /* Add margin for separation */
+    text-align: center; /* Center images */
+}
+
+/* Media queries for responsiveness */
+@media screen and (min-width: 768px) {
+    .About_us_flex_conatiner {
+        flex-direction: row; /* Change back to row for larger screens */
+    }
+
+    .About_us_text_details {
+        padding: 0 30px; /* Increase padding for larger screens */
+    }
+}
