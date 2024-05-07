@@ -59,6 +59,8 @@ sequelize.authenticate()
   db1.otpDetails = require('./otpverification.models')(sequelize,DataTypes)
   db1.bankDetail = require('./bankdetail.models')(sequelize,DataTypes)
   db1.languageresources = require('./languageresources.models')(sequelize, DataTypes);
+  db1.eventactivities = require('./eventactivities.models')(sequelize,DataTypes)
+  db1.hostbookings = require('./hosteventbooking.models')(sequelize,DataTypes)
   db1.bankDetail.sync({
     force: true
   })
