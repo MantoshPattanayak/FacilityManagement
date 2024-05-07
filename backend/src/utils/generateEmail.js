@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer')
 
-const sendMail = async(option)=>{
+const sendEMail = async(option)=>{
     // Here the transporter allows to send the mail to other mail ids 
     const transporter = nodemailer.createTransport({
         service:'gmail',
@@ -11,14 +11,14 @@ const sendMail = async(option)=>{
     })
     const mailOptions ={
         from:process.env.mailUsername,
-        to:option(mail),
-        subject:'Verify your email address',
-        text:'write mobile number'
+        to:option.email,
+        subject:option.subject,
+        text:option.html
     }
     await transporter.sendMail(mailOptions)
 
 }
 
-module.exports = sendMail
+module.exports = sendEMail
 
 
