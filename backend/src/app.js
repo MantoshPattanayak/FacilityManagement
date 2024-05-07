@@ -57,6 +57,9 @@ const booking = require("./routes/api/" + api_version + "/booking/booking");
 const languageContent = require("./routes/api/" +
   api_version +
   "/configuration/languageContent");
+const publicNotifications = require("./routes/api/" +
+api_version +
+"/activity/publicnotifications");
 
 console.log(port, "port");
 
@@ -108,6 +111,7 @@ app.use("/languageContent", languageContent);
 
 //activity routes
 app.use("/reviewEvents", reviewEventBookingRoute);
+app.use('/publicNotifications', publicNotifications);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
