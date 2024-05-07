@@ -10,6 +10,7 @@ const api = {
      PROFILE_DATA_VIEW_API: '/pulicUser/viewpublic_user', // post
     //  Event_Host Api -------------------------------------
       Bank_details_Api:'/hosteventdetails/bankService', // get
+      Create_Host_event:'/hosteventdetails/createHosteventdetails',
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
      View_By_ParkId:'/mapData/viewParkById',        
