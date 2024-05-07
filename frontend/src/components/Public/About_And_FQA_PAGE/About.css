@@ -1,0 +1,51 @@
+.Child_about_container {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)), url('https://www.shutterstock.com/image-vector/street-workout-park-people-training-260nw-2124207332.jpg');
+    height: 28vh;
+    margin-top: 60px;
+    background-size: cover; /* Adjust background size */
+    background-position: center; /* Adjust background position */
+    background-repeat: no-repeat; /* Adjust background repeat */
+    /* Add any additional styling here */
+    padding: 80px;
+ 
+}
+.About{
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+.About_div {
+    text-align: center;
+}
+
+.About_heading {
+    font-size: 50px;
+    color: rgb(7, 7, 7);
+    position: relative; /* Needed for positioning the lines */
+    font-weight: 600;
+}
+
+/* Style for the lines */
+.About_heading::after {
+    content: ''; /* Empty content */
+    position: absolute; /* Position absolutely relative to the parent */
+    bottom: -1px; /* Adjust this value to control the distance of the line from the text */
+    left: 49%; /* Position the line in the center */
+    width: 90px; /* Width of the line */
+    height: 4px; /* Height of the line */
+    background-color:  #f7c409; /* Color of the line */
+    transform: translateX(-50%); /* Center the line horizontally */
+}
+.About_us_flex_conatiner{
+    display: flex;
+    justify-content: space-between;
+}
+.About_img{
+    height: 25vh;
+    padding-right: 20px;
+}
+.About_us_text_details{
+    color: #212121;
+    font-size: 20px;
+    padding-left: 30px;
+}
