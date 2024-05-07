@@ -17,10 +17,18 @@ function formatTime(time24) {   //format 24 hour time as 12 hour time
 
 function formatDate(date) { //format input date as DD-MM-YYYY
     if(!date)   return;
-
+    date = date?.split('T')[0] ? date.split('T')[0] : date;
     const [year, month, day] = date.split('-');
 
     return `${day}-${month}-${year}`;
+}
+
+function formatDateYYYYMMDD(date) { //format input date as DD-MM-YYYY
+    if(!date)   return;
+
+    const [year, month, day] = date.split('-');
+
+    return `${year}-${month}-${day}`;
 }
 
 function logOutUser() {
@@ -28,4 +36,4 @@ function logOutUser() {
     return;
 }
 
-export { formatTime, formatDate, logOutUser };
+export { formatTime, formatDate, formatDateYYYYMMDD, logOutUser };

@@ -1,4 +1,7 @@
 
+.footer-container{
+  bottom: 0;
+}
 .right-section-footer {
   width: 40%;
     display: flex;
@@ -13,7 +16,7 @@
 .middle-section,
 .middle-right-section,
 .last-right-section ul li{
-  font-size: large;
+  font-size: 15px;
   font-weight: 400;
   padding:0 ;
   margin: 5px;
@@ -87,13 +90,24 @@ font-size: large;
   font-weight: 500;
   float: left;
 }
+.input-with-icon{
+  display: flex;
+  align-items: center;
+}
 .input-with-icon input[type="text"] {
-  width: 30%;
+  width: 65%;
   height: 20px;
-  margin-top: 10px;
-  padding: 20px;
+  margin-top: 8px;
+  padding: 19px;
   border-radius: 5px;
-  border: 1px  solid #7b7b7b;
+  border: 1px solid #7b7b7b;
+}
+.input-icon{
+  border: 1px solid #7b7b7b;
+  border-radius: 5px;
+  height: 36px;
+  width: 33px;
+  margin-top: auto;
 }
 
 .app-store-icons img {
@@ -154,4 +168,28 @@ font-size: large;
 .app-store-icons img {
   width: 100px;
   margin-right: 10px;
+}
+
+/* Media query for screens below 400px */
+@media screen and (max-width: 400px) {
+   *{
+    font-size:12px ;
+   }
+   .app-store-icons{
+    margin-top: 0px;
+   }
+   .right-section-footer{
+    margin-top: -25px;
+   }
+   .input-with-icon{
+    margin-right: 66px;
+   }
+}
+@media screen and (max-width: 550px) {
+  *{
+   font-size:13px ;
+  }
+  .app-store-icons{
+    margin-top: 0px;
+   }
 }

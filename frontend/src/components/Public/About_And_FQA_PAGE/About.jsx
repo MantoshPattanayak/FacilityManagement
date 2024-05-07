@@ -19,7 +19,10 @@ Secure . </h1>
              
             </div>
             <div className="About_us_img">
-              <img className="About_img" src={Aboutusimg}></img>
+              <h1>hello</h1>
+         
+          
+
             </div>
          </div>
       </div>

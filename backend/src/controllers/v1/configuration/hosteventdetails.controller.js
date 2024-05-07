@@ -56,7 +56,7 @@ const createHosteventdetails = async (req, res) => {
       uploadEventImage,
       additionalFiles,
     } = req.body;
-
+console.log("here Reponse of Host event", req.body)
     createBankDetails = await bankDetails.create({
       beneficiaryName:beneficiaryName,
       accountNumber:await encrypt(accountNumber),

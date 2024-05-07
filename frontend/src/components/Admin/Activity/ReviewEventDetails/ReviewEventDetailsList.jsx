@@ -138,15 +138,15 @@ export default function ReviewEventDetailsList() {
     return (
         <>
             <AdminHeader />
-            <div className="form-container">
-                <div className='form-heading'>
+            <div className="specialevent-form-container">
+                <div className='specialevent-form-heading'>
                     <h2>Manage event details</h2>
                 </div>
-                <div className="search_text_conatiner">
-                    <input type="text" className="search_input_field" placeholder="Search..." />
-                    <input type="date" className="search_input_calender" onChange={handleDateChange}/>
+                <div className="specialevent-search_text_conatiner">
+                    <input type="text" className="specialevent-search_input_field" placeholder="Search..." />
+                    <input type="date" className="specialevent-search_input_calender" onChange={handleDateChange}/>
                 </div>
-                <div className='eventdetails-tab'>
+                <div className='specialevent-eventdetails-tab'>
                     {
                         tab?.length > 0 && tab.map((tabData) => {
                             if (tabData.active) {
@@ -166,24 +166,24 @@ export default function ReviewEventDetailsList() {
                         })
                     }
                 </div>
-                <div className='eventdetails-cardsection'>
+                <div className='specialevent-eventdetails-cardsection'>
                     {
                         eventDetails?.length > 0 && eventDetails.map((event) => {
                             return (
-                                <div className='eventdetails-carddetails'>
-                                    <div className='eventdetails-photo'>
+                                <div className='specialevent-eventdetails-carddetails'>
+                                    <div className='specialevent-eventdetails-photo'>
                                         <img src={eventPhoto} />
                                     </div>
-                                    <div className='eventdetails-details'>
-                                        <div className='eventdetails-details-eventname'>{event.eventName}</div>
-                                        <div className='eventdetails-details-eventAddress'>{event.eventAddress}</div>
-                                        <div className='flex justify-between eventdetails-details-eventTime'>
+                                    <div className='specialevent-eventdetails-details'>
+                                        <div className='specialevent-eventdetails-details-eventname'>{event.eventName}</div>
+                                        <div className='specialevent-eventdetails-details-eventAddress'>{event.eventAddress}</div>
+                                        <div className='flex justify-between specialevent-eventdetails-details-eventTime'>
                                             <div>Booked at {event.bookedTiming}</div>
                                             <div><FontAwesomeIcon icon={faClock} /> {calculateTime(event.createdDate)} ago</div>
                                         </div>
                                         {/* <div><button className='eventdetails-eventbutton' onClick={navigateToDetailsPage(event.eventName)}>Event details</button></div> */}
                                         <Link
-                                            className='eventdetails-eventbutton'
+                                            className='specialevent-eventdetails-eventbutton'
                                             to={{
                                                 pathname: '/Activity/EventDetailsPage',
                                                 search: '?eventId=456'
