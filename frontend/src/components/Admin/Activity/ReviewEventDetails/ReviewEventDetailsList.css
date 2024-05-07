@@ -1,21 +1,21 @@
-.search_text_conatiner_outer {
+.specialevent-search_text_conatiner_outer {
     display: flex;
     justify-content: center;
 }
 
-.form-heading {
+.specialevent-form-heading {
     margin-top: 0vh;
     padding-bottom: 0px;
 }
 
-.form-heading h2 {
+.specialevent-form-heading h2 {
     width: 627px;
     height: 48px;
     font-size: 18px;
 }
 
 
-.search_text_conatiner {
+.specialevent-search_text_conatiner {
     width: 627px;
     display: flex;
     justify-content: flex-start;
@@ -23,17 +23,17 @@
     padding-bottom: 12px;
 }
 
-.search_input_calender {
+.specialevent-search_input_calender {
     border: 1px solid rgba(0, 0, 0, 0.7);
     border-radius: 8px;
     padding: 4px;
 }
 
-.search_input_field {
+.specialevent-search_input_field {
     width: 24vw;
 }
 
-.eventdetails-tab {
+.specialevent-eventdetails-tab {
     display: flex;
     justify-content: space-evenly;
     /* width: 625px; */
@@ -41,7 +41,7 @@
     margin-bottom: 10px;
 }
 
-.eventdetails-tab div {
+.specialevent-eventdetails-tab div {
     font-size: 16px;
     font-weight: bold;
     width: 100%;
@@ -55,18 +55,18 @@
     border: 1px solid #00000031;
 }
 
-.eventdetails-tab div:hover {
+.specialevent-eventdetails-tab div:hover {
     cursor: pointer;
     background: #00B562;
     color: white;
 }
 
-.eventdetails-tab .active {
+.specialevent-eventdetails-tab .active {
     background: #00B562;
     color: white;
 }
 
-.eventdetails-cardsection {
+.specialevent-eventdetails-cardsection {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,7 +78,7 @@
     overflow-y: scroll;
 }
 
-.eventdetails-carddetails {
+.specialevent-eventdetails-carddetails {
     /* border: 1px solid #B9B9B97D; */
     width: 627px;
     height: 144px;
@@ -90,12 +90,12 @@
     font-size: 16px;
 }
 
-.eventdetails-photo img {
+.specialevent-eventdetails-photo img {
     width: 190px;
     height: 120px;
 }
 
-.eventdetails-details {
+.specialevent-eventdetails-details {
     width: 75%;
     height: 100%;
     display: flex;
@@ -103,20 +103,20 @@
     justify-content: space-around;
 }
 
-.eventdetails-details-eventname {
+.specialevent-eventdetails-details-eventname {
     font-weight: bold;
     font-size: 22px;
 }
 
-.eventdetails-details-eventAddress {
+.specialevent-eventdetails-details-eventAddress {
     font-size: 14px;
 }
 
-.eventdetails-details-eventTime {
+.specialevent-eventdetails-details-eventTime {
     font-size: 11px;
 }
 
-.eventdetails-eventbutton {
+.specialevent-eventdetails-eventbutton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,42 +132,42 @@
 }
 
 @media screen and (max-width: 768px) {
-    .eventdetails-tab {
+    .specialevent-eventdetails-tab {
         width: 627px;
         display: flex;
         justify-content: space-between;
     }
 
-    .eventdetails-cardsection {
+    .specialevent-eventdetails-cardsection {
         gap: 20px;
     }
 
-    .eventdetails-carddetails {
+    .specialevent-eventdetails-carddetails {
         height: 150px;
         padding: 10px;
         font-size: 18px;
         line-height: 22px;
     }
 
-    .search_text_conatiner {
+    .specialevent-search_text_conatiner {
         justify-content: space-between;
         flex-direction: row;
         align-items: center;
     }
 
-    .search_input_field {
+    .specialevent-search_input_field {
         font-size: small;
         padding: 5px;
         margin-top: 6px;
     }
 
-    .eventdetails-tab div {
+    .specialevent-eventdetails-tab div {
         font-size: small;
         padding: 5px;
         width: 22vw;
     }
 
-    .search_input_calender {
+    .specialevent-search_input_calender {
         border: 1px solid rgba(0, 0, 0, 0.7);
         border-radius: 8px;
         font-size: small;
@@ -177,13 +177,13 @@
 }
 
 @media screen and (max-width: 575px) {
-    .eventdetails-tab {
+    .specialevent-eventdetails-tab {
         width: 90vw;
         gap: 20px;
     }
 
 
-    .form-heading h2 {
+    .specialevent-form-heading h2 {
         width: 377px;
         /* height: 38px; */
         font-size: 14px;
@@ -193,16 +193,16 @@
         padding-left: 1vh;
     }
 
-    .eventdetails-tab div {
+    .specialevent-eventdetails-tab div {
         font-size: 9px;
         padding: 5px;
     }
 
-    .eventdetails-cardsection {
+    .specialevent-eventdetails-cardsection {
         gap: 20px;
     }
 
-    .eventdetails-carddetails {
+    .specialevent-eventdetails-carddetails {
         min-height: 80px;
         height: auto;
         width: auto;
@@ -211,39 +211,39 @@
         line-height: 18px;
     }
 
-    .eventdetails-photo img {
+    .specialevent-eventdetails-photo img {
         width: 150px;
         height: 100%;
     }
 
-    .eventdetails-details-eventname {
+    .specialevent-eventdetails-details-eventname {
         font-weight: 600;
         font-size: 12px;
     }
 
-    .eventdetails-details-eventAddress {
+    .specialevent-eventdetails-details-eventAddress {
         font-weight: 300;
         font-size: 9px;
     }
 
-    .eventdetails-details-eventTime {
+    .specialevent-eventdetails-details-eventTime {
         font-size: 9px;
     }
 
-    .eventdetails-eventbutton {
+    .specialevent-eventdetails-eventbutton {
         padding-inline: 8px;
         font-size: xx-small;
         width: max-content;
     }
  
-    .search_text_conatiner {
+    .specialevent-search_text_conatiner {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: end;
     }
 
-    .search_input_calender {
+    .specialevent-search_input_calender {
         border: 1px solid rgba(0, 0, 0, 0.7);
         border-radius: 5px;
         font-size: xx-small;
@@ -254,18 +254,18 @@
 }
 
 @media screen and (max-width: 300px) {
-    .eventdetails-tab {
+    .specialevent-eventdetails-tab {
         width: 70vw;
         gap: 20px;
     }
 
-    .eventdetails-tab div {
+    .specialevent-eventdetails-tab div {
         font-size: 11px;
         border-radius: 8px;
         padding: 4px;
     }
 
-    .eventdetails-carddetails {
+    .specialevent-eventdetails-carddetails {
         height: 100px;
         padding: 10px;
         font-size: 9px;

@@ -26,7 +26,7 @@ let addNewNotification = async (req, res) => {
             createdOn: new Date()
         })
 
-        console.log(addNewNotification);
+        console.log(addNotification);
         res.status(statusCode.SUCCESS.code).json({
             message: 'New public notification added successfully!',
             data: addNotification

@@ -73,6 +73,8 @@ import HostEvent from "./components/Public/UserProfile/HostEvent";
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
 import About from "./components/Public/About_And_FQA_PAGE/About";
+import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
+import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -157,6 +159,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ReviewEventDetailsList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Activity/AddNewNotification"
+              element={
+                <ProtectedRoute>
+                  <AddNewNotification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Activity/ViewNotifications"
+              element={
+                <ProtectedRoute>
+                  <ViewNotifications />
                 </ProtectedRoute>
               }
             />
