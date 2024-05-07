@@ -19,7 +19,7 @@ require('../../../config/passport')
 const mailToken= require('../../../middlewares/mailToken.middlewares')
 
 const { Op } = require("sequelize");
-
+const sendEmail = require('../../../utils/generateEmail')
 // Initialize Firebase Admin SDK
 // var serviceAccount = require("D:/AmaBhoomiProject/amabhoomi-25a8a-firebase-adminsdk-ggc8d-a61a7fdad5.json");
 
@@ -207,12 +207,90 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
 let sendEmailToUser = async(req,res)=>{
   try {
-    let {email,mobileNo}= req.body
-    let firstField = email;
+    let {emailId,mobileNo}= req.body
+    let firstField = emailId;
     let secondField = mobileNo
-
+    let Token = await mailToken({firstField,secondField})
+    let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
+    const message = `Your account has been created, Now you Create your password.<br><br>
+    This is your emailId <b>${emailId}</b><br>
+    Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
+    <button style=" background-color: #4CAF50; border: none;
+     color: white;
+     padding: 15px 32px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;">Update Password</button> </a>
+     </br></br>
+     This link is valid for 10 mins only  `;
+      try {
+          await sendEmail({
+            email:`${emailId}`,
+            subject:"please verify the email for your amabhoomi sign up",
+            html:`<p>${message}</p>`
+          }
+          )
+      } catch (err) {
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
+      }
     
   } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
+
+let verifyEmail = async(req,res)=>{
+  try {
+    let {token}= req.body;
+    let verifyEmail =1
+    console.log('token',token);
+    if(!token){
+      return res.status(statusCode.NOTFOUND.code).json({
+        message:"Bad Request"
+      })
+    }
+
+    const decodedEmailToken = jwt.verify(token,process.env.EMAIL_TOKEN,{ignoreExpiration: true})
+    if(decodedEmailToken){
+      const {exp , iat}= decodedEmailToken
+      
+      // Calculate the duration of the token's validity in seconds
+      const durationInSeconds = exp - iat;
+      let mobileNo = decodedEmailToken.secondField
+      if (exp * 1000 <= Date.now()) {
+        console.log('Token has expired');
+        return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Url Expired' });
+      }
+      else{
+        // update the verify email column in database to verfied i.e. 1
+       
+       let userExist = await publicUser.findOne({
+        where:{
+          phoneNo:mobileNo
+        }
+       })
+        if(userExist){
+          let updateVerifyEmailColumn = await publicUser.update({
+            verifyEmail:1
+          },
+        {
+          where:{
+            phoneNo:mobileNo
+        }})
+        return res.status(statusCode.SUCCESS.code).json({
+          message:`Email verified Successfully`,verifyEmail:1
+        })
+
+        }
+        return res.status(statusCode.SUCCESS.code).json({
+          message:`Email verified Successfully`,verifyEmail:1
+        })
+      }
+    }
+  } catch (error) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1040,7 +1118,9 @@ module.exports = {
  logout,
  privateLogin,
  generateOTPHandler,
- verifyOTPHandlerWithGenerateToken
+ verifyOTPHandlerWithGenerateToken,
+ verifyEmail,
+ sendEmailToUser
 
 }
 
