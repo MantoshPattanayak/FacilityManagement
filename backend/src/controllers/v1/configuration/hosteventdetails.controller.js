@@ -39,7 +39,7 @@ const createHosteventdetails = async (req, res) => {
       eventImage,
       additionalFile
     } = req.body;
-
+console.log("here Reponse of Host event", req.body)
     createBankDetails = await bankDetails.create({
       beneficiaryName:beneficiaryName,
       accountNumber:accountNumber,
