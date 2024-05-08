@@ -84,7 +84,7 @@
    
 }
 
-.form-heading input[type="text"], input[type='date'] {
+.form-heading input[type="text"], input[type='date'], select {
     /* width: 24vw; */
     /* Converted from 100px to 8.33vw */
     padding: 0.625vw;

@@ -45,19 +45,24 @@ let viewNotifications = async (req, res) => {
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
         let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
+        let currentDate = req.body.currentDate;
 
-        let viewNotificationsListQuery = `
-        select
-            *
-        from amabhoomi.publicnotifications p
-        where validFromDate <= ?
-        and validToDate >= ?
-        `;
+        let viewNotificationsListQueryData;
 
-        let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
-            type: Sequelize.QueryTypes.SELECT,
-            replacements: [ new Date(), new Date() ]
-        });
+        if(currentDate){
+            viewNotificationsListQueryData = await sequelize.query(`
+            select * from amabhoomi.publicnotifications p where validFromDate <= ? and validToDate >= ?`, {
+                type: Sequelize.QueryTypes.SELECT,
+                replacements: [ new Date(currentDate), new Date(currentDate) ]
+            });
+        }
+        else {
+            viewNotificationsListQueryData = await sequelize.query(`
+            select * from amabhoomi.publicnotifications p `, {
+                type: Sequelize.QueryTypes.SELECT,
+            });
+        }
+        
 
         console.log('viewNotificationsListQueryData', viewNotificationsListQueryData);
 
