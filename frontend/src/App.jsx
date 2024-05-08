@@ -72,7 +72,9 @@ import HostEvent from "./components/Public/UserProfile/HostEvent";
 
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
-import ShimmerUI from "./components/Public/Search_Card/ShimmerUI";
+import About from "./components/Public/About_And_FQA_PAGE/About";
+import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
+import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -87,8 +89,8 @@ function App() {
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Event_hostPage" element={<Event_hostPage />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
-            <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
+            <Route path="/About" element={<About/>} />
           
             {/* Public (Book Parks)  */}
             <Route
@@ -101,7 +103,7 @@ function App() {
             />
             {/* Public (Book Details)  */}
             <Route
-              path="/UserProfile/BookingDetails"
+              path="/profile/booking-details"
               element={
                 <ProtectedRoute>
                   <BookingDetails />
@@ -127,29 +129,22 @@ function App() {
               }
             />
 
-            {/* Common Footer final */}
+            {/* User-Profile */}
             <Route
-              path="/common/CommonFooter"
+              path="/Profile"
               element={
                 <ProtectedRoute>
-                  <CommonFooter />
+                  <Profile />
                 </ProtectedRoute>
               }
             />
+
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
             {/* use Section  */}
 
             {/* ADMIN SECTION - Activity */}
-            <Route
-              path="/Common/CommonTable"
-              element={
-                <ProtectedRoute>
-                  <CommonTable />
-                </ProtectedRoute>
-              }
-            />
 
             <Route
               path="/Activity/ReviewUserRating"
@@ -164,6 +159,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ReviewEventDetailsList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Activity/AddNewNotification"
+              element={
+                <ProtectedRoute>
+                  <AddNewNotification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Activity/ViewNotifications"
+              element={
+                <ProtectedRoute>
+                  <ViewNotifications />
                 </ProtectedRoute>
               }
             />
@@ -311,15 +322,6 @@ function App() {
               }
             />
 
-            {/* User-Profile */}
-            <Route
-              path="/Profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
             {/* Payment-razorPay */}
             <Route
               path="/paymentSection"

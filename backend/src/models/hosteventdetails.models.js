@@ -54,6 +54,9 @@ module.exports = (sequelize, DataTypes) => {
         Description: {
             type: DataTypes.STRING(255),
         },
+        emailVerified:{
+            type:DataTypes.INTEGER
+        },
         statusId: {
             type: DataTypes.INTEGER,
         },

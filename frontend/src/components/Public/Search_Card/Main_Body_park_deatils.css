@@ -236,11 +236,27 @@
 .Filter_grid{
   padding: 10px;
   margin-left: 90px;
+  display: flex;
+  justify-content: space-between;
+}
+.gride_page{
+    margin-right: 90px;
 }
 .filter_button{
     display: flex;
     gap: 10px;
 }
+/* drop down */
+
+select{
+    border:none;
+    padding: 20px 20px;
+    border-radius:5px;
+  }
+  
+  select:focus{
+    outline:none;
+  }
 
 .button-59 {
   align-items: center;
@@ -286,4 +302,9 @@
   .button-59 {
     min-width: 100px;
   }
+}
+
+/* here Table (List design) --------------------------- */
+.table_Container1{
+    padding: 30px;
 }

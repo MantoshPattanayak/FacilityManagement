@@ -4,13 +4,13 @@ dotenv.config();
 const path = require('path');
 const fs = require('fs')
 
-const storage = multer.memoryStorage();
+const eventStorage = multer.memoryStorage();
 
-const upload = multer({ storage: storage, 
+const eventUpload = multer({ storage: eventStorage, 
   limits: { fileSize: process.env.MAX_FILE_SIZE || '200KB' } 
 });
 
 
 
 
-module.exports = { upload };
+module.exports = { eventUpload };

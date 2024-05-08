@@ -1,12 +1,10 @@
-const { sequelize, Sequelize } = require('../../../models')
-const statusCode = require('../../../utils/statusCode')
-const db = require('../../../models')
-const bcrypt = require('bcrypt')
-const { decrypt } = require('../../../middlewares/decryption.middlewares')
-const {
-  encrypt
-} = require('../../../middlewares/encryption.middlewares')
-const user = db.privateuser
+const { sequelize, Sequelize } = require("../../../models");
+const statusCode = require("../../../utils/statusCode");
+const db = require("../../../models");
+const bcrypt = require("bcrypt");
+const { decrypt } = require("../../../middlewares/decryption.middlewares");
+const { encrypt } = require("../../../middlewares/encryption.middlewares");
+const user = db.privateuser;
 const facilityTypeMaster = db.facilitytype;
 const statusCodeMaster = db.statusmaster;
 const bookmarks = db.bookmarks;
@@ -25,7 +23,7 @@ let autoSuggestionForUserSearch = async (req, res) => {
     INNER JOIN statusmasters sm ON sm.statusId = rm.statusId`;
 
     let allUsersData = await sequelize.query(allUsersDataQuery, {
-      type: Sequelize.QueryTypes.SELECT
+      type: Sequelize.QueryTypes.SELECT,
     });
     // Decrypt all encrypted fields
     let decryptedUsers = allUsersData.map(async (userData) => ({
@@ -34,21 +32,22 @@ let autoSuggestionForUserSearch = async (req, res) => {
       fullName: await decrypt(userData.fullName),
       emailId: await decrypt(userData.emailId),
       userName: await decrypt(userData.userName),
-      contactNo: await decrypt(userData.contactNo)
+      contactNo: await decrypt(userData.contactNo),
     }));
 
     let matchedSuggestions = decryptedUsers;
 
     if (givenReq) {
-      matchedSuggestions = decryptedUsers.filter(userData =>
-        userData.privateUserId.includes(givenReq) ||
-        userData.title.toLowerCase().includes(givenReq) ||
-        userData.fullName.toLowerCase().includes(givenReq) ||
-        userData.emailId.toLowerCase().includes(givenReq) ||
-        userData.userName.toLowerCase().includes(givenReq) ||
-        userData.contactNo.toLowerCase().includes(givenReq) ||
-        userData.roleName.toLowerCase().includes(givenReq) ||
-        userData.status.toLowerCase().includes(givenReq)
+      matchedSuggestions = decryptedUsers.filter(
+        (userData) =>
+          userData.privateUserId.includes(givenReq) ||
+          userData.title.toLowerCase().includes(givenReq) ||
+          userData.fullName.toLowerCase().includes(givenReq) ||
+          userData.emailId.toLowerCase().includes(givenReq) ||
+          userData.userName.toLowerCase().includes(givenReq) ||
+          userData.contactNo.toLowerCase().includes(givenReq) ||
+          userData.roleName.toLowerCase().includes(givenReq) ||
+          userData.status.toLowerCase().includes(givenReq)
       );
     }
     // const encryptedData = matchedSuggestions.map(async (userData) => ({
@@ -62,11 +61,13 @@ let autoSuggestionForUserSearch = async (req, res) => {
     //     status: await encrypt(userData.status)
     //   }));
     return res.status(statusCode.SUCCESS.code).json({
-      message: 'All users data',
-      data: matchedSuggestions
+      message: "All users data",
+      data: matchedSuggestions,
     });
   } catch (err) {
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
   }
 };
 
@@ -86,47 +87,57 @@ let viewList = async (req, res) => {
     // INNER JOIN statusmasters sm ON sm.statusId = rm.statusId
 
     let getAllUsers = await sequelize.query(getAllUsersQuery, {
-      type: Sequelize.QueryTypes.SELECT
+      type: Sequelize.QueryTypes.SELECT,
     });
-    console.log(getAllUsers, 'getAllUsers');
-    // let givenReqDecrypted = await decrypt(givenReqEncrypted).toLowerCase() 
+    console.log(getAllUsers, "getAllUsers");
+    // let givenReqDecrypted = await decrypt(givenReqEncrypted).toLowerCase()
 
     // Decrypt all encrypted fields
-    let decryptedUsers = await Promise.all(getAllUsers.map(async (userData) => {
-      if (!userData || !userData.title || !userData.fullName || !userData.emailId || !userData.userName || !userData.contactNo) {
-        return userData; // Skip decryption if userData or its fields are null or undefined
-      }
-      return {
-        ...userData,
-        title: await decrypt(userData.title),
-        fullName: await decrypt(userData.fullName),
-        emailId: await decrypt(userData.emailId),
-        userName: await decrypt(userData.userName),
-        contactNo: await decrypt(userData.contactNo)
-      }
-    }));
+    let decryptedUsers = await Promise.all(
+      getAllUsers.map(async (userData) => {
+        if (
+          !userData ||
+          !userData.title ||
+          !userData.fullName ||
+          !userData.emailId ||
+          !userData.userName ||
+          !userData.contactNo
+        ) {
+          return userData; // Skip decryption if userData or its fields are null or undefined
+        }
+        return {
+          ...userData,
+          title: await decrypt(userData.title),
+          fullName: await decrypt(userData.fullName),
+          emailId: await decrypt(userData.emailId),
+          userName: await decrypt(userData.userName),
+          contactNo: await decrypt(userData.contactNo),
+        };
+      })
+    );
 
-    console.log('g')
-    console.log(decryptedUsers, 'decryptedUsers')
+    console.log("g");
+    console.log(decryptedUsers, "decryptedUsers");
     // Filter data based on the encrypted search term
     let filteredUsers = decryptedUsers;
 
-    console.log('5')
+    console.log("5");
     if (givenReq) {
       givenReq = givenReq.toLowerCase();
 
-      filteredUsers = decryptedUsers.filter(userData =>
-        userData.title.toLowerCase().includes(givenReq) ||
-        userData.fullName.toLowerCase().includes(givenReq) ||
-        userData.emailId.toLowerCase().includes(givenReq) ||
-        userData.userName.toLowerCase().includes(givenReq) ||
-        userData.contactNo.toLowerCase().includes(givenReq) ||
-        userData.roleName.toLowerCase().includes(givenReq)
+      filteredUsers = decryptedUsers.filter(
+        (userData) =>
+          userData.title.toLowerCase().includes(givenReq) ||
+          userData.fullName.toLowerCase().includes(givenReq) ||
+          userData.emailId.toLowerCase().includes(givenReq) ||
+          userData.userName.toLowerCase().includes(givenReq) ||
+          userData.contactNo.toLowerCase().includes(givenReq) ||
+          userData.roleName.toLowerCase().includes(givenReq)
         // ||
         // userData.statusCode.toLowerCase().includes(givenReq)
       );
     }
-    console.log('filteruser', filteredUsers)
+    console.log("filteruser", filteredUsers);
 
     // Paginate the filtered data
     let paginatedUsers = filteredUsers.slice(offset, offset + limit);
@@ -143,41 +154,51 @@ let viewList = async (req, res) => {
     //   status:await encrypt(userData.status)
     // }));
 
-
     return res.status(statusCode.SUCCESS.code).json({
-      message: 'All users data',
-      data: paginatedUsers
+      message: "All users data",
+      data: paginatedUsers,
     });
   } catch (err) {
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
   }
 };
 
 let generatePassword = async (length) => {
-  let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let password = ""
+  let charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
   for (let i = 0; i < length; i++) {
-    let randomIndex = Math.floor(Math.random() * charset.length)
-    password += charset[randomIndex]
+    let randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
   }
-  return password
-}
+  return password;
+};
 
 let createUser = async (req, res) => {
   try {
-
     const pwdFlag = false;
 
-
-    const { encryptTitle, encryptFullName: encryptfullName, encryptMobileNo: encryptMobileNumber, encryptAlternateMobileNo: encryptAlternateMobileNumber, encryptRole, encryptStatus, encryptUsername: encryptUserName, encryptEmailId: encryptemailId, encryptGenderId } = req.body;
+    const {
+      encryptTitle,
+      encryptFullName: encryptfullName,
+      encryptMobileNo: encryptMobileNumber,
+      encryptAlternateMobileNo: encryptAlternateMobileNumber,
+      encryptRole,
+      encryptStatus,
+      encryptUsername: encryptUserName,
+      encryptEmailId: encryptemailId,
+      encryptGenderId,
+    } = req.body;
 
     // console.log(title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId, 'input')
-    console.log(req.body, 'req.body')
+    console.log(req.body, "req.body");
 
-    let password = await generatePassword(8)
-    let roleId = await decrypt(encryptRole)
-    let statusId = await decrypt(encryptStatus)
-    let genderId = await decrypt(encryptGenderId)
+    let password = await generatePassword(8);
+    let roleId = await decrypt(encryptRole);
+    let statusId = await decrypt(encryptStatus);
+    let genderId = await decrypt(encryptGenderId);
     // const encryptTitle = await encrypt(title);
     // const encryptfullName = await encrypt(fullName);
     // const encryptUserName = await encrypt(userName);
@@ -185,204 +206,265 @@ let createUser = async (req, res) => {
     // const encryptAlternateMobileNumber = await encrypt(alternateMobileNo);
     // const encryptemailId = await encrypt(emailId);
 
-    console.log("1", encryptTitle, encryptfullName, encryptMobileNumber, encryptAlternateMobileNumber)
+    console.log(
+      "1",
+      encryptTitle,
+      encryptfullName,
+      encryptMobileNumber,
+      encryptAlternateMobileNumber
+    );
 
     const createdBy = req.user?.id || 1;
     const updatedBy = req.user?.id || 1;
-    console.log('1')
-    const existingUserMobile = await user.findOne({ where: { contactNo: encryptMobileNumber } });
-    const existingUserEmail = await user.findOne({ where: { emailId: encryptemailId } });
-    const existingUserName = await user.findOne({ where: { userName: encryptUserName } });
-    const existingAlternateUserMobile = await user.findOne({ where: { contactNo: encryptAlternateMobileNumber } });
+    console.log("1");
+    const existingUserMobile = await user.findOne({
+      where: { contactNo: encryptMobileNumber },
+    });
+    const existingUserEmail = await user.findOne({
+      where: { emailId: encryptemailId },
+    });
+    const existingUserName = await user.findOne({
+      where: { userName: encryptUserName },
+    });
+    const existingAlternateUserMobile = await user.findOne({
+      where: { contactNo: encryptAlternateMobileNumber },
+    });
 
     if (existingUserMobile) {
-      return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same contact_no" })
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist same contact_no" });
     } else if (existingUserEmail) {
-      return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same email_id" })
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist same email_id" });
     } else if (existingUserName) {
-      return res.status(statusCode.CONFLICT.code).json({ message: "User already exist same user_name" })
-    }
-    else if (existingAlternateUserMobile) {
-      return res.status(statusCode.CONFLICT.code).json({ message: "User already exist with given alternate contact no " })
-
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({ message: "User already exist same user_name" });
+    } else if (existingAlternateUserMobile) {
+      return res
+        .status(statusCode.CONFLICT.code)
+        .json({
+          message: "User already exist with given alternate contact no ",
+        });
     } else {
-      console.log('req.body', req.body)
+      console.log("req.body", req.body);
       const hashedPassword = await bcrypt.hash(password, 10); // Use 10 rounds for hashing
 
-      console.log(hashedPassword)
+      console.log(hashedPassword);
       const newUser = await user.create({
-        title: encryptTitle, fullName: encryptfullName, contactNo: encryptMobileNumber, emailId: encryptemailId,
-        userName: encryptUserName, password: hashedPassword, changePwdFlag: pwdFlag,
-        roleId: roleId, statusId: statusId, genderId: genderId,
+        title: encryptTitle,
+        fullName: encryptfullName,
+        contactNo: encryptMobileNumber,
+        emailId: encryptemailId,
+        userName: encryptUserName,
+        password: hashedPassword,
+        changePwdFlag: pwdFlag,
+        roleId: roleId,
+        statusId: statusId,
+        genderId: genderId,
         alterateContactNo: encryptAlternateMobileNumber,
-        createdDt: new Date(), createdBy: createdBy, updatedDt: new Date(), updatedBy: updatedBy
+        createdDt: new Date(),
+        createdBy: createdBy,
+        updatedDt: new Date(),
+        updatedBy: updatedBy,
       });
 
-      console.log(newUser)
+      console.log(newUser);
 
-      return res.status(statusCode.SUCCESS.code).json({ message: "User created successfully " });
+      return res
+        .status(statusCode.SUCCESS.code)
+        .json({ message: "User created successfully " });
     }
   } catch (err) {
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
-
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
   }
-
-}
-
+};
 
 let updateUserData = async (req, res) => {
   try {
-    const { userId, title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId } = req.body   //await decrypt(req.body);
-
+    const {
+      userId,
+      title,
+      fullName,
+      userName,
+      mobileNumber,
+      alternateMobileNo,
+      emailId,
+      roleId,
+      statusId,
+      genderId,
+    } = req.body; //await decrypt(req.body);
 
     const encryptTitle = await encrypt(title);
     const encryptfullName = await encrypt(fullName);
     const encryptUserName = await encrypt(userName);
     const encryptMobileNumber = await encrypt(mobileNumber);
     const encryptemailId = await encrypt(emailId);
-    const encryptAlternateMobileNo = await encrypt(alternateMobileNo)
+    const encryptAlternateMobileNo = await encrypt(alternateMobileNo);
     let updatedValueObject = {};
 
     const getUser = await user.findOne({
       where: {
-        privateUserId: userId
-      }
-    })
-    console.log(getUser, 'getUser')
+        privateUserId: userId,
+      },
+    });
+    console.log(getUser, "getUser");
     if (getUser) {
-      if (await decrypt(getUser.dataValues.fullName) != fullName) {
-        updatedValueObject.fullName = encryptfullName
+      if ((await decrypt(getUser.dataValues.fullName)) != fullName) {
+        updatedValueObject.fullName = encryptfullName;
       }
-      if (await decrypt(getUser.userName) != userName) {
+      if ((await decrypt(getUser.userName)) != userName) {
         let checkIsUsernameAlreadyPresent = await user.findOne({
           where: {
-            contactNo: encryptUserName
-          }
-        })
+            contactNo: encryptUserName,
+          },
+        });
         if (checkIsUsernameAlreadyPresent) {
           return res.status(statusCode.CONFLICT.code).json({
-            message: "This username is already existing "
-          })
+            message: "This username is already existing ",
+          });
         }
-        updatedValueObject.userName = encryptUserName
+        updatedValueObject.userName = encryptUserName;
       }
-      if (await decrypt(getUser.contactNo) != mobileNumber) {
+      if ((await decrypt(getUser.contactNo)) != mobileNumber) {
         let checkIsMobileAlreadyPresent = await user.findOne({
           where: {
-            contactNo: encryptMobileNumber
-          }
-        })
+            contactNo: encryptMobileNumber,
+          },
+        });
         if (checkIsMobileAlreadyPresent) {
           return res.status(statusCode.CONFLICT.code).json({
-            message: "This mobile no is already assigned to a existing user"
-          })
+            message: "This mobile no is already assigned to a existing user",
+          });
         }
-        updatedValueObject.mobileNo = encryptMobileNumber
+        updatedValueObject.mobileNo = encryptMobileNumber;
       }
 
-      if (await decrypt(getUser.contactNo) != alternateMobileNo) {
+      if ((await decrypt(getUser.contactNo)) != alternateMobileNo) {
         let checkIsAlternateMobileAlreadyPresent = await user.findOne({
           where: {
-            contactNo: encryptAlternateMobileNo
-          }
-        })
+            contactNo: encryptAlternateMobileNo,
+          },
+        });
         if (checkIsAlternateMobileAlreadyPresent) {
           return res.status(statusCode.CONFLICT.code).json({
-            message: "This mobile no is already assigned to a existing user"
-          })
+            message: "This mobile no is already assigned to a existing user",
+          });
         }
-        updatedValueObject.mobileNo = encryptMobileNumber
+        updatedValueObject.mobileNo = encryptMobileNumber;
       }
-      if (await decrypt(getUser.title) != title) {
-        updatedValueObject.title = encryptTitle
+      if ((await decrypt(getUser.title)) != title) {
+        updatedValueObject.title = encryptTitle;
       }
-      if (await decrypt(getUser.dataValues.emailId) != emailId && emailId != null) {
-
+      if (
+        (await decrypt(getUser.dataValues.emailId)) != emailId &&
+        emailId != null
+      ) {
         let checkIsEmailAlreadyPresent = await user.findOne({
           where: {
-            emailId: encryptemailId
-          }
-        })
+            emailId: encryptemailId,
+          },
+        });
         if (checkIsEmailAlreadyPresent) {
           return res.status(statusCode.CONFLICT.code).json({
-            message: "This email id is already assigned to a existing user"
-          })
+            message: "This email id is already assigned to a existing user",
+          });
         }
-        updatedValueObject.emailId = encryptemailId
+        updatedValueObject.emailId = encryptemailId;
       }
       if (getUser.roleId != roleId) {
-        updatedValueObject.roleId = roleId
+        updatedValueObject.roleId = roleId;
       }
       if (getUser.statusId != statusId) {
-        updatedValueObject.statusId = statusId
+        updatedValueObject.statusId = statusId;
       }
       if (getUser.gender != genderId) {
-        updatedValueObject.gender = genderId
+        updatedValueObject.gender = genderId;
       }
 
-      let [updatedValueCounts, updatedMetaData] = await user.update(updatedValueObject, {
-        where: {
-          privateUserId: getUser.privateUserId
+      let [updatedValueCounts, updatedMetaData] = await user.update(
+        updatedValueObject,
+        {
+          where: {
+            privateUserId: getUser.privateUserId,
+          },
         }
-      })
+      );
       if (updatedValueCounts > 0) {
-        return res.status(statusCode.SUCCESS.code).json({ message: "User record is updated successfully" })
-
+        return res
+          .status(statusCode.SUCCESS.code)
+          .json({ message: "User record is updated successfully" });
       }
-      return res.status(statusCode.FORBIDDEN.code).json({ message: "User record is updated successfully" })
-
-
+      return res
+        .status(statusCode.FORBIDDEN.code)
+        .json({ message: "User record is updated successfully" });
+    } else {
+      return res
+        .status(statusCode.BAD_REQUEST.code)
+        .json({ message: "This user doesn't  exist in our record" });
     }
-    else {
-      return res.status(statusCode.BAD_REQUEST.code).json({ message: "This user doesn't  exist in our record" })
-
-    }
-
-
+  } catch (err) {
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
   }
-  catch (err) {
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
-
-  }
-}
+};
 
 let getUserById = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    let specificUser = await sequelize.query(`select title,fullName,emailId,userName,contactNo,roleId,statusId,genderId from amabhoomi.privateusers where privateuserid= ?`, {
-      replacements: [userId], // Pass the parameter value as an array
-      type: Sequelize.QueryTypes.SELECT
-    }
+    let specificUser = await sequelize.query(
+      `select title,fullName,emailId,userName,contactNo,roleId,statusId,genderId from amabhoomi.privateusers where privateuserid= ?`,
+      {
+        replacements: [userId], // Pass the parameter value as an array
+        type: Sequelize.QueryTypes.SELECT,
+      }
     );
 
-    let userEncryptedData = await Promise.all(specificUser.map(async (user) => {
-      return {
-        ...user,
-        title: await decrypt(user.title),
-        fullName: await decrypt(user.fullName),
-        emailId: await decrypt(user.emailId),
-        userName: await decrypt(user.userName),
-        contactNo: await decrypt(user.contactNo)
-      }
+    let userEncryptedData = await Promise.all(
+      specificUser.map(async (user) => {
+        return {
+          ...user,
+          title: await decrypt(user.title),
+          fullName: await decrypt(user.fullName),
+          emailId: await decrypt(user.emailId),
+          userName: await decrypt(user.userName),
+          contactNo: await decrypt(user.contactNo),
+        };
+      })
+    );
 
-    }))
-
-    return res.status(statusCode.SUCCESS.code).json({ message: "Required User", data: specificUser });
+    return res
+      .status(statusCode.SUCCESS.code)
+      .json({ message: "Required User", data: specificUser });
+  } catch (err) {
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
   }
-  catch (err) {
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
-
-  }
-}
+};
 
 let fetchInitialData = async (req, res) => {
   try {
-    let roleData = await sequelize.query(`select  roleId, roleCode, roleName from amabhoomi.rolemasters `, { type: Sequelize.QueryTypes.SELECT })
+    let roleData = await sequelize.query(
+      `select  roleId, roleCode, roleName from amabhoomi.rolemasters `,
+      { type: Sequelize.QueryTypes.SELECT }
+    );
 
-    let statusData = await sequelize.query(`select statusId,statusCode, description from amabhoomi.statusmasters`, { type: Sequelize.QueryTypes.SELECT })
+    let statusData = await sequelize.query(
+      `select statusId,statusCode, description from amabhoomi.statusmasters`,
+      { type: Sequelize.QueryTypes.SELECT }
+    );
 
-    let genderData = await sequelize.query(`select genderId, genderCode, genderName from amabhoomi.gendermasters`, { type: Sequelize.QueryTypes.SELECT })
+    let genderData = await sequelize.query(
+      `select genderId, genderCode, genderName from amabhoomi.gendermasters`,
+      { type: Sequelize.QueryTypes.SELECT }
+    );
 
     // roleData = roleData.map(async(role)=>({
     //     roleId:role.roleId,
@@ -394,7 +476,6 @@ let fetchInitialData = async (req, res) => {
     //     gender:genderValue.gender,
     //     code:await encrypt(genderValue.code),
     //     description:await encrypt(genderValue.description)
-
 
     // }))
 
@@ -408,29 +489,29 @@ let fetchInitialData = async (req, res) => {
       message: "All initial data to be populated in the dropdown",
       Role: roleData,
       Status: statusData,
-      gender: genderData
-    })
-
+      gender: genderData,
+    });
+  } catch (err) {
+    return res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: err.message });
   }
-  catch (err) {
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
-
-  }
-}
+};
 
 let viewBookings = async (req, res) => {
   try {
     let userId = req.user?.id || 1;
-    let fromDate = req.body.fromDate ? new Date(req.body.fromDate) : null || null;
+    let fromDate = req.body.fromDate
+      ? new Date(req.body.fromDate)
+      : null || null;
     let toDate = req.body.toDate ? new Date(req.body.toDate) : null || null;
     let bookingStatus = req.body.bookingStatus || null;
     let facilityType = req.body.facilityType || null; //EVENTS-6   EVENT_HOST_REQUEST-7   PARKS -1  PLAYGROUNDS-2  MULTIPURPOSE_GROUND-3
     let facilityTypeId = req.body.facilityTypeId || null;
-    let sortingOrder = req.body.sortingOrder || 'desc';  // asc or desc
-    let tabName = req.body.tabName || 'ALL_BOOKINGS';  //ALL_BOOKINGS     HISTORY
+    let sortingOrder = req.body.sortingOrder || "desc"; // asc or desc
+    let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS     HISTORY
 
-    let searchQuery =
-      `select 
+    let searchQuery = `select 
         fb.facilityBookingId as bookingId, f.facilityId as Id, f.facilityname as name, f2.description as type, f.address as location, fb.startDate,
         fb.endDate, s.statusCode, fb.sportsName, fb.bookingDate, fb.createdOn as createdDate
       from amabhoomi.facilitybookings fb
@@ -440,15 +521,14 @@ let viewBookings = async (req, res) => {
       where fb.createdBy = ?
       order by fb.createdOn ${sortingOrder}`;
 
-      /**
+    /**
        * AND (? IS NULL OR CAST(fb.createdOn as DATE) >= CAST(? as DATE))
       AND (? IS NULL OR CAST(fb.createdOn as DATE) <= CAST(? as DATE))
       AND (? IS NULL OR s.statusId = ?)
       AND (? IS NULL OR f2.facilityTypeId = ?)
        */
 
-    let searchQueryEvents =
-      `select 
+    let searchQueryEvents = `select 
         fb.eventBookingId as bookingId, f.eventId as Id, f.eventName as name, f.eventCategory, f.locationName as location, 
         fb.bookingDate, s.statusCode, 'EVENTS' as type, fb.createdOn as createdDate
       from amabhoomi.eventbookings fb
@@ -456,89 +536,82 @@ let viewBookings = async (req, res) => {
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
       where fb.createdBy = ?
       order by fb.createdOn ${sortingOrder}`;
-      /**
+    /**
        * 
       AND (? IS NULL OR CAST(fb.createdOn as DATE) >= CAST(? as DATE))
       AND (? IS NULL OR CAST(fb.createdOn as DATE) <= CAST(? as DATE))
       AND (? IS NULL OR s.statusId = ?)
        */
 
-    let searchQueryEventHostRequest =
-      `select 
+    let searchQueryEventHostRequest = `select 
         fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategory, f2.facilityname, e.locationName as location, e.eventDate, 
         fb.bookingDate, s.statusCode, fb.bookingDate, 'EVENT_HOST_REQUEST' as type, fb.createdOn as createdDate
       from amabhoomi.hostbookings fb
       inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
       inner join amabhoomi.eventactivities e on e.eventId = f.eventId
-      inner join amabhoomi.facilities f2 on f2.facilityId = e.facilityMasterId
+      inner join amabhoomi.facilities f2 on f2.facilityId = e.facilityId
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
       where fb.createdBy = ?
       order by fb.createdOn ${sortingOrder}`;
 
-    if (tabName == 'ALL_BOOKINGS') {
-      let searchQueryResult = await sequelize.query(
-        searchQuery,
-        {
-          replacements: [userId],
-          type: Sequelize.QueryTypes.SELECT
-        }
-      );
-      console.log('searchQueryResult', searchQueryResult);
+    if (tabName == "ALL_BOOKINGS") {
+      let searchQueryResult = await sequelize.query(searchQuery, {
+        replacements: [userId],
+        type: Sequelize.QueryTypes.SELECT,
+      });
+      console.log("searchQueryResult", searchQueryResult);
 
-      let searchEventQueryResult = await sequelize.query(
-        searchQueryEvents,
-        {
-          replacements: [userId],
-          type: Sequelize.QueryTypes.SELECT
-        }
-      );
-
-      let modifiedResultArray = [...searchQueryResult, ...searchEventQueryResult];
-      modifiedResultArray = modifiedResultArray.sort((a, b) => {
-        return( new Date(b.bookingDate) -  new Date(a.bookingDate))
+      let searchEventQueryResult = await sequelize.query(searchQueryEvents, {
+        replacements: [userId],
+        type: Sequelize.QueryTypes.SELECT,
       });
 
-      console.log('searchEventQueryResult', searchEventQueryResult);
+      let modifiedResultArray = [
+        ...searchQueryResult,
+        ...searchEventQueryResult,
+      ];
+      modifiedResultArray = modifiedResultArray.sort((a, b) => {
+        return new Date(b.bookingDate) - new Date(a.bookingDate);
+      });
 
-      if(searchQueryResult.length == 0 && searchEventQueryResult.length == 0){
+      console.log("searchEventQueryResult", searchEventQueryResult);
+
+      if (searchQueryResult.length == 0 && searchEventQueryResult.length == 0) {
         res.status(statusCode.NOTFOUND.code).json({
-          message: 'No bookings data found for parks, playgrounds, multi-grounds',
+          message:
+            "No bookings data found for parks, playgrounds, multi-grounds",
           data: [],
-        })
-      }
-      else{
+        });
+      } else {
         res.status(statusCode.SUCCESS.code).json({
-          message: 'All bookings of parks, playgrounds, multi-grounds',
+          message: "All bookings of parks, playgrounds, multi-grounds",
           data: modifiedResultArray,
-        })
+        });
       }
-    }
-    else if (tabName == 'HISTORY') {
+    } else if (tabName == "HISTORY") {
       let searchQueryResult = await sequelize.query(
         searchQueryEventHostRequest,
         {
           replacements: [userId],
-          type: Sequelize.QueryTypes.SELECT
+          type: Sequelize.QueryTypes.SELECT,
         }
       );
 
-      if(searchQueryResult.length == 0){
+      if (searchQueryResult.length == 0) {
         res.status(statusCode.NOTFOUND.code).json({
-          message: 'No bookings data found for event host requests',
-          eventHostRequests: []
-        })
-      }
-      else{
+          message: "No bookings data found for event host requests",
+          eventHostRequests: [],
+        });
+      } else {
         res.status(statusCode.SUCCESS.code).json({
-          message: 'All bookings for event host requests',
-          eventHostRequests: searchQueryResult
-        })
+          message: "All bookings for event host requests",
+          eventHostRequests: searchQueryResult,
+        });
       }
-    }
-    else {
+    } else {
       res.status(statusCode.BAD_REQUEST.code).json({
-        message: 'Tab not selected'
-      })
+        message: "Tab not selected",
+      });
     }
 
     // if (facilityType != 'EVENTS' && facilityType != 'EVENT_HOST_REQUEST') {
@@ -589,36 +662,40 @@ let viewBookings = async (req, res) => {
     //     data: []
     //   })
     // }
+  } catch (error) {
+    res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: error.message });
   }
-  catch (error) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
-  }
-}
+};
 
 let initalFilterDataForBooking = async (req, res) => {
   try {
-
     let facilityTypeQueryResult = await facilityTypeMaster.findAll();
 
     let statusCodeMasterQueryResult = await statusCodeMaster.findAll({
       where: {
         parentStatusCode: {
-          [Sequelize.Op.in]: ['BOOKING_STATUS', 'HOSTING_STATUS']
-        }
-      }
+          [Sequelize.Op.in]: ["BOOKING_STATUS", "HOSTING_STATUS"],
+        },
+      },
     });
 
-    console.log('search results', { facilityTypeQueryResult, statusCodeMasterQueryResult });
+    console.log("search results", {
+      facilityTypeQueryResult,
+      statusCodeMasterQueryResult,
+    });
 
     res.status(statusCode.SUCCESS.code).json({
-      message: 'Initial filter data for Booking Details section',
-      data: { facilityTypeQueryResult, statusCodeMasterQueryResult }
-    })
+      message: "Initial filter data for Booking Details section",
+      data: { facilityTypeQueryResult, statusCodeMasterQueryResult },
+    });
+  } catch (error) {
+    res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: error.message });
   }
-  catch (error) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
-  }
-}
+};
 
 let bookmarkingAddAction = async (req, res) => {
   try {
@@ -632,38 +709,37 @@ let bookmarkingAddAction = async (req, res) => {
         facilityId: facilityId,
         statusId: 1,
         createdDt: new Date(),
-        createdBy: userId
+        createdBy: userId,
       });
 
-      console.log('newUserBookmark', newUserBookmark);
+      console.log("newUserBookmark", newUserBookmark);
       res.status(statusCode.SUCCESS.code).json({
-        message: 'New bookmark added!'
-      })
-    }
-    else if (eventId) {
+        message: "New bookmark added!",
+      });
+    } else if (eventId) {
       const newUserBookmark = await bookmarks.create({
         publicUserId: userId,
         eventId: eventId,
         statusId: 1,
         createdDt: new Date(),
-        createdBy: userId
+        createdBy: userId,
       });
 
-      console.log('newUserBookmark', newUserBookmark);
+      console.log("newUserBookmark", newUserBookmark);
       res.status(statusCode.SUCCESS.code).json({
-        message: 'New bookmark added!'
-      })
-    }
-    else {
+        message: "New bookmark added!",
+      });
+    } else {
       res.status(statusCode.BAD_REQUEST.code).json({
-        message: 'Bookmarking failed!'
-      })
+        message: "Bookmarking failed!",
+      });
     }
+  } catch (error) {
+    res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: error.message });
   }
-  catch (error) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
-  }
-}
+};
 
 let bookmarkingRemoveAction = async (req, res) => {
   try {
@@ -672,29 +748,34 @@ let bookmarkingRemoveAction = async (req, res) => {
     let facilityId = req.body.facilityId;
     let eventId = req.body.eventId;
 
-    const numUpdated = await bookmarks.update({ statusId: 2 }, { where: { bookmarkId: bookmarkId } });
+    const numUpdated = await bookmarks.update(
+      { statusId: 2 },
+      { where: { bookmarkId: bookmarkId } }
+    );
 
     if (numUpdated > 0) {
       res.status(statusCode.SUCCESS.code).json({
-        message: 'Bookmark removed!'
-      })
-    }
-    else {
+        message: "Bookmark removed!",
+      });
+    } else {
       res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message: 'Bookmark removal failed!'
-      })
+        message: "Bookmark removal failed!",
+      });
     }
+  } catch (error) {
+    res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: error.message });
   }
-  catch (error) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
-  }
-}
+};
 
 let viewBookmarksListForUser = async (req, res) => {
   try {
     let userId = req.user?.id || 1;
     let facilityType = req.body.facilityType; //EVENTS   PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND
-    let fromDate = req.body.fromDate ? new Date(req.body.fromDate) : null || null;
+    let fromDate = req.body.fromDate
+      ? new Date(req.body.fromDate)
+      : null || null;
     let toDate = req.body.toDate ? new Date(req.body.toDate) : null || null;
 
     console.log({ userId, facilityType, fromDate, toDate });
@@ -726,67 +807,64 @@ let viewBookmarksListForUser = async (req, res) => {
 
     let searchQueryResult = null;
 
-    if (facilityType != 'EVENTS' && facilityType != 'EVENT_HOST_REQUEST') {   //search for PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND bookmarks
+    if (facilityType != "EVENTS" && facilityType != "EVENT_HOST_REQUEST") {
+      //search for PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND bookmarks
       searchQueryResult = await sequelize.query(
         fetchBookmarkListForFacilitiesQuery,
         {
           replacements: [userId, fromDate, fromDate, toDate, toDate],
-          type: Sequelize.QueryTypes.SELECT
+          type: Sequelize.QueryTypes.SELECT,
         }
       );
 
       // console.log('1 searchQueryResult', searchQueryResult);
 
       res.status(statusCode.SUCCESS.code).json({
-        message: 'Data of all bookmarks for parks, playgrounds, multipurpose grounds',
-        data: searchQueryResult
-      })
-    }
-    else if (facilityType == 'EVENTS') {    //EVENTS bookmarks
+        message:
+          "Data of all bookmarks for parks, playgrounds, multipurpose grounds",
+        data: searchQueryResult,
+      });
+    } else if (facilityType == "EVENTS") {
+      //EVENTS bookmarks
       searchQueryResult = await sequelize.query(
         fetchBookmarkListForEventsQuery,
         {
           replacements: [userId, fromDate, fromDate, toDate, toDate],
-          type: Sequelize.QueryTypes.SELECT
+          type: Sequelize.QueryTypes.SELECT,
         }
       );
 
       // console.log('2 searchQueryResult', searchQueryResult);
 
       res.status(statusCode.SUCCESS.code).json({
-        message: 'Data of all bookmarks for event booking',
-        data: searchQueryResult
-      })
-    }
-    else {
+        message: "Data of all bookmarks for event booking",
+        data: searchQueryResult,
+      });
+    } else {
       res.status(statusCode.BAD_REQUEST.code).json({
-        message: 'Please provide filter options.',
-        data: []
-      })
+        message: "Please provide filter options.",
+        data: [],
+      });
     }
+  } catch (error) {
+    res
+      .status(statusCode.INTERNAL_SERVER_ERROR.code)
+      .json({ message: error.message });
   }
-  catch (error) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: error.message });
-  }
-}
+};
 
 let addHostEventRequest = async (req, res) => {
   try {
-    let {
-      organisationName,
-      organisationPanCard,
-      organisationAddress,
-
-    } = req.body;
+    let { organisationName, organisationPanCard, organisationAddress } =
+      req.body;
 
     // hosteventdetails
-  }
-  catch (error) {
+  } catch (error) {
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 module.exports = {
   viewList,
@@ -799,5 +877,5 @@ module.exports = {
   initalFilterDataForBooking,
   bookmarkingAddAction,
   bookmarkingRemoveAction,
-  viewBookmarksListForUser
-}
+  viewBookmarksListForUser,
+};
