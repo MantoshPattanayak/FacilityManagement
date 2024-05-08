@@ -132,30 +132,34 @@ body {
 }
 
 .typing-animation {
-    overflow: hidden; 
-    white-space: nowrap; 
-   
+    overflow: hidden;
+    white-space: nowrap;
+
     animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
-  }
-  
-  @keyframes typing {
+}
+
+@keyframes typing {
     from {
-      width: 0;
+        width: 0;
     }
+
     to {
-      width: 100%;
+        width: 100%;
     }
-  }
-  
-  @keyframes blink-caret {
-    from, to {
-      border-color: transparent;
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent;
     }
+
     50% {
-      border-color: #000; 
+        border-color: #000;
     }
-  }
-  
+}
+
 
 .search-bar {
     width: 441px;
@@ -187,7 +191,7 @@ body {
 .icon img {
     width: 100px;
     height: 100px;
-   
+
 }
 
 .logo-section {
@@ -243,14 +247,14 @@ body {
     position: relative;
 }
 
-.text1{
+.text1 {
     position: absolute;
     top: 95%;
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    
+
     color: #013409;
     padding: 10px;
     border-radius: 5px;
@@ -259,7 +263,7 @@ body {
 }
 
 .icon1 img {
-   height: 8vh;
+    height: 8vh;
 }
 
 .icon1:hover h2 {
@@ -301,9 +305,79 @@ body {
 
 }
 
-/* .LoadScript {
-    margin-top: 100px;
-} */
+.EventDetailsCardSec_outer {
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+}
+
+.EventDetailsCardSec {
+    display: flex;
+    flex-wrap: nowrap;
+    /* Prevent wrapping of cards */
+    width: fit-content;
+    /* Adjust width to fit all cards */
+    margin: 0 auto;
+    /* Center the cards horizontally */
+    padding-bottom: 20px;
+    /* Add some padding at the bottom for aesthetic purposes */
+}
+
+.eventCard {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: auto;
+    margin: 4px;
+    border-radius: 8px;
+    background-color: rgba(224, 248, 229, 1);
+}
+
+.eventCard_Img {
+    width: 17vw;
+    border-radius: 8px;
+}
+
+.eventCardTitle {
+    width: 17vw;
+    font-weight: bolder;
+    font-size: 18px;
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.eventCardLocation {
+    display: flex;
+    width: 17vw;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 1vh;
+}
+
+.eventCardLocation svg {
+    height: 12px;
+}
+
+.eventCardLocation h1 {
+    width: 16vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+}
+
+.eventCard_Date_Time {
+    display: flex;
+    justify-content: space-between;
+    width: 17vw;
+    font-size: 12px;
+}
+
+.eventCard_time {
+    display: flex;
+}
+
 
 
 /* --------Facilities Near me----------------------------------------------------- */
@@ -405,6 +479,127 @@ body {
 
 
 /* ------Event details card-------------------------------------------------------------------- */
+.EventContainerlanding {
+    width: 100%;
+    margin: 4vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.EventContainerTitle {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    padding: 3vw;
+}
+
+.EventContainerTitle {
+    font-size: 28px;
+    color: #2A2D32;
+}
+
+.EventDetailsCardSec_outer {
+    overflow: hidden;
+    width: 94%;
+}
+
+.EventDetailsCardSec {
+    display: flex;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    margin-block: 2vh;
+    /* animation: scroll 20s linear infinite; */
+}
+
+.EventDetailsCardSec:hover {
+    animation-play-state: paused;
+  }
+
+  .EventDetailsCardSec::-webkit-scrollbar {
+    display: none;
+  }
+
+@keyframes scroll {
+    from {
+        transform: translateX(0%);
+    }
+
+    to {
+        transform: translateX(-100%);
+        /* Adjust -2px to leave a small gap between items */
+    }
+
+
+}
+
+.eventCard {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    /* border: 0.5px solid #3AB757 ; */
+    width: auto;
+    margin: 4px;
+    border-radius: 8px;
+    background-color: rgba(224, 248, 229, 1);
+    flex-shrink: 0;
+    
+    animation: scroll 20s linear infinite;
+}
+
+.eventCard_Img {
+    width: 17vw;
+    border-radius: 8px;
+}
+
+.eventCardTitle {
+    width: 17vw;
+    font-weight: bolder;
+    font-size: 18px;
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.eventCardLocation {
+    display: flex;
+    width: 17vw;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 1vh;
+}
+
+.eventCardLocation svg {
+    height: 12px;
+}
+
+.eventCardLocation h1 {
+    width: 16vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+}
+
+.eventCard_Date_Time {
+    display: flex;
+    justify-content: space-between;
+    width: 17vw;
+    font-size: 12px;
+}
+
+
+
+.eventCard_time {
+    display: flex;
+    /* width: 3vw; */
+    justify-content: space-between;
+}
 
 
 
@@ -422,7 +617,7 @@ body {
 
 }
 
-.badminton_img{
+.badminton_img {
     height: 20vh;
 }
 
@@ -433,9 +628,9 @@ body {
     /* Ensure positioning relative to this div */
     width: 100%;
     /* Adjust as needed */
-    height:30vh;
+    height: 30vh;
     /* Adjust as needed */
-  
+
     background-size: cover;
     /* Adjust as needed */
     background-position: center;
@@ -446,17 +641,11 @@ body {
 }
 
 .parkList {
-    /* position: absolute; */
-    /* top: 0;
-    right: 0; */
-    background-color: #fff;
-    /* Change to desired color */
+    background-color: rgba(0, 0, 0, 0.5);
     padding: 10px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     display: flex;
-    /* Display parks side by side */
     flex-direction: column;
-    /* Display parks in a column */
 }
 
 
@@ -501,7 +690,8 @@ body {
 
 .exploreNewAct-Header {
     display: flex;
-    margin: 5vw;
+    margin-inline: 5vw;
+    margin-block: 2vh;
     align-items: center;
     gap: 1vw;
 }
@@ -510,33 +700,25 @@ body {
     display: flex;
     flex-wrap: wrap;
     margin-top: 10px;
+    padding: 4px;
+    padding-inline: 80px;
+    border-radius: 7px;
     justify-content: center;
     width: 91px;
-    background-color: #424242;
+    background-color: hsl(0, 0%, 52%, 0.5);
     color: white;
 }
 
 /* Selected activity */
 .activity.selected {
-    background-color: #ccc;
-    /* Change to desired color */
+    background-color: white;
+    color: black;
+    font-weight: 600;
 }
-
-/* List of parks */
-.parkList {
-    /* position: absolute; */
-    top: 0;
-    right: 0;
-    background-color: #fff;
-    /* Change to desired color */
-    padding: 10px;
-    border: 1px solid #ccc;
-}
-
-/* Optional: Style individual park items */
 .parkList p {
     margin: 5px 0;
     width: 300px;
+    color: rgba(255, 255, 255, 0.818);
 }
 
 .parkItem {
@@ -552,6 +734,9 @@ body {
     width: 73px;
     background-color: white;
     color: black;
+}
+.parkItem svg{
+    color: white;
 }
 
 .image-secondDiv img {
@@ -587,25 +772,135 @@ body {
     justify-content: center;
 }
 
-.parkList {
-    background-color: rgba(255, 255, 255, 0.7);
-    /* Semi-transparent background for better readability */
-    padding: 10px;
-    border: 1px solid #ccc;
-    z-index: 1;
-    /* Ensure parks appear above the image */
-}
+
 
 
 /*----------------------------------- Gallery section------------------------------------------------------------------------------------------------------- */
-/* Custom CSS for slick carousel arrows */
-/* Custom CSS for slick carousel arrows */
-.slick-prev:before,
-.slick-next:before {
-  font-size: 90px; /* Change the font size to your desired size */
-  color: blue; /* Change the color to your desired color */
-  background-color: red;
+
+.galleryOuter {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-block: 6vh;
 }
+
+.gallerySlider {
+    display: flex;
+    align-items: center;
+    width: 94%;
+    gap: 2vw;
+}
+
+.EventDetailsCardSec {
+    width: 94%;
+}
+
+.galleryTitle {
+    width: 94%;
+    display: flex;
+    /* margin: 5vw; */
+    align-items: center;
+    gap: 1vw;
+}
+
+.galleryTitle h1 {
+    font-size: 28px;
+    color: #2A2D32;
+}
+
+.greenHeader {
+    width: 6px;
+    height: 49px;
+    border-radius: 4px;
+    background-color: #3AB757;
+}
+
+.gallerySlider svg {
+    color: #2A2D32;
+}
+
+.carousel-slide3 {
+    max-width: 284px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    flex: 0 0 30%;
+    /* Each slide takes up 30% of the container width */
+    width: 20%;
+    /* Each slide takes up 30% of the container width */
+    height: 100%;
+    /* Each slide takes up full height of the container */
+    scroll-snap-align: start;
+    /* Align slides to the start of the container */
+    width: 5vw;
+    height: auto;
+    padding-block: 10px;
+
+    align-items: center;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9;
+    opacity: 100;
+    visibility: visible;
+    transition: all 0.35s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.carousel-slide3 .overlay {
+    position: relative;
+}
+
+.carousel-slide3 .overlay::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Adjust the transparency as needed */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-slide3:hover .overlay::after {
+    opacity: 1;
+}
+
+.overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-slide3:hover .overlay-text {
+    opacity: 1;
+}
+
+.Gallery_image {
+    width: 284px;
+    height: 200px;
+    border-radius: 8px;
+}
+
+
 
 
 
@@ -745,9 +1040,10 @@ body {
     }
 
     /* -----Facilities Near me------------------------------------------------------- */
-    .nearByFacilities-heading button{
+    .nearByFacilities-heading button {
         font-size: 10px;
     }
+
     .map-facilities {
         height: 20px;
     }
@@ -758,38 +1054,46 @@ body {
     }
 
     /* ------Event details card---------------------------------------------------- */
-    .Name_yoga{
+    .Name_yoga {
         width: 135px;
         font-size: 14px;
     }
+
     .Yoga_image {
         width: 156px;
         height: 104px;
     }
+
     .Yoga_date_time {
         width: 145px;
         margin-inline: 4px;
     }
+
     .Yoga_date {
         font-size: 8px;
         font-weight: 500;
     }
+
     .Yoga_time {
         font-size: 8px;
         font-weight: 500;
     }
+
     .carousel-slide-location {
         margin-inline: 3px;
         width: 142px;
     }
-    .carousel-slide-location svg{
+
+    .carousel-slide-location svg {
         height: 10px;
     }
+
     .carousel-slide-location h1 {
         width: 221px;
         font-size: 8px;
     }
-    .carousel-slide-text{
+
+    .carousel-slide-text {
         width: 145px;
         display: flex;
         align-items: center;
@@ -797,3 +1101,7 @@ body {
     }
 
 }
+
+
+
+/* ---------------Gallery section --------------------------------*/
