@@ -212,7 +212,7 @@ let sendEmailToUser = async(req,res)=>{
     let secondField = mobileNo
     let Token = await mailToken({firstField,secondField})
     let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
-    const message = `Your account has been created, Now you Create your password.<br><br>
+    const message = `Your account has been created.<br><br>
     This is your emailId <b>${emailId}</b><br>
     Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
     <button style=" background-color: #4CAF50; border: none;
