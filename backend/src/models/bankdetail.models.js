@@ -9,25 +9,25 @@ module.exports= (sequelize,DataTypes)=>{
             primaryKey:true
         },
         beneficiaryName:{
-            type:DataTypes.STRING,
+            type:DataTypes.STRING(30),
         },
         accountType:{
-            type:DataTypes.STRING
+            type:DataTypes.STRING(10)
         },
         bankName:{
-            type:DataTypes.STRING
+            type:DataTypes.STRING(15)
         },
         accountNumber:{
-            type:DataTypes.STRING
+            type:DataTypes.BIGINT
         },
         bankIfscCode:{
-            type:DataTypes.STRING
+            type:DataTypes.STRING(20)
         },
         phoneNumber:{
-            type:DataTypes.STRING
+            type:DataTypes.STRING(20)
         },
         address:{
-            type:DataTypes.STRING
+            type:DataTypes.STRING(50)
         },
         createdBy:{
             type:DataTypes.INTEGER
@@ -44,6 +44,8 @@ module.exports= (sequelize,DataTypes)=>{
         }
     },
 {
+    timestamps: false,
+
 })
 
     return bankDetail
