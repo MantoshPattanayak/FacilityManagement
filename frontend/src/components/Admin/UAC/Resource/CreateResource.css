@@ -26,6 +26,18 @@
   margin-top: 20px;
 }
 
+.form-select-parent-resource {
+  /* width: 24vw; */
+  /* Converted from 100px to 8.33vw */
+  padding: 0.625vw;
+  /* Converted from 5px to 0.625vw */
+  border: 0.0833vw solid #ccc;
+  /* Converted from 1px to 0.0833vw */
+  border-radius: 0.417vw;
+  /* Converted from 5px to 0.417vw */
+  background-color: ghostwhite;
+}
+
 .fields {
   flex: 1;
   min-width: 365px;

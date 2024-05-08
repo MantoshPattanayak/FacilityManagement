@@ -1,6 +1,6 @@
 import "../../../../../common/CommonTable.css";
 import Footer from "../../../../../common/Footer";
-import "./UserResourceMappingList.css";
+// import "./UserResourceMappingList.css";
 const UserResourceMappingList = () => {
   return (
     <div>

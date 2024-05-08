@@ -53,7 +53,7 @@ const api = {
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
     REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
     // Public Notifications
-    VIEW_NOTIFICATIONS_LIST_API: '/publicNotifications/viewList', //post givenReq page_size page_number
+    VIEW_NOTIFICATIONS_LIST_API: '/publicNotifications/viewList', //post givenReq page_size page_number currentDate
     ADD_NOTIFICATIONS_API: '/publicNotifications/add',  //post  notificationTitle, notificationContent, validFromDate, validToDate
      ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
      REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Profile.css";
 
 export default function Profile() {
@@ -6,6 +6,24 @@ export default function Profile() {
     const photoInput = document.getElementById("photo");
     photoInput.value = ""; // Clear the value of the file input
   }
+
+  const [selectedActivities, setSelectedActivities] = useState([]);
+
+  const handleActivityToggle = (activity) => {
+    if (selectedActivities.includes(activity)) {
+      setSelectedActivities(
+        selectedActivities.filter((item) => item !== activity)
+      );
+    } else {
+      setSelectedActivities([...selectedActivities, activity]);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // handle form submission with selectedActivities
+    console.log(selectedActivities);
+  };
   return (
     <main>
       <div className="profile--Main-Box">
@@ -98,7 +116,9 @@ export default function Profile() {
         {/* right side-section */}
         <div className="profile-rightside--Body">
           <h1>User-Profile</h1>
-          <form className="profile-form-Body">
+
+          {/* form-content */}
+          <form className="profile-form-Body" onSubmit={handleSubmit}>
             <h3>Edit your Profile here--</h3>
 
             {/* photo Upload */}
@@ -143,6 +163,127 @@ export default function Profile() {
               <input type="password" placeholder="*******" />
               <label htmlFor="NewPassword">Reenter New Password</label>
               <input type="password" placeholder="*******" />
+            </div>
+
+            {/* choose preffered Activity */}
+            <div className="profile--Activity-Box">
+              <h2>
+                Preferred Activities{" "}
+                <span className="text-sm text-zinc-500">
+                  (user can select multiple activities)
+                </span>
+              </h2>
+              {/* <form onSubmit={handleSubmit}> */}
+              <div className="profile--Activity-options">
+                <button
+                  className={`select-none rounded-lg border border-gray-900 py-3 px-6 text-center font-sans text-xs uppercase ${
+                    selectedActivities.includes("Running")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white`}
+                  onClick={() => handleActivityToggle("Running")}
+                >
+                  <span>🏃 Running</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Yoga")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-6 py-3 rounded-lg`}
+                  onClick={() => handleActivityToggle("Yoga")}
+                >
+                  <span>🧘 Yoga</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Open-Gym")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-6 py-3 rounded-lg`}
+                  onClick={() => handleActivityToggle("Open-Gym")}
+                >
+                  <span>🏋️ Open-Gym</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Swimming")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Swimming")}
+                >
+                  <span>🏊 Swimming</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Cricket")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Cricket")}
+                >
+                  <span>🏏 Cricket</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Football")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Football")}
+                >
+                  <span>⚽ Football</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Volleyball")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Volleyball")}
+                >
+                  <span>🏐 Volleyball</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Badminton")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Badminton")}
+                >
+                  <span>🏸 Badminton</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Library")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Library")}
+                >
+                  <span>📚 Library</span>
+                </button>
+                <button
+                  className={`flex items-center justify-center gap-2 ${
+                    selectedActivities.includes("Boating")
+                      ? "bg-green-700"
+                      : "bg-green-500"
+                  } text-white px-4 py-2 rounded-lg`}
+                  onClick={() => handleActivityToggle("Boating")}
+                >
+                  <span>🛶 Boating</span>
+                </button>
+                {/* Add more buttons for other activities */}
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg"
+              >
+                Submit
+              </button>
+              {/* </form> */}
             </div>
           </form>
         </div>
