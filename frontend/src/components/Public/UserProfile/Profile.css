@@ -5,6 +5,7 @@
   flex-direction: column;
   min-height: 100vh;
   column-gap: 4rem;
+  /* border: 2px solid red; */
 }
 
 .profile-leftside--Body {
@@ -74,8 +75,11 @@
 }
 
 .profile-rightside--Body {
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
   flex: 1 1 0%;
+  overflow: visible;
+  /* padding: 10px; */
+  /* box-sizing: border-box; */
 }
 
 .profile-rightside--Body > h1 {
@@ -86,12 +90,13 @@
 }
 
 .profile-formContainer {
-  margin: 1.2rem 0;
+  margin-top: 1.2rem;
 }
 
 /* Style for form labels */
 .profile-formContainer label,
-.profile-photoLabel {
+.profile-photoLabel,
+.profile--Activity-Box > h2 {
   display: block;
   margin-bottom: 0.5rem;
   color: rgb(63, 63, 70);
@@ -117,6 +122,31 @@
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
+
+.profile--Activity-options {
+  display: grid;
+  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.4rem 4rem;
+}
+
+.profile--activityButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background-color: #ccc;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+.activityButton.selected {
+  background-color: #6ab04c;
+}
+
 @media (min-width: 768px) {
   .button-67 {
     padding: 24px;
@@ -127,9 +157,18 @@
 @media (min-width: 1024px) {
   .profile--Main-Box {
     flex-direction: row;
+    column-gap: 8rem;
   }
 
   .profile-leftside--Body {
     width: 17rem;
+  }
+  .profile-rightside--Body {
+    /* align-items: center; */
+    /* justify-content: center; */
+    /* max-width: 44rem; */
+    padding: 0 4rem;
+    height: fit-content;
+    /* border: 2px solid black; */
   }
 }
