@@ -109,6 +109,7 @@ let generateOTPHandler = async (req,res)=> {
       })
   }
 }
+let generateToken = require('../../../utils/generateToken')
 
 // let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
 //   try {
