@@ -14,6 +14,8 @@ import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 
 
@@ -35,6 +37,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import { encryptData } from '../../utils/encryptData';
 // import for slider
 
+
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 5
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1
+  }
+};
 
 
 
@@ -217,6 +239,7 @@ const Landing = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === galleryData.length - 1 ? 0 : prevIndex + 1));
   };
+
 
 
 
@@ -634,11 +657,10 @@ const Landing = () => {
           <div className="greenHeader"></div>
           <h1>Gallery</h1>
         </div>
-        <div className="gallerySlider">
-          <button className="sliderButton" onClick={handlePrev}>
-            next
-          </button>
-          <div className="EventDetailsCardSec"  >
+
+        <div className='gallery-slider'>
+          <Carousel responsive={responsive}>
+
             {galleryData.map((data, index) => (
               <div className="carousel-slide3" key={index}>
                 <div className="overlay">
@@ -647,11 +669,9 @@ const Landing = () => {
                 </div>
               </div>
             ))}
-          </div>
-          <button className="sliderButton" onClick={handleNext}>
-            <FontAwesomeIcon icon={faCircleChevronRight} />
-          </button>
+          </Carousel>;
         </div>
+
       </div>
 
 
@@ -668,6 +688,7 @@ const Landing = () => {
         </div>
       </div>
       <div className="footer">
+
         <Footer />
       </div>
 
