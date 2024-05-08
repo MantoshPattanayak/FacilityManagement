@@ -84,14 +84,13 @@
 }
 .prev_button:hover{
     background-color: #23272E;
-
-
 }
 .next_button{
     background-color: #00B562;
     padding: 10px;
     width: 10%;
     color: #fff;
+    float: right;
 }
 .next_button:hover{
     background-color: green;
@@ -137,3 +136,60 @@
     background-color: #F6F7F9;
     padding: 10px;
 }
+
+/* here for form data */
+.container-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-data {
+    font-size: 20px;
+    box-sizing: border-box;
+    width: 70vw;
+    border-collapse: collapse;
+    border: 1px solid rgb(214, 208, 208);
+    border-radius: 5px;
+  }
+  
+  .form-data h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: x-large;
+    font-weight: 600;
+    background-color: #1e7d42;
+  }
+  
+  .form-data p {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .form-data p:last-child {
+    border-bottom: none;
+  }
+  
+  .form-data button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+  
+  .form-data button[type="button"] {
+    background-color: #aaa;
+    float: left;
+  }
+  
+  .form-data button[type="submit"] {
+    background-color: #4CAF50;
+  }
+  
+  .form-data button:hover {
+    background-color: #45a049;
+  }
+  
