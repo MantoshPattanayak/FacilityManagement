@@ -55,7 +55,8 @@
     width: 100%;
     height: 100%;
     border: 1px solid #8794A9;
-    background-color: #F6F7F9;
+    background-color: #ffffff;
+    border-radius: 8px;
 
 }
 .HostEvent_Group select {
@@ -63,6 +64,7 @@
     height: 100%;
     border: 1px solid #8794A9;
     background-color: #F6F7F9;
+    border-radius: 8px;
 }
 
 #AddressBox{
@@ -193,3 +195,46 @@
     background-color: #45a049;
   }
   
+  /* here Sumbit Button */
+  .Submit_Button {
+    display: flex;
+    float: right;
+  }
+  
+  .Submit_Button button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .Submit_Button button:first-child {
+    background-color: #dc3545; /* Red color for "Previous" button */
+  }
+  
+  .Submit_Button button:last-child {
+    background-color: #28a745; /* Green color for "Submit" button */
+  }
+  
+  .Submit_Button button:hover {
+    opacity: 0.8;
+  }
+  
+  /* here */
+.buttons-container{
+    margin-top: 10px;
+}
+
+/* here set the padding  */
+.all_From_conatiner{
+    padding: 50px;
+}
+.verify_name_text{
+    font-size: 30px;
+    font-weight: 600;
+}
+.img_verify_text_container{
+    display: flex;
+}
