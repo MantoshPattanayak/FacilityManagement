@@ -75,6 +75,7 @@ import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
 import About from "./components/Public/About_And_FQA_PAGE/About";
 import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
 import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
+import AdminLogin from "./components/Admin/Login";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -144,6 +145,8 @@ function App() {
             <Route path="/login/SignUp" element={<SignUp />} />
             {/* use Section  */}
 
+            {/* ADMIN SECTION - Login */}
+            <Route path="/admin-login" element={<AdminLogin />} />
             {/* ADMIN SECTION - Activity */}
 
             <Route
