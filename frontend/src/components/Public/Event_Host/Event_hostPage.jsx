@@ -669,36 +669,38 @@ const Event_hostPage = () => {
             )}
             {/*           ----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
             {currentStep === 3 && (
-                <form onSubmit={handleSubmit}>
+                <div class="container-form">
+                <form onSubmit={handleSubmit} className="form-data">
                     <h2>Step 3</h2>
                     <p>First Name: {formData.organisationName}</p>
                     <p>Last Name: {formData.organisationPanCardNumber}</p>
                     <p>Email: {formData.organisationAddress}</p>
                     <p>Password: {formData.firstName}</p>
-                    <p>{formData.lastName}</p>
-                    <p>{formData.phoneNo}</p>
-                    <p>{formData.emailId}</p>
-                    <p>{formData.beneficiaryName}</p>
-                    <p>{formData.accountType}</p>
-                    <p>{formData.bankName}</p>
-                    <p>{formData.accountNumber}</p>
-                    <p>bankIFSC:{formData.bankIFSC}</p>
-                    <p>{formData.eventTitle}</p>
-                    <p>{formData.eventDate}</p>
-                    <p>{formData.locationofEvent}</p>
-                    <p>{formData.eventCategory}</p>
-                    <p>{formData.startEventDate}</p>
-                    <p>{formData.endEventDate}</p>
-                    <p>{formData.descriptionofEvent}</p>
-                    <p>{formData.ticketsold}</p>
-                    <p>{formData.numberofTicket}</p>
-                    <p>{formData.uploadeventImage}</p>
-                    <p>{formData.additionalFiles}</p>
+                    <p>Last Name: {formData.lastName}</p>
+                    <p>Phone Number: {formData.phoneNo}</p>
+                    <p>Email Id: {formData.emailId}</p>
+                    <p>Benificiary Name: {formData.beneficiaryName}</p>
+                    <p>Account Type: {formData.accountType}</p>
+                    <p>Bank Name: {formData.bankName}</p>
+                    <p>Account Number: {formData.accountNumber}</p>
+                    <p>BankIFSC: {formData.bankIFSC}</p>
+                    <p>Event Title: {formData.eventTitle}</p>
+                    <p>Event Date: {formData.eventDate}</p>
+                    <p>Location of Event: {formData.locationofEvent}</p>
+                    <p>Event Catagory: {formData.eventCategory}</p>
+                    <p>Start Event Date: {formData.startEventDate}</p>
+                    <p>End Event Date: {formData.endEventDate}</p>
+                    <p>Description Of Event: {formData.descriptionofEvent}</p>
+                    <p>Ticket Sold: {formData.ticketsold}</p>
+                    <p>Number Of Ticket: {formData.numberofTicket}</p>
+                    <p>Upload Event Image: {formData.uploadeventImage}</p>
+                    <p>Additional Files: {formData.additionalFiles}</p>
 
 
                     <button type="button" onClick={prevStep}>Previous</button>
                     <button type="submit">Submit</button>
                 </form>
+                </div>
             )}
 
             {/* ---------------------------------------------------here Toast Libary-------------------------------------- */}
