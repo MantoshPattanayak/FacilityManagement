@@ -55,18 +55,18 @@ const Event_hostPage = () => {
     // handler for target the Name of Input field -------------------------------------------------
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-    
+
         switch (name) {
             case "uploadEventImage":
                 let file = files[0];
-    
+
                 if (parseInt(file.size / 1024) <= 200) {
                     const reader = new FileReader();
-    
+
                     reader.onloadend = () => {
                         setFormData({ ...formData, [name]: reader.result });
                     };
-    
+
                     reader.readAsDataURL(file);
                 }
                 else {
@@ -76,14 +76,14 @@ const Event_hostPage = () => {
                 break;
             case "additionalFiles":
                 let filesData = formData.additionalFiles;
-    
+
                 // Check if number of files exceeds the limit
-                if(files.length + formData.additionalFiles.length> 3) {
+                if (files.length + formData.additionalFiles.length > 3) {
                     alert("You can only upload a maximum of 3 files.");
-                   
+
                     return;
                 }
-    
+
                 for (let i = 0; i < files.length; i++) {
                     let file = files[i];
                     if (parseInt(file.size / 1024) <= 400) { // Checking for 400KB
@@ -105,13 +105,13 @@ const Event_hostPage = () => {
                 }
                 break;
             default:
-                console.log("from data",formData )
+                console.log("from data", formData)
                 setFormData({ ...formData, [name]: value });
                 setformErrors({ ...formErrors, [name]: '' });
                 break;
         }
     };
-    
+
 
     // here Post the data ------------------------------------------------------------------------
     async function handleSubmit(e) {
@@ -322,7 +322,7 @@ const Event_hostPage = () => {
             err.endEventDate = "End EventDate is Required"
         }
         // here check start Date should less then or equal to enddata
-        if(new Date(value.startEventDate)> new Date(value.endEventDate)){
+        if (new Date(value.startEventDate) > new Date(value.endEventDate)) {
             err.startEventDate = "Start Event Date should be less than or equal to End Event Date";
             err.endEventDate = "End Event Date should be greater than or equal to Start Event Date";
         }
@@ -351,10 +351,10 @@ const Event_hostPage = () => {
             } else if (!space_block.test(value.price)) {
                 err.price = "Do not use spaces at beginning"
             }
-            
+
         }
-        if(!value.uploadEventImage){
-            err.uploadEventImage="Upload Event Image is required"
+        if (!value.uploadEventImage) {
+            err.uploadEventImage = "Upload Event Image is required"
         }
 
         return err;
@@ -706,6 +706,7 @@ const Event_hostPage = () => {
 
 
                                 </div>
+                                {/*----------------------------- here Upload Event Image ---------------------------- */}
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1">Upload Event Image <span className="text-red-600 font-bold text-xl">*</span></label>
                                     <form id="myForm" className="m-0">
@@ -721,7 +722,7 @@ const Event_hostPage = () => {
                                             Max. image file size is 200KB.
                                         </p>
                                     </form>
-         
+
                                     <p className="italic text-sm font-bold text-gray-500">
                                         Max. image or PDF file size is 200KB.
                                     </p>
@@ -737,17 +738,17 @@ const Event_hostPage = () => {
                                                 });
                                                 document.getElementById("myForm").reset();
                                             }}
-                                         
+
                                         >
 
                                         </div>
                                     )}
-                                   
+
                                 </div>
                                 <div className="HostEvent_Group" id='AddressBox'>
 
                                 </div>
-
+                                {/*----------------------------- here Upload Additional Files ---------------------------- */}
 
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1">Upload Additional Files <span className="text-red-600 font-bold text-xl">*</span></label>
@@ -771,7 +772,7 @@ const Event_hostPage = () => {
                                     </p>
 
                                     {/* here Upload */}
-                                    {formData.additionalFiles &&  formData.additionalFiles.length>0 && (
+                                    {formData.additionalFiles && formData.additionalFiles.length > 0 && (
                                         <div
                                             onClick={(e) => {
 
@@ -784,13 +785,13 @@ const Event_hostPage = () => {
                                             id="ownerPhotoRemove"
                                             className="block"
                                         >
-                                    
+
                                         </div>
-                                        
+
                                     )}
-                                        
+
                                 </div>
-                                {/* Two more similar rows for Heading 1 */}
+
                             </div>
                             {/* Two more similar headings */}
                             <div className="buttons-container">
