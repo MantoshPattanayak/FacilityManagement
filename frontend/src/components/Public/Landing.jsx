@@ -14,6 +14,8 @@ import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 
 
@@ -36,6 +38,26 @@ import { encryptData } from '../../utils/encryptData';
 // import for slider
 
 
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 5
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1
+  }
+};
+
 
 
 const Landing = () => {
@@ -47,6 +69,7 @@ const Landing = () => {
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
+  let navigate = useNavigate();
 
 
 
@@ -107,8 +130,10 @@ const Landing = () => {
 
   //-------------for event Cards---------------------------------------
   const containerRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
+    // animations added to current events section
     const container = containerRef.current;
     const cards = container.querySelectorAll('.eventCard');
 
@@ -128,6 +153,16 @@ const Landing = () => {
     container.addEventListener('animationiteration', () => {
       container.style.animation = 'none';
       setTimeout(startScrollAnimation, 0);
+    });
+
+    // search functionality for user input in the field
+    const searchInput = searchInputRef.current;
+    searchInput.addEventListener('keypress', (e) => {
+      let inputVal;
+      if(e.key === 'Enter') {
+        inputVal = searchInput.value;
+        navigate(`/facilities?givenReq=${inputVal}`);
+      }
     });
 
     return () => {
@@ -220,6 +255,7 @@ const Landing = () => {
 
 
 
+
   return (
     <div className='landingcontainer'>
       <section className="bg-img">
@@ -234,7 +270,7 @@ const Landing = () => {
               <p className='about_text'>Ama Bhoomi stands for Assuring mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
             </span>
             <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
-            <input className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
+            <input ref={searchInputRef} className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
 
           </span>
 
@@ -634,11 +670,10 @@ const Landing = () => {
           <div className="greenHeader"></div>
           <h1>Gallery</h1>
         </div>
-        <div className="gallerySlider">
-          <button className="sliderButton" onClick={handlePrev}>
-            next
-          </button>
-          <div className="EventDetailsCardSec"  >
+
+        <div className='gallery-slider'>
+          <Carousel responsive={responsive}>
+
             {galleryData.map((data, index) => (
               <div className="carousel-slide3" key={index}>
                 <div className="overlay">
@@ -647,11 +682,9 @@ const Landing = () => {
                 </div>
               </div>
             ))}
-          </div>
-          <button className="sliderButton" onClick={handleNext}>
-            <FontAwesomeIcon icon={faCircleChevronRight} />
-          </button>
+          </Carousel>;
         </div>
+
       </div>
 
 
@@ -668,6 +701,7 @@ const Landing = () => {
         </div>
       </div>
       <div className="footer">
+
         <Footer />
       </div>
 

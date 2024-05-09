@@ -24,39 +24,40 @@ import { ToastContainer, toast } from 'react-toastify';
 // impport shimmerUi------------------------------------------
 import ShimmerUI from "./ShimmerUI";
 const Main_Body_Park_Details = () => {
+  const defaultLocation = {
+    latitude: 20.3010259,
+    longitude: 85.7380521
+  }
   // Use state ------------------------------------------------------------------
   const [DisPlayParkData, setDisPlayParkData] = useState([]);
   // const simmerUi Loader------------------------------------------------
-  const[IsLoding, setIsLoding] = useState(false);
+  const [IsLoding, setIsLoding] = useState(false);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
   // State variable to track selected layout type ------------------------------
   const [layoutType, setLayoutType] = useState('grid');
 
-// here set the latitude and longitude --------------------------------------------
-  const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
-    latitude: 20.3010259,
-    longitude: 85.7380521
-  });
+  // here set the latitude and longitude --------------------------------------------
+  const [userLocation, setUserLocation] = useState();
   // fetch facility type id --------------------------------------------------------
   let location = useLocation();
-  let facilityIdTypeFetch = decryptData(
-    new URLSearchParams(location.search).get("facilityTypeId")
-  );
   // for Faciltiy ----------------------------------------------------------------
-  const [facilityTypeId, setFacilityTypeId] = useState(1);
+  const [facilityTypeId, setFacilityTypeId] = useState();
   const [selectedTab, setSelectedTab] = useState('');
   const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
+
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
-// Function to handle layout change
-    const handleLayoutChange = (e) => {
-      setLayoutType(e.target.value);
-    };
+
+  // Function to handle layout change
+  const handleLayoutChange = (e) => {
+    setLayoutType(e.target.value);
+  };
+
   //Here (Post the data)----------------------------------------------------------------
   async function GetParkDetails() {
     try {
-       setIsLoding(true)
+      setIsLoding(true)
       let res = await axiosHttpClient("View_Park_Data", "post", {
         givenReq: givenReq,
         facilityTypeId: facilityTypeId,
@@ -72,133 +73,122 @@ const Main_Body_Park_Details = () => {
 
   // Function to handle selectedTab button click  ------------------------------
   const handleTabClick = (e, tab) => {
-    // Toggle game selection
-    if (selectedTab != tab) {
+    if (tab != selectedTab)
       setSelectedTab(tab);
-      // if(tab == 'Nearby') {
-        getNearbyFacilities(e);
-      // }
-    }
-    else if(selectedTab == tab) {   // if same tab selected, then clear tab selection, and show default facility data
-      setSelectedTab('');
-      GetParkDetails();
-    } 
-    else {
-      // continue
-    }
+    else
+      setSelectedTab();
     console.log('selectedTab', selectedTab);
   }
-// here set the userLocation -------------------------------------------------------
-  function setUserGeoLocation(location){
-    setUserLocation(location);
-    sessionStorage.setItem('location', JSON.stringify(location));
-    return;
-  }
-// filter the data (near by park) -----------------------------------------------------
-  async function getNearbyFacilities(e){
-    e?.preventDefault();
-    console.log('nearby facilities', userLocation);
+
+  // here set the userLocation -------------------------------------------------------
+  function setUserGeoLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserGeoLocation({
+          setUserLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           });
+          sessionStorage.setItem('location', JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }));
         },
         (error) => {
           console.error('Error getting location:', error);
-          setUserGeoLocation({
-            latitude: 20.3010259,
-            longitude: 85.7380521
-          });
+          // setUserLocation(defaultLocation);
+          // sessionStorage.setItem('location', JSON.stringify(location));
           // Handle error, e.g., display a message to the user
         }
       );
-
-      let bodyParams = {};
-      switch(selectedTab){    // ['Nearby', 'Popular', 'Free', 'Paid']
-        case 'Nearby':
-          bodyParams = {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-            facilityTypeId: facilityTypeId,
-            range: ''
-          }
-          break;
-        case 'Popular': bodyParams = {popular:1}; break;
-        case 'Free': bodyParams = {free:1}; break;
-        case 'Paid': bodyParams = {paid:1}; break;
-        default: break;
-      }
-
-      try{
-        setIsLoding(true)
-        let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
-        console.log(res.data.message, res.data.data);
-        setDisPlayParkData(res.data.data);
-        setIsLoding(false)
-      }
-      catch(error){
-        console.error(error);
-        toast.error('Location permission not granted.')
-        setIsLoding(false)
-      }
     } else {
       console.error('Geolocation is not supported by this browser');
+      toast.error('Location permission not granted.');
+    }
+    return;
+  }
+
+  // filter the data according to filter options -----------------------------------------------------
+  async function getNearbyFacilities() {
+    let bodyParams = {};
+    switch (selectedTab) {    // ['Nearby', 'Popular', 'Free', 'Paid']
+      case 'Nearby':
+        setUserGeoLocation();
+        bodyParams = {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          facilityTypeId: facilityTypeId,
+          range: ''
+        }
+        break;
+      case 'Popular': bodyParams = { popular: 1, facilityTypeId: facilityTypeId }; break;
+      case 'Free': bodyParams = { free: 1, facilityTypeId: facilityTypeId }; break;
+      case 'Paid': bodyParams = { paid: 1, facilityTypeId: facilityTypeId }; break;
+      default: break;
+    }
+
+    try {
+      setIsLoding(true)
+      let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
+      console.log(res.data.message, res.data.data);
+      setDisPlayParkData(res.data.data);
+      setIsLoding(false)
+    }
+    catch (error) {
+      console.error(error);
       toast.error('Location permission not granted.')
- 
-      // Handle case where Geolocation API is not supported
+      setIsLoding(false)
     }
   }
 
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (e, typeid) => {
     setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
-    console.log("here type id, selectedTab", {typeid, selectedTab});
-    if(!selectedTab){
-      GetParkDetails();
-    }
-    else{
-      getNearbyFacilities(e);
-    }
+    console.log("here type id", { typeid });
   };
-  // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
+
+  // here Function to encryptDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
     let res = encryptData(id);
     return res;
   }
-  // Get the data for autoSuggestion  --------------------------------------------------------
-  // async function getAutoSuggest(){
-  //     try{
-  //         let res= await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get' ,null,  givenReq)
-  //            console.log("here Response of Auto  Suggest", res)
-  //     }
-  //     catch(err){
-  //         console.log("here error", err)
-  //     }
-  // }
-  // useEffect for Update the data (Call the Api) ------------------------------------------------
+
+  // on page load
   useEffect(() => {
-    if(selectedTab == '' || selectedTab == null){
-      console.log('facilityTypeId useeffect - tab not selected! call getParkDetails()');
+    let facilityIdTypeFetch = decryptData(new URLSearchParams(location.search).get("facilityTypeId"));
+    let givenReqFetch = new URLSearchParams(location.search).get("givenReq");
+    try {
+      let userLocation = JSON.parse(sessionStorage?.getItem('location'));
+      setUserLocation(userLocation);
+    }
+    catch(error) {
+      console.error('json parse error');
+      sessionStorage.setItem('location', JSON.stringify({}));
+    }
+    // on page load, if we have facilityTypeId from homepage, 
+    // then set facilityType or else set default facilityType to 1 (Parks)
+    if (facilityIdTypeFetch)
+      setFacilityTypeId(facilityIdTypeFetch);
+    else
+      setFacilityTypeId(1);
+
+    if(givenReqFetch)
+      setGivenReq(givenReqFetch);
+    else
+      setGivenReq('');
+  }, [])
+
+  // refresh page on searching, change in facility type or selecting filter options
+  useEffect(() => {
+    if (selectedTab) {  //fetch facility details based on filter options
+      getNearbyFacilities()
+    }
+    else { // fetch facility details based on selected facility type or searching value
       GetParkDetails();
     }
-    else{
-      getNearbyFacilities();
-      console.log('facilityTypeId useeffect - tab selected... not call getNearbyFacilities()');
-    }
-    // getAutoSuggest()
-  }, [givenReq, facilityTypeId]);
+  }, [givenReq, facilityTypeId, selectedTab]);
 
-  // useEffect(() => {
-  //   GetParkDetails();
-  // }, [])
 
-  useEffect(() => {
-    console.log('selectedTab useeffect - tab selected... not call getParkDetails()');
-  }, [userLocation, selectedTab]);
- 
   //Return here------------------------------------------------------------------------------------------------------------
   return (
     <div className="main__body__park">
@@ -206,20 +196,19 @@ const Main_Body_Park_Details = () => {
       <PublicHeader />
       {/* Here Below of header set image ---------------------------------------------------- */}
       <div
-        className={`${
-          facilityTypeId === 1
+        className={`${(facilityTypeId == 1)
             ? "park-body-1"
-            : facilityTypeId === 2
-            ? "park-body-2"
-            : facilityTypeId === 3
-            ? "park-body-3"
-            : ""
-        }`}
+            : (facilityTypeId == 2)
+              ? "park-body-2"
+              : (facilityTypeId == 3)
+                ? "park-body-3"
+                : ""
+          }`}
       >
         <h1 className="name_park_img">
-          {facilityTypeId === 1 && "Parks"}
-          {facilityTypeId === 2 && "Sports"}
-          {facilityTypeId === 3 && "Multi-purpose Grounds"}
+          {(facilityTypeId == 1) && "Parks"}
+          {(facilityTypeId == 2) && "Sports"}
+          {(facilityTypeId == 3) && "Multi-purpose Grounds"}
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}
@@ -276,137 +265,123 @@ const Main_Body_Park_Details = () => {
           {
             tabList?.length > 0 && tabList?.map((tab) => {
               return (
-                <button className={`button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => {handleTabClick(e, tab)}}>
+                <button className={`button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
                   {tab}
                 </button>
               )
             })
           }
-          {/* <button class="button-59" role="button" onClick={(e) => {getNearbyFacilities(e); handleTabClick()}}>
-            NearBy
-          </button>
-          <button class="button-59" role="button">
-            Popular
-          </button>
-          <button class="button-59" role="button">
-            Free
-          </button>
-          <button class="button-59" role="button">
-            Paid
-          </button> */}
         </div>
         <div class="gride_page">
-        <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
-           <option value="grid">Grid</option>
+          <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
+            <option value="grid">Grid</option>
             <option value="list">List</option>
-            
-        </select>
-       </div>
 
-              
+          </select>
+        </div>
+
+
       </div>
       {/* Heere Name of Park, sports dyamics ---------------------------------------- */}
       <span className="text_name_park">
         <h1 className="name_park">
-          {facilityTypeId === 1 && "Parks"}
-          {facilityTypeId === 2 && "Sports"}
-          {facilityTypeId === 3 && "Multi-purpose Grounds"}
+          {(facilityTypeId == 1) && "Parks"}
+          {(facilityTypeId == 2) && "Sports"}
+          {(facilityTypeId == 3) && "Multi-purpose Grounds"}
         </h1>
       </span>
 
       {/* Card Container Here -------------------------------------------- */}
 
-     
+
       <div className="card-container">
         {IsLoding ? (
           // Show shimmer loader while data is being fetched
           <ShimmerUI />
         ) : DisPlayParkData?.length > 0 ? (
-           // Conditional rendering based on layout type
-           layoutType === 'grid' ? (
-          DisPlayParkData?.map((item, index) => (
-            <Link
-              key={index}
-              to={{
-                pathname: "/Sub_Park_Details",
-                search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
-              }}
-            >
-              <div
-                className={`${
-                  item.facilityTypeId === 1
-                    ? "park-card-1"
-                    : item.facilityTypeId === 2
-                    ? "park-card-2"
-                    : "park-card-3"
-                }`}
+          // Conditional rendering based on layout type
+          layoutType === 'grid' ? (
+            DisPlayParkData?.map((item, index) => (
+              <Link
+                key={index}
+                to={{
+                  pathname: "/Sub_Park_Details",
+                  search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
+                }}
               >
-                <img className="Card_img" src={Cardimg} alt="Park" />
-                <div className="card_text">
-                  <span className="Name_location">
-                    <h2 className="park_name">{item.facilityname}</h2>
-                    <h3 className="park_location">{item.address}</h3>
-                  </span>
-                  <span className="Avil_Dis">
-                    <button
-                      className={`Avilable ${
-                        item.status == "open" ? "text-green-500" : "text-red-500"
-                      }`}
-                    >
-                      {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
-                    </button>
-                    <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
-                  </span>
+                <div
+                  className={`${item.facilityTypeId === 1
+                      ? "park-card-1"
+                      : item.facilityTypeId === 2
+                        ? "park-card-2"
+                        : "park-card-3"
+                    }`}
+                >
+                  <img className="Card_img" src={Cardimg} alt="Park" />
+                  <div className="card_text">
+                    <span className="Name_location">
+                      <h2 className="park_name">{item.facilityname}</h2>
+                      <h3 className="park_location">{item.address}</h3>
+                    </span>
+                    <span className="Avil_Dis">
+                      <button
+                        className={`Avilable ${item.status == "open" ? "text-green-500" : "text-red-500"
+                          }`}
+                      >
+                        {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+                      </button>
+                      <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-        ))
-           ):(
+              </Link>
+            ))
+          ) : (
             // here Table data (Data in list)----------------------------------------------------------------
             <div className="table_Container1">
-            <table>
+              <table>
                 <thead>
-                    <tr>
-                        <th scope="col">Name of the Park</th>
-                        <th scope="col">Location</th>
-                        <th className="left">Details</th>
-                    </tr>
+                  <tr>
+                    <th scope="col">Name of the Park</th>
+                    <th scope="col">Location</th>
+                    <th className="left">Details</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
-                        <tr key={table_index}>
-                            <td data-label="Name">{table_item.facilityname}</td>
-                            <td data-label="Location">{table_item.address}</td>
-                            <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
-                                <Link
-                                    key={table_index}
-                                    to={{
-                                        pathname: "/Sub_Park_Details",
-                                        search: `?facilityId=${encryptDataId(table_item.facilityId)}&action=view`,
-                                    }}
-                                >
-                                    Details
-                                </Link>
-                            </td>
-                        </tr>
-                    ))}
+                  {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
+                    <tr key={table_index}>
+                      <td data-label="Name">{table_item.facilityname}</td>
+                      <td data-label="Location">{table_item.address}</td>
+                      <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
+                        <Link
+                          key={table_index}
+                          to={{
+                            pathname: "/Sub_Park_Details",
+                            search: `?facilityId=${encryptDataId(table_item.facilityId)}`,
+                          }}
+                        >
+                          Details
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
-            </table>
-        </div>
-        
-           )
-      ) : (
-        // Show message if no data is available
-        <div className="no-data-message">
-          <img src={No_Data_icon} alt="No Data Found" />
-        </div>
-      )}
-     </div>
+              </table>
+            </div>
+
+          )
+        ) : (
+          // Show message if no data is available
+          <div className="no-data-message">
+            <img src={No_Data_icon} alt="No Data Found" />
+          </div>
+        )}
+      </div>
 
 
 
       <CommonFooter />
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
