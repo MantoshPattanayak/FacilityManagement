@@ -9,6 +9,7 @@ import PublicHeader from "../../../common/PublicHeader";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import verfiy_img from "../../../assets/verify_img.png"
+
 const Event_hostPage = () => {
     // useSate for page -----------------------------------------------
     const [currentStep, setCurrentStep] = useState(1);
@@ -44,20 +45,74 @@ const Event_hostPage = () => {
         descriptionofEvent: "",
         ticketsold: "",
         numberofTicket: "",
-        uploadeventImage: "",
-        additionalFiles: "",
-        price: ""
+        price: "",
+        uploadEventImage: "",
+        additionalFiles: []
 
 
     });
 
     // handler for target the Name of Input field -------------------------------------------------
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        setformErrors({ ...formErrors, [name]: '' });
-
+        const { name, value, files } = e.target;
+    
+        switch (name) {
+            case "uploadEventImage":
+                let file = files[0];
+    
+                if (parseInt(file.size / 1024) <= 200) {
+                    const reader = new FileReader();
+    
+                    reader.onloadend = () => {
+                        setFormData({ ...formData, [name]: reader.result });
+                    };
+    
+                    reader.readAsDataURL(file);
+                }
+                else {
+                    alert("Kindly choose an image with size less than 200 KB.");
+                    document.getElementById("myForm_files").reset();
+                }
+                break;
+            case "additionalFiles":
+                let filesData = formData.additionalFiles;
+    
+                // Check if number of files exceeds the limit
+                if(files.length + formData.additionalFiles.length> 3) {
+                    alert("You can only upload a maximum of 3 files.");
+                   
+                    return;
+                }
+    
+                for (let i = 0; i < files.length; i++) {
+                    let file = files[i];
+                    if (parseInt(file.size / 1024) <= 400) { // Checking for 400KB
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            filesData.push(reader.result);
+                            // If all files are read, update form data
+                            if (filesData.length === files.length) {
+                                setFormData({ ...formData, [name]: filesData });
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert("Kindly choose images with size less than 200 KB.");
+                        // Reset the form if any file exceeds size limit
+                        document.getElementById("myForm_files").reset();
+                        return; // Stop further processing
+                    }
+                }
+                break;
+            default:
+                console.log("from data",formData )
+                setFormData({ ...formData, [name]: value });
+                setformErrors({ ...formErrors, [name]: '' });
+                break;
+        }
     };
+    
+
     // here Post the data ------------------------------------------------------------------------
     async function handleSubmit(e) {
         e.preventDefault();
@@ -93,7 +148,7 @@ const Event_hostPage = () => {
                     ticketsold: formData.ticketsold,
                     numberofTicket: formData.numberofTicket,
                     price: formData.price,
-                    uploadeventImage: formData.uploadeventImage || null,
+                    uploadEventImage: formData.uploadEventImage || null,
                     additionalFiles: formData.additionalFiles || null
                 });
                 console.log(res);
@@ -266,6 +321,11 @@ const Event_hostPage = () => {
         if (!value.endEventDate) {
             err.endEventDate = "End EventDate is Required"
         }
+        // here check start Date should less then or equal to enddata
+        if(new Date(value.startEventDate)> new Date(value.endEventDate)){
+            err.startEventDate = "Start Event Date should be less than or equal to End Event Date";
+            err.endEventDate = "End Event Date should be greater than or equal to Start Event Date";
+        }
         if (!value.descriptionofEvent) {
             err.descriptionofEvent = "Description of Event is Required"
         } else if (!nameRegex.test(value.descriptionofEvent)) {
@@ -291,6 +351,10 @@ const Event_hostPage = () => {
             } else if (!space_block.test(value.price)) {
                 err.price = "Do not use spaces at beginning"
             }
+            
+        }
+        if(!value.uploadEventImage){
+            err.uploadEventImage="Upload Event Image is required"
         }
 
         return err;
@@ -644,24 +708,87 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1">Upload Event Image <span className="text-red-600 font-bold text-xl">*</span></label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Upload Event Image"
-                                        name="uploadeventImage"
-                                        value={formData.uploadeventImage}
-                                        onChange={handleChange}
-                                    />
+                                    <form id="myForm" className="m-0">
+                                        <input
+                                            className="form-input"
+                                            id="uploadEventImage"
+                                            name="uploadEventImage"
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleChange}
+                                        />
+                                        <p className="italic text-sm font-bold text-gray-500">
+                                            Max. image file size is 200KB.
+                                        </p>
+                                    </form>
+         
+                                    <p className="italic text-sm font-bold text-gray-500">
+                                        Max. image or PDF file size is 200KB.
+                                    </p>
+                                    {formErrors.uploadEventImage && <p className="error text-red-700">{formErrors.uploadEventImage}</p>}
+                                    {/* here Upload */}
+                                    {formData.uploadEventImage && (
+                                        <div
+                                            onClick={(e) => {
 
+                                                setFormData({
+                                                    ...formData,
+                                                    ["uploadEventImage"]: null,
+                                                });
+                                                document.getElementById("myForm").reset();
+                                            }}
+                                         
+                                        >
+
+                                        </div>
+                                    )}
+                                   
                                 </div>
                                 <div className="HostEvent_Group" id='AddressBox'>
-                                    <label htmlFor="input1">Upload any Additional Files</label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Upload any Additional Files"
-                                        name="additionalFiles"
-                                        value={formData.additionalFiles}
-                                        onChange={handleChange}
-                                    />
+
                                 </div>
-                                <div className="HostEvent_Row">
 
 
+                                <div className="HostEvent_Group" id='AddressBox'>
+                                    <label htmlFor="input1">Upload Additional Files <span className="text-red-600 font-bold text-xl">*</span></label>
+                                    <form id="myForm_files" className="m-0">
+                                        <input
+                                            className="form-input"
+                                            id="additionalFiles"
+                                            name="additionalFiles"
+                                            type="file"
+                                            accept="file/*"
+                                            multiple
+                                            onChange={handleChange}
+                                        />
+                                        <p className="italic text-sm font-bold text-gray-500">
+                                            Max. image file size is 200KB.
+                                        </p>
+                                    </form>
+
+                                    <p className="italic text-sm font-bold text-gray-500">
+                                        Max. image or PDF file size is 200KB.
+                                    </p>
+
+                                    {/* here Upload */}
+                                    {formData.additionalFiles &&  formData.additionalFiles.length>0 && (
+                                        <div
+                                            onClick={(e) => {
+
+                                                setFormData({
+                                                    ...formData,
+                                                    ["additionalFiles"]: null,
+                                                });
+                                                document.getElementById("myForm_files").reset();
+                                            }}
+                                            id="ownerPhotoRemove"
+                                            className="block"
+                                        >
+                                    
+                                        </div>
+                                        
+                                    )}
+                                        
                                 </div>
                                 {/* Two more similar rows for Heading 1 */}
                             </div>
@@ -973,7 +1100,7 @@ const Event_hostPage = () => {
                                     <label htmlFor="input1">Upload Event Image</label>
                                     <input type="text" id="input1" className="input_padding" placeholder="Organization/Individual Address"
                                         name="uploadeventImage"
-                                        value={formData.uploadeventImage}
+                                        value={formData.uploadEventImage}
                                         disabled
 
                                     />
