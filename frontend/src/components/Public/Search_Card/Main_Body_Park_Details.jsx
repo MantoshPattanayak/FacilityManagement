@@ -156,6 +156,7 @@ const Main_Body_Park_Details = () => {
   // on page load
   useEffect(() => {
     let facilityIdTypeFetch = decryptData(new URLSearchParams(location.search).get("facilityTypeId"));
+    let givenReqFetch = new URLSearchParams(location.search).get("givenReq");
     try {
       let userLocation = JSON.parse(sessionStorage?.getItem('location'));
       setUserLocation(userLocation);
@@ -170,6 +171,11 @@ const Main_Body_Park_Details = () => {
       setFacilityTypeId(facilityIdTypeFetch);
     else
       setFacilityTypeId(1);
+
+    if(givenReqFetch)
+      setGivenReq(givenReqFetch);
+    else
+      setGivenReq('');
   }, [])
 
   // refresh page on searching, change in facility type or selecting filter options

@@ -69,6 +69,7 @@ const Landing = () => {
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
+  let navigate = useNavigate();
 
 
 
@@ -129,8 +130,10 @@ const Landing = () => {
 
   //-------------for event Cards---------------------------------------
   const containerRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
+    // animations added to current events section
     const container = containerRef.current;
     const cards = container.querySelectorAll('.eventCard');
 
@@ -150,6 +153,16 @@ const Landing = () => {
     container.addEventListener('animationiteration', () => {
       container.style.animation = 'none';
       setTimeout(startScrollAnimation, 0);
+    });
+
+    // search functionality for user input in the field
+    const searchInput = searchInputRef.current;
+    searchInput.addEventListener('keypress', (e) => {
+      let inputVal;
+      if(e.key === 'Enter') {
+        inputVal = searchInput.value;
+        navigate(`/facilities?givenReq=${inputVal}`);
+      }
     });
 
     return () => {
@@ -257,7 +270,7 @@ const Landing = () => {
               <p className='about_text'>Ama Bhoomi stands for Assuring mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
             </span>
             <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
-            <input className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
+            <input ref={searchInputRef} className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
 
           </span>
 
