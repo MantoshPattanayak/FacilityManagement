@@ -72,7 +72,7 @@ export default function PublicHeader() {
               <a href="/facilities">FACILITIES</a>
             </li>
             <li>
-              <a href="#">EVENTS</a>
+              <a href="/events">EVENTS</a>
             </li>
             <li>
               <a href="#">HOST EVENT</a>
