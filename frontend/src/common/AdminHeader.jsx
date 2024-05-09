@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import "./AdminHeader.css";
 import APP_LOGO from "../assets/ama-bhoomi_logo.png";
+import { useNavigate } from "react-router-dom";
 
 const AdminHeader = () => {
   const [isMenuActive, setMenuActive] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const menuRef = useRef(null);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuActive(!isMenuActive);
@@ -56,7 +59,15 @@ const AdminHeader = () => {
     }
   };
 
+  const logout = () => {
+    sessionStorage.setItem('isAdminLoggedIn', 0);
+    navigate('/admin-login');
+    return;
+  }
+
   useEffect(() => {
+    setIsAdminLoggedIn(sessionStorage?.getItem("isAdminLoggedIn") || 0);
+
     window.addEventListener("resize", resizeWindow);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -68,62 +79,56 @@ const AdminHeader = () => {
   return (
     <header className="header" id="header">
       <section className="wrapper container">
-        <a href="/" className="brand">
-          <img  className="ama_bhoomi_logo"     src={APP_LOGO} alt="App Logo" />
+        <a href={`${isAdminLoggedIn == 1 ? '/Dashboard/AdminDashboard' : '/admin-login'}`} className="brand">
+          <img className="ama_bhoomi_logo" src={APP_LOGO} alt="App Logo" />
         </a>
         <div className="burger" id="burger" onClick={toggleMenu}>
           <span className="burger-line"></span>
           <span className="burger-line"></span>
           <span className="burger-line"></span>
         </div>
-        {isMenuActive && <div className="overlay" onClick={toggleMenu}></div>}
-        <nav ref={menuRef} className={`navbar ${isMenuActive ? "active" : ""}`} id="navbar" onClick={toggleSubMenu}>
-          <ul className="menu" id="menu">
-            <li className="menu-item"><a href="#" className="menu-link">Home</a></li>
-            <li className="menu-item menu-dropdown">
-              <span className="menu-link" data-toggle="submenu">MDM<FontAwesomeIcon icon={faChevronDown}  /></span>
-              <ul className="submenu">
-                <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
+        {
+          (isAdminLoggedIn == 1) &&
+          <>
+            {isMenuActive && <div className="overlay" onClick={toggleMenu}></div>}
+            <nav ref={menuRef} className={`navbar ${isMenuActive ? "active" : ""}`} id="navbar" onClick={toggleSubMenu}>
+              <ul className="menu" id="menu">
+                <li className="menu-item"><a href="#" className="menu-link">Home</a></li>
+                <li className="menu-item menu-dropdown">
+                  <span className="menu-link" data-toggle="submenu">MDM<FontAwesomeIcon icon={faChevronDown} /></span>
+                  <ul className="submenu">
+                    <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
+                  </ul>
+                </li>
+                <li className="menu-item menu-dropdown">
+                  <span className="menu-link" data-toggle="submenu">Activity<FontAwesomeIcon icon={faChevronDown} /></span>
+                  <ul className="submenu">
+                    <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
+                  </ul>
+                </li>
+                <li className="menu-item"><a href="#" className="menu-link">Report</a></li>
+                <li className="menu-item menu-dropdown">
+                  <span className="menu-link" data-toggle="submenu">UAC<FontAwesomeIcon icon={faChevronDown} /></span>
+                  <ul className="submenu">
+                    <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
+                    <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
+                  </ul>
+                </li>
+                <li className="menu" onClick={logout}>
+                  <span className="menu-link" data-toggle="submenu"><FontAwesomeIcon icon={faRightFromBracket} /> Log out</span>
+                </li>
               </ul>
-            </li>
-            <li className="menu-item menu-dropdown">
-              <span className="menu-link" data-toggle="submenu">Activity<FontAwesomeIcon icon={faChevronDown}  /></span>
-              <ul className="submenu">
-                <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-              </ul>
-            </li>
-            <li className="menu-item"><a href="#" className="menu-link">Report</a></li>
-            <li className="menu-item menu-dropdown">
-            <span className="menu-link" data-toggle="submenu">UAC<FontAwesomeIcon icon={faChevronDown}  /></span>
-              <ul className="submenu">
-                <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-                <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-              </ul>
-            </li>
-         
-           
-        
-            {/*  */}
-            
-           
-          
-           
-       <li>
-         
-         
-       </li>
-       
-          </ul>
-          
-        </nav>
+            </nav>
+          </>
+        }
       </section>
     </header>
   );
