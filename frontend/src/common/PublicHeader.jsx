@@ -15,9 +15,11 @@ export default function PublicHeader() {
   function setLanguageCode(e) {
     e?.preventDefault();
     if (language == 'EN'){
+      sessionStorage?.setItem('language', 'OD');
       setLanguage('OD');
     }
     else {
+      sessionStorage?.setItem('language', 'EN');
       setLanguage('EN');
     }
   }
@@ -36,7 +38,14 @@ export default function PublicHeader() {
   // on page load, set language preference
   useEffect(() => {
     setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0);
-    setLanguage('EN');
+    if(sessionStorage?.getItem('language') == null || sessionStorage?.getItem('language') == ''){
+      sessionStorage?.setItem('language', 'EN');
+      setLanguage('EN');
+    }
+    else{
+      setLanguage(sessionStorage?.getItem('language'))
+    }
+    
     getWebContent();
   }, []);
 
@@ -72,7 +81,7 @@ export default function PublicHeader() {
               <a href="/facilities">FACILITIES</a>
             </li>
             <li>
-              <a href="#">EVENTS</a>
+              <a href="/events">EVENTS</a>
             </li>
             <li>
               <a href="#">HOST EVENT</a>

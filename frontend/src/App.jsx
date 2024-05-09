@@ -76,6 +76,9 @@ import About from "./components/Public/About_And_FQA_PAGE/About";
 import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
 import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
 import AdminLogin from "./components/Admin/Login";
+import EventList from "./components/Public/Events/EventList";
+import Details from "./components/Public/Events/Details";
+import BookEvent from "./components/Public/Events/BookEvent";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -144,6 +147,11 @@ function App() {
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
             {/* use Section  */}
+
+            {/* Events */}
+            <Route path="/events" element={<EventList />} />
+            <Route path="/events-details" element={<Details />} />
+            <Route path="/event-book" element={<BookEvent />} />
 
             {/* ADMIN SECTION - Login */}
             <Route path="/admin-login" element={<AdminLogin />} />

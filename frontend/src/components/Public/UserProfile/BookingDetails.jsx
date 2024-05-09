@@ -169,7 +169,7 @@ const BookingDetails = () => {
                             {event.location}
                           </div>
                           <div className="flex justify-between eventdetails-details-eventTime">
-                            <div>Booking Date {formatDate(event.bookingDate)}</div>
+                            <div className="booking-date">Booking Date {formatDate(event.bookingDate)}</div>
                             {/* <div>
                               <FontAwesomeIcon icon={faClock} />{" "}
                               {calculateTime(event.createdDate)} ago
