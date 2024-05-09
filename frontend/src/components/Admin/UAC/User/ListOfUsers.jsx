@@ -35,9 +35,7 @@ export default function ListOfUsers() {
 
     async function fetchListOfUserData() {
         try {
-            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post', {
-                limit: 50, page: 1
-            });
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post');
             setTableData(res.data.data);
             console.log(res.data.data);
         }
@@ -49,7 +47,7 @@ export default function ListOfUsers() {
     async function autoSuggest(givenReq) {
         try {
             let res = await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get', null, givenReq);
-            console.log(res.data.data);
+            console.log('auto suggest api response', res.data.data);
             setSearchOptions(res.data.data);
         }
         catch (error) {

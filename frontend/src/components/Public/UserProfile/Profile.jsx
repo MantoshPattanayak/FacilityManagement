@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./Profile.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function Profile() {
-  function clearPhoto() {
-    const photoInput = document.getElementById("photo");
-    photoInput.value = ""; // Clear the value of the file input
-  }
+  // function clearPhoto() {
+  //   const photoInput = document.getElementById("photo");
+  //   photoInput.value = ""; // Clear the value of the file input
+  // }
 
   const [selectedActivities, setSelectedActivities] = useState([]);
 
@@ -24,17 +28,43 @@ export default function Profile() {
     // handle form submission with selectedActivities
     console.log(selectedActivities);
   };
+
+  //profile phhoto
+
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (!photoUrl) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhotoUrl(null);
+  };
   return (
     <main>
       <div className="profile--Main-Box">
         {/* left side-section */}
         <aside className="profile-leftside--Body">
           <div className="profile-view--Body">
-            <img
+            {/* <img
               src="https://placehold.co/100x100"
               alt="Profile Image"
               className="rounded-full mb-3"
-            />
+            /> */}
             <div className="profile-about">
               <p>Akash Sharma</p>
               <p>akashSharma4957@gmail.com</p>
@@ -65,7 +95,7 @@ export default function Profile() {
               <li>
                 <a
                   href="#"
-                  // className="flex items-center p-2 text-zinc-700 hover:bg-zinc-100 rounded-lg"
+                // className="flex items-center p-2 text-zinc-700 hover:bg-zinc-100 rounded-lg"
                 >
                   {/* <svg
                     className="w-6 h-6 mr-3"
@@ -109,7 +139,11 @@ export default function Profile() {
               </li>
             </ul>
             {/* Logout Button */}
-            <button className="button-67 ">Logout</button>
+            <button className="button-67 ">
+              <h1>Logout</h1>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            </button>
+
           </div>
         </aside>
 
@@ -119,30 +153,43 @@ export default function Profile() {
 
           {/* form-content */}
           <form className="profile-form-Body" onSubmit={handleSubmit}>
-            <h3>Edit your Profile here--</h3>
+            <div className="profileTitle">
+              <h3>Edit your Profile here--</h3>
+              <button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            </div>
 
             {/* photo Upload */}
-            <label htmlFor="photo" className="profile-photoLabel">
-              Upload Photo
-            </label>
-            <input type="file" id="photo" accept="image/*" />
-            <button type="button" onClick={() => clearPhoto()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-x"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+            {/* <div className="profilePhoto">
+              <FontAwesomeIcon icon={faUser} />
+              <input type="file" id="photo" placeholder="Add Photo" accept="image/*" />
+              <button type="button" onClick={() => clearPhoto()}>
+                remove photo
+              </button>
+            </div> */}
+
+            <div className="profilePhoto" onClick={handleProfileClick}>
+              {photoUrl ? (
+                <img src={photoUrl} alt="Uploaded" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+              ) : (
+                <div className="profileIcon">
+                  <FontAwesomeIcon icon={faCircleUser} />
+                  <button>Add Photo</button>
+                </div>
+
+              )}
+              <input ref={fileInputRef} type="file" id="photo" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+              {photoUrl && (
+                <button type="button" onClick={clearPhoto}>
+                  <FontAwesomeIcon icon={faTrash} style={{ color: "#a41e1e", }} />
+                </button>
+              )}
+              {!photoUrl && (
+                <input ref={fileInputRef} type="file" id="photo" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+              )}
+
+            </div>
+
+
 
             <div className="profile-formContainer">
               <label htmlFor="firstName">First Name</label>
@@ -176,101 +223,91 @@ export default function Profile() {
               {/* <form onSubmit={handleSubmit}> */}
               <div className="profile--Activity-options">
                 <button
-                  className={`select-none rounded-lg border border-gray-900 py-3 px-6 text-center font-sans text-xs uppercase ${
-                    selectedActivities.includes("Running")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Running")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Running")}
                 >
                   <span>🏃 Running</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Yoga")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-6 py-3 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Yoga")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Yoga")}
                 >
                   <span>🧘 Yoga</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Open-Gym")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-6 py-3 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Open-Gym")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Open-Gym")}
                 >
                   <span>🏋️ Open-Gym</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Swimming")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Swimming")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Swimming")}
                 >
                   <span>🏊 Swimming</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Cricket")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Cricket")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Cricket")}
                 >
                   <span>🏏 Cricket</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Football")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Football")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Football")}
                 >
                   <span>⚽ Football</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Volleyball")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Volleyball")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Volleyball")}
                 >
                   <span>🏐 Volleyball</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Badminton")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Badminton")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Badminton")}
                 >
                   <span>🏸 Badminton</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Library")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Library")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Library")}
                 >
                   <span>📚 Library</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Boating")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
+                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Boating")
+                  ? "border-solid bg-green-800 text-white" 
+                  : "border-solid border border-gray-600 " 
+                  } text-black`} 
                   onClick={() => handleActivityToggle("Boating")}
                 >
                   <span>🛶 Boating</span>
@@ -280,6 +317,7 @@ export default function Profile() {
               <button
                 type="submit"
                 className="w-full bg-green-600 text-white px-6 py-3 rounded-lg"
+                id="ProfileActButton"
               >
                 Submit
               </button>

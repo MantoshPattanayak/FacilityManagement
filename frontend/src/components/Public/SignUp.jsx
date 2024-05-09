@@ -285,6 +285,7 @@ const SignUp = () => {
                                 <input id="profile-image" type="file" accept="image/*" className="input-image" />
                             </div>
 
+
                             <div className="inputs">
                                 <div className="name-field">
                                     <label htmlFor="">
