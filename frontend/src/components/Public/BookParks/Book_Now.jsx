@@ -4,15 +4,19 @@ import AdminHeader from '../../../common/AdminHeader';
 import CommonFooter from '../../../common/CommonFooter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons'; // Import the icon
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
+
 // Import Aixos method---------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Import Navigate and Crypto -----------------------------------
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { decryptData } from "../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import PublicHeader from '../../../common/PublicHeader';
 import { formatDate } from '../../../utils/utilityFunctions';
+
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -22,6 +26,7 @@ const Book_Now = () => {
   //here Location / crypto and navigate the page---------------
   const location = useLocation();
   const facilityId = decryptData(new URLSearchParams(location.search).get('facilityId'));
+ 
   const action = new URLSearchParams(location.search).get('action');
   const navigate = useNavigate();
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
@@ -33,7 +38,10 @@ const Book_Now = () => {
     bookingDate: new Date().toISOString().split('T')[0],
     startTime: '',
     durationInHours: '',
-    facilityId: ''
+    facilityId: '',
+    entityId:'', 
+    entityTypeId:'',
+    facilityPreference:''
   })
 
   // Here Get the data of Sub_park_details------------------------------------------
@@ -45,6 +53,9 @@ const Book_Now = () => {
       console.log("here Response", res)
       setFacilitiesData(res.data.facilitiesData)
       setFormData({...formData, ['facilityId']: res.data.facilitiesData[0].facilityId});
+      setFormData({...formData, ['entityTypeId']: res.data.facilitiesData[0].facilityTypeId});
+      setFormData({...formData, ['entityId']: res.data.facilitiesData[0].facilityId});
+      
     }
     catch (err) {
       console.log("here Error", err)
@@ -93,7 +104,52 @@ const Book_Now = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value});
   }
+// here Add to Cart -------------------------------------------------------------------------------------------
+async function handleAddtoCart() {
+  let modifiedFormData = {...formData, ['activityPreference']: selectedGames};
+  console.log('formData handleSubmitAndProceed', modifiedFormData);
+  const validationError = validation(modifiedFormData);
+  if(Object.keys(validationError).length == 0) {
+    try{
+         let facilityPreference = {
+          totalMembers:modifiedFormData.totalMembers,
+          activityPreference:modifiedFormData.activityPreference,
+          otherActivities:modifiedFormData.otherActivities,
+          bookingDate:modifiedFormData.bookingDate,
+          startTime:modifiedFormData.startTime,
+          duration:modifiedFormData.duration,
+          price:modifiedFormData.price,
+        }
+  
+    // Prepare request body
+    const requestBody = {
+      entityId: modifiedFormData.entityId,
+      entityTypeId: modifiedFormData.entityTypeId,
+      facilityPreference
+    };
+      let res = await axiosHttpClient('Add_to_Cart', 'post', requestBody);
+      console.log('submit and response', res);
+      toast.success('Add to Cart has been done  successfully.', {
+        autoClose: 3000, // Toast timer duration in milliseconds
+        onClose: () => {
+          // Navigate to another page after toast timer completes
+          setTimeout(() => {
+            navigate('/profile/booking-details');
+          }, 1000); // Wait 1 second after toast timer completes before navigating
+        }
+      });
+    }
+    catch(error) {
+      console.log(error);
+      toast.error('Add to Cart  failed.Try agin')
+    }
+  }
+  else{
+    toast.error('Please fill the required data.')
+  }
+}
 
+// HandleSubmit (Proceed to Payment) ---------------------------------------------------------------------------------------------------
   async function handleSubmitAndProceed() {
     let modifiedFormData = {...formData, ['activityPreference']: selectedGames};
     console.log('formData handleSubmitAndProceed', modifiedFormData);
@@ -140,7 +196,7 @@ const Book_Now = () => {
   }
 
   return (
-    <div>
+    <div className='Book_Now_Min_conatiner'>
       <ToastContainer />
       <PublicHeader />
       <div className="booknow-container">
@@ -198,19 +254,27 @@ const Book_Now = () => {
           </div>
 
           {/* Add to cart button */}
-          <div className="button">
+          <div className='Add_to_card_main_conatiner'>
+          <div className="button_Book_Now">
+         
+         {/* <a href=''> */}
+          <button class='AddToCartButton' onClick={handleAddtoCart}>
+          <FontAwesomeIcon icon={faShoppingCart} className='Icon' />
+              Add to Cart
+            </button>
+          {/* </a>  */}
+
             <button className="addtocart-btn" onClick={handleSubmitAndProceed}>
-              Proceed to payment
+              <FontAwesomeIcon icon={faCreditCard} className="Icon" />
+                Proceed to Payment
             </button>
           </div>
-        </div>
-
-        {/* <div className="cart-container">
-          <div className="cart-icon">
-            <FontAwesomeIcon icon={faCartShopping} />
-            <p>Cart is empty</p>
           </div>
-        </div> */}
+       
+        </div>
+        
+
+       
 
       </div>
       <CommonFooter />

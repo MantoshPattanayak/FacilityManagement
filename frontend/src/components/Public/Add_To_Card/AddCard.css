@@ -1,0 +1,124 @@
+.Add_To_Card_Child_conatiner {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  min-height: calc(100vh - 60vh - 100px); 
+  padding: 100px; 
+}
+
+.Card{
+ 
+  background-color: #008000;
+}
+.card_text{
+font-size: 20px;
+color: #fff;
+ font-weight: 600;
+ font-variant: unset;
+ font-style: normal;
+}
+.Add_Card_Box{
+  background-color: #fff;
+  width: 840px;
+  border: 1px solid rgb(221, 222, 221);
+}
+.card_item_conatiner{
+  padding: 20px;
+ 
+
+ 
+}
+.Cont_card{
+  box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 2px;
+  background-color: #fffefe;
+
+}
+.card_item_conatiner_heading{
+  display: flex;
+  justify-content: space-between;
+  background-color: #545D66;
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 2px;
+}
+.text_heading{
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  
+
+}
+.icon{
+  color: #fff;
+  font-size: 20px;
+}
+.Location_Name_icon{
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+.Location_text{
+  font-size: 20px;
+  color: #3b4842;
+
+}
+.date_time_people_conatiner{
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+.date_time_text_icon{
+  display: flex;
+  gap: 10px;
+}
+.Money_name_icon{
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+}
+.money_icon_text{
+  font-size: 25px;
+  color: #4ECB71;
+}
+
+/* Button Pay */
+.Button_pay{
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+/* CSS */
+.button-37 {
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+  padding: 10px 25px;
+  text-align: center;
+ 
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 60%;
+}
+
+.button-37:hover {
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .button-37 {
+    padding: 10px 30px;
+  }
+}

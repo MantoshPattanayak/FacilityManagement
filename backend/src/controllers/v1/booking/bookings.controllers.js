@@ -40,6 +40,7 @@ let parkBooking = async (req, res) => {
             startTime,
             durationInHours
         }, 'before change');
+   
 
         // Function to add hours to a time string
         function addHoursToTime(timeString, hoursToAdd) {
@@ -183,6 +184,7 @@ const addToCart = async (req,res)=>{
         let statusId =1
         const {entityId, entityTypeId, totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price} = req.body
         let facilityPreference;
+        console.log("Add to cart",{entityId, entityTypeId})
         // first checks in the carts table consist of the user id 
         let isUserExist = await  cart.findOne({
             where:{
