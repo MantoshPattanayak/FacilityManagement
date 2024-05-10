@@ -9,7 +9,7 @@ const api = {
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
      PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post
-     PROFILE_DATA_UPDATE_API: 'publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
+     PROFILE_DATA_UPDATE_API: '/publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
     //  Event_Host Api -------------------------------------
       Bank_details_Api:'/hosteventdetails/bankService', // get
       Create_Host_event:'/hosteventdetails/createHosteventdetails',  // post
