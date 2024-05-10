@@ -10,6 +10,8 @@ const useractivitymasters = db.useractivitymasters;
 const cart = db.cart
 const cartItem = db.cartItem
 const useractivitypreferences = db.userActivityPreference
+const { Op } = require('sequelize');
+ 
 const moment = require('moment')
 let parkBooking = async (req, res) => {
     try {
@@ -180,10 +182,11 @@ const addToCart = async (req,res)=>{
         let updatedDt = new Date();
         let statusId =1
         const {entityId, entityTypeId, totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price} = req.body
+        let facilityPreference;
         // first checks in the carts table consist of the user id 
         let isUserExist = await  cart.findOne({
             where:{
-                userId:userId
+                [Op.and]:[{userId:userId},{statusId:statusId}]
             }
         })
         // if not exist add to cart table
@@ -215,13 +218,16 @@ const addToCart = async (req,res)=>{
             }) 
             // if exist then update
             if(checkIsItemAlreadyExist){
-                let updateTheCart = await cartItem.update({
-                    totalMembers:totalMembers,
+                facilityPreference = {totalMembers:totalMembers,
                     otherActivities:otherActivities,
                     startTime:startTime,
                     duration:duration,
                     activityPreference:activityPreference,
-                    price:price,
+                    price:price
+                }
+
+                let updateTheCart = await cartItem.update({
+                    facilityPreference:facilityPreference,
                     updatedDt:updatedDt,
                     updatedBy:userId
                 },
@@ -246,10 +252,7 @@ const addToCart = async (req,res)=>{
             }
             // else add the item
             else{
-                let createAddToCart = await cartItem.create({
-                    cartId:isUserExist.cartId,
-                    entityId:entityId,
-                    entityTypeId:entityTypeId,
+                facilityPreference = {
                     totalMembers:totalMembers,
                     activityPreference:activityPreference,
                     otherActivities:otherActivities,
@@ -257,6 +260,12 @@ const addToCart = async (req,res)=>{
                     startTime:startTime,
                     duration:duration,
                     price:price,
+                }
+                let createAddToCart = await cartItem.create({
+                    cartId:isUserExist.cartId,
+                    entityId:entityId,
+                    entityTypeId:entityTypeId,
+                    facilityPreference:facilityPreference,
                     createdDt:createdDt,
                     updatedDt:updatedDt,
                     createdBy:userId,
@@ -292,12 +301,15 @@ const addToCart = async (req,res)=>{
               }) 
               // if exist then update
               if(checkIsItemAlreadyExist){
+                  facilityPreference = {
+                    playersLimit:playersLimit,
+                    sports:sports,
+                    startTime:startTime,
+                    endTime:endTime,
+                    price:price,
+                  }
                   let updateTheCart = await cartItem.update({
-                      playersLimit:playersLimit,
-                      sports:sports,
-                      startTime:startTime,
-                      endTime:endTime,
-                      price:price,
+                      facilityPreference:facilityPreference,
                       updatedDt:updatedDt,
                       updatedBy:userId
                   },
@@ -322,16 +334,19 @@ const addToCart = async (req,res)=>{
               }
               // else add the item
               else{
-                  let createAddToCart = await cartItem.create({
-                      cartId:isUserExist.cartId,
-                      entityId:entityId,
-                      entityTypeId:entityTypeId,
-                      playersLimit:playersLimit,
+                  facilityPreference = {
+                    playersLimit:playersLimit,
                       sports:sports,
                       bookingDate:bookingDate,
                       startTime:startTime,
                       endTime:endTime,
                       price:price,
+                  }
+                  let createAddToCart = await cartItem.create({
+                      cartId:isUserExist.cartId,
+                      entityId:entityId,
+                      entityTypeId:entityTypeId,
+                      facilityPreference:facilityPreference,
                       createdDt:createdDt,
                       updatedDt:updatedDt,
                       createdBy:userId,
@@ -383,11 +398,14 @@ const addToCart = async (req,res)=>{
             }) 
             // if exist then update
             if(checkIsItemAlreadyExist){
-                let updateTheCart = await cartItem.update({
+                facilityPreference = { 
                     totalMembers:totalMembers,
                     startTime:startTime,
                     duration:duration,
-                    price:price,
+                    price:price
+                }
+                let updateTheCart = await cartItem.update({
+                   facilityPreference:facilityPreference,
                     updatedDt:updatedDt,
                     updatedBy:userId
                 },
@@ -412,15 +430,18 @@ const addToCart = async (req,res)=>{
             }
             // else add the item
             else{
-                let createAddToCart = await cartItem.create({
-                    cartId:isUserExist.cartId,
-                    entityId:entityId,
-                    entityTypeId:entityTypeId,
+                 facilityPreference={
                     totalMembers:totalMembers,
                     bookingDate:bookingDate,
                     startTime:startTime,
                     duration:duration,
                     price:price,
+                }
+                let createAddToCart = await cartItem.create({
+                    cartId:isUserExist.cartId,
+                    entityId:entityId,
+                    entityTypeId:entityTypeId,
+                    facilityPreference:facilityPreference,
                     createdDt:createdDt,
                     updatedDt:updatedDt,
                     createdBy:userId,

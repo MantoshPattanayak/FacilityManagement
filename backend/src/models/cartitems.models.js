@@ -16,6 +16,9 @@ module.exports = (sequelize,DataTypes)=>{
         entityTypedId:{
             type:DataTypes.INTEGER
         },
+        facilityPreferences:{
+            type:DataTypes.JSON
+        },
         totalMembers:{
             type:DataTypes.INTEGER
         },
