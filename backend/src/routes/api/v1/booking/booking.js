@@ -8,4 +8,6 @@ router.post('/park',booking.parkBooking);
 
 router.get('/park-book-initialdata', booking.parkBookingFormInitialData);
 
+router.post('/addToCart',booking.addToCart)
+
 module.exports = router

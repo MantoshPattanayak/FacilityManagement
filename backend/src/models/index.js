@@ -62,8 +62,12 @@ sequelize.authenticate()
   db1.languageresources = require('./languageresources.models')(sequelize, DataTypes);
   db1.eventactivities = require('./eventactivities.models')(sequelize,DataTypes)
   db1.hostbookings = require('./hosteventbooking.models')(sequelize,DataTypes)
-  db1.bankDetail.sync({
-    force: true
+  db1.cart = require('./cart.models')(sequelize,DataTypes)
+  db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
+  db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
+  
+  db1.cartItem.sync({
+    force: false
   })
 
 module.exports = db1;

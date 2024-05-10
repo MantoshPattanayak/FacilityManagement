@@ -8,7 +8,7 @@ const port = process.env.PORT || 7100;
 const cors = require("cors");
 var cookieParser = require("cookie-parser");
 let api_version = process.env.API_VERSION;
-
+const uploadDir = process.env.UPLOAD_DIR
 const {
   requestLogger,
   errorLogger,
@@ -119,6 +119,8 @@ app.use('/reports', reports);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
+
+app.use('/static', express.static(uploadDir));
 
 module.exports = {
   app,
