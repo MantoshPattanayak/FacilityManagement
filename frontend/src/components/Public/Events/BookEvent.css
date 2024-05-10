@@ -1,5 +1,76 @@
-.event-container{
+/* CSS */
+.event-container {
     width: 40vw;
-    border: 1px solid black;
+    border: 1px solid #ddd;
     border-radius: 5px;
-}
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto; 
+    margin-top: 10vh; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+  }
+  
+  @media screen and (min-width: 768px) {
+    .event-container {
+      width: 30vw; 
+    }
+  }
+  
+  .input-bookevent select {
+    width: 95%; 
+    padding: 8px; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Style the dropdown when it's focused */
+  .input-bookevent select:focus {
+    outline: none;
+    border-color:#00B562; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  }
+  .book-event {
+    width: 100%; 
+  }
+  
+  .heading {
+    text-align: center; 
+    margin-bottom: 20px; 
+  }
+  
+  .total-members {
+    margin-bottom: 15px; 
+  }
+  
+  .total-members label {
+    display: block; 
+    margin-bottom: 5px;
+  }
+  
+  .input-bookevent input {
+    width: calc(100% - 20px); /*( Adjust input width to fit within the container )*/
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 3px; 
+    font-size: 14px;
+  }
+  
+  .add-to-cart-btn {
+    display: block; 
+    width: 100%; 
+    padding: 10px; 
+    background-color: #00B562; 
+    color: #fff; 
+    border: none; 
+    border-radius: 3px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+  }
+  
+  .add-to-cart-btn:hover {
+    background-color: #02713d; 
+  }
+  
