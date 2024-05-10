@@ -1,9 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Profile.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import axiosHttpClient from "../../../utils/axios";
+import { encryptData, decryptData } from "../../../utils/encryptData";
 
 export default function Profile() {
   // function clearPhoto() {
@@ -12,6 +14,8 @@ export default function Profile() {
   // }
 
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [formData, setFormData] = useState({});
+  const [inputdata, setInputdata] = useState(formData);
 
   const handleActivityToggle = (activity) => {
     if (selectedActivities.includes(activity)) {
@@ -54,21 +58,60 @@ export default function Profile() {
   const clearPhoto = () => {
     setPhotoUrl(null);
   };
+
+  async function fetchProfileDetails() {
+    try {
+      let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
+      console.log('response of fetch profile api', res.data.public_user);
+
+      let userName = decryptData(res.data.public_user.userName);
+      let firstName = decryptData(res.data.public_user.firstName);
+      let lastName = decryptData(res.data.public_user.lastName);
+      let emailId = decryptData(res.data.public_user.emailId);
+      let phoneNo = decryptData(res.data.public_user.phoneNo);
+      let language = decryptData(res.data.public_user.language);
+      let password = decryptData(res.data.public_user.password);
+      // setFormData({
+      //   ...formData, ['firstName']: firstName
+      // });
+      setFormData({
+        userName: userName || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        emailId: emailId || '',
+        phoneNo: phoneNo || '',
+        language: language || '',
+        password: password || '',
+      })
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleData = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    console.log("here input data", formData)
+  }
+
+  // on page load
+  useEffect(() => {
+    fetchProfileDetails();
+
+  }, []);
+
   return (
     <main>
       <div className="profile--Main-Box">
         {/* left side-section */}
         <aside className="profile-leftside--Body">
           <div className="profile-view--Body">
-            {/* <img
-              src="https://placehold.co/100x100"
-              alt="Profile Image"
-              className="rounded-full mb-3"
-            /> */}
             <div className="profile-about">
-              <p>Akash Sharma</p>
-              <p>akashSharma4957@gmail.com</p>
-              <p>8877228919</p>
+              <p>{formData.userName}</p>
+              <p>{formData.emailId}</p>
+              <p>{formData.phoneNo}</p>
             </div>
           </div>
           <div>
@@ -153,20 +196,6 @@ export default function Profile() {
 
           {/* form-content */}
           <form className="profile-form-Body" onSubmit={handleSubmit}>
-            <div className="profileTitle">
-              <h3>Edit your Profile here--</h3>
-              <button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            </div>
-
-            {/* photo Upload */}
-            {/* <div className="profilePhoto">
-              <FontAwesomeIcon icon={faUser} />
-              <input type="file" id="photo" placeholder="Add Photo" accept="image/*" />
-              <button type="button" onClick={() => clearPhoto()}>
-                remove photo
-              </button>
-            </div> */}
-
             <div className="profilePhoto" onClick={handleProfileClick}>
               {photoUrl ? (
                 <img src={photoUrl} alt="Uploaded" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
@@ -193,23 +222,21 @@ export default function Profile() {
 
             <div className="profile-formContainer">
               <label htmlFor="firstName">First Name</label>
-              <input type="text" placeholder="akash" />
-              <label htmlFor="firstName">Last Name</label>
-              <input type="text" placeholder="sharma" />
+              <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+              <label htmlFor="lastName">Last Name</label>
+              <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
               <label htmlFor="email">Email</label>
-              <input type="email" placeholder="akashsharma4957@gmail.com" />
-              <label htmlFor="firstName">Last Name</label>
-              <input type="text" placeholder="sharma" />
+              <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
               <label htmlFor="language">Language</label>
-              <select id="language">
+              <select id="language" name='language' value={formData.language} onChange={handleData}>
                 <option>English</option>
                 <option>Hindi</option>
                 <option>Spanish</option>
               </select>
               <label htmlFor="password">New Password</label>
-              <input type="password" placeholder="*******" />
+              <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
               <label htmlFor="NewPassword">Reenter New Password</label>
-              <input type="password" placeholder="*******" />
+              <input type="password" placeholder="Reenter New Password" onChange={handleData} />
             </div>
 
             {/* choose preffered Activity */}
@@ -224,90 +251,90 @@ export default function Profile() {
               <div className="profile--Activity-options">
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Running")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Running")}
                 >
                   <span>🏃 Running</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Yoga")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Yoga")}
                 >
                   <span>🧘 Yoga</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Open-Gym")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Open-Gym")}
                 >
                   <span>🏋️ Open-Gym</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Swimming")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Swimming")}
                 >
                   <span>🏊 Swimming</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Cricket")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Cricket")}
                 >
                   <span>🏏 Cricket</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Football")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Football")}
                 >
                   <span>⚽ Football</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Volleyball")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Volleyball")}
                 >
                   <span>🏐 Volleyball</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Badminton")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Badminton")}
                 >
                   <span>🏸 Badminton</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Library")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Library")}
                 >
                   <span>📚 Library</span>
                 </button>
                 <button
                   className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Boating")
-                  ? "border-solid bg-green-800 text-white" 
-                  : "border-solid border border-gray-600 " 
-                  } text-black`} 
+                    ? "border-solid bg-green-800 text-white"
+                    : "border-solid border border-gray-600 "
+                    } text-black`}
                   onClick={() => handleActivityToggle("Boating")}
                 >
                   <span>🛶 Boating</span>
