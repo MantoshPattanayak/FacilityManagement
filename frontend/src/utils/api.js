@@ -8,10 +8,14 @@ const api = {
     PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
-     PROFILE_DATA_VIEW_API: '/pulicUser/viewpublic_user', // post
+     PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post
+     PROFILE_DATA_UPDATE_API: '/publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
     //  Event_Host Api -------------------------------------
       Bank_details_Api:'/hosteventdetails/bankService', // get
-      Create_Host_event:'/hosteventdetails/createHosteventdetails',
+      Create_Host_event:'/hosteventdetails/createHosteventdetails',  // post
+    // Add to Cart----------------------------------------
+       Add_to_Cart:'/booking/addToCart',
+
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
      View_By_ParkId:'/mapData/viewParkById',        

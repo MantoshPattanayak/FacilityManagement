@@ -79,6 +79,8 @@ import AdminLogin from "./components/Admin/Login";
 import EventList from "./components/Public/Events/EventList";
 import Details from "./components/Public/Events/Details";
 import BookEvent from "./components/Public/Events/BookEvent";
+// Add to card
+import Add_Card from "./components/Public/Add_To_Card/AddCard";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -102,6 +104,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Book_Now />
+                </ProtectedRoute>
+              }
+            />
+              {/* Public (Add to Crad)  */}
+              <Route
+              path="/BookParks/Add_Card"
+              element={
+                <ProtectedRoute>
+                  <Add_Card/>
                 </ProtectedRoute>
               }
             />

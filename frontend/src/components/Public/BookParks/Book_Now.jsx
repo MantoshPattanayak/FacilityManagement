@@ -3,25 +3,27 @@ import '../../Public/BookParks/Book_Now.css';
 import AdminHeader from '../../../common/AdminHeader';
 import CommonFooter from '../../../common/CommonFooter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons'; // Import the icon
+import { faC, faCartShopping } from '@fortawesome/free-solid-svg-icons'; // Import the icon
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
+
 // Import Aixos method---------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Import Navigate and Crypto -----------------------------------
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { decryptData } from "../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import PublicHeader from '../../../common/PublicHeader';
 import { formatDate } from '../../../utils/utilityFunctions';
 
+
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   // UseSate for get data -------------------------------------
-
   const [FacilitiesData, setFacilitiesData] = useState([])
   //here Location / crypto and navigate the page---------------
   const location = useLocation();
-  const facilityId = decryptData(new URLSearchParams(location.search).get('facilityId'));
   const action = new URLSearchParams(location.search).get('action');
   const navigate = useNavigate();
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
@@ -33,18 +35,30 @@ const Book_Now = () => {
     bookingDate: new Date().toISOString().split('T')[0],
     startTime: '',
     durationInHours: '',
-    facilityId: ''
+    facilityId: '',
+    entityId: '',
+    entityTypeId: '',
+    facilityPreference: ''
   })
 
   // Here Get the data of Sub_park_details------------------------------------------
-  async function getSub_park_details() {
+  async function getSub_park_details(facilityId) {
     console.log('facilityId', facilityId);
+
     try {
       let res = await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
 
-      console.log("here Response", res)
+      console.log("response of facility fetch api", res)
       setFacilitiesData(res.data.facilitiesData)
-      setFormData({...formData, ['facilityId']: res.data.facilitiesData[0].facilityId});
+      setFormData(
+        {
+          ...formData,
+          ['entityTypeId']: res.data.facilitiesData[0].facilityTypeId,
+          ['facilityId']: facilityId,
+          ['entityId']: facilityId
+        }
+      );
+            
     }
     catch (err) {
       console.log("here Error", err)
@@ -66,7 +80,9 @@ const Book_Now = () => {
 
   // UseEffect for Update/Call API--------------------------------
   useEffect(() => {
-    getSub_park_details();
+    let facilityId = decryptData(new URLSearchParams(location.search).get('facilityId'));
+    console.log('facilityId', facilityId);
+    getSub_park_details(facilityId);
     getParkBookingInitialData();
   }, []);
 
@@ -91,15 +107,60 @@ const Book_Now = () => {
   const handleChangeInput = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value});
+    setFormData({ ...formData, [name]: value });
   }
-
-  async function handleSubmitAndProceed() {
-    let modifiedFormData = {...formData, ['activityPreference']: selectedGames};
+  // here Add to Cart -------------------------------------------------------------------------------------------
+  async function handleAddtoCart() {
+    let modifiedFormData = { ...formData, ['activityPreference']: selectedGames };
     console.log('formData handleSubmitAndProceed', modifiedFormData);
     const validationError = validation(modifiedFormData);
-    if(Object.keys(validationError).length == 0) {
-      try{
+    if (Object.keys(validationError).length == 0) {
+      try {
+        let facilityPreference = {
+          totalMembers: modifiedFormData.totalMembers,
+          activityPreference: modifiedFormData.activityPreference,
+          otherActivities: modifiedFormData.otherActivities,
+          bookingDate: modifiedFormData.bookingDate,
+          startTime: modifiedFormData.startTime,
+          duration: modifiedFormData.duration,
+          price: modifiedFormData.price,
+        }
+
+        // Prepare request body
+        const requestBody = {
+          entityId: modifiedFormData.entityId,
+          entityTypeId: modifiedFormData.entityTypeId,
+          facilityPreference
+        };
+        let res = await axiosHttpClient('Add_to_Cart', 'post', requestBody);
+        console.log('submit and response', res);
+        toast.success('Add to Cart has been done  successfully.', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate('/profile/booking-details');
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          }
+        });
+      }
+      catch (error) {
+        console.log(error);
+        toast.error('Add to Cart  failed.Try agin')
+      }
+    }
+    else {
+      toast.error('Please fill the required data.')
+    }
+  }
+
+  // HandleSubmit (Proceed to Payment) ---------------------------------------------------------------------------------------------------
+  async function handleSubmitAndProceed() {
+    let modifiedFormData = { ...formData, ['activityPreference']: selectedGames };
+    console.log('formData handleSubmitAndProceed', modifiedFormData);
+    const validationError = validation(modifiedFormData);
+    if (Object.keys(validationError).length == 0) {
+      try {
         let res = await axiosHttpClient('PARK_BOOK_PAGE_SUBMIT_API', 'post', modifiedFormData);
         console.log('submit and response', res);
         toast.success('Booking details submitted successfully.', {
@@ -112,35 +173,35 @@ const Book_Now = () => {
           }
         });
       }
-      catch(error) {
+      catch (error) {
         console.log(error);
         toast.error('Booking details submission failedc.')
       }
     }
-    else{
+    else {
       toast.error('Please fill the required data.')
     }
   }
 
   const validation = (formData) => {
-    let errors ={};
-    if(!formData.totalMembers) {
+    let errors = {};
+    if (!formData.totalMembers) {
       errors.totalMembers = 'Please provide number of members';
     }
-    if(!formData.bookingDate) {
+    if (!formData.bookingDate) {
       errors.date = 'Please provide date.'
     }
-    if(!formData.startTime){
+    if (!formData.startTime) {
       errors.startTime = 'Please provide Start time.';
     }
-    if(!formData.durationInHours){
+    if (!formData.durationInHours) {
       errors.durationInHours = 'Please provide duration.';
     }
     return errors;
   }
 
   return (
-    <div>
+    <div className='Book_Now_Min_conatiner'>
       <ToastContainer />
       <PublicHeader />
       <div className="booknow-container">
@@ -153,8 +214,8 @@ const Book_Now = () => {
           </div>
 
           <div className="input-fields">
-            <p>Total Members</p> 
-            <input type="number" name="totalMembers" value={formData.totalMembers} id="" className='member-input' onChange={handleChangeInput}/>
+            <p>Total Members</p>
+            <input type="number" name="totalMembers" value={formData.totalMembers} id="" className='member-input' onChange={handleChangeInput} />
           </div><br />
 
           <div className="activity-preference">
@@ -177,40 +238,48 @@ const Book_Now = () => {
 
           <div className="other-activities">
             <label htmlFor="activities">Other Activities(if any)</label>
-            <input type="text" name="otherActivities" value={formData.otherActivities} id="" className='input-field-otheractivities' onChange={handleChangeInput}/>
+            <input type="text" name="otherActivities" value={formData.otherActivities} id="" className='input-field-otheractivities' onChange={handleChangeInput} />
           </div><br />
 
 
           <div className="date">
             <label htmlFor="">Date :</label>
-            <input type="date" name="bookingDate" value={formData.bookingDate} id="" className='input-field-date' onChange={handleChangeInput}/>
+            <input type="date" name="bookingDate" value={formData.bookingDate} id="" className='input-field-date' onChange={handleChangeInput} />
           </div><br />
 
 
           <div className="start-time">
             <label htmlFor=""> Start Time :</label>
-            <input type="time" name="startTime" value={formData.startTime} id="" className='input-field-date' onChange={handleChangeInput}/>
+            <input type="time" name="startTime" value={formData.startTime} id="" className='input-field-date' onChange={handleChangeInput} />
           </div>
 
           <div className="duration">
             <label htmlFor="">  Duration :</label>
-            <input type="number" name="durationInHours" value={formData.durationInHours} id="" className='input-field-date' onChange={handleChangeInput}/>
+            <input type="number" name="durationInHours" value={formData.durationInHours} id="" className='input-field-date' onChange={handleChangeInput} />
           </div>
 
           {/* Add to cart button */}
-          <div className="button">
-            <button className="addtocart-btn" onClick={handleSubmitAndProceed}>
-              Proceed to payment
-            </button>
+          <div className='Add_to_card_main_conatiner'>
+            <div className="button_Book_Now">
+
+              {/* <a href=''> */}
+              <button class='AddToCartButton' onClick={handleAddtoCart}>
+                <FontAwesomeIcon icon={faShoppingCart} className='Icon' />
+                Add to Cart
+              </button>
+              {/* </a>  */}
+
+              <button className="addtocart-btn" onClick={handleSubmitAndProceed}>
+                <FontAwesomeIcon icon={faCreditCard} className="Icon" />
+                Proceed to Payment
+              </button>
+            </div>
           </div>
+
         </div>
 
-        {/* <div className="cart-container">
-          <div className="cart-icon">
-            <FontAwesomeIcon icon={faCartShopping} />
-            <p>Cart is empty</p>
-          </div>
-        </div> */}
+
+
 
       </div>
       <CommonFooter />

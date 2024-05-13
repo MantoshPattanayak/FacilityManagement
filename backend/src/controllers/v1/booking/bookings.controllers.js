@@ -40,6 +40,7 @@ let parkBooking = async (req, res) => {
             startTime,
             durationInHours
         }, 'before change');
+   
 
         // Function to add hours to a time string
         function addHoursToTime(timeString, hoursToAdd) {

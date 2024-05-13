@@ -4,6 +4,7 @@ import "../components/Public/Landing";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../utils/axios";
 
 export default function PublicHeader() {
@@ -99,6 +100,13 @@ export default function PublicHeader() {
                 </a>
               </li>
             )}
+          <li>
+            <a href="/BookParks/Add_Card">
+              <h1 className="cart_icon">
+                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> {/* size="lg" increases the size */}
+              </h1> 
+            </a>
+          </li>
           </ul>
         </nav>
       </header>
