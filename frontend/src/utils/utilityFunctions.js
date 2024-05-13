@@ -36,4 +36,8 @@ function logOutUser() {
     return;
 }
 
-export { formatTime, formatDate, formatDateYYYYMMDD, logOutUser };
+const truncateName = (name, maxLength) => {
+    return name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
+  };
+
+export { formatTime, formatDate, formatDateYYYYMMDD, logOutUser, truncateName };

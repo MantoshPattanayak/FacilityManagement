@@ -11,7 +11,9 @@ const viewEventactivities = async (req, res) => {
     let offset = (page - 1) * limit;
     let [showAllEventactivities] = await sequelize.query(`    
       SELECT 
-      ea.facilityMasterId, 
+      ea.eventId,
+      ea.facilityId,
+      f.facilityname,
       ea.eventName, 
       ea.eventCategory, 
       ea.locationName, 
@@ -24,23 +26,27 @@ const viewEventactivities = async (req, res) => {
       ea.eventImagePath,
       ea.additionalFilesPath,
       sm.statusCode as status,
-      ea.remark,
+      ea.remarks,
       ea.additionalDetails
       FROM 
-      amabhoomi.eventactivites ea 
+      amabhoomi.eventactivities ea 
       INNER JOIN 
-      amabhoomi.statusmasters sm ON sm.statusId = ea.statusId 
+      amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
+      left join
+      amabhoomi.facilities f on ea.facilityId = f.facilityId
       ORDER BY 
-      ea.facilityMasterId DESC
-      `);
+      ea.eventDate DESC
+    `);
 
     console.log(showAllEventactivities, "all Eventactivities");
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
     if (givenReq) {
       showAllEventactivities = showAllEventactivities.filter(
         (EventactivitiesData) =>
-          EventactivitiesData.facilityMasterId.includes(givenReq) ||
-          EventactivitiesData.name.toLowerCase().includes(givenReq)
+          EventactivitiesData.facilityId.includes(givenReq) ||
+          EventactivitiesData.eventName.toLowerCase().includes(givenReq) || 
+          EventactivitiesData.eventCategory.toLowerCase().includes(givenReq) ||
+          EventactivitiesData.locationName.toLowerCase().includes(givenReq)
       );
     }
     let paginatedshowAllEventactivities = showAllEventactivities.slice(
