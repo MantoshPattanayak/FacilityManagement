@@ -112,7 +112,7 @@ const BookingDetails = () => {
               <button className="edit-profile-btn">Edit User Profile</button>
               <button className="edit-profile-btn">Booking Details</button>
               <button className="edit-profile-btn">Favorites</button>
-              <button className="edit-profile-btn">Card Details</button>
+            <a href="/BookParks/Add_Card">  <button className="edit-profile-btn">Card Details</button></a>  
             </div>
             <button className="logout-button" onClick={(e) => {logOutUser(); navigate('/')}}>
               <FontAwesomeIcon icon={faRightFromBracket} />

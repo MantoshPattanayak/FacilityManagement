@@ -1,0 +1,68 @@
+.Book_sport_Main_conatiner {
+    width: 100%;
+
+}
+
+.Book_sport_Child_conatiner {
+
+    display: flex;
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+   padding: 100px;
+}
+
+.Add_sport_form {
+    width: 840px;
+   
+    border: 10px solid red;
+    top: 30%;
+}
+
+.sport_name_Book h1{
+    font-size: 25px;
+}
+
+/* here form */
+.bookingFormWrapper {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+   
+   
+  
+}
+.price_Sport{
+    font-size: 20px;
+    color: #232323;
+    font-weight: 500;
+}
+
+
+.bookingForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.fieldName {
+    width: 120px;
+    font-weight: bold;
+    color: #555;
+}
+
+.formSelect,
+.formInput {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+
