@@ -65,8 +65,9 @@ sequelize.authenticate()
   db1.cart = require('./cart.models')(sequelize,DataTypes)
   db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
   db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
-  
-  db1.cartItem.sync({
+  db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
+
+  db1.eventBookings.sync({
     force: false
   })
 
