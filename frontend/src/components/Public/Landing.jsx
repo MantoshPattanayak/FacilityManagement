@@ -16,31 +16,16 @@ import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-
-
-
 import PublicHeader from '../../common/PublicHeader.jsx';
-
-// Location icon and image all types of image---------------------------------------------
-// import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
-// import Park_img from "../../../assets/park_img1.jpg"
 import Yoga_img from "../../assets/Yoga_img.png";
 import greenway from "../../assets/Greenway.png"
 import Blueway from "../../assets/blueways.png"
-
-// import blueWays_logo from "../../assets/ama_bhoomi_blueways_logo.jpeg";
-// import greenWays_logo from "../../assets/ama_bhoomi_greenways.jpeg";
-// import here encpty js ----------------------------------
-// Import here to encrptData ------------------------------------------
 import { Link, useNavigate } from 'react-router-dom';
-// import { encryptData } from "../../../utils/encryptData"
 import { encryptData } from '../../utils/encryptData';
-// import for slider
-
+import CommonFooter from '../../common/CommonFooter.jsx';
 
 const responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 5
   },
@@ -58,8 +43,6 @@ const responsive = {
   }
 };
 
-
-
 const Landing = () => {
   const [mapdata, setmapdata] = useState([])
   const [selectedParkId, setSelectedParkId] = useState(null);
@@ -71,29 +54,20 @@ const Landing = () => {
   let randomKey = Math.random();
   let navigate = useNavigate();
 
-
-
-  // here Fetch the data -----------------------------------------------
   async function fecthMapData() {
     try {
       let res = await axiosHttpClient('View_Park_Data', 'post', {
         givenReq: givenReq,
         facilityTypeId: facilityTypeId
       });
-
       console.log("here get data", res)
       setmapdata(res.data.data)
-
     }
     catch (err) {
       console.log(" here error", err)
     }
   }
 
-
-
-
-  // Handle Chnage ----------------------------------------------------------------
   function handleChange(e) {
     let { name, value } = e.target;
     switch (name) {
@@ -102,45 +76,38 @@ const Landing = () => {
         setGivenReq(value);
     }
   }
-  // Function to handle marker click ---------------------------------------------------
+
   const handleMarkerClick = (facilityId) => {
-    setSelectedParkId(facilityId); // Set selected parkId
+    setSelectedParkId(facilityId);
     const location = mapdata.find(location => location.facilityId === facilityId);
-    setSelectedLocationDetails(location); // Set selected location details
+    setSelectedLocationDetails(location);
     console.log(location);
   };
-  // Function to handle setting facility type ID and updating search input value ---------------------------
+
   const handleParkLogoClick = (typeid) => {
-    setFacilityTypeId(typeid) // Set facility ex typeid-1,typeid-2,typeid-3
+    setFacilityTypeId(typeid)
     console.log("here type id", typeid)
     fecthMapData()
-
   };
-  // here Handle for encrpt the data------------------------------------------
-  // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
+
   function encryptDataId(id) {
     let res = encryptData(id);
     return res;
   }
 
-  // here Update the data-----------------------------------------------
   useEffect(() => {
     fecthMapData()
   }, [givenReq, facilityTypeId])
 
-  //-------------for event Cards---------------------------------------
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
 
   useEffect(() => {
-    // animations added to current events section
     const container = containerRef.current;
     const cards = container.querySelectorAll('.eventCard');
-
     const cardWidth = cards[0].offsetWidth;
     const firstCardClone = cards[0].cloneNode(true);
     container.appendChild(firstCardClone);
-
     const totalWidth = (cards.length + 1) * cardWidth;
     container.style.width = totalWidth + 'px';
 
@@ -155,7 +122,6 @@ const Landing = () => {
       setTimeout(startScrollAnimation, 0);
     });
 
-    // search functionality for user input in the field
     const searchInput = searchInputRef.current;
     searchInput.addEventListener('keypress', (e) => {
       let inputVal;
@@ -174,74 +140,19 @@ const Landing = () => {
     };
   }, []);
 
-  // --------------Explore new Activities-------------------------------------------------------------
-  // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(null);
 
   const exploreNewActivies = [
-    {
-      game: 'Tennis',
-      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Buddha JAyanti Park', 'Buddha JAyanti Park']
-    },
-    {
-      game: 'Cricket',
-      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'IG Park']
-    },
-    {
-      game: 'Football',
-      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Gopabandhu Park']
-    },
-    {
-      game: 'Yoga',
-      parks: ['Buddha JAyanti Park']
-    }
+    // Your data here
   ];
-
-
-
-  // handleGameClick ------------------------------------------------
 
   const handleGameClick = (index) => {
     setSelectedActivity(index === selectedActivity ? null : index);
   };
 
-  //Gallery section
-
   const galleryData = [
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    },
-    {
-      img: galleryImg,
-      desc: `Your text description here`
-    }
-  ]
-
+    // Your gallery data here
+  ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -252,6 +163,7 @@ const Landing = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === galleryData.length - 1 ? 0 : prevIndex + 1));
   };
+
 
 
 
@@ -474,16 +386,23 @@ const Landing = () => {
 
       {/* ------Event details card-------------------------------------------------------------------- */}
 
+    
+
       <div className="EventContainerlanding">
         <div className="EventContainerTitle">
           <div className="greenHeader"></div>
           <h1>Current Events</h1>
         </div>
 
-        <div className="EventDetailsCardSec_outer">
-          <div ref={containerRef} className="EventDetailsCardSec" id="eventContainer">
 
-            <div className="eventCard">
+
+
+
+
+        <div className='gallery-slider'>
+          <Carousel responsive={responsive}>
+
+          <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga Day Celebration</div>
               <div className="eventCardLocation">
@@ -499,6 +418,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+            
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga</div>
@@ -515,6 +435,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga Day Celebration</div>
@@ -531,6 +452,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga Day Celebration</div>
@@ -547,6 +469,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga Day Celebration</div>
@@ -563,6 +486,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga Day Celebration</div>
@@ -579,6 +503,7 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National Yoga Day Celebration</div>
@@ -595,25 +520,40 @@ const Landing = () => {
                 </div>
               </div>
             </div>
+          </Carousel>;
+        </div>
+
+
+
+
+
+
+
+
+       
+
+         <div className="EventDetailsCardSec_outer">
+          <div ref={containerRef} className="EventDetailsCardSec" id="eventContainer">
+           
+          
+          
+           
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
               <div className="eventCardTitle">National</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
+           
+              
             </div>
+          
           </div>
-        </div>
+        </div> 
+    
+    
       </div>
+ 
+    
+
+
       {/*------------ Explore new activities----------- */}
 
       <div className="exploreNewAct-Parent-Container">
@@ -687,22 +627,37 @@ const Landing = () => {
 
       </div>
 
+      {/* -----------------Avatisement section -------------------------------------------------------------------------------------*/}
+
+      <div className='gallery-slider'>
+          <Carousel responsive={responsive}>
+
+            {galleryData.map((data, index) => (
+              <div className="carousel-slide3" key={index}>
+                <div className="overlay">
+                <img src={adImg} alt="" className="avatisement-Image" />
+     
+
+                </div>
+              </div>
+            ))}
+          </Carousel>;
+        </div>
 
 
 
 
 
-
-      {/* ------------Avatisement section -------------------------------------------------------------------------------------*/}
-
-      <div className="avatisement-Border">
+       {/* <div className="avatisement-Border">
         <div className="avatisement-Content">
           <img src={adImg} alt="" className="avatisement-Image" />
         </div>
-      </div>
+      </div>  */}
+ 
+
       <div className="footer">
 
-        <Footer />
+        <CommonFooter  />
       </div>
 
     </div>
