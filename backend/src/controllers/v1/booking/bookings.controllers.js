@@ -199,7 +199,8 @@ let addToCart = async (req,res)=>{
             isUserExist = await cart.create({
                 userId:userId,
                 createdDt:createdDt,
-                updatedDt:updatedDt
+                updatedDt:updatedDt,
+                statusId:1
             })
         }
         // then check entity wise where the user wants to add the data
@@ -221,6 +222,7 @@ let addToCart = async (req,res)=>{
                   }}]
                 }
             }) 
+            console.log(facilityPreference.startTime,'startTime',checkIsItemAlreadyExist)
             // if exist then update
             if(checkIsItemAlreadyExist){
                 // facilityPreference = {
@@ -265,6 +267,7 @@ let addToCart = async (req,res)=>{
                     entityId:entityId,
                     entityTypeId:entityTypeId,
                     facilityPreference:facilityPreference,
+                    statusId:1,
                     createdDt:createdDt,
                     updatedDt:updatedDt,
                     createdBy:userId,
@@ -339,6 +342,7 @@ let addToCart = async (req,res)=>{
                       entityId:entityId,
                       entityTypeId:entityTypeId,
                       facilityPreference:facilityPreference,
+                      statusId:1,
                       createdDt:createdDt,
                       updatedDt:updatedDt,
                       createdBy:userId,
@@ -428,6 +432,7 @@ let addToCart = async (req,res)=>{
                     entityId:entityId,
                     entityTypeId:entityTypeId,
                     facilityPreference:facilityPreference,
+                    statusId:1,
                     createdDt:createdDt,
                     updatedDt:updatedDt,
                     createdBy:userId,
@@ -461,14 +466,17 @@ let addToCart = async (req,res)=>{
 
 let viewCartByUserId = async(req,res)=>{
     try {
+        console.log('12')
         const userId = req.user?.id || 1
         let findCartIdByUserId = await cart.findOne({
             where:{
             [Op.and]:[{userId: userId},{statusId:1}]
             }
         })
+
+        // console.log(findCartIdByUserId,'findCartByUserId')
         if(findCartIdByUserId){
-            
+            console.log(findCartIdByUserId.cartId,'cartId')
         let findCartItemsWRTCartId = await cartItem.findAll({
             where:{
                 
@@ -477,6 +485,8 @@ let viewCartByUserId = async(req,res)=>{
              
             }
         })
+
+        console.log(findCartItemsWRTCartId,'findCartIdByUserId')
         if(findCartIdByUserId.length<=0){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:  "Not a single item is associated with the cart"
@@ -503,6 +513,9 @@ let viewCartByUserId = async(req,res)=>{
         
     }
 }
+
+// view Cart with respect to cart item id
+
 
 
 // remove the cart items

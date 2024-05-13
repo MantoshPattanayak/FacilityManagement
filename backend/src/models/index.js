@@ -67,7 +67,7 @@ sequelize.authenticate()
   db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
   
   db1.cartItem.sync({
-    force: true
+    force: false
   })
 
 module.exports = db1;
