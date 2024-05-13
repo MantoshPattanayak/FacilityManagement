@@ -81,6 +81,9 @@ import Details from "./components/Public/Events/Details";
 import BookEvent from "./components/Public/Events/BookEvent";
 // Add to card
 import Add_Card from "./components/Public/Add_To_Card/AddCard";
+import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
+// here PublicLoader
+import PublicLoader from "./common/PublicLoader";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -92,6 +95,7 @@ function App() {
           <Routes>
             {/* HOME */}
             <Route path="/" element={<Landing />}/>
+            <Route path="/PublicLoader" element={<PublicLoader />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Event_hostPage" element={<Event_hostPage />} />
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
@@ -100,6 +104,15 @@ function App() {
           
             {/* Public (Book Parks)  */}
             <Route
+              path="/BookParks/Book_Now_Sport"
+              element={
+                <ProtectedRoute>
+                  <Book_Now_Sport />
+                </ProtectedRoute>
+              }
+            />
+              {/* Public (sport)  */}
+              <Route
               path="/BookParks/Book_Now"
               element={
                 <ProtectedRoute>

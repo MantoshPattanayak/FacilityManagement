@@ -11,11 +11,13 @@ export default function PublicHeader() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState();
   const [language, setLanguage] = useState('');
   const [webContent, setWebContent] = useState([]);
+  // here Get the data of TotalCount of Cart ---------------
+  const [GetCardCount, setGetCardCount] = useState([])
 
   // function to set language and change web content as per language
   function setLanguageCode(e) {
     e?.preventDefault();
-    if (language == 'EN'){
+    if (language == 'EN') {
       sessionStorage?.setItem('language', 'OD');
       setLanguage('OD');
     }
@@ -27,26 +29,44 @@ export default function PublicHeader() {
 
   async function getWebContent() {
     try {
-      let res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', {language});
+      let res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
       console.log('response of web content as per language', res.data.languageContentResultData);
       setWebContent(res.data.languageContentResultData);
     }
-    catch(error) {
+    catch (error) {
       console.error(error);
     }
   }
+  // here Get total count of Cart --------------------------------------------
+  async function GetTotalNumberofCart() {
+    try {
+      let res = await axiosHttpClient('View_Card_UserId', 'get')
+
+      console.log("here Response of Total Count of Cart(Public Header)", res)
+      setGetCardCount(res.data)
+    }
+    catch (err) {
+      console.log("here Error Total Count of Cart (Public Header)", err)
+    }
+  }
+
+  useEffect(() => {
+    GetTotalNumberofCart()
+    // const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
+    // return () => clearInterval(intervalId);
+  }, [])
 
   // on page load, set language preference
   useEffect(() => {
     setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0);
-    if(sessionStorage?.getItem('language') == null || sessionStorage?.getItem('language') == ''){
+    if (sessionStorage?.getItem('language') == null || sessionStorage?.getItem('language') == '') {
       sessionStorage?.setItem('language', 'EN');
       setLanguage('EN');
     }
-    else{
+    else {
       setLanguage(sessionStorage?.getItem('language'))
     }
-    
+
     getWebContent();
   }, []);
 
@@ -66,8 +86,8 @@ export default function PublicHeader() {
 
           <ul>
             <li>
-              { (language == 'EN') && <><button value={'ଓଡ଼ିଆ'} onClick={setLanguageCode}>ଓଡ଼ିଆ</button> &nbsp; | </>}
-              { (language == 'OD') && <><button value={'English'} onClick={setLanguageCode}>English</button> &nbsp; | </>}
+              {(language == 'EN') && <><button value={'ଓଡ଼ିଆ'} onClick={setLanguageCode}>ଓଡ଼ିଆ</button> &nbsp; | </>}
+              {(language == 'OD') && <><button value={'English'} onClick={setLanguageCode}>English</button> &nbsp; | </>}
             </li>
             <li>
               <a href="/">{(webContent.filter((data) => { return data.languageResourceKey == 'publicHeaderHome' })[0]?.languageResourceValue)?.toUpperCase()}</a>
@@ -100,13 +120,27 @@ export default function PublicHeader() {
                 </a>
               </li>
             )}
-          <li>
-            <a href="/BookParks/Add_Card">
-              <h1 className="cart_icon">
-                <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> {/* size="lg" increases the size */}
-              </h1> 
-            </a>
-          </li>
+      <li>
+  {isUserLoggedIn == 1 ? (
+    <li>
+      <a className="relative flex items-center" href="/BookParks/Add_Card">
+        {GetCardCount.count > 0 && (
+          <span className="cart-count absolute  left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1  rounded-full">{GetCardCount.count}</span>
+        )}
+        <span>  <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> Cart</span>
+      </a>
+    </li>
+  ) : (
+    <li>
+      
+    </li>
+  )}
+</li>
+
+
+
+
+
           </ul>
         </nav>
       </header>
