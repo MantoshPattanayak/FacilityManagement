@@ -229,12 +229,27 @@ const homePage = async (req, res) => {
     let fetchAllServices = await sequelize.query(
       `select serviceId,code,description status from amabhoomi.services where statusId = 1`
     );
+
+    let viewNotificationsListQuery = `
+        select
+            *
+        from amabhoomi.publicnotifications p
+        where validFromDate <= ?
+        and validToDate >= ?
+        `;
+
+    let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
+      type: Sequelize.QueryTypes.SELECT,
+      replacements: [new Date(), new Date()]
+    })
+
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,
       eventDetailsData: fetchEventDetailsData[0],
       amenityDetails: fetchAllAmenities[0],
       servicesDetails: fetchAllServices[0],
+      notificationsList:viewNotificationsListQueryData
     });
   } catch (err) {
     return res

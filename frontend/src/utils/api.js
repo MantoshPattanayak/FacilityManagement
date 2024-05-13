@@ -1,15 +1,21 @@
 // to be maintained by backend developers
 
 const api = {
+    LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
     PUBLIC_LOGIN_API: '/auth/publicLogin',
     PUBLIC_SIGNUP_API: '/auth/signUp',
     PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
     PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
     MAP_SEARCH: '/mapData/searchParkFacilities',
-     PROFILE_DATA_VIEW_API: '/pulicUser/viewpublic_user', // post
+     PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post
+     PROFILE_DATA_UPDATE_API: '/publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
     //  Event_Host Api -------------------------------------
       Bank_details_Api:'/hosteventdetails/bankService', // get
+      Create_Host_event:'/hosteventdetails/createHosteventdetails',  // post
+    // Add to Cart----------------------------------------
+       Add_to_Cart:'/booking/addToCart',
+
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
      View_By_ParkId:'/mapData/viewParkById',        
@@ -50,7 +56,9 @@ const api = {
     REVIEW_EVENTS_VIEWLIST_API: '/reviewEvents/viewList',   //post
     REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
     REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API: '/reviewEvents/performAction', //put /reviewEvents/performAction/id
-    //Bookmark
+    // Public Notifications
+    VIEW_NOTIFICATIONS_LIST_API: '/publicNotifications/viewList', //post givenReq page_size page_number currentDate
+    ADD_NOTIFICATIONS_API: '/publicNotifications/add',  //post  notificationTitle, notificationContent, validFromDate, validToDate
      ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
      REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
      VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate

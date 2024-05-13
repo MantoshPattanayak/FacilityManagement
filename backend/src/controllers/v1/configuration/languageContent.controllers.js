@@ -2,11 +2,18 @@ const { sequelize, Sequelize } = require('../../../models');
 const statusCode = require('../../../utils/statusCode');
 const db = require('../../../models');
 const bcrypt = require('bcrypt');
+const { where } = require('sequelize');
 const languageresources = db.languageresources;
 
 let viewLanguageContent = async (req, res) => {
     try {
-        let languageContentResultData = await languageresources.findAll();
+        let language = req.body.language || 'EN';
+        
+        let languageContentResultData = await languageresources.findAll({
+            where: {
+                language: language
+            }
+        });
 
         res.status(statusCode.SUCCESS.code).json({
             message: 'language content',

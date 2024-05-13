@@ -15,6 +15,9 @@ module.exports = (sequelize,DataTypes)=>{
         fileId:{
             type:DataTypes.INTEGER
         },
+        filePurpose:{
+            type:DataTypes.STRING
+        },
         statusId:{
             type:DataTypes.INTEGER
         },

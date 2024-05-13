@@ -1,0 +1,14 @@
+.logo .logo-ama-boomi {
+    height: 10%;
+    width: 10%;
+    position:absolute;
+}
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-ama-boomi img{
+    height: 30px;
+    width: 30px;
+}
