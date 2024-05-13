@@ -1,5 +1,6 @@
 html,
 body {
+    box-sizing: border-box;
     height: 100%;
     margin: 0;
     /* Remove default margin */
@@ -13,6 +14,7 @@ body {
 }
 
 * {
+
     box-sizing: border-box;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
@@ -190,7 +192,7 @@ body {
 
 .icon img {
     width: 100px;
-    height: 100px;
+    /* height: 100px; */
 
 }
 
@@ -333,7 +335,7 @@ body {
 }
 
 .eventCard_Img {
-    width: 17vw;
+    width: 28vw;
     border-radius: 8px;
 }
 
@@ -524,18 +526,17 @@ body {
     display: none;
   }
 
-@keyframes scroll {
+/* @keyframes scroll {
     from {
         transform: translateX(0%);
     }
 
     to {
         transform: translateX(-100%);
-        /* Adjust -2px to leave a small gap between items */
     }
 
 
-}
+} */
 
 .eventCard {
     display: flex;
@@ -776,10 +777,10 @@ body {
 
 
 /*----------------------------------- Gallery section------------------------------------------------------------------------------------------------------- */
-.gallery-slider{
+.gallery-slider {
     width: 100%;
-    height: 90px;
-    margin-bottom: 100px;
+    margin-top: 20px;
+    overflow: hidden; /* Add overflow hidden to hide extra content */
 }
 .galleryOuter {
     width: 100%;
@@ -788,9 +789,19 @@ body {
     align-items: center;
     justify-content: center;
     margin-block: 6vh;
+    overflow: hidden; /* Add overflow hidden to hide extra content */
 }
 
-
+.react-multi-carousel-list {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    overflow-x: auto;
+    width: 94%;
+    padding-left: 100px;
+    margin-left:5%;
+}
 
 .EventDetailsCardSec {
     width: 100%;
@@ -821,26 +832,15 @@ body {
 }
 
 .carousel-slide3 {
-    max-width: 284px;
+    width: 100%;
+    max-width: 284px; /* Set max-width for each slide */
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    flex: 0 0 60%;
-    
-    width: 20%;
-    
-    height: 100%;
-
-    scroll-snap-align: start;
-    
-    width: 5vw;
-    height: auto;
-    padding-block: 10px;
-
     align-items: center;
-    margin: 0 5px;
-    transition: background-color 0.3s ease;
+    scroll-snap-align: start;
+    padding: 10px;
+    margin: 0; /* Remove margin to decrease gap */
 }
 
 .overlay {
@@ -877,6 +877,15 @@ body {
     opacity: 1;
 }
 
+.react-multiple-carousel__arrow--right {
+    right: calc(4% + 1px);
+    z-index: auto;
+}
+.react-multiple-carousel__arrow--left {
+    left: calc(4% + 1px);
+    z-index: auto;
+}
+
 .overlay-text {
     position: absolute;
     top: 50%;
@@ -911,7 +920,7 @@ body {
 
 
 .gallery-slider {
-    margin-top: 20px; /* Adjust margin as needed */
+    margin-top: 20px; 
   }
   
   .carousel-slide3 {
@@ -922,7 +931,7 @@ body {
   
   .overlay {
     position: relative;
-    width: 150%;
+    width: 175%;
     height: 100%;
     border-radius: 20px;
   }
@@ -946,9 +955,7 @@ body {
   }
   
 
-  .avatisement-Border{
-    margin-top: 100px;
-  }
+
 
 /* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
 
@@ -1150,5 +1157,7 @@ body {
 
 
 
-/* ---------------Gallery section --------------------------------*/
+.react-multiple-carousel__arrow {
+    position: fixed; /* Keep the arrows fixed */
+}
 
