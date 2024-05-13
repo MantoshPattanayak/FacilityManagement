@@ -48,6 +48,8 @@ const hosteventdetailsroute = require("./routes/api/" +
 const reviewEventBookingRoute = require("./routes/api/" +
   api_version +
   "/activity/reviewEventBooking");
+const faqRoute = require("./routes/api/" + api_version + "/activity/faq");
+
 const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
 const razorPayPayment = require("./routes/api/" +
@@ -108,6 +110,7 @@ app.use("/languageContent", languageContent);
 
 //activity routes
 app.use("/reviewEvents", reviewEventBookingRoute);
+app.use("/faq", faqRoute);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
