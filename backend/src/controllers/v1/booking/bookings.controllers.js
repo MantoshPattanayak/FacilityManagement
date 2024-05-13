@@ -175,14 +175,17 @@ let parkBookingFormInitialData = async (req, res) => {
 
 // create cart
 
-const addToCart = async (req,res)=>{
+let addToCart = async (req,res)=>{
     try {
+        console.log('1')
         let userId = req.user?.id || 1;
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId =1
-        const {entityId, entityTypeId, totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price} = req.body
-        let facilityPreference;
+        const {entityId, entityTypeId, facilityPreference} = req.body
+
+        // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
+        
         // first checks in the carts table consist of the user id 
         let isUserExist = await  cart.findOne({
             where:{
@@ -200,8 +203,8 @@ const addToCart = async (req,res)=>{
         // then check entity wise where the user wants to add the data
         if(entityTypeId = 1){
             // if parks
-            let momentStartTime = moment.duration(startTime);
-            let momentDuration = moment.duration(duration);
+            let momentStartTime = moment.duration(facilityPreference.startTime);
+            let momentDuration = moment.duration(facilityPreference.duration);
             // adding the duration
             let momentEndTime = momentStartTime.add(momentDuration)
             // Format the total momentEndTime back into HH:mm:ss format
@@ -209,8 +212,8 @@ const addToCart = async (req,res)=>{
             // first check the item already exist or not
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
-                  [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{bookingDate:bookingDate},{startTime:{
-                    [Op.gte]:[startTime]
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId},{bookingDate:facilityPreference.bookingDate},{startTime:{
+                    [Op.gte]:[facilityPreference.startTime]
                   }},{startTime:{
                     [Op.lte]:[momentEndTime]
                   }}]
@@ -218,13 +221,14 @@ const addToCart = async (req,res)=>{
             }) 
             // if exist then update
             if(checkIsItemAlreadyExist){
-                facilityPreference = {totalMembers:totalMembers,
-                    otherActivities:otherActivities,
-                    startTime:startTime,
-                    duration:duration,
-                    activityPreference:activityPreference,
-                    price:price
-                }
+                // facilityPreference = {
+                //     totalMembers:facilityPreference.totalMembers,
+                //     otherActivities:facilityPreference.otherActivities,
+                //     startTime:facilityPreference.startTime,
+                //     duration:facilityPreference.duration,
+                //     activityPreference:facilityPreference.activityPreference,
+                //     price:facilityPreference.price
+                // }
 
                 let updateTheCart = await cartItem.update({
                     facilityPreference:facilityPreference,
@@ -252,15 +256,7 @@ const addToCart = async (req,res)=>{
             }
             // else add the item
             else{
-                facilityPreference = {
-                    totalMembers:totalMembers,
-                    activityPreference:activityPreference,
-                    otherActivities:otherActivities,
-                    bookingDate:bookingDate,
-                    startTime:startTime,
-                    duration:duration,
-                    price:price,
-                }
+        
                 let createAddToCart = await cartItem.create({
                     cartId:isUserExist.cartId,
                     entityId:entityId,
@@ -292,22 +288,22 @@ const addToCart = async (req,res)=>{
               // first check the item already exist or not
               let checkIsItemAlreadyExist = await cartItem.findOne({
                   where:{
-                    [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{bookingDate:bookingDate},{startTime:{
-                      [Op.gte]:[startTime]
+                    [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{entityTypeId:entityTypeId},{bookingDate:facilityPreference.bookingDate},{startTime:{
+                      [Op.gte]:[facilityPreference.startTime]
                     }},{startTime:{
-                      [Op.lte]:[endTime]
+                      [Op.lte]:[facilityPreference.endTime]
                     }}]
                   }
               }) 
               // if exist then update
               if(checkIsItemAlreadyExist){
-                  facilityPreference = {
-                    playersLimit:playersLimit,
-                    sports:sports,
-                    startTime:startTime,
-                    endTime:endTime,
-                    price:price,
-                  }
+                //   facilityPreference = {
+                //     playersLimit:playersLimit,
+                //     sports:sports,
+                //     startTime:startTime,
+                //     endTime:endTime,
+                //     price:price,
+                //   }
                   let updateTheCart = await cartItem.update({
                       facilityPreference:facilityPreference,
                       updatedDt:updatedDt,
@@ -334,14 +330,7 @@ const addToCart = async (req,res)=>{
               }
               // else add the item
               else{
-                  facilityPreference = {
-                    playersLimit:playersLimit,
-                      sports:sports,
-                      bookingDate:bookingDate,
-                      startTime:startTime,
-                      endTime:endTime,
-                      price:price,
-                  }
+               
                   let createAddToCart = await cartItem.create({
                       cartId:isUserExist.cartId,
                       entityId:entityId,
@@ -380,8 +369,8 @@ const addToCart = async (req,res)=>{
         }
         else if(entityTypeId= 6){
             // if events
-            let momentStartTime = moment.duration(startTime);
-            let momentDuration = moment.duration(duration);
+            let momentStartTime = moment.duration(facilityPreference.startTime);
+            let momentDuration = moment.duration(facilityPreference.duration);
             // adding the duration
             let momentEndTime = momentStartTime.add(momentDuration)
             // Format the total momentEndTime back into HH:mm:ss format
@@ -389,8 +378,8 @@ const addToCart = async (req,res)=>{
             // first check the item already exist or not
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
-                  [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{bookingDate:bookingDate},{startTime:{
-                    [Op.gte]:[startTime]
+                  [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{entityTypeId:entityTypeId},{bookingDate:facilityPreference.bookingDate},{startTime:{
+                    [Op.gte]:[facilityPreference.startTime]
                   }},{startTime:{
                     [Op.lte]:[momentEndTime]
                   }}]
@@ -398,12 +387,12 @@ const addToCart = async (req,res)=>{
             }) 
             // if exist then update
             if(checkIsItemAlreadyExist){
-                facilityPreference = { 
-                    totalMembers:totalMembers,
-                    startTime:startTime,
-                    duration:duration,
-                    price:price
-                }
+                // facilityPreference = { 
+                //     totalMembers:totalMembers,
+                //     startTime:startTime,
+                //     duration:duration,
+                //     price:price
+                // }
                 let updateTheCart = await cartItem.update({
                    facilityPreference:facilityPreference,
                     updatedDt:updatedDt,
@@ -430,13 +419,7 @@ const addToCart = async (req,res)=>{
             }
             // else add the item
             else{
-                 facilityPreference={
-                    totalMembers:totalMembers,
-                    bookingDate:bookingDate,
-                    startTime:startTime,
-                    duration:duration,
-                    price:price,
-                }
+           
                 let createAddToCart = await cartItem.create({
                     cartId:isUserExist.cartId,
                     entityId:entityId,
@@ -473,10 +456,43 @@ const addToCart = async (req,res)=>{
 
 // view cart by useID
 
-const viewCartByUserId = async(req,res)=>{
+let viewCartByUserId = async(req,res)=>{
     try {
         const userId = req.user?.id || 1
-        const{}=req.body
+        let findCartIdByUserId = await cart.findOne({
+            where:{
+            [Op.and]:[{userId: userId},{statusId:1}]
+            }
+        })
+        if(findCartIdByUserId){
+            
+        let findCartItemsWRTCartId = await cartItem.findAll({
+            where:{
+                
+                [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
+                
+             
+            }
+        })
+        if(findCartIdByUserId.length<=0){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:  "Not a single item is associated with the cart"
+              })
+        }
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"These are the cart items",data:findCartItemsWRTCartId
+        })
+
+        }
+        else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:  "Not a single item is associated with the cart"
+            })
+        }
+
+
+        
+
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
@@ -484,11 +500,48 @@ const viewCartByUserId = async(req,res)=>{
         
     }
 }
-// add to cart end here
 
+
+// remove the cart items
+
+let updateCart = async(req,res)=>{
+    try {
+    
+        let userId = req.user?.id
+        let {cartItemId}= req.params.cartItemId
+        let statusId = 0
+
+        let findTheCartIdFromUserId = await cart.findOne({
+            where:{
+                userId:userId
+            }
+        })
+      
+            let removeTheCartItems = await cartItem.update(
+                {statusId:statusId},
+                {where:{
+                    [Op.and]:[{cartItemId:cartItemId,cartId:findTheCartIdFromUserId.cartId}]
+                }
+            })
+
+            if(removeTheCartItems.length>0){
+                return res.status(statusCode.SUCCESS.code).json({
+                    message:"Successfully removed the items"
+                })
+            }
+
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:"Something went wrong"
+        })
+      
+    } catch (err) {
+       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message}) 
+    }
+}
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
     addToCart,
-    viewCartByUserId
+    viewCartByUserId,
+    updateCart
 }
