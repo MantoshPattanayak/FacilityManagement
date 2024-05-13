@@ -84,6 +84,10 @@ db1.languageresources = require("./languageresources.models")(
   DataTypes
 );
 db1.faq = require("./frequentlyaskquestion.models")(sequelize, DataTypes);
+
+db1.cart = require('./cart.models')(sequelize,DataTypes);
+db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
+
 db1.faq.sync({
   force: false,
 });
