@@ -395,7 +395,7 @@ function calculateEndTime(startTime,duration){
 
 
 
-let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)=>{
+let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)=>{
     try {
         console.log(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,'here is the data')
           // if exist then update
@@ -412,6 +412,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
                 }
             }
         )
+        console.log('2',updateTheCart)
         if(updateTheCart.length>0){
 
                return  null;
@@ -428,7 +429,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
         }
         // else add the item
         else{
-       
+            console.log('add to cart')
             let createAddToCart = await cartItem.create({
                 cartId:isUserExist.cartId,
                 entityId:entityId,
@@ -469,7 +470,7 @@ let addToCart = async (req,res)=>{
         let updatedDt = new Date();
         let statusId =1
         let {entityId, entityTypeId, facilityPreference} = req.body
-
+        console.log(typeof(entityId),'req.body',entityTypeId==2)
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
         
         // first checks in the carts table consist of the user id 
@@ -487,7 +488,8 @@ let addToCart = async (req,res)=>{
             })
         }
         // then check entity wise where the user wants to add the data
-        if(entityTypeId = 1){
+        if(entityTypeId == 1){
+            console.log('parks')
             // if parks
             let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
 
@@ -518,7 +520,8 @@ let addToCart = async (req,res)=>{
                 // }
 
             
-                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)
+                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
+                console.log('findthe resultttttt',findTheResult)
                 if(findTheResult?.error){
                     return res.status(statusCode.BAD_REQUEST.code).json({
                         message:findTheResult.error
@@ -529,17 +532,25 @@ let addToCart = async (req,res)=>{
                     return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
                 }
         }
-        else if(entityTypeId = 2){
+        else if(entityTypeId == 2){
             // if playgrounds
+            console.log('playgrounds')
+
          
               // first check the item already exist or not
               let checkIsItemAlreadyExist = await cartItem.findOne({
-                  where:{
-                    [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{entityTypeId:entityTypeId},{bookingDate:facilityPreference.bookingDate},{startTime:{
-                      [Op.gte]:[facilityPreference.startTime]
-                    }},{startTime:{
-                      [Op.lte]:[facilityPreference.endTime]
-                    }}]
+                where:{
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+                  ]
+                }
+                , 
+                replacements: {
+                    bookingDate: facilityPreference.bookingDate,
+                    startTime: facilityPreference.startTime,
+                    endTime: facilityPreference.endTime
                   }
               }) 
               // if exist then update
@@ -551,7 +562,7 @@ let addToCart = async (req,res)=>{
                 //     price:price,
                 //   }
                
-                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)
+                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
                 if(findTheResult?.error){
                     return res.status(statusCode.BAD_REQUEST.code).json({
                         message:findTheResult.error
@@ -564,17 +575,18 @@ let addToCart = async (req,res)=>{
 
 
         }
-        else if(entityTypeId = 3){
+        else if(entityTypeId == 3){
             // if Multipurpose ground
            
         }
-        else if(entityTypeId = 4){
+        else if(entityTypeId == 4){
             // if blueway location
         }
-        else if(entityTypeId = 5){
+        else if(entityTypeId == 5){
             //  if greenways
         }
-        else if(entityTypeId= 6){
+        else if(entityTypeId ==  6){
+            console.log('1')
 
             // if events
                 // facilityPreference = { 
@@ -587,15 +599,23 @@ let addToCart = async (req,res)=>{
 
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
-                  [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{entityTypeId:entityTypeId},{bookingDate:facilityPreference.bookingDate},{startTime:{
-                    [Op.gte]:[facilityPreference.startTime]
-                  }},{startTime:{
-                    [Op.lte]:[momentEndTime]
-                  }}]
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+                  ]
                 }
-            })
+                , 
+                replacements: {
+                    bookingDate: facilityPreference.bookingDate,
+                    startTime: facilityPreference.startTime,
+                    endTime: momentEndTime
+                  }
+            })        
+                // console.log('check is item  already exist',checkIsItemAlreadyExist)
+
             
-            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)
+            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
             if(findTheResult?.error){
                 return res.status(statusCode.BAD_REQUEST.code).json({
                     message:findTheResult.error
