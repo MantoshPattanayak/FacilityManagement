@@ -389,7 +389,7 @@ let addToCart = async (req,res)=>{
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId =1
-        const {entityId, entityTypeId, facilityPreference} = req.body
+        let {entityId, entityTypeId, facilityPreference} = req.body
 
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
         
