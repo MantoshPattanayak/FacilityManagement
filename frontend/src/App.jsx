@@ -84,11 +84,16 @@ import Add_Card from "./components/Public/Add_To_Card/AddCard";
 import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
+// import provider for connect to our app
+import { Provider } from 'react-redux';
+import appStore from "./utils/appStore";
+
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
     <>
       {/* PUBLIC SECTION */}
+      <Provider store={appStore}>
       <BrowserRouter>
         <div>
           {/* <AdminHeader /> */}
@@ -378,6 +383,8 @@ function App() {
           {/* <Footer /> */}
         </div>
       </BrowserRouter>
+      </Provider>
+    
     </>
   );
 }
