@@ -7,6 +7,7 @@ const Sequelize = db.Sequelize;
 const bcrypt = require("bcrypt");
 const { decrypt } = require("../../../middlewares/decryption.middlewares");
 const { encrypt } = require("../../../middlewares/encryption.middlewares");
+const { where } = require("sequelize");
 const facilityType = db.facilitytype;
 const updatepublic_user = async (req, res) => {
   try {
@@ -22,26 +23,38 @@ const updatepublic_user = async (req, res) => {
       altPhoneNo,
       emailId,
       profilePicture,
-      lastLogin,
     } = req.body;
 
     let params = {};
-    if (existingUserName) {
+    const existuserName = await user.findOne({
+      where: { userName: userName },
+    });
+    const existingphoneNo = await user.findOne({
+      where: { phoneNo: phoneNo },
+    });
+    const existingaltPhoneNo = await user.findOne({
+      where: { altPhoneNo: altPhoneNo },
+    });
+    const existingemailId = await user.findOne({
+      where: { emailId: emailId },
+    });
+
+    if (existuserName) {
       return res
         .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same user_name" });
-    } else if (existingPhoneNo) {
+        .json({ message: "User already exist same userName" });
+    } else if (existingphoneNo) {
       return res
         .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same phone_no" });
-    } else if (existingAlternatePhoneNo) {
+        .json({ message: "User already exist same phoneNo" });
+    } else if (existingaltPhoneNo) {
       return res
         .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same alt_phone_no" });
-    } else if (existingUserEmail) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist with given email_id " });
+        .json({ message: "User already exist same altPhoneNo" });
+    } else if (existingemailId) {
+      return res.status(statusCode.CONFLICT.code).json({
+        message: "User already exist with given emailId",
+      });
     }
     let findPublicuserWithTheGivenId = await public_user.findOne({
       where: {
@@ -66,10 +79,6 @@ const updatepublic_user = async (req, res) => {
       params.altPhoneNo = altPhoneNo;
     } else if (findPublicuserWithTheGivenId.emailId != emailId) {
       params.emailId = emailId;
-    } else if (findPublicuserWithTheGivenId.profilePicture != profilePicture) {
-      params.profilePicture = profilePicture;
-    } else if (findPublicuserWithTheGivenId.lastLogin != lastLogin) {
-      params.lastLogin = lastLogin;
     }
     let [updatepublicUserCount, updatepublicUserData] =
       await public_user.update(params, {

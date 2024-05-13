@@ -8,7 +8,7 @@ const port = process.env.PORT || 7100;
 const cors = require("cors");
 var cookieParser = require("cookie-parser");
 let api_version = process.env.API_VERSION;
-const uploadDir = process.env.UPLOAD_DIR
+const uploadDir = process.env.UPLOAD_DIR;
 const {
   requestLogger,
   errorLogger,
@@ -48,6 +48,8 @@ const hosteventdetailsroute = require("./routes/api/" +
 const reviewEventBookingRoute = require("./routes/api/" +
   api_version +
   "/activity/reviewEventBooking");
+const faqRoute = require("./routes/api/" + api_version + "/activity/faq");
+
 const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
 const razorPayPayment = require("./routes/api/" +
@@ -58,11 +60,9 @@ const languageContent = require("./routes/api/" +
   api_version +
   "/configuration/languageContent");
 const publicNotifications = require("./routes/api/" +
-api_version +
-"/activity/publicnotifications");
-const reports = require("./routes/api/" +
-api_version +
-"/reports/reports");
+  api_version +
+  "/activity/publicnotifications");
+const reports = require("./routes/api/" + api_version + "/reports/reports");
 
 console.log(port, "port");
 
@@ -114,13 +114,14 @@ app.use("/languageContent", languageContent);
 
 //activity routes
 app.use("/reviewEvents", reviewEventBookingRoute);
-app.use('/publicNotifications', publicNotifications);
-app.use('/reports', reports);
+app.use("/faq", faqRoute);
+app.use("/publicNotifications", publicNotifications);
+app.use("/reports", reports);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
-app.use('/static', express.static(uploadDir));
+app.use("/static", express.static(uploadDir));
 
 module.exports = {
   app,

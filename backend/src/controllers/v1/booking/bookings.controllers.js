@@ -13,9 +13,10 @@ const cart = db.cart
 const cartItem = db.cartItem
 const useractivitypreferences = db.userActivityPreference
 const { Op } = require('sequelize');
- 
+// events booking table
+const eventBooking = db.eventBookings;
 const moment = require('moment')
-let parkBooking = async (req, res) => {
+let parkBookingTestForPark = async (req, res) => {
     try {
         /**
          * @facilitytype park
@@ -45,23 +46,23 @@ let parkBooking = async (req, res) => {
    
 
         // Function to add hours to a time string
-        function addHoursToTime(timeString, hoursToAdd) {
-            // Parse the time string into hours and minutes
-            const [hours, minutes] = timeString.split(':').map(Number);
-            console.log({hours, minutes, hoursToAdd});
+        // function addHoursToTime(timeString, hoursToAdd) {
+        //     // Parse the time string into hours and minutes
+        //     const [hours, minutes] = timeString.split(':').map(Number);
+        //     console.log({hours, minutes, hoursToAdd});
 
-            // Add the hours
-            let newHours = (hours + hoursToAdd) % 24;
+        //     // Add the hours
+        //     let newHours = (hours + hoursToAdd) % 24;
 
-            // Ensure newHours is in the range [0, 23]
-            newHours = newHours < 0 ? newHours + 24 : newHours;
+        //     // Ensure newHours is in the range [0, 23]
+        //     newHours = newHours < 0 ? newHours + 24 : newHours;
 
-            // Format the result back into a time string
-            const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            console.log(newTimeString);
+        //     // Format the result back into a time string
+        //     const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        //     console.log(newTimeString);
 
-            return newTimeString;
-        }
+        //     return newTimeString;
+        // }
 
         const endTime = addHoursToTime(startTime, Number(durationInHours) );
 
@@ -168,8 +169,211 @@ let parkBookingFormInitialData = async (req, res) => {
     }
 }
 
+// Function to add hours to a time string
+function addHoursToTime(timeString, hoursToAdd) {
+    // Parse the time string into hours and minutes
+    const [hours, minutes] = timeString.split(':').map(Number);
+    console.log({hours, minutes, hoursToAdd});
 
+    // Add the hours
+    let newHours = (hours + hoursToAdd) % 24;
 
+    // Ensure newHours is in the range [0, 23]
+    newHours = newHours < 0 ? newHours + 24 : newHours;
+
+    // Format the result back into a time string
+    const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    console.log(newTimeString);
+
+    return newTimeString;
+}
+
+/**
+ * book park, playgrounds, multipurpose grounds, events API
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+let parkBooking = async (req, res) => {
+    try {
+        let {
+            entityId,
+            entityTypeId,
+            facilityPreference
+        } = req.body;
+
+        /**
+         * 1	PARKS 
+         * 2	PLAYGROUNDS
+         * 3	MULTIPURPOSE_GROUND
+         * 6	EVENTS
+         */
+        if(entityTypeId == 1){
+            bookingTransactionForPark(entityId, facilityPreference);
+        }
+        else if(entityTypeId == 2){
+            bookingTransactionForPlaygrounds(entityId, facilityPreference);
+        }
+        else if(entityTypeId == 3){
+            bookingTransactionForMPgrounds(entityId, facilityPreference);
+        }
+        else if(entityTypeId == 6) {
+            bookingTransactionForEvents(entityId, facilityPreference);
+        }
+        else{
+            res.status(statusCode.BAD_REQUEST.code).json({
+                message: 'Booking failed.'
+            })
+        }
+
+        async function bookingTransactionForPark(facilityId, bookingData) {
+            let transaction;
+            try {
+                transaction = await sequelize.transaction();
+
+                const newParkBooking = await facilitybookings.create({
+                    facilityId: facilityId,
+                    totalMembers: bookingData.totalMembers,
+                    otherActivities: bookingData.otherActivities,
+                    bookingDate: bookingData.bookingDate,
+                    startDate: bookingData.startTime,
+                    endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
+                    amount: bookingData.amount,
+                    statusId: 1,
+                    paymentstatus: '',
+                    createdBy: userId
+                }, { transaction });
+
+                console.log('newParkBooking', newParkBooking);
+
+                for (let i = 0; i < bookingData.activityPreference.length; i++) {
+                    const newParkBookingActivityPreference = await userbookingactivities.create({
+                        facilityBookingId: newParkBooking.dataValues.facilityBookingId,
+                        userActivityId: bookingData.activityPreference[i],
+                        statusId: 1,
+                        createdBy: userId
+                    }, { transaction });
+                }
+
+                await transaction.commit();
+
+                res.status(statusCode.SUCCESS.code).json({
+                    message: 'Park booking done successfully',
+                    data: newParkBooking
+                })
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+
+                console.error('Error creating user park booking:', error);
+                res.status(statusCode.BAD_REQUEST.code).json({
+                    message: 'Park booking failed!',
+                    data: []
+                })
+            }
+        }
+
+        async function bookingTransactionForPlaygrounds(facilityId, bookingData) {
+            /** body params
+             * playerLimit: '',
+             * sports: '',
+             * bookingDate: '',
+             * startTime: '',
+             * endTime: '',
+             * amount: '',
+             */
+            let transaction;
+            try {
+                transaction = await sequelize.transaction();
+
+                const newPlaygroundBooking = await facilitybookings.create({
+                    facilityId: facilityId,
+                    totalMembers: bookingData.playerLimit,
+                    sportsName: bookingData.sports,
+                    bookingDate: bookingData.bookingDate,
+                    startDate: bookingData.startTime,
+                    endDate: bookingData.endTime,
+                    amount: bookingData.amount,
+                    statusId: 1,
+                    paymentstatus: '',
+                    createdBy: userId
+                }, { transaction });
+
+                console.log('newPlaygroundBooking', newPlaygroundBooking);
+
+                await transaction.commit();
+
+                res.status(statusCode.SUCCESS.code).json({
+                    message: 'Playground booking done successfully',
+                    data: newPlaygroundBooking
+                })
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+
+                console.error('Error creating user park booking:', error);
+                res.status(statusCode.BAD_REQUEST.code).json({
+                    message: 'Park booking failed!',
+                    data: []
+                })
+            }
+        }
+
+        async function bookingTransactionForMPgrounds(bookingData) {
+
+        }
+
+        async function bookingTransactionForEvents(eventId, bookingData) {
+            /**
+             * totalMembers: '',
+             * bookingDate: '',
+             * startTime: '',
+             * duration: '',
+             * amount: '',
+             * eventId: 1
+             */
+            let transaction;
+            try {
+                transaction = await sequelize.transaction();
+
+                const eventBookingData = await eventBooking.create({
+                    eventId: eventId,
+                    totalMembers: bookingData.totalMembers,
+                    bookingDate: bookingData.bookingDate,
+                    startDate: bookingData.startTime,
+                    endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
+                    amount: bookingData.amount,
+                    statusId: 1,
+                    paymentstatus: '',
+                    createdBy: userId
+                }, { transaction });
+
+                console.log('eventBooking', eventBookingData);
+
+                await transaction.commit();
+
+                res.status(statusCode.SUCCESS.code).json({
+                    message: 'Event booking done successfully',
+                    data: eventBooking
+                })
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+
+                console.error('Error creating user park booking:', error);
+                res.status(statusCode.BAD_REQUEST.code).json({
+                    message: 'Park booking failed!',
+                    data: []
+                })
+            }
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        });
+    }
+}
 //  add to cart and cart items table
 // create cart
 // view cart by user id 
@@ -185,9 +389,8 @@ let addToCart = async (req,res)=>{
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId =1
-        let {entityId, entityTypeId, facilityPreference} = req.body
+        const {entityId, entityTypeId, facilityPreference} = req.body
 
-        console.log(req.body,'req.body')
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
         
         // first checks in the carts table consist of the user id 
@@ -201,8 +404,7 @@ let addToCart = async (req,res)=>{
             isUserExist = await cart.create({
                 userId:userId,
                 createdDt:createdDt,
-                updatedDt:updatedDt,
-                statusId:1
+                updatedDt:updatedDt
             })
         }
         // then check entity wise where the user wants to add the data
@@ -232,7 +434,6 @@ let addToCart = async (req,res)=>{
                     endTime: momentEndTime
                   }
             }) 
-            console.log(facilityPreference.startTime,'startTime',checkIsItemAlreadyExist)
             // if exist then update
             if(checkIsItemAlreadyExist){
                 // facilityPreference = {
@@ -243,7 +444,6 @@ let addToCart = async (req,res)=>{
                 //     activityPreference:facilityPreference.activityPreference,
                 //     price:facilityPreference.price
                 // }
-                // put booking date if the data is not present
 
                 let updateTheCart = await cartItem.update({
                     facilityPreference:facilityPreference,
@@ -277,7 +477,6 @@ let addToCart = async (req,res)=>{
                     entityId:entityId,
                     entityTypeId:entityTypeId,
                     facilityPreference:facilityPreference,
-                    statusId:1,
                     createdDt:createdDt,
                     updatedDt:updatedDt,
                     createdBy:userId,
@@ -352,7 +551,6 @@ let addToCart = async (req,res)=>{
                       entityId:entityId,
                       entityTypeId:entityTypeId,
                       facilityPreference:facilityPreference,
-                      statusId:1,
                       createdDt:createdDt,
                       updatedDt:updatedDt,
                       createdBy:userId,
@@ -442,7 +640,6 @@ let addToCart = async (req,res)=>{
                     entityId:entityId,
                     entityTypeId:entityTypeId,
                     facilityPreference:facilityPreference,
-                    statusId:1,
                     createdDt:createdDt,
                     updatedDt:updatedDt,
                     createdBy:userId,
@@ -476,15 +673,12 @@ let addToCart = async (req,res)=>{
 
 let viewCartByUserId = async(req,res)=>{
     try {
-        console.log('12')
         const userId = req.user?.id || 1
         let findCartIdByUserId = await cart.findOne({
             where:{
             [Op.and]:[{userId: userId},{statusId:1}]
             }
         })
-
-        // console.log(findCartIdByUserId,'findCartByUserId')
         if(findCartIdByUserId){
             console.log(findCartIdByUserId.cartId,'cartId')
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
@@ -525,7 +719,7 @@ let viewCartByUserId = async(req,res)=>{
               })
         }
         return res.status(statusCode.SUCCESS.code).json({
-            message:"These are the cart items",data:findCartItemsWRTCartId, count:findCartItemsWRTCartId.length
+            message:"These are the cart items",data:findCartItemsWRTCartId
         })
 
         }
@@ -545,9 +739,6 @@ let viewCartByUserId = async(req,res)=>{
         
     }
 }
-
-// view Cart with respect to cart item id
-
 
 
 // remove the cart items
@@ -586,7 +777,6 @@ let updateCart = async(req,res)=>{
        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message}) 
     }
 }
-
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
