@@ -2,6 +2,8 @@ const db = require("../../../models/index");
 const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
+const facilitytype = db.facilitytype;
+const facilities = db.facilities;
 const role = db.rolemaster;
 const facilitybookings = db.facilitybookings;
 const userbookingactivities = db.userbookingactivities;
@@ -212,15 +214,23 @@ let addToCart = async (req,res)=>{
             let momentEndTime = momentStartTime.add(momentDuration)
             // Format the total momentEndTime back into HH:mm:ss format
             momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
+
+            console.log('values', facilityPreference.bookingDate,facilityPreference.startTime,momentEndTime )
             // first check the item already exist or not
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
-                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId},{bookingDate:facilityPreference.bookingDate},{startTime:{
-                    [Op.gte]:[facilityPreference.startTime]
-                  }},{startTime:{
-                    [Op.lte]:[momentEndTime]
-                  }}]
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+                  ]
                 }
+                , 
+                replacements: {
+                    bookingDate: facilityPreference.bookingDate,
+                    startTime: facilityPreference.startTime,
+                    endTime: momentEndTime
+                  }
             }) 
             console.log(facilityPreference.startTime,'startTime',checkIsItemAlreadyExist)
             // if exist then update
@@ -477,14 +487,36 @@ let viewCartByUserId = async(req,res)=>{
         // console.log(findCartIdByUserId,'findCartByUserId')
         if(findCartIdByUserId){
             console.log(findCartIdByUserId.cartId,'cartId')
-        let findCartItemsWRTCartId = await cartItem.findAll({
-            where:{
+            let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
+            amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId `)
+        //     let findCartItemsWRTCartId = await cartItem.findAll({
+        //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
+        //     where:{
                 
-                [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
+        //         [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
                 
              
-            }
-        })
+        //     },
+        //     include: [
+        //         {
+        //           model: facilitytype,
+        //           attributes: ["code"],
+        //           on: {
+        //             '$cartItem.entityTypeId$': sequelize.col('facilitytype.facilityTypeId')
+        //           },
+        //           required: true // true
+        //         },
+        //         {
+        //           model: facilities,
+        //           attributes: ["facilityName"],
+        //           on:{
+        //             '$cartItem.entityId$':sequelize.col('facilities.facilityId')
+        //           },
+        //           required: true //true
+        //         }
+        //       ],
+         
+        // })
 
         console.log(findCartItemsWRTCartId,'findCartIdByUserId')
         if(findCartIdByUserId.length<=0){
