@@ -381,6 +381,17 @@ let parkBooking = async (req, res) => {
 
 
 // create cart
+function calculateEndTime(startTime,duration){
+
+    let momentStartTime = moment.duration(startTime);
+    let momentDuration = moment.duration(duration);
+    // adding the duration
+    let momentEndTime = momentStartTime.add(momentDuration)
+    // Format the total momentEndTime back into HH:mm:ss format
+    momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
+    return momentEndTime;
+}
+
 
 let addToCart = async (req,res)=>{
     try {
@@ -410,12 +421,7 @@ let addToCart = async (req,res)=>{
         // then check entity wise where the user wants to add the data
         if(entityTypeId = 1){
             // if parks
-            let momentStartTime = moment.duration(facilityPreference.startTime);
-            let momentDuration = moment.duration(facilityPreference.duration);
-            // adding the duration
-            let momentEndTime = momentStartTime.add(momentDuration)
-            // Format the total momentEndTime back into HH:mm:ss format
-            momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
+            let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
 
             console.log('values', facilityPreference.bookingDate,facilityPreference.startTime,momentEndTime )
             // first check the item already exist or not
@@ -584,13 +590,8 @@ let addToCart = async (req,res)=>{
         }
         else if(entityTypeId= 6){
             // if events
-            let momentStartTime = moment.duration(facilityPreference.startTime);
-            let momentDuration = moment.duration(facilityPreference.duration);
-            // adding the duration
-            let momentEndTime = momentStartTime.add(momentDuration)
-            // Format the total momentEndTime back into HH:mm:ss format
-            momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
-            // first check the item already exist or not
+            let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
+
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
                   [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{entityTypeId:entityTypeId},{bookingDate:facilityPreference.bookingDate},{startTime:{
@@ -720,7 +721,7 @@ let viewCartByUserId = async(req,res)=>{
               })
         }
         return res.status(statusCode.SUCCESS.code).json({
-            message:"These are the cart items",data:findCartItemsWRTCartId
+            message:"These are the cart items",data:findCartItemsWRTCartId, count:findCartItemsWRTCartId.length
         })
 
         }
