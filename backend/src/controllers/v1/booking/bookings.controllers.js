@@ -183,8 +183,9 @@ let addToCart = async (req,res)=>{
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId =1
-        const {entityId, entityTypeId, facilityPreference} = req.body
+        let {entityId, entityTypeId, facilityPreference} = req.body
 
+        console.log(req.body,'req.body')
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
         
         // first checks in the carts table consist of the user id 
@@ -230,6 +231,7 @@ let addToCart = async (req,res)=>{
                 //     activityPreference:facilityPreference.activityPreference,
                 //     price:facilityPreference.price
                 // }
+                // put booking date if the data is not present
 
                 let updateTheCart = await cartItem.update({
                     facilityPreference:facilityPreference,

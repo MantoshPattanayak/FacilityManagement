@@ -13,7 +13,7 @@ module.exports = (sequelize,DataTypes)=>{
         entityId:{
             type:DataTypes.INTEGER
         },
-        entityTypedId:{
+        entityTypeId:{
             type:DataTypes.INTEGER
         },
         facilityPreferences:{
