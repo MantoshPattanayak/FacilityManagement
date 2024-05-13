@@ -393,6 +393,74 @@ function calculateEndTime(startTime,duration){
 }
 
 
+
+
+let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)=>{
+    try {
+        console.log(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,'here is the data')
+          // if exist then update
+          if(checkIsItemAlreadyExist){
+            let updateTheCart = await cartItem.update({
+               facilityPreference:facilityPreference,
+                updatedDt:updatedDt,
+                updatedBy:userId
+            },
+            {
+                where:
+                {
+                    cartItemId:checkIsItemAlreadyExist.cartItemId
+                }
+            }
+        )
+        if(updateTheCart.length>0){
+
+               return  null;
+          
+         
+        }
+        else{
+                return {
+                    error:"Item is not added to the cart"
+                }
+        
+        }
+            
+        }
+        // else add the item
+        else{
+       
+            let createAddToCart = await cartItem.create({
+                cartId:isUserExist.cartId,
+                entityId:entityId,
+                entityTypeId:entityTypeId,
+                facilityPreference:facilityPreference,
+                statusId:statusId,
+                createdDt:createdDt,
+                updatedDt:updatedDt,
+                createdBy:userId,
+                updatedBy:userId
+            })
+
+
+            if(createAddToCart){
+                return null
+                  
+               
+            }
+            else{
+              
+                return {error: "Item is not added to the cart"}
+                
+            }
+        }
+    } catch (err) {
+        return {
+            error:err.message
+        }
+    }
+}
+
+
 let addToCart = async (req,res)=>{
     try {
         console.log('1')
@@ -440,8 +508,6 @@ let addToCart = async (req,res)=>{
                     endTime: momentEndTime
                   }
             }) 
-            // if exist then update
-            if(checkIsItemAlreadyExist){
                 // facilityPreference = {
                 //     totalMembers:facilityPreference.totalMembers,
                 //     otherActivities:facilityPreference.otherActivities,
@@ -451,57 +517,17 @@ let addToCart = async (req,res)=>{
                 //     price:facilityPreference.price
                 // }
 
-                let updateTheCart = await cartItem.update({
-                    facilityPreference:facilityPreference,
-                    updatedDt:updatedDt,
-                    updatedBy:userId
-                },
-                {
-                    where:
-                    {
-                        cartItemId:checkIsItemAlreadyExist.cartItemId
-                    }
-                }
-            )
-            if(updateTheCart.length>0){
-                return res.status(statusCode.SUCCESS.code).json({
-                    message: "Item successfully added to cart"
-                })
-            }
-            else{
-                return res.status(statusCode.BAD_REQUEST.code).json({
-                    message:"Item is not added to the cart"
-                })
-            }
-                
-            }
-            // else add the item
-            else{
-        
-                let createAddToCart = await cartItem.create({
-                    cartId:isUserExist.cartId,
-                    entityId:entityId,
-                    entityTypeId:entityTypeId,
-                    facilityPreference:facilityPreference,
-                    createdDt:createdDt,
-                    updatedDt:updatedDt,
-                    createdBy:userId,
-                    updatedBy:userId
-                })
-
-
-                if(createAddToCart){
-                    return res.status(statusCode.SUCCESS.code).json({
-                        message: "Item successfully added to cart"
+            
+                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)
+                if(findTheResult?.error){
+                    return res.status(statusCode.BAD_REQUEST.code).json({
+                        message:findTheResult.error
                     })
+                    
                 }
                 else{
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:"Item is not added to the cart"
-                    })
+                    return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
                 }
-            }
-
         }
         else if(entityTypeId = 2){
             // if playgrounds
@@ -517,7 +543,6 @@ let addToCart = async (req,res)=>{
                   }
               }) 
               // if exist then update
-              if(checkIsItemAlreadyExist){
                 //   facilityPreference = {
                 //     playersLimit:playersLimit,
                 //     sports:sports,
@@ -525,57 +550,18 @@ let addToCart = async (req,res)=>{
                 //     endTime:endTime,
                 //     price:price,
                 //   }
-                  let updateTheCart = await cartItem.update({
-                      facilityPreference:facilityPreference,
-                      updatedDt:updatedDt,
-                      updatedBy:userId
-                  },
-                  {
-                      where:
-                      {
-                          cartItemId:checkIsItemAlreadyExist.cartItemId
-                      }
-                  }
-              )
-              if(updateTheCart.length>0){
-                  return res.status(statusCode.SUCCESS.code).json({
-                      message: "Item successfully added to cart"
-                  })
-              }
-              else{
-                  return res.status(statusCode.BAD_REQUEST.code).json({
-                      message:"Item is not added to the cart"
-                  })
-              }
-                  
-              }
-              // else add the item
-              else{
                
-                  let createAddToCart = await cartItem.create({
-                      cartId:isUserExist.cartId,
-                      entityId:entityId,
-                      entityTypeId:entityTypeId,
-                      facilityPreference:facilityPreference,
-                      createdDt:createdDt,
-                      updatedDt:updatedDt,
-                      createdBy:userId,
-                      updatedBy:userId
-                  })
-  
-  
-                  if(createAddToCart){
-                      return res.status(statusCode.SUCCESS.code).json({
-                          message: "Item successfully added to cart"
-                      })
-                  }
-                  else{
-                      return res.status(statusCode.BAD_REQUEST.code).json({
-                          message:"Item is not added to the cart"
-                      })
-                  }
-              }
-  
+                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)
+                if(findTheResult?.error){
+                    return res.status(statusCode.BAD_REQUEST.code).json({
+                        message:findTheResult.error
+                    })
+                    
+                }
+                else{
+                    return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
+                }
+
 
         }
         else if(entityTypeId = 3){
@@ -589,7 +575,14 @@ let addToCart = async (req,res)=>{
             //  if greenways
         }
         else if(entityTypeId= 6){
+
             // if events
+                // facilityPreference = { 
+            //     totalMembers:totalMembers,
+            //     startTime:startTime,
+            //     duration:duration,
+            //     price:price
+            // }
             let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
 
             let checkIsItemAlreadyExist = await cartItem.findOne({
@@ -600,64 +593,17 @@ let addToCart = async (req,res)=>{
                     [Op.lte]:[momentEndTime]
                   }}]
                 }
-            }) 
-            // if exist then update
-            if(checkIsItemAlreadyExist){
-                // facilityPreference = { 
-                //     totalMembers:totalMembers,
-                //     startTime:startTime,
-                //     duration:duration,
-                //     price:price
-                // }
-                let updateTheCart = await cartItem.update({
-                   facilityPreference:facilityPreference,
-                    updatedDt:updatedDt,
-                    updatedBy:userId
-                },
-                {
-                    where:
-                    {
-                        cartItemId:checkIsItemAlreadyExist.cartItemId
-                    }
-                }
-            )
-            if(updateTheCart.length>0){
-                return res.status(statusCode.SUCCESS.code).json({
-                    message: "Item successfully added to cart"
-                })
-            }
-            else{
+            })
+            
+            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId)
+            if(findTheResult?.error){
                 return res.status(statusCode.BAD_REQUEST.code).json({
-                    message:"Item is not added to the cart"
+                    message:findTheResult.error
                 })
-            }
                 
             }
-            // else add the item
             else{
-           
-                let createAddToCart = await cartItem.create({
-                    cartId:isUserExist.cartId,
-                    entityId:entityId,
-                    entityTypeId:entityTypeId,
-                    facilityPreference:facilityPreference,
-                    createdDt:createdDt,
-                    updatedDt:updatedDt,
-                    createdBy:userId,
-                    updatedBy:userId
-                })
-
-
-                if(createAddToCart){
-                    return res.status(statusCode.SUCCESS.code).json({
-                        message: "Item successfully added to cart"
-                    })
-                }
-                else{
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:"Item is not added to the cart"
-                    })
-                }
+                return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
             }
             
         }
