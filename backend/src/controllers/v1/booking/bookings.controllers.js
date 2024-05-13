@@ -682,7 +682,8 @@ let viewCartByUserId = async(req,res)=>{
         if(findCartIdByUserId){
             console.log(findCartIdByUserId.cartId,'cartId')
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
-            amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId `)
+            amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId `,
+            { type: sequelize.QueryTypes.SELECT })
         //     let findCartItemsWRTCartId = await cartItem.findAll({
         //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
         //     where:{
@@ -746,8 +747,8 @@ let viewCartByUserId = async(req,res)=>{
 let updateCart = async(req,res)=>{
     try {
     
-        let userId = req.user?.id
-        let {cartItemId}= req.params.cartItemId
+        let userId = req.user?.id||1
+        let cartItemId = req.params.cartItemId
         let statusId = 0
 
         let findTheCartIdFromUserId = await cart.findOne({
@@ -755,13 +756,16 @@ let updateCart = async(req,res)=>{
                 userId:userId
             }
         })
+        console.log(findTheCartIdFromUserId,'fjd',cartItemId,'fd',findTheCartIdFromUserId.cartId)
       
             let removeTheCartItems = await cartItem.update(
                 {statusId:statusId},
-                {where:{
+                {
+                    where:{
                     [Op.and]:[{cartItemId:cartItemId,cartId:findTheCartIdFromUserId.cartId}]
                 }
             })
+            console.log(removeTheCartItems,'cart items')
 
             if(removeTheCartItems.length>0){
                 return res.status(statusCode.SUCCESS.code).json({
@@ -777,10 +781,36 @@ let updateCart = async(req,res)=>{
        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message}) 
     }
 }
+
+// view cart w.r.t to cart Item id
+let viewCartItemsWRTCartItemId = async(req,res)=>{
+    try {
+        let cartItemId = req.params.cartItemId;
+
+        let viewTheCartItemData = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
+        amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.cartItemId = ? `,
+        {
+            replacements: [cartItemId],
+            type: sequelize.QueryTypes.SELECT
+        })
+        
+        return res.status(statusCode.SUCCESS.code).json({
+            message:
+                "Here are the cart items data"
+            ,
+            data:viewTheCartItemData
+        })
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
     addToCart,
     viewCartByUserId,
-    updateCart
+    updateCart,
+    viewCartItemsWRTCartItemId
 }
