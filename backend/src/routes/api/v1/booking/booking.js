@@ -10,4 +10,11 @@ router.get('/park-book-initialdata', booking.parkBookingFormInitialData);
 
 router.post('/addToCart',booking.addToCart)
 
+router.get('/viewCartByUserId',booking.viewCartByUserId)
+
+router.put('/updateCart/:cartItemId',booking.updateCart)
+
+router.get('/viewCartItemsWRTCartItemId/:cartItemId',booking.viewCartItemsWRTCartItemId)
+
+
 module.exports = router

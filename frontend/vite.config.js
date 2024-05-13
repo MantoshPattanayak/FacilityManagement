@@ -24,5 +24,8 @@ export default defineConfig({
       },
     outDir: '../dist/frontend',
     emptyOutDir: true
-  }
+  },
+  optimizeDeps: {
+    exclude: ['node_modules', 'dist', 'build'], // Exclude directories from being watched
+  },
 })

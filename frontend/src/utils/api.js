@@ -73,7 +73,8 @@ const api = {
    VIEW_BOOKINGS_API: '/userDetails/profile/viewBookings', //post fromDate, toDate, bookingStatus, facilityType, sortingOrder
    FETCH_BOOKINGS_INITIAL_FILTERDATA_API: '/userDetails/profile/initalFilterDataForBooking',   //get
 
-
+   //EVENTS Section
+   VIEW_EVENTS_LIST_API: '/eventactivites/viewEventactivities',   // post givenReq
 }
 
 export default api;

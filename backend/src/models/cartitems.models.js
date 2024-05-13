@@ -1,6 +1,7 @@
+
 module.exports = (sequelize,DataTypes)=>{
 
-    const cartItem = sequelize.define('cartItem',{
+     const cartItem = sequelize.define('cartitem',{
         cartItemId:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
@@ -13,42 +14,11 @@ module.exports = (sequelize,DataTypes)=>{
         entityId:{
             type:DataTypes.INTEGER
         },
-        entityTypedId:{
+        entityTypeId:{
             type:DataTypes.INTEGER
         },
-        facilityPreferences:{
+        facilityPreference:{
             type:DataTypes.JSON
-        },
-        totalMembers:{
-            type:DataTypes.INTEGER
-        },
-        activityPreference:{
-            type:DataTypes.STRING(255)
-        },
-        otherActivities:{
-            type:DataTypes.STRING(255)
-        },
-        bookingDate:{
-            type:DataTypes.DATE
-        },
-        startTime:{
-            type:DataTypes.TIME
-        },
-        endTime:{
-            type:DataTypes.TIME
-        },
-        duration:{
-            type:DataTypes.TIME
-        },
-        playersLimit:{
-            type:DataTypes.INTEGER
-        },
-        sports:{
-            type:DataTypes.INTEGER
-        },
-        price:{
-            type:DataTypes.DECIMAL
-
         },
         statusId:{
             type:DataTypes.INTEGER
@@ -71,5 +41,8 @@ module.exports = (sequelize,DataTypes)=>{
     {
         timestamps:false
     })
+
     return cartItem
     }
+
+

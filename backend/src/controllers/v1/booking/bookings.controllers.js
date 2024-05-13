@@ -2,6 +2,8 @@ const db = require("../../../models/index");
 const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
+const facilitytype = db.facilitytype;
+const facilities = db.facilities;
 const role = db.rolemaster;
 const facilitybookings = db.facilitybookings;
 const userbookingactivities = db.userbookingactivities;
@@ -11,9 +13,10 @@ const cart = db.cart
 const cartItem = db.cartItem
 const useractivitypreferences = db.userActivityPreference
 const { Op } = require('sequelize');
- 
+// events booking table
+const eventBooking = db.eventBookings;
 const moment = require('moment')
-let parkBooking = async (req, res) => {
+let parkBookingTestForPark = async (req, res) => {
     try {
         /**
          * @facilitytype park
@@ -43,23 +46,23 @@ let parkBooking = async (req, res) => {
    
 
         // Function to add hours to a time string
-        function addHoursToTime(timeString, hoursToAdd) {
-            // Parse the time string into hours and minutes
-            const [hours, minutes] = timeString.split(':').map(Number);
-            console.log({hours, minutes, hoursToAdd});
+        // function addHoursToTime(timeString, hoursToAdd) {
+        //     // Parse the time string into hours and minutes
+        //     const [hours, minutes] = timeString.split(':').map(Number);
+        //     console.log({hours, minutes, hoursToAdd});
 
-            // Add the hours
-            let newHours = (hours + hoursToAdd) % 24;
+        //     // Add the hours
+        //     let newHours = (hours + hoursToAdd) % 24;
 
-            // Ensure newHours is in the range [0, 23]
-            newHours = newHours < 0 ? newHours + 24 : newHours;
+        //     // Ensure newHours is in the range [0, 23]
+        //     newHours = newHours < 0 ? newHours + 24 : newHours;
 
-            // Format the result back into a time string
-            const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            console.log(newTimeString);
+        //     // Format the result back into a time string
+        //     const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        //     console.log(newTimeString);
 
-            return newTimeString;
-        }
+        //     return newTimeString;
+        // }
 
         const endTime = addHoursToTime(startTime, Number(durationInHours) );
 
@@ -166,8 +169,211 @@ let parkBookingFormInitialData = async (req, res) => {
     }
 }
 
+// Function to add hours to a time string
+function addHoursToTime(timeString, hoursToAdd) {
+    // Parse the time string into hours and minutes
+    const [hours, minutes] = timeString.split(':').map(Number);
+    console.log({hours, minutes, hoursToAdd});
 
+    // Add the hours
+    let newHours = (hours + hoursToAdd) % 24;
 
+    // Ensure newHours is in the range [0, 23]
+    newHours = newHours < 0 ? newHours + 24 : newHours;
+
+    // Format the result back into a time string
+    const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    console.log(newTimeString);
+
+    return newTimeString;
+}
+
+/**
+ * book park, playgrounds, multipurpose grounds, events API
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+let parkBooking = async (req, res) => {
+    try {
+        let {
+            entityId,
+            entityTypeId,
+            facilityPreference
+        } = req.body;
+
+        /**
+         * 1	PARKS 
+         * 2	PLAYGROUNDS
+         * 3	MULTIPURPOSE_GROUND
+         * 6	EVENTS
+         */
+        if(entityTypeId == 1){
+            bookingTransactionForPark(entityId, facilityPreference);
+        }
+        else if(entityTypeId == 2){
+            bookingTransactionForPlaygrounds(entityId, facilityPreference);
+        }
+        else if(entityTypeId == 3){
+            bookingTransactionForMPgrounds(entityId, facilityPreference);
+        }
+        else if(entityTypeId == 6) {
+            bookingTransactionForEvents(entityId, facilityPreference);
+        }
+        else{
+            res.status(statusCode.BAD_REQUEST.code).json({
+                message: 'Booking failed.'
+            })
+        }
+
+        async function bookingTransactionForPark(facilityId, bookingData) {
+            let transaction;
+            try {
+                transaction = await sequelize.transaction();
+
+                const newParkBooking = await facilitybookings.create({
+                    facilityId: facilityId,
+                    totalMembers: bookingData.totalMembers,
+                    otherActivities: bookingData.otherActivities,
+                    bookingDate: bookingData.bookingDate,
+                    startDate: bookingData.startTime,
+                    endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
+                    amount: bookingData.amount,
+                    statusId: 1,
+                    paymentstatus: '',
+                    createdBy: userId
+                }, { transaction });
+
+                console.log('newParkBooking', newParkBooking);
+
+                for (let i = 0; i < bookingData.activityPreference.length; i++) {
+                    const newParkBookingActivityPreference = await userbookingactivities.create({
+                        facilityBookingId: newParkBooking.dataValues.facilityBookingId,
+                        userActivityId: bookingData.activityPreference[i],
+                        statusId: 1,
+                        createdBy: userId
+                    }, { transaction });
+                }
+
+                await transaction.commit();
+
+                res.status(statusCode.SUCCESS.code).json({
+                    message: 'Park booking done successfully',
+                    data: newParkBooking
+                })
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+
+                console.error('Error creating user park booking:', error);
+                res.status(statusCode.BAD_REQUEST.code).json({
+                    message: 'Park booking failed!',
+                    data: []
+                })
+            }
+        }
+
+        async function bookingTransactionForPlaygrounds(facilityId, bookingData) {
+            /** body params
+             * playerLimit: '',
+             * sports: '',
+             * bookingDate: '',
+             * startTime: '',
+             * endTime: '',
+             * amount: '',
+             */
+            let transaction;
+            try {
+                transaction = await sequelize.transaction();
+
+                const newPlaygroundBooking = await facilitybookings.create({
+                    facilityId: facilityId,
+                    totalMembers: bookingData.playerLimit,
+                    sportsName: bookingData.sports,
+                    bookingDate: bookingData.bookingDate,
+                    startDate: bookingData.startTime,
+                    endDate: bookingData.endTime,
+                    amount: bookingData.amount,
+                    statusId: 1,
+                    paymentstatus: '',
+                    createdBy: userId
+                }, { transaction });
+
+                console.log('newPlaygroundBooking', newPlaygroundBooking);
+
+                await transaction.commit();
+
+                res.status(statusCode.SUCCESS.code).json({
+                    message: 'Playground booking done successfully',
+                    data: newPlaygroundBooking
+                })
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+
+                console.error('Error creating user park booking:', error);
+                res.status(statusCode.BAD_REQUEST.code).json({
+                    message: 'Park booking failed!',
+                    data: []
+                })
+            }
+        }
+
+        async function bookingTransactionForMPgrounds(bookingData) {
+
+        }
+
+        async function bookingTransactionForEvents(eventId, bookingData) {
+            /**
+             * totalMembers: '',
+             * bookingDate: '',
+             * startTime: '',
+             * duration: '',
+             * amount: '',
+             * eventId: 1
+             */
+            let transaction;
+            try {
+                transaction = await sequelize.transaction();
+
+                const eventBookingData = await eventBooking.create({
+                    eventId: eventId,
+                    totalMembers: bookingData.totalMembers,
+                    bookingDate: bookingData.bookingDate,
+                    startDate: bookingData.startTime,
+                    endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
+                    amount: bookingData.amount,
+                    statusId: 1,
+                    paymentstatus: '',
+                    createdBy: userId
+                }, { transaction });
+
+                console.log('eventBooking', eventBookingData);
+
+                await transaction.commit();
+
+                res.status(statusCode.SUCCESS.code).json({
+                    message: 'Event booking done successfully',
+                    data: eventBooking
+                })
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+
+                console.error('Error creating user park booking:', error);
+                res.status(statusCode.BAD_REQUEST.code).json({
+                    message: 'Park booking failed!',
+                    data: []
+                })
+            }
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        });
+    }
+}
 //  add to cart and cart items table
 // create cart
 // view cart by user id 
@@ -175,16 +381,98 @@ let parkBookingFormInitialData = async (req, res) => {
 
 
 // create cart
+function calculateEndTime(startTime,duration){
 
-const addToCart = async (req,res)=>{
+    let momentStartTime = moment.duration(startTime);
+    let momentDuration = moment.duration(duration);
+    // adding the duration
+    let momentEndTime = momentStartTime.add(momentDuration)
+    // Format the total momentEndTime back into HH:mm:ss format
+    momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
+    return momentEndTime;
+}
+
+
+
+
+let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)=>{
     try {
+        console.log(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,'here is the data')
+          // if exist then update
+          if(checkIsItemAlreadyExist){
+            let updateTheCart = await cartItem.update({
+               facilityPreference:facilityPreference,
+                updatedDt:updatedDt,
+                updatedBy:userId
+            },
+            {
+                where:
+                {
+                    cartItemId:checkIsItemAlreadyExist.cartItemId
+                }
+            }
+        )
+        console.log('2',updateTheCart)
+        if(updateTheCart.length>0){
+
+               return  null;
+          
+         
+        }
+        else{
+                return {
+                    error:"Item is not added to the cart"
+                }
+        
+        }
+            
+        }
+        // else add the item
+        else{
+            console.log('add to cart')
+            let createAddToCart = await cartItem.create({
+                cartId:isUserExist.cartId,
+                entityId:entityId,
+                entityTypeId:entityTypeId,
+                facilityPreference:facilityPreference,
+                statusId:statusId,
+                createdDt:createdDt,
+                updatedDt:updatedDt,
+                createdBy:userId,
+                updatedBy:userId
+            })
+
+
+            if(createAddToCart){
+                return null
+                  
+               
+            }
+            else{
+              
+                return {error: "Item is not added to the cart"}
+                
+            }
+        }
+    } catch (err) {
+        return {
+            error:err.message
+        }
+    }
+}
+
+
+let addToCart = async (req,res)=>{
+    try {
+        console.log('1')
         let userId = req.user?.id || 1;
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId =1
-        const {entityId, entityTypeId, totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price} = req.body
-        let facilityPreference;
-        console.log("Add to cart",{entityId, entityTypeId})
+        let {entityId, entityTypeId, facilityPreference} = req.body
+        console.log(typeof(entityId),'req.body',entityTypeId==2)
+        // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
+        
         // first checks in the carts table consist of the user id 
         let isUserExist = await  cart.findOne({
             where:{
@@ -200,267 +488,142 @@ const addToCart = async (req,res)=>{
             })
         }
         // then check entity wise where the user wants to add the data
-        if(entityTypeId = 1){
+        if(entityTypeId == 1){
+            console.log('parks')
             // if parks
-            let momentStartTime = moment.duration(startTime);
-            let momentDuration = moment.duration(duration);
-            // adding the duration
-            let momentEndTime = momentStartTime.add(momentDuration)
-            // Format the total momentEndTime back into HH:mm:ss format
-            momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
+            let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
+
+            console.log('values', facilityPreference.bookingDate,facilityPreference.startTime,momentEndTime )
             // first check the item already exist or not
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
-                  [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{bookingDate:bookingDate},{startTime:{
-                    [Op.gte]:[startTime]
-                  }},{startTime:{
-                    [Op.lte]:[momentEndTime]
-                  }}]
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+                  ]
                 }
+                , 
+                replacements: {
+                    bookingDate: facilityPreference.bookingDate,
+                    startTime: facilityPreference.startTime,
+                    endTime: momentEndTime
+                  }
             }) 
-            // if exist then update
-            if(checkIsItemAlreadyExist){
-                facilityPreference = {totalMembers:totalMembers,
-                    otherActivities:otherActivities,
-                    startTime:startTime,
-                    duration:duration,
-                    activityPreference:activityPreference,
-                    price:price
-                }
+                // facilityPreference = {
+                //     totalMembers:facilityPreference.totalMembers,
+                //     otherActivities:facilityPreference.otherActivities,
+                //     startTime:facilityPreference.startTime,
+                //     duration:facilityPreference.duration,
+                //     activityPreference:facilityPreference.activityPreference,
+                //     price:facilityPreference.price
+                // }
 
-                let updateTheCart = await cartItem.update({
-                    facilityPreference:facilityPreference,
-                    updatedDt:updatedDt,
-                    updatedBy:userId
-                },
-                {
-                    where:
-                    {
-                        cartItemId:checkIsItemAlreadyExist.cartItemId
-                    }
-                }
-            )
-            if(updateTheCart.length>0){
-                return res.status(statusCode.SUCCESS.code).json({
-                    message: "Item successfully added to cart"
-                })
-            }
-            else{
-                return res.status(statusCode.BAD_REQUEST.code).json({
-                    message:"Item is not added to the cart"
-                })
-            }
-                
-            }
-            // else add the item
-            else{
-                facilityPreference = {
-                    totalMembers:totalMembers,
-                    activityPreference:activityPreference,
-                    otherActivities:otherActivities,
-                    bookingDate:bookingDate,
-                    startTime:startTime,
-                    duration:duration,
-                    price:price,
-                }
-                let createAddToCart = await cartItem.create({
-                    cartId:isUserExist.cartId,
-                    entityId:entityId,
-                    entityTypeId:entityTypeId,
-                    facilityPreference:facilityPreference,
-                    createdDt:createdDt,
-                    updatedDt:updatedDt,
-                    createdBy:userId,
-                    updatedBy:userId
-                })
-
-
-                if(createAddToCart){
-                    return res.status(statusCode.SUCCESS.code).json({
-                        message: "Item successfully added to cart"
+            
+                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
+                console.log('findthe resultttttt',findTheResult)
+                if(findTheResult?.error){
+                    return res.status(statusCode.BAD_REQUEST.code).json({
+                        message:findTheResult.error
                     })
+                    
                 }
                 else{
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:"Item is not added to the cart"
-                    })
+                    return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
                 }
-            }
-
         }
-        else if(entityTypeId = 2){
+        else if(entityTypeId == 2){
             // if playgrounds
+            console.log('playgrounds')
+
          
               // first check the item already exist or not
               let checkIsItemAlreadyExist = await cartItem.findOne({
-                  where:{
-                    [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{bookingDate:bookingDate},{startTime:{
-                      [Op.gte]:[startTime]
-                    }},{startTime:{
-                      [Op.lte]:[endTime]
-                    }}]
+                where:{
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+                  ]
+                }
+                , 
+                replacements: {
+                    bookingDate: facilityPreference.bookingDate,
+                    startTime: facilityPreference.startTime,
+                    endTime: facilityPreference.endTime
                   }
               }) 
               // if exist then update
-              if(checkIsItemAlreadyExist){
-                  facilityPreference = {
-                    playersLimit:playersLimit,
-                    sports:sports,
-                    startTime:startTime,
-                    endTime:endTime,
-                    price:price,
-                  }
-                  let updateTheCart = await cartItem.update({
-                      facilityPreference:facilityPreference,
-                      updatedDt:updatedDt,
-                      updatedBy:userId
-                  },
-                  {
-                      where:
-                      {
-                          cartItemId:checkIsItemAlreadyExist.cartItemId
-                      }
-                  }
-              )
-              if(updateTheCart.length>0){
-                  return res.status(statusCode.SUCCESS.code).json({
-                      message: "Item successfully added to cart"
-                  })
-              }
-              else{
-                  return res.status(statusCode.BAD_REQUEST.code).json({
-                      message:"Item is not added to the cart"
-                  })
-              }
-                  
-              }
-              // else add the item
-              else{
-                  facilityPreference = {
-                    playersLimit:playersLimit,
-                      sports:sports,
-                      bookingDate:bookingDate,
-                      startTime:startTime,
-                      endTime:endTime,
-                      price:price,
-                  }
-                  let createAddToCart = await cartItem.create({
-                      cartId:isUserExist.cartId,
-                      entityId:entityId,
-                      entityTypeId:entityTypeId,
-                      facilityPreference:facilityPreference,
-                      createdDt:createdDt,
-                      updatedDt:updatedDt,
-                      createdBy:userId,
-                      updatedBy:userId
-                  })
-  
-  
-                  if(createAddToCart){
-                      return res.status(statusCode.SUCCESS.code).json({
-                          message: "Item successfully added to cart"
-                      })
-                  }
-                  else{
-                      return res.status(statusCode.BAD_REQUEST.code).json({
-                          message:"Item is not added to the cart"
-                      })
-                  }
-              }
-  
+                //   facilityPreference = {
+                //     playersLimit:playersLimit,
+                //     sports:sports,
+                //     startTime:startTime,
+                //     endTime:endTime,
+                //     price:price,
+                //   }
+               
+                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
+                if(findTheResult?.error){
+                    return res.status(statusCode.BAD_REQUEST.code).json({
+                        message:findTheResult.error
+                    })
+                    
+                }
+                else{
+                    return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
+                }
+
 
         }
-        else if(entityTypeId = 3){
+        else if(entityTypeId == 3){
             // if Multipurpose ground
            
         }
-        else if(entityTypeId = 4){
+        else if(entityTypeId == 4){
             // if blueway location
         }
-        else if(entityTypeId = 5){
+        else if(entityTypeId == 5){
             //  if greenways
         }
-        else if(entityTypeId= 6){
+        else if(entityTypeId ==  6){
+            console.log('1')
+
             // if events
-            let momentStartTime = moment.duration(startTime);
-            let momentDuration = moment.duration(duration);
-            // adding the duration
-            let momentEndTime = momentStartTime.add(momentDuration)
-            // Format the total momentEndTime back into HH:mm:ss format
-            momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
-            // first check the item already exist or not
+                // facilityPreference = { 
+            //     totalMembers:totalMembers,
+            //     startTime:startTime,
+            //     duration:duration,
+            //     price:price
+            // }
+            let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
+
             let checkIsItemAlreadyExist = await cartItem.findOne({
                 where:{
-                  [Op.and] :[{entityId:entityId},{cartId:isUserExist.cartId},{bookingDate:bookingDate},{startTime:{
-                    [Op.gte]:[startTime]
-                  }},{startTime:{
-                    [Op.lte]:[momentEndTime]
-                  }}]
+                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+                  ]
                 }
-            }) 
-            // if exist then update
-            if(checkIsItemAlreadyExist){
-                facilityPreference = { 
-                    totalMembers:totalMembers,
-                    startTime:startTime,
-                    duration:duration,
-                    price:price
-                }
-                let updateTheCart = await cartItem.update({
-                   facilityPreference:facilityPreference,
-                    updatedDt:updatedDt,
-                    updatedBy:userId
-                },
-                {
-                    where:
-                    {
-                        cartItemId:checkIsItemAlreadyExist.cartItemId
-                    }
-                }
-            )
-            if(updateTheCart.length>0){
-                return res.status(statusCode.SUCCESS.code).json({
-                    message: "Item successfully added to cart"
-                })
-            }
-            else{
+                , 
+                replacements: {
+                    bookingDate: facilityPreference.bookingDate,
+                    startTime: facilityPreference.startTime,
+                    endTime: momentEndTime
+                  }
+            })        
+                // console.log('check is item  already exist',checkIsItemAlreadyExist)
+
+            
+            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
+            if(findTheResult?.error){
                 return res.status(statusCode.BAD_REQUEST.code).json({
-                    message:"Item is not added to the cart"
+                    message:findTheResult.error
                 })
-            }
                 
             }
-            // else add the item
             else{
-                 facilityPreference={
-                    totalMembers:totalMembers,
-                    bookingDate:bookingDate,
-                    startTime:startTime,
-                    duration:duration,
-                    price:price,
-                }
-                let createAddToCart = await cartItem.create({
-                    cartId:isUserExist.cartId,
-                    entityId:entityId,
-                    entityTypeId:entityTypeId,
-                    facilityPreference:facilityPreference,
-                    createdDt:createdDt,
-                    updatedDt:updatedDt,
-                    createdBy:userId,
-                    updatedBy:userId
-                })
-
-
-                if(createAddToCart){
-                    return res.status(statusCode.SUCCESS.code).json({
-                        message: "Item successfully added to cart"
-                    })
-                }
-                else{
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:"Item is not added to the cart"
-                    })
-                }
+                return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
             }
             
         }
@@ -475,10 +638,68 @@ const addToCart = async (req,res)=>{
 
 // view cart by useID
 
-const viewCartByUserId = async(req,res)=>{
+let viewCartByUserId = async(req,res)=>{
     try {
         const userId = req.user?.id || 1
-        const{}=req.body
+        let findCartIdByUserId = await cart.findOne({
+            where:{
+            [Op.and]:[{userId: userId},{statusId:1}]
+            }
+        })
+        if(findCartIdByUserId){
+            console.log(findCartIdByUserId.cartId,'cartId')
+            let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
+            amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.statusId = 1`,
+            { type: sequelize.QueryTypes.SELECT })
+        //     let findCartItemsWRTCartId = await cartItem.findAll({
+        //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
+        //     where:{
+                
+        //         [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
+                
+             
+        //     },
+        //     include: [
+        //         {
+        //           model: facilitytype,
+        //           attributes: ["code"],
+        //           on: {
+        //             '$cartItem.entityTypeId$': sequelize.col('facilitytype.facilityTypeId')
+        //           },
+        //           required: true // true
+        //         },
+        //         {
+        //           model: facilities,
+        //           attributes: ["facilityName"],
+        //           on:{
+        //             '$cartItem.entityId$':sequelize.col('facilities.facilityId')
+        //           },
+        //           required: true //true
+        //         }
+        //       ],
+         
+        // })
+
+        console.log(findCartItemsWRTCartId,'findCartIdByUserId')
+        if(findCartIdByUserId.length<=0){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:  "Not a single item is associated with the cart"
+              })
+        }
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"These are the cart items",data:findCartItemsWRTCartId, count:findCartItemsWRTCartId.length
+        })
+
+        }
+        else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:  "Not a single item is associated with the cart"
+            })
+        }
+
+
+        
+
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
@@ -486,11 +707,77 @@ const viewCartByUserId = async(req,res)=>{
         
     }
 }
-// add to cart end here
 
+
+// remove the cart items
+
+let updateCart = async(req,res)=>{
+    try {
+    
+        let userId = req.user?.id||1
+        let cartItemId = req.params.cartItemId
+        let statusId = 0
+
+        let findTheCartIdFromUserId = await cart.findOne({
+            where:{
+                userId:userId
+            }
+        })
+        console.log(findTheCartIdFromUserId,'fjd',cartItemId,'fd',findTheCartIdFromUserId.cartId)
+      
+            let removeTheCartItems = await cartItem.update(
+                {statusId:statusId},
+                {
+                    where:{
+                    [Op.and]:[{cartItemId:cartItemId,cartId:findTheCartIdFromUserId.cartId}]
+                }
+            })
+            console.log(removeTheCartItems,'cart items')
+
+            if(removeTheCartItems.length>0){
+                return res.status(statusCode.SUCCESS.code).json({
+                    message:"Successfully removed the items"
+                })
+            }
+
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:"Something went wrong"
+        })
+      
+    } catch (err) {
+       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message}) 
+    }
+}
+
+// view cart w.r.t to cart Item id
+let viewCartItemsWRTCartItemId = async(req,res)=>{
+    try {
+        let cartItemId = req.params.cartItemId;
+
+        let viewTheCartItemData = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
+        amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.cartItemId = ? `,
+        {
+            replacements: [cartItemId],
+            type: sequelize.QueryTypes.SELECT
+        })
+        
+        return res.status(statusCode.SUCCESS.code).json({
+            message:
+                "Here are the cart items data"
+            ,
+            data:viewTheCartItemData
+        })
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
     addToCart,
-    viewCartByUserId
+    viewCartByUserId,
+    updateCart,
+    viewCartItemsWRTCartItemId
 }
