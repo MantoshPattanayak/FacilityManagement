@@ -6,13 +6,16 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
+
+
 export default function Profile() {
 
   const publicUserId = decryptData(
     new URLSearchParams(location.search).get("publicUserId")
   );
-
+  const [reenteredPassword, setReenteredPassword] = useState('');
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [errors, setErrors] = useState({});  //to show error message
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -33,12 +36,57 @@ export default function Profile() {
     }
   };
 
+
+  //--------------Validation--------------------------------
+  const validateFormData = (formData) => {
+    // Password validation regex
+    const passwordRegex = /^(?=.*?[0-9])(?=.*?[A-Za-z]).{8,32}$/;
+
+    // Name validation regex (assuming it contains only letters and spaces)
+    const nameRegex = /^[A-Z][a-zA-Z]*$/;
+
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const newErrors = {};
+    // Validate password
+    if (reenteredPassword.trim() !== '' && !passwordRegex.test(formData.password.trim())) {
+      console.log("Invalid password format");
+      // Show a warning message
+      // alert("Password must contain only letters, numbers, and special characters.");
+      // return false;
+      newErrors.password = "Password must contain only letters, numbers, and special characters.";
+    }
+
+    // Validate name
+    if (!nameRegex.test(formData.firstName.trim()) || !nameRegex.test(formData.lastName.trim())) {
+      console.log("Invalid name format");
+      // Show a warning message
+      // alert("Name must contain only letters.");
+      // return false;
+      newErrors.name = "Name must contain only letters.";
+    }
+
+    // Validate email
+    if (!emailRegex.test(formData.emailId.trim())) {
+      console.log("Invalid email format");
+      // Show a warning message
+      // alert("Invalid email format.");
+      // return false;
+      newErrors.email = "Invalid email format.";
+    }
+
+    // return true;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     // handle form submission with selectedActivities
     console.log("Selected Activities:", selectedActivities);
   };
 
+  //After clicking submit button Data willl upadate to api from here
   const handleUpdate = async (e) => {
     e.preventDefault();
     // handle form submission with selectedActivities
@@ -48,6 +96,23 @@ export default function Profile() {
     console.log("Form Data Before Update:", formData);
 
     try {
+      let updatedFormData = { ...formData };
+
+      //check validation
+      if (!validateFormData(formData)) {
+        return; // Stop execution if validation fails
+      }
+
+      // Check if the reentered password field is not empty and matches the new password
+      if (formData.password.trim() === '' && reenteredPassword.trim() === '') {
+        // No password change, proceed with updating other data
+      } else if (formData.password.trim() !== reenteredPassword.trim()) {
+        console.log("Passwords do not match");
+        // Show a warning message
+        alert("Passwords do not match. Please make sure your passwords match before updating.");
+        return;
+      }
+
       let response = await axiosHttpClient('PROFILE_DATA_UPDATE_API', 'put', {
         publicUserId: formData.publicUserId,
         firstName: encryptData(formData.firstName),
@@ -132,18 +197,42 @@ export default function Profile() {
   const handleData = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
+
+    // if (name === 'password') {
+    //   if (value === reenteredPassword && value.trim() !== '') {
+    //     // Passwords match and are not empty, update password
+    //     console.log("Passwords match, updating password");
+    //     setFormData(prevFormData => ({
+    //       ...prevFormData,
+    //       password: value
+    //     }));
+    //   }
+    // }
+
     setFormData(prevFormData => {
       const updatedFormData = { ...prevFormData, [name]: value };
       console.log("here input data", updatedFormData);
       return updatedFormData;
     });
+
   };
 
+  // here Validation -----------------------------
+  // const validatation=()=>{
+  //   const err={};
+
+
+
+  //   return;
+  // }
 
   // on page load
   useEffect(() => {
     fetchProfileDetails();
   }, []);
+
+
+
 
   return (
     <main>
@@ -173,11 +262,11 @@ export default function Profile() {
               </li>
               <li>
                 <a href="#">
-                  Change Password
+                  Favorites
                 </a>
               </li>
               <li>
-                <a href="#">Card Details</a>
+                <a href="#">Cart Details</a>
               </li>
             </ul>
             {/* Logout Button */}
@@ -220,22 +309,45 @@ export default function Profile() {
 
 
             <div className="profile-formContainer">
-              <label htmlFor="firstName">First Name</label>
-              <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
-              <label htmlFor="lastName">Last Name</label>
-              <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
-              <label htmlFor="email">Email</label>
-              <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
-              <label htmlFor="language">Language</label>
-              <select id="language" name='language' value={formData.language} onChange={handleData}>
-                <option>English</option>
-                <option>Hindi</option>
-                <option>Spanish</option>
-              </select>
-              <label htmlFor="password">New Password</label>
-              <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
-              <label htmlFor="NewPassword">Reenter New Password</label>
-              <input type="password" placeholder="Reenter New Password" onChange={handleData} />
+              <div className="profile-formContainer_Inner">
+                <label htmlFor="firstName">First Name</label>
+                <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+                {errors.name && <span className="error">{errors.name}</span>}
+              </div>
+
+              <div className="profile-formContainer_Inner">
+                <label htmlFor="lastName">Last Name</label>
+                <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
+                {errors.name && <span className="error">{errors.name}</span>}
+              </div>
+
+              <div className="profile-formContainer_Inner">
+                <label htmlFor="email">Email</label>
+                <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
+                {errors.email && <span className="error">{errors.email}</span>}
+              </div>
+
+              <div className="profile-formContainer_Inner">
+                <label htmlFor="language">Language</label>
+                <select id="language" name='language' value={formData.language} onChange={handleData}>
+                  <option>English</option>
+                  <option>Hindi</option>
+                  <option>Spanish</option>
+                </select>
+              </div>
+
+              <div className="profile-formContainer_Inner">
+                <label htmlFor="password">New Password</label>
+                <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
+              </div>
+
+              <div className="profile-formContainer_Inner">
+                <label htmlFor="NewPassword">Reenter New Password</label>
+                <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
+                {errors.password && <span className="error">{errors.password}</span>}
+              </div>
+
+
             </div>
 
             {/* choose preffered Activity */}

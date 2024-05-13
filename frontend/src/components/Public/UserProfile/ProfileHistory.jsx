@@ -3,7 +3,8 @@ import "./ProfileHistory.css";
 import CommonHeader from "../../../common/CommonHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+// import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";/
 
 const ProfileHistory = () => {
   const tabList = [
@@ -42,22 +43,43 @@ const ProfileHistory = () => {
       <div className="booking-dtails-container">
         <div className="user-profile-section">
           <div className="user-details">
-            <FontAwesomeIcon icon={faUser} className="icon-user" />
             <p>Test User</p>
             <p>7008765443</p>
             <p>testuser@gmail.com</p>
           </div>
-          <div className="buttons-profile">
-            <button className="edit-profile-btn">Edit User Profile</button>
-            <button className="edit-profile-btn">Booking Details</button>
-            <button className="edit-profile-btn">Favorites</button>
-            <button className="edit-profile-btn">Card Details</button>
+          <div>
+            <ul className="profile-button--Section">
+              <li>
+                <a href="#" className="">
+                  Edit User Profile
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                >
+                  Booking Details
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  Favorites
+                </a>
+              </li>
+              <li>
+                <a href="#">Cart Details</a>
+              </li>
+            </ul>
+            {/* Logout Button */}
+            <button className="button-67 ">
+              <h1>Logout</h1>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            </button>
+
           </div>
-          <button className="logout-button">
-            <FontAwesomeIcon icon={faRightFromBracket} />
-            Logout
-          </button>
         </div>
+
+        
 
         <div className="right-container">
           <div className="eventdetails-tab">
