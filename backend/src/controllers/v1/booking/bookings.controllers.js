@@ -481,7 +481,7 @@ let viewCartByUserId = async(req,res)=>{
               })
         }
         return res.status(statusCode.SUCCESS.code).json({
-            message:"These are the cart items",data:findCartItemsWRTCartId
+            message:"These are the cart items",data:findCartItemsWRTCartId, count:findCartItemsWRTCartId.length
         })
 
         }
@@ -539,6 +539,7 @@ let updateCart = async(req,res)=>{
        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message}) 
     }
 }
+
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
