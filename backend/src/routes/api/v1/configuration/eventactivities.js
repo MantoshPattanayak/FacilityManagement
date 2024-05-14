@@ -5,4 +5,8 @@ const eventactivites = require("../../../../controllers/" +
   api_version +
   "/configuration/eventactivities.controller");
 router.post("/viewEventactivities", eventactivites.viewEventactivities);
+router.get(
+  "/viewEventactivitiesById/:eventId",
+  eventactivites.viewEventactivitiesById
+);
 module.exports = router;
