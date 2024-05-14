@@ -42,18 +42,18 @@ export default function PublicHeader() {
     try {
       let res = await axiosHttpClient('View_Card_UserId', 'get')
 
-      console.log("here Response of Total Count of Cart(Public Header)", res)
+ 
       setGetCardCount(res.data)
     }
     catch (err) {
-      console.log("here Error Total Count of Cart (Public Header)", err)
+      console.log( err)
     }
   }
 
   useEffect(() => {
     GetTotalNumberofCart()
-    // const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
-    // return () => clearInterval(intervalId);
+    const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
+    return () => clearInterval(intervalId);
   }, [])
 
   // on page load, set language preference
@@ -105,7 +105,7 @@ export default function PublicHeader() {
               <a href="/events">EVENTS</a>
             </li>
             <li>
-              <a href="#">HOST EVENT</a>
+              <a href="/Event_hostPage">HOST EVENT</a>
             </li>
             {isUserLoggedIn == 1 ? (
               <li>

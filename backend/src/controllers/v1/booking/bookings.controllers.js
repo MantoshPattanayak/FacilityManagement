@@ -467,7 +467,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
 
 let addToCart = async (req,res)=>{
     try {
-        console.log('1')
+        console.log('here reponse of sports',req.body)
         let userId = req.user?.id || 1;
         let createdDt = new Date();
         let updatedDt = new Date();
