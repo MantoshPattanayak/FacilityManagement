@@ -10,6 +10,7 @@ import mp_ground_logo from "../../assets/multipurpose-ground-logo.png";
 import galleryImg from "../../assets/gallery1.png"
 import adImg from "../../assets/ad.png"
 import Footer from "../../common/Footer.jsx"
+import CommonFooter from '../../common/CommonFooter.jsx';
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
@@ -64,7 +65,7 @@ const Landing = () => {
   const [mapdata, setmapdata] = useState([])
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
-  const [givenReq, setGivenReq] = useState(null);
+  const [givenReq, setGivenReq] = useState('');
   const [facilityTypeId, setFacilityTypeId] = useState(1);
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
@@ -132,47 +133,47 @@ const Landing = () => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  useEffect(() => {
-    // animations added to current events section
-    const container = containerRef.current;
-    const cards = container.querySelectorAll('.eventCard');
+  // useEffect(() => {
+  //   // animations added to current events section
+  //   const container = containerRef.current;
+  //   const cards = container.querySelectorAll('.eventCard');
 
-    const cardWidth = cards[0].offsetWidth;
-    const firstCardClone = cards[0].cloneNode(true);
-    container.appendChild(firstCardClone);
+  //   const cardWidth = cards[0].offsetWidth;
+  //   const firstCardClone = cards[0].cloneNode(true);
+  //   container.appendChild(firstCardClone);
 
-    const totalWidth = (cards.length + 1) * cardWidth;
-    container.style.width = totalWidth + 'px';
+  //   const totalWidth = (cards.length + 1) * cardWidth;
+  //   container.style.width = totalWidth + 'px';
 
-    function startScrollAnimation() {
-      container.style.animation = 'scroll 55s linear infinite';
-    }
+  //   function startScrollAnimation() {
+  //     container.style.animation = 'scroll 55s linear infinite';
+  //   }
 
-    container.addEventListener('mouseenter', startScrollAnimation);
+  //   container.addEventListener('mouseenter', startScrollAnimation);
 
-    container.addEventListener('animationiteration', () => {
-      container.style.animation = 'none';
-      setTimeout(startScrollAnimation, 0);
-    });
+  //   container.addEventListener('animationiteration', () => {
+  //     container.style.animation = 'none';
+  //     setTimeout(startScrollAnimation, 0);
+  //   });
 
-    // search functionality for user input in the field
-    const searchInput = searchInputRef.current;
-    searchInput.addEventListener('keypress', (e) => {
-      let inputVal;
-      if(e.key === 'Enter') {
-        inputVal = searchInput.value;
-        navigate(`/facilities?givenReq=${inputVal}`);
-      }
-    });
+  //   // search functionality for user input in the field
+  //   const searchInput = searchInputRef.current;
+  //   searchInput.addEventListener('keypress', (e) => {
+  //     let inputVal;
+  //     if(e.key === 'Enter') {
+  //       inputVal = searchInput.value;
+  //       navigate(`/facilities?givenReq=${inputVal}`);
+  //     }
+  //   });
 
-    return () => {
-      container.removeEventListener('mouseenter', startScrollAnimation);
-      container.removeEventListener('animationiteration', () => {
-        container.style.animation = 'none';
-        setTimeout(startScrollAnimation, 0);
-      });
-    };
-  }, []);
+  //   return () => {
+  //     container.removeEventListener('mouseenter', startScrollAnimation);
+  //     container.removeEventListener('animationiteration', () => {
+  //       container.style.animation = 'none';
+  //       setTimeout(startScrollAnimation, 0);
+  //     });
+  //   };
+  // }, []);
 
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
@@ -480,8 +481,138 @@ const Landing = () => {
           <h1>Current Events</h1>
         </div>
 
-        <div className="EventDetailsCardSec_outer">
-          <div ref={containerRef} className="EventDetailsCardSec" id="eventContainer">
+{/* .........Card section scroll using carousel ..........*/}
+<div className='gallery-slider-event'>
+          <Carousel responsive={responsive}>
+
+          <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga Day Celebration</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga Day Celebration</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga Day Celebration</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga Day Celebration</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga Day Celebration</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="eventCard">
+              <img src={Yoga_img} alt="" className="eventCard_Img" />
+              <div className="eventCardTitle">National Yoga Day Celebration</div>
+              <div className="eventCardLocation">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
+              </div>
+              <div className="eventCard_Date_Time">
+                <div className="eventCard_date">06-05-2024</div>
+                <div className="eventCard_time">
+                  <div className="eventCard_startTime">12:00</div>
+                  <div>-</div>
+                  <div className="eventCard_clodeTime">14:00</div>
+                </div>
+              </div>
+            </div>
+          </Carousel>
+        </div>
+
+        </div>
+<br /><br /><br /><br />
+
+{/* Auto scrolling card section ..................*/}
+
+        {/* <div className="EventDetailsCardSec_outer">
+          <div className="EventDetailsCardSec" id="eventContainer">
 
             <div className="eventCard">
               <img src={Yoga_img} alt="" className="eventCard_Img" />
@@ -612,8 +743,12 @@ const Landing = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div> */}
+
+        {/*.......... Auto scrolling card end ...........*/}
+    
+
+
       {/*------------ Explore new activities----------- */}
 
       <div className="exploreNewAct-Parent-Container">
@@ -697,12 +832,12 @@ const Landing = () => {
 
       <div className="avatisement-Border">
         <div className="avatisement-Content">
-          <img src={adImg} alt="" className="avatisement-Image" />
+          <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' />
         </div>
       </div>
       <div className="footer">
 
-        <Footer />
+      <CommonFooter  />
       </div>
 
     </div>
