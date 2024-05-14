@@ -44,7 +44,7 @@ const viewEventactivities = async (req, res) => {
       showAllEventactivities = showAllEventactivities.filter(
         (EventactivitiesData) =>
           EventactivitiesData.facilityId.includes(givenReq) ||
-          EventactivitiesData.eventName.toLowerCase().includes(givenReq) || 
+          EventactivitiesData.eventName.toLowerCase().includes(givenReq) ||
           EventactivitiesData.eventCategory.toLowerCase().includes(givenReq) ||
           EventactivitiesData.locationName.toLowerCase().includes(givenReq)
       );
@@ -63,6 +63,67 @@ const viewEventactivities = async (req, res) => {
     });
   }
 };
+const viewEventactivitiesById = async (req, res) => {
+  try {
+    let eventId = req.params.eventId ? req.params.eventId : null;
+    if (!eventId) {
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: "eventId is required",
+      });
+    }
+
+    let [eventActivity] = await sequelize.query(
+      `SELECT 
+      ea.eventId,
+      ea.facilityId,
+      f.facilityname,
+      ea.eventName, 
+      ea.eventCategory, 
+      ea.locationName, 
+      ea.eventDate, 
+      ea.eventStartTime,
+      ea.eventEndTime,
+      ea.descriptionOfEvent,
+      ea.ticketSalesEnabled,
+      ea.ticketPrice,
+      ea.eventImagePath,
+      ea.additionalFilesPath,
+      sm.statusCode as status,
+      ea.remarks,
+      ea.additionalDetails
+      FROM 
+      amabhoomi.eventactivities ea 
+      INNER JOIN 
+      amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
+      LEFT JOIN
+      amabhoomi.facilities f ON ea.facilityId = f.facilityId
+      WHERE 
+      ea.eventId = :eventId
+    `,
+      {
+        replacements: { eventId: eventId },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    if (!eventActivity) {
+      return res.status(statusCode.NOTFOUND.code).json({
+        message: "Event activity not found",
+      });
+    }
+
+    return res.status(statusCode.SUCCESS.code).json({
+      message: "Event activity details",
+      eventActivityDetails: eventActivity,
+    });
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   viewEventactivities,
+  viewEventactivitiesById,
 };
