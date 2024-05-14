@@ -81,7 +81,7 @@ export default function PublicHeader() {
 
         <nav className="navbar">
           <div className="logo-ama-boomi">
-            <img src={AppLogo} alt="" className="h-[80%] absolute" />
+            <img src={AppLogo} alt="" className="h-[100%] top-0 absolute" />
           </div>
 
           <ul>
