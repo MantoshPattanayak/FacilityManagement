@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProfileHistory.css";
 import CommonHeader from "../../../common/CommonHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-// import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";/
+import axiosHttpClient from "../../../utils/axios";
+import { decryptData } from "../../../utils/encryptData";
 
 const ProfileHistory = () => {
   const tabList = [
@@ -24,6 +25,9 @@ const ProfileHistory = () => {
 
   const [tab, setTab] = useState(tabList);
   const [selectedOption, setSelectedOption] = useState("Daily");
+  const [userName, setUserName] = useState('');
+  const [emailId, setEmailId] = useState('');
+  const [phoneNo, setPhoneNo] = useState('');
 
   function manageCurrentTab(e, name) {
     e.preventDefault();
@@ -37,26 +41,56 @@ const ProfileHistory = () => {
     setTab(tabListCopy);
   }
 
+  //get Api Here
+
+  const publicUserId = decryptData(
+    new URLSearchParams(location.search).get("publicUserId")
+  );
+
+  async function fetchProfileDetails() {
+    try {
+      let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
+      console.log('response of fetch profile api', res.data.public_user);
+
+      setUserName(decryptData(res.data.public_user.userName));
+      setEmailId(decryptData(res.data.public_user.emailId));
+      setPhoneNo(decryptData(res.data.public_user.phoneNo));
+    }
+    catch (error) {
+      console.error("Error in fetching data:",error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProfileDetails();
+  }, []);
+
+
+
   return (
     <div>
       <CommonHeader />
       <div className="booking-dtails-container">
-        <div className="user-profile-section">
-          <div className="user-details">
-            <p>Test User</p>
-            <p>7008765443</p>
-            <p>testuser@gmail.com</p>
+      <aside className="profile-leftside--Body">
+          <div className="profile-view--Body">
+            <div className="profile-about">
+              <p>{userName}</p>
+              <p>{emailId}</p>
+              <p>{phoneNo}</p>
+            </div>
           </div>
           <div>
             <ul className="profile-button--Section">
               <li>
-                <a href="#" className="">
+                <a href="/Profile" className="">
                   Edit User Profile
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                   href="/ProfileHistory"
+                   className="profile-button"
+                   style={{ color: 'white', backgroundColor:"green" }}
                 >
                   Booking Details
                 </a>
@@ -77,9 +111,9 @@ const ProfileHistory = () => {
             </button>
 
           </div>
-        </div>
+        </aside>
 
-        
+
 
         <div className="right-container">
           <div className="eventdetails-tab">

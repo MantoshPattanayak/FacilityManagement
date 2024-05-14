@@ -80,6 +80,8 @@ export default function Profile() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // handle form submission with selectedActivities
@@ -249,19 +251,21 @@ export default function Profile() {
           <div>
             <ul className="profile-button--Section">
               <li>
-                <a href="#" className="">
+                <a href="/ProfileHistory"
+                   className="profile-button"
+                   style={{ color: 'white', backgroundColor:"green" }}>
                   Edit User Profile
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/UserProfile/ProfileHistory" className=""
                 >
                   Booking Details
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="/UserProfile/Favorites">
                   Favorites
                 </a>
               </li>

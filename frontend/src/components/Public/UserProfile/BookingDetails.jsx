@@ -16,6 +16,8 @@ import PublicHeader from "../../../common/PublicHeader";
 import { formatDate, logOutUser } from "../../../utils/utilityFunctions";
 import { encryptData } from "../../../utils/encryptData";
 import No_Data_icon from "../../../assets/No_Data_icon.png";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { decryptData } from "../../../utils/encryptData";
 // import format
 const BookingDetails = () => {
   let navigate = useNavigate();
@@ -96,29 +98,84 @@ const BookingDetails = () => {
     setTab(tabListCopy);
     return;
   }
+
+
+  //get the api here
+
+  const [userName, setUserName] = useState('');
+  const [emailId, setEmailId] = useState('');
+  const [phoneNo, setPhoneNo] = useState('');
+
+  const publicUserId = decryptData(
+    new URLSearchParams(location.search).get("publicUserId")
+  );
+
+  async function fetchProfileDetails() {
+    try {
+      let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
+      console.log('response of fetch profile api', res.data.public_user);
+
+      setUserName(decryptData(res.data.public_user.userName));
+      setEmailId(decryptData(res.data.public_user.emailId));
+      setPhoneNo(decryptData(res.data.public_user.phoneNo));
+    }
+    catch (error) {
+      console.error("Error in fetching data:",error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProfileDetails();
+  }, []);
+
+
+
   return (
     <div>
       <PublicHeader />
       <div className="booking-dtails-container">
         <div className="booking-dtails-container">
-          <div className="user-profile-section">
-            <div className="user-details">
-              <FontAwesomeIcon icon={faUser} className="icon-user" />
-              <p>Test User</p>
-              <p>7008765443</p>
-              <p>testuser@gmail.com</p>
+         <aside className="profile-leftside--Body">
+          <div className="profile-view--Body">
+            <div className="profile-about">
+              <p>{userName}</p>
+              <p>{emailId}</p>
+              <p>{phoneNo}</p>
             </div>
-            <div className="buttons-profile">
-              <button className="edit-profile-btn">Edit User Profile</button>
-              <button className="edit-profile-btn">Booking Details</button>
-              <button className="edit-profile-btn">Favorites</button>
-            <a href="/BookParks/Add_Card">  <button className="edit-profile-btn">Card Details</button></a>  
-            </div>
-            <button className="logout-button" onClick={(e) => {logOutUser(); navigate('/')}}>
-              <FontAwesomeIcon icon={faRightFromBracket} />
-              Logout
-            </button>
           </div>
+          <div>
+            <ul className="profile-button--Section">
+              <li>
+                <a href="/Profile" className="">
+                  Edit User Profile
+                </a>
+              </li>
+              <li>
+                <a
+                   href="/ProfileHistory"
+                   className="profile-button"
+                   style={{ color: 'white', backgroundColor:"green" }}
+                >
+                  Booking Details
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  Favorites
+                </a>
+              </li>
+              <li>
+                <a href="#">Cart Details</a>
+              </li>
+            </ul>
+            {/* Logout Button */}
+            <button className="button-67 ">
+              <h1>Logout</h1>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            </button>
+
+          </div>
+        </aside>
           <div className="right-container-booking-details">
             {/* New div with paragraph and blue border */}
             {/* <div className="form-container"> */}
