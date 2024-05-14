@@ -73,6 +73,11 @@ module.exports = (sequelize, DataTypes) => {
         updatedOn: {
             type: DataTypes.DATE,
         }
-    });
+    }
+    ,
+    {
+        timestamps:false
+    }
+);
     return HostEventDetails
 }

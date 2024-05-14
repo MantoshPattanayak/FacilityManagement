@@ -1,4 +1,3 @@
-// const { PI } = require('aws-sdk');
 const db = require('../../../models/index');
 const statusCode = require('../../../utils/statusCode');
 

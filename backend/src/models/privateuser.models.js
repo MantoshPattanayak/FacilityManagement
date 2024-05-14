@@ -78,6 +78,10 @@ const PrivateUser = sequelize.define('privateuser', {
   }
  
 }
+,
+{
+    timestamps:false
+}
 );
 return PrivateUser
 

@@ -109,7 +109,7 @@ console.log("here Reponse of Host event", req.body)
       const mimeMatch = uploadEventImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
       const mime = mimeMatch ? mimeMatch[1] : null;
 
-      if(  [
+      if([
         "image/jpeg",
         "image/png",
         "application/pdf",
@@ -128,7 +128,7 @@ console.log("here Reponse of Host event", req.body)
           const fileExtension = mime ? mime.split("/")[1]:"txt";
           uploadEventImagePath = `${uploadDir}/eventDir/${eventTitle}${createEventActivities.eventId}.${fileExtension}`
           fs.writeFileSync(uploadEventImagePath,uploadEventBuffer)
-          uploadEventImagePath2 = `/eventDir//${eventTitle}${createEventActivities.eventId}.${fileExtension}`
+          uploadEventImagePath2 = `/eventDir/${eventTitle}${createEventActivities.eventId}.${fileExtension}`
           let fileName = `${eventTitle}${createEventActivities.eventId}.${fileExtension}`
           let fileType = mime ? mime.split("/")[0]:'unknown'
           // insert to file table and file attachment table

@@ -44,6 +44,12 @@ const ParkInventory = sequelize.define('parkinventory',{
     }
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 return ParkInventory
 }

@@ -25,7 +25,7 @@ db1.DataTypes = DataTypes;
 db1.QueryTypes = QueryTypes;
 
 db1.amenitiesmaster = require("./amenitiesmaster.models")(sequelize, DataTypes);
-db1.publicuser = require("./publicuser.models")(sequelize, DataTypes);
+db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
 db1.privateuser = require("./privateuser.models")(sequelize, DataTypes);
 db1.amenityfacilities = require("./amenityfacilities.models")(
   sequelize,
@@ -89,7 +89,7 @@ db1.cart = require('./cart.models')(sequelize,DataTypes);
 db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
 // event bookings table
 db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
-db1.faq.sync({
+db1.cart.sync({
   force: false,
 });
 

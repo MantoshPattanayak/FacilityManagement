@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             defaultValue: null
         }
-    })
+    }
+    ,
+    {
+        timestamps:false
+    }
+)
     return UserBookingActivities
 }

@@ -1,12 +1,13 @@
 const db = require("../../../models/index");
 let statusCode = require("../../../utils/statusCode");
 const bcrypt = require("bcrypt");
-const publicUser = db.publicuser;
-const privateUser = db.privateuser;
+const user = db.usermaster;
+const fs = require('fs')
 let authSessions = db.authsessions
 let deviceLogin = db.device
 let otpCheck = db.otpDetails
 let QueryTypes = db.QueryTypes
+let userActivityPreference = db.useractivitypreferences
 // const admin = require('firebase-admin');
 const { sequelize,Sequelize } = require('../../../models')
 
@@ -109,7 +110,7 @@ let generateOTPHandler = async (req,res)=> {
       })
   }
 }
-let generateToken = require('../../../utils/generateToken')
+let generateToken = require('../../../utils/generateToken');
 
 // let verifyOTPHandlerWithGenerateToken = async (mobileNo,otp)=>{
 //   try {
@@ -120,7 +121,7 @@ let generateToken = require('../../../utils/generateToken')
 //       if (response && response.status === 'OK') {
 //           // OTP verified successfully
 //           // Check if the user exists in the database
-//           let isUserExist = await publicUser.findOne({
+//           let isUserExist = await user.findOne({
 //             where:{
 //               contactNo:mobileNo
 //             }
@@ -174,7 +175,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
             )
             console.log(updateTheVerifiedValue,'update the verified value')
              // Check if the user exists in the database
-             let isUserExist = await publicUser.findOne({
+             let isUserExist = await user.findOne({
               where:{
                 phoneNo:mobileNo
               }
@@ -268,13 +269,13 @@ let verifyEmail = async(req,res)=>{
       else{
         // update the verify email column in database to verfied i.e. 1
        
-       let userExist = await publicUser.findOne({
+       let userExist = await user.findOne({
         where:{
           phoneNo:mobileNo
         }
        })
         if(userExist){
-          let updateVerifyEmailColumn = await publicUser.update({
+          let updateVerifyEmailColumn = await user.update({
             verifyEmail:1
           },
         {
@@ -305,16 +306,26 @@ let signUp = async (req,res)=>{
   console.log(req.body,'req.body')
 
     let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,activities} = req.body;
+
+    let createdDt = new Date();
+    let updatedDt = new Date();
+    if(!password && !firstName && !middleName && !lastName && !phoneNo && !userImage && !activities && language){
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: `please provide all required data to set up the profile`
+      })
+    }
     // const decryptUserName = decrypt(userName);
     // const decryptEmailId = decrypt(email);
     // const decryptPhoneNumber = decrypt(phoneNo);
  
-    password = await decrypt(password)
-    let checkDuplicateMobile= await publicUser.findOne({
-        where:{
-          phoneNo:{
-            [Op.eq]:phoneNo
-          }
+    password = decrypt(password)
+    let checkDuplicateMobile= await user.findOne({
+        where:
+        {
+         [Op.and]:[
+          {phoneNo:phoneNo},
+          {roleId:null}
+        ]
           
         }
       })
@@ -332,47 +343,14 @@ let signUp = async (req,res)=>{
       let lastLogin = new Date();
   
 
-
-
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
-   
-
-      // Create a new user record in the database
-
-      const uploadDir = process.env.UPLOAD_DIR;
-
-      // Ensure that the base64-encoded image data is correctly decoded before writing it to the file. Use the following code to decode the base64 data:
-      
-      const base64Data = userImage
-        ? userImage.replace(/^data:image\/\w+;base64,/, "")
-        : null;
-      console.log(base64Data, "3434559");
-
-      // Convert Base64 to Buffer for user image
-      const userImageBuffer = userImage
-        ? Buffer.from(base64Data, "base64")
-        : null;
-
-      let userImagePath = null;
-      let userImagePath2 = null;
-      // Save the user image to the specified path
-      console.log(userImageBuffer, "fhsifhskhk");
-      
-      if (userImageBuffer) {
-        const userDocDir = path.join(uploadDir, "publicUsers"); // Path to users directory
-        // Ensure the users directory exists
-        if (!fs.existsSync(userDocDir)) {
-          fs.mkdirSync(userDocDir, { recursive: true });
-        }
-        userImagePath = `${uploadDir}/publicUsers/${userId}_user_image.png`; // Set your desired file name
-
-        fs.writeFileSync(userImagePath, userImageBuffer);
-        userImagePath2 = `/publicUsers/${userId}_user_image.png`;
-      }
+      // for uploading user image
       
 
-      const newUser = await publicUser.create({
+
+
+      const newUser = await user.create({
         firstName: firstName,
         middleName: middleName,
         lastName: lastName,
@@ -380,14 +358,88 @@ let signUp = async (req,res)=>{
         password: hashedPassword,
         phoneNo: phoneNo,
         emailId: email,
-        profilePicture: userImagePath, // Assuming profilePicture is the field for storing the image path
         language:language,
-        lastLogin: new Date(), // Example of setting a default value
+        lastLogin:lastLogin, // Example of setting a default value
         statusId: 1, // Example of setting a default value
-        createdOn: new Date(), // Set current timestamp for createdOn
-        updatedOn: new Date(), // Set current timestamp for updatedOn
+        createdDt: createdDt, // Set current timestamp for createdOn
+        updatedDt: updatedDt, // Set current timestamp for updatedOn
      
       });
+
+      if(!newUser){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:"Something went wrong"
+        })
+      }
+      // insert to prefered activity first
+      activities.forEach(async(activity)=>{
+        let insertToPreferedActivity  = await userActivityPreference.create({
+          userId:newUser.userId,
+          userActivityId: activity,
+          statusId:statusId,
+          createdBy:newUser.userId,
+          updatedBy:newUser.userId,
+          createdDt:createdDt,
+          updatedDt:updatedDt
+
+        })
+      }) 
+      
+      // after the user created successfully then the image can be added 
+      if(userImage){
+        let userImagePath = null;
+        let userImagePath2 = null;
+
+        let uploadDir = process.env.UPLOAD_DIR;
+        let base64UploadUserImage = userImage ? userImage.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, ""): null;
+        let mimeMatch = userImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
+        let mime = mimeMatch ? mimeMatch[1]: null;
+        if([
+          "image/jpeg",
+          "image/png",
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ].includes(mime)){
+          // convert base 64 to buffer 
+          let uploadImageBuffer = userImage ? Buffer.from(base64UploadUserImage,'base64') : null;
+          if(uploadImageBuffer){
+            const userImageDir = path.join(uploadDir,"userImageDir");
+            if(!fs.existsSync(userImageDir)){
+              fs.mkdirSync(userImageDir,{recursive:true})
+            }
+            let fileExtension = mime ? mime.split("/")[1] : "txt";
+            userImagePath = `${uploadDir}/userImageDir/${newUser.userId}.${fileExtension}`
+            fs.writeFileSync(userImagePath, uploadImageBuffer);
+            userImagePath2= `/userImageDir/${userName}.${fileExtension}`
+            let fileName = `${newUser.userName}${newUser.userId}.${fileExtension}`
+            let fileType = mime ? mime.split("/")[0]:'unknown'
+            // insert to file table and file attachment table
+            let createFile = await file.create({
+              fileName:fileName,
+              fileType:fileType,
+              url:userImagePath2,
+              statusId:1,
+              createdDt:now(),
+              updatedDt:now()
+            })
+  
+            if(!createFile){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
+            }
+            let createFileAttachment = await fileAttachment.create({
+              entityId: newUser.userId,
+              entityType:'usermaster',
+              fileId:createFile.fileId,
+              statusId:1,
+              filePurpose:"User Image"
+            })
+          }
+        }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({message:"Invalid File type for the event image"})
+        }
+      }
 
       // Return success response
       return res.status(statusCode.SUCCESS.code).json({
@@ -451,7 +503,7 @@ let publicLogin = async(req,res)=>{
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await publicUser.findOne({
+       isUserExist = await user.findOne({
         where: {
           emailId:emailId
         }
@@ -465,7 +517,7 @@ let publicLogin = async(req,res)=>{
         // check whether the credentials are valid or not 
         // Finding one record
         
-       isUserExist = await publicUser.findOne({
+       isUserExist = await user.findOne({
         where: {
           phoneNo:mobileNo
         }
@@ -481,28 +533,28 @@ let publicLogin = async(req,res)=>{
           // console.log('21',isUserExist)
           const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
           if(isPasswordSame){
-            console.log('isUserExist.publicUserId,isUserExist.userName, isUserExist.emailId',isUserExist.publicUserId, isUserExist.userName, isUserExist.emailId)
+            console.log('isUserExist.userId,isUserExist.userName, isUserExist.emailId',isUserExist.userId, isUserExist.userName, isUserExist.emailId)
             const userName = await decrypt(isUserExist.userName)
             const emailId = await decrypt(isUserExist.emailId)
-            const publicUserId = isUserExist.publicUserId
-            console.log(isUserExist.publicUserId,userName,emailId)
+            const userId = isUserExist.userId
+            console.log(isUserExist.userId,userName,emailId)
 
-            let {accessToken,refreshToken} = await generateToken(publicUserId,userName,emailId)
+            let {accessToken,refreshToken} = await generateToken(userId,userName,emailId)
 
             const options = {
               httpOnly: true,
               secure: true
           };
 
-          let updateLastLoginTime =  await publicUser.update({lastLogin:lastLoginTime},{
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
             where :{
-              publicUserId:isUserExist.publicUserId
+              userId:isUserExist.userId
             }
           })
           // check for active session
 
           let checkForActiveSession = await authSessions.findOne({where:{
-           [Op.and] :[{userId:isUserExist.publicUserId},
+           [Op.and] :[{userId:isUserExist.userId},
             {active:1}]
           }})
           // if active
@@ -527,7 +579,7 @@ let publicLogin = async(req,res)=>{
                       lastActivity:new Date(),
                       active:1,
                       deviceId:checkDeviceForParticularSession.deviceId,
-                      userId:isUserExist.publicUserId
+                      userId:isUserExist.userId
                     })
                     // then update the session id in the device table
                     let updateTheDeviceTable = await deviceLogin.update({
@@ -551,7 +603,7 @@ let publicLogin = async(req,res)=>{
                       lastActivity:new Date(),
                       active:1,
                       deviceId:insertToDeviceTable.deviceId,
-                      userId:isUserExist.publicUserId
+                      userId:isUserExist.userId
                     })
                     // update the session id in the device table
                     let updateSessionIdInDeviceTable = await deviceLogin.update({
@@ -577,7 +629,7 @@ let publicLogin = async(req,res)=>{
                       lastActivity:new Date(),
                       active:1,
                       deviceId:insertToDeviceTable.deviceId,
-                      userId:isUserExist.publicUserId
+                      userId:isUserExist.userId
                     })
                     // update the session id in the device table
                     let updateSessionIdInDeviceTable = await deviceLogin.update({
@@ -608,7 +660,7 @@ let publicLogin = async(req,res)=>{
                 lastActivity:new Date(),
                 active:1,
                 deviceId:insertToDeviceTable.deviceId,
-                userId:isUserExist.publicUserId
+                userId:isUserExist.userId
               })
               // update the session id in the device table
               let updateSessionIdInDeviceTable = await deviceLogin.update({
@@ -682,30 +734,30 @@ let publicLogin = async(req,res)=>{
     else if(mobileNo)
       {
      
-     let  isUserExist = await publicUser.findOne({
+     let  isUserExist = await user.findOne({
         where: {
           phoneNo:mobileNo
         }
         })          
         // mobileNo = await decrypt(mobileNo)
 
-          let {accessToken,refreshToken} = await generateToken(isUserExist.publicUserId,isUserExist.userName, isUserExist.emailId)
+          let {accessToken,refreshToken} = await generateToken(isUserExist.userId,isUserExist.userName, isUserExist.emailId)
 
             const options = {
               httpOnly: true,
               secure: true
           };
 
-          let updateLastLoginTime =  await publicUser.update({lastLogin:lastLoginTime},{
+          let updateLastLoginTime =  await user.update({lastLogin:lastLoginTime},{
             where :{
-              publicUserId:isUserExist.publicUserId
+              userId:isUserExist.userId
             }
           })
           // session and device table data start 
                // check for active session
 
           let checkForActiveSession = await authSessions.findOne({where:{
-            [Op.and] :[{userId:isUserExist.publicUserId},
+            [Op.and] :[{userId:isUserExist.userId},
              {active:1}]
            }})
            // if active
@@ -730,7 +782,7 @@ let publicLogin = async(req,res)=>{
                        lastActivity:new Date(),
                        active:1,
                        deviceId:checkDeviceForParticularSession.deviceId,
-                       userId:isUserExist.publicUserId
+                       userId:isUserExist.userId
                      })
                      // then update the session id in the device table
                      let updateTheDeviceTable = await deviceLogin.update({
@@ -754,7 +806,7 @@ let publicLogin = async(req,res)=>{
                        lastActivity:new Date(),
                        active:1,
                        deviceId:insertToDeviceTable.deviceId,
-                       userId:isUserExist.publicUserId
+                       userId:isUserExist.userId
                      })
                      // update the session id in the device table
                      let updateSessionIdInDeviceTable = await deviceLogin.update({
@@ -780,7 +832,7 @@ let publicLogin = async(req,res)=>{
                        lastActivity:new Date(),
                        active:1,
                        deviceId:insertToDeviceTable.deviceId,
-                       userId:isUserExist.publicUserId
+                       userId:isUserExist.userId
                      })
                      // update the session id in the device table
                      let updateSessionIdInDeviceTable = await deviceLogin.update({
@@ -811,7 +863,7 @@ let publicLogin = async(req,res)=>{
                  lastActivity:new Date(),
                  active:1,
                  deviceId:insertToDeviceTable.deviceId,
-                 userId:isUserExist.publicUserId
+                 userId:isUserExist.userId
                })
                // update the session id in the device table
                let updateSessionIdInDeviceTable = await deviceLogin.update({
@@ -943,9 +995,9 @@ let privateLogin = async(req,res)=>{
             }
           })
             //menu items list fetch
-            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from usermasters pu inner join roleresource rr on rr.roleId = pu.roleId
             inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            where pu.userId = :userId and rr.statusId =1 and rm.statusId =1 
             order by rm.orderIn`
 
             let menuListItems = await sequelize.query(menuListItemQuery,{
@@ -1039,9 +1091,9 @@ let privateLogin = async(req,res)=>{
             }
           })
             //menu items list fetch
-            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+            let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from usermasters pu inner join roleresource rr on rr.roleId = pu.roleId
             inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-            where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+            where pu.userId = :userId and rr.statusId =1 and rm.statusId =1 
             order by rm.orderIn`
 
             let menuListItems = await sequelize.query(menuListItemQuery,{

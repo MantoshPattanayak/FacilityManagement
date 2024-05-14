@@ -36,6 +36,9 @@ const AmenityMaster = sequelize.define('amenitymaster',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
+},
+{
+    timestamps:false
 })
 return AmenityMaster
 }
