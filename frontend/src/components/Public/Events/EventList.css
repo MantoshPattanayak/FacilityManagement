@@ -1,35 +1,29 @@
 .event-main__body__park {
-    padding-top: 60px; /* Add space at the top for the header */
+    padding-top: 60px;
+    width: 100%;
 }
-.event-body{
+
+.event-body {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/event-pic.jpg");
     height: 35vh;
     background-size: cover;
     background-repeat: no-repeat;
 }
-.event-name_park_img{
+
+.event-name_park_img {
     padding: 140px;
     font-size: 40px;
-    color:white;
+    color: white;
 }
-
-
-
-
-
-
-
-
-
-
 
 /* Card here ------------------------------------------ */
 
 .event-card-container {
     display: flex;
-    flex-wrap: wrap; /* Allow cards to wrap to the next line */
-    justify-content: center; /* Center cards horizontally */
-   
+    flex-wrap: wrap;
+    /* Allow cards to wrap to the next line */
+    justify-content: center;
+    /* Center cards horizontally */
 }
 
 
@@ -40,15 +34,17 @@
 
 
 
-.event-park-card-1{
+.event-park-card-1 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px); /* Adjust width for padding */
-    max-width: 300px; /* Limit maximum width for better responsiveness */
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
     padding: 8px;
     gap: 14px;
     margin: 20px;
     border-radius: 18px;
-    background-color:#E0F8E5;
+    background-color: #E0F8E5;
     overflow: hidden;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -57,10 +53,13 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
-.event-park-card-2{
+
+.event-park-card-2 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px); /* Adjust width for padding */
-    max-width: 300px; /* Limit maximum width for better responsiveness */
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
     padding: 8px;
     gap: 14px;
     margin: 20px;
@@ -74,10 +73,13 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
-.event-park-card-3{
+
+.event-park-card-3 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px); /* Adjust width for padding */
-    max-width: 300px; /* Limit maximum width for better responsiveness */
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
     padding: 8px;
     gap: 14px;
     margin: 20px;
@@ -91,6 +93,7 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
+
 .event-Card_img {
     width: 100%;
     border-radius: 15px;
@@ -111,13 +114,13 @@
     margin-bottom: 5px;
 }
 
-.event-park_location{
+.event-park_location {
     font-size: 12px;
     font-weight: 500;
     color: #2f2f2f;
 }
 
-.event-time-details{
+.event-time-details {
     font-size: 12px;
     font-weight: 500;
     color: #2f2f2f;
@@ -139,7 +142,7 @@
 
 
 /* here Search --------------------------------------*/
-.event-Search_container{
+.event-Search_container {
     display: flex;
     justify-content: space-between;
     padding: 8px;
@@ -151,27 +154,36 @@
 /* Adjust styling to make it resemble Google's search input */
 .event-search-container1 {
     position: relative;
-    width: 300px; /* Adjust width as needed */
+    width: 300px;
+    /* Adjust width as needed */
 }
 
 /* Style the input field */
 .event-Search_input {
     width: 100%;
-    padding: 8px; /* Add padding to top and bottom */
-    padding-left: 40px; /* Add more padding on the left to accommodate the icon */
-    border: 2px solid #ccc; /* Increase border thickness */
-    border-radius: 8px; /* Increase border radius for rounded corners */
+    padding: 8px;
+    /* Add padding to top and bottom */
+    padding-left: 40px;
+    /* Add more padding on the left to accommodate the icon */
+    border: 2px solid #ccc;
+    /* Increase border thickness */
+    border-radius: 8px;
+    /* Increase border radius for rounded corners */
     font-size: 16px;
-    color: #333; /* Text color */
-    background-color: #f9f9f9; /* Background color */
-    transition: border-color 0.3s; /* Smooth transition for border color */
+    color: #333;
+    /* Text color */
+    background-color: #f9f9f9;
+    /* Background color */
+    transition: border-color 0.3s;
+    /* Smooth transition for border color */
 }
 
 /* Style the search icon */
 .event-search-icon {
     position: absolute;
     top: 55%;
-    left: 10px; /* Adjust the position to the left */
+    left: 10px;
+    /* Adjust the position to the left */
     transform: translateY(-50%);
     color: #888;
 }
@@ -184,8 +196,10 @@
 
 /* Highlight border color on focus */
 .event-Search_input:focus {
-    border-color: #029c3d; /* Change border color on focus */
-    outline: none; /* Remove default focus outline */
+    border-color: #029c3d;
+    /* Change border color on focus */
+    outline: none;
+    /* Remove default focus outline */
 }
 
 
@@ -200,13 +214,14 @@
 .event-button-text {
     display: none;
     position: absolute;
-    bottom: -20px; /* Adjust this value to change the distance between image and text */
+    bottom: -20px;
+    /* Adjust this value to change the distance between image and text */
     left: 50%;
     transform: translateX(-50%);
-    color:green;
+    color: green;
     font-size: 20px;
     font-weight: 600;
-    
+
 }
 
 .event-image-button:hover .button-text {
@@ -214,10 +229,10 @@
 }
 
 /* Name of Park */
-.event-name_park{
+.event-name_park {
     font-size: 35px;
     font-weight: 600;
-   color: rgb(0, 109, 0);
+    color: rgb(0, 109, 0);
     margin-left: 120px;
 }
 
@@ -227,81 +242,183 @@
 /* Filter On Click of Button Free, Paid , NearBy, Popular --------------------------------------------------------- */
 
 
-.event-Filter_grid{
-  padding: 10px;
-  margin-left: 90px;
-  display: flex;
-  justify-content: space-between;
+.event-Filter_grid {
+    padding: 10px;
+    margin-left: 90px;
+    display: flex;
+    justify-content: space-between;
 }
-.event-gride_page select{
+
+.event-gride_page select {
     margin-right: 90px;
     padding: 0.2vw;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-.event-filter_button{
+
+.event-filter_button {
     display: flex;
     gap: 10px;
 }
+
 /* drop down */
 
-select{
-    border:none;
+select {
+    border: none;
     padding: 20px 20px;
-    border-radius:5px;
-  }
-  
-  select:focus{
-    outline:none;
-  }
+    border-radius: 5px;
+}
+
+select:focus {
+    outline: none;
+}
 
 .event-button-59 {
-  align-items: center;
-  background-color: #fff;
-  border: 2px solid #01b116;
-  box-sizing: border-box;
-  color: #000;
-  cursor: pointer;
-  display: inline-flex;
-  fill: #000;
-  font-family: Inter,sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  height: 35px;
-  justify-content: center;
-  outline: 0;
-  padding: 2px;
-  text-align: center;
-  min-width: 100px;
-  text-decoration: none;
-  transition: all .3s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  border-radius: 10px;
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #01b116;
+    box-sizing: border-box;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    fill: #000;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 35px;
+    justify-content: center;
+    outline: 0;
+    padding: 2px;
+    text-align: center;
+    min-width: 100px;
+    text-decoration: none;
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border-radius: 10px;
 
 }
 
 .event-button-59:focus {
-  color: #171e29;
+    color: #171e29;
 }
 
 .event-button-59:hover {
-  border-color: rgb(4, 156, 1);
-    background-color:rgb(2, 125, 0) ;
+    border-color: rgb(4, 156, 1);
+    background-color: rgb(2, 125, 0);
     color: #fff;
-  fill: #06f;
+    fill: #06f;
 }
 
 
 
 @media (min-width: 768px) {
-  .event-button-59 {
-    min-width: 100px;
-  }
+    .event-button-59 {
+        min-width: 100px;
+    }
 }
 
 /* here Table (List design) --------------------------- */
-.event-table_Container1{
+.event-table_Container1 {
     padding: 30px;
+}
+
+/* Small devices (portrait and landscape) */
+@media only screen and (max-width: 480px) {
+    /* Styles for small devices */
+    .event-Filter_grid {
+        padding: 5px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .event-button-59 {
+        font-size: 14px;
+        height: 30px;
+        min-width: 52px;
+    }
+
+    .event-Search_container {
+        padding: 5px;
+    }
+
+    .event-body {
+        height: 10vh;
+    }
+    
+    .event-name_park_img {
+        padding: 50px;
+        font-size: 22px;
+    }
+}
+
+/* Medium devices (portrait and landscape) */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    /* Styles for medium devices */
+    .event-Filter_grid {
+        padding: 5px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .event-button-59 {
+        font-size: 14px;
+        height: 30px;
+        min-width: 56px;
+    }
+
+    .event-Search_container {
+        padding: 5px;
+        justify-content: center;
+        margin-left: 1px;
+    }
+
+    .event-body {
+        height: 12vh;
+        width: 100%;
+    }
+    
+    .event-name_park_img {
+        padding: 50px;
+        font-size: 22px;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1023px) {
+    /* Styles for medium devices */
+    .event-Filter_grid {
+        padding: 5px;
+        padding: 10px;
+        margin-left: 60px;
+        justify-content: space-between;
+    }
+
+    .event-button-59 {
+        font-size: 14px;
+        height: 30px;
+        min-width: 56px;
+    }
+
+    .event-Search_container {
+        justify-content: flex-start;
+        padding: 8px;
+        margin-left: 60px;
+    }
+
+    .event-body {
+        height: 16vh;
+        width: 100%;
+    }
+    
+    .event-name_park_img {
+        padding: 55px;
+        font-size: 26px;
+    }
+}
+
+/* Large devices (portrait and landscape) */
+@media only screen and (min-width: 1024px) {
+    /* Styles for large devices */
+
 }
