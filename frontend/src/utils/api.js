@@ -14,7 +14,10 @@ const api = {
       Bank_details_Api:'/hosteventdetails/bankService', // get
       Create_Host_event:'/hosteventdetails/createHosteventdetails',  // post
     // Add to Cart----------------------------------------
-       Add_to_Cart:'/booking/addToCart',
+       Add_to_Cart:'/booking/addToCart',  // Post
+       View_Card_UserId:'/booking/viewCartByUserId', // Get
+       Update_Card:'/booking/updateCart', // Put
+
 
     // Park_Booking(Search) Page
      View_Park_Data:'/mapData/viewParkDetails',
@@ -73,7 +76,8 @@ const api = {
    VIEW_BOOKINGS_API: '/userDetails/profile/viewBookings', //post fromDate, toDate, bookingStatus, facilityType, sortingOrder
    FETCH_BOOKINGS_INITIAL_FILTERDATA_API: '/userDetails/profile/initalFilterDataForBooking',   //get
 
-
+   //EVENTS Section
+   VIEW_EVENTS_LIST_API: '/eventactivites/viewEventactivities',   // post givenReq
 }
 
 export default api;
