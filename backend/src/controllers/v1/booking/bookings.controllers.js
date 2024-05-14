@@ -388,7 +388,9 @@ function calculateEndTime(startTime,duration){
     // adding the duration
     let momentEndTime = momentStartTime.add(momentDuration)
     // Format the total momentEndTime back into HH:mm:ss format
+
     momentEndTime = moment.utc(momentEndTime.asMilliseconds()).format('HH:mm:ss')
+    console.log('moment end time', momentEndTime)
     return momentEndTime;
 }
 
@@ -400,6 +402,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
         console.log(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,'here is the data')
           // if exist then update
           if(checkIsItemAlreadyExist){
+            console.log('if exist')
             let updateTheCart = await cartItem.update({
                facilityPreference:facilityPreference,
                 updatedDt:updatedDt,
@@ -495,21 +498,29 @@ let addToCart = async (req,res)=>{
 
             console.log('values', facilityPreference.bookingDate,facilityPreference.startTime,momentEndTime )
             // first check the item already exist or not
-            let checkIsItemAlreadyExist = await cartItem.findOne({
-                where:{
-                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
-                  ]
-                }
-                , 
+      
+            const checkIsItemAlreadyExist = await cartItem.findOne({
+                where: {
+                    [Op.and]: [
+                        { entityId: entityId },
+                        { entityTypeId: entityTypeId },
+                        { cartId: isUserExist.cartId },
+                        sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`),
+                        {
+                            [Op.or]: [
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`),
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`)
+                            ]
+                        }
+                    ]
+                },
                 replacements: {
                     bookingDate: facilityPreference.bookingDate,
                     startTime: facilityPreference.startTime,
                     endTime: momentEndTime
-                  }
-            }) 
+                }
+            });
+           
                 // facilityPreference = {
                 //     totalMembers:facilityPreference.totalMembers,
                 //     otherActivities:facilityPreference.otherActivities,
@@ -538,21 +549,28 @@ let addToCart = async (req,res)=>{
 
          
               // first check the item already exist or not
-              let checkIsItemAlreadyExist = await cartItem.findOne({
-                where:{
-                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
-                  ]
-                }
-                , 
+      
+              const checkIsItemAlreadyExist = await cartItem.findOne({
+                where: {
+                    [Op.and]: [
+                        { entityId: entityId },
+                        { entityTypeId: entityTypeId },
+                        { cartId: isUserExist.cartId },
+                        sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`),
+                        {
+                            [Op.or]: [
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`),
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`)
+                            ]
+                        }
+                    ]
+                },
                 replacements: {
                     bookingDate: facilityPreference.bookingDate,
                     startTime: facilityPreference.startTime,
-                    endTime: facilityPreference.endTime
-                  }
-              }) 
+                    endTime: facilityPreference.endTime,
+                }
+            });
               // if exist then update
                 //   facilityPreference = {
                 //     playersLimit:playersLimit,
@@ -597,22 +615,48 @@ let addToCart = async (req,res)=>{
             // }
             let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
 
-            let checkIsItemAlreadyExist = await cartItem.findOne({
-                where:{
-                  [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
-                    sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
-                  ]
-                }
-                , 
+            // let checkIsItemAlreadyExist = await cartItem.findOne({
+            //     where:{
+            //       [Op.and] :[{entityId:entityId},{entityTypeId:entityTypeId},{cartId:isUserExist.cartId}, 
+            //         sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`), // Check bookingDate in facilityPreference
+            //         sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`), // Check startTime in facilityPreference
+            //         {
+            //         [Op.or] : // Check startTime in facilityPreference
+            //         [sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`) // Check endTime in facilityPreference
+            //        ]
+            //     }
+            //       ]}
+            //     , 
+            //     replacements: {
+            //         bookingDate: facilityPreference.bookingDate,
+            //         startTime: facilityPreference.startTime,
+            //         endTime: momentEndTime
+            //       }
+            // })
+
+            const checkIsItemAlreadyExist = await cartItem.findOne({
+                where: {
+                    [Op.and]: [
+                        { entityId: entityId },
+                        { entityTypeId: entityTypeId },
+                        { cartId: isUserExist.cartId },
+                        sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`),
+                        {
+                            [Op.or]: [
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`),
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`)
+                            ]
+                        }
+                    ]
+                },
                 replacements: {
                     bookingDate: facilityPreference.bookingDate,
                     startTime: facilityPreference.startTime,
                     endTime: momentEndTime
-                  }
-            })        
-                // console.log('check is item  already exist',checkIsItemAlreadyExist)
+                }
+            });
+
+                console.log(checkIsItemAlreadyExist,'check is item  already exist')
 
             
             let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
