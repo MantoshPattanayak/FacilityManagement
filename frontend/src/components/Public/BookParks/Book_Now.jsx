@@ -108,6 +108,7 @@ const Book_Now = () => {
     e.preventDefault();
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    console.log("here fromdata",formData)
   }
   // here Add to Cart -------------------------------------------------------------------------------------------
   async function handleAddtoCart() {
@@ -139,7 +140,7 @@ const Book_Now = () => {
           onClose: () => {
             // Navigate to another page after toast timer completes
             setTimeout(() => {
-              navigate('/profile/booking-details');
+              navigate('/BookParks/Add_Card');
             }, 1000); // Wait 1 second after toast timer completes before navigating
           }
         });

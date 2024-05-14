@@ -14,7 +14,7 @@
 .Add_sport_form {
     width: 840px;
    
-    border: 10px solid red;
+    border: 1px solid rgb(157, 156, 156);
     top: 30%;
 }
 
@@ -64,5 +64,95 @@
     border: 1px solid #ccc;
 }
 
+.Button_Conatiner_Sport{
+    display: flex;
+    justify-content: center;
+    gap: 140px;
+    padding: 20px;
+}
 
 
+/* Styles for both buttons */
+.Add_to_Cart {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+  }
+  
+  .icon {
+    margin-right: 5px;
+  }
+  
+  /* Styles specific to Add to Cart button */
+  .Add_to_Cart {
+    background-color: #4caf50; /* Green */
+  }
+  
+  .Add_to_Cart:hover {
+    background-color: #45a049; /* Darker green */
+  }
+  
+ 
+  .Proceed_to_Payment {
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    padding: 10px;
+  }
+  
+  .icon {
+    margin-right: 5px;
+  }
+  
+  /* Styles specific to Add to Cart button */
+  .Proceed_to_Payment {
+    background-color: #4caf50; /* Green */
+  }
+  
+  .Proceed_to_Payment:hover {
+    background-color: #45a049; /* Darker green */
+  }
+
+
+  /*  */
+  .increament_decrement_conatiner {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .formInput_Add_member {
+    width: 220px; /* Adjust width as needed */
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .decrement-button,
+  .increment-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+  
+  .decrement-button {
+    left: 0;
+    padding: 8px;
+    border-radius: 5px 0 0 5px;
+  
+  }
+  
+  .increment-button {
+    right: 0;
+    padding: 8px;
+    border-radius: 0 5px 5px 0;
+  }
+  
+  
