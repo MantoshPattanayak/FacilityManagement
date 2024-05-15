@@ -6,6 +6,9 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
+import CommonHeader from "../../../common/CommonHeader";
+import CommonFooter from "../../../common/CommonFooter";
+import PublicHeader from "../../../common/PublicHeader";
 
 
 export default function Profile() {
@@ -238,236 +241,240 @@ export default function Profile() {
 
   return (
     <main>
-      <div className="profile--Main-Box">
-        {/* left side-section */}
-        <aside className="profile-leftside--Body">
-          <div className="profile-view--Body">
-            <div className="profile-about">
-              <p>{formData.userName}</p>
-              <p>{formData.emailId}</p>
-              <p>{formData.phoneNo}</p>
+      <div>
+        <PublicHeader />
+        <div className="profile--Main-Box">
+          {/* left side-section */}
+          <aside className="profile-leftside--Body">
+            <div className="profile-view--Body">
+              <div className="profile-about">
+                <p>{formData.userName}</p>
+                <p>{formData.emailId}</p>
+                <p>{formData.phoneNo}</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <ul className="profile-button--Section">
-              <li>
-                <a href="/ProfileHistory"
-                   className="profile-button"
-                   style={{ color: 'white', backgroundColor:"green" }}>
-                  Edit User Profile
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/UserProfile/ProfileHistory" className=""
-                >
-                  Booking Details
-                </a>
-              </li>
-              <li>
-                <a href="/UserProfile/Favorites">
-                  Favorites
-                </a>
-              </li>
-              <li>
-                <a href="#">Cart Details</a>
-              </li>
-            </ul>
-            {/* Logout Button */}
-            <button className="button-67 ">
-              <h1>Logout</h1>
-              <FontAwesomeIcon icon={faArrowRightFromBracket} />
-            </button>
+            <div>
+              <ul className="profile-button--Section">
+                <li>
+                  <a href="/ProfileHistory"
+                    className="profile-button"
+                    style={{ color: 'white', backgroundColor: "green" }}>
+                    Edit User Profile
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/UserProfile/ProfileHistory" className=""
+                  >
+                    Booking Details
+                  </a>
+                </li>
+                <li>
+                  <a href="/UserProfile/Favorites">
+                    Favorites
+                  </a>
+                </li>
+                <li>
+                  <a href="/BookParks/Add_Card">Cart Details</a>
+                </li>
+              </ul>
+              {/* Logout Button */}
+              <button className="button-67 ">
+                <h1>Logout</h1>
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              </button>
 
-          </div>
-        </aside>
+            </div>
+          </aside>
 
-        {/* right side-section */}
-        <div className="profile-rightside--Body">
-          <h1>User-Profile</h1>
+          {/* right side-section */}
+          <div className="profile-rightside--Body">
+            <h1>User-Profile</h1>
 
-          {/* form-content */}
-          <form className="profile-form-Body" onSubmit={handleSubmit}>
-            <div className="profilePhoto" onClick={handleProfileClick}>
-              {photoUrl ? (
-                <img src={photoUrl} alt="Uploaded" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
-              ) : (
-                <div className="profileIcon">
-                  <FontAwesomeIcon icon={faCircleUser} />
-                  <button>Add Photo</button>
+            {/* form-content */}
+            <form className="profile-form-Body" onSubmit={handleSubmit}>
+              <div className="profilePhoto" onClick={handleProfileClick}>
+                {photoUrl ? (
+                  <img src={photoUrl} alt="Uploaded" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                ) : (
+                  <div className="profileIcon">
+                    <FontAwesomeIcon icon={faCircleUser} />
+                    <button>Add Photo</button>
+                  </div>
+
+                )}
+                <input ref={fileInputRef} type="file" id="photoInput" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                {photoUrl && (
+                  <button type="button" onClick={clearPhoto}>
+                    <FontAwesomeIcon icon={faTrash} style={{ color: "#a41e1e", }} />
+                  </button>
+                )}
+                {!photoUrl && (
+                  <input ref={fileInputRef} type="file" id="photo" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                )}
+
+              </div>
+
+
+
+              <div className="profile-formContainer">
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="firstName">First Name</label>
+                  <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+                  {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
-              )}
-              <input ref={fileInputRef} type="file" id="photoInput" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
-              {photoUrl && (
-                <button type="button" onClick={clearPhoto}>
-                  <FontAwesomeIcon icon={faTrash} style={{ color: "#a41e1e", }} />
-                </button>
-              )}
-              {!photoUrl && (
-                <input ref={fileInputRef} type="file" id="photo" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
-              )}
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
+                  {errors.name && <span className="error">{errors.name}</span>}
+                </div>
 
-            </div>
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="email">Email</label>
+                  <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
+                  {errors.email && <span className="error">{errors.email}</span>}
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="language">Language</label>
+                  <select id="language" name='language' value={formData.language} onChange={handleData}>
+                    <option>English</option>
+                    <option>Hindi</option>
+                    <option>Spanish</option>
+                  </select>
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="password">New Password</label>
+                  <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="NewPassword">Reenter New Password</label>
+                  <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
+                  {errors.password && <span className="error">{errors.password}</span>}
+                </div>
 
 
-
-            <div className="profile-formContainer">
-              <div className="profile-formContainer_Inner">
-                <label htmlFor="firstName">First Name</label>
-                <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
-                {errors.name && <span className="error">{errors.name}</span>}
               </div>
 
-              <div className="profile-formContainer_Inner">
-                <label htmlFor="lastName">Last Name</label>
-                <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
-                {errors.name && <span className="error">{errors.name}</span>}
+              {/* choose preffered Activity */}
+              <div className="profile--Activity-Box">
+                <h2>
+                  Preferred Activities{" "}
+                  <span className="text-sm text-zinc-500">
+                    (user can select multiple activities)
+                  </span>
+                </h2>
+                {/* <form onSubmit={handleSubmit}> */}
+                <div className="profile--Activity-options">
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Running")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Running")}
+                  >
+                    <span>🏃 Running</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Yoga")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Yoga")}
+                  >
+                    <span>🧘 Yoga</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Open-Gym")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Open-Gym")}
+                  >
+                    <span>🏋️ Open-Gym</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Swimming")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Swimming")}
+                  >
+                    <span>🏊 Swimming</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Cricket")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Cricket")}
+                  >
+                    <span>🏏 Cricket</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Football")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Football")}
+                  >
+                    <span>⚽ Football</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Volleyball")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Volleyball")}
+                  >
+                    <span>🏐 Volleyball</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Badminton")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Badminton")}
+                  >
+                    <span>🏸 Badminton</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Library")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Library")}
+                  >
+                    <span>📚 Library</span>
+                  </button>
+                  <button
+                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Boating")
+                      ? "border-solid bg-green-800 text-white"
+                      : "border-solid border border-gray-600 "
+                      } text-black`}
+                    onClick={() => handleActivityToggle("Boating")}
+                  >
+                    <span>🛶 Boating</span>
+                  </button>
+                  {/* Add more buttons for other activities */}
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 text-white px-6 py-3 rounded-lg"
+                  id="ProfileActButton"
+                  onClick={handleUpdate}
+                >
+                  Submit
+                </button>
+                {/* </form> */}
               </div>
-
-              <div className="profile-formContainer_Inner">
-                <label htmlFor="email">Email</label>
-                <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
-                {errors.email && <span className="error">{errors.email}</span>}
-              </div>
-
-              <div className="profile-formContainer_Inner">
-                <label htmlFor="language">Language</label>
-                <select id="language" name='language' value={formData.language} onChange={handleData}>
-                  <option>English</option>
-                  <option>Hindi</option>
-                  <option>Spanish</option>
-                </select>
-              </div>
-
-              <div className="profile-formContainer_Inner">
-                <label htmlFor="password">New Password</label>
-                <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
-              </div>
-
-              <div className="profile-formContainer_Inner">
-                <label htmlFor="NewPassword">Reenter New Password</label>
-                <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
-                {errors.password && <span className="error">{errors.password}</span>}
-              </div>
-
-
-            </div>
-
-            {/* choose preffered Activity */}
-            <div className="profile--Activity-Box">
-              <h2>
-                Preferred Activities{" "}
-                <span className="text-sm text-zinc-500">
-                  (user can select multiple activities)
-                </span>
-              </h2>
-              {/* <form onSubmit={handleSubmit}> */}
-              <div className="profile--Activity-options">
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Running")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Running")}
-                >
-                  <span>🏃 Running</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Yoga")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Yoga")}
-                >
-                  <span>🧘 Yoga</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Open-Gym")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Open-Gym")}
-                >
-                  <span>🏋️ Open-Gym</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Swimming")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Swimming")}
-                >
-                  <span>🏊 Swimming</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Cricket")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Cricket")}
-                >
-                  <span>🏏 Cricket</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Football")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Football")}
-                >
-                  <span>⚽ Football</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Volleyball")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Volleyball")}
-                >
-                  <span>🏐 Volleyball</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Badminton")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Badminton")}
-                >
-                  <span>🏸 Badminton</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Library")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Library")}
-                >
-                  <span>📚 Library</span>
-                </button>
-                <button
-                  className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Boating")
-                    ? "border-solid bg-green-800 text-white"
-                    : "border-solid border border-gray-600 "
-                    } text-black`}
-                  onClick={() => handleActivityToggle("Boating")}
-                >
-                  <span>🛶 Boating</span>
-                </button>
-                {/* Add more buttons for other activities */}
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg"
-                id="ProfileActButton"
-                onClick={handleUpdate}
-              >
-                Submit
-              </button>
-              {/* </form> */}
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
+        <CommonFooter />
       </div>
     </main>
   );

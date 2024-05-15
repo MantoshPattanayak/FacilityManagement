@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { decryptData } from "../../../utils/encryptData";
+import PublicHeader from "../../../common/PublicHeader";
 
 const ProfileHistory = () => {
   const tabList = [
@@ -57,7 +58,7 @@ const ProfileHistory = () => {
       setPhoneNo(decryptData(res.data.public_user.phoneNo));
     }
     catch (error) {
-      console.error("Error in fetching data:",error);
+      console.error("Error in fetching data:", error);
     }
   }
 
@@ -69,9 +70,9 @@ const ProfileHistory = () => {
 
   return (
     <div>
-      <CommonHeader />
+      <PublicHeader />
       <div className="booking-dtails-container">
-      <aside className="profile-leftside--Body">
+        <aside className="profile-leftside--Body">
           <div className="profile-view--Body">
             <div className="profile-about">
               <p>{userName}</p>
@@ -88,9 +89,9 @@ const ProfileHistory = () => {
               </li>
               <li>
                 <a
-                   href="/ProfileHistory"
-                   className="profile-button"
-                   style={{ color: 'white', backgroundColor:"green" }}
+                  href="/ProfileHistory"
+                  className="profile-button"
+                  style={{ color: 'white', backgroundColor: "green" }}
                 >
                   Booking Details
                 </a>
@@ -129,33 +130,36 @@ const ProfileHistory = () => {
           </div>
 
           <div className="entry-details">
-            <div className="last-entry">
-              <p>Last Entry: 22 February 2011, 10.00 AM</p>
-            </div>
-            <div className="average-time">
-              <div className="dropdown">
-                <p>Average Time in Park: 1 hour, 20 minutes</p>
-                <select
-                  className="drop"
-                  value={selectedOption}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                >
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Weekly</option>
-                </select>
+
+            <div className="ProfileHistoryDesc">
+              <div className="last-entry">
+                <p>Last Entry: 22 February 2011, 10.00 AM</p>
               </div>
-            </div>
-            <div className="total-visit">
-              <div className="dropdown">
-                <p>Total Visits : 5</p>
-                <select
-                  className="drop"
-                  value={selectedOption}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                >
-                  <option value="Daily">Weekly</option>
-                  <option value="Weekly">Daily</option>
-                </select>
+              <div className="average-time">
+                <div className="dropdown">
+                  <p>Average Time in Park: 1 hour, 20 minutes</p>
+                  <select
+                    className="drop"
+                    value={selectedOption}
+                    onChange={(e) => setSelectedOption(e.target.value)}
+                  >
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                  </select>
+                </div>
+              </div>
+              <div className="total-visit">
+                <div className="dropdown">
+                  <p>Total Visits : 5</p>
+                  <select
+                    className="drop"
+                    value={selectedOption}
+                    onChange={(e) => setSelectedOption(e.target.value)}
+                  >
+                    <option value="Daily">Weekly</option>
+                    <option value="Weekly">Daily</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -166,7 +170,7 @@ const ProfileHistory = () => {
               <div></div>
               <div className="park-name">
                 <p>Budha Jayanti Park</p>
-                <p>Neeladri vihar , Chandrashekharpur, Bhubaneswar. </p>
+                <p>Neeladri vihar , Chandrashekharpur, Bhubaneswar</p>
                 <p>Activity : Running, Walking.</p>
               </div>
 

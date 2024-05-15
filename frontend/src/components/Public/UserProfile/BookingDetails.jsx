@@ -160,12 +160,12 @@ const BookingDetails = () => {
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="/UserProfile/Favorites">
                   Favorites
                 </a>
               </li>
               <li>
-                <a href="#">Cart Details</a>
+                <a href="/BookParks/Add_Card">Cart Details</a>
               </li>
             </ul>
             {/* Logout Button */}
