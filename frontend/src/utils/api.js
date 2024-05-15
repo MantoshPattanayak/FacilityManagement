@@ -78,6 +78,7 @@ const api = {
 
    //EVENTS Section
    VIEW_EVENTS_LIST_API: '/eventactivites/viewEventactivities',   // post givenReq
+   VIEW_EVENT_BY_ID_API: '/eventactivites/viewEventactivitiesById', // get :eventId
 }
 
 export default api;

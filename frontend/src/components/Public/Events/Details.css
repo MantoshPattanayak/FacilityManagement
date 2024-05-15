@@ -7,10 +7,6 @@
     height: 30vh;
     background-size: cover;
     background-repeat: no-repeat;
-  
- 
-   
-  
    
 }
 
@@ -59,7 +55,7 @@
 .event-Map_container{
     background-color: rgb(251, 249, 249);
     border: 2px solid #cdd1ce;
-    height: 44vh;
+    height: 66vh;
     width: 40vh;
 }
 .event-Google_map{
@@ -69,13 +65,18 @@
 
 /* ----------------------------------------------Time and status ------------------------------------------ */
 .event-time_status{
-    display: flex;
-    justify-content: space-around;
+  margin-top: 5px;
+  margin-left: 5px;
 
 }
+.event-date_text{
+    font-size: 18px;
+    font-weight: 500;
+    color: #484747;
+}
 .event-time_text{
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 500;
     color: #484747;
 }
 .event-Open_Button{
@@ -101,33 +102,35 @@
 
 /* CSS */
 .event-button-9 {
-  appearance: button;
-  backface-visibility: hidden;
-  background-color: #3AB757;
-  border-radius: 6px;
-  border-width: 0;
-  box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
-  font-size: 100%;
-  height: 44px;
-
-  line-height: 1.15;
-  margin: 12px 0 0;
-  outline: none;
-  overflow: hidden;
-  padding: 0 25px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transform: translateZ(0);
-  transition: all .2s,box-shadow .08s ease-in;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    appearance: button;
+    backface-visibility: hidden;
+    background-color: #3AB757;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
+    font-size: 100%;
+    height: 44px;
+    line-height: 1.15;
+    margin: 12px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s,box-shadow .08s ease-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 45%;
 }
 
 .event-button-9:disabled {
@@ -312,3 +315,103 @@
     font-size: 20px;
     font-weight: 600;
 }
+
+/*........... Add media Queries for responsiceness ...........*/
+@media screen and (max-width:975px){
+.event-Park_image{
+    width: 40vw;
+}
+}
+@media screen and (max-width:650px){
+ 
+    .event-Map_container {
+        height: 51vh;
+        width: 35vh;
+    }
+    }
+    /* @media screen and (max-width:550px){
+        .event-Park_image{
+            width: 60vw;
+        }
+        .event-map_img_main_conatiner {
+             display: flex; 
+            justify-content: space-evenly;
+            padding-top: 30px;
+        }
+    } */
+    @media screen and (max-width:550px){
+        .event-map_img_main_conatiner{
+            display: unset;
+        }
+        .event-Park_image{
+            margin-left: 5%;
+            width: 90vw;
+        }
+        .event-Map_container {
+            height: 54vh;
+            width: 50vh;
+            margin-left: 10%;
+            margin-top: 15px;
+        }
+        .event-Service_text {
+            font-size: 20px;
+
+        }
+    }
+
+
+    
+
+
+
+
+
+
+
+
+    /* Add media queries for responsiveness */
+
+/* For smaller screens */
+@media screen and (max-width: 975px) {
+    .event-Park_image {
+      width: 40vw; /* Adjust image width */
+    }
+  }
+  
+  /* For even smaller screens */
+  @media screen and (max-width: 650px) {
+    .event-Map_container {
+      height: 69vh;
+      width: 35vh; /* Adjust map container width */
+    }
+    .event-text-park {
+        font-size: 26px;
+        
+    }
+
+  }
+  
+  /* For mobile devices */
+  @media screen and (max-width: 550px) {
+    .event-map_img_main_conatiner {
+      display: block; /* Reset display for main container */
+    }
+    .event-Park_image {
+      margin-left: 5%;
+      width: 90vw; /* Adjust image width */
+    }
+
+    .eventmap-parent{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .event-Map_container {
+      height: 69vh;
+      margin-top: 15px; 
+    }
+    .event-Service_text {
+      font-size: 20px; 
+    }
+  }
+  
