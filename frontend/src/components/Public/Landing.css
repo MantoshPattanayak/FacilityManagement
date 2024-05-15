@@ -773,8 +773,8 @@ margin-top: 20px;  */
 
 }
 .gallery-slider{
-width: 100%;
-height: 90px;
+width: 98%;
+height: auto;
 margin-bottom: 100px;
 margin-top: 20px; 
     
@@ -947,7 +947,9 @@ border-radius: 5px;
 .avatisement-Border{
 margin-top: 100px;
 }
-
+.react-multi-carousel-list {
+    padding-left: 66px;
+}
 
 /* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
 
