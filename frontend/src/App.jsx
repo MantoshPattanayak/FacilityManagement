@@ -73,11 +73,6 @@ import HostEvent from "./components/Public/UserProfile/HostEvent";
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
 import About from "./components/Public/About_And_FQA_PAGE/About";
-import History from "./components/Public/About_And_FQA_PAGE/History";
-import Organogram from "./components/Public/About_And_FQA_PAGE/Organogram";
-import Stakeholders from "./components/Public/About_And_FQA_PAGE/StakeHolder";
-import FqaPage from "./components/Public/About_And_FQA_PAGE/FqaPage";
-import StandOut from "./components/Public/About_And_FQA_PAGE/StandOut";
 import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
 import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
 import AdminLogin from "./components/Admin/Login";
@@ -104,7 +99,6 @@ function App() {
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
-            
             <Route path="/" element={<Landing />}/>
             <Route path="/PublicLoader" element={<PublicLoader />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
@@ -112,11 +106,6 @@ function App() {
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
             <Route path="/About" element={<About/>} />
-            <Route path="/History" element={<History/>} />
-            <Route path="/Organogram" element={<Organogram/>} />
-            <Route path="/Stakeholders" element={<Stakeholders/>} />
-            <Route path="/StandOut" element={<StandOut/>} />
-            <Route path="/FqaPage" element={<FqaPage/>} />
           
             {/* Public (Book Parks)  */}
             <Route

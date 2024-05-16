@@ -691,7 +691,7 @@ let viewCartByUserId = async(req,res)=>{
             }
         })
         if(findCartIdByUserId){
-            // console.log(findCartIdByUserId.cartId,'cartId')
+            console.log(findCartIdByUserId.cartId,'cartId')
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
             amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.statusId = 1`,
             { type: sequelize.QueryTypes.SELECT })
@@ -724,7 +724,7 @@ let viewCartByUserId = async(req,res)=>{
          
         // })
 
-        // console.log(findCartItemsWRTCartId,'findCartIdByUserId')
+        console.log(findCartItemsWRTCartId,'findCartIdByUserId')
         if(findCartIdByUserId.length<=0){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:  "Not a single item is associated with the cart"
