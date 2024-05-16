@@ -155,4 +155,22 @@
     border-radius: 0 5px 5px 0;
   }
   
-  
+  .error {
+    border-color: red; /* Set border color to red for error */
+}
+
+.errorMessage {
+    color: red; /* Set text color to red for error message */
+    font-size: 0.8em; /* Adjust font size for error message */
+    text-align: center;
+}
+.error_massage_span{
+  display: flex;
+  justify-content: center;
+}
+.Faclity_Name{
+  text-align: center;
+}
+.Faclity_Address{
+  text-align: center;
+}
