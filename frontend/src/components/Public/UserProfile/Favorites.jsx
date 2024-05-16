@@ -1,15 +1,18 @@
 import React from 'react'
 import './Favorites.css'
-import CommonHeader from '../../../common/CommonHeader';
 import CommonFooter from '../../../common/CommonFooter';
 
 import { useState, useEffect } from 'react';
 import eventPhoto from '../../../assets/ama_bhoomi_bg.jpg';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faClock, faUser, faRightFromBracket, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faEllipsisVertical, faClock, faUser, faRightFromBracket, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import axiosHttpClient from "../../../utils/axios";
+import { decryptData } from "../../../utils/encryptData";
+import { logOutUser } from '../../../utils/utilityFunctions';
+import PublicHeader from '../../../common/PublicHeader';
 const Favorites = () => {
-
+    const navigate = useNavigate();
     const tabList = [
         {
             tabName: 'All Bookings',
@@ -125,25 +128,81 @@ const Favorites = () => {
         setSelectedDate(event.target.value); // Update selected date on change
     };
 
+
+    //get Api Here
+
+    const [userName, setUserName] = useState('');
+    const [emailId, setEmailId] = useState('');
+    const [phoneNo, setPhoneNo] = useState('');
+
+    const publicUserId = decryptData(
+        new URLSearchParams(location.search).get("publicUserId")
+    );
+
+    async function fetchProfileDetails() {
+        try {
+            let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
+            console.log('response of fetch profile api', res.data.public_user);
+
+            setUserName(decryptData(res.data.public_user.userName));
+            setEmailId(decryptData(res.data.public_user.emailId));
+            setPhoneNo(decryptData(res.data.public_user.phoneNo));
+        }
+        catch (error) {
+            console.error("Error in fetching data:", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchProfileDetails();
+    }, []);
+
+
     return (
         <div>
-            <CommonHeader />
+            <PublicHeader />
             <div className="booking-dtails-container">
-                <div className="user-profile-section">
-                    <div className="user-details">
-                        <FontAwesomeIcon icon={faUser} className='icon-user' />
-                        <p>Sunidhi Chauhan</p>
-                        <p>7008765443</p>
-                        <p>sushi@gmail.com</p>
+                <aside className="profile-leftside--Body">
+                    <div className="profile-view--Body">
+                        <div className="profile-about">
+                            <p>{userName}</p>
+                            <p>{emailId}</p>
+                            <p>{phoneNo}</p>
+                        </div>
                     </div>
-                    <div className="buttons-profile">
-                        <button className="edit-profile-btn">Edit User Profile</button>
-                        <button className="edit-profile-btn">Booking Details</button>
-                        <button className="edit-profile-btn">Favorites</button>
-                        <button className="edit-profile-btn">Card Details</button>
+                    <div>
+                        <ul className="profile-button--Section">
+                            <li>
+                                <a href="/Profile" className="">
+                                    Edit User Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                   href='/BookingDetails' className=''
+                                >
+                                    Booking Details
+                                </a>
+                            </li>
+                            <li>
+                                <a  href="/UserProfile/Favorites"
+                                    className="profile-button"
+                                    style={{ color: 'white', backgroundColor: "green" }}>
+                                    Favorites
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/BookParks/Add_Card">Cart Details</a>
+                            </li>
+                        </ul>
+                        {/* Logout Button */}
+                        <button className="button-67 " onClick={(e)=>{logOutUser(e); navigate('/');}}>
+                            <h1>Logout</h1>
+                            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                        </button>
+
                     </div>
-                    <button className="logout-button"><FontAwesomeIcon icon={faRightFromBracket} />Logout</button>
-                </div>
+                </aside>
                 <div className="right-container">
                     {/* New div with paragraph and blue border */}
 

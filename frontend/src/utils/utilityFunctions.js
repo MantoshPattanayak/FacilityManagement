@@ -31,8 +31,11 @@ function formatDateYYYYMMDD(date) { //format input date as DD-MM-YYYY
     return `${year}-${month}-${day}`;
 }
 
-function logOutUser() {
+function logOutUser(e) {
+    e.preventDefault();
     sessionStorage.setItem('isUserLoggedIn', 0);
+    sessionStorage.clear();
+    localStorage.clear();
     return;
 }
 

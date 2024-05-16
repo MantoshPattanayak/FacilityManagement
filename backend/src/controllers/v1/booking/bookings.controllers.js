@@ -233,6 +233,7 @@ let parkBooking = async (req, res) => {
 
                 const newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    facilityTypeId: entityTypeId,
                     totalMembers: bookingData.totalMembers,
                     otherActivities: bookingData.otherActivities,
                     bookingDate: bookingData.bookingDate,
@@ -288,6 +289,7 @@ let parkBooking = async (req, res) => {
 
                 const newPlaygroundBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    facilityTypeId: entityTypeId,
                     totalMembers: bookingData.playerLimit,
                     sportsName: bookingData.sports,
                     bookingDate: bookingData.bookingDate,
@@ -467,7 +469,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
 
 let addToCart = async (req,res)=>{
     try {
-        console.log('1')
+        console.log('here reponse of sports',req.body)
         let userId = req.user?.id || 1;
         let createdDt = new Date();
         let updatedDt = new Date();

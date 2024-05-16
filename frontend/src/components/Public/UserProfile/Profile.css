@@ -1,3 +1,18 @@
+/* //error */
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.profile-formContainer_Inner{
+  margin-bottom: 1rem;
+}
+
+
+/*-------------- Main Profile------------- */
+
 .profile--Main-Box {
   height: 100vh;
   padding: 3rem 5rem;
@@ -60,9 +75,17 @@
   font-weight: 500;
 }
 
-.profile-button--Section>li>a:hover {
+
+/* .profile-button--Section>li>a:hover {
   background-color: rgba(217, 217, 217, 1);
+} */
+
+.profile-button--Section li a:hover {
+  background-color: green; /* Green background on hover */
+  color: white; /* White text color on hover */
 }
+
+
 
 /* .profilePhoto {
   display: flex;
@@ -200,7 +223,7 @@
 .profile-formContainer select {
   width: 100%;
   padding: 0.5rem;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;

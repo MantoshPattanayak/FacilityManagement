@@ -92,7 +92,7 @@ const Add_Card = () => {
                                         </span>
                                         <span className="date_time_text_icon9">
                                             <h1 className="Location_text9"> <FontAwesomeIcon icon={faUsers} className="people-icon" /></h1>
-                                            <h1 className="Location_text9">{cardItem.facilityPreference.totalMembers} players joined</h1>
+                                            <h1 className="Location_text9">{(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit} players joined</h1>
                                         </span>
                                     </div>
                                     <div className="Money_name_icon9">

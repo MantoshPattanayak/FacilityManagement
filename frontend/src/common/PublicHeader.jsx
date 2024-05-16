@@ -42,18 +42,18 @@ export default function PublicHeader() {
     try {
       let res = await axiosHttpClient('View_Card_UserId', 'get')
 
-      console.log("here Response of Total Count of Cart(Public Header)", res)
+ 
       setGetCardCount(res.data)
     }
     catch (err) {
-      console.log("here Error Total Count of Cart (Public Header)", err)
+      console.log( err)
     }
   }
 
   useEffect(() => {
     GetTotalNumberofCart()
-    // const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
-    // return () => clearInterval(intervalId);
+    const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
+    return () => clearInterval(intervalId);
   }, [])
 
   // on page load, set language preference
@@ -81,7 +81,7 @@ export default function PublicHeader() {
 
         <nav className="navbar">
           <div className="logo-ama-boomi">
-            <img src={AppLogo} alt="" className="h-[80%] absolute" />
+            <img src={AppLogo} alt="" className="h-[100%] top-0 absolute" />
           </div>
 
           <ul>
@@ -104,12 +104,16 @@ export default function PublicHeader() {
             <li>
               <a href="/events">EVENTS</a>
             </li>
-            <li>
-              <a href="#">HOST EVENT</a>
-            </li>
+            {
+              isUserLoggedIn == 1 ? (
+                <li>
+                  <a href="/Event_hostPage">HOST EVENT</a>
+                </li>
+              ) : ''
+            }
             {isUserLoggedIn == 1 ? (
               <li>
-                <a className="" href="/profile/booking-details">
+                <a className="" href="/Profile">
                   <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
                 </a>
               </li>
