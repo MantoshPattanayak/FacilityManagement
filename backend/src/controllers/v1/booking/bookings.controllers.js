@@ -233,6 +233,7 @@ let parkBooking = async (req, res) => {
 
                 const newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    facilityTypeId: entityTypeId,
                     totalMembers: bookingData.totalMembers,
                     otherActivities: bookingData.otherActivities,
                     bookingDate: bookingData.bookingDate,
@@ -288,6 +289,7 @@ let parkBooking = async (req, res) => {
 
                 const newPlaygroundBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    facilityTypeId: entityTypeId,
                     totalMembers: bookingData.playerLimit,
                     sportsName: bookingData.sports,
                     bookingDate: bookingData.bookingDate,
