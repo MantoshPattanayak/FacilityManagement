@@ -607,7 +607,7 @@ const Landing = () => {
         </div>
 
         </div>
-
+<br /><br /><br /><br />
 
 {/* Auto scrolling card section ..................*/}
 
@@ -817,7 +817,7 @@ const Landing = () => {
                 </div>
               </div>
             ))}
-          </Carousel>
+          </Carousel>;
         </div>
 
       </div>

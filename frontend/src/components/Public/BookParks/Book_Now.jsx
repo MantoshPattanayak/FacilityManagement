@@ -176,7 +176,7 @@ const Book_Now = () => {
       }
       catch (error) {
         console.log(error);
-        toast.error('Booking details submission failed.')
+        toast.error('Booking details submission failedc.')
       }
     }
     else {
