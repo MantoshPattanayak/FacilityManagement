@@ -172,26 +172,23 @@ const Favorites = () => {
                     <div>
                         <ul className="profile-button--Section">
                             <li>
-                                <a href="/Profile" className="">
+                                <Link to="/Profile" className="">
                                     Edit User Profile
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                   href='/profile/booking-details' className=''
-                                >
+                                <Link to="/BookingDetails" className="">
                                     Booking Details
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a  href="/UserProfile/Favorites"
+                                <Link
+                                    to="/UserProfile/Favorites"
                                     className="profile-button"
-                                    style={{ color: 'white', backgroundColor: "green" }}>
+                                    style={{ color: 'white', backgroundColor: 'green' }}
+                                >
                                     Favorites
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/BookParks/Add_Card">Cart Details</a>
+                                </Link>
                             </li>
                         </ul>
                         {/* Logout Button */}

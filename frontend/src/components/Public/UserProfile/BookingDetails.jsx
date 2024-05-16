@@ -120,7 +120,7 @@ const BookingDetails = () => {
       setPhoneNo(decryptData(res.data.public_user.phoneNo));
     }
     catch (error) {
-      console.error("Error in fetching data:",error);
+      console.error("Error in fetching data:", error);
     }
   }
 
@@ -135,47 +135,44 @@ const BookingDetails = () => {
       <PublicHeader />
       <div className="booking-dtails-container">
         <div className="booking-dtails-container">
-         <aside className="profile-leftside--Body">
-          <div className="profile-view--Body">
-            <div className="profile-about">
-              <p>{userName}</p>
-              <p>{emailId}</p>
-              <p>{phoneNo}</p>
+          <aside className="profile-leftside--Body">
+            <div className="profile-view--Body">
+              <div className="profile-about">
+                <p>{userName}</p>
+                <p>{emailId}</p>
+                <p>{phoneNo}</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <ul className="profile-button--Section">
-              <li>
-                <a href="/Profile" className="">
-                  Edit User Profile
-                </a>
-              </li>
-              <li>
-                <a
-                   href="/ProfileHistory"
-                   className="profile-button"
-                   style={{ color: 'white', backgroundColor:"green" }}
-                >
-                  Booking Details
-                </a>
-              </li>
-              <li>
-                <a href="/UserProfile/Favorites">
-                  Favorites
-                </a>
-              </li>
-              <li>
-                <a href="/BookParks/Add_Card">Cart Details</a>
-              </li>
-            </ul>
-            {/* Logout Button */}
-            <button className="button-67 ">
-              <h1>Logout</h1>
-              <FontAwesomeIcon icon={faArrowRightFromBracket} />
-            </button>
+            <div>
+              <ul className="profile-button--Section">
+                <li>
+                  <Link to="/Profile" className="">
+                    Edit User Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/BookingDetails"
+                    className="profile-button"
+                    style={{ color: 'white', backgroundColor: 'green' }}
+                  >
+                    Booking Details
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/UserProfile/Favorites">
+                    Favorites
+                  </Link>
+                </li>
+              </ul>
+              {/* Logout Button */}
+              <button className="button-67 ">
+                <h1>Logout</h1>
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              </button>
 
-          </div>
-        </aside>
+            </div>
+          </aside>
           <div className="right-container-booking-details">
             {/* New div with paragraph and blue border */}
             {/* <div className="form-container"> */}

@@ -9,7 +9,7 @@ import { encryptData, decryptData } from "../../../utils/encryptData";
 import CommonHeader from "../../../common/CommonHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import PublicHeader from "../../../common/PublicHeader";
-
+import { Link } from "react-router-dom";
 
 export default function Profile() {
 
@@ -256,27 +256,28 @@ export default function Profile() {
             <div>
               <ul className="profile-button--Section">
                 <li>
-                  <a href="/ProfileHistory"
+                  <Link
+                    to="/ProfileHistory"
                     className="profile-button"
-                    style={{ color: 'white', backgroundColor: "green" }}>
+                    style={{ color: 'white', backgroundColor: "green" }}
+                  >
                     Edit User Profile
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/UserProfile/ProfileHistory" className=""
+                  <Link
+                    to="/profile/booking-details"
+                    className=""
                   >
                     Booking Details
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/UserProfile/Favorites">
+                  <Link to="/UserProfile/Favorites">
                     Favorites
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="/BookParks/Add_Card">Cart Details</a>
-                </li>
+                
               </ul>
               {/* Logout Button */}
               <button className="button-67 ">
