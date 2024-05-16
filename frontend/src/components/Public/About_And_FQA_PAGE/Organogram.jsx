@@ -4,21 +4,22 @@ import PublicHeader from "../../../common/PublicHeader";
 import "./About.css"
 import Aboutusimg from "../../../assets/About_us3.png"
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-const About=()=>{
+const Organogram=()=>{
   const location = useLocation();
   const navigate = useNavigate();
  return(
     <div className="About_Mian_conatiner">
       <PublicHeader/>
      <div className="Child_about_container">
-       <h1 className="About">Overview</h1>
+       <h1 className="About">Organogram</h1>
      </div>
       <div className="About_div">
-         <h1 className="About_heading">Overview</h1>
+         <h1 className="About_heading">Organogram</h1>
          <div className="About_us_flex_conatiner">
             <div className="About_us_text">
-             <h1 className="About_us_text_details" >Babasaheb Bhimrao Ambedkar Bus Terminal (BSABT), Bhubaneswar is a state-of-the-art <br></br>bus terminal developed as a hub for various bus routes within Odisha <br></br>and for linking Bhubaneswar to other states. It aims to enhance the experience of bus travellers to and from the Capital city.
-              </h1>
+                <div>
+                <img className="h-96" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM8wlfb_tHMcUVo3wId33zVAWZMbNQUVazdA&usqp=CAU"></img>
+                </div>
              
             </div>
             <div className="About_us_img">
@@ -37,4 +38,4 @@ const About=()=>{
     </div>
     )
 }
-export default About;
+export default Organogram;
