@@ -33,6 +33,7 @@ const Book_Now_Sport = () => {
     });
     const [FacilitiesData, setFacilitiesData] = useState('');
     const [errors, setErrors] = useState({}); // State to hold validation errors
+    const [sportsDropdownData , setSportsDropdownData] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -154,10 +155,11 @@ const Book_Now_Sport = () => {
     //  here Get types of Sport ----------------------
     async function GetSportType() {
         try {
-            let res = await axiosHttpClient("here Api", "get");
-            console.log("here Response of Get sport type in dropdown", res);
+            let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
+            console.log("Response for Sport List in dropdown", res.data.sportsMasterData);
+            setSportsDropdownData(res.data.sportsMasterData);
         } catch (err) {
-            console.error("here Error of get sport types in dropdown");
+            console.error("here Error of get sport types in dropdown", err);
         }
     }
     // useEffect for Update the data (Call Api) ------------------------
@@ -166,7 +168,7 @@ const Book_Now_Sport = () => {
             new URLSearchParams(location.search).get("facilityId")
         );
         console.log("facilityId", facilityId);
-        // GetSportType();
+        GetSportType();
         getSub_Sport_details(facilityId);
     }, []);
 
@@ -174,7 +176,7 @@ const Book_Now_Sport = () => {
     const validation = (value) => {
         const err = {}
 
-        if (!value.sports) {
+        if (!value.sports || value.sports == '') {
             err.sports = "Please Select Sport Name"
         }
         if (!value.bookingDate) {
@@ -214,10 +216,12 @@ const Book_Now_Sport = () => {
                                         name="sports"
                                         value={formData.sports}
                                         onChange={handleChangeInput} >
-                                        <option value="football">Football</option>
-                                        <option value="basketball">Basketball</option>
-                                        <option value="tennis">Tennis</option>
-                                        <option value="swimming">Swimming</option>
+                                            <option value={''}>Select sports</option>
+                                            {sportsDropdownData?.length > 0 && sportsDropdownData?.map((sportData) => {
+                                                return(
+                                                    <option value={sportData.sportsId}>{sportData.sportsName}</option>
+                                                )
+                                            })}
                                     </select>
 
                                 </div>
