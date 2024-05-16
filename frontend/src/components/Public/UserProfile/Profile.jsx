@@ -259,7 +259,7 @@ export default function Profile() {
               </li>
               <li>
                 <a
-                  href="/UserProfile/ProfileHistory" className=""
+                  href="/BookingDetails" className=""
                 >
                   Booking Details
                 </a>

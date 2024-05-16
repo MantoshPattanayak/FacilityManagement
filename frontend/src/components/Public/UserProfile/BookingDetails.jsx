@@ -152,7 +152,7 @@ const BookingDetails = () => {
               </li>
               <li>
                 <a
-                   href="/ProfileHistory"
+                   href="/BookingDetails"
                    className="profile-button"
                    style={{ color: 'white', backgroundColor:"green" }}
                 >

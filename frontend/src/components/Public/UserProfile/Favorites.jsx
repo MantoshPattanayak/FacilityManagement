@@ -178,7 +178,7 @@ const Favorites = () => {
                             </li>
                             <li>
                                 <a
-                                   href='/profile/booking-details' className=''
+                                   href='/BookingDetails' className=''
                                 >
                                     Booking Details
                                 </a>
