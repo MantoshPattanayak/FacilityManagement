@@ -89,7 +89,7 @@ function App() {
             <Route path="/Organogram" element={<Organogram/>} />
             <Route path="/Stakeholders" element={<Stakeholders/>} />
             <Route path="/StandOut" element={<StandOut/>} />
-            <Route path="/FqaPage" element={<FqaPage/>} />
+            <Route path="/faqs" element={<FqaPage/>} />
           
             {/* Public (Book Parks)  */}
             <Route
