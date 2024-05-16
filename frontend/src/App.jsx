@@ -73,6 +73,11 @@ import HostEvent from "./components/Public/UserProfile/HostEvent";
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
 import About from "./components/Public/About_And_FQA_PAGE/About";
+import History from "./components/Public/About_And_FQA_PAGE/History";
+import Organogram from "./components/Public/About_And_FQA_PAGE/Organogram";
+import Stakeholders from "./components/Public/About_And_FQA_PAGE/StakeHolder";
+import FqaPage from "./components/Public/About_And_FQA_PAGE/FqaPage";
+import StandOut from "./components/Public/About_And_FQA_PAGE/StandOut";
 import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
 import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
 import AdminLogin from "./components/Admin/Login";
@@ -82,6 +87,7 @@ import BookEvent from "./components/Public/Events/BookEvent";
 // Add to card
 import Add_Card from "./components/Public/Add_To_Card/AddCard";
 import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
+import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
 // import provider for connect to our app
@@ -99,6 +105,7 @@ function App() {
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
+            
             <Route path="/" element={<Landing />}/>
             <Route path="/PublicLoader" element={<PublicLoader />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
@@ -106,6 +113,11 @@ function App() {
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
             <Route path="/About" element={<About/>} />
+            <Route path="/History" element={<History/>} />
+            <Route path="/Organogram" element={<Organogram/>} />
+            <Route path="/Stakeholders" element={<Stakeholders/>} />
+            <Route path="/StandOut" element={<StandOut/>} />
+            <Route path="/FqaPage" element={<FqaPage/>} />
           
             {/* Public (Book Parks)  */}
             <Route
@@ -131,6 +143,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Add_Card/>
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/BookParks/Book_Event"
+              element={
+                <ProtectedRoute>
+                  <Book_Event/>
                 </ProtectedRoute>
               }
             />
@@ -180,7 +200,7 @@ function App() {
             {/* Events */}
             <Route path="/events" element={<EventList />} />
             <Route path="/events-details" element={<Details />} />
-            <Route path="/event-book" element={<BookEvent />} />
+            {/* <Route path="/event-book" element={<BookEvent />} /> */}
 
             {/* ADMIN SECTION - Login */}
             <Route path="/admin-login" element={<AdminLogin />} />

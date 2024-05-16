@@ -65,6 +65,8 @@ const viewEventactivities = async (req, res) => {
 };
 const viewEventactivitiesById = async (req, res) => {
   try {
+    console.log('event data')
+    console.log(req.params,'req params')
     let eventId = req.params.eventId ? req.params.eventId : null;
     if (!eventId) {
       return res.status(statusCode.BAD_REQUEST.code).json({

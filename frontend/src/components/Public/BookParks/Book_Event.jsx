@@ -18,9 +18,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import "./Book_Now_Sport.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
-const Book_Now_Sport = () => {
-    // UseSate for post data -------------------------------------
-    const [formData, setFormData] = useState({
+const Book_Event=()=>{
+     // UseSate for post data -------------------------------------
+     const [formData, setFormData] = useState({
         entityId: "",
         entityTypeId: "",
         facilityPreference: {
@@ -33,7 +33,6 @@ const Book_Now_Sport = () => {
     });
     const [FacilitiesData, setFacilitiesData] = useState('');
     const [errors, setErrors] = useState({}); // State to hold validation errors
-    const [sportsDropdownData , setSportsDropdownData] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -118,7 +117,7 @@ const Book_Now_Sport = () => {
                 facilityPreference: formData.facilityPreference
 
             };
-            let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", requestBody);
+            let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
             toast.success('Booking details submitted successfully', {
                 autoClose: 3000, // Toast timer duration in milliseconds
                 onClose: () => {
@@ -130,7 +129,7 @@ const Book_Now_Sport = () => {
             });
         } catch (err) {
             console.error("here Error of Sport Booking", err);
-            toast.error('Booking details submission failed')
+            toast.error('Booking details submission failedc')
         }
     }
 
@@ -155,11 +154,10 @@ const Book_Now_Sport = () => {
     //  here Get types of Sport ----------------------
     async function GetSportType() {
         try {
-            let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
-            console.log("Response for Sport List in dropdown", res.data.sportsMasterData);
-            setSportsDropdownData(res.data.sportsMasterData);
+            let res = await axiosHttpClient("here Api", "get");
+            console.log("here Response of Get sport type in dropdown", res);
         } catch (err) {
-            console.error("here Error of get sport types in dropdown", err);
+            console.error("here Error of get sport types in dropdown");
         }
     }
     // useEffect for Update the data (Call Api) ------------------------
@@ -168,7 +166,7 @@ const Book_Now_Sport = () => {
             new URLSearchParams(location.search).get("facilityId")
         );
         console.log("facilityId", facilityId);
-        GetSportType();
+        // GetSportType();
         getSub_Sport_details(facilityId);
     }, []);
 
@@ -176,7 +174,7 @@ const Book_Now_Sport = () => {
     const validation = (value) => {
         const err = {}
 
-        if (!value.sports || value.sports == '') {
+        if (!value.sports) {
             err.sports = "Please Select Sport Name"
         }
         if (!value.bookingDate) {
@@ -196,123 +194,129 @@ const Book_Now_Sport = () => {
         setErrors(err);
         return Object.keys(err).length === 0; // Returns true if no errors
     };
-    //  Return (jsx) -------------------------------------------------------------
-    return (
+    return(
         <div className="Book_sport_Main_conatiner">
-            <ToastContainer />
-            <PublicHeader />
-            <div className="Book_sport_Child_conatiner">
-                <div className="Add_sport_form">
-                    <div className="sport_name_Book">
-                        <h1 className="Faclity_Name"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
-                        <p className="Faclity_Address"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
-                    </div>
-                    <div class="bookingFormWrapper">
-                        <form class="bookingForm">
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName" >Sport:</span>
-                                    <select class="formSelect"
-                                        name="sports"
-                                        value={formData.sports}
-                                        onChange={handleChangeInput} >
-                                            <option value={''}>Select sports</option>
-                                            {sportsDropdownData?.length > 0 && sportsDropdownData?.map((sportData) => {
-                                                return(
-                                                    <option value={sportData.sportsId}>{sportData.sportsName}</option>
-                                                )
-                                            })}
-                                    </select>
-
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.sports && <span className="errorMessage">{errors.sports}</span>}
-                                </span>
-
-                            </div>
-
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName"   >Date:</span>
-                                    <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.bookingDate && <span className="errorMessage">{errors.bookingDate}</span>}
-                                </span>
-
-                            </div>
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName"   >Satrt Time:</span>
-                                    <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.startTime && <span className="errorMessage">{errors.startTime}</span>}
-                                </span>
-
-                            </div>
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName"   >End Time:</span>
-                                    <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
-
-
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.endTime && <span className="errorMessage">{errors.endTime}</span>}
-                                </span>
-                            </div>
+        <ToastContainer />
+        <PublicHeader />
+        <div className="Book_sport_Child_conatiner">
+            <div className="Add_sport_form">
+                <div className="sport_name_Book">
+                    <h1 className="Faclity_Name"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
+                    <p className="Faclity_Address"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
+                </div>
+                <div class="bookingFormWrapper">
+                    <form class="bookingForm">
+                        <div className="fromgroup_par">
                             <div class="formGroup">
-                                <span class="fieldName"  >Player Limit:</span>
-                                <div className="increament_decrement_conatiner">
-                                    <button
-                                        type="button"
-                                        className="decrement-button"
+                                <span class="fieldName" >Total Members</span>
+                                <select class="formSelect"
+                                    name="sports"
+                                    value={formData.sports}
+                                    onChange={handleChangeInput} >
+                                     <option value="">1</option>
+                                     <option value="">2</option>
+                                     <option value="">3</option>
+                                     <option value="">4</option>
+                                     <option value="">5</option>
+                                     <option value="">6</option>
+                                     <option value="">7</option>
+                                     <option value="">8</option>
+                                     <option value="">9</option>
+                                     <option value="">10</option>
 
-                                        onClick={handleDecrement}
-                                    >
-                                        <FontAwesomeIcon icon={faMinus} />
-                                    </button>
-                                    <input
-                                        type="text"
-                                        className="formInput_Add_member"
-                                        value={formData.facilityPreference.playersLimit}
-                                        name="playersLimit"
-                                        onChange={handleChangeInput}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="increment-button"
-                                        onClick={handleIncrement}
-                                    >
-                                        <FontAwesomeIcon icon={faPlus} />
-                                    </button>
-                                </div>
+                                     <option value="">11</option>
+                                     <option value="">12</option>
+                                     <option value="">1</option>
+
+                                     <option value="">13</option>
+                                     <option value="">14</option>
+                                     <option value="">15</option>
+                                     <option value="">16</option>
+
+                                     <option value="">17</option>
+                                     <option value="">18</option>
+                                     <option value="">19</option>
+                                     <option value="">20</option>
+                                 
+                                </select>
+
                             </div>
+                            <span className="error_massage_span">
+                                {errors.sports && <span className="errorMessage">{errors.sports}</span>}
+                            </span>
+
+                        </div>
+
+                        <div className="fromgroup_par">
                             <div class="formGroup">
-                                <span class="fieldName">Price</span>
-                                <h1 className="price_Sport">INR 78/_</h1>
+                                <span class="fieldName"   >Date:</span>
+                                <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
                             </div>
-                        </form>
-                    </div>
-                    <div className="Button_Conatiner_Sport">
-                        <button type="submit" class="Add_to_Cart"
-                            onClick={HandleAddtoCart}
-                        >
-                            <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
-                            Add to Cart
-                        </button>
-                        <button type="submit" class="Proceed_to_Payment" 
-                        onClick={HandleProccedToPayment}
-                        >
-                            <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                            Proceed to Payment
-                        </button>
-                    </div>
+                            <span className="error_massage_span">
+                                {errors.bookingDate && <span className="errorMessage">{errors.bookingDate}</span>}
+                            </span>
+
+                        </div>
+                        <div className="fromgroup_par">
+                            <div class="formGroup">
+                                <span class="fieldName"   >Satrt Time:</span>
+                                <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
+                            </div>
+                            <span className="error_massage_span">
+                                {errors.startTime && <span className="errorMessage">{errors.startTime}</span>}
+                            </span>
+
+                        </div>
+                     
+                        <div class="formGroup">
+                            <span class="fieldName"  >Duration</span>
+                            <div className="increament_decrement_conatiner">
+                                <button
+                                    type="button"
+                                    className="decrement-button"
+
+                                    onClick={handleDecrement}
+                                >
+                                    <FontAwesomeIcon icon={faMinus} />
+                                </button>
+                                <input
+                                    type="text"
+                                    className="formInput_Add_member"
+                                    value={formData.facilityPreference.playersLimit}
+                                    name="playersLimit"
+                                    onChange={handleChangeInput}
+                                />
+                                <button
+                                    type="button"
+                                    className="increment-button"
+                                    onClick={handleIncrement}
+                                >
+                                    <FontAwesomeIcon icon={faPlus} />
+                                </button>
+                            </div>
+                        </div>
+                    
+                    </form>
+                </div>
+                <div className="Button_Conatiner_Sport">
+                    <button type="submit" class="Add_to_Cart"
+                        onClick={HandleAddtoCart}
+                    >
+                        <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
+                        Add to Cart
+                    </button>
+                    <button type="submit" class="Proceed_to_Payment" 
+                    onClick={HandleProccedToPayment}
+                    >
+                        <FontAwesomeIcon icon={faCreditCard} className="Icon" />
+                        Proceed to Payment
+                    </button>
                 </div>
             </div>
-            <CommonFooter />
         </div>
-    );
-};
-export default Book_Now_Sport;
+        <CommonFooter />
+    </div>
+    )
+}
+
+export default Book_Event;

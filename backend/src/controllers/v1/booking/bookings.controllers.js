@@ -16,6 +16,7 @@ const { Op } = require('sequelize');
 // events booking table
 const eventBooking = db.eventBookings;
 const moment = require('moment')
+const sportsMaster = db.sportsMaster;
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -146,20 +147,12 @@ let parkBookingTestForPark = async (req, res) => {
 let parkBookingFormInitialData = async (req, res) => {
     try {
         let userActivityMaster = await useractivitymasters.findAll();
-
-        // let activity = ['Walking', 'Yoga', 'Open Gym', 'Jogging', 'Children Park'];
-
-        // for(let i = 0; i < activity.length; i++){
-        //     let user = await useractivitymasters.create({
-        //         userActivityName: activity[i],
-        //         statusId: 1,
-        //         createdBy: 1
-        //     })
-        // }
+        let sportsMasterData = await sportsMaster.findAll();
 
         res.status(statusCode.SUCCESS.code).json({
             message: 'Park booking form initial data',
-            data: userActivityMaster
+            data: userActivityMaster,
+            sportsMasterData
         })
     }
     catch (error) {
@@ -201,7 +194,7 @@ let parkBooking = async (req, res) => {
             entityTypeId,
             facilityPreference
         } = req.body;
-
+        let userId = req.user?.id || 1;
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -288,12 +281,12 @@ let parkBooking = async (req, res) => {
 
                 const newPlaygroundBooking = await facilitybookings.create({
                     facilityId: facilityId,
-                    totalMembers: bookingData.playerLimit,
+                    totalMembers: bookingData.playersLimit,
                     sportsName: bookingData.sports,
                     bookingDate: bookingData.bookingDate,
                     startDate: bookingData.startTime,
                     endDate: bookingData.endTime,
-                    amount: bookingData.amount,
+                    amount: bookingData.price,
                     statusId: 1,
                     paymentstatus: '',
                     createdBy: userId
@@ -691,7 +684,7 @@ let viewCartByUserId = async(req,res)=>{
             }
         })
         if(findCartIdByUserId){
-            console.log(findCartIdByUserId.cartId,'cartId')
+            // console.log(findCartIdByUserId.cartId,'cartId')
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
             amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.statusId = 1`,
             { type: sequelize.QueryTypes.SELECT })
@@ -724,7 +717,7 @@ let viewCartByUserId = async(req,res)=>{
          
         // })
 
-        console.log(findCartItemsWRTCartId,'findCartIdByUserId')
+        // console.log(findCartItemsWRTCartId,'findCartIdByUserId')
         if(findCartIdByUserId.length<=0){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:  "Not a single item is associated with the cart"
