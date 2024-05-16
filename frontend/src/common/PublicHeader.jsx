@@ -96,7 +96,7 @@ export default function PublicHeader() {
               <a href="/About">{(webContent.filter((data) => { return data.languageResourceKey == 'publicHeaderAbout' })[0]?.languageResourceValue)?.toUpperCase()}</a>
             </li>
             <li>
-              <a href="/FqaPage">FAQ</a>
+              <a href="#">FAQ</a>
             </li>
             <li>
               <a href="/facilities">FACILITIES</a>

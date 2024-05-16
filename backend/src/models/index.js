@@ -89,8 +89,7 @@ db1.cart = require('./cart.models')(sequelize,DataTypes);
 db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
 // event bookings table
 db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
-db1.sportsMaster = require('./sportsmaster.models')(sequelize, DataTypes);
-db1.sportsMaster.sync({
+db1.faq.sync({
   force: false,
 });
 

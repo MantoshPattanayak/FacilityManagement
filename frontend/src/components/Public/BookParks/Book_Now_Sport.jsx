@@ -32,8 +32,6 @@ const Book_Now_Sport = () => {
         },
     });
     const [FacilitiesData, setFacilitiesData] = useState('');
-    const [errors, setErrors] = useState({}); // State to hold validation errors
-    const [sportsDropdownData , setSportsDropdownData] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -73,16 +71,10 @@ const Book_Now_Sport = () => {
                 [name]: value
             }
         }));
-        setErrors(prevErrors => ({
-            ...prevErrors,
-            [name]: ''
-        }));
     };
-    // here Post the data (Add to Cart) -------------------------------
+    // here Post the data -------------------------------
     async function HandleAddtoCart() {
-
         try {
-            if (!validateForm()) return;
             // Prepare request body
             const requestBody = {
                 entityId: formData.entityId,
@@ -106,35 +98,7 @@ const Book_Now_Sport = () => {
         }
     }
 
-    // here Post the data (Proceed to Payement) -----------------------------
-    async function HandleProccedToPayment() {
-
-        try {
-            if (!validateForm()) return;
-            // Prepare request body
-            const requestBody = {
-                entityId: formData.entityId,
-                entityTypeId: formData.entityTypeId,
-                facilityPreference: formData.facilityPreference
-
-            };
-            let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", requestBody);
-            toast.success('Booking details submitted successfully', {
-                autoClose: 3000, // Toast timer duration in milliseconds
-                onClose: () => {
-                    // Navigate to another page after toast timer completes
-                    setTimeout(() => {
-                        navigate('/');
-                    }, 1000); // Wait 1 second after toast timer completes before navigating
-                }
-            });
-        } catch (err) {
-            console.error("here Error of Sport Booking", err);
-            toast.error('Booking details submission failed')
-        }
-    }
-
-    // Here Get the data of sport details------------------------------------------
+    // Here Get the data ofsport details------------------------------------------
     async function getSub_Sport_details(facilityId) {
         console.log("get park details", facilityId);
         try {
@@ -155,11 +119,10 @@ const Book_Now_Sport = () => {
     //  here Get types of Sport ----------------------
     async function GetSportType() {
         try {
-            let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
-            console.log("Response for Sport List in dropdown", res.data.sportsMasterData);
-            setSportsDropdownData(res.data.sportsMasterData);
+            let res = await axiosHttpClient("here Api", "get");
+            console.log("here Response of Get sport type in dropdown", res);
         } catch (err) {
-            console.error("here Error of get sport types in dropdown", err);
+            console.error("here Error of get sport types in dropdown");
         }
     }
     // useEffect for Update the data (Call Api) ------------------------
@@ -168,7 +131,7 @@ const Book_Now_Sport = () => {
             new URLSearchParams(location.search).get("facilityId")
         );
         console.log("facilityId", facilityId);
-        GetSportType();
+        // GetSportType();
         getSub_Sport_details(facilityId);
     }, []);
 
@@ -176,7 +139,7 @@ const Book_Now_Sport = () => {
     const validation = (value) => {
         const err = {}
 
-        if (!value.sports || value.sports == '') {
+        if (!value.sports) {
             err.sports = "Please Select Sport Name"
         }
         if (!value.bookingDate) {
@@ -188,14 +151,11 @@ const Book_Now_Sport = () => {
         if (!value.endTime) {
             err.endTime = "Please Select End Time"
         }
-
+        if (!value.playersLimit) {
+            err.playersLimit = "Please Select players Limit"
+        }
         return err;
     }
-    const validateForm = () => {
-        const err = validation(formData.facilityPreference);
-        setErrors(err);
-        return Object.keys(err).length === 0; // Returns true if no errors
-    };
     //  Return (jsx) -------------------------------------------------------------
     return (
         <div className="Book_sport_Main_conatiner">
@@ -204,63 +164,34 @@ const Book_Now_Sport = () => {
             <div className="Book_sport_Child_conatiner">
                 <div className="Add_sport_form">
                     <div className="sport_name_Book">
-                        <h1 className="Faclity_Name"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
-                        <p className="Faclity_Address"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
+                        <h1> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
+                        <p> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
                     </div>
                     <div class="bookingFormWrapper">
                         <form class="bookingForm">
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName" >Sport:</span>
-                                    <select class="formSelect"
-                                        name="sports"
-                                        value={formData.sports}
-                                        onChange={handleChangeInput} >
-                                            <option value={''}>Select sports</option>
-                                            {sportsDropdownData?.length > 0 && sportsDropdownData?.map((sportData) => {
-                                                return(
-                                                    <option value={sportData.sportsId}>{sportData.sportsName}</option>
-                                                )
-                                            })}
-                                    </select>
-
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.sports && <span className="errorMessage">{errors.sports}</span>}
-                                </span>
-
+                            <div class="formGroup">
+                                <span class="fieldName" >Sport:</span>
+                                <select class="formSelect"
+                                    name="sports"
+                                    value={formData.sports}
+                                    onChange={handleChangeInput} >
+                                    <option value="football">Football</option>
+                                    <option value="basketball">Basketball</option>
+                                    <option value="tennis">Tennis</option>
+                                    <option value="swimming">Swimming</option>
+                                </select>
                             </div>
-
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName"   >Date:</span>
-                                    <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.bookingDate && <span className="errorMessage">{errors.bookingDate}</span>}
-                                </span>
-
+                            <div class="formGroup">
+                                <span class="fieldName"   >Date:</span>
+                                <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
                             </div>
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName"   >Satrt Time:</span>
-                                    <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.startTime && <span className="errorMessage">{errors.startTime}</span>}
-                                </span>
-
+                            <div class="formGroup">
+                                <span class="fieldName"   >Satrt Time:</span>
+                                <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
                             </div>
-                            <div className="fromgroup_par">
-                                <div class="formGroup">
-                                    <span class="fieldName"   >End Time:</span>
-                                    <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
-
-
-                                </div>
-                                <span className="error_massage_span">
-                                    {errors.endTime && <span className="errorMessage">{errors.endTime}</span>}
-                                </span>
+                            <div class="formGroup">
+                                <span class="fieldName"   >End Time:</span>
+                                <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
                             </div>
                             <div class="formGroup">
                                 <span class="fieldName"  >Player Limit:</span>
@@ -302,9 +233,7 @@ const Book_Now_Sport = () => {
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        <button type="submit" class="Proceed_to_Payment" 
-                        onClick={HandleProccedToPayment}
-                        >
+                        <button type="submit" class="Proceed_to_Payment">
                             <FontAwesomeIcon icon={faCreditCard} className="Icon" />
                             Proceed to Payment
                         </button>
