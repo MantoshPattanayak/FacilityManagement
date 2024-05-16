@@ -416,7 +416,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
             }
         )
         console.log('2',updateTheCart)
-        if(updateTheCart.length>0){
+        if(updateTheCart>0){
 
                return  null;
           
@@ -778,7 +778,7 @@ let updateCart = async(req,res)=>{
             })
             console.log(removeTheCartItems,'cart items')
 
-            if(removeTheCartItems.length>0){
+            if(removeTheCartItems>0){
                 return res.status(statusCode.SUCCESS.code).json({
                     message:"Successfully removed the items"
                 })
