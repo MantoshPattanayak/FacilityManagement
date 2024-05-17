@@ -9,6 +9,7 @@ const viewEventactivities = async (req, res) => {
     let limit = req.body.page_size ? req.body.page_size : 50;
     let page = req.body.page_number ? req.body.page_number : 1;
     let offset = (page - 1) * limit;
+    let location = req.body.location;
     let [showAllEventactivities] = await sequelize.query(`    
       SELECT 
       ea.eventId,
@@ -25,7 +26,12 @@ const viewEventactivities = async (req, res) => {
       ea.ticketPrice,
       ea.eventImagePath,
       ea.additionalFilesPath,
-      sm.statusCode as status,
+      TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
+      CASE
+      	WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
+        THEN 'ACTIVE'
+      	ELSE 'CLOSED'
+      END AS status,
       ea.remarks,
       ea.additionalDetails
       FROM 
@@ -34,11 +40,11 @@ const viewEventactivities = async (req, res) => {
       amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
       left join
       amabhoomi.facilities f on ea.facilityId = f.facilityId
-      ORDER BY 
+      ORDER BY
       ea.eventDate DESC
     `);
 
-    console.log(showAllEventactivities, "all Eventactivities");
+    // console.log(showAllEventactivities, "all Eventactivities");
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
     if (givenReq) {
       showAllEventactivities = showAllEventactivities.filter(
@@ -77,26 +83,32 @@ const viewEventactivitiesById = async (req, res) => {
       ea.eventId,
       ea.facilityId,
       f.facilityname,
+      f.latitude,
+      f.longitude,
       ea.eventName, 
       ea.eventCategory, 
       ea.locationName, 
-      ea.eventDate, 
-      ea.eventStartTime,
-      ea.eventEndTime,
       ea.descriptionOfEvent,
       ea.ticketSalesEnabled,
       ea.ticketPrice,
       ea.eventImagePath,
       ea.additionalFilesPath,
-      sm.statusCode as status,
+      ea.eventDate, 
+      ea.eventStartTime,
+      ea.eventEndTime,
+      TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
+      CASE
+      	WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') THEN 'ACTIVE'
+      	ELSE 'CLOSED'
+      END AS status,
       ea.remarks,
       ea.additionalDetails
       FROM 
-      amabhoomi.eventactivities ea 
+        amabhoomi.eventactivities ea 
       INNER JOIN 
-      amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
+        amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
       LEFT JOIN
-      amabhoomi.facilities f ON ea.facilityId = f.facilityId
+        amabhoomi.facilities f ON ea.facilityId = f.facilityId
       WHERE 
       ea.eventId = :eventId
     `,
@@ -105,6 +117,8 @@ const viewEventactivitiesById = async (req, res) => {
         type: sequelize.QueryTypes.SELECT,
       }
     );
+
+    eventActivity.amentities = ['Parking', 'Food Stalls', 'Drinking Water'];
 
     if (!eventActivity) {
       return res.status(statusCode.NOTFOUND.code).json({

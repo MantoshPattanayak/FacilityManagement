@@ -6,57 +6,32 @@ import ProtectedRoute from "./utils/ProtectedRoutes";
 import ListOfRoles from "./components/Admin/UAC/Role/ListOfRoles";
 import CreateRole from "./components/Admin/UAC/Role/CreateRole";
 import EditRole from "./components/Admin/UAC/Role/EditRole";
-
 import EditResource from "./components/Admin/UAC/Resource/EditResource";
 import AdminDashboard from "./components/Admin/Dashboard/AdminDashboard";
-
 //common table
 import CommonTable from "./common/CommonTable";
-
 import UnauthorizedPage from "./common/Unauthorized";
 import ListOfUsers from "./components/Admin/UAC/User/ListOfUsers";
 import CreateNewUser from "./components/Admin/UAC/User/CreateNewUser";
 import EditUser from "./components/Admin/UAC/User/EditUser";
 import ReviewUserRating from "./components/Admin/Activity/ReviewUserRating/ReviewUserRating";
 import ReviewEventDetailsList from "./components/Admin/Activity/ReviewEventDetails/ReviewEventDetailsList";
-
 //import public files here
 import SignUp from "./components/Public/SignUp";
 import Login from "./components/Public/Login";
+import ForgotPassword from'./components/Public/Forgot_Password/ForgotPassword';
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
 import BookingDetails from "./components/Public/UserProfile/BookingDetails";
 //User profile (Favorites -USER PROFILE)
 import Favorites from "./components/Public/UserProfile/Favorites";
-
-//Public Header
-// import PublicHeader from "./common/PublicHeader";
-// Admin Header
-import AdminHeader from "./common/AdminHeader";
-// Import Footer
-import Footer from "./common/Footer";
-// Import Common Header
-import CommonHeader from "./common/CommonHeader";
-// Import Common Footer
-import CommonFooter from "./common/CommonFooter";
-//import home page
-import Home from "./components/Public/Home";
-// Import here Partice Page
-import ParticePage from "./components/Admin/MDM/FacilityRegistration/ParPage";
-
-// here import list of resources
-// import ListOfResources from './components/Admin/UAC/Resource/ListOfResources';
-// here Import the role list table'
 import RoleResourceMappingList from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList";
-
 import CreateRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping";
-
 import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown";
 //user Resource
 import CreateUserResourceMapping from "./components/Admin/UAC/AccessControl/UserResourceMapping/CreateUserResourceMapping";
 import UserResourceMappingList from "./components/Admin/UAC/AccessControl/UserResourceMapping/UserResourceMappingList";
-
 // Resource
 import ListOfResources from "./components/Admin/UAC/Resource/ListOfResources";
 import CreateResource from "./components/Admin/UAC/Resource/CreateResource";
@@ -69,10 +44,14 @@ import PaymentHome from "./common/PaymentHome";
 import ParkPayment from "./common/ParkPayment";
 import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
 import HostEvent from "./components/Public/UserProfile/HostEvent";
-
 import Profile from "./components/Public/UserProfile/Profile";
 import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
 import About from "./components/Public/About_And_FQA_PAGE/About";
+import History from "./components/Public/About_And_FQA_PAGE/History";
+import Organogram from "./components/Public/About_And_FQA_PAGE/Organogram";
+import Stakeholders from "./components/Public/About_And_FQA_PAGE/StakeHolder";
+import FqaPage from "./components/Public/About_And_FQA_PAGE/FqaPage";
+import StandOut from "./components/Public/About_And_FQA_PAGE/StandOut";
 import AddNewNotification from "./components/Admin/Activity/Notifications/AddNewNotification";
 import ViewNotifications from "./components/Admin/Activity/Notifications/ViewNotifications";
 import AdminLogin from "./components/Admin/Login";
@@ -82,6 +61,7 @@ import BookEvent from "./components/Public/Events/BookEvent";
 // Add to card
 import Add_Card from "./components/Public/Add_To_Card/AddCard";
 import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
+import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
 // import provider for connect to our app
@@ -99,6 +79,7 @@ function App() {
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
+            
             <Route path="/" element={<Landing />}/>
             <Route path="/PublicLoader" element={<PublicLoader />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
@@ -106,6 +87,11 @@ function App() {
             <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
             <Route path="/BookingDetails" element={<BookingDetails />} />
             <Route path="/About" element={<About/>} />
+            <Route path="/History" element={<History/>} />
+            <Route path="/Organogram" element={<Organogram/>} />
+            <Route path="/Stakeholders" element={<Stakeholders/>} />
+            <Route path="/StandOut" element={<StandOut/>} />
+            <Route path="/faqs" element={<FqaPage/>} />
           
             {/* Public (Book Parks)  */}
             <Route
@@ -171,16 +157,20 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
 
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
+            <Route path="/Forgot_Password/ForgotPassword" element={<ForgotPassword />} />
+
+
             {/* use Section  */}
 
             {/* Events */}
             <Route path="/events" element={<EventList />} />
             <Route path="/events-details" element={<Details />} />
-            <Route path="/event-book" element={<BookEvent />} />
+            <Route path="/event-book" element={<Book_Event />} />
 
             {/* ADMIN SECTION - Login */}
             <Route path="/admin-login" element={<AdminLogin />} />

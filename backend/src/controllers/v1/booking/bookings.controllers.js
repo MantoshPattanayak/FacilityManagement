@@ -201,7 +201,12 @@ let parkBooking = async (req, res) => {
             entityTypeId,
             facilityPreference
         } = req.body;
-
+        console.log({
+            entityId,
+            entityTypeId,
+            facilityPreference
+        });
+        let userId = req.user?.id || 1;
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -233,6 +238,7 @@ let parkBooking = async (req, res) => {
 
                 const newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    facilityTypeId: entityTypeId,
                     totalMembers: bookingData.totalMembers,
                     otherActivities: bookingData.otherActivities,
                     bookingDate: bookingData.bookingDate,
@@ -288,6 +294,7 @@ let parkBooking = async (req, res) => {
 
                 const newPlaygroundBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    facilityTypeId: entityTypeId,
                     totalMembers: bookingData.playerLimit,
                     sportsName: bookingData.sports,
                     bookingDate: bookingData.bookingDate,

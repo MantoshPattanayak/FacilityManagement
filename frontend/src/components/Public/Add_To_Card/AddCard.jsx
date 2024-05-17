@@ -21,11 +21,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { decryptData } from "../../../utils/encryptData";
 
+import { useSelector } from "react-redux";
 const Add_Card = () => {
     // here useState for Get the data -----------------------------------------------
     const [GetViewCradData, setGetViewCradData] = useState([])
     // here Put (Delete the Cart) ----------------------------------------------------
-   
+     // Read the data (useing Selector ) ------------------------------------
+    const languageContent = useSelector((state) => state.language.languageContent);
+    // Find the language resource key
+    const homeLanguageContent = languageContent.find(
+      (data) => data.languageResourceKey === "publicHeaderHome"
+    );
 
 
     // Delete the Cart ----------------------------------------
@@ -72,7 +78,7 @@ const Add_Card = () => {
             
                 <div className="Add_Card_Box9">
                     <div className="Card9">
-                        <h1 className="card_text9">Cart</h1>
+                    <a href="/">{homeLanguageContent?.languageResourceValue.toUpperCase()}</a>
                     </div>
                     <div className="card_item_conatiner9" >
                         {GetViewCradData.length > 0 && GetViewCradData.map((cardItem) => (

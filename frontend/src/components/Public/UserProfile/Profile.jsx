@@ -9,10 +9,14 @@ import { encryptData, decryptData } from "../../../utils/encryptData";
 import CommonHeader from "../../../common/CommonHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import PublicHeader from "../../../common/PublicHeader";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";import { logOutUser } from "../../../utils/utilityFunctions";
+import PublicHeader from "../../../common/PublicHeader";
+import CommonFooter from "../../../common/CommonFooter";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Profile() {
-
+  const navigate = useNavigate();
   const publicUserId = decryptData(
     new URLSearchParams(location.search).get("publicUserId")
   );
@@ -358,6 +362,7 @@ export default function Profile() {
                 </div>
 
 
+              </div>
               </div>
 
               {/* choose preffered Activity */}

@@ -26,14 +26,6 @@
     /* Center cards horizontally */
 }
 
-
-
-
-
-
-
-
-
 .event-park-card-1 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
     width: calc(100% - 40px);
@@ -50,46 +42,6 @@
 }
 
 .event-park-card-1:hover {
-    background-color: rgb(246, 245, 245);
-    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-}
-
-.event-park-card-2 {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px);
-    /* Adjust width for padding */
-    max-width: 300px;
-    /* Limit maximum width for better responsiveness */
-    padding: 8px;
-    gap: 14px;
-    margin: 20px;
-    border-radius: 18px;
-    background-color: #fdc7bc80;
-    overflow: hidden;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.event-park-card-2:hover {
-    background-color: rgb(246, 245, 245);
-    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-}
-
-.event-park-card-3 {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px);
-    /* Adjust width for padding */
-    max-width: 300px;
-    /* Limit maximum width for better responsiveness */
-    padding: 8px;
-    gap: 14px;
-    margin: 20px;
-    border-radius: 18px;
-    background-color: rgb(255, 240, 209);
-    overflow: hidden;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.event-park-card-3:hover {
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
@@ -140,8 +92,7 @@
     align-self: flex-end;
 }
 
-
-/* here Search --------------------------------------*/
+/* Search Container --------------------------------------*/
 .event-Search_container {
     display: flex;
     justify-content: space-between;
@@ -151,97 +102,43 @@
     margin-left: 90px;
 }
 
-/* Adjust styling to make it resemble Google's search input */
+/* Search Input */
 .event-search-container1 {
     position: relative;
     width: 300px;
-    /* Adjust width as needed */
 }
 
-/* Style the input field */
 .event-Search_input {
     width: 100%;
     padding: 8px;
-    /* Add padding to top and bottom */
     padding-left: 40px;
-    /* Add more padding on the left to accommodate the icon */
     border: 2px solid #ccc;
-    /* Increase border thickness */
     border-radius: 8px;
-    /* Increase border radius for rounded corners */
     font-size: 16px;
     color: #333;
-    /* Text color */
     background-color: #f9f9f9;
-    /* Background color */
     transition: border-color 0.3s;
-    /* Smooth transition for border color */
 }
 
-/* Style the search icon */
 .event-search-icon {
     position: absolute;
-    top: 55%;
+    top: 50%;
     left: 10px;
-    /* Adjust the position to the left */
     transform: translateY(-50%);
     color: #888;
 }
 
-/* Style the icon */
 .event-search-icon svg {
     width: 20px;
     height: auto;
 }
 
-/* Highlight border color on focus */
 .event-Search_input:focus {
     border-color: #029c3d;
-    /* Change border color on focus */
     outline: none;
-    /* Remove default focus outline */
 }
 
-
-.event-Button_Container {
-    display: flex;
-}
-
-.event-image-button {
-    position: relative;
-}
-
-.event-button-text {
-    display: none;
-    position: absolute;
-    bottom: -20px;
-    /* Adjust this value to change the distance between image and text */
-    left: 50%;
-    transform: translateX(-50%);
-    color: green;
-    font-size: 20px;
-    font-weight: 600;
-
-}
-
-.event-image-button:hover .button-text {
-    display: block;
-}
-
-/* Name of Park */
-.event-name_park {
-    font-size: 35px;
-    font-weight: 600;
-    color: rgb(0, 109, 0);
-    margin-left: 120px;
-}
-
-/* Search Input field */
-
-
-/* Filter On Click of Button Free, Paid , NearBy, Popular --------------------------------------------------------- */
-
-
+/* Filter Button and Dropdown ----------------------------------------- */
 .event-Filter_grid {
     padding: 10px;
     margin-left: 90px;
@@ -260,8 +157,6 @@
     display: flex;
     gap: 10px;
 }
-
-/* drop down */
 
 select {
     border: none;
@@ -297,7 +192,6 @@ select:focus {
     -webkit-user-select: none;
     touch-action: manipulation;
     border-radius: 10px;
-
 }
 
 .event-button-59:focus {
@@ -311,51 +205,89 @@ select:focus {
     fill: #06f;
 }
 
-
-
 @media (min-width: 768px) {
     .event-button-59 {
         min-width: 100px;
     }
 }
 
-/* here Table (List design) --------------------------- */
+/* Table Container --------------------------- */
 .event-table_Container1 {
     padding: 30px;
 }
 
 /* Small devices (portrait and landscape) */
 @media only screen and (max-width: 480px) {
-    /* Styles for small devices */
-    .event-Filter_grid {
-        padding: 5px;
-        justify-content: center;
+    .event-main__body__park {
+        padding-top: 20px;
+    }
+
+    .event-body {
+        height: 25vh;
+        background-position: center;
+    }
+
+    .event-name_park_img {
+        padding: 60px 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .event-Search_container {
+        flex-direction: column;
         align-items: center;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .event-search-container1 {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .event-Filter_grid {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0;
+        margin-left: 0;
+    }
+
+    .event-gride_page select {
+        margin-right: 0;
+        padding: 8px;
+    }
+
+    .event-filter_button {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
     }
 
     .event-button-59 {
         font-size: 14px;
         height: 30px;
-        min-width: 52px;
-    }
-
-    .event-Search_container {
+        min-width: 80px;
         padding: 5px;
     }
 
-    .event-body {
-        height: 10vh;
+    .event-card-container {
+        flex-direction: column;
+        align-items: center;
     }
-    
-    .event-name_park_img {
-        padding: 50px;
-        font-size: 22px;
+
+    .event-park-card-1 {
+        width: 90%;
+        max-width: 100%;
+        margin: 10px 17px;
+    }
+
+    .event-table_Container1 {
+        padding: 10px;
     }
 }
 
 /* Medium devices (portrait and landscape) */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-    /* Styles for medium devices */
     .event-Filter_grid {
         padding: 5px;
         justify-content: center;
@@ -378,7 +310,7 @@ select:focus {
         height: 12vh;
         width: 100%;
     }
-    
+
     .event-name_park_img {
         padding: 50px;
         font-size: 22px;
@@ -386,7 +318,6 @@ select:focus {
 }
 
 @media only screen and (min-width: 769px) and (max-width: 1023px) {
-    /* Styles for medium devices */
     .event-Filter_grid {
         padding: 5px;
         padding: 10px;
@@ -405,20 +336,4 @@ select:focus {
         padding: 8px;
         margin-left: 60px;
     }
-
-    .event-body {
-        height: 16vh;
-        width: 100%;
-    }
-    
-    .event-name_park_img {
-        padding: 55px;
-        font-size: 26px;
-    }
-}
-
-/* Large devices (portrait and landscape) */
-@media only screen and (min-width: 1024px) {
-    /* Styles for large devices */
-
 }

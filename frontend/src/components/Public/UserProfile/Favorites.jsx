@@ -1,6 +1,5 @@
 import React from 'react'
 import './Favorites.css'
-import CommonHeader from '../../../common/CommonHeader';
 import CommonFooter from '../../../common/CommonFooter';
 
 import { useState, useEffect } from 'react';
@@ -10,8 +9,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket, faEllipsisVertical, faClock, faUser, faRightFromBracket, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { decryptData } from "../../../utils/encryptData";
+import { logOutUser } from '../../../utils/utilityFunctions';
+import PublicHeader from '../../../common/PublicHeader';
 const Favorites = () => {
-
+    const navigate = useNavigate();
     const tabList = [
         {
             tabName: 'All Bookings',
@@ -159,7 +160,7 @@ const Favorites = () => {
 
     return (
         <div>
-            <CommonHeader />
+            <PublicHeader />
             <div className="booking-dtails-container">
                 <aside className="profile-leftside--Body">
                     <div className="profile-view--Body">
@@ -192,7 +193,7 @@ const Favorites = () => {
                             </li>
                         </ul>
                         {/* Logout Button */}
-                        <button className="button-67 ">
+                        <button className="button-67 " onClick={(e)=>{logOutUser(e); navigate('/');}}>
                             <h1>Logout</h1>
                             <FontAwesomeIcon icon={faArrowRightFromBracket} />
                         </button>
