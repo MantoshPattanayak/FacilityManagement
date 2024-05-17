@@ -74,7 +74,7 @@ export default function PublicHeader() {
             </li>
 
             <li>
-              <a href="#">FAQ</a>
+              <a href="/faqs">FAQ</a>
             </li>
             <li>
               <a href="/facilities">FACILITIES</a>
