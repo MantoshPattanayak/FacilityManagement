@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { decryptData } from "../../../utils/encryptData";
+import { logOutUser } from "../../../utils/utilityFunctions";
 
 const ProfileHistory = () => {
   const tabList = [
@@ -88,7 +89,7 @@ const ProfileHistory = () => {
               </li>
               <li>
                 <a
-                   href="/ProfileHistory"
+                   href="/BookingDetails"
                    className="profile-button"
                    style={{ color: 'white', backgroundColor:"green" }}
                 >
@@ -96,16 +97,16 @@ const ProfileHistory = () => {
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="/UserProfile/Favorites">
                   Favorites
                 </a>
               </li>
               <li>
-                <a href="#">Cart Details</a>
+                <a href="/BookParks/Add_Card">Cart Details</a>
               </li>
             </ul>
             {/* Logout Button */}
-            <button className="button-67 ">
+            <button className="button-67 " onClick={(e)=>{logOutUser(e); navigate('/');}}>
               <h1>Logout</h1>
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>

@@ -82,12 +82,16 @@ export default function PublicHeader() {
             <li>
               <a href="/events">EVENTS</a>
             </li>
-            <li>
-              <a href="/Event_hostPage">HOST EVENT</a>
-            </li>
+            {
+              isUserLoggedIn == 1 ? (
+                <li>
+                  <a href="/Event_hostPage">HOST EVENT</a>
+                </li>
+              ) : ''
+            }
             {isUserLoggedIn == 1 ? (
               <li>
-                <a className="" href="/profile/booking-details">
+                <a className="" href="/Profile">
                   <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
                 </a>
               </li>
