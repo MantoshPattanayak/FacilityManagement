@@ -161,8 +161,8 @@ const Sub_Park_Details = () => {
             </h1>
             <button
               className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
-                  ? "open"
-                  : "closed"
+                ? "open"
+                : "closed"
                 }`}
             >
               {FacilitiesData?.length > 0 &&
@@ -178,12 +178,12 @@ const Sub_Park_Details = () => {
                     pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now" : "/login-signup"
                       }`,
                     search: `${isUserLoggedIn == 1
-                        ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
-                        : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
+                      ? `?facilityId=${encryptDataId(
+                        FacilitiesData[0]?.facilityId
+                      )}`
+                      : `?facilityId=${encryptDataId(
+                        FacilitiesData[0]?.facilityId
+                      )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
                       }`,
                   }}
                   className="button-9"
@@ -191,186 +191,187 @@ const Sub_Park_Details = () => {
                   <button role="button_by">Buy a Ticket</button>
                 </Link>
               )
-              : FacilitiesData[0]?.facilityTypeId == 2 ? (
-                <Link
-                  to={{
-                    pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now_Sport" : "/login-signup"
-                      }`,
-                    search: `${isUserLoggedIn == 1
-                        ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
-                        : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` + `&redirect=${encryptDataId("/BookParks/Book_Now_Sport")}`
-                      }`,
-                  }}
-                  className="button-9"
-                >
-                  <button role="button_by">Buy a Ticket</button>
-                </Link>
-              )
-              : (
-                <Link
-                  to={{
-                    pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now_Sport" : "/login-signup"
-                      }`,
-                    search: `${isUserLoggedIn == 1
+                : FacilitiesData[0]?.facilityTypeId == 2 ? (
+                  <Link
+                    to={{
+                      pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now_Sport" : "/login-signup"
+                        }`,
+                      search: `${isUserLoggedIn == 1
                         ? `?facilityId=${encryptDataId(
                           FacilitiesData[0]?.facilityId
                         )}`
                         : `?facilityId=${encryptDataId(
                           FacilitiesData[0]?.facilityId
                         )}` + `&redirect=${encryptDataId("/BookParks/Book_Now_Sport")}`
-                      }`,
-                  }}
-                  className="button-9"
-                >
-                  <button role="button_by">Buy a Ticket</button>
-                </Link>
-              )
+                        }`,
+                    }}
+                    className="button-9"
+                  >
+                    <button role="button_by">Buy a Ticket</button>
+                  </Link>
+                )
+                  : (
+                    <Link
+                      to={{
+                        pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now_Sport" : "/login-signup"
+                          }`,
+                        search: `${isUserLoggedIn == 1
+                          ? `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}`
+                          : `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}` + `&redirect=${encryptDataId("/BookParks/Book_Now_Sport")}`
+                          }`,
+                      }}
+                      className="button-9"
+                    >
+                      <button role="button_by">Buy a Ticket</button>
+                    </Link>
+                  )
             }
-            
+
             < Link
               to={{
-              pathname: `${isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-                }`,
-              search: `${isUserLoggedIn == 1
+                pathname: `${isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                  }`,
+                search: `${isUserLoggedIn == 1
                   ? `?facilityId=${encryptDataId(
                     FacilitiesData[0]?.facilityId
                   )}`
                   : `?facilityId=${encryptDataId(
                     FacilitiesData[0]?.facilityId
                   )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-                }`,
-            }}
-            className="button-9"
+                  }`,
+              }}
+              className="button-9"
             >
-            <button role="button_by">Host Event</button>
-          </Link>
+              <button role="button_by">Host Event</button>
+            </Link>
 
-        </span>
+          </span>
 
-        <div className="Map_image">
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              mapContainerStyle={{ height: "300px", width: "100%" }}
-              center={defaultCenter}
-              zoom={8}
-            >
-              {/* Render markers */}
-              {FacilitiesData?.map((location, index) => (
-                <Marker
-                  key={index}
-                  position={{
-                    lat: location.latitude,
-                    lng: location.longitude,
-                  }}
-                />
-              ))}
-            </GoogleMap>
-          </LoadScript>
-        </div>
-      </div>
-    </div>
-
-      {/* -----------------------------services------------------------------------------ */ }
-  <div className="Service_Now_conatiner">
-    <h1 className="Service_text">Services</h1>
-    {ServiceData?.length > 0 &&
-      ServiceData?.map((item, index) => (
-        <div className="Service_Avilable" key={index}>
-          <div className="service_item">
-            <img
-              className="service_Avil_img"
-              src={Park_img}
-              alt="Parking"
-            />
-            <p className="service_name">{item.code}</p>
+          <div className="Map_image">
+            <LoadScript  googleMapsApiKey={apiKey}>
+              <GoogleMap
+                ClassName= "Map_image_Goole"
+                mapContainerStyle={{ height: "300px", width: "100%" }}
+                center={defaultCenter}
+                zoom={8}
+              >
+                {/* Render markers */}
+                {FacilitiesData?.map((location, index) => (
+                  <Marker
+                    key={index}
+                    position={{
+                      lat: location.latitude,
+                      lng: location.longitude,
+                    }}
+                  />
+                ))}
+              </GoogleMap>
+            </LoadScript>
           </div>
         </div>
-      ))}
-  </div>
+      </div>
 
-  {/* --------------------------- Amenities ------------------------------------------*/ }
-  <div className="Amenities_Main_conatiner">
-    <h1 className="Service_text">Amenities</h1>
-    <div className="Amenities-Data">
-      {amenitiesData
-        .flatMap((group) => group) // Flatten the array of arrays
-        .filter(
-          (item, index, self) =>
-            self.findIndex((t) => t.amenityName === item.amenityName) ===
-            index
-        ) // Filter unique items
-        .map((item, index) => (
-          <span className="flex gap-2" key={index}>
-            <img
-              className="Correct_icon"
-              src={correct_icon}
-              alt={`Amenity icon ${index}`}
-            />
-            <h1 className="Amenities_name">{item.amenityName}</h1>
-          </span>
-        ))}
-    </div>
-  </div>
-
-  {/* -------------------------- Here About -------------------------------------------- */ }
-  <div className="About_Conatiner">
-    <h1 className="Service_text">About</h1>
-    <h1 className="About_text">
-      {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
-    </h1>
-  </div>
-  {/* -------------------------Helpline Number ------------------------------------------ */ }
-  <div className="Helpline_number_conatine">
-    <h1 className="Service_text">Helpline Number</h1>
-    <div className="Contact_number">
-      <img className="Phone_icon" src={Phone_icon}></img>
-      <h1 className="Number">
-        {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
-      </h1>
-      <h1 className="Number">9192847567</h1>
-    </div>
-  </div>
-  {/* -------------------------Event Available ----------------------------------------------------------- */ }
-  <div className="Event_Available_main_conatiner">
-    <h1 className="Service_text">Event Available</h1>
-    <div className="Sub_Park_Details">
-      {EventAvailable?.length > 0 &&
-        EventAvailable?.map((item, index) => {
-          return (
-            <div
-              className="carousel-container"
-              ref={containerRef}
-              key={index}
-            >
-              <div className="carousel-slide">
+      {/* -----------------------------services------------------------------------------ */}
+      <div className="Service_Now_conatiner">
+        <h1 className="Service_text">Services</h1>
+        {ServiceData?.length > 0 &&
+          ServiceData?.map((item, index) => (
+            <div className="Service_Avilable" key={index}>
+              <div className="service_item">
                 <img
-                  className="Yoga_image"
-                  src={Yoga_img}
-                  alt="Event"
-                ></img>
-                <h1 className="Name_yoga"> {item.eventName}</h1>
-                <span className="Yoga_date_time">
-                  <h1 className="Yoga_date">
-                    Date:-{formatDate(item.eventDate)}
-                  </h1>
-                  <h1 className="Yoga_time">
-                    Time:-{formatTime(item.eventStartTime)} -{" "}
-                    {formatTime(item.eventEndTime)}
-                  </h1>
-                </span>
+                  className="service_Avil_img"
+                  src={Park_img}
+                  alt="Parking"
+                />
+                <p className="service_name">{item.code}</p>
               </div>
             </div>
-          );
-        })}
-      {EventAvailable?.length == 0 && <p>No events.</p>}
-    </div>
-  </div>
-  {/*-------------------------------------------- Here Footer---------------------------------------------- */ }
-  <CommonFooter />
+          ))}
+      </div>
+
+      {/* --------------------------- Amenities ------------------------------------------*/}
+      <div className="Amenities_Main_conatiner">
+        <h1 className="Service_text">Amenities</h1>
+        <div className="Amenities-Data">
+          {amenitiesData
+            .flatMap((group) => group) // Flatten the array of arrays
+            .filter(
+              (item, index, self) =>
+                self.findIndex((t) => t.amenityName === item.amenityName) ===
+                index
+            ) // Filter unique items
+            .map((item, index) => (
+              <span className="flex gap-2" key={index}>
+                <img
+                  className="Correct_icon"
+                  src={correct_icon}
+                  alt={`Amenity icon ${index}`}
+                />
+                <h1 className="Amenities_name">{item.amenityName}</h1>
+              </span>
+            ))}
+        </div>
+      </div>
+
+      {/* -------------------------- Here About -------------------------------------------- */}
+      <div className="About_Conatiner">
+        <h1 className="Service_text">About</h1>
+        <h1 className="About_text">
+          {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
+        </h1>
+      </div>
+      {/* -------------------------Helpline Number ------------------------------------------ */}
+      <div className="Helpline_number_conatine">
+        <h1 className="Service_text">Helpline Number</h1>
+        <div className="Contact_number">
+          <img className="Phone_icon" src={Phone_icon}></img>
+          <h1 className="Number">
+            {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
+          </h1>
+          <h1 className="Number">9192847567</h1>
+        </div>
+      </div>
+      {/* -------------------------Event Available ----------------------------------------------------------- */}
+      <div className="Event_Available_main_conatiner">
+        <h1 className="Service_text">Event Available</h1>
+        <div className="Sub_Park_Details">
+          {EventAvailable?.length > 0 &&
+            EventAvailable?.map((item, index) => {
+              return (
+                <div
+                  className="carousel-container"
+                  ref={containerRef}
+                  key={index}
+                >
+                  <div className="carousel-slide">
+                    <img
+                      className="Yoga_image"
+                      src={Yoga_img}
+                      alt="Event"
+                    ></img>
+                    <h1 className="Name_yoga"> {item.eventName}</h1>
+                    <span className="Yoga_date_time">
+                      <h1 className="Yoga_date">
+                        Date:-{formatDate(item.eventDate)}
+                      </h1>
+                      <h1 className="Yoga_time">
+                        Time:-{formatTime(item.eventStartTime)} -{" "}
+                        {formatTime(item.eventEndTime)}
+                      </h1>
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          {EventAvailable?.length == 0 && <p>No events.</p>}
+        </div>
+      </div>
+      {/*-------------------------------------------- Here Footer---------------------------------------------- */}
+      <CommonFooter />
     </div >
   );
 };

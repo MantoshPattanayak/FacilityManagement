@@ -19,6 +19,8 @@ import "./AddCard.css"
 // Import Toast -------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { decryptData } from "../../../utils/encryptData";
+
 import { useSelector } from "react-redux";
 const Add_Card = () => {
     // here useState for Get the data -----------------------------------------------
@@ -64,12 +66,16 @@ const Add_Card = () => {
     useEffect(() => {
         GetViewCardData()
     }, [])
+
+
+
     // ---------------------------------------------here Return funcatin --------------------------------------------------
     return (
         <div className="Add_to_Card_Main_conatiner9">
 
             <PublicHeader />
             <div className="Add_To_Card_Child_conatiner9">
+            
                 <div className="Add_Card_Box9">
                     <div className="Card9">
                     <a href="/">{homeLanguageContent?.languageResourceValue.toUpperCase()}</a>
