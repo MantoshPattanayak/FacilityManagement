@@ -6,71 +6,47 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../utils/axios";
+// here Import Redux Part ---------------------------------
+import { useDispatch, useSelector } from "react-redux";  // selector use for Read the data -----------------
+import { setLanguage, setLanguageContent } from "../utils/languageSlice";
+
 
 export default function PublicHeader() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState();
-  const [language, setLanguage] = useState('');
-  const [webContent, setWebContent] = useState([]);
   // here Get the data of TotalCount of Cart ---------------
   const [GetCardCount, setGetCardCount] = useState([])
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState();
+  // Redux (Redux-Toolkit) -------------------------------------
+  const dispatch = useDispatch();
+  const language = useSelector((state) => state.language.language); // Updated variable name
+  const languageContent = useSelector((state) => state.language.languageContent);
+  const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
 
-  // function to set language and change web content as per language
-  function setLanguageCode(e) {
-    e?.preventDefault();
-    if (language == 'EN') {
-      sessionStorage?.setItem('language', 'OD');
-      setLanguage('OD');
+  useEffect(() => {
+    setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0)
+
+    if (!isLanguageContentFetched) {
+      getWebContent();
     }
-    else {
-      sessionStorage?.setItem('language', 'EN');
-      setLanguage('EN');
-    }
-  }
+  }, [isLanguageContentFetched, language]); // Updated dependency
 
   async function getWebContent() {
     try {
-      let res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
-      console.log('response of web content as per language', res.data.languageContentResultData);
-      setWebContent(res.data.languageContentResultData);
-    }
-    catch (error) {
-      console.error(error);
-    }
-  }
-  // here Get total count of Cart --------------------------------------------
-  async function GetTotalNumberofCart() {
-    try {
-      let res = await axiosHttpClient('View_Card_UserId', 'get')
-
- 
-      setGetCardCount(res.data)
-    }
-    catch (err) {
-      console.log( err)
+      const res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
+      if (Array.isArray(res.data.languageContentResultData)) {
+        dispatch(setLanguageContent(res.data.languageContentResultData));
+      } else {
+        console.log('valid language content data:', res.data.languageContentResultData);
+      }
+    } catch (error) {
+      console.error('Error fetching language content:', error);
     }
   }
+  function setLanguageCode(languageCode) {
+    dispatch(setLanguage(languageCode));
+  }
+  
 
-  useEffect(() => {
-    GetTotalNumberofCart()
-    const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
-    return () => clearInterval(intervalId);
-  }, [])
-
-  // on page load, set language preference
-  useEffect(() => {
-    setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0);
-    if (sessionStorage?.getItem('language') == null || sessionStorage?.getItem('language') == '') {
-      sessionStorage?.setItem('language', 'EN');
-      setLanguage('EN');
-    }
-    else {
-      setLanguage(sessionStorage?.getItem('language'))
-    }
-
-    getWebContent();
-  }, []);
-
-  //  on change of language
+  
   useEffect(() => {
     getWebContent();
   }, [language]);
@@ -85,16 +61,18 @@ export default function PublicHeader() {
           </div>
 
           <ul>
-            <li>
-              {(language == 'EN') && <><button value={'ଓଡ଼ିଆ'} onClick={setLanguageCode}>ଓଡ଼ିଆ</button> &nbsp; | </>}
-              {(language == 'OD') && <><button value={'English'} onClick={setLanguageCode}>English</button> &nbsp; | </>}
+          <li>
+              {(language === 'EN') && <><button value={'OD'} onClick={() => setLanguageCode('OD')}>ଓଡ଼ିଆ</button> &nbsp; | </>}
+              {(language === 'OD') && <><button value={'EN'} onClick={() => setLanguageCode('EN')}>English</button> &nbsp; | </>}
             </li>
             <li>
-              <a href="/">{(webContent.filter((data) => { return data.languageResourceKey == 'publicHeaderHome' })[0]?.languageResourceValue)?.toUpperCase()}</a>
+              <a href="/">{(languageContent.find(data => data.languageResourceKey === 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</a>
             </li>
+            {/* Render 'About' link */}
             <li>
-              <a href="/About">{(webContent.filter((data) => { return data.languageResourceKey == 'publicHeaderAbout' })[0]?.languageResourceValue)?.toUpperCase()}</a>
+              <a href="/">{(languageContent.find(data => data.languageResourceKey === 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</a>
             </li>
+
             <li>
               <a href="/faqs">FAQ</a>
             </li>
@@ -124,22 +102,22 @@ export default function PublicHeader() {
                 </a>
               </li>
             )}
-      <li>
-  {isUserLoggedIn == 1 ? (
-    <li>
-      <a className="relative flex items-center" href="/BookParks/Add_Card">
-        {GetCardCount.count > 0 && (
-          <span className="cart-count absolute  left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1  rounded-full">{GetCardCount.count}</span>
-        )}
-        <span>  <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> Cart</span>
-      </a>
-    </li>
-  ) : (
-    <li>
-      
-    </li>
-  )}
-</li>
+            <li>
+              {isUserLoggedIn == 1 ? (
+                <li>
+                  <a className="relative flex items-center" href="/BookParks/Add_Card">
+                    {GetCardCount.count > 0 && (
+                      <span className="cart-count absolute  left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1  rounded-full">{GetCardCount.count}</span>
+                    )}
+                    <span>  <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> Cart</span>
+                  </a>
+                </li>
+              ) : (
+                <li>
+
+                </li>
+              )}
+            </li>
 
 
 
