@@ -61,6 +61,7 @@ import BookEvent from "./components/Public/Events/BookEvent";
 // Add to card
 import Add_Card from "./components/Public/Add_To_Card/AddCard";
 import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
+import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
 // import provider for connect to our app
@@ -169,7 +170,7 @@ function App() {
             {/* Events */}
             <Route path="/events" element={<EventList />} />
             <Route path="/events-details" element={<Details />} />
-            <Route path="/event-book" element={<BookEvent />} />
+            <Route path="/event-book" element={<Book_Event />} />
 
             {/* ADMIN SECTION - Login */}
             <Route path="/admin-login" element={<AdminLogin />} />

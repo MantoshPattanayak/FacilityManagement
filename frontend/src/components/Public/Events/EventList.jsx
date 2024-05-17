@@ -42,7 +42,7 @@ export default function EventList() {
   const [layoutType, setLayoutType] = useState('grid');
 
   // here set the latitude and longitude --------------------------------------------
-  const [userLocation, setUserLocation] = useState();
+  const [userLocation, setUserLocation] = useState(defaultLocation);
   // fetch facility type id --------------------------------------------------------
   let location = useLocation();
   const [selectedTab, setSelectedTab] = useState('');
@@ -58,7 +58,8 @@ export default function EventList() {
     try {
       setIsLoding(true)
       let res = await axiosHttpClient("VIEW_EVENTS_LIST_API", "post", {
-        givenReq: givenReq
+        givenReq: givenReq,
+        location: userLocation
       });
       console.log("Event details data response", res);
       setEventListData(res.data.Eventactivities);

@@ -1,98 +1,106 @@
 /* Css of Top image (header)  (Set image and Write text) ------------------------------------------------------------------------ */
-.event-Sub_Manu_Conatiner{
+.event-Sub_Manu_Conatiner {
     padding-top: 50px;
 }
-.event-Header_Img{
-    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Park_BackGround_img.png");
+
+.event-Header_Img {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/odissi-dance-image.jpg");
     height: 30vh;
     background-size: cover;
     background-repeat: no-repeat;
-  
- 
-   
-  
-   
 }
 
-.event-text-park{
+.event-text-park {
     padding-top: 90px;
     font-size: 50px;
     color: #fff;
     font-weight: 600;
     margin-left: 40px;
-    
+
 }
-.event-Location_text_sub_manu{
+
+.event-Location_text_sub_manu {
     display: flex;
-    gap:  10px;
+    gap: 10px;
     margin-left: 40px;
 }
-.event-text_location{
+
+.event-text_location {
     font-size: 30px;
     color: #fff;
 }
-.event-location_icon{
+
+.event-location_icon {
     height: 5vh;
-    
+
 }
 
 /* ----------------------------------------------- Css image and Map here -------------------------------------------------------- */
-.event-map_img_main_conatiner{
+.event-map_img_main_conatiner {
     display: flex;
     justify-content: space-evenly;
     padding-top: 30px;
 }
-.event-Park_image{
+
+.event-Park_image {
     height: 50vh;
     width: 100vh;
     border-radius: 20px;
     border: 5px solid #cdd1ce;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Add a subtle shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .event-Park_image:hover {
-    transform: scale(1.01); /* Scale up the image on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase the shadow on hover */
+    transform: scale(1.01);
+    /* Scale up the image on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Increase the shadow on hover */
 }
 
 /* --------------------------------------------------------here Map _conatiner -------------------------------- */
-.event-Map_container{
+.event-Map_container {
     background-color: rgb(251, 249, 249);
     border: 2px solid #cdd1ce;
     height: 44vh;
     width: 40vh;
 }
-.event-Google_map{
+
+.event-Google_map {
     width: 40vh;
     height: 30vh;
 }
 
 /* ----------------------------------------------Time and status ------------------------------------------ */
-.event-time_status{
+.event-time_status {
     display: flex;
     justify-content: space-around;
 
 }
-.event-time_text{
-    font-size: 20px;
-    font-weight: 600;
+
+.event-time_text {
+    font-size: 15px;
+    font-weight: 500;
     color: #484747;
 }
-.event-Open_Button{
- 
-    font-size: 20px;
+
+.event-Open_Button {
+
+    font-size: 16px;
     font-weight: 700;
     border: 1px 2px soild red;
 }
+
 .event-open {
-  color: green;
-  }
-  
+    color: green;
+}
+
 .event-closed {
     color: rgb(191, 42, 42);
-  }
-  
-.event-Button_ticket_container{
+}
+
+.event-Button_ticket_container {
     display: flex;
     justify-content: space-around;
 
@@ -101,47 +109,49 @@
 
 /* CSS */
 .event-button-9 {
-  appearance: button;
-  backface-visibility: hidden;
-  background-color: #3AB757;
-  border-radius: 6px;
-  border-width: 0;
-  box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
-  font-size: 100%;
-  height: 44px;
-
-  line-height: 1.15;
-  margin: 12px 0 0;
-  outline: none;
-  overflow: hidden;
-  padding: 0 25px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transform: translateZ(0);
-  transition: all .2s,box-shadow .08s ease-in;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 45%;
+    appearance: button;
+    backface-visibility: hidden;
+    background-color: #3AB757;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
+    font-size: 100%;
+    height: 44px;
+    line-height: 1.15;
+    margin: 12px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s, box-shadow .08s ease-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 45%;
+    display: flex;
+    align-items: center;
 }
 
 .event-button-9:disabled {
-  cursor: default;
+    cursor: default;
 }
 
 .event-button-9:focus {
-  box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
 }
 
-.event-Button_ticket_container{
+.event-Button_ticket_container {
     padding: 20px;
 }
-.event-button-9:hover{
+
+.event-button-9:hover {
     background-color: green;
 }
 
@@ -156,19 +166,24 @@
     font-size: 30px;
     font-weight: 600;
     color: #292929;
-    display: inline-block; /* Ensure the text is displayed as a block */
+    display: inline-block;
+    /* Ensure the text is displayed as a block */
 }
 
 .event-Service_text::after {
     content: "";
     position: absolute;
-    bottom: -3px; /* Adjust the distance between the text and the line */
+    bottom: -3px;
+    /* Adjust the distance between the text and the line */
     left: 0;
     width: 60%;
-    height: 3px; /* Adjust the thickness of the line */
-    background-color: #028835; /* Color of the line */
+    height: 3px;
+    /* Adjust the thickness of the line */
+    background-color: #028835;
+    /* Color of the line */
 }
-.event-Service_text:hover{
+
+.event-Service_text:hover {
     font-weight: 700;
     color: #019f13;
 }
@@ -186,129 +201,273 @@
 .event-service_Avil_img {
     height: 12vh;
     border-radius: 17px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Add a subtle shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .event-service_Avil_img:hover {
-    transform: scale(1.05); /* Scale up the image on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase the shadow on hover */
-}
-.event-service_name {
-   
-    font-size: 17px;
-   
-    font-weight: 600;
-    
+    transform: scale(1.05);
+    /* Scale up the image on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Increase the shadow on hover */
 }
 
- /* --------------------------- Amenities ------------------------------------------*/
- .event-Amenities_Main_conatiner{
+.event-service_name {
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+}
+
+/* --------------------------- Amenities ------------------------------------------*/
+.event-Amenities_Main_conatiner {
     padding: 40px;
- }
- .event-Amenities-Data{
+}
+
+.event-Amenities-Data {
     display: flex;
     gap: 40px;
     padding: 10px;
- }
- .event-Correct_icon{
-    height: 3vh;
- }
- .event-Amenities_name{
- font-size: 20px;
- font-weight: 500;
- }
+}
 
- /* -----------------------------About here------------------------------------------- */
- .event-About_Conatiner{
+.event-Correct_icon {
+    height: 3vh;
+}
+
+.event-Amenities_name {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* -----------------------------About here------------------------------------------- */
+.event-About_Conatiner {
     padding: 40px;
- }
- .event-About_text{
+}
+
+.event-About_text {
     font-size: 20px;
     font-weight: 500;
     color: #292929;
     padding: 10px;
- }
+}
 
- /* -------------------------------Helpline Number ----------------------------------- */
- .event-Helpline_number_conatine{
+/* -------------------------------Helpline Number ----------------------------------- */
+.event-Helpline_number_conatine {
     padding: 40px;
- }
- .event-Contact_number{
+}
+
+.event-Contact_number {
     display: flex;
     gap: 30px;
     padding: 10px;
- }
- .event-Number{
+}
+
+.event-Number {
     font-size: 20px;
     font-weight: 500;
- }
- .event-Phone_icon{
-    height: 4vh;
- }
+}
 
- /* --------------------------------------------Event Available ------------------------------------------------------------- */
- .event-Event_Available_main_conatiner{
+.event-Phone_icon {
+    height: 4vh;
+}
+
+/* --------------------------------------------Event Available ------------------------------------------------------------- */
+.event-Event_Available_main_conatiner {
     padding: 40px;
- }
- .event-Sub_Park_Details {
-    overflow: hidden; /* Hide overflow to prevent horizontal scrollbar */
-  }
-  
-  .event-carousel-container {
+}
+
+.event-Sub_Park_Details {
+    overflow: hidden;
+    /* Hide overflow to prevent horizontal scrollbar */
+}
+
+.event-carousel-container {
     display: flex;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Snap to each slide */
-    scroll-behavior: smooth; /* Smooth scrolling effect */
-    width: 100%; /* Full width */
-    height: auto; /* Full height */
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory;
+    /* Snap to each slide */
+    scroll-behavior: smooth;
+    /* Smooth scrolling effect */
+    width: 100%;
+    /* Full width */
+    height: auto;
+    /* Full height */
     padding: 20px;
-  }
-  
-  .event-carousel-slide {
-    flex: 0 0 30%; /* Each slide takes up 30% of the container width */
-    width: 20%; /* Each slide takes up 30% of the container width */
-    height: 100%; /* Each slide takes up full height of the container */
-    scroll-snap-align: start; /* Align slides to the start of the container */
-   
+}
+
+.event-carousel-slide {
+    flex: 0 0 30%;
+    /* Each slide takes up 30% of the container width */
+    width: 20%;
+    /* Each slide takes up 30% of the container width */
+    height: 100%;
+    /* Each slide takes up full height of the container */
+    scroll-snap-align: start;
+    /* Align slides to the start of the container */
+
 
     align-items: center;
     border: 2px solid rgb(1, 129, 16);
-    margin: 0 5px; /* Space between boxes */
-    background-color:#E0F8E5;
+    margin: 0 5px;
+    /* Space between boxes */
+    background-color: #E0F8E5;
     border-radius: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow effect */
-     transition: background-color 0.3s ease;
-  }
-  .event-carousel-slide:hover{
-    background-color:#fff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow effect */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    /* Add shadow effect */
+    transition: background-color 0.3s ease;
+}
+
+.event-carousel-slide:hover {
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    /* Add shadow effect */
     transition: background-color 0.3s ease;
     border: 1px solid rgb(11, 11, 11);
 
-  }
-  .event-Yoga_image{
+}
+
+.event-Yoga_image {
     width: 59vh;
     height: 20vh;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    
-  }
-  .event-Name_yoga{
+
+}
+
+.event-Name_yoga {
     font-size: 25px;
     color: #019f13;
     font-weight: 600;
     margin: 10px;
-  }
-  .event-Yoga_date_time{
+}
+
+.event-Yoga_date_time {
     display: flex;
     justify-content: space-evenly;
     padding: 10px;
-  }
-  .event-Yoga_date{
+}
+
+.event-Yoga_date {
     font-size: 20px;
     font-weight: 600;
-  }
-.event-Yoga_time{
+}
+
+.event-Yoga_time {
     font-size: 20px;
     font-weight: 600;
+}
+
+/*........... Add media Queries for responsiceness ...........*/
+@media screen and (max-width:975px) {
+    .event-Park_image {
+        width: 40vw;
+    }
+}
+
+@media screen and (max-width:650px) {
+
+    .event-Map_container {
+        height: 51vh;
+        width: 35vh;
+    }
+}
+
+/* @media screen and (max-width:550px){
+            .event-Park_image{
+                width: 60vw;
+            }
+            .event-map_img_main_conatiner {
+                 display: flex; 
+                justify-content: space-evenly;
+                padding-top: 30px;
+            }
+        } */
+@media screen and (max-width:550px) {
+    .event-map_img_main_conatiner {
+        display: unset;
+    }
+
+    .event-Park_image {
+        margin-left: 5%;
+        width: 90vw;
+    }
+
+    .event-Map_container {
+        height: 54vh;
+        width: 50vh;
+        margin-left: 10%;
+        margin-top: 15px;
+    }
+
+    .event-Service_text {
+        font-size: 20px;
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Add media queries for responsiveness */
+
+/* For smaller screens */
+@media screen and (max-width: 975px) {
+    .event-Park_image {
+        width: 40vw;
+        /* Adjust image width */
+    }
+}
+
+/* For even smaller screens */
+@media screen and (max-width: 650px) {
+    .event-Map_container {
+        height: 69vh;
+        width: 35vh;
+        /* Adjust map container width */
+    }
+
+    .event-text-park {
+        font-size: 26px;
+
+    }
+
+}
+
+/* For mobile devices */
+@media screen and (max-width: 550px) {
+    .event-map_img_main_conatiner {
+        display: block;
+        /* Reset display for main container */
+    }
+
+    .event-Park_image {
+        margin-left: 5%;
+        width: 90vw;
+        /* Adjust image width */
+    }
+
+    .eventmap-parent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .event-Map_container {
+        height: 69vh;
+        margin-top: 15px;
+    }
+
+    .event-Service_text {
+        font-size: 20px;
+    }
 }
