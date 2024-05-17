@@ -19,6 +19,7 @@ import ReviewEventDetailsList from "./components/Admin/Activity/ReviewEventDetai
 //import public files here
 import SignUp from "./components/Public/SignUp";
 import Login from "./components/Public/Login";
+import ForgotPassword from'./components/Public/Forgot_Password/ForgotPassword';
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
@@ -155,10 +156,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
 
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
+            <Route path="/Forgot_Password/ForgotPassword" element={<ForgotPassword />} />
+
+
             {/* use Section  */}
 
             {/* Events */}

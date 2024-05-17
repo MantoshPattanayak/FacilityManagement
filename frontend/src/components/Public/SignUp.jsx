@@ -72,36 +72,36 @@ const SignUp = () => {
 
     useEffect(() => {
         let intervalId;
-        
+
         // Function to decrement timer every second
         const decrementTimer = () => {
-          setTimer(prevTimer => {
-            if (prevTimer === 0) {
-              clearInterval(intervalId);
-              return 0;
-            }
-            return prevTimer - 1;
-          });
+            setTimer(prevTimer => {
+                if (prevTimer === 0) {
+                    clearInterval(intervalId);
+                    return 0;
+                }
+                return prevTimer - 1;
+            });
         };
-        
+
         // Start the timer when OTP is sent
         if (otp && timer > 0) {
-          intervalId = setInterval(decrementTimer, 1000);
+            intervalId = setInterval(decrementTimer, 1000);
         }
-    
+
         // Clean up interval when component unmounts
         return () => clearInterval(intervalId);
-      }, [otp, timer]);
+    }, [otp, timer]);
 
     // Function to handle sending OTP
     async function handleSignUp(e) {
         e.preventDefault();
-        if(mobileNumber == '') {
+        if (mobileNumber == '') {
             toast.error('Please enter mobile number.');
             return;
         }
 
-        try{
+        try {
             let res = await axiosHttpClient('PUBLIC_SIGNUP_GENERATE_OTP_API', 'post', {
                 encryptMobile: encryptData(mobileNumber)
             });
@@ -110,7 +110,7 @@ const SignUp = () => {
             setOTP(true);
             setTimer(60);
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
             toast.error('Sign up failed. Please try again!')
         }
@@ -119,29 +119,29 @@ const SignUp = () => {
     // Function to handle verifying OTP
     async function handleOTP(e) {
         e.preventDefault();
-        if(otpVal == '') {
+        if (otpVal == '') {
             toast.error('Please enter the OTP.');
             return;
         }
 
-        try{
+        try {
             let res = await axiosHttpClient('PUBLIC_SIGNUP_VERIFY_OTP_API', 'post', {
                 encryptMobile: encryptData(mobileNumber),
                 encryptOtp: encryptData(otpVal)
             });
             console.log('response after otp entry', res.data);
             setDecideSignUpOrLogin(res.data.decideSignUpOrLogin);
-            if(res.data.decideSignUpOrLogin == 1) {     //if user exists, then redirect to homepage
+            if (res.data.decideSignUpOrLogin == 1) {     //if user exists, then redirect to homepage
                 sessionStorage.setItem("isUserLoggedIn", 1);
                 navigate('/');
             }
-            else{
+            else {
                 sessionStorage.setItem("isUserLoggedIn", 0);
             }
             setOTP(false);
             setProfile(true);
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
             toast.error('Sign up failed. Please try again!')
         }
@@ -168,7 +168,7 @@ const SignUp = () => {
             // Redirect to home page after successful registration
             toast.success('Profile Setup done successfully.');
             sessionStorage.setItem("isUserLoggedIn", 1);
-            navigate('/');            
+            navigate('/');
             setShowSuccessPopup(true); // Show the success popup
         } catch (error) {
             console.error('Error:', error);
@@ -211,7 +211,7 @@ const SignUp = () => {
         }
         return true;
     };
-// here SingUp Page (Send the Mobile Number of User)
+    // here SingUp Page (Send the Mobile Number of User)
 
 
 
@@ -229,10 +229,15 @@ const SignUp = () => {
                                 <div className="text">
                                     <p>Mobile no.</p>
                                 </div>
-                                <input className='input-field' type="text" name="Mobile" value={mobileNumber} placeholder='Enter Mobile Number' onChange={(e) => setMobileNumber(e.target.value)}/>
+                                <input className='input-field' type="text" name="Mobile" value={mobileNumber} placeholder='Enter Mobile Number' onChange={(e) => setMobileNumber(e.target.value)} />
                             </div>
                             <div className="otp-btn" onClick={handleSignUp}>
                                 <button className="sendotp-btn" >Send OTP</button>
+                            </div>
+                            {/* Option for SignIn */}
+                            <div className="no-account">
+                                <p>Have an account?</p>
+                                <a href="/login-signup">Login</a>
                             </div>
                         </div>
                     </div>
@@ -249,7 +254,7 @@ const SignUp = () => {
                             <div className='heading-text'> <h1>Verify</h1></div>
                             <div className="inputs">
                                 <div className="text"><p>OTP</p></div>
-                                <input className='input-field' type="text" placeholder='' value={otpVal} onChange={(e) => setOtpVal(e.target.value)}/>
+                                <input className='input-field' type="text" placeholder='' value={otpVal} onChange={(e) => setOtpVal(e.target.value)} />
                             </div>
                             <div className="otp-btn" onClick={handleOTP}>
                                 <button className="sendotp-btn">Verify OTP</button>
@@ -361,7 +366,7 @@ const SignUp = () => {
                                     />
                                     {confirmPasswordError && <p className="error-message">{confirmPasswordError}</p>}
                                 </div>
-                               
+
                             </div><br />
 
                             <div className="preffered-activity">
@@ -375,7 +380,7 @@ const SignUp = () => {
                                     <button className='activity-btn'><FontAwesomeIcon icon={faFootball} />Football</button>
                                     <button className='activity-btn'><FontAwesomeIcon icon={faVolleyball} />Volleyball</button>
                                     <button className='activity-btn'>Badminton</button>
-                                    <button className='activity-btn'>Rugby</button>                                  
+                                    <button className='activity-btn'>Rugby</button>
                                 </div>
                             </div>
                             <div className="otp-btn" onClick={handleProfile}>
@@ -386,8 +391,8 @@ const SignUp = () => {
                 )
             }
             {showSuccessPopup && <SuccessPopup />}
-        
-            <CommonFooter/>
+
+            <CommonFooter />
             <ToastContainer />
         </div>
     )
