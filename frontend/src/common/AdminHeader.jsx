@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import "./AdminHeader.css";
+
 import APP_LOGO from "../assets/ama-bhoomi_logo.png";
 import { useNavigate } from "react-router-dom";
 
