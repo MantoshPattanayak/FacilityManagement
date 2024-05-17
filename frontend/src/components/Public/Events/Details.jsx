@@ -36,44 +36,36 @@ import PublicHeader from "../../../common/PublicHeader";
 export default function Details() {
 
   // UseSate for get data -------------------------------------
-  const [ServiceData, setServiceData] = useState([]);
-  const [amenitiesData, setAmenitiesData] = useState([]);
-  const [EventAvailable, setEventAvailable] = useState([]);
-  const [FacilitiesData, setFacilitiesData] = useState([]);
+  const [eventDetailsData, setEventDetailsData] = useState({});
   // here Check Login Status------------------------------------
   const [LoginStatus, setLoginStatus] = useState([0]);
 
   //here Location / crypto and navigate the page---------------
   const location = useLocation();
-  const facilityId = decryptData(
-    new URLSearchParams(location.search).get("facilityId")
+  const eventId = decryptData(
+    new URLSearchParams(location.search).get("eventId")
   );
   const action = new URLSearchParams(location.search).get("action");
   const navigate = useNavigate();
   const isUserLoggedIn = sessionStorage.getItem("isUserLoggedIn") || 0;
-  const [toRoute, setToRoute] = useState();
-  // Here Map Api keys ------------------------------------------------------------
-
+  // Here Map Api keys -------------------------------------------------
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
 
   // Here Get the data of Sub_park_details------------------------------------------
-  async function getSub_park_details() {
-    // console.log('facilityId', facilityId);
+  async function getEventDetailData() {
+    // console.log('eventId', eventId);
     try {
       let res = await axiosHttpClient(
-        "View_By_ParkId",
+        "VIEW_EVENT_BY_ID_API",
         "get",
-        null,
-        facilityId
+        {},
+        eventId
       );
 
-      console.log("here Response", res);
-      setServiceData(res.data.serviceData);
-      setAmenitiesData(res.data.amenitiesData);
-      setEventAvailable(res.data.eventDetails);
-      setFacilitiesData(res.data.facilitiesData);
+      console.log("Response of event details", res);
+      setEventDetailsData(res.data.eventActivityDetails);
     } catch (err) {
       console.log("here Error", err);
     }
@@ -81,11 +73,11 @@ export default function Details() {
   // For Find Out the Status of Login Page -----------------------------------
   // For Find Out the Status of Login Page -------------------------------
 
-  useEffect(() => {}, [isUserLoggedIn]);
+  useEffect(() => { }, [isUserLoggedIn]);
 
   // UseEffect for Update the data---------------------------------------------
   useEffect(() => {
-    getSub_park_details();
+    getEventDetailData();
   }, []);
   // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
@@ -96,16 +88,16 @@ export default function Details() {
   //Image swap  conatiner ------------------------------------------------
   const containerRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  useEffect(() => {
-    const container = containerRef.current;
-    const interval = setInterval(() => {
-      const newIndex = (currentIndex + 1) % 10;
-      setCurrentIndex(newIndex);
-      container.scrollLeft = newIndex * container.offsetWidth;
-    }, 4000); // Change box set every 3 seconds
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   const interval = setInterval(() => {
+  //     const newIndex = (currentIndex + 1) % 10;
+  //     setCurrentIndex(newIndex);
+  //     container.scrollLeft = newIndex * container.offsetWidth;
+  //   }, 4000); // Change box set every 3 seconds
 
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+  //   return () => clearInterval(interval);
+  // }, [currentIndex]);
 
   function formatTime(time24) {
     //format 24 hour time as 12 hour time
@@ -137,118 +129,104 @@ export default function Details() {
 
   return (
     <div className="event-Sub_Manu_Conatiner">
-    {/* here Header -----------------------------------------------------*/}
-    <PublicHeader />
-    {/* Here Heading Image (Below of header) */}
-    <div className="event-Header_Img">
-      <h1 className="event-text-park">
-        {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
-      </h1>
-      <span className="event-Location_text_sub_manu">
-        <img className="event-location_icon" src={Location_icon}></img>
-        <h1 className="event-text_location">
-          {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}
+      {/* here Header -----------------------------------------------------*/}
+      <PublicHeader />
+      {/* Here Heading Image (Below of header) */}
+      <div className="event-Header_Img">
+        <h1 className="event-text-park">
+          {eventDetailsData?.eventName}
         </h1>
-      </span>
-    </div>
-    {/*---------------- Jsx for Map and Image ------------------- */}
-    <div className="event-map_img_main_conatiner">
-      <div className="event-Image_conatiner">
-        <img className="event-Park_image" src={Park_img}></img>
-      </div>
-      <div className="event-Map_container">
-        <span className="event-time_status">
-          <h1 className="event-time_text">
-            {" "}
-            Timing : {formatTime(
-              FacilitiesData[0]?.operatingHoursFrom
-            )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+        <span className="event-Location_text_sub_manu">
+          <img className="event-location_icon" src={Location_icon}></img>
+          <h1 className="event-text_location">
+            {eventDetailsData?.locationName}
           </h1>
-          <button
-            className={`event-Open_Button ${
-              FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
-                ? "open"
-                : "closed"
-            }`}
-          >
-            {FacilitiesData?.length > 0 &&
-              FacilitiesData[0]?.status.toUpperCase()}
-          </button>
         </span>
+      </div>
+      {/*---------------- Jsx for Map and Image ------------------- */}
+      <div className="event-map_img_main_conatiner">
+        <div className="event-Image_conatiner">
+          <img className="event-Park_image" src={Park_img}></img>
+        </div>
+        <div className="event-Map_container">
+          <span className="event-time_status grid grid-rows-2 grid-cols-3">
+            <h1 className="event-time_text col-span-3">Event date: {formatDate(eventDetailsData?.eventDate)}</h1>
+            <span className='col-start-1 col-span-3 grid grid-cols-3 items-center'>
+              <h1 className="event-time_text col-span-2">
+                {" "}
+                Timing : {formatTime(
+                  eventDetailsData?.eventStartTime
+                )} - {formatTime(eventDetailsData?.eventEndTime)}
+              </h1>
+              <button
+                className={`event-Open_Button ${eventDetailsData?.status == "ACTIVE"
+                  ? "event-open"
+                  : "event-closed"
+                  }`}
+              >
+                {
+                  eventDetailsData?.status == "ACTIVE"
+                    ? "Available"
+                    : "Closed"
+                }
+              </button>
+            </span>
+          </span>
 
-        <span className="event-Button_ticket_container">
-          <Link
-            to={{
-              pathname: `${
-                isUserLoggedIn == 1 ? "/BookParks/Book_Now" : "/login-signup"
-              }`,
-              search: `${
-                isUserLoggedIn == 1
-                  ? `?facilityId=${encryptDataId(
-                      FacilitiesData[0]?.facilityId
-                    )}`
-                  : `?facilityId=${encryptDataId(
-                      FacilitiesData[0]?.facilityId
-                    )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
-              }`,
-            }}
-            className="event-button-9"
-          >
-            <button role="button_by">Buy a Ticket</button>
-          </Link>
- 
+          <span className={`event-Button_ticket_container`}>
+            {
+              eventDetailsData.status == 'ACTIVE' ?
+                <>
+                  <Link
+                    to={{
+                      pathname: `${isUserLoggedIn == 1 ? "/event-book" : "/login-signup"
+                        }`,
+                      search: `${isUserLoggedIn == 1
+                        ? `?eventId=${encryptDataId(
+                          eventDetailsData?.eventId
+                        )}`
+                        : `?eventId=${encryptDataId(
+                          eventDetailsData?.eventId
+                        )}` + `&redirect=${encryptDataId("/event-book")}`
+                        }`,
+                    }}
+                    className={`event-button-9`}
+                  >
+                    Buy a Ticket
+                  </Link>
+                </>
+                :
+                <>
+                  <button disabled className={`event-button-9 disabled:bg-slate-500`}>Buy a Ticket</button>
+                </>
+            }
+          </span>
 
-
-          <Link
-            to={{
-              pathname: `${
-                isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-              }`,
-              search: `${
-                isUserLoggedIn == 1
-                  ? `?facilityId=${encryptDataId(
-                      FacilitiesData[0]?.facilityId
-                    )}`
-                  : `?facilityId=${encryptDataId(
-                      FacilitiesData[0]?.facilityId
-                    )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-              }`,
-            }}
-            className="event-button-9"
-          >
-                <button role="button_by">Host Event</button>
-            </Link>
-      
-        </span>
-
-        <div className="event-Map_image">
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              mapContainerStyle={{ height: "300px", width: "100%" }}
-              center={defaultCenter}
-              zoom={8}
-            >
-              {/* Render markers */}
-              {FacilitiesData?.map((location, index) => (
+          <div className="event-Map_image">
+            <LoadScript googleMapsApiKey={apiKey}>
+              <GoogleMap
+                mapContainerStyle={{ height: "300px", width: "100%" }}
+                center={defaultCenter}
+                zoom={12}
+              >
+                {/* Render markers */}
                 <Marker
-                  key={index}
+                  key={eventDetailsData.eventId}
                   position={{
-                    lat: location.latitude,
-                    lng: location.longitude,
+                    lat: eventDetailsData?.latitude,
+                    lng: eventDetailsData?.longitude,
                   }}
                 />
-              ))}
-            </GoogleMap>
-          </LoadScript>
+              </GoogleMap>
+            </LoadScript>
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* -----------------------------services------------------------------------------ */}
-    <div className="event-Service_Now_conatiner">
+      {/* -----------------------------services------------------------------------------ */}
+      {/* <div className="event-Service_Now_conatiner">
       <h1 className="event-Service_text">Services</h1>
-      {ServiceData?.length > 0 &&
-        ServiceData?.map((item, index) => (
+      {eventDetailsData.services?.map((item, index) => (
           <div className="event-Service_Avilable" key={index}>
             <div className="event-service_item">
               <img
@@ -260,87 +238,47 @@ export default function Details() {
             </div>
           </div>
         ))}
-    </div>
+    </div> */}
 
-    {/* --------------------------- Amenities ------------------------------------------*/}
-    <div className="event-Amenities_Main_conatiner">
-      <h1 className="event-Service_text">Amenities</h1>
-      <div className="event-Amenities-Data">
-        {amenitiesData
-          .flatMap((group) => group) // Flatten the array of arrays
-          .filter(
-            (item, index, self) =>
-              self.findIndex((t) => t.amenityName === item.amenityName) ===
-              index
-          ) // Filter unique items
-          .map((item, index) => (
-            <span className="flex gap-2" key={index}>
-              <img
-                className="event-Correct_icon"
-                src={correct_icon}
-                alt={`Amenity icon ${index}`}
-              />
-              <h1 className="event-Amenities_name">{item.amenityName}</h1>
-            </span>
-          ))}
+      {/* --------------------------- Amenities ------------------------------------------*/}
+      <div className="event-Amenities_Main_conatiner">
+        <h1 className="event-Service_text">Amenities</h1>
+        <div className="event-Amenities-Data">
+          {
+            eventDetailsData.amentities?.map((item, index) => (
+              <span className="flex gap-2" key={index}>
+                <img
+                  className="event-Correct_icon"
+                  src={correct_icon}
+                  alt={`Amenity icon ${index}`}
+                />
+                <h1 className="event-Amenities_name">{item}</h1>
+              </span>
+            ))
+          }
+        </div>
       </div>
-    </div>
 
-    {/* -------------------------- Here About -------------------------------------------- */}
-    <div className="event-About_Conatiner">
-      <h1 className="event-Service_text">About</h1>
-      <h1 className="event-About_text">
-        {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
-      </h1>
-    </div>
-    {/* -------------------------Helpline Number ------------------------------------------ */}
-    <div className="event-Helpline_number_conatine">
-      <h1 className="event-Service_text">Helpline Number</h1>
-      <div className="event-Contact_number">
-        <img className="event-Phone_icon" src={Phone_icon}></img>
-        <h1 className="event-Number">
-          {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
+      {/* -------------------------- Here About -------------------------------------------- */}
+      <div className="event-About_Conatiner">
+        <h1 className="event-Service_text">About</h1>
+        <h1 className="event-About_text">
+          {eventDetailsData?.descriptionOfEvent}
         </h1>
-        <h1 className="event-Number">9192847567</h1>
       </div>
-    </div>
-    {/* -------------------------Event Available ----------------------------------------------------------- */}
-    <div className="event-Event_Available_main_conatiner">
-      <h1 className="event-Service_text">Event Available</h1>
-      <div className="event-Sub_Park_Details">
-        {EventAvailable?.length > 0 &&
-          EventAvailable?.map((item, index) => {
-            return (
-              <div
-                className="event-carousel-container"
-                ref={containerRef}
-                key={index}
-              >
-                <div className="event-carousel-slide">
-                  <img
-                    className="event-Yoga_image"
-                    src={Yoga_img}
-                    alt="Event"
-                  ></img>
-                  <h1 className="event-Name_yoga"> {item.eventName}</h1>
-                  <span className="event-Yoga_date_time">
-                    <h1 className="event-Yoga_date">
-                      Date:-{formatDate(item.eventDate)}
-                    </h1>
-                    <h1 className="event-Yoga_time">
-                      Time:-{formatTime(item.eventStartTime)} -{" "}
-                      {formatTime(item.eventEndTime)}
-                    </h1>
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        {EventAvailable?.length == 0 && <p>No events.</p>}
+      {/* -------------------------Helpline Number ------------------------------------------ */}
+      <div className="event-Helpline_number_conatine">
+        <h1 className="event-Service_text">Helpline Number</h1>
+        <div className="event-Contact_number">
+          <img className="event-Phone_icon" src={Phone_icon}></img>
+          <h1 className="event-Number">
+            {eventDetailsData?.length > 0 && eventDetailsData?.helpNumber}
+          </h1>
+          <h1 className="event-Number">9192847567</h1>
+        </div>
       </div>
+      {/*-------------------------------------------- Here Footer---------------------------------------------- */}
+      <CommonFooter />
     </div>
-    {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-    <CommonFooter />
-  </div>
   )
 }

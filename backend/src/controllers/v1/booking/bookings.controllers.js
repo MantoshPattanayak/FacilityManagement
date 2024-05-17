@@ -201,7 +201,12 @@ let parkBooking = async (req, res) => {
             entityTypeId,
             facilityPreference
         } = req.body;
-
+        console.log({
+            entityId,
+            entityTypeId,
+            facilityPreference
+        });
+        let userId = req.user?.id || 1;
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS

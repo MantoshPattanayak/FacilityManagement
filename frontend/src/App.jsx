@@ -19,6 +19,7 @@ import ReviewEventDetailsList from "./components/Admin/Activity/ReviewEventDetai
 //import public files here
 import SignUp from "./components/Public/SignUp";
 import Login from "./components/Public/Login";
+import ForgotPassword from'./components/Public/Forgot_Password/ForgotPassword';
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
@@ -60,6 +61,7 @@ import BookEvent from "./components/Public/Events/BookEvent";
 // Add to card
 import Add_Card from "./components/Public/Add_To_Card/AddCard";
 import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
+import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
 // import provider for connect to our app
@@ -89,7 +91,7 @@ function App() {
             <Route path="/Organogram" element={<Organogram/>} />
             <Route path="/Stakeholders" element={<Stakeholders/>} />
             <Route path="/StandOut" element={<StandOut/>} />
-            <Route path="/FqaPage" element={<FqaPage/>} />
+            <Route path="/faqs" element={<FqaPage/>} />
           
             {/* Public (Book Parks)  */}
             <Route
@@ -155,16 +157,20 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
 
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
+            <Route path="/Forgot_Password/ForgotPassword" element={<ForgotPassword />} />
+
+
             {/* use Section  */}
 
             {/* Events */}
             <Route path="/events" element={<EventList />} />
             <Route path="/events-details" element={<Details />} />
-            <Route path="/event-book" element={<BookEvent />} />
+            <Route path="/event-book" element={<Book_Event />} />
 
             {/* ADMIN SECTION - Login */}
             <Route path="/admin-login" element={<AdminLogin />} />
