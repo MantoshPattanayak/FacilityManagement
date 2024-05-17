@@ -40,9 +40,12 @@ const usermaster = sequelize.define('usermaster', {
   lastLogin:{
     type: DataTypes.DATE // Define the column as DATE type
 },
-  status:{
+  statusId:{
     type: DataTypes.INTEGER // Define the column as DATE type
 },
+  verifyEmail:{
+    type:DataTypes.INTEGER
+  },
   remarks:{
     type: DataTypes.STRING(255)
   },

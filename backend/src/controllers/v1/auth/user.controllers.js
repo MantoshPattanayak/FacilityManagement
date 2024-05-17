@@ -7,9 +7,10 @@ let authSessions = db.authsessions
 let deviceLogin = db.device
 let otpCheck = db.otpDetails
 let QueryTypes = db.QueryTypes
-let userActivityPreference = db.useractivitypreferences
+let userActivityPreference = db.userActivityPreference
 // const admin = require('firebase-admin');
 const { sequelize,Sequelize } = require('../../../models')
+let jwt = require('jsonwebtoken');
 
 const {encrypt} = require('../../../middlewares/encryption.middlewares')
 const {decrypt} = require('../../../middlewares/decryption.middlewares')
@@ -187,7 +188,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
       let userAgent =  req.headers['user-agent'];
 
-
+      console.log('userAgent', userAgent)
       let deviceInfo = parseUserAgent(userAgent)
       let lastLoginTime = new Date();
 
@@ -216,7 +217,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
                [Op.and]:[{ phoneNo:mobileNo},{statusId:statusId},{roleId:null}]
               }
             })
-            console.log(isUserExist,'check user')
+            // console.log(isUserExist,'check user')
           // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
           if(!isUserExist){
 
@@ -224,7 +225,11 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
           }
           
+          console.log('2')
           let tokenGenerationAndSessionStatus = await tokenAndSessionCreation(isUserExist,lastLoginTime,deviceInfo);
+
+          console.log('all the data', tokenGenerationAndSessionStatus)
+
           if(tokenGenerationAndSessionStatus?.error){
 
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -232,6 +237,8 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
             })
 
           }
+
+          console.log('here upto it is coming')
           let {accessToken, refreshToken, options} = tokenGenerationAndSessionStatus
                   //menu items list fetch
         //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
@@ -295,23 +302,47 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
 let sendEmailToUser = async(req,res)=>{
   try {
-    let {emailId,mobileNo}= req.body
+    let {emailId,mobileNo,changePassword}= req.body
+    emailId = decrypt(emailId)
+    let message;
+    if(mobileNo){
+      mobileNo = decrypt(mobileNo)
+    }
+    console.log(emailId,mobileNo,"req.body")
     let firstField = emailId;
     let secondField = mobileNo
     let Token = await mailToken({firstField,secondField})
     let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
-    const message = `Please verify your emailId.<br><br>
-    This is your emailId <b>${emailId}</b><br>
-    Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
-    <button style=" background-color: #4CAF50; border: none;
-     color: white;
-     padding: 15px 32px;
-     text-align: center;
-     text-decoration: none;
-     display: inline-block;
-     font-size: 16px;">Update Password</button> </a>
-     </br></br>
-     This link is valid for 10 mins only  `;
+
+    if(changePassword==1){
+      message = `
+      <b>This is your emailId <b>${emailId}</b><br>
+      Please use the below link to change your password</br></br><a href=${verifyUrl}>
+      <button style=" background-color: #4CAF50; border: none;
+       color: white;
+       padding: 15px 32px;
+       text-align: center;
+       text-decoration: none;
+       display: inline-block;
+       font-size: 16px;">Update Password</button> </a>
+       </br></br>
+       This link is valid for 10 mins only  `
+    }
+    else{
+      message = `Please verify your emailId.<br><br>
+      This is your emailId <b>${emailId}</b><br>
+      Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
+      <button style=" background-color: #4CAF50; border: none;
+       color: white;
+       padding: 15px 32px;
+       text-align: center;
+       text-decoration: none;
+       display: inline-block;
+       font-size: 16px;">Verify Email</button> </a>
+       </br></br>
+       This link is valid for 10 mins only  `;
+    }
+   
       try {
           await sendEmail({
             email:`${emailId}`,
@@ -335,6 +366,7 @@ let sendEmailToUser = async(req,res)=>{
 let verifyEmail = async(req,res)=>{
   try {
     let {token}= req.body;
+    console.log('req.body',req.body)
     let isEmailVerified =1
     let statusId = 1;
     console.log('token',token);
@@ -350,7 +382,8 @@ let verifyEmail = async(req,res)=>{
       
       // Calculate the duration of the token's validity in seconds
       const durationInSeconds = exp - iat;
-      let mobileNo = decodedEmailToken.secondField
+      let mobileNo =  encrypt(decodedEmailToken.secondField)
+
       if (exp * 1000 <= Date.now()) {
         console.log('Token has expired');
         return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Url Expired' });
@@ -364,45 +397,113 @@ let verifyEmail = async(req,res)=>{
         }
        })
 
-
+       console.log(userExist,'userExist')
         if(userExist){
-          let updateVerifyEmailColumn = await user.update({
-            verifyEmail:1
+          let [updateVerifyEmailColumn] = await user.update({
+            verifyEmail:isEmailVerified
           },
         {
           where:{
             [Op.and]:[{phoneNo:mobileNo},{roleId:userExist.roleId}]
         }})
-        if(updateVerifyEmailColumn==0){
+        if(updateVerifyEmailColumn==0 && userExist.verifyEmail == 0){
           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:`Something went wrong`
           })
         }
         return res.status(statusCode.SUCCESS.code).json({
-          message:`Email verified Successfully`,isEmailVerified:1
+          message:`Email verified Successfully`,isEmailVerified:isEmailVerified
         })
 
         }
         return res.status(statusCode.SUCCESS.code).json({
-          message:`Email verified Successfully`,isEmailVerified:1
+          message:`Email verified Successfully`,isEmailVerified:isEmailVerified
         })
       }
     }
-  } catch (error) {
+  } catch (err) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
   }
 }
 
+let forgotPassword = async(req,res)=>{
+  try {
+    let {token,password}= req.body;
+    console.log('req.body',req.body)
+    let statusId = 1;
+    console.log('token',token);
+    if(!token){
+      return res.status(statusCode.NOTFOUND.code).json({
+        message:"Bad Request"
+      })
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const decodedEmailToken = jwt.verify(token,process.env.EMAIL_TOKEN,{ignoreExpiration: true})
+    if(decodedEmailToken){
+      const {exp , iat}= decodedEmailToken
+      
+      // Calculate the duration of the token's validity in seconds
+      const durationInSeconds = exp - iat;
+      let emailId =  encrypt(decodedEmailToken.firstField)
+      if (exp * 1000 <= Date.now()) {
+        console.log('Token has expired');
+        return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Url Expired' });
+      }
+      else{
+        // update the password
+       
+       let userExist = await user.findOne({
+        where:{
+          [Op.and]:[{emailId:emailId},{statusId:statusId},{roleId:null}]
+        }
+       })
+
+       console.log(userExist,'userExist')
+        if(userExist){
+          let [updatePassword] = await user.update({
+            password:hashedPassword
+          },
+        {
+          where:{
+            [Op.and]:[{userId:userExist.userId}]
+        }})
+        if(updatePassword==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+        }
+        return res.status(statusCode.SUCCESS.code).json({
+          message:`Password changed successfully`
+        })
+
+        }
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message:`User does not exist. Please check the email address`,
+        })
+      }
+    }
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
 
 let signUp = async (req,res)=>{
  try{
   console.log('1')
   console.log(req.body,'req.body')
     let statusId = 1;
-    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,activities,isEmailVerified} = req.body;
+    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,encryptActivity:activities,isEmailVerified} = req.body;
 
+    activities = activities.map(decryptValue=>decrypt(decryptValue));
+
+    console.log(activities,"activities")
+
+    console.log('req.body',req.body)
     let createdDt = new Date();
     let updatedDt = new Date();
     if(!password && !firstName && !middleName && !lastName && !phoneNo && !userImage && !activities && language){
@@ -477,6 +578,17 @@ let signUp = async (req,res)=>{
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
           message:"Something went wrong"
         })
+      }
+      if(isEmailVerified==1){
+        let [updateTheUser] = await user.update({
+          verifyEmail:isEmailVerified
+        },{
+          where:{
+            userId:newUser.userId
+          }
+        }
+      )
+      console.log(updateTheUser,'update the user email ')
       }
       // insert to prefered activity first
       activities.forEach(async(activity)=>{
@@ -582,6 +694,11 @@ function parseUserAgent(userAgent) {
       deviceType = 'Mobile';
       deviceName = 'iOS Device';
   }
+    else if(userAgent.includes('Postman')){
+      deviceType = 'PC'
+      deviceName = 'Postman'
+      
+    }
 
   return { deviceType, deviceName };
 }
@@ -599,15 +716,19 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
     let mobileNo = decrypt(isUserExist.phoneNo)
     console.log(isUserExist.userId,userName,emailId,mobileNo)
 
+    console.log(userId,userName,emailId,mobileNo,'mobileNo')
+
     let accessAndRefreshToken = await generateToken(userId,userName,emailId,mobileNo)
 
+    console.log(accessAndRefreshToken, "accessAndRefreshToken")
     if(accessAndRefreshToken?.error){
       return {
         error:accessAndRefreshToken.error
       }
     }
-    let {refreshToken,accessToken} = generateToken;
+    let {accessToken,refreshToken} = accessAndRefreshToken;
 
+    console.log(accessToken, refreshToken, 'accessToken and refresh token')
     const options = {
       httpOnly: true,
       secure: true
@@ -1066,7 +1187,8 @@ module.exports = {
  generateOTPHandler,
  verifyOTPHandlerWithGenerateToken,
  verifyEmail,
- sendEmailToUser
+ sendEmailToUser,
+ forgotPassword
 
 }
 

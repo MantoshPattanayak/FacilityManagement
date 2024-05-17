@@ -3,7 +3,7 @@ let {encrypt}= require('../middlewares/encryption.middlewares')
 let {decrypt}= require('../middlewares/encryption.middlewares')
 
 //Generate an access token and a refresh token for this database user
-async function jwtTokens(userId, userName, emailId ) {
+async function jwtTokens(userId, userName, emailId,mobileNo ) {
   try{
   console.log(userId, userName,emailId, mobileNo,'token data')
 

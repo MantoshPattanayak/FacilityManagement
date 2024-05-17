@@ -1,7 +1,7 @@
 module.exports = (sequelize,DataTypes)=>{
 
     let userActivityPreferences = sequelize.define('useractivitypreference',{
-        userActivityId:{
+        userActivityPreferenceId:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
             primaryKey:true
