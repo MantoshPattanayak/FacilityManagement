@@ -26,7 +26,6 @@ db1.QueryTypes = QueryTypes;
 
 db1.amenitiesmaster = require("./amenitiesmaster.models")(sequelize, DataTypes);
 db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
-db1.privateuser = require("./privateuser.models")(sequelize, DataTypes);
 db1.amenityfacilities = require("./amenityfacilities.models")(
   sequelize,
   DataTypes
@@ -94,7 +93,7 @@ db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
 
 db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
 
-db1.faq.sync({
+db1.hosteventdetails.sync({
   force: false,
 });
 
