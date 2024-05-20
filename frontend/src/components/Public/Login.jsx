@@ -50,7 +50,8 @@ const Login = () => {
         dispatch(loginSuccess({
           accessToken: res.data.accessToken,
           refreshToken: res.data.refreshToken,
-          user: res.data.user
+          user: res.data.user,
+          sid: res.data.sid
         }));
         
         // sessionStorage.setItem("isUserLoggedIn", 1);
