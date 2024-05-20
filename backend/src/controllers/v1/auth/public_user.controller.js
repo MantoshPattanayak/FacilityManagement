@@ -249,6 +249,8 @@ const homePage = async (req, res) => {
       replacements: [new Date(), new Date()]
     })
 
+    
+
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,

@@ -17,7 +17,7 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.INTEGER
         },
         mobileNo:{
-            type:DataTypes.INTEGER
+            type:DataTypes.STRING(255)
         },
         createdDt:{
             type:DataTypes.DATE,
