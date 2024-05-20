@@ -69,6 +69,9 @@ import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
 // import provider for connect to our app
 import { Provider } from 'react-redux';
 import appStore from "./utils/appStore";
+import ViewGrievanceList from "./components/Admin/Activity/Grievance/ViewGrievanceList";
+import AssignGrievance from "./components/Admin/Activity/Grievance/AssignGrievance";
+import ActionAgainstGrievance from "./components/Admin/Activity/Grievance/ActionAgainstGrievance";
 
 
 function App() {
@@ -212,6 +215,11 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Activity - Grievance */}
+            <Route path="/activity/grievance" element={<ProtectedRoute><ViewGrievanceList /></ProtectedRoute>}/>
+            <Route path="/activity/assign-grievance" element={<ProtectedRoute><AssignGrievance /></ProtectedRoute>}/>
+            <Route path="/activity/grievance-action" element={<ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute>}/>
+            {/* Activity - Grievance */}
             {/* ADMIN SECTION - UAC*/}
             <Route
               path="/UAC/Resource/ListOfResources"
