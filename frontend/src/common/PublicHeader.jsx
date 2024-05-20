@@ -24,12 +24,11 @@ export default function PublicHeader() {
 
   useEffect(() => {
     setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0)
-
     if (!isLanguageContentFetched) {
       getWebContent();
     }
   }, [isLanguageContentFetched, language]); // Updated dependency
-
+  // here Get the Launage (Odia and eng)-------------------------------------
   async function getWebContent() {
     try {
       const res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
@@ -48,10 +47,11 @@ export default function PublicHeader() {
 
 
 
+// useEffect -------------------------------xx---------
   useEffect(() => {
     getWebContent();
   }, [language]);
-
+// Return --------------------------------------------
   return (
     <header className="header">
       <header className="header-content">
