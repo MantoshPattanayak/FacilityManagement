@@ -1,11 +1,13 @@
-import React from 'react'
+import React from 'react';
 import { Navigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const ProtectedRoute = ({children}) => {
     // const user = useSelector((state) => state.user);
     let location = useLocation();
 
-    console.log({location, });
+    // console.log({location});
 
     const accessRoutes = [
         {

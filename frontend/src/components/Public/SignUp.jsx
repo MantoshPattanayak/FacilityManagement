@@ -236,8 +236,10 @@ const SignUp = () => {
                             </div>
                             {/* Option for SignIn */}
                             <div className="no-account">
-                                <p>Have an account?</p>
-                                <a href="/login-signup">Login</a>
+                                <p>Have an account?</p>'
+                                <Link to='/login-signup'>
+                                    Login
+                                </Link>
                             </div>
                         </div>
                     </div>
