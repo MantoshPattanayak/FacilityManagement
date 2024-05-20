@@ -499,7 +499,9 @@ let signUp = async (req,res)=>{
     let statusId = 1;
     let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,encryptActivity:activities,isEmailVerified} = req.body;
 
-    activities = activities.map(decryptValue=>decrypt(decryptValue));
+    if(activities){
+      activities = activities.map(decryptValue=>decrypt(decryptValue));
+    }
 
     console.log(activities,"activities")
 
@@ -590,7 +592,8 @@ let signUp = async (req,res)=>{
       )
       console.log(updateTheUser,'update the user email ')
       }
-      // insert to prefered activity first
+      if(activities){
+           // insert to prefered activity first
       activities.forEach(async(activity)=>{
         let insertToPreferedActivity  = await userActivityPreference.create({
           userId:newUser.userId,
@@ -603,6 +606,8 @@ let signUp = async (req,res)=>{
 
         })
       }) 
+      }
+   
       
       // after the user created successfully then the image can be added 
       if(userImage){
