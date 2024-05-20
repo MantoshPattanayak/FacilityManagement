@@ -430,34 +430,41 @@ let verifyEmail = async(req,res)=>{
 
 let forgotPassword = async(req,res)=>{
   try {
-    let {token,password}= req.body;
+    let {mobileNo,password}= req.body;
     console.log('req.body',req.body)
     let statusId = 1;
     console.log('token',token);
-    if(!token){
-      return res.status(statusCode.NOTFOUND.code).json({
-        message:"Bad Request"
+    let publicRole = null;
+    // if(!token){
+    //   return res.status(statusCode.NOTFOUND.code).json({
+    //     message:"Bad Request"
+    //   })
+    // }
+    if(!mobileNo && !password){
+      return res.status(statusCode.BAD_REQUEST.code).json({
+      message:"Bad Request"
       })
     }
+    password = decrypt(password)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const decodedEmailToken = jwt.verify(token,process.env.EMAIL_TOKEN,{ignoreExpiration: true})
-    if(decodedEmailToken){
-      const {exp , iat}= decodedEmailToken
+    // const decodedEmailToken = jwt.verify(token,process.env.EMAIL_TOKEN,{ignoreExpiration: true})
+    // if(decodedEmailToken){
+    //   const {exp , iat}= decodedEmailToken
       
-      // Calculate the duration of the token's validity in seconds
-      const durationInSeconds = exp - iat;
-      let emailId =  encrypt(decodedEmailToken.firstField)
-      if (exp * 1000 <= Date.now()) {
-        console.log('Token has expired');
-        return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Url Expired' });
-      }
-      else{
+    //   // Calculate the duration of the token's validity in seconds
+    //   const durationInSeconds = exp - iat;
+    //   let emailId =  encrypt(decodedEmailToken.firstField)
+    //   if (exp * 1000 <= Date.now()) {
+    //     console.log('Token has expired');
+    //     return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Url Expired' });
+    //   }
+      // else{
         // update the password
        
        let userExist = await user.findOne({
         where:{
-          [Op.and]:[{emailId:emailId},{statusId:statusId},{roleId:null}]
+          [Op.and]:[{phoneNo:mobileNo},{statusId:statusId},{roleId:publicRole}]
         }
        })
 
@@ -483,8 +490,8 @@ let forgotPassword = async(req,res)=>{
         return res.status(statusCode.BAD_REQUEST.code).json({
           message:`User does not exist. Please check the email address`,
         })
-      }
-    }
+      // }
+    // }
   } catch (err) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
@@ -955,6 +962,7 @@ let publicLogin = async(req,res)=>{
               })
 
             }
+            console.log('fdfjdlkfld')
             let {accessToken, refreshToken, options} = tokenGenerationAndSessionStatus
           
             //menu items list fetch
@@ -992,7 +1000,8 @@ let publicLogin = async(req,res)=>{
         res.cookie('refreshToken', refreshToken, options)
 
         // bearer is actually set in the first to tell that  this token is used for the authentication purposes
-
+          
+        console.log('233232')
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
         .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,  }); //menuItems: dataJSON
