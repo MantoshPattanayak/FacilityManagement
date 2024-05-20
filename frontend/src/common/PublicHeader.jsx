@@ -9,6 +9,7 @@ import axiosHttpClient from "../utils/axios";
 // here Import Redux Part ---------------------------------
 import { useDispatch, useSelector } from "react-redux";  // selector use for Read the data -----------------
 import { setLanguage, setLanguageContent } from "../utils/languageSlice";
+import { Link } from "react-router-dom";
 
 
 export default function PublicHeader() {
@@ -44,9 +45,9 @@ export default function PublicHeader() {
   function setLanguageCode(languageCode) {
     dispatch(setLanguage(languageCode));
   }
-  
 
-  
+
+
   useEffect(() => {
     getWebContent();
   }, [language]);
@@ -61,60 +62,59 @@ export default function PublicHeader() {
           </div>
 
           <ul>
-          <li>
+            <li>
               {(language === 'EN') && <><button value={'OD'} onClick={() => setLanguageCode('OD')}>ଓଡ଼ିଆ</button> &nbsp; | </>}
               {(language === 'OD') && <><button value={'EN'} onClick={() => setLanguageCode('EN')}>English</button> &nbsp; | </>}
             </li>
             <li>
-              <a href="/">{(languageContent.find(data => data.languageResourceKey === 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</a>
+              <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey === 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
             </li>
             {/* Render 'About' link */}
             <li>
-              <a href="/">{(languageContent.find(data => data.languageResourceKey === 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</a>
+              <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey === 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
             </li>
 
             <li>
-              <a href="/faqs">FAQ</a>
+              <Link to={'/faqs'}>FAQ</Link>
             </li>
             <li>
-              <a href="/facilities">FACILITIES</a>
+              <Link to={'/facilities'}>FACILITIES</Link>
             </li>
             <li>
-              <a href="/events">EVENTS</a>
+              <Link to={'/events'}>EVENTS</Link>
             </li>
             {
               isUserLoggedIn == 1 ? (
                 <li>
-                  <a href="/Event_hostPage">HOST EVENT</a>
+                  <Link to={'/Event_hostPage'}>HOST EVENT</Link>
                 </li>
               ) : ''
             }
             {isUserLoggedIn == 1 ? (
               <li>
-                <a className="" href="/Profile">
+                <Link to={'/Profile'}>
                   <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
-                </a>
+                </Link>
               </li>
             ) : (
               <li>
-                <a className="login-button" href="/login-signup">
+                <Link className="login-button" to="/login-signup">
                   LOGIN
-                </a>
+                </Link>
               </li>
             )}
             <li>
               {isUserLoggedIn == 1 ? (
                 <li>
-                  <a className="relative flex items-center" href="/BookParks/Add_Card">
+                  <Link className="relative flex items-center" to="/BookParks/Add_Card">
                     {GetCardCount.count > 0 && (
                       <span className="cart-count absolute  left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1  rounded-full">{GetCardCount.count}</span>
                     )}
                     <span>  <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> Cart</span>
-                  </a>
+                  </Link>
                 </li>
               ) : (
                 <li>
-
                 </li>
               )}
             </li>
