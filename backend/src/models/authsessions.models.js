@@ -23,7 +23,13 @@ const AuthSessions = sequelize.define('authsessions',{
     }
     
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 return AuthSessions
 }
 

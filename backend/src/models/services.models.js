@@ -41,7 +41,12 @@ const Services = sequelize.define('services',{
     }
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 
 return Services
 }

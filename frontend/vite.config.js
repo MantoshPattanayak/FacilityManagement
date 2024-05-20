@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import instance from './env'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,6 +12,7 @@ export default defineConfig({
   preview: {
     port: 5173
   },
+  base: '/ama-bhoomi',
   build: {
     minify: 'terser',
       terserOptions: {

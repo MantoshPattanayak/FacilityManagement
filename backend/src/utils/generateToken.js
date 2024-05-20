@@ -1,12 +1,13 @@
 let jwt = require('jsonwebtoken');
-let encrypt= require('../middlewares/encryption.middlewares')
+let {encrypt}= require('../middlewares/encryption.middlewares')
 let {decrypt}= require('../middlewares/encryption.middlewares')
 
 //Generate an access token and a refresh token for this database user
-async function jwtTokens(userId, userName, emailId ) {
+async function jwtTokens(userId, userName, emailId,mobileNo ) {
   try{
-  console.log(userId, userName,emailId,'token data')
-  const user = { userId, userName, emailId};
+  console.log(userId, userName,emailId, mobileNo,'token data')
+
+  const user = { userId, userName, emailId,mobileNo};
   console.log(userId, userName, emailId);
 
 
@@ -21,7 +22,9 @@ async function jwtTokens(userId, userName, emailId ) {
 }
 
 catch (err) {
-console.log(err,'error')
+return {
+  error:"Internal Server Error"
+}
 } 
 }
 

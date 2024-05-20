@@ -3,7 +3,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from './rootReducer';
 import { persistReducer } from 'redux-persist';
 import sessionStorage from 'redux-persist/lib/storage/session';
-
 const persistConfig = {
   key: 'root',
   storage: sessionStorage,

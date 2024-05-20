@@ -4,14 +4,18 @@ import CommonFooter from '../../../common/CommonFooter';
 
 import { useState, useEffect } from 'react';
 import eventPhoto from '../../../assets/ama_bhoomi_bg.jpg';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket, faEllipsisVertical, faClock, faUser, faRightFromBracket, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { decryptData } from "../../../utils/encryptData";
 import { logOutUser } from '../../../utils/utilityFunctions';
+// redux --------------------------------------------------------------------------
+import { useDispatch } from 'react-redux';
+import { Logout } from "../../../utils/authSlice";
 import PublicHeader from '../../../common/PublicHeader';
 const Favorites = () => {
+    const dispatch = useDispatch(); // Initialize dispatch
     const navigate = useNavigate();
     const tabList = [
         {
@@ -156,7 +160,12 @@ const Favorites = () => {
     useEffect(() => {
         fetchProfileDetails();
     }, []);
-
+// Handle Logout ------------------------
+//handle for Logout ------------------------------------
+const handleLogout=()=>{
+    dispatch(Logout());
+    navigate('/')
+  }
 
     return (
         <div>
@@ -193,7 +202,7 @@ const Favorites = () => {
                             </li>
                         </ul>
                         {/* Logout Button */}
-                        <button className="button-67 " onClick={(e)=>{logOutUser(e); navigate('/');}}>
+                        <button className="button-67 " onClick={handleLogout}>
                             <h1>Logout</h1>
                             <FontAwesomeIcon icon={faArrowRightFromBracket} />
                         </button>

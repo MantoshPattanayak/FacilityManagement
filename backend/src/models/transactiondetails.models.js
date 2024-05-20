@@ -63,7 +63,12 @@ const TransactionDetails = sequelize.define('transactiondetails',{
 
     
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 
 return TransactionDetails
 }

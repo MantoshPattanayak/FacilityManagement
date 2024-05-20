@@ -1,15 +1,16 @@
 let jwt = require('jsonwebtoken');
 let statusCode = require('../utils/statusCode.js');
-const db = require('../config/db.js');
-const User = db.publicuser
+const db = require("../models/index.js");
+const User = db.usermaster;
 function authenticateToken(req, res, next) {
-
   try {
     const authHeader = req.headers['authorization']; 
     const tokens = req.cookies;
     
-    const token = req.cookies?.token?.accessToken || authHeader?.replace('Bearer', '').trim();
+    console.log(authHeader,'authHeaders and tokens',tokens)
+    const token = tokens?.accessToken || authHeader?.replace('Bearer', '').trim();
 
+    console.log(token,'token')
     if (token == null) return res.status(statusCode.UNAUTHORIZED.code).json({ error: "Null token" });
 
     if (!token) {
@@ -19,13 +20,14 @@ function authenticateToken(req, res, next) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (error, user) => {
       // console.log(user);
       if (error) return res.status(statusCode.UNAUTHORIZED.code).json({ error: error.message });
-      const user = await User.findByPk(user.publicUserId);
-
+      console.log(user,'user')
+      const findUser = await User.findByPk(user.userId);
+      console.log(findUser,'findUser')
       // console.log(query.rows);
-      if (query.rows[0].status_id == 0) {
+      if (findUser.statusId == 0) {
         return res.status(statusCode.UNAUTHORIZED.code).json({ message: 'You are inactive user' });
       } else {
-        req.user = user;
+        req.user = findUser;
         next();
       }
     });

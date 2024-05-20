@@ -43,7 +43,12 @@ const Transaction = sequelize.define('transaction',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 
 return Transaction
 

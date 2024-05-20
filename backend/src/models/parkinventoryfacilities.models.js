@@ -40,6 +40,12 @@ const ParkInventoryFacilities = sequelize.define('parkinventoryfacilities',{
     }
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 return ParkInventoryFacilities
 }

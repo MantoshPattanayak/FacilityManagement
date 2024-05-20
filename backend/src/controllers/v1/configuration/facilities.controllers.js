@@ -1,4 +1,3 @@
-// const { PI } = require('aws-sdk');
 const db = require('../../../models/index');
 const statusCode = require('../../../utils/statusCode');
 
@@ -14,6 +13,7 @@ let facilitiesTable = db.facilities;
 
 const displayMapData = async(req,res)=>{
     try{
+    
         let givenReq = req.body.givenReq?req.body.givenReq:null
         console.log(givenReq,'givenReq ')
 
@@ -59,6 +59,7 @@ const displayMapData = async(req,res)=>{
 
 const searchParkFacilities = async (req, res) => {
     try {
+        console.log('22')
         const { searchQuery } = req.query;
         console.log(searchQuery)
         
