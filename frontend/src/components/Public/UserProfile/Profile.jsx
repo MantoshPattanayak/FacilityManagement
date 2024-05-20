@@ -6,12 +6,9 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
-import CommonHeader from "../../../common/CommonHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import PublicHeader from "../../../common/PublicHeader";
-import { Link } from "react-router-dom";import { logOutUser } from "../../../utils/utilityFunctions";
-import PublicHeader from "../../../common/PublicHeader";
-import CommonFooter from "../../../common/CommonFooter";
+import { Link } from "react-router-dom"; import { logOutUser } from "../../../utils/utilityFunctions";
 import { useNavigate } from "react-router-dom";
 
 
@@ -360,9 +357,6 @@ export default function Profile() {
                   <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
                   {errors.password && <span className="error">{errors.password}</span>}
                 </div>
-
-
-              </div>
               </div>
 
               {/* choose preffered Activity */}
@@ -481,7 +475,7 @@ export default function Profile() {
           </div>
         </div>
         <CommonFooter />
-      </div>
-    </main>
+      </div >
+    </main >
   );
 }
