@@ -1,38 +1,57 @@
 .dropdown {
     display: flex;
     align-items: center;
-    margin-left: 5px;
-  
-   
+    /* margin-left: 5px; */
+
+
 }
-.average-time{
+
+.average-time {
     margin-top: 10px;
-    
+
 }
-.drop{
+
+.drop {
+    width: auto;
+    padding: 4px;
     border: 1px solid rgb(102, 102, 102);
     border-radius: 6px;
     margin-left: 10px;
 }
-.total-visit{
+
+.total-visit {
     margin-top: 10px;
 }
-.today{
+
+.today {
     margin-top: 20px;
     width: 100%;
-    padding:2px ;
-  
+    padding: 2px;
+
 }
-.day{
+
+.day {
     color: black;
     background-color: #A5D5B2;
-    width: 168%;
-   
+    width: 46.5vw;
+    max-width: 100%;
+    padding: 8px;
+    border-radius: 8px;
 }
-.park-name{
-    margin-top: 3px;
+
+.park-name {
+    margin-top: 18px;
+    width: auto;
+    height: auto;
+    max-width: 46.5vw;
+    padding: 10px;
     border: 1px solid rgb(155, 153, 153);
+    border-radius: 8px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    word-wrap: break-word; /* Ensures that the text will wrap to the next line if it reaches max width */
+    overflow-wrap: break-word; /* Alternative property for wrapping text */
 }
+
 
 .user-profile-section {
     width: 20vw;
@@ -40,4 +59,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.ProfileHistoryDesc{
+    margin-block: 6vh;
+    font-size: 14px;
+    font-weight: 500;
 }

@@ -6,9 +6,9 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
-import { logOutUser } from "../../../utils/utilityFunctions";
-import PublicHeader from "../../../common/PublicHeader";
 import CommonFooter from "../../../common/CommonFooter";
+import PublicHeader from "../../../common/PublicHeader";
+import { Link } from "react-router-dom"; import { logOutUser } from "../../../utils/utilityFunctions";
 import { useNavigate } from "react-router-dom";
 
 
@@ -241,9 +241,9 @@ export default function Profile() {
 
 
   return (
-    <>
-      <PublicHeader />
-      <main>
+    <main>
+      <div>
+        <PublicHeader />
         <div className="profile--Main-Box">
           {/* left side-section */}
           <aside className="profile-leftside--Body">
@@ -257,30 +257,31 @@ export default function Profile() {
             <div>
               <ul className="profile-button--Section">
                 <li>
-                  <a href="/ProfileHistory"
+                  <Link
+                    to="/ProfileHistory"
                     className="profile-button"
-                    style={{ color: 'white', backgroundColor:"green" }}>
+                    style={{ color: 'white', backgroundColor: "green" }}
+                  >
                     Edit User Profile
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/BookingDetails" className=""
+                  <Link
+                    to="/profile/booking-details"
+                    className=""
                   >
                     Booking Details
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/UserProfile/Favorites">
+                  <Link to="/UserProfile/Favorites">
                     Favorites
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="/BookParks/Add_Card">Cart Details</a>
-                </li>
+                
               </ul>
               {/* Logout Button */}
-              <button className="button-67 " onClick={(e)=>{logOutUser(e); navigate('/');}}>
+              <button className="button-67 ">
                 <h1>Logout</h1>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>
@@ -340,8 +341,9 @@ export default function Profile() {
                 <div className="profile-formContainer_Inner">
                   <label htmlFor="language">Language</label>
                   <select id="language" name='language' value={formData.language} onChange={handleData}>
-                    <option value={'EN'}>English</option>
-                    <option value={'OD'}>Odia</option>
+                    <option>English</option>
+                    <option>Hindi</option>
+                    <option>Spanish</option>
                   </select>
                 </div>
 
@@ -355,8 +357,6 @@ export default function Profile() {
                   <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
                   {errors.password && <span className="error">{errors.password}</span>}
                 </div>
-
-
               </div>
 
               {/* choose preffered Activity */}
@@ -474,8 +474,8 @@ export default function Profile() {
             </form>
           </div>
         </div>
-      </main>
-      <CommonFooter />
-    </>
+        <CommonFooter />
+      </div >
+    </main >
   );
 }

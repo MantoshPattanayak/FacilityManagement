@@ -133,6 +133,87 @@ const Landing = () => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
 
+  const events = [
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM",
+      link: "/Sub_Park_Details"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+    {
+      imgSrc: Yoga_img,
+      name: "National Yoga Day Celebration",
+      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
+      date: "22 Mar 2024",
+      time: "7:00 AM - 10:00AM"
+    },
+
+  ]
+
+  const handleEventClick = (link, event) => {
+    event.preventDefault();
+    window.location.href = link; // Redirect to the respective page
+  };
+
+
   // useEffect(() => {
   //   // animations added to current events section
   //   const container = containerRef.current;
@@ -208,7 +289,7 @@ const Landing = () => {
 
   //Gallery section
 
-  const galleryData = [
+  const images = [
     {
       img: galleryImg,
       desc: `Your text description here`
@@ -243,8 +324,20 @@ const Landing = () => {
     }
   ]
 
-
   const [currentIndex, setCurrentIndex] = useState(0);
+  const nextImage = () => {
+    if (currentIndex < images.length - 3) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+  const prevImage = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? galleryData.length - 1 : prevIndex - 1));
@@ -481,272 +574,41 @@ const Landing = () => {
           <h1>Current Events</h1>
         </div>
 
-{/* .........Card section scroll using carousel ..........*/}
-<div className='gallery-slider-event'>
-          <Carousel responsive={responsive}>
+        {/* .........Card section scroll using carousel ..........*/}
 
-          <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
+        <div className="carousel">
+          <button className="carousel-button left" onClick={prevImage}>&lt;</button>
+          <div className="carousel-container">
+            <div
+              className="carousel-images"
+              // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
+              style={{ transform: `translateX(-${currentIndex * (420)}px)` }}  // Adjust transform value
+            >
+              {events.map((event, index) => (
+                <div key={index} className="carousel-slide2" onClick={(e) => handleEventClick(event.link, e)}>
+                  <img className="Yoga_image2" src={event.imgSrc} alt="Yoga Event"></img>
+                  <div className="carousel-slide-text">
+                    <h1 className="Name_yoga2">{event.name}</h1>
+                    <div className='carousel-slide-location'>
+                      <FontAwesomeIcon icon={faSearch} className="os-icon" />
+                      <h1>{event.location}</h1>
+                    </div>
+                    <span className="Yoga_date_time2">
+                      <h1 className="Yoga_date2">{event.date}</h1>
+                      <h1 className="Yoga_time2">{event.time}</h1>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-          </Carousel>
-        </div>
-
-        </div>
-<br /><br /><br /><br />
-
-{/* Auto scrolling card section ..................*/}
-
-        {/* <div className="EventDetailsCardSec_outer">
-          <div className="EventDetailsCardSec" id="eventContainer">
-
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National Yoga Day Celebration</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
-            </div>
-            <div className="eventCard">
-              <img src={Yoga_img} alt="" className="eventCard_Img" />
-              <div className="eventCardTitle">National</div>
-              <div className="eventCardLocation">
-                <FontAwesomeIcon icon={faLocationDot} />
-                <h1>Buddha Jayanti Park, Lumbini Vihar, Bhubaneswar</h1>
-              </div>
-              <div className="eventCard_Date_Time">
-                <div className="eventCard_date">06-05-2024</div>
-                <div className="eventCard_time">
-                  <div className="eventCard_startTime">12:00</div>
-                  <div>-</div>
-                  <div className="eventCard_clodeTime">14:00</div>
-                </div>
-              </div>
+              ))}
+              {/* {images.map((image, index) => (
+                <img key={index} src={image.img} alt={`carousel-img-${index}`} className="carousel-image" />
+              ))} */}
             </div>
           </div>
-        </div> */}
+          <button className="carousel-button right" onClick={nextImage}>&gt;</button>
+        </div>
 
-        {/*.......... Auto scrolling card end ...........*/}
-    
+      </div>
 
 
       {/*------------ Explore new activities----------- */}
@@ -806,18 +668,23 @@ const Landing = () => {
           <h1>Gallery</h1>
         </div>
 
-        <div className='gallery-slider'>
-          <Carousel responsive={responsive}>
-
-            {galleryData.map((data, index) => (
-              <div className="carousel-slide3" key={index}>
-                <div className="overlay">
-                  <img className="Gallery_image" src={data.img} alt={galleryData[currentIndex].desc} />
-                  <div className="overlay-text">{data.desc}</div>
+        <div className="carousel">
+          <button className="carousel-button left" onClick={prevImage}>&lt;</button>
+          <div className="carousel-container">
+            <div
+              className="carousel-images"
+              // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
+              style={{ transform: `translateX(-${currentIndex * (420)}px)` }}  // Adjust transform value
+            >
+              {images.map((image, index) => (
+                <div key={index} className="carousel-image-container">
+                  <img src={image.img} alt={`carousel-img-${index}`} className="carousel-image" />
+                  <div className="description">{image.desc}</div>
                 </div>
-              </div>
-            ))}
-          </Carousel>;
+              ))}
+            </div>
+          </div>
+          <button className="carousel-button right" onClick={nextImage}>&gt;</button>
         </div>
 
       </div>
@@ -837,7 +704,7 @@ const Landing = () => {
       </div>
       <div className="footer">
 
-      <CommonFooter  />
+        <CommonFooter />
       </div>
 
     </div>

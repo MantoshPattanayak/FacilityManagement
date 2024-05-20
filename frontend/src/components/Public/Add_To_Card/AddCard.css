@@ -1,88 +1,109 @@
 .Add_To_Card_Child_conatiner9 {
+  /* display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 60vh - 100px);
+  padding-block: 100px; */
+
+  height: auto;
+  padding: 3rem 5rem;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
-  min-height: calc(100vh - 60vh - 100px); 
-  padding: 100px; 
+  min-height: 100vh;
+  column-gap: 4rem;
+  margin-block: 5vh;
+  justify-content: center;
 }
 
-.Card9{
- 
+.Card9 {
+
   background-color: #008000;
   padding: 10px;
 }
-.card_text9{
-font-size: 25px;
-color: #fff;
- font-weight: 600;
- font-variant: unset;
- font-style: normal;
+
+.card_text9 {
+  font-size: 25px;
+  color: #fff;
+  font-weight: 600;
+  font-variant: unset;
+  font-style: normal;
 }
-.Add_Card_Box9{
+
+.Add_Card_Box9 {
   background-color: #fff;
   width: 840px;
   border: 1px solid rgb(221, 222, 221);
 }
-.card_item_conatiner9{
-  padding: 20px;
- 
 
- 
+.card_item_conatiner9 {
+  padding: 20px;
+
+
+
 }
-.Cont_card9{
+
+.Cont_card9 {
   box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 2px;
   background-color: #fffefe;
 
 }
-.card_item_conatiner_heading9{
+
+.card_item_conatiner_heading9 {
   display: flex;
   justify-content: space-between;
   background-color: #545D66;
   padding: 10px;
   box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 2px;
 }
-.text_heading9{
+
+.text_heading9 {
   color: #fff;
   font-size: 18px;
   font-weight: 600;
-  
+
 
 }
-.icon9{
+
+.icon9 {
   color: #fff;
   font-size: 20px;
 }
-.Location_Name_icon9{
+
+.Location_Name_icon9 {
   display: flex;
   gap: 20px;
   padding: 20px;
 }
-.Location_text9{
+
+.Location_text9 {
   font-size: 20px;
   color: #3b4842;
 
 }
-.date_time_people_conatiner9{
+
+.date_time_people_conatiner9 {
   display: flex;
   justify-content: space-between;
   padding: 20px;
 }
-.date_time_text_icon9{
+
+.date_time_text_icon9 {
   display: flex;
   gap: 10px;
 }
-.Money_name_icon9{
+
+.Money_name_icon9 {
   padding: 20px;
   display: flex;
   gap: 20px;
 }
-.money_icon_text9{
+
+.money_icon_text9 {
   font-size: 25px;
   color: #4ECB71;
 }
 
 /* Button Pay */
-.Button_pay9{
+.Button_pay9 {
   padding: 30px;
   display: flex;
   justify-content: center;
@@ -104,7 +125,7 @@ color: #fff;
   outline: 0;
   padding: 10px 25px;
   text-align: center;
- 
+
   transform: translateY(0);
   transition: transform 150ms, box-shadow 150ms;
   user-select: none;
@@ -118,11 +139,38 @@ color: #fff;
   transform: translateY(-2px);
 }
 
+
+@media (min-width: 1230px) {
+
+  .Add_To_Card_Child_conatiner9{
+    height: auto;
+  padding: 3rem 5rem;
+  display: flex;
+  min-height: 100vh;
+  column-gap: 4rem;
+  margin-block: 5vh;
+  justify-content: center;
+  }
+
+  .Location_text9 {
+    font-size: 14px;
+  }
+  .card_item_conatiner_heading9 {
+    width: 50vw;
+  }
+  .Cont_card9{
+    width: 50vw;
+  }
+  .Add_Card_Box9{
+    width: auto;
+  }
+}
+
 @media (min-width: 768px) {
   .button-379 {
     padding: 10px 30px;
   }
 
-/* here Reponsive code */
+  /* here Reponsive code */
 
 }
