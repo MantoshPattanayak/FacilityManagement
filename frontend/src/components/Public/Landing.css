@@ -1377,13 +1377,69 @@ margin-top: 20px;
         flex-direction: column;
     }
 
+    .map-bar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .map-container2 {
+        width: 88%;
+    }
+
+    .mapSearchButton input{
+        width: 308px;
+    }
+
+
+    /* --------- Facilities ner me */
+
+    .nearByFacilities-heading {
+        display: flex;
+        flex-direction: row;
+        width: 288px;
+    }
+
+    .nearByFacilities-heading h1 {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .nearByFacilities{
+        width: 88%;
+    }
+
+    .facililiy-list-map{
+        height: 180px;
+    overflow-y: auto;
+    }
+
+    .nearByFacilities{
+        height: 246px;
+    }
 
     /*------------ Current events-------------------------------- */
+    .EventContainerTitle h1 {
+        font-size: 18px;
+    }
     .carousel-slide2 {
         width: 44vw;
     }
     .carousel-slide-text {
         width: 44vw;
+    }
+
+    .Yoga_date_time2 {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .carousel-slide-location {
+        width: 37vw;
+    }
+
+    .carousel-slide-location h1 {
+        width: 32vw;
     }
 
 
@@ -1444,4 +1500,96 @@ margin-top: 20px;
         height: 26px;
     }
 
+    .parkList {
+        height: auto;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+
+    /*------------- Gallery------- */
+
+
+    .galleryOuter {
+        margin-block: 4vh;
+    }
+
+    /* -----Advtisement-------- */
+
+
+    .avatisement-Border {
+        margin-top: 0vh;
+    }
+
+}
+
+
+
+@media screen and (max-width: 430px){
+    .landing-page_contant{
+        margin-top: 0px;
+    }
+    .Search-Conatiner h1 {
+        font-size: 28px;
+    }
+    .Search-Conatiner p {
+        font-size: 12px;
+    }
+    .Search-Conatiner h2 {
+        font-size: 16px;
+    }
+    .search-bar {
+        padding: 16px;
+        font-size: 10px;
+    }
+
+    /* ----------Logo sticker---------------------------------------- */
+
+    .icon h2 {
+        font-size: 6px;
+    }
+    .icon img {
+        height: 54px;
+    }
+    .logos {
+        height: 81px;
+    }
+
+    /* ----------GOOGLE MAP Container-------------------------- */
+
+    .mapSearchButton input {
+        width: 265px;
+    }
+    .nearByFacilities-heading h1 {
+        font-weight: 500;
+        font-size: 14px;
+        width: 130px;
+    }
+    .nearByFacilities-heading {
+        width: 250px;
+        gap: 16vw;
+    }
+    .nearByFacilities-heading {
+        margin-bottom: 2px;
+    }
+
+    /* --------------------Event details card----------------- */
+
+    .Yoga_date_time2 {
+        width: 36vw;
+    }
+
+    /* ---------Explore new activities---------------- */
+
+    .exploreNewAct-outer {
+        padding-left: 16px;
+    }
+
+    /* ---------Gallery------------- */
+    .carousel-image {
+        height: 212px;
+    }
+    .carousel-image-container {
+        height: 260px;
+    }
 }
