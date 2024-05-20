@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import instance from "../env";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 import ListOfRoles from "./components/Admin/UAC/Role/ListOfRoles";
 import CreateRole from "./components/Admin/UAC/Role/CreateRole";
@@ -64,23 +64,30 @@ import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
 import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
+// here Import Admin Page -----------------xxxx----------------------
+import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
 // import provider for connect to our app
 import { Provider } from 'react-redux';
 import appStore from "./utils/appStore";
+import ViewGrievanceList from "./components/Admin/Activity/Grievance/ViewGrievanceList";
+import AssignGrievance from "./components/Admin/Activity/Grievance/AssignGrievance";
+import ActionAgainstGrievance from "./components/Admin/Activity/Grievance/ActionAgainstGrievance";
+
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
+
   return (
     <>
       {/* PUBLIC SECTION */}
       <Provider store={appStore}>
-      <BrowserRouter>
+      <BrowserRouter basename={instance().baseName}>
         <div>
           {/* <AdminHeader /> */}
           <Routes>
             {/* HOME */}
             
-            <Route path="/" element={<Landing />}/>
+            <Route path='/' element={<Landing />}/>
             <Route path="/PublicLoader" element={<PublicLoader />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Event_hostPage" element={<Event_hostPage />} />
@@ -208,6 +215,11 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Activity - Grievance */}
+            <Route path="/activity/grievance" element={<ProtectedRoute><ViewGrievanceList /></ProtectedRoute>}/>
+            <Route path="/activity/assign-grievance" element={<ProtectedRoute><AssignGrievance /></ProtectedRoute>}/>
+            <Route path="/activity/grievance-action" element={<ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute>}/>
+            {/* Activity - Grievance */}
             {/* ADMIN SECTION - UAC*/}
             <Route
               path="/UAC/Resource/ListOfResources"
@@ -361,6 +373,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+                 {/* Admin Traiff Page */}
+          <Route
+              path="/TariffDetails"
+              element={
+                <ProtectedRoute>
+                  <TariffDetails />
+                </ProtectedRoute>
+              }
+            />
+     
             <Route
               path="/ParkPayment"
               element={
@@ -371,6 +393,7 @@ function App() {
             />
           </Routes>
           {/* <Footer /> */}
+     
         </div>
       </BrowserRouter>
       </Provider>

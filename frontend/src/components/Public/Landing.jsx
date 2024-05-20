@@ -73,6 +73,21 @@ const Landing = () => {
   let navigate = useNavigate();
 
 
+  async function fetchLandingPageData() {
+    try {
+      let resLanding = await axiosHttpClient('http://localhost:8000/publicUser/homePage', 'get');
+      console.log('Here is the Landing Page API data', resLanding.data);
+    }
+    catch (error) {
+      console.error("Error fetching the Landing Page API data: ", error);
+    }
+  }
+
+  
+  useEffect(() => {
+    fetchLandingPageData();
+  }, []);
+
 
   // here Fetch the data -----------------------------------------------
   async function fecthMapData() {
@@ -91,6 +106,22 @@ const Landing = () => {
     }
   }
 
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 575px)");
+
+    const handleMediaQueryChange = (e) => {
+      setIsMobile(e.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
 
 
 
@@ -486,9 +517,10 @@ const Landing = () => {
 
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
-              mapContainerStyle={{ height: '400px', width: '100%' }}
+              mapContainerStyle={{ height: '400px', width: '100%', ...(isMobile && { height: '280px' }) }}
               center={defaultCenter}
               zoom={12}
+
             >
               {/* Render markers */}
               {mapdata.map((location, index) => (

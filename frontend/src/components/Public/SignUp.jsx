@@ -51,9 +51,9 @@ const SignUp = () => {
             case 'lastName':
                 error = !regex.NAME.test(value) || value.length > dataLength.NAME ? 'Invalid last name' : '';
                 break;
-            case 'email':
-                error = !regex.EMAIL.test(value) || value.length > dataLength.EMAIL ? 'Invalid email' : '';
-                break;
+            // case 'email':
+            //     error = !regex.EMAIL.test(value) || value.length > dataLength.EMAIL ? 'Invalid email' : '';
+            //     break;
             case 'password':
                 error = !regex.PASSWORD.test(value) || value.length > dataLength.PASSWORD ? 'Invalid password' : '';
                 break;
@@ -196,10 +196,10 @@ const SignUp = () => {
             return false;
         }
         // Validate email
-        if (!regex.EMAIL.test(email) || email.length > dataLength.EMAIL) {
-            toast.error('Invalid email');
-            return false;
-        }
+        // if (!regex.EMAIL.test(email) || email.length > dataLength.EMAIL) {
+        //     toast.error('Invalid email');
+        //     return false;
+        // }
         // Validate password
         if (!regex.PASSWORD.test(password) || password.length > dataLength.PASSWORD) {
             toast.error('Invalid password');
@@ -236,8 +236,10 @@ const SignUp = () => {
                             </div>
                             {/* Option for SignIn */}
                             <div className="no-account">
-                                <p>Have an account?</p>
-                                <a href="/login-signup">Login</a>
+                                <p>Have an account?</p>'
+                                <Link to='/login-signup'>
+                                    Login
+                                </Link>
                             </div>
                         </div>
                     </div>
