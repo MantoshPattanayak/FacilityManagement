@@ -38,6 +38,10 @@ const StatusMaster = sequelize.define('statusmaster', {
     type: DataTypes.STRING(100)
   }
 }
+,
+{
+    timestamps:false
+}
 );
 return StatusMaster
 }

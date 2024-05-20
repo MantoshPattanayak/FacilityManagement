@@ -37,7 +37,13 @@ const ServiceFacility = sequelize.define('servicefacilities',{
     }
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 
 return ServiceFacility
 }

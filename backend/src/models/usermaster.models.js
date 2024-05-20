@@ -1,8 +1,8 @@
 module.exports = (sequelize,DataTypes)=>{
 
-const PublicUser = sequelize.define('publicuser', {
+const usermaster = sequelize.define('usermaster', {
   // Model attributes are defined here
-  publicUserId:{
+  userId:{
     type:DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
@@ -15,7 +15,6 @@ const PublicUser = sequelize.define('publicuser', {
     type: DataTypes.STRING(255)
     // allowNull defaults to true
   },
-
   lastName: {
     type: DataTypes.STRING(255)
     // allowNull defaults to true
@@ -41,9 +40,12 @@ const PublicUser = sequelize.define('publicuser', {
   lastLogin:{
     type: DataTypes.DATE // Define the column as DATE type
 },
-  status:{
+  statusId:{
     type: DataTypes.INTEGER // Define the column as DATE type
 },
+  verifyEmail:{
+    type:DataTypes.INTEGER
+  },
   remarks:{
     type: DataTypes.STRING(255)
   },
@@ -53,29 +55,37 @@ const PublicUser = sequelize.define('publicuser', {
   facebookId:{
     type:DataTypes.STRING
   },
+  changePwdFlag:{
+    type: DataTypes.BOOLEAN
+  },
+  roleId:{
+    type:DataTypes.INTEGER
+  },
   createdBy:{
     type:DataTypes.INTEGER
   },
-  createdOn: {
+  createdDt: {
     type: DataTypes.DATE, // Define the column as DATE type
-    allowNull: false,
-    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
   },
   updatedBy:{
     type:DataTypes.INTEGER
   },
-  updatedOn: {
+  updatedDt: {
     type: DataTypes.DATE // Define the column as DATE type
   },
   deletedBy:{
     type:DataTypes.INTEGER
   },
-  deletedOn: {
+  deletedDt: {
     type: DataTypes.DATE // Define the column as DATE type
   }
  
 }
+,
+{
+    timestamps:false
+}
 );
 
-return PublicUser
+return usermaster
 }

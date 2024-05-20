@@ -44,6 +44,10 @@ const RoleResource = sequelize.define('roleresource', {
     type: DataTypes.DATE // Define the column as DATE type
   }
  
+},
+
+{
+    timestamps:false
 }
 );
 

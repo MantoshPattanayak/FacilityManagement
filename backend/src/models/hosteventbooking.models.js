@@ -46,7 +46,13 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.DATE
         }
 
-    })
+    }
+    ,
+    {
+        timestamps:false
+    }
+
+)
 
     return hostbookings
 }
