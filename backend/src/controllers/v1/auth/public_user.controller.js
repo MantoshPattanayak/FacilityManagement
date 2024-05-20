@@ -1,18 +1,19 @@
 const db = require("../../../models/index");
 let statusCode = require("../../../utils/statusCode");
-const public_user = db.publicuser;
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const Sequelize = db.Sequelize;
 const bcrypt = require("bcrypt");
 const { decrypt } = require("../../../middlewares/decryption.middlewares");
 const { encrypt } = require("../../../middlewares/encryption.middlewares");
-const { where } = require("sequelize");
 const facilityType = db.facilitytype;
+let user = db.usermaster
+const {Op} = require('sequelize')
 const updatepublic_user = async (req, res) => {
   try {
-    const {
-      publicUserId,
+    let statusId = 1;
+    let {
+      userId,
       title,
       firstName,
       middleName,
@@ -26,17 +27,18 @@ const updatepublic_user = async (req, res) => {
     } = req.body;
 
     let params = {};
+
     const existuserName = await user.findOne({
-      where: { userName: userName },
+      where: { userName: userName, statusId:statusId,roleId:null},
     });
     const existingphoneNo = await user.findOne({
-      where: { phoneNo: phoneNo },
+      where: { phoneNo: phoneNo,statusId:statusId, roleId:null },
     });
     const existingaltPhoneNo = await user.findOne({
-      where: { altPhoneNo: altPhoneNo },
+      where: { altPhoneNo: altPhoneNo, statusId:statusId, roleId:null },
     });
     const existingemailId = await user.findOne({
-      where: { emailId: emailId },
+      where: { emailId: emailId ,statusId:statusId, roleId:null },
     });
 
     if (existuserName) {
@@ -56,9 +58,9 @@ const updatepublic_user = async (req, res) => {
         message: "User already exist with given emailId",
       });
     }
-    let findPublicuserWithTheGivenId = await public_user.findOne({
+    let findPublicuserWithTheGivenId = await user.findOne({
       where: {
-        publicUserId: publicUserId,
+        userId: userId,
       },
     });
     if (findPublicuserWithTheGivenId.title != title) {
@@ -81,8 +83,8 @@ const updatepublic_user = async (req, res) => {
       params.emailId = emailId;
     }
     let [updatepublicUserCount, updatepublicUserData] =
-      await public_user.update(params, {
-        where: { publicUserId: publicUserId },
+      await user.update(params, {
+        where: { userId: userId },
       });
 
     if (updatepublicUserCount >= 0) {
@@ -150,16 +152,20 @@ const updatepublic_user = async (req, res) => {
 const viewpublicUser = async (req, res) => {
   console.log("view user profile details");
   try {
-    let limit = req.body.page_size ? req.body.page_size : 50;
-    let page = req.body.page_number ? req.body.page_number : 1;
-    let offset = (page - 1) * limit;
+    console.log(21)
     let userId = req.user?.id || 1;
-
-    let showpublic_user = await public_user.findOne({
+    let publicRole = null
+    let statusId = 1;
+    let showpublic_user = await user.findOne({
       where: {
-        publicUserId: userId,
+       [Op.and]: [{ userId: userId},{statusId:statusId},{roleId:publicRole}]
       },
     });
+
+    console.log('show public user', showpublic_user)
+    // let decryptUser = showpublic_user.map((encryptData)=>({
+    //   encryptData. && encryptdData
+    // }))
 
     // let givenReq = req.body.givenReq ? req.body.givenReq : null;
     // if (givenReq) {

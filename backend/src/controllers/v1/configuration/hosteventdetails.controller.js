@@ -12,15 +12,17 @@ const fileAttachment = db.fileattachment;
 const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares')
 
+let user = db.usermaster
 const createHosteventdetails = async (req, res) => {
   try {
-    let publicUserId =1;
-    let role =1
-    let privateUserId =1
-    if(role){
-       privateUserId=1;
-      publicUserId= 2
-    }
+
+    let userId = req.user?.id || 1;
+
+    findTheRoleFromTheUserId = await user.findOne({
+      where:{
+        [Op.and]:[{userId:userId},{statusId:statusId}]
+      }
+    })
     let statusId = 1;
 
     let createHosteventdetails;
@@ -88,8 +90,7 @@ console.log("here Reponse of Host event", req.body)
           organisationPanCardNumber: organisationPanCardNumber,
           emailId: emailId,
           phoneNo: phoneNo,
-          publicUserId: publicUserId,
-          privateUserId: privateUserId,
+          userId: userId,
           organisationName: organisationName,
           category: eventCategory,
           organisationAddress: organisationAddress,
