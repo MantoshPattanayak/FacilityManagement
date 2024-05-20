@@ -11,8 +11,10 @@ import PublicHeader from "../../../common/PublicHeader";
 import { Link } from "react-router-dom"; import { logOutUser } from "../../../utils/utilityFunctions";
 import { useNavigate } from "react-router-dom";
 
-
+import { useDispatch } from 'react-redux';
+import { Logout } from "../../../utils/authSlice";
 export default function Profile() {
+  const dispatch = useDispatch(); // Initialize dispatch
   const navigate = useNavigate();
   const publicUserId = decryptData(
     new URLSearchParams(location.search).get("publicUserId")
@@ -168,6 +170,11 @@ export default function Profile() {
   const clearPhoto = () => {
     setPhotoUrl(null);
   };
+  //handle for Logout ------------------------------------
+  const handleLogout=()=>{
+    dispatch(Logout());
+    navigate('/')
+  }
 
   // get profile data from api
   async function fetchProfileDetails() {
@@ -278,10 +285,10 @@ export default function Profile() {
                     Favorites
                   </Link>
                 </li>
-                
+
               </ul>
               {/* Logout Button */}
-              <button className="button-67 ">
+              <button className="button-67 " onClick={handleLogout}>
                 <h1>Logout</h1>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>
