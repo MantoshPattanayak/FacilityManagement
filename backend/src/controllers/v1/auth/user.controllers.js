@@ -433,7 +433,7 @@ let forgotPassword = async(req,res)=>{
     let {mobileNo,password}= req.body;
     console.log('req.body',req.body)
     let statusId = 1;
-    console.log('token',token);
+    // console.log('token',token);
     let publicRole = null;
     // if(!token){
     //   return res.status(statusCode.NOTFOUND.code).json({
