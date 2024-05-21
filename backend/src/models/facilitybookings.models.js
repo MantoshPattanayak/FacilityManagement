@@ -82,6 +82,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             defaultValue: null
         }
-    });
+    }
+    ,
+    {
+        timestamps:false
+    }
+
+
+);
     return FacilityBookings
 }

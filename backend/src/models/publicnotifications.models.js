@@ -47,6 +47,11 @@ const PublicNotifications = sequelize.define('publicnotifications',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 return PublicNotifications;
 }

@@ -12,15 +12,17 @@ const fileAttachment = db.fileattachment;
 const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares')
 
+let user = db.usermaster
 const createHosteventdetails = async (req, res) => {
   try {
-    let publicUserId =1;
-    let role =1
-    let privateUserId =1
-    if(role){
-       privateUserId=1;
-      publicUserId= 2
-    }
+
+    let userId = req.user?.id || 1;
+
+    findTheRoleFromTheUserId = await user.findOne({
+      where:{
+        [Op.and]:[{userId:userId},{statusId:statusId}]
+      }
+    })
     let statusId = 1;
 
     let createHosteventdetails;
@@ -88,8 +90,7 @@ console.log("here Reponse of Host event", req.body)
           organisationPanCardNumber: organisationPanCardNumber,
           emailId: emailId,
           phoneNo: phoneNo,
-          publicUserId: publicUserId,
-          privateUserId: privateUserId,
+          userId: userId,
           organisationName: organisationName,
           category: eventCategory,
           organisationAddress: organisationAddress,
@@ -109,7 +110,7 @@ console.log("here Reponse of Host event", req.body)
       const mimeMatch = uploadEventImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
       const mime = mimeMatch ? mimeMatch[1] : null;
 
-      if(  [
+      if([
         "image/jpeg",
         "image/png",
         "application/pdf",
@@ -128,7 +129,7 @@ console.log("here Reponse of Host event", req.body)
           const fileExtension = mime ? mime.split("/")[1]:"txt";
           uploadEventImagePath = `${uploadDir}/eventDir/${eventTitle}${createEventActivities.eventId}.${fileExtension}`
           fs.writeFileSync(uploadEventImagePath,uploadEventBuffer)
-          uploadEventImagePath2 = `/eventDir//${eventTitle}${createEventActivities.eventId}.${fileExtension}`
+          uploadEventImagePath2 = `/eventDir/${eventTitle}${createEventActivities.eventId}.${fileExtension}`
           let fileName = `${eventTitle}${createEventActivities.eventId}.${fileExtension}`
           let fileType = mime ? mime.split("/")[0]:'unknown'
           // insert to file table and file attachment table

@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
         deletedOn: {
             type: DataTypes.DATE // Define the column as DATE type
         }
-    });
+    }
+    ,
+    {
+        timestamps:false
+    }
+);
     return LanguageResources
 }

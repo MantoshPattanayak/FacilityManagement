@@ -67,11 +67,29 @@ const Landing = () => {
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
   const [givenReq, setGivenReq] = useState('');
   const [facilityTypeId, setFacilityTypeId] = useState(1);
+  const [eventNameLanding, setEventNameLanding] = useState([]);
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
   let navigate = useNavigate();
 
+
+  async function fetchLandingPageData() {
+    try {
+      let resLanding = await axiosHttpClient('LandingApi', 'get');
+      console.log('Here is the Landing Page API data', resLanding.data);
+      setEventNameLanding(resLanding.data.eventDetailsData)
+      console.log("bla blab bla", resLanding.data.eventDetailsData)
+    }
+    catch (error) {
+      console.error("Error fetching the Landing Page API data: ", error);
+    }
+  }
+
+
+  useEffect(() => {
+    fetchLandingPageData();
+  }, []);
 
 
   // here Fetch the data -----------------------------------------------
@@ -91,6 +109,22 @@ const Landing = () => {
     }
   }
 
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 575px)");
+
+    const handleMediaQueryChange = (e) => {
+      setIsMobile(e.matches);
+    };
+
+    mediaQuery.addListener(handleMediaQueryChange);
+
+    return () => {
+      mediaQuery.removeListener(handleMediaQueryChange);
+    };
+  }, []);
 
 
 
@@ -486,9 +520,10 @@ const Landing = () => {
 
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
-              mapContainerStyle={{ height: '400px', width: '100%' }}
+              mapContainerStyle={{ height: '400px', width: '100%', ...(isMobile && { height: '280px' }) }}
               center={defaultCenter}
               zoom={12}
+
             >
               {/* Render markers */}
               {mapdata.map((location, index) => (
@@ -584,22 +619,29 @@ const Landing = () => {
               // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
               style={{ transform: `translateX(-${currentIndex * (420)}px)` }}  // Adjust transform value
             >
-              {events.map((event, index) => (
+
+
+              {eventNameLanding.length > 0 && eventNameLanding.map((event, index) => (
+
                 <div key={index} className="carousel-slide2" onClick={(e) => handleEventClick(event.link, e)}>
-                  <img className="Yoga_image2" src={event.imgSrc} alt="Yoga Event"></img>
+                  <img className="Yoga_image2" src={Yoga_img} alt="Yoga Event"></img>
                   <div className="carousel-slide-text">
-                    <h1 className="Name_yoga2">{event.name}</h1>
+                    <h1 className="Name_yoga2">{event.eventName}</h1>
                     <div className='carousel-slide-location'>
-                      <FontAwesomeIcon icon={faSearch} className="os-icon" />
-                      <h1>{event.location}</h1>
+                      {/* <FontAwesomeIcon icon={faSearch} className="os-icon" /> */}
+                      <FontAwesomeIcon icon={faLocationDot} style={{ color: "#504f4e", }} className="os-icon" />
+                      <h1>{event.locationName}</h1>
                     </div>
                     <span className="Yoga_date_time2">
-                      <h1 className="Yoga_date2">{event.date}</h1>
-                      <h1 className="Yoga_time2">{event.time}</h1>
+                      <h1 className="Yoga_date2">{event.eventDate}</h1>
+                      <h1 className="Yoga_time2">{event.eventStartTime}</h1>
                     </span>
                   </div>
                 </div>
+
               ))}
+
+
               {/* {images.map((image, index) => (
                 <img key={index} src={image.img} alt={`carousel-img-${index}`} className="carousel-image" />
               ))} */}

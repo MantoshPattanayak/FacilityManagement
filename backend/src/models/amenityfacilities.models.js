@@ -40,6 +40,11 @@ const FacilityAmenity = sequelize.define('facilityamenities',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 return FacilityAmenity
 }

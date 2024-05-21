@@ -32,7 +32,13 @@ const PaymentMethod = sequelize.define('paymentmethod',{
     },
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 return PaymentMethod
 }
 

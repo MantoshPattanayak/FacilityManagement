@@ -44,7 +44,10 @@ module.exports = (sequelize,DataTypes)=>{
         type: DataTypes.DATE // Define the column as DATE type
       }
      
-    }
+    },
+{
+    timestamps:false
+}
     );
     
     return userResource

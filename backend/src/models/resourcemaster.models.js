@@ -63,6 +63,10 @@ const ResourceMaster = sequelize.define('resourcemaster', {
   }
  
 }
+,
+{
+    timestamps:false
+}
 );
 
 return ResourceMaster

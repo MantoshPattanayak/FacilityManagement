@@ -19,7 +19,11 @@ import No_Data_icon from "../../../assets/No_Data_icon.png";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { decryptData } from "../../../utils/encryptData";
 // import format
+// redux --------------------------------------------------------------------------
+import { useDispatch } from 'react-redux';
+import { Logout } from "../../../utils/authSlice";
 const BookingDetails = () => {
+  const dispatch = useDispatch(); // Initialize dispatch
   let navigate = useNavigate();
   const tabList = [
     {
@@ -127,7 +131,11 @@ const BookingDetails = () => {
   useEffect(() => {
     fetchProfileDetails();
   }, []);
-
+//handle for Logout ------------------------------------
+const handleLogout=()=>{
+  dispatch(Logout());
+  navigate('/')
+}
 
 
   return (
@@ -166,7 +174,7 @@ const BookingDetails = () => {
                 </li>
               </ul>
               {/* Logout Button */}
-              <button className="button-67 ">
+              <button className="button-67 " onClick={handleLogout}>
                 <h1>Logout</h1>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>

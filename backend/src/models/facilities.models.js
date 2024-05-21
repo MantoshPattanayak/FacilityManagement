@@ -95,6 +95,12 @@ const Facility = sequelize.define('facilities',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 return Facility;
 }

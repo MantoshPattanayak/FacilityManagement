@@ -25,8 +25,7 @@ db1.DataTypes = DataTypes;
 db1.QueryTypes = QueryTypes;
 
 db1.amenitiesmaster = require("./amenitiesmaster.models")(sequelize, DataTypes);
-db1.publicuser = require("./publicuser.models")(sequelize, DataTypes);
-db1.privateuser = require("./privateuser.models")(sequelize, DataTypes);
+db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
 db1.amenityfacilities = require("./amenityfacilities.models")(
   sequelize,
   DataTypes
@@ -89,7 +88,15 @@ db1.cart = require('./cart.models')(sequelize,DataTypes);
 db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
 // event bookings table
 db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
-db1.faq.sync({
+
+// userActivityPreference
+
+db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
+// grievance masters and details
+db1.grievancemasters = require('./grievancemasters.models')(sequelize, DataTypes)
+db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes)
+
+db1.otpDetails.sync({
   force: false,
 });
 

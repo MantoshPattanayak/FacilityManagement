@@ -1,14 +1,12 @@
-const { INTEGER } = require("sequelize")
-
 module.exports = (sequelize,DataTypes)=>{
 
     let userActivityPreferences = sequelize.define('useractivitypreference',{
-        userActivityId:{
+        userActivityPreferenceId:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
             primaryKey:true
         },
-        publicUserId:{
+        userId:{
             type:DataTypes.INTEGER
         },
         userActivityId:{
@@ -29,6 +27,11 @@ module.exports = (sequelize,DataTypes)=>{
         updatedDt:{
             type:DataTypes.DATE
         }
-    })
+    }
+    ,
+    {
+        timestamps:false
+    }
+)
     return userActivityPreferences
 }

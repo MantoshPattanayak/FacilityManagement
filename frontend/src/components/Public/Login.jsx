@@ -11,12 +11,17 @@ import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import CommonFooter from "../../common/CommonFooter";
+// here import useDispatch to store the 
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from "../../utils/authSlice";
+
 const Login = () => {
   // UseState for Post the data---------------------------------
   const [LogingDataPost, setLogingDataPost] = useState({
     Mobile: "",
     Password: "",
   });
+  const dispatch = useDispatch();
   let navigate = useNavigate();
   const location = useLocation();
   const redirect = decryptData(
@@ -40,8 +45,16 @@ const Login = () => {
           encryptMobile: encryptData(LogingDataPost.Mobile),
           encryptPassword: encryptData(LogingDataPost.Password),
         });
-        console.log("res", res);
-        sessionStorage.setItem("isUserLoggedIn", 1);
+        console.log("user Login Response", res);
+        // Dispatch login success action with tokens and user data -------------------
+        dispatch(loginSuccess({
+          accessToken: res.data.accessToken,
+          refreshToken: res.data.refreshToken,
+          user: res.data.user,
+          sid: res.data.sid
+        }));
+        
+        // sessionStorage.setItem("isUserLoggedIn", 1);
         toast.success("Login successfully.");
         redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
       } catch (err) {
@@ -64,6 +77,8 @@ const Login = () => {
     console.log("LogingDataPost", LogingDataPost);
     return;
   }
+
+  
   // Validation here ----------------------------------------
   const validation = (value) => {
     const err = {};
