@@ -4,6 +4,7 @@ const api = {
     LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
     PUBLIC_LOGIN_API: '/auth/publicLogin',
     PUBLIC_SIGNUP_API: '/auth/signUp',
+    FORGOT_PASSWORD_API:'/auth/forgotPassword', //put  mobileNo password
     PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
     PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
@@ -17,6 +18,9 @@ const api = {
        Add_to_Cart:'/booking/addToCart',  // Post
        View_Card_UserId:'/booking/viewCartByUserId', // Get
        Update_Card:'/booking/updateCart', // Put
+      
+      //  Landing page Api......................................
+       LandingApi:'/publicUser/homePage',
 
 
     // Park_Booking(Search) Page
