@@ -17,6 +17,9 @@ const api = {
        Add_to_Cart:'/booking/addToCart',  // Post
        View_Card_UserId:'/booking/viewCartByUserId', // Get
        Update_Card:'/booking/updateCart', // Put
+      
+      //  Landing page Api......................................
+       LandingApi:'/publicUser/homePage',
 
 
     // Park_Booking(Search) Page

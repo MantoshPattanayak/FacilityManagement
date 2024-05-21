@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { encryptData } from "./encryptData";
 const initialState = {
     isUserLoggedIn: false,
     accessToken: sessionStorage.getItem('accessToken') || null,
     refreshToken: localStorage.getItem('refreshToken') || null,
-    user: null,
-    sid: null
+    user: null
 }
 // Create Slice for store the data --------------------------------------------------
 const authSlice = createSlice({
@@ -29,7 +27,6 @@ const authSlice = createSlice({
             sessionStorage.setItem("isUserLoggedIn", 1);
             sessionStorage.setItem('session-id', sid);
         },
-               
         Logout(state) {
             state.isUserLoggedIn = false;
             state.accessToken = null;
@@ -39,6 +36,8 @@ const authSlice = createSlice({
             // here Clear token from storage -------------------------------------------
             sessionStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            sessionStorage.setItem("isUserLoggedIn", 0);
+            sessionStorage.removeItem('session-id');
         }
     }
 });
