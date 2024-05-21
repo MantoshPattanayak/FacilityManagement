@@ -719,6 +719,7 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
   try {
     let userName =  decrypt(isUserExist.userName)
     let emailId
+    let sessionId;
     if(isUserExist.emailId!=null){
       emailId =  decrypt(isUserExist.emailId)
 
@@ -789,6 +790,7 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
                   deviceId:checkDeviceForParticularSession.deviceId
                 }
               })
+              sessionId = insertToAuthSession.sessionId
             }
             else{
               // insert to device table 
@@ -813,6 +815,8 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
                   deviceId:insertToDeviceTable.deviceId
                 }
               })
+
+              sessionId = insertToAuthSession.sessionId
             }
           
           }
@@ -839,6 +843,7 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
                   deviceId:insertToDeviceTable.deviceId
                 }
               })
+              sessionId = insertToAuthSession.sessionId
 
           }
         }
@@ -874,11 +879,12 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
             deviceId:insertToDeviceTable.deviceId
           }
         })
-
+        sessionId = insertToAuthSession.sessionId
     }
     return {
       accessToken:accessToken,
       refreshToken:refreshToken,
+      sessionId:sessionId,
       options:options
     }
 
@@ -963,7 +969,7 @@ let publicLogin = async(req,res)=>{
 
             }
             console.log('fdfjdlkfld')
-            let {accessToken, refreshToken, options} = tokenGenerationAndSessionStatus
+            let {accessToken, refreshToken, options,sessionId} = tokenGenerationAndSessionStatus
           
             //menu items list fetch
         //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
@@ -1004,7 +1010,9 @@ let publicLogin = async(req,res)=>{
         console.log('233232')
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,  }); //menuItems: dataJSON
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,
+          sid:sessionId
+          }); //menuItems: dataJSON
           }
 
           else{

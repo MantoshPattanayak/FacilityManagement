@@ -92,8 +92,11 @@ db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
 // userActivityPreference
 
 db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
+// grievance masters and details
+db1.grievancemasters = require('./grievancemasters.models')(sequelize, DataTypes)
+db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes)
 
-db1.authsessions.sync({
+db1.otpDetails.sync({
   force: false,
 });
 
