@@ -169,7 +169,7 @@ function App() {
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
-            <Route path="/Forgot_Password/ForgotPassword" element={<ForgotPassword />} />
+            <Route path="/ForgotPassword" element={<ForgotPassword />} />
 
 
             {/* use Section  */}
