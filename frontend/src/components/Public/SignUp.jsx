@@ -16,6 +16,7 @@ import { encryptData } from '../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import PublicHeader from '../../common/PublicHeader';
+import { Link } from 'react-router-dom';
 
 
 const SignUp = () => {
@@ -162,7 +163,8 @@ const SignUp = () => {
                 encryptEmail: encryptData(signupData.email),
                 encryptLanguage: encryptData(signupData.language),
                 encryptPassword: encryptData(signupData.password),
-                encryptPhoneNo: encryptData(mobileNumber)
+                encryptPhoneNo: encryptData(mobileNumber),
+                isEmailVerified: 1
             });
             console.log('Response:', response.data);
             // Redirect to home page after successful registration
@@ -236,7 +238,7 @@ const SignUp = () => {
                             </div>
                             {/* Option for SignIn */}
                             <div className="no-account">
-                                <p>Have an account?</p>'
+                                <p>Have an account?</p>
                                 <Link to='/login-signup'>
                                     Login
                                 </Link>
