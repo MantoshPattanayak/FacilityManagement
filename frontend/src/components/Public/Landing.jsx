@@ -758,7 +758,7 @@ const Landing = () => {
       </div>
       <div className="footer">
 
-        <CommonFooter />
+      
       </div>
 
     </div>

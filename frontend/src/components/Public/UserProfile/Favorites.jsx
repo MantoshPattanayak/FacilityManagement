@@ -259,7 +259,7 @@ const handleLogout=()=>{
 
 
             </div>
-            <CommonFooter />
+         
         </div>
 
     );

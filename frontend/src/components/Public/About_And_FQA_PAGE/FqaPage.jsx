@@ -86,7 +86,7 @@ const FqaPage = () => {
                     
             
             </div>
-            <CommonFooter/>
+    
     
         </div>
     )

@@ -380,7 +380,7 @@ const Main_Body_Park_Details = () => {
 
 
 
-      <CommonFooter />
+  
       <ToastContainer />
     </div>
   );
