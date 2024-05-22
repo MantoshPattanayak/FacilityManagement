@@ -219,7 +219,7 @@ const homePage = async (req, res) => {
       },
     });
 
-    let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
+    let fetchEventDetailsQuery = `select eventId, eventName, eventCategory,locationName,eventDate,eventStartTime,
     eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where ticketSalesEnabled =1 `;
 
     let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery);
