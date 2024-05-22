@@ -4,7 +4,7 @@ import AdminHeader from "../../common/AdminHeader";
 import Footer from "../../common/Footer";
 // Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import PublicHeader from "../../common/PublicHeader";
 // EncrptData here --------------------------------------------------------
 import { decryptData, encryptData } from "../../utils/encryptData";
@@ -147,7 +147,9 @@ const Login = () => {
           <div className="login-options">
             {/* Option for Forgot Password */}
             <div className="forgot-password">
-              <a href="#">Forgot Password?</a>
+              <Link to={'/ForgotPassword'}>
+                Forgot Password?
+              </Link>
             </div>
 
             {/* Option for Login with OTP */}
@@ -159,7 +161,9 @@ const Login = () => {
           {/* Option for SignUp */}
           <div className="no-account">
             <p>Don't have an account?</p>
-            <a href="/login/SignUp">SignUp</a>
+            <Link to={'/login/SignUp'}>
+              SignUp
+            </Link>
           </div>
         </form>
       </div>
