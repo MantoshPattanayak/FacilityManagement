@@ -302,7 +302,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
 let sendEmailToUser = async(req,res)=>{
   try {
-    let {emailId,mobileNo,changePassword}= req.body
+    let {emailId,mobileNo,changePassword,roleId}= req.body
     emailId = decrypt(emailId)
     let message;
     if(mobileNo){
@@ -310,8 +310,9 @@ let sendEmailToUser = async(req,res)=>{
     }
     console.log(emailId,mobileNo,"req.body")
     let firstField = emailId;
-    let secondField = mobileNo
-    let Token = await mailToken({firstField,secondField})
+    let secondField = mobileNo;
+    let thirdField = roleId;
+    let Token = await mailToken({firstField,secondField,thirdField})
     let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
 
     if(changePassword==1){
@@ -383,6 +384,7 @@ let verifyEmail = async(req,res)=>{
       // Calculate the duration of the token's validity in seconds
       const durationInSeconds = exp - iat;
       let mobileNo =  encrypt(decodedEmailToken.secondField)
+      let roleId = decodedEmailToken.roleId
 
       if (exp * 1000 <= Date.now()) {
         console.log('Token has expired');
