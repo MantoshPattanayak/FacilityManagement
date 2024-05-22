@@ -72,7 +72,7 @@ import appStore from "./utils/appStore";
 import ViewGrievanceList from "./components/Admin/Activity/Grievance/ViewGrievanceList";
 import AssignGrievance from "./components/Admin/Activity/Grievance/AssignGrievance";
 import ActionAgainstGrievance from "./components/Admin/Activity/Grievance/ActionAgainstGrievance";
-
+import CommonFooter1 from "./common/Common_footer1";
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -393,6 +393,7 @@ function App() {
             />
           </Routes>
           {/* <Footer /> */}
+          <CommonFooter1/>
      
         </div>
       </BrowserRouter>

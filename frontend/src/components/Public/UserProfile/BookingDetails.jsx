@@ -276,7 +276,7 @@ const handleLogout=()=>{
           </div>
         </div>
       </div>
-      <CommonFooter />
+   
     </div>
     // </div>
   );

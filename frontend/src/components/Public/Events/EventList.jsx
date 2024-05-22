@@ -301,7 +301,7 @@ export default function EventList() {
         )}
       </div>
       <ToastContainer />
-      <CommonFooter />
+
     </div>
   )
 }

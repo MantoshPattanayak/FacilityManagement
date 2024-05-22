@@ -278,7 +278,7 @@ export default function Details() {
         </div>
       </div>
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-      <CommonFooter />
+ 
     </div>
   )
 }

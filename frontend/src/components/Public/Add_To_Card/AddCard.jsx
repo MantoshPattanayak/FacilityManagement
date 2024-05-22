@@ -20,6 +20,7 @@ import "./AddCard.css"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { decryptData } from "../../../utils/encryptData";
+import CommonFooter1 from "../../../common/Common_footer1";
 
 import { useSelector } from "react-redux";
 const Add_Card = () => {
@@ -128,7 +129,7 @@ const Add_Card = () => {
 
             </div>
 
-            <CommonFooter />
+   
         </div>
     )
 }
