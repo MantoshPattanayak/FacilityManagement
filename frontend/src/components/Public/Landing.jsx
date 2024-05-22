@@ -36,6 +36,7 @@ import Blueway from "../../assets/blueways.png"
 import { Link, useNavigate } from 'react-router-dom';
 // import { encryptData } from "../../../utils/encryptData"
 import { encryptData } from '../../utils/encryptData';
+import { formatDateYYYYMMDD, formatTime } from '../../utils/utilityFunctions.js';
 // import for slider
 
 
@@ -68,6 +69,7 @@ const Landing = () => {
   const [givenReq, setGivenReq] = useState('');
   const [facilityTypeId, setFacilityTypeId] = useState(1);
   const [eventNameLanding, setEventNameLanding] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
@@ -78,7 +80,9 @@ const Landing = () => {
     try {
       let resLanding = await axiosHttpClient('LandingApi', 'get');
       console.log('Here is the Landing Page API data', resLanding.data);
-      setEventNameLanding(resLanding.data.eventDetailsData)
+      setEventNameLanding(resLanding.data.eventDetailsData);
+      setNotifications(resLanding.data.notificationsList);
+      console.log(resLanding.data.notificationsList);
       console.log("bla blab bla", resLanding.data.eventDetailsData)
     }
     catch (error) {
@@ -242,10 +246,10 @@ const Landing = () => {
 
   ]
 
-  const handleEventClick = (link, event) => {
-    event.preventDefault();
-    window.location.href = link; // Redirect to the respective page
-  };
+  // const handleEventClick = (link, event) => {
+  //   event.preventDefault();
+  //   window.location.href = link
+  // };
 
 
   // useEffect(() => {
@@ -595,8 +599,15 @@ const Landing = () => {
       <div className="notice2">
         <div class="notice2-container">
           <span>Whats New</span>
-          <marquee behavior="" direction="left">Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will inaugurate a new open park at Old Town,
-            "Join us for the grand opening of our new park! "  </marquee>
+          <marquee behavior="" direction="left">
+            <div className='flex'>
+              {notifications.map((notification) => {
+                return <p>{notification.publicNotificationsContent} &nbsp; &nbsp;</p>
+              })}
+            </div>
+            {/* Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will inaugurate a new open park at Old Town,
+            "Join us for the grand opening of our new park! "   */}
+          </marquee>
         </div>
       </div>
 
@@ -623,7 +634,7 @@ const Landing = () => {
 
               {eventNameLanding.length > 0 && eventNameLanding.map((event, index) => (
 
-                <div key={index} className="carousel-slide2" onClick={(e) => handleEventClick(event.link, e)}>
+                <Link key={index} className="carousel-slide2"  to={"/events-details?eventId=" + `${encryptData(event.eventId)}`}>
                   <img className="Yoga_image2" src={Yoga_img} alt="Yoga Event"></img>
                   <div className="carousel-slide-text">
                     <h1 className="Name_yoga2">{event.eventName}</h1>
@@ -633,11 +644,12 @@ const Landing = () => {
                       <h1>{event.locationName}</h1>
                     </div>
                     <span className="Yoga_date_time2">
-                      <h1 className="Yoga_date2">{event.eventDate}</h1>
-                      <h1 className="Yoga_time2">{event.eventStartTime}</h1>
+                      <h1 className="Yoga_date2">{formatDateYYYYMMDD(event.eventDate)}</h1>
+                      <h1 className="Yoga_time2">{formatTime(event.eventStartTime)}</h1>
                     </span>
                   </div>
-                </div>
+                </Link>
+
 
               ))}
 
