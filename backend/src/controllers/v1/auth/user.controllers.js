@@ -944,16 +944,17 @@ let publicLogin = async(req,res)=>{
       }
 
       
-      if(isUserExist?.roleId!=4){
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:"Please do login using your user credential"
-        })
-      }
+   
 
       password = decrypt(password)
     
       
         if(isUserExist){
+          if(isUserExist?.roleId!=4){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:"Please do login using your user credential"
+            })
+          }
           // console.log('21',isUserExist)
           const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
           if(isPasswordSame){
@@ -1070,43 +1071,40 @@ let privateLogin = async(req,res)=>{
         }
         })
 
-        if(isUserExist.roleId==4){
-          return res.status(statusCode.BAD_REQUEST.code).json({message:'Please login through your admin credential'})
-        }
         console.log(isUserExist,'isUserExist')
 
-        console.log('fj')
+        // console.log('fj')
       }
       if(mobileNo){
-        console.log('mobileNo',mobileNo)
+        console.log('mobileNo12',mobileNo)
         // mobileNo = await decrypt(mobileNo)
         // check whether the credentials are valid or not 
         // Finding one record
         
+
      
       isUserExist = await user.findOne({
         where: {
           [Op.and]:[{phoneNo:mobileNo},{statusId:statusId},{verifyEmail:1}]
         }
         })
+        console.log('isUserExist', isUserExist)
 
-        if(isUserExist.roleId==4){
-          return res.status(statusCode.BAD_REQUEST.code).json({message:'Please login through your admin credential'})
-        }
-
+       
         console.log('2 mobile no', isUserExist, 'phoneNumber',mobileNo)
       }
-      if(isUserExist?.roleId==null){
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:"Please do login using your admin credentials"
-        })
-      }
+   
 
 
         password = decrypt(password)
     
       
         if(isUserExist){
+
+          if(isUserExist.roleId==4){
+            return res.status(statusCode.BAD_REQUEST.code).json({message:'Please login through your admin credential'})
+          }
+  
           // console.log('21',isUserExist)
           const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
           if(isPasswordSame){
