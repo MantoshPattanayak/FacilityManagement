@@ -42,7 +42,15 @@ module.exports = (sequelize, DataTypes) => {
         deletedOn: {
             type: DataTypes.DATE,
             defaultValue: null
-        }
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
+        },
     }
     ,
     {
