@@ -96,7 +96,7 @@ db1.userActivityPreference = require('./useractivitypreferences.models')(sequeli
 db1.grievancemasters = require('./grievancemasters.models')(sequelize, DataTypes)
 db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes)
 
-db1.otpDetails.sync({
+db1.faq.sync({
   force: false,
 });
 

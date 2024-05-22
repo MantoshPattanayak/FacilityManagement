@@ -7,9 +7,14 @@ const usermaster = sequelize.define('usermaster', {
     autoIncrement: true,
     primaryKey: true
   },
+  title:{
+    type: DataTypes.STRING(255)
+  },
+  fullName:{
+    type: DataTypes.STRING(255),
+  },
   firstName: {
     type: DataTypes.STRING(255),
-    allowNull: false
   },
   middleName: {
     type: DataTypes.STRING(255)
@@ -61,6 +66,9 @@ const usermaster = sequelize.define('usermaster', {
   roleId:{
     type:DataTypes.INTEGER
   },
+  genderId:{
+    type:DataTypes.INTEGER
+  },
   createdBy:{
     type:DataTypes.INTEGER
   },
@@ -71,12 +79,6 @@ const usermaster = sequelize.define('usermaster', {
     type:DataTypes.INTEGER
   },
   updatedDt: {
-    type: DataTypes.DATE // Define the column as DATE type
-  },
-  deletedBy:{
-    type:DataTypes.INTEGER
-  },
-  deletedDt: {
     type: DataTypes.DATE // Define the column as DATE type
   }
  

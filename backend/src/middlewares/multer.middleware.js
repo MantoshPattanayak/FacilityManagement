@@ -12,5 +12,4 @@ const eventUpload = multer({ storage: eventStorage,
 
 
 
-
 module.exports = { eventUpload };

@@ -767,7 +767,7 @@ let updateCart = async(req,res)=>{
     
         let userId = req.user?.id||1
         let cartItemId = req.params.cartItemId
-        let statusId = 0
+        let statusId = 2
 
         let findTheCartIdFromUserId = await cart.findOne({
             where:{
