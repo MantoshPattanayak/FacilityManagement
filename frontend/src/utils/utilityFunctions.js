@@ -25,10 +25,10 @@ function formatDate(date) { //format input date as DD-MM-YYYY
 
 function formatDateYYYYMMDD(date) { //format input date as DD-MM-YYYY
     if(!date)   return;
-
+    
     const [year, month, day] = date.split('-');
 
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
 }
 
 function logOutUser(e) {
