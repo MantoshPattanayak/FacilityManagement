@@ -481,7 +481,7 @@ export default function Profile() {
             </form>
           </div>
         </div>
-        <CommonFooter />
+    
       </div >
     </main >
   );
