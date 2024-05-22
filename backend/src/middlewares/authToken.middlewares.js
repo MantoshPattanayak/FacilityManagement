@@ -6,6 +6,7 @@ let authSessions = db.authsessions;
 let {Op}= require('sequelize')
 function authenticateToken(req, res, next) {
   try {
+    console.log('new date', new Date())
     const authHeader = req.headers['authorization']; 
     const tokens = req.cookies;
     const sessionId = req.headers['sid']

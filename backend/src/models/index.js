@@ -98,7 +98,7 @@ db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 
-db1.otpDetails.sync({
+db1.faq.sync({
   force: false,
 });
 

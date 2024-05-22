@@ -7,10 +7,16 @@ const role =db.rolemaster
 const roleresource = db.roleresource
 const resourcemaster = db.resourcemaster
 const QueryTypes = db.QueryTypes
+let {Op} = require('sequelize')
 let dataload = async (req, res) => {
     try {
         let roleData = await role.findAll({
-            attributes: ['roleId', 'roleName', 'roleCode']
+            attributes: ['roleId', 'roleName', 'roleCode'],
+            where:{
+            roleId:{
+                [Op.ne]:4
+            }
+            }
           });
         if (roleData.length > 0) {
 
@@ -185,10 +191,10 @@ let updateRoleResource = async (req, res) => {
     )
 
         if (updateTheStatusOfRoleCount >= 1) {
-            if(statusId = 0){
+            if(statusId == 2){
                 res.status(statusCode.SUCCESS.code).json({ message: 'Role data mapped with resource is deactivated successfully!!!' })
             }
-            else if(statusId = 1){
+            else if(statusId == 1){
                 res.status(statusCode.SUCCESS.code).json({ message: 'Role data mapped with resource is actived successfully!!!' })
             }
         }
@@ -332,9 +338,8 @@ let autoSuggestionForRoleResourceSearch = async(req,res)=> {
    findMatchRes = roleResourceData.filter((allData)=>
     //    allData.roleResourceId.includes(givenReq)||
        allData.role.toLowerCase().includes(givenReq)||
-       allData.resourceName.toLowerCase().includes(givenReq)||
-       allData.status.toLowerCase().includes(givenReq)
-   )
+       allData.resourceName.toLowerCase().includes(givenReq)
+       )
   }
   
 //   let encryptRoleResources = findMatchRes.map(async(allData)=>({
