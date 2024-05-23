@@ -110,7 +110,7 @@ const Add_Card = () => {
                                     </div>
                                     <div className="Money_name_icon9">
                                         <h1 className="money_icon_text9"><FontAwesomeIcon icon={faRupeeSign} className="money-note-icon" /></h1>
-                                        <h1 className="Location_text9">INR 500 /_</h1>
+                                        <h1 className="Location_text9">INR 0.00 /_</h1>
                                     </div>
                                 </div>
                             </div>
