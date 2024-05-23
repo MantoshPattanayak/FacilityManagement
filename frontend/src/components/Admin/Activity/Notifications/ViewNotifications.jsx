@@ -64,8 +64,8 @@ export default function ViewNotifications() {
                 <th scope="col">Valid From</th>
                 <th scope="col">Valid To</th>
                 {/* <th scope="col">Status</th> */}
-                {/* <th scope="col">View</th> */}
-                {/* <th scope="col">Edit</th> */}
+                <th scope="col">View</th>
+                <th scope="col">Edit</th>
               </tr>
             </thead>
             <tbody >
@@ -77,11 +77,11 @@ export default function ViewNotifications() {
                       <td data-label="Content">{data.publicNotificationsContent}</td>
                       <td data-label="Valid From">{formatDate(data.validFromDate)}</td>
                       <td data-label="Valid To">{formatDate(data.validToDate)}</td>
-                      {/* <td data-label="View">
+                      <td data-label="View">
                         <Link
                           to={{
-                            pathname: '/UAC/Users/Edit',
-                            search: `?userId=${encodeURIComponent(encryptData(data.privateUserId))}&action=view`
+                            pathname: '/Activity/EditNotification',
+                            search: `?notificationId=${encodeURIComponent(encryptData(data.publicNotificationsId))}&action=view`
                           }}
                         >
                           <FontAwesomeIcon icon={faEye} />
@@ -90,13 +90,13 @@ export default function ViewNotifications() {
                       <td data-label="Edit">
                         <Link
                           to={{
-                            pathname: '/UAC/Users/Edit',
-                            search: `?userId=${encodeURIComponent(encryptData(data.privateUserId))}&action=edit`
+                            pathname: '/Activity/EditNotification',
+                            search: `?notificationId=${encodeURIComponent(encryptData(data.publicNotificationsId))}&action=edit`
                           }}
                         >
                           <FontAwesomeIcon icon={faPenToSquare} />
                         </Link>
-                      </td> */}
+                      </td>
                     </tr>
                   )
                 })

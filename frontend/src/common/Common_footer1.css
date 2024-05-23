@@ -21,7 +21,7 @@
   
 }
 .Ama_name{
-    padding-top:25px;
+    padding-top:8px;
     font-size: 30px;
     font-weight: 800;
     padding-right: 7px; 
@@ -136,7 +136,7 @@
 .footer-column2 ul li a {
     color: black;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 500;
 }
 
@@ -212,7 +212,7 @@
     justify-content: space-evenly;
 }
 .term_condtion_conatiner p{
-    font-size: 17px;
+    font-size: 13px;
     color: black;
 }
 
