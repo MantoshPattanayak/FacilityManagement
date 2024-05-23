@@ -169,7 +169,6 @@ const Login = () => {
       </div>
       <ToastContainer />
 
-      <CommonFooter />
     </div>
   );
 };

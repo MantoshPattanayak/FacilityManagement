@@ -192,12 +192,12 @@ export default function Details() {
                     }}
                     className={`event-button-9`}
                   >
-                    Buy a Ticket
+                    Buy  Ticket
                   </Link>
                 </>
                 :
                 <>
-                  <button disabled className={`event-button-9 disabled:bg-slate-500`}>Buy a Ticket</button>
+                  <button disabled className={`event-button-9 disabled:bg-slate-500`}>Buy  Ticket</button>
                 </>
             }
           </span>

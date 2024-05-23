@@ -207,7 +207,7 @@ const Sub_Park_Details = () => {
                     }}
                     className="button-9"
                   >
-                    <button role="button_by">Buy a Ticket</button>
+                    <button role="button_by">Buy  Ticket</button>
                   </Link>
                 )
                   : (
@@ -226,7 +226,7 @@ const Sub_Park_Details = () => {
                       }}
                       className="button-9"
                     >
-                      <button role="button_by">Buy a Ticket</button>
+                      <button role="button_by">Buy  Ticket</button>
                     </Link>
                   )
             }
@@ -244,9 +244,9 @@ const Sub_Park_Details = () => {
                   )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
                   }`,
               }}
-              className="button-9"
+              className="button-10"
             >
-              <button role="button_by">Host Event</button>
+              <button role="button_by" className="name_button">Host Event</button>
             </Link>
 
           </span>
