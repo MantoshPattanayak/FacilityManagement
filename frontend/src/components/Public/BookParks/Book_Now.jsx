@@ -3,7 +3,7 @@ import "../../Public/BookParks/Book_Now.css";
 import AdminHeader from "../../../common/AdminHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
-import { faC, faCartShopping } from "@fortawesome/free-solid-svg-icons"; // Import the icon
+import { faC, faCartShopping, faXmark } from "@fortawesome/free-solid-svg-icons"; // Import the icon
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
 
@@ -224,9 +224,11 @@ const Book_Now = () => {
         <div className="park-container">
           <div className="heading">
             <h1>
-              {" "}
+              
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
+            <Link to="/Sub_Park_Details"><FontAwesomeIcon icon={faXmark}/></Link>
+            
           </div>
           <div className="address">
             <p> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
@@ -337,7 +339,7 @@ const Book_Now = () => {
           </div>
         </div>
       </div>
-
+      <CommonFooter />
     </div>
   );
 };
