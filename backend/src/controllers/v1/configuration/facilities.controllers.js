@@ -90,7 +90,7 @@ const viewParkDetails = async(req,res)=>{
         let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
-        end as status, address,latitude,longitude,areaAcres,ownership 
+        end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership 
         from amabhoomi.facilities f `
    
         let facilities = await sequelize.query(facility,{
@@ -102,7 +102,7 @@ const viewParkDetails = async(req,res)=>{
          facility = `select facilityId, facilityname,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-        end as status, address,latitude,longitude,areaAcres,ownership 
+        end as status, address,latitude,longitude,areaAcres,ownership, sun, mon, tue, wed, thu, fri, sat
         from amabhoomi.facilities f where facilityTypeId=?`
        
         facilities = await sequelize.query(facility,{
@@ -236,7 +236,7 @@ let calculateDistance = (lat1, long1, lat2, long2) => {
 
 const nearByDataInMap = async(req,res)=>{
     try {
-        let {latitude,longitude,facilityTypeId,range,popular,free,paid} = req.body;
+        let {latitude,longitude,facilityTypeId,range,popular,free,paid, order} = req.body;
         console.log('1',req.body)
         // here range is bydefault set to 10
         range = range?range:20;

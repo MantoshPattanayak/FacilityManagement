@@ -66,6 +66,8 @@ const reports = require("./routes/api/" + api_version + "/reports/reports");
 // grievance
 const grievance = require('./routes/api/' + api_version + '/activity/grievance');
 
+const facilityRegistration = require('./routes/api/'+ api_version + '/mdm/registration')
+
 console.log(port, "port");
 
 app.use(
