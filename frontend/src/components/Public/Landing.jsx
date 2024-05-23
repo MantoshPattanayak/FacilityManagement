@@ -36,7 +36,7 @@ import Blueway from "../../assets/blueways.png"
 import { Link, useNavigate } from 'react-router-dom';
 // import { encryptData } from "../../../utils/encryptData"
 import { encryptData } from '../../utils/encryptData';
-import { formatDateYYYYMMDD, formatTime } from '../../utils/utilityFunctions.js';
+import { formatDate, formatDateYYYYMMDD, formatTime } from '../../utils/utilityFunctions.js';
 // import for slider
 
 
@@ -644,8 +644,9 @@ const Landing = () => {
                       <h1>{event.locationName}</h1>
                     </div>
                     <span className="Yoga_date_time2">
-                      <h1 className="Yoga_date2">{formatDateYYYYMMDD(event.eventDate)}</h1>
-                      <h1 className="Yoga_time2">{formatTime(event.eventStartTime)}</h1>
+                      {/* <h1 className={`Yoga_date2 ${event.status == "ACTIVE" ? "text-green-500" : "text-red-500"}`}>{event.status?.charAt(0).toUpperCase() + event.status?.slice(1)}</h1> */}
+                      <h1 className="Yoga_date2">{formatDate(event.eventDate)}</h1>
+                      <h1 className="Yoga_time2">{formatTime(event.eventStartTime)} - {formatTime(event.eventEndTime)}</h1>
                     </span>
                   </div>
                 </Link>

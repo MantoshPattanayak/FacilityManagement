@@ -23,6 +23,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 // impport shimmerUi------------------------------------------
 import ShimmerUI from "./ShimmerUI";
+import { truncateName } from "../../../utils/utilityFunctions";
 const Main_Body_Park_Details = () => {
   const defaultLocation = {
     latitude: 20.3010259,
@@ -38,12 +39,12 @@ const Main_Body_Park_Details = () => {
   const [layoutType, setLayoutType] = useState('grid');
 
   // here set the latitude and longitude --------------------------------------------
-  const [userLocation, setUserLocation] = useState();
+  const [userLocation, setUserLocation] = useState(defaultLocation);
   // fetch facility type id --------------------------------------------------------
   let location = useLocation();
   // for Faciltiy ----------------------------------------------------------------
   const [facilityTypeId, setFacilityTypeId] = useState();
-  const [selectedTab, setSelectedTab] = useState('');
+  const [selectedTab, setSelectedTab] = useState([]);
   const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
 
   // Use Navigate for Navigate the page ----------------------------------------------
@@ -60,7 +61,7 @@ const Main_Body_Park_Details = () => {
       setIsLoding(true)
       let res = await axiosHttpClient("View_Park_Data", "post", {
         givenReq: givenReq,
-        facilityTypeId: facilityTypeId,
+        facilityTypeId: facilityTypeId
       });
       console.log("here Response of Park", res);
       setDisPlayParkData(res.data.data);
@@ -73,10 +74,11 @@ const Main_Body_Park_Details = () => {
 
   // Function to handle selectedTab button click  ------------------------------
   const handleTabClick = (e, tab) => {
-    if (tab != selectedTab)
-      setSelectedTab(tab);
-    else
-      setSelectedTab();
+    if (selectedTab.includes(tab)) {
+      setSelectedTab(selectedTab.filter(t => t !== tab));
+    } else {
+      setSelectedTab([...selectedTab, tab]);
+    }
     console.log('selectedTab', selectedTab);
   }
 
@@ -110,22 +112,34 @@ const Main_Body_Park_Details = () => {
 
   // filter the data according to filter options -----------------------------------------------------
   async function getNearbyFacilities() {
-    let bodyParams = {};
-    switch (selectedTab) {    // ['Nearby', 'Popular', 'Free', 'Paid']
-      case 'Nearby':
-        setUserGeoLocation();
-        bodyParams = {
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          facilityTypeId: facilityTypeId,
-          range: ''
-        }
-        break;
-      case 'Popular': bodyParams = { popular: 1, facilityTypeId: facilityTypeId }; break;
-      case 'Free': bodyParams = { free: 1, facilityTypeId: facilityTypeId }; break;
-      case 'Paid': bodyParams = { paid: 1, facilityTypeId: facilityTypeId }; break;
-      default: break;
+    let bodyParams = {
+      facilityTypeId: facilityTypeId,
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude
+    };
+    console.log('body params before', bodyParams);
+
+    if (selectedTab.includes('Nearby')) {
+      console.log('first');
+      setUserGeoLocation();
+      bodyParams = {
+        ...bodyParams,
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        range: ''
+      }
     }
+    if (selectedTab.includes('Popular')) {
+      bodyParams = { ...bodyParams, popular: 1 };
+    }
+    if (selectedTab.includes('Free')) {
+      bodyParams = { ...bodyParams, free: 1 };
+    }
+    if (selectedTab.includes('Paid')) {
+      bodyParams = { ...bodyParams, paid: 1 };
+    }
+
+    console.log('body params after', bodyParams);
 
     try {
       setIsLoding(true)
@@ -161,7 +175,7 @@ const Main_Body_Park_Details = () => {
       let userLocation = JSON.parse(sessionStorage?.getItem('location'));
       setUserLocation(userLocation);
     }
-    catch(error) {
+    catch (error) {
       console.error('json parse error');
       sessionStorage.setItem('location', JSON.stringify({}));
     }
@@ -172,7 +186,7 @@ const Main_Body_Park_Details = () => {
     else
       setFacilityTypeId(1);
 
-    if(givenReqFetch)
+    if (givenReqFetch)
       setGivenReq(givenReqFetch);
     else
       setGivenReq('');
@@ -180,7 +194,7 @@ const Main_Body_Park_Details = () => {
 
   // refresh page on searching, change in facility type or selecting filter options
   useEffect(() => {
-    if (selectedTab) {  //fetch facility details based on filter options
+    if (selectedTab.length > 0) {  //fetch facility details based on filter options
       getNearbyFacilities()
     }
     else { // fetch facility details based on selected facility type or searching value
@@ -197,12 +211,12 @@ const Main_Body_Park_Details = () => {
       {/* Here Below of header set image ---------------------------------------------------- */}
       <div
         className={`${(facilityTypeId == 1)
-            ? "park-body-1"
-            : (facilityTypeId == 2)
-              ? "park-body-2"
-              : (facilityTypeId == 3)
-                ? "park-body-3"
-                : ""
+          ? "park-body-1"
+          : (facilityTypeId == 2)
+            ? "park-body-2"
+            : (facilityTypeId == 3)
+              ? "park-body-3"
+              : ""
           }`}
       >
         <h1 className="name_park_img">
@@ -246,7 +260,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-14" src={Park_Logo} alt="Sports" />
-            <span className="button-text">Sports</span>
+            <span className="button-text">Playgrounds</span>
           </button>
 
           {/* Multipark */}
@@ -265,18 +279,17 @@ const Main_Body_Park_Details = () => {
           {
             tabList?.length > 0 && tabList?.map((tab) => {
               return (
-                <button className={`button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
+                <button className={`button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
                   {tab}
                 </button>
               )
             })
           }
         </div>
-        <div class="gride_page">
+        <div className="gride_page">
           <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
-            <option value="grid">Grid</option>
-            <option value="list">List</option>
-
+            <option value="grid">Grid View</option>
+            <option value="list">List View</option>
           </select>
         </div>
 
@@ -311,16 +324,17 @@ const Main_Body_Park_Details = () => {
               >
                 <div
                   className={`${item.facilityTypeId === 1
-                      ? "park-card-1"
-                      : item.facilityTypeId === 2
-                        ? "park-card-2"
-                        : "park-card-3"
+                    ? "park-card-1"
+                    : item.facilityTypeId === 2
+                      ? "park-card-2"
+                      : "park-card-3"
                     }`}
+                  title={item.facilityname}
                 >
                   <img className="Card_img" src={Cardimg} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
-                      <h2 className="park_name">{item.facilityname}</h2>
+                      <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
                       <h3 className="park_location">{item.address}</h3>
                     </span>
                     <span className="Avil_Dis">
@@ -344,6 +358,8 @@ const Main_Body_Park_Details = () => {
                   <tr>
                     <th scope="col">Name of the Park</th>
                     <th scope="col">Location</th>
+                    <th scope="col">Distance</th>
+                    <th scope="col">Park Status</th>
                     <th className="left">Details</th>
                   </tr>
                 </thead>
@@ -352,6 +368,8 @@ const Main_Body_Park_Details = () => {
                     <tr key={table_index}>
                       <td data-label="Name">{table_item.facilityname}</td>
                       <td data-label="Location">{table_item.address}</td>
+                      <td data-label='Distance'>{Number(table_item.distance?.toFixed(2)) || 10} km(s)</td>
+                      <td data-label='Park Status' className={`Avilable ${table_item.status == "open" ? "text-green-500" : "text-red-500"}`}>{table_item.status?.charAt(0).toUpperCase() + table_item.status?.slice(1)}</td>
                       <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
                         <Link
                           key={table_index}
@@ -380,7 +398,7 @@ const Main_Body_Park_Details = () => {
 
 
 
-  
+
       <ToastContainer />
     </div>
   );
