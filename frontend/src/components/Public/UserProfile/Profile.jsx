@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Profile.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faUser, faEnvelope, faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
@@ -171,7 +171,7 @@ export default function Profile() {
     setPhotoUrl(null);
   };
   //handle for Logout ------------------------------------
-  const handleLogout=()=>{
+  const handleLogout = () => {
     dispatch(Logout());
     navigate('/')
   }
@@ -256,9 +256,21 @@ export default function Profile() {
           <aside className="profile-leftside--Body">
             <div className="profile-view--Body">
               <div className="profile-about">
-                <p>{formData.userName}</p>
-                <p>{formData.emailId}</p>
-                <p>{formData.phoneNo}</p>
+                <div className="profile-about-icon" >
+                  <FontAwesomeIcon icon={faUser} />
+                  <p>{formData.firstName + " " + formData.lastName}</p>
+                </div>
+
+                <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faEnvelope} />
+                  <p>{formData.emailId}</p>
+                </div>
+
+                <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faMobileScreenButton} />
+                  <p>{formData.phoneNo}</p>
+                </div>
+                
               </div>
             </div>
             <div>
@@ -349,8 +361,7 @@ export default function Profile() {
                   <label htmlFor="language">Language</label>
                   <select id="language" name='language' value={formData.language} onChange={handleData}>
                     <option>English</option>
-                    <option>Hindi</option>
-                    <option>Spanish</option>
+                    <option>ଓଡ଼ିଆ</option>
                   </select>
                 </div>
 
@@ -481,7 +492,7 @@ export default function Profile() {
             </form>
           </div>
         </div>
-    
+
       </div >
     </main >
   );
