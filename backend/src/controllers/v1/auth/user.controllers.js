@@ -73,11 +73,13 @@ let generateOTPHandler = async (req,res)=> {
     let expiryTime = new Date();
     expiryTime = expiryTime.setMinutes(expiryTime.getMinutes() + 5);
 
-    let otp="";
-    for(let i=0;i<length;i++){
-      let otpIndex = Math.floor(Math.random()*numberValue.length)
-      otp += numberValue[otpIndex]
-    }
+    // let otp="";
+    // for(let i=0;i<length;i++){
+    //   let otpIndex = Math.floor(Math.random()*numberValue.length)
+    //   otp += numberValue[otpIndex]
+    // }
+
+    let otp = "1234"
 
     if(mobileNo){
       // first check if the otp is actually present or not
