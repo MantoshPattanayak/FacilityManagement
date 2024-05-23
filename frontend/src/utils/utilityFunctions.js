@@ -28,7 +28,7 @@ function formatDateYYYYMMDD(date) { //format input date as DD-MM-YYYY
     
     const [year, month, day] = date.split('-');
 
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
 }
 
 function logOutUser(e) {
