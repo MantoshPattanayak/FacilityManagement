@@ -337,7 +337,7 @@ const Book_Now = () => {
           </div>
         </div>
       </div>
-      <CommonFooter />
+
     </div>
   );
 };
