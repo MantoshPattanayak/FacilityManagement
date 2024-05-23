@@ -51,9 +51,8 @@ let viewNotifications = async (req, res) => {
 
         if(currentDate){
             viewNotificationsListQueryData = await sequelize.query(`
-            select * from amabhoomi.publicnotifications p where validFromDate <= ? and validToDate >= ?`, {
+            select * from amabhoomi.publicnotifications p`, {
                 type: Sequelize.QueryTypes.SELECT,
-                replacements: [ currentDate, currentDate ]
             });
         }
         else {
@@ -92,6 +91,36 @@ let viewNotifications = async (req, res) => {
     }
 }
 
+let viewNotificationById = async (req, res) => {
+    try{
+        let notificationId = req.params.notificationId;
+
+        let notificationDetails = await publicNotifications.findOne({
+            where: {
+                publicNotificationsId: notificationId
+            }
+        });
+
+        if(notificationDetails){
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'Notification details',
+                notificationDetails
+            });
+        }
+        else{
+            res.status(statusCode.NOTFOUND.code).json({
+                message: 'Notification details not found',
+                notificationDetails
+            });
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+
 let editNotification = async (req, res) => {
     try{
         let { notificationTitle, notificationContent, validFromDate, validToDate, publicNotificationsId } = req.body;
@@ -104,27 +133,36 @@ let editNotification = async (req, res) => {
                 publicNotificationsId: publicNotificationsId
             }
         });
-        // console.log('found notification', notificationDetails);
+        console.log('found notification', notificationDetails);
 
         let params = {};
 
         // check which paramaters value is modified, and accordingly update that column data for the record
-        if((!notificationTitle == '' || !notificationTitle == null) && notificationDetails.publicNotificationsTitle != notificationTitle){
+        if((!notificationTitle == '' || !notificationTitle == null) && notificationDetails.publicNotificationsTitle !== notificationTitle){
             params.publicNotificationsTitle = notificationTitle;
         }
-        if((!notificationContent == '' || !notificationContent == null) && notificationDetails.publicNotificationsContent != notificationContent){
+        if((!notificationContent == '' || !notificationContent == null) && notificationDetails.publicNotificationsContent !== notificationContent){
             params.publicNotificationsContent = notificationContent;
         }
-        if((!validFromDate == '' || !validFromDate == null) && notificationDetails.validFromDate != validFromDate){
+        if((!validFromDate == '' || !validFromDate == null) && new Date(notificationDetails.validFromDate).getTime() !== new Date(validFromDate).getTime()){
             params.validFromDate = validFromDate;
         }
-        if((!validToDate == '' || !validToDate == null) && notificationDetails.validToDate != validToDate){
+        if((!validToDate == '' || !validToDate == null) && new Date(notificationDetails.validToDate).getTime() !== new Date(validToDate).getTime()){
             params.validToDate = validToDate;
         }
+
+        console.log('params', params);
+
+        if(Object.keys(params).length == 0){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: 'No changes detected.'
+            })
+        }
+
         params.updatedBy = userId;
         params.updatedOn = new Date();
 
-        console.log('params', params);
+        
 
         let [numberOfUpdatedRows] = await publicNotifications.update(params, {
                 where: {
@@ -154,5 +192,6 @@ let editNotification = async (req, res) => {
 module.exports = {
     addNewNotification,
     viewNotifications,
-    editNotification
+    editNotification,
+    viewNotificationById
 }

@@ -8,5 +8,6 @@ const publicNotificationsController = require('../../../../controllers/'+api_ver
 router.post('/add', publicNotificationsController.addNewNotification);
 router.post('/viewList', publicNotificationsController.viewNotifications);
 router.put('/edit', publicNotificationsController.editNotification);
+router.get('/view/:notificationId', publicNotificationsController.viewNotificationById);
 
 module.exports = router;
