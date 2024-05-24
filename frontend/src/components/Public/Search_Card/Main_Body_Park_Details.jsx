@@ -1,5 +1,6 @@
 // Function of Main Container ---------------------------------------
 import Cardimg from "../../../assets/Card_img.png";
+import sport_image2 from "../../../assets/Sport_image.jpg" 
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -349,7 +350,7 @@ const Main_Body_Park_Details = () => {
                     }`}
                   title={item.facilityname}
                 >
-                  <img className="Card_img" src={Cardimg} alt="Park" />
+                  <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
