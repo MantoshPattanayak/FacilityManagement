@@ -7,10 +7,15 @@ import axiosHttpClient from '../../utils/axios';
 import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
 import mp_ground_logo from "../../assets/multipurpose-ground-logo.png";
-import galleryImg from "../../assets/gallery1.png"
 import adImg from "../../assets/Park_near_Utkal.png"
-import Footer from "../../common/Footer.jsx"
-import CommonFooter from '../../common/CommonFooter.jsx';
+import galleryImg1 from "../../assets/Gallery_Anant Vihar Park,Phase-3,DDC Park_Pokhariput.jpg";
+import galleryImg2 from "../../assets/Gallery_BDA Children's Park.jpg";
+import galleryImg3 from "../../assets/Gallery_Disabled Friendly Park_Saheed Nagar.jpg";
+import galleryImg4 from "../../assets/Gallery_Kelucharan_Park-5.jpg";
+import galleryImg5 from "../../assets/Gallery_Madhusudan_Park.jpg";
+import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
+import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
+import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
@@ -331,36 +336,36 @@ const Landing = () => {
 
   const images = [
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg1,
+      desc: `Anant Vihar Park,Phase-3, DDC Park, Pokhariput`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg2,
+      desc: `BDA Children's Park`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg3,
+      desc: `Disabled Friendly Park, Saheed Nagar`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg4,
+      desc: `Kelucharan Park-5`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg5,
+      desc: `Madhusudan Park`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg6,
+      desc: `Mukharjee Park`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg7,
+      desc: `Prachi Park, Damana`
     },
     {
-      img: galleryImg,
-      desc: `Your text description here`
+      img: galleryImg8,
+      desc: `BDA Colony Park, Sundarpada`
     }
   ]
 
