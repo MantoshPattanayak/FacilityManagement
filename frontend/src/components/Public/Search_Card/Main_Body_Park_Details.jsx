@@ -221,7 +221,7 @@ const Main_Body_Park_Details = () => {
       >
         <h1 className="name_park_img">
           {(facilityTypeId == 1) && "Parks"}
-          {(facilityTypeId == 2) && "Sports"}
+          {(facilityTypeId == 2) && "Playgrounds"}
           {(facilityTypeId == 3) && "Multi-purpose Grounds"}
         </h1>
       </div>
@@ -299,7 +299,7 @@ const Main_Body_Park_Details = () => {
       <span className="text_name_park">
         <h1 className="name_park">
           {(facilityTypeId == 1) && "Parks"}
-          {(facilityTypeId == 2) && "Sports"}
+          {(facilityTypeId == 2) && "Playgrounds"}
           {(facilityTypeId == 3) && "Multi-purpose Grounds"}
         </h1>
       </span>
