@@ -117,8 +117,8 @@ const Main_Body_Park_Details = () => {
   async function getNearbyFacilities() {
     let bodyParams = {
       facilityTypeId: facilityTypeId,
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude
+      latitude: userLocation?.latitude || defaultLocation.latitude,
+      longitude: userLocation?.longitude || defaultLocation.longitude
     };
     console.log('body params before', bodyParams);
 
@@ -127,8 +127,8 @@ const Main_Body_Park_Details = () => {
       setUserGeoLocation();
       bodyParams = {
         ...bodyParams,
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
+        latitude: userLocation.latitude || defaultLocation.latitude,
+        longitude: userLocation.longitude || defaultLocation.latitude,
         range: ''
       }
     }
@@ -198,6 +198,7 @@ const Main_Body_Park_Details = () => {
   // refresh page on searching, change in facility type or selecting filter options
   useEffect(() => {
     if (selectedTab.length > 0) {  //fetch facility details based on filter options
+      console.log(selectedTab.length)
       getNearbyFacilities()
     }
     else { // fetch facility details based on selected facility type or searching value
