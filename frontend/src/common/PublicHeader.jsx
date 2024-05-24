@@ -63,6 +63,15 @@ useEffect(() => {
   return () => clearInterval(intervalId);
 }, [])
 
+  //function to handle log out of user
+  function handleLogOut(e){
+    // e.preventDefault();
+    dispatch(Logout());
+    navigate('/');
+    // setRefreshOnLogOut(Date.now());
+    window.location.reload();
+  }
+
 
 // useEffect -------------------------------xx---------
   useEffect(() => {
