@@ -441,6 +441,28 @@ const nearByDataInMap = async(req,res)=>{
             // console.log(getNearByData,'getNearByData')
         }
 
+        if(order == 1){
+            // ascending
+            getNearByData.sort(function(a, b){
+                // Convert names to lowercase for case-insensitive comparison
+                const nameA = a.facilityname.toLowerCase();
+                const nameB = b.facilityname.toLowerCase();
+            
+                // Compare lowercase names for ascending order
+                if (nameA < nameB) return -1;
+                if (nameA > nameB) return 1;
+                return 0;
+            });
+        }
+        else if(order == 2){
+            // descending
+            getNearByData.sort(function(a, b){
+                // Compare b.name with a.name for descending order
+                if (a.name < b.name) return 1;
+                if (a.name > b.name) return -1;
+                return 0;
+            });
+        }
 
     //    console.log('get near by data',getNearByData)
        return res.status(statusCode.SUCCESS.code).json({
