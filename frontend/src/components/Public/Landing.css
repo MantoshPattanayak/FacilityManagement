@@ -1020,7 +1020,7 @@ margin-top: 20px;
 }
 
 .carousel-image {
-    width: calc(100% / 3);
+    width: calc(100% / 4);
     /* Show 3 images at a time */
     flex-shrink: 0;
     /* margin-inline: 5px; */
@@ -1653,4 +1653,8 @@ margin-top: 20px;
     .carousel-image-container {
         height: 260px;
     }
+}
+
+.avatisement-Image{
+    height: 70vh;
 }

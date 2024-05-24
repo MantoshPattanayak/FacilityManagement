@@ -47,6 +47,21 @@ export default function PublicHeader() {
   function setLanguageCode(languageCode) {
     dispatch(setLanguage(languageCode));
   }
+// here Get total count of Cart --------------------------------------------
+async function GetTotalNumberofCart() {
+  try {
+    let res = await axiosHttpClient('View_Card_UserId', 'get')
+    setGetCardCount(res.data)
+  }
+  catch (err) {
+    console.log( err)
+  }
+}
+useEffect(() => {
+  GetTotalNumberofCart()
+  const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
+  return () => clearInterval(intervalId);
+}, [])
 
   //function to handle log out of user
   function handleLogOut(e){
