@@ -91,7 +91,7 @@ const viewParkDetails = async(req,res)=>{
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership, fl.url
-        from amabhoomi.facilities f inner join amabhoomi.fileattachments ft on f.facilityId = ft.entityId inner join amabhoomi.files fl on fl.fileId= ft.fileId`
+        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId`
    
         let facilities = await sequelize.query(facility,{
             replacements:[new Date()]
@@ -103,7 +103,7 @@ const viewParkDetails = async(req,res)=>{
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
         end as status, address,latitude,longitude,areaAcres,ownership, sun, mon, tue, wed, thu, fri, sat, fl.url
-        from amabhoomi.facilities f inner join amabhoomi.fileattachments ft on f.facilityId = ft.entityId inner join amabhoomi.files fl on fl.fileId= ft.fileId where f.facilityTypeId=?`
+        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where f.facilityTypeId=?`
        
         facilities = await sequelize.query(facility,{
             replacements:[new Date(),facilityTypeId]
@@ -166,7 +166,7 @@ const viewParkById = async (req,res)=>{
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
             end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url 
-            from amabhoomi.facilities f inner join amabhoomi.fileattachments ft on f.facilityId = ft.entityId inner join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? `
+            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? `
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
             replacements:[new Date(), facilityId]
