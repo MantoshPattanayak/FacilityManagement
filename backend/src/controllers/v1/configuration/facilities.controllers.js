@@ -635,7 +635,7 @@ const nearByDataInMap = async (req, res) => {
         // Construct response
         return res.status(statusCode.SUCCESS.code).json({
             message: 'Nearby data retrieved successfully',
-            data: fetchFacilities[0] // Assuming fetchFacilities is an array with the result at index 0
+            data: getNearByData // Assuming fetchFacilities is an array with the result at index 0
         });
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
