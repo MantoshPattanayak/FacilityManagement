@@ -8,7 +8,7 @@ import AdminHeader from "../../../common/AdminHeader";
 
 // Location icon and image all types of image---------------------------------------------
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
-import Park_img from "../../../assets/park_img1.jpg";
+import Park_img from "../../../assets/event_details.webp";
 import Yoga_img from "../../../assets/Yoga_img.png";
 import Google_map from "../../../assets/Google_map.jpg";
 import correct_icon from "../../../assets/Correct_icon.png";

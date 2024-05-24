@@ -8,7 +8,7 @@ import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
 import mp_ground_logo from "../../assets/multipurpose-ground-logo.png";
 import galleryImg from "../../assets/gallery1.png"
-import adImg from "../../assets/ad.png"
+import adImg from "../../assets/Park_near_Utkal.png"
 import Footer from "../../common/Footer.jsx"
 import CommonFooter from '../../common/CommonFooter.jsx';
 import badminton from "../../assets/explore new activity badminton.png";
@@ -17,6 +17,8 @@ import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import anan_image from "../../assets/Anan_vihar.jpg"
+// here import Park Image
 
 
 
@@ -301,19 +303,19 @@ const Landing = () => {
   const exploreNewActivies = [
     {
       game: 'Tennis',
-      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Buddha JAyanti Park', 'Buddha JAyanti Park']
+      parks: ['Kalinga Stadium', 'Saheed Nagar Sports Complex']
     },
     {
       game: 'Cricket',
-      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'IG Park']
+      parks: ['Ruchika High School, Unit - 6', 'Saheed Nagar Sports Complex']
     },
     {
       game: 'Football',
-      parks: ['Buddha JAyanti Park', 'Buddha JAyanti Park', 'Gopabandhu Park']
+      parks: ['Kalinga Stadium', 'Bhubaneswar Footbal Academy', 'BJB Nagar Field']
     },
     {
       game: 'Yoga',
-      parks: ['Buddha JAyanti Park']
+      parks: ['Buddha Jayanti Park', 'Acharya Vihar Colony Park']
     }
   ];
 
@@ -573,22 +575,22 @@ const Landing = () => {
 
           <div className="facililiy-list-map">
             <div className="map-facilities">
-              <p>Buddha Jayanti park</p>
+              <p>BMC Park</p>
             </div>
             <div className="map-facilities">
               <p>IG park</p>
             </div>
             <div className="map-facilities">
-              <p>Buddha Jayanti park</p>
+              <p>G.L Colony Park</p>
             </div>
             <div className="map-facilities">
-              <p>Buddha Jayanti park</p>
+              <p>Kharvela Park</p>
             </div>
             <div className="map-facilities">
-              <p>Buddha Jayanti park</p>
+              <p>Nicco Park</p>
             </div>
             <div className="map-facilities">
-              <p>Buddha Jayanti park</p>
+              <p>Badagada Village Park</p>
             </div>
           </div>
         </div>
