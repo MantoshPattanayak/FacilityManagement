@@ -12,6 +12,8 @@ import CommonFooter from "../../../common/CommonFooter";
 import Park_Logo from "../../../assets/Ground_logo.png";
 import MultiPark from "../../../assets/ama_bhoomi_multipurpose_grounds_logo-removebg-preview.png";
 import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png";
+import greenway from "../../../assets/Greenway.png"
+import blueway from "../../../assets/blueways.png"
 // Data Not available Icon ---------------------------------------------------------------
 import No_Data_icon from "../../../assets/No_Data_icon.png";
 import { useEffect, useState } from "react";
@@ -270,6 +272,22 @@ const Main_Body_Park_Details = () => {
           >
             <img className="h-14" src={MultiPark} alt="Multipark" />
             <span className="button-text">Multipark</span>
+          </button>
+          {/* waterway */}
+          <button
+            onClick={(e) => handleParkLogoClick(e, 4)}
+            className="image-button"
+          >
+            <img className="h-14" src={greenway} alt="Multipark" />
+            <span className="button-text">Greenway</span>
+          </button>
+               {/* blueway */}
+               <button
+            onClick={(e) => handleParkLogoClick(e, 5)}
+            className="image-button"
+          >
+            <img className="h-14" src={blueway} alt="Multipark" />
+            <span className="button-text">Waterways</span>
           </button>
         </span>
       </div>

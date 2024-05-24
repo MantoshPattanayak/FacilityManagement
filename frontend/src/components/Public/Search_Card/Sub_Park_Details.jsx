@@ -8,6 +8,7 @@ import AdminHeader from "../../../common/AdminHeader";
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
 import Park_img from "../../../assets/Park_details.jpg";
 import sport_image from "../../../assets/sport_details_image.jpg"
+
 import Yoga_img from "../../../assets/Yoga_img.png";
 import Google_map from "../../../assets/Google_map.jpg";
 import correct_icon from "../../../assets/Correct_icon.png";
@@ -103,6 +104,7 @@ const Sub_Park_Details = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
+  
   function formatTime(time24) {
     //format 24 hour time as 12 hour time
     if (!time24) return;
