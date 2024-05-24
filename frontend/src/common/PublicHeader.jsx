@@ -3,21 +3,24 @@ import AppLogo from "../assets/ama-bhoomi_logo.png";
 import "../components/Public/Landing";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPowerOff, faUser } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../utils/axios";
 // here Import Redux Part ---------------------------------
 import { useDispatch, useSelector } from "react-redux";  // selector use for Read the data -----------------
 import { setLanguage, setLanguageContent } from "../utils/languageSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Logout } from "../utils/authSlice";
 
 
 export default function PublicHeader() {
   // here Get the data of TotalCount of Cart ---------------
   const [GetCardCount, setGetCardCount] = useState([])
   const [isUserLoggedIn, setIsUserLoggedIn] = useState();
+  const [refreshOnLogOut, setRefreshOnLogOut] = useState(Date.now());
   // Redux (Redux-Toolkit) -------------------------------------
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const language = useSelector((state) => state.language.language); // Updated variable name
   const languageContent = useSelector((state) => state.language.languageContent);
   const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
@@ -64,7 +67,7 @@ useEffect(() => {
 // useEffect -------------------------------xx---------
   useEffect(() => {
     getWebContent();
-  }, [language]);
+  }, [language, refreshOnLogOut]);
 // Return --------------------------------------------
   return (
     <header className="header">
@@ -132,7 +135,13 @@ useEffect(() => {
                 </li>
               )}
             </li>
-
+              {
+                isUserLoggedIn == 1 ? (
+                  <li>
+                    <Link onClick={handleLogOut} to={'/'}><FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;</Link>
+                  </li>
+                ) : <></>
+              }
 
 
 

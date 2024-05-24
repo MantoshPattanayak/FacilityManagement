@@ -77,6 +77,8 @@ app.use(
   })
 );
 
+app.use('/static', express.static(uploadDir));
+
 app.use(express.json({ limit: "20mb" }));
 // app.use(passport.initialize());
 
