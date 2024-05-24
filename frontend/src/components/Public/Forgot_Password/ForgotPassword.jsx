@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ForgotPassword.css';
 import { RxCross1 } from 'react-icons/rx';
-import CommonHeader from '../../../common/CommonHeader';
+import PublicHeader from '../../../common/PublicHeader';
 import CommonFooter from '../../../common/CommonFooter';
 import { useNavigate, Link } from 'react-router-dom';
 import { regex } from '../../../utils/regexExpAndDataLength';
@@ -160,7 +160,7 @@ function handleChange(e) {
 
     return (
         <div>
-            <CommonHeader />
+            <PublicHeader />
      {forgotPassword && (
         <div className="signup-container">
             <div className="context">
