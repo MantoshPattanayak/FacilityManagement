@@ -400,7 +400,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Organization / Individual Name <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" className="input_padding" id="input1" placeholder="Organization / Individual Name" name="organisationName"
+                                        <input type="text" className="input_padding" id="input1" placeholder=" Please Enter the Organization / Individual Name" name="organisationName"
                                             onChange={handleChange}
                                             value={formData.organisationName}
                                         />
@@ -408,7 +408,7 @@ const Event_hostPage = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Organization/Individual PAN card number <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Organization/Individual PAN card number" name="organisationPanCardNumber"
+                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Organization/Individual PAN card number" name="organisationPanCardNumber"
                                             onChange={handleChange}
                                             value={formData.organisationPanCardNumber}
                                         />
@@ -418,7 +418,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Organization/Individual Address <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Organization/Individual Address" name="organisationAddress"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter the Organization/Individual Address" name="organisationAddress"
                                             onChange={handleChange}
                                             value={formData.organisationAddress}
                                         />
@@ -436,7 +436,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">First Name <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="First Name" name="firstName"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter First Name" name="firstName"
                                             onChange={handleChange}
                                             value={formData.firstName}
                                         />
@@ -444,7 +444,7 @@ const Event_hostPage = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Last Name <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Last Name" name="lastName"
+                                        <input type="text" id="input2" className="input_padding" placeholder="Please Enter Last Name" name="lastName"
                                             onChange={handleChange}
                                             value={formData.lastName}
                                         />
@@ -454,7 +454,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Phone Number <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Phone Number" name="phoneNo"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter Phone Number" name="phoneNo"
                                             onChange={handleChange}
                                             value={formData.phoneNo}
                                         />
@@ -462,7 +462,7 @@ const Event_hostPage = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Email Address <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Email Address" name="emailId"
+                                        <input type="text" id="input2" className="input_padding" placeholder="Please Enter Email Address" name="emailId"
                                             onChange={handleChange}
                                             value={formData.emailId}
                                         />
@@ -480,7 +480,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Beneficiary Name <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Beneficiary Name" name="beneficiaryName"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter Beneficiary Name" name="beneficiaryName"
                                             onChange={handleChange}
                                             value={formData.beneficiaryName}
                                         />
@@ -523,7 +523,7 @@ const Event_hostPage = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Account Number <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Account Number" name="accountNumber"
+                                        <input type="text" id="input2" className="input_padding" placeholder="Plase Enter Account Number" name="accountNumber"
                                             onChange={handleChange}
                                             value={formData.accountNumber}
                                         />
@@ -534,7 +534,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Bank IFSC <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Bank IFSC" name="bankIFSC"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter Bank IFSC" name="bankIFSC"
                                             onChange={handleChange}
                                             value={formData.bankIFSC}
                                         />
@@ -565,7 +565,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Event Title <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Event Title"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter Event Title"
                                             name="eventTitle"
                                             value={formData.eventTitle}
                                             onChange={handleChange}
@@ -575,7 +575,7 @@ const Event_hostPage = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Event Date <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="date" id="input2" className="input_padding" placeholder="Organization/Individual PAN card number"
+                                        <input type="date" id="input2" className="input_padding" placeholder="Please Enter the Organization/Individual PAN card number"
                                             name="eventDate"
                                             value={formData.eventDate}
                                             onChange={handleChange}
@@ -586,7 +586,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Location of Event <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Location of Event"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Plase Enter the Location of Event"
                                             name="locationofEvent"
                                             value={formData.locationofEvent}
                                             onChange={handleChange}
@@ -624,7 +624,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Start Event Date <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="date" id="input1" className="input_padding" placeholder="Phone Number"
+                                        <input type="date" id="input1" className="input_padding" placeholder="Please Enter Phone Number"
                                             name="startEventDate"
                                             value={formData.startEventDate}
                                             onChange={handleChange}
@@ -633,7 +633,7 @@ const Event_hostPage = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">End Event Date <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="date" id="input2" className="input_padding" placeholder="Email Address"
+                                        <input type="date" id="input2" className="input_padding" placeholder="Please Enter Email Address"
                                             name="endEventDate"
                                             value={formData.endEventDate}
                                             onChange={handleChange}
@@ -649,7 +649,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Description of Event <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Description of Event"
+                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter the Description of Event"
                                             name="descriptionofEvent"
                                             value={formData.descriptionofEvent}
                                             onChange={handleChange}
@@ -680,7 +680,7 @@ const Event_hostPage = () => {
 
                                             <div className="HostEvent_Group1 ">
                                                 <label htmlFor="input2">Number of tickets <span className="text-red-600 font-bold text-xl">*</span></label>
-                                                <input type="text" id="No_ticket" className="input_padding" placeholder="Number of tickets"
+                                                <input type="text" id="No_ticket" className="input_padding" placeholder="Please Enter Number of tickets"
                                                     name="numberofTicket"
                                                     value={formData.numberofTicket}
                                                     onChange={handleChange}
@@ -690,7 +690,7 @@ const Event_hostPage = () => {
                                             </div>
                                             <div className="HostEvent_Group1">
                                                 <label htmlFor="input2">price <span className="text-red-600 font-bold text-xl">*</span></label>
-                                                <input type="text" id="price1" className="input_padding" placeholder="price "
+                                                <input type="text" id="price1" className="input_padding" placeholder="Please Enter price "
                                                     name="price"
                                                     value={formData.price}
                                                     onChange={handleChange}

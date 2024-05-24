@@ -430,7 +430,7 @@ const SignUp = () => {
             }
             {showSuccessPopup && <SuccessPopup />}
 
-            <CommonFooter />
+          
             <ToastContainer />
         </div>
     )

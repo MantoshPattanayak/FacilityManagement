@@ -154,5 +154,11 @@
     padding: 8px;
     border-radius: 0 5px 5px 0;
   }
-  
-  
+  .Faclity_Name{
+    text-align: center;
+   
+  }
+  .Faclity_adress{
+    text-align: center;
+    font-size: 25px;
+  }

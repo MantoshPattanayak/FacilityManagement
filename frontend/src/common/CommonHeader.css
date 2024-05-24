@@ -43,6 +43,24 @@
     text-decoration: none;
 }
 
+
+.header nav ul li a:active {
+    font-weight: bolder;
+    /* color: #d61a1a; */
+    text-decoration: underline;
+    border-bottom: 2px solid #d61a1a; 
+    padding-bottom: 2px; 
+}
+
+
+.active {
+    /* Add your styling for the active link here */
+    font-weight: bolder;
+    /* color: #d61a1a; */
+    text-decoration: underline;
+    border-bottom: 2px solid #d61a1a; 
+    padding-bottom: 2px; 
+}
 .login-button {
     width: 80px;
     height: 34px;
@@ -53,3 +71,7 @@
     align-items: center;
     justify-content: center;
 }
+
+
+
+

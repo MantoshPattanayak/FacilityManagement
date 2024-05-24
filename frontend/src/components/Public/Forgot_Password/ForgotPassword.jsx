@@ -257,7 +257,7 @@ function handleChange(e) {
                 </div>
             )}
             {showSuccessPopup && <SuccessPopup />}
-            <CommonFooter />
+
             <ToastContainer />
         </div>
     );

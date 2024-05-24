@@ -26,6 +26,7 @@
     margin-top: 10px;
     font-size:x-large;
     font-weight: 600;
+    margin-bottom: 0px;
   }
   
   .address p {
@@ -39,8 +40,8 @@
   .member-input {
     border: 1px solid black;
     border-radius: 5px;
-    width: 180px;
-    height: 30px;
+    width: 21.4vw;
+    height: 38px;
     margin-left: 10px;
   }
   
@@ -85,8 +86,14 @@
   }
   
   .other-activities {
+    /* margin-top: 10px;
+    padding: 8px; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     margin-top: 10px;
-    padding: 8px;
+    padding: 0px;
+    justify-content: space-between;
   }
   
   .other-activities label {
@@ -117,7 +124,7 @@
     width: calc(100% - 110px); /* Make inputs full width minus space for labels */
   
     float: right;
-    width: 190px;
+    width: 20vw;
     height: 38px;
     border: 1px solid black;
     border-radius: 5px;
@@ -147,6 +154,8 @@
     font-size: large;
     font-weight: 500;
   }
+
+ 
 
 
   
@@ -197,6 +206,8 @@
         margin-top: 30px;
     }
   }
+
+ 
   
   @media screen and (max-width: 450px){
 
@@ -272,18 +283,18 @@
 
 
   .AddToCartButton {
-    background-color: #00bd58; /* Green */
+    background-color: #00bd58;
     border: none;
     color: white;
-    padding: 12px 32px;
+    padding: 8px 12px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 8px;
-    transition: transform 0.3s ease; /* Add a transition for smoother animation */
-  }
+    transition: transform 0.3s ease;
+}
   
   .AddToCartButton:hover {
     transform: translateY(-1px) scale(1.05); /* Apply a slight scale and lift effect on hover */
@@ -294,19 +305,19 @@
     margin-right: 8px;
   }
   
-  .addtocart-btn{
-    background-color: #008c33; /* Green */
-    border: none;
-    color: white;
-    padding: 12px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-   
-    cursor: pointer;
-    border-radius: 8px;
-  }
+
+.addtocart-btn {
+  background-color: #008c33;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+}
   .addtocart-btn:hover {
     transform: translateY(-2px) scale(1.05); /* Apply a slight scale and lift effect on hover */
     background-color: #009f2a; /* Green */

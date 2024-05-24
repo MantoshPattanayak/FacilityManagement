@@ -86,6 +86,11 @@
   color: white; /* White text color on hover */
 }
 
+.profile-about-icon{
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
 
 
 /* .profilePhoto {

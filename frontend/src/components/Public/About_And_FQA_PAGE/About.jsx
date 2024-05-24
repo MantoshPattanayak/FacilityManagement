@@ -12,6 +12,7 @@ const About=()=>{
       <PublicHeader/>
      <div className="Child_about_container">
        <h1 className="About">Overview</h1>
+       <img src=""></img>
      </div>
       <div className="About_div">
          <h1 className="About_heading">Overview</h1>

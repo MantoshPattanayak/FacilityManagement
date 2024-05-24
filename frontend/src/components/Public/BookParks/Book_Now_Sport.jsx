@@ -164,8 +164,11 @@ const Book_Now_Sport = () => {
             <div className="Book_sport_Child_conatiner">
                 <div className="Add_sport_form">
                     <div className="sport_name_Book">
-                        <h1> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
-                        <p> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
+                        <h1 className="Faclity_Name"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
+                        <span>
+                           <p className="Faclity_adress"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
+                        </span>
+                        
                     </div>
                     <div class="bookingFormWrapper">
                         <form class="bookingForm">
@@ -194,7 +197,7 @@ const Book_Now_Sport = () => {
                                 <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
                             </div>
                             <div class="formGroup">
-                                <span class="fieldName"  >Player Limit:</span>
+                                <span class="fieldName"  >No of Player</span>
                                 <div className="increament_decrement_conatiner">
                                     <button
                                         type="button"
@@ -222,7 +225,7 @@ const Book_Now_Sport = () => {
                             </div>
                             <div class="formGroup">
                                 <span class="fieldName">Price</span>
-                                <h1 className="price_Sport">INR 78/_</h1>
+                                <h1 className="price_Sport">INR 00.00/_</h1>
                             </div>
                         </form>
                     </div>
@@ -240,7 +243,7 @@ const Book_Now_Sport = () => {
                     </div>
                 </div>
             </div>
-            <CommonFooter />
+     
         </div>
     );
 };
