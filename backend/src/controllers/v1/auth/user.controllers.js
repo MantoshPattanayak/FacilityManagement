@@ -434,6 +434,7 @@ let verifyEmail = async(req,res)=>{
 
 let forgotPassword = async(req,res)=>{
   try {
+    console.log('1232')
     let {mobileNo,password}= req.body;
     console.log('req.body',req.body)
     let statusId = 1;
@@ -449,7 +450,8 @@ let forgotPassword = async(req,res)=>{
       message:"Bad Request"
       })
     }
-    password = decrypt(password)
+    mobileNo= encrypt(mobileNo)
+    // password = decrypt(password)
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // const decodedEmailToken = jwt.verify(token,process.env.EMAIL_TOKEN,{ignoreExpiration: true})
@@ -954,6 +956,7 @@ let publicLogin = async(req,res)=>{
     
       
         if(isUserExist){
+          console.log('isUserExist', isUserExist)
           if(isUserExist?.roleId!=4){
             return res.status(statusCode.BAD_REQUEST.code).json({
               message:"Please do login using your user credential"

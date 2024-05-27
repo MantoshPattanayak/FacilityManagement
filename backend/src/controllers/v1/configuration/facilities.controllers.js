@@ -597,6 +597,7 @@ const nearByDataInMap = async (req, res) => {
             // console.log('data',data.latitude,data.longitude)
             let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
             if (distance <= range) {
+                console.log('distance', distance)
                 getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
                     sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.url
                 });
@@ -635,7 +636,7 @@ const nearByDataInMap = async (req, res) => {
         // Construct response
         return res.status(statusCode.SUCCESS.code).json({
             message: 'Nearby data retrieved successfully',
-            data: fetchFacilities[0] // Assuming fetchFacilities is an array with the result at index 0
+            data: getNearByData // Assuming fetchFacilities is an array with the result at index 0
         });
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
