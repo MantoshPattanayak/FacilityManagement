@@ -63,6 +63,9 @@ const publicNotifications = require("./routes/api/" +
   api_version +
   "/activity/publicnotifications");
 const reports = require("./routes/api/" + api_version + "/reports/reports");
+const grievanceRoute = require("./routes/api/" +
+  api_version +
+  "/configuration/grievance");
 
 console.log(port, "port");
 
@@ -114,6 +117,7 @@ app.use("/languageContent", languageContent);
 
 //activity routes
 app.use("/reviewEvents", reviewEventBookingRoute);
+app.use("/grievance",grievanceRoute)
 app.use("/faq", faqRoute);
 app.use("/publicNotifications", publicNotifications);
 app.use("/reports", reports);
