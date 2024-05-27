@@ -1018,7 +1018,7 @@ let publicLogin = async(req,res)=>{
         console.log('233232')
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,
+        .json({ message: 'logged in', userId:isUserExist.userId, username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,
           sid:sessionId
           }); //menuItems: dataJSON
           }

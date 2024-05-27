@@ -122,7 +122,7 @@ app.use("/languageContent", languageContent);
 
 //activity routes
 app.use("/reviewEvents", reviewEventBookingRoute);
-app.use("/grievance",grievanceRoute)
+// app.use("/grievance",grievanceRoute)
 app.use("/faq", faqRoute);
 app.use("/publicNotifications", publicNotifications);
 app.use("/reports", reports);

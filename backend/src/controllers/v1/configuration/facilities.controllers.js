@@ -10,6 +10,11 @@ const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch s
 const Sequelize = db.Sequelize
 
 let facilitiesTable = db.facilities;
+const fs = require('fs');
+
+
+
+const path = require('path');
 
 const displayMapData = async(req,res)=>{
     try{
@@ -130,10 +135,12 @@ const viewParkDetails = async(req,res)=>{
             console.log(matchedData,'matchedData')
 
         }
+        const convertedData = convertImagesToBase64(matchedData);
+
   
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:matchedData
+            data:convertedData
         })
 
 
@@ -498,6 +505,31 @@ let calculateDistance = (lat1, long1, lat2, long2) => {
 //     }
 // }
 
+
+
+
+function convertImagesToBase64(dataArray) {
+    return dataArray.map(item => {
+        try {
+            const imagePath = path.join(process.env.UPLOAD_DIR, item.url); // Construct absolute path to image
+            console.log(imagePath, 'imagePath')
+            const imageBuffer = fs.readFileSync(imagePath); // Read image file
+
+            // Convert image buffer to base64 string
+            const base64String = imageBuffer.toString('base64');
+
+            // Replace the relative path with the base64 string
+            return {
+                ...item,
+                url: base64String
+            };
+        } catch (error) {
+            console.error(`Error converting image ${item.url}:`, error.message);
+            return item; // Return the original item if an error occurs
+        }
+    });
+}
+
 const nearByDataInMap = async (req, res) => {
     try {
         let { latitude, longitude, facilityTypeId, range, popular, free, paid, order } = req.body;
@@ -599,12 +631,12 @@ const nearByDataInMap = async (req, res) => {
             if (distance <= range) {
                 console.log('distance', distance)
                 getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
-                    sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.url
+                    sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.imageURL
                 });
             }
             // console.log(getNearByData,'getNearByData')
         }
-
+        // console.log('fetchFacilities', fetchFacilities[0])
         if(order == 1){
             console.log('order', 11)
             // ascending
@@ -634,9 +666,11 @@ const nearByDataInMap = async (req, res) => {
             });
         }
         // Construct response
+        const convertedData = convertImagesToBase64(getNearByData);
+
         return res.status(statusCode.SUCCESS.code).json({
             message: 'Nearby data retrieved successfully',
-            data: getNearByData // Assuming fetchFacilities is an array with the result at index 0
+            data: convertedData // Assuming fetchFacilities is an array with the result at index 0
         });
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
