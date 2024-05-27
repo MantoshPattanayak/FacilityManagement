@@ -1,5 +1,6 @@
 // Function of Main Container ---------------------------------------
 import Cardimg from "../../../assets/Card_img.png";
+import sport_image2 from "../../../assets/Sport_image.jpg" 
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -116,8 +117,8 @@ const Main_Body_Park_Details = () => {
   async function getNearbyFacilities() {
     let bodyParams = {
       facilityTypeId: facilityTypeId,
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude
+      latitude: userLocation?.latitude || defaultLocation.latitude,
+      longitude: userLocation?.longitude || defaultLocation.longitude
     };
     console.log('body params before', bodyParams);
 
@@ -126,8 +127,8 @@ const Main_Body_Park_Details = () => {
       setUserGeoLocation();
       bodyParams = {
         ...bodyParams,
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
+        latitude: userLocation.latitude || defaultLocation.latitude,
+        longitude: userLocation.longitude || defaultLocation.latitude,
         range: ''
       }
     }
@@ -197,6 +198,7 @@ const Main_Body_Park_Details = () => {
   // refresh page on searching, change in facility type or selecting filter options
   useEffect(() => {
     if (selectedTab.length > 0) {  //fetch facility details based on filter options
+      console.log(selectedTab.length)
       getNearbyFacilities()
     }
     else { // fetch facility details based on selected facility type or searching value
@@ -349,7 +351,7 @@ const Main_Body_Park_Details = () => {
                     }`}
                   title={item.facilityname}
                 >
-                  <img className="Card_img" src={Cardimg} alt="Park" />
+                  <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
