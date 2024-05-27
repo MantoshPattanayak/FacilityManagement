@@ -72,6 +72,8 @@ import appStore from "./utils/appStore";
 import ViewGrievanceList from "./components/Admin/Activity/Grievance/ViewGrievanceList";
 import AssignGrievance from "./components/Admin/Activity/Grievance/AssignGrievance";
 import ActionAgainstGrievance from "./components/Admin/Activity/Grievance/ActionAgainstGrievance";
+import CommonFooter1 from "./common/Common_footer1";
+import EditNotification from "./components/Admin/Activity/Notifications/EditNotification";
 
 
 function App() {
@@ -169,7 +171,7 @@ function App() {
             {/* Public User Login */}
             <Route path="/login-signup" element={<Login />} />
             <Route path="/login/SignUp" element={<SignUp />} />
-            <Route path="/Forgot_Password/ForgotPassword" element={<ForgotPassword />} />
+            <Route path="/ForgotPassword" element={<ForgotPassword />} />
 
 
             {/* use Section  */}
@@ -212,6 +214,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ViewNotifications />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Activity/EditNotification"
+              element={
+                <ProtectedRoute>
+                  <EditNotification />
                 </ProtectedRoute>
               }
             />
@@ -393,6 +403,7 @@ function App() {
             />
           </Routes>
           {/* <Footer /> */}
+          <CommonFooter1/>
      
         </div>
       </BrowserRouter>

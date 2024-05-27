@@ -73,11 +73,13 @@ let generateOTPHandler = async (req,res)=> {
     let expiryTime = new Date();
     expiryTime = expiryTime.setMinutes(expiryTime.getMinutes() + 5);
 
-    let otp="";
-    for(let i=0;i<length;i++){
-      let otpIndex = Math.floor(Math.random()*numberValue.length)
-      otp += numberValue[otpIndex]
-    }
+    // let otp="";
+    // for(let i=0;i<length;i++){
+    //   let otpIndex = Math.floor(Math.random()*numberValue.length)
+    //   otp += numberValue[otpIndex]
+    // }
+
+    let otp = "1234"
 
     if(mobileNo){
       // first check if the otp is actually present or not
@@ -302,7 +304,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
 let sendEmailToUser = async(req,res)=>{
   try {
-    let {emailId,mobileNo,changePassword}= req.body
+    let {emailId,mobileNo,changePassword,roleId}= req.body
     emailId = decrypt(emailId)
     let message;
     if(mobileNo){
@@ -310,8 +312,9 @@ let sendEmailToUser = async(req,res)=>{
     }
     console.log(emailId,mobileNo,"req.body")
     let firstField = emailId;
-    let secondField = mobileNo
-    let Token = await mailToken({firstField,secondField})
+    let secondField = mobileNo;
+    let thirdField = roleId;
+    let Token = await mailToken({firstField,secondField,thirdField})
     let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
 
     if(changePassword==1){
@@ -383,6 +386,7 @@ let verifyEmail = async(req,res)=>{
       // Calculate the duration of the token's validity in seconds
       const durationInSeconds = exp - iat;
       let mobileNo =  encrypt(decodedEmailToken.secondField)
+      let roleId = decodedEmailToken.roleId
 
       if (exp * 1000 <= Date.now()) {
         console.log('Token has expired');
@@ -433,7 +437,7 @@ let forgotPassword = async(req,res)=>{
     let {mobileNo,password}= req.body;
     console.log('req.body',req.body)
     let statusId = 1;
-    console.log('token',token);
+    // console.log('token',token);
     let publicRole = null;
     // if(!token){
     //   return res.status(statusCode.NOTFOUND.code).json({
@@ -944,16 +948,17 @@ let publicLogin = async(req,res)=>{
       }
 
       
-      if(isUserExist?.roleId!=null){
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:"Please do login using your user credential"
-        })
-      }
+   
 
       password = decrypt(password)
     
       
         if(isUserExist){
+          if(isUserExist?.roleId!=4){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:"Please do login using your user credential"
+            })
+          }
           // console.log('21',isUserExist)
           const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
           if(isPasswordSame){
@@ -1054,6 +1059,7 @@ let privateLogin = async(req,res)=>{
     console.log(req.body,'req.body')
     let lastLoginTime = new Date();
 
+    console.log('fhfha',emailId, 'password', password)
     if(emailId && password || mobileNo && password)
     {
       console.log('f')
@@ -1065,37 +1071,44 @@ let privateLogin = async(req,res)=>{
         // Finding one record
        isUserExist = await user.findOne({
         where: {
-          [Op.and]:[{emailId:emailId},{statusId:statusId}]
+          [Op.and]:[{emailId:emailId},{statusId:statusId},{verifyEmail:1}]
         }
         })
 
-        console.log('fj')
+        console.log(isUserExist,'isUserExist')
+
+        // console.log('fj')
       }
       if(mobileNo){
-        console.log('mobileNo',mobileNo)
+        console.log('mobileNo12',mobileNo)
         // mobileNo = await decrypt(mobileNo)
         // check whether the credentials are valid or not 
         // Finding one record
         
+
+     
       isUserExist = await user.findOne({
         where: {
-          [Op.and]:[{phoneNo:mobileNo},{statusId:statusId},{roleId:roleId}]
+          [Op.and]:[{phoneNo:mobileNo},{statusId:statusId},{verifyEmail:1}]
         }
         })
+        console.log('isUserExist', isUserExist)
 
+       
         console.log('2 mobile no', isUserExist, 'phoneNumber',mobileNo)
       }
-      if(isUserExist?.roleId==null){
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:"Please do login using your admin credentials"
-        })
-      }
+   
 
 
         password = decrypt(password)
     
       
         if(isUserExist){
+
+          if(isUserExist.roleId==4){
+            return res.status(statusCode.BAD_REQUEST.code).json({message:'Please login through your admin credential'})
+          }
+  
           // console.log('21',isUserExist)
           const isPasswordSame = await bcrypt.compare(password, isUserExist.password);
           if(isPasswordSame){

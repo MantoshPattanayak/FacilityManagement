@@ -1,119 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import '../../Public/BookParks/Book_Now.css';
-import AdminHeader from '../../../common/AdminHeader';
-import CommonFooter from '../../../common/CommonFooter';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
-import { faC, faCartShopping } from '@fortawesome/free-solid-svg-icons'; // Import the icon
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useState } from "react";
+import "../../Public/BookParks/Book_Now.css";
+import AdminHeader from "../../../common/AdminHeader";
+import CommonFooter from "../../../common/CommonFooter";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
+import { faC, faCartShopping, faXmark } from "@fortawesome/free-solid-svg-icons"; // Import the icon
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
 
 // Import Aixos method---------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Import Navigate and Crypto -----------------------------------
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { decryptData } from "../../../utils/encryptData";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
-import PublicHeader from '../../../common/PublicHeader';
-import { formatDate } from '../../../utils/utilityFunctions';
-
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import PublicHeader from "../../../common/PublicHeader";
+import { formatDate } from "../../../utils/utilityFunctions";
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   // UseSate for get data -------------------------------------
-  const [FacilitiesData, setFacilitiesData] = useState([])
+  const [FacilitiesData, setFacilitiesData] = useState([]);
   //here Location / crypto and navigate the page---------------
   const location = useLocation();
-  const action = new URLSearchParams(location.search).get('action');
+  const action = new URLSearchParams(location.search).get("action");
   const navigate = useNavigate();
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
   const [formData, setFormData] = useState({
-    totalMembers: '',
-    amount: '10.00',
+    totalMembers: "",
+    amount: "10.00",
     activityPreference: [],
-    otherActivities: '',
-    bookingDate: new Date().toISOString().split('T')[0],
-    startTime: '',
-    durationInHours: '',
-    facilityId: '',
-    entityId: '',
-    entityTypeId: '',
-    facilityPreference: ''
-  })
+    otherActivities: "",
+    bookingDate: new Date().toISOString().split("T")[0],
+    startTime: "",
+    durationInHours: "",
+    facilityId: "",
+    entityId: "",
+    entityTypeId: "",
+    facilityPreference: "",
+  });
 
   // Here Get the data of Sub_park_details------------------------------------------
   async function getSub_park_details(facilityId) {
-    console.log('facilityId', facilityId);
+    console.log("facilityId", facilityId);
 
     try {
-      let res = await axiosHttpClient('View_By_ParkId', 'get', null, facilityId)
-
-      console.log("response of facility fetch api", res)
-      setFacilitiesData(res.data.facilitiesData)
-      setFormData(
-        {
-          ...formData,
-          ['entityTypeId']: res.data.facilitiesData[0].facilityTypeId,
-          ['facilityId']: facilityId,
-          ['entityId']: facilityId
-        }
+      let res = await axiosHttpClient(
+        "View_By_ParkId",
+        "get",
+        null,
+        facilityId
       );
-            
-    }
-    catch (err) {
-      console.log("here Error", err)
+
+      console.log("response of facility fetch api", res);
+      setFacilitiesData(res.data.facilitiesData);
+      setFormData({
+        ...formData,
+        ["entityTypeId"]: res.data.facilitiesData[0].facilityTypeId,
+        ["facilityId"]: facilityId,
+        ["entityId"]: facilityId,
+      });
+    } catch (err) {
+      console.log("here Error", err);
     }
   }
 
   // API call to fetch dropdown data and selection data
   async function getParkBookingInitialData() {
     try {
-      let res = await axiosHttpClient('PARK_BOOK_PAGE_INITIALDATA_API', 'get');
+      let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
 
       console.log("getParkBookingInitialData", res);
       setActivityPreferenceData(res.data.data);
-    }
-    catch (err) {
-      console.log("here Error", err)
+    } catch (err) {
+      console.log("here Error", err);
     }
   }
 
   // UseEffect for Update/Call API--------------------------------
   useEffect(() => {
-    let facilityId = decryptData(new URLSearchParams(location.search).get('facilityId'));
-    console.log('facilityId', facilityId);
+    let facilityId = decryptData(
+      new URLSearchParams(location.search).get("facilityId")
+    );
+    console.log("facilityId", facilityId);
     getSub_park_details(facilityId);
     getParkBookingInitialData();
   }, []);
 
   useEffect(() => {
-    console.log('selectedGames', selectedGames);
-    console.log('formData', formData);
-  }, [selectedGames, formData])
-
+    console.log("selectedGames", selectedGames);
+    console.log("formData", formData);
+  }, [selectedGames, formData]);
 
   // Function to handle game button click
   const handleGameClick = (game) => {
     // Toggle game selection
     if (selectedGames.includes(game)) {
-      setSelectedGames(selectedGames.filter(item => item !== game));
+      setSelectedGames(selectedGames.filter((item) => item !== game));
     } else {
       setSelectedGames([...selectedGames, game]);
     }
     // setFormData({...formData, ['activityPreference']: selectedGames});
-    console.log('selectedGames', selectedGames);
-  }
+    console.log("selectedGames", selectedGames);
+  };
 
   const handleChangeInput = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log("here fromdata",formData)
-  }
+    console.log("here fromdata", formData);
+  };
   // here Add to Cart -------------------------------------------------------------------------------------------
   async function handleAddtoCart() {
-    let modifiedFormData = { ...formData, ['activityPreference']: selectedGames };
-    console.log('formData handleSubmitAndProceed', modifiedFormData);
+    let modifiedFormData = {
+      ...formData,
+      ["activityPreference"]: selectedGames,
+    };
+    console.log("formData handleSubmitAndProceed", modifiedFormData);
     const validationError = validation(modifiedFormData);
     if (Object.keys(validationError).length == 0) {
       try {
@@ -125,90 +128,107 @@ const Book_Now = () => {
           startTime: modifiedFormData.startTime,
           duration: modifiedFormData.duration,
           price: modifiedFormData.price,
-        }
+        };
 
         // Prepare request body
         const requestBody = {
           entityId: modifiedFormData.entityId,
           entityTypeId: modifiedFormData.entityTypeId,
-          facilityPreference
+          facilityPreference,
         };
-        let res = await axiosHttpClient('Add_to_Cart', 'post', requestBody);
-        console.log('submit and response', res);
-        toast.success('Add to Cart has been done  successfully.', {
+        let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
+        console.log("submit and response", res);
+        toast.success("Add to Cart has been done  successfully.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
             setTimeout(() => {
-              navigate('/BookParks/Add_Card');
+              navigate("/BookParks/Add_Card");
             }, 1000); // Wait 1 second after toast timer completes before navigating
-          }
+          },
         });
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error);
-        toast.error('Add to Cart  failed.Try agin')
+        toast.error("Add to Cart  failed.Try agin");
       }
-    }
-    else {
-      toast.error('Please fill the required data.')
+    } else {
+      toast.error("Please fill the required data.");
     }
   }
 
   // HandleSubmit (Proceed to Payment) ---------------------------------------------------------------------------------------------------
   async function handleSubmitAndProceed() {
-    let modifiedFormData = { ...formData, ['activityPreference']: selectedGames };
-    console.log('formData handleSubmitAndProceed', modifiedFormData);
+    let modifiedFormData = {
+      ...formData,
+      ["activityPreference"]: selectedGames,
+    };
+    console.log("formData handleSubmitAndProceed", modifiedFormData);
     const validationError = validation(modifiedFormData);
+    let facilityPreference = {
+      totalMembers: modifiedFormData.totalMembers,
+      amount: modifiedFormData.amount,
+      activityPreference: modifiedFormData.activityPreference,
+      otherActivities: modifiedFormData.otherActivities,
+      bookingDate: modifiedFormData.bookingDate,
+      startTime: modifiedFormData.startTime,
+      durationInHours: modifiedFormData.durationInHours,
+    };
     if (Object.keys(validationError).length == 0) {
       try {
-        let res = await axiosHttpClient('PARK_BOOK_PAGE_SUBMIT_API', 'post', modifiedFormData);
-        console.log('submit and response', res);
-        toast.success('Booking details submitted successfully.', {
+        let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
+          entityId: modifiedFormData.entityId,
+          entityTypeId: modifiedFormData.entityTypeId,
+          facilityPreference,
+        });
+        console.log("submit and response", res);
+        toast.success("Booking details submitted successfully.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
             setTimeout(() => {
-              navigate('/');
+              navigate("/");
             }, 1000); // Wait 1 second after toast timer completes before navigating
-          }
+          },
         });
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error);
-        toast.error('Booking details submission failedc.')
+        toast.error("Booking details submission failedc.");
       }
-    }
-    else {
-      toast.error('Please fill the required data.')
+    } else {
+      toast.error("Please fill the required data.");
     }
   }
 
   const validation = (formData) => {
     let errors = {};
     if (!formData.totalMembers) {
-      errors.totalMembers = 'Please provide number of members';
+      errors.totalMembers = "Please provide number of members";
     }
     if (!formData.bookingDate) {
-      errors.date = 'Please provide date.'
+      errors.date = "Please provide date.";
     }
     if (!formData.startTime) {
-      errors.startTime = 'Please provide Start time.';
+      errors.startTime = "Please provide Start time.";
     }
     if (!formData.durationInHours) {
-      errors.durationInHours = 'Please provide duration.';
+      errors.durationInHours = "Please provide duration.";
     }
     return errors;
-  }
+  };
 
   return (
-    <div className='Book_Now_Min_conatiner'>
+    <div className="Book_Now_Min_conatiner">
       <ToastContainer />
       <PublicHeader />
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading">
-            <h1> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
+            <h1>
+              
+              {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
+            </h1>
+            <Link to="/Sub_Park_Details"><FontAwesomeIcon icon={faXmark}/></Link>
+            
           </div>
           <div className="address">
             <p> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
@@ -216,76 +236,112 @@ const Book_Now = () => {
 
           <div className="input-fields">
             <p>Total Members</p>
-            <input type="number" name="totalMembers" value={formData.totalMembers} id="" className='member-input' onChange={handleChangeInput} />
-          </div><br />
+            <input
+              type="number"
+              name="totalMembers"
+              value={formData.totalMembers}
+              id=""
+              className="member-input"
+              onChange={handleChangeInput}
+            />
+          </div>
+          <br />
 
           <div className="activity-preference">
             <span>Activity Preference</span>
             <div className="games">
-              {
-                activityPreferenceData?.length > 0 && activityPreferenceData.map((activity) => {
+              {activityPreferenceData?.length > 0 &&
+                activityPreferenceData.map((activity) => {
                   return (
                     <button
-                      className={`game-btn ${selectedGames.includes(activity.userActivityId) ? 'selected' : ''}`}
+                      className={`game-btn ${
+                        selectedGames.includes(activity.userActivityId)
+                          ? "selected"
+                          : ""
+                      }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
                     </button>
-                  )
-                })
-              }
+                  );
+                })}
             </div>
           </div>
 
           <div className="other-activities">
             <label htmlFor="activities">Other Activities(if any)</label>
-            <input type="text" name="otherActivities" value={formData.otherActivities} id="" className='input-field-otheractivities' onChange={handleChangeInput} />
-          </div><br />
-
+            <input
+              type="text"
+              name="otherActivities"
+              value={formData.otherActivities}
+              id=""
+              className="input-field-otheractivities"
+              onChange={handleChangeInput}
+            />
+          </div>
+          <br />
 
           <div className="date">
             <label htmlFor="">Date :</label>
-            <input type="date" name="bookingDate" value={formData.bookingDate} id="" className='input-field-date' onChange={handleChangeInput} />
-          </div><br />
-
+            <input
+              type="date"
+              name="bookingDate"
+              value={formData.bookingDate}
+              id=""
+              className="input-field-date"
+              onChange={handleChangeInput}
+            />
+          </div>
+          <br />
 
           <div className="start-time">
             <label htmlFor=""> Start Time :</label>
-            <input type="time" name="startTime" value={formData.startTime} id="" className='input-field-date' onChange={handleChangeInput} />
+            <input
+              type="time"
+              name="startTime"
+              value={formData.startTime}
+              id=""
+              className="input-field-date"
+              onChange={handleChangeInput}
+            />
           </div>
 
           <div className="duration">
-            <label htmlFor="">  Duration :</label>
-            <input type="number" name="durationInHours" value={formData.durationInHours} id="" className='input-field-date' onChange={handleChangeInput} />
+            <label htmlFor=""> Duration :</label>
+            <input
+              type="number"
+              name="durationInHours"
+              value={formData.durationInHours}
+              id=""
+              className="input-field-date"
+              onChange={handleChangeInput}
+            />
           </div>
 
           {/* Add to cart button */}
-          <div className='Add_to_card_main_conatiner'>
+          <div className="Add_to_card_main_conatiner">
             <div className="button_Book_Now">
-
               {/* <a href=''> */}
-              <button class='AddToCartButton' onClick={handleAddtoCart}>
-                <FontAwesomeIcon icon={faShoppingCart} className='Icon' />
+              <button class="AddToCartButton" onClick={handleAddtoCart}>
+                <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                 Add to Cart
               </button>
               {/* </a>  */}
 
-              <button className="addtocart-btn" onClick={handleSubmitAndProceed}>
+              <button
+                className="addtocart-btn"
+                onClick={handleSubmitAndProceed}
+              >
                 <FontAwesomeIcon icon={faCreditCard} className="Icon" />
                 Proceed to Payment
               </button>
             </div>
           </div>
-
         </div>
-
-
-
-
       </div>
       <CommonFooter />
     </div>
   );
-}
+};
 
 export default Book_Now;

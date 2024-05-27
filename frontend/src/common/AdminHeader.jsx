@@ -80,7 +80,7 @@ const AdminHeader = () => {
     <header className="header" id="header">
       <section className="wrapper container">
         <a href={`${isAdminLoggedIn == 1 ? '/Dashboard/AdminDashboard' : '/admin-login'}`} className="brand">
-          <img className="ama_bhoomi_logo" src={APP_LOGO} alt="App Logo" />
+          <img className="ama_bhoomi_logo" src={APP_LOGO} alt="App Logo"  />
         </a>
         <div className="burger" id="burger" onClick={toggleMenu}>
           <span className="burger-line"></span>

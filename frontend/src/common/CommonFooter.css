@@ -30,7 +30,7 @@
 
 .footer-container {
   background-color: #f2f2f2;
-  padding: 20px;
+
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap when container becomes too small */
   justify-content: space-between;

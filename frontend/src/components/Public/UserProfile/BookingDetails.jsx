@@ -131,17 +131,17 @@ const BookingDetails = () => {
   useEffect(() => {
     fetchProfileDetails();
   }, []);
-//handle for Logout ------------------------------------
-const handleLogout=()=>{
-  dispatch(Logout());
-  navigate('/')
-}
+  //handle for Logout ------------------------------------
+  const handleLogout = () => {
+    dispatch(Logout());
+    navigate('/')
+  }
 
 
   return (
     <div>
       <PublicHeader />
-      <div className="booking-dtails-container">
+      {/* <div className="booking-dtails-container"> */}
         <div className="booking-dtails-container">
           <aside className="profile-leftside--Body">
             <div className="profile-view--Body">
@@ -181,7 +181,7 @@ const handleLogout=()=>{
 
             </div>
           </aside>
-          <div className="right-container-booking-details">
+          <div className="right-container-favorite">
             {/* New div with paragraph and blue border */}
             {/* <div className="form-container"> */}
             <div className="eventdetails-tab">
@@ -276,8 +276,8 @@ const handleLogout=()=>{
           </div>
         </div>
       </div>
-      <CommonFooter />
-    </div>
+
+    // </div>
     // </div>
   );
 };

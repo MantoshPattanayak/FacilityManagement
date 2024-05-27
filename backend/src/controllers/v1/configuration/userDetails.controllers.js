@@ -4,23 +4,27 @@ const db = require("../../../models");
 const bcrypt = require("bcrypt");
 const { decrypt } = require("../../../middlewares/decryption.middlewares");
 const { encrypt } = require("../../../middlewares/encryption.middlewares");
-const user = db.privateuser;
+const user = db.usermaster;
 const facilityTypeMaster = db.facilitytype;
 const statusCodeMaster = db.statusmaster;
 const bookmarks = db.bookmarks;
 const hosteventdetails = db.hosteventdetails;
+const mailToken= require('../../../middlewares/mailToken.middlewares')
+const sendEmail = require('../../../utils/generateEmail')
 
 let autoSuggestionForUserSearch = async (req, res) => {
   try {
     const givenReq = req.query.givenReq ? req.body.givenReq : null;
     // const decryptGivenReq = await decrypt(givenReq).toLowerCase();
 
-    let allUsersDataQuery = `SELECT COUNT(*) OVER() AS totalCount,
-    pu.privateUserId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.contactNo, 
+    let allUsersDataQuery = `    
+    SELECT COUNT(*) OVER() AS totalCount,
+    pu.userId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.phoneNo, 
     rm.roleName, sm.statusCode
     FROM amabhoomi.rolemasters rm
-    LEFT JOIN amabhoomi.privateusers pu ON pu.roleid = rm.id
-    INNER JOIN statusmasters sm ON sm.statusId = rm.statusId`;
+    LEFT JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId
+    INNER JOIN statusmasters sm ON sm.statusId = rm.statusId
+    `;
 
     let allUsersData = await sequelize.query(allUsersDataQuery, {
       type: Sequelize.QueryTypes.SELECT,
@@ -32,7 +36,7 @@ let autoSuggestionForUserSearch = async (req, res) => {
       fullName: await decrypt(userData.fullName),
       emailId: await decrypt(userData.emailId),
       userName: await decrypt(userData.userName),
-      contactNo: await decrypt(userData.contactNo),
+      phoneNo: await decrypt(userData.phoneNo),
     }));
 
     let matchedSuggestions = decryptedUsers;
@@ -45,7 +49,7 @@ let autoSuggestionForUserSearch = async (req, res) => {
           userData.fullName.toLowerCase().includes(givenReq) ||
           userData.emailId.toLowerCase().includes(givenReq) ||
           userData.userName.toLowerCase().includes(givenReq) ||
-          userData.contactNo.toLowerCase().includes(givenReq) ||
+          userData.phoneNo.toLowerCase().includes(givenReq) ||
           userData.roleName.toLowerCase().includes(givenReq) ||
           userData.status.toLowerCase().includes(givenReq)
       );
@@ -79,10 +83,10 @@ let viewList = async (req, res) => {
     let offset = (page - 1) * limit;
     let params = [];
     let getAllUsersQuery = `SELECT COUNT(*) OVER() AS totalCount,
-        pu.privateUserId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.contactNo, 
+        pu.userId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.phoneNo, 
         rm.roleName
         FROM amabhoomi.rolemasters rm
-        LEFT JOIN amabhoomi.privateusers pu ON pu.roleId = rm.roleId`;
+        LEFT JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId`;
     // , sm.statusCode
     // INNER JOIN statusmasters sm ON sm.statusId = rm.statusId
 
@@ -101,7 +105,7 @@ let viewList = async (req, res) => {
           !userData.fullName ||
           !userData.emailId ||
           !userData.userName ||
-          !userData.contactNo
+          !userData.phoneNo
         ) {
           return userData; // Skip decryption if userData or its fields are null or undefined
         }
@@ -111,7 +115,7 @@ let viewList = async (req, res) => {
           fullName: await decrypt(userData.fullName),
           emailId: await decrypt(userData.emailId),
           userName: await decrypt(userData.userName),
-          contactNo: await decrypt(userData.contactNo),
+          phoneNo: await decrypt(userData.phoneNo),
         };
       })
     );
@@ -131,7 +135,7 @@ let viewList = async (req, res) => {
           userData.fullName.toLowerCase().includes(givenReq) ||
           userData.emailId.toLowerCase().includes(givenReq) ||
           userData.userName.toLowerCase().includes(givenReq) ||
-          userData.contactNo.toLowerCase().includes(givenReq) ||
+          userData.phoneNo.toLowerCase().includes(givenReq) ||
           userData.roleName.toLowerCase().includes(givenReq)
         // ||
         // userData.statusCode.toLowerCase().includes(givenReq)
@@ -184,7 +188,6 @@ let createUser = async (req, res) => {
       encryptTitle,
       encryptFullName: encryptfullName,
       encryptMobileNo: encryptMobileNumber,
-      encryptAlternateMobileNo: encryptAlternateMobileNumber,
       encryptRole,
       encryptStatus,
       encryptUsername: encryptUserName,
@@ -196,9 +199,14 @@ let createUser = async (req, res) => {
     console.log(req.body, "req.body");
 
     let password = await generatePassword(8);
+    let sentPassword = password;
     let roleId = await decrypt(encryptRole);
     let statusId = await decrypt(encryptStatus);
     let genderId = await decrypt(encryptGenderId);
+         
+    if(roleId==4){
+      return res.status(statusCode.BAD_REQUEST.code).json({message:'Please provide the role id of the BDA staff'})
+    }
     // const encryptTitle = await encrypt(title);
     // const encryptfullName = await encrypt(fullName);
     // const encryptUserName = await encrypt(userName);
@@ -211,14 +219,13 @@ let createUser = async (req, res) => {
       encryptTitle,
       encryptfullName,
       encryptMobileNumber,
-      encryptAlternateMobileNumber
     );
 
     const createdBy = req.user?.id || 1;
     const updatedBy = req.user?.id || 1;
     console.log("1");
     const existingUserMobile = await user.findOne({
-      where: { contactNo: encryptMobileNumber },
+      where: { phoneNo: encryptMobileNumber },
     });
     const existingUserEmail = await user.findOne({
       where: { emailId: encryptemailId },
@@ -226,9 +233,9 @@ let createUser = async (req, res) => {
     const existingUserName = await user.findOne({
       where: { userName: encryptUserName },
     });
-    const existingAlternateUserMobile = await user.findOne({
-      where: { contactNo: encryptAlternateMobileNumber },
-    });
+    // const existingAlternateUserMobile = await user.findOne({
+    //   where: { phoneNo: encryptAlternateMobileNumber },
+    // });
 
     if (existingUserMobile) {
       return res
@@ -242,13 +249,15 @@ let createUser = async (req, res) => {
       return res
         .status(statusCode.CONFLICT.code)
         .json({ message: "User already exist same user_name" });
-    } else if (existingAlternateUserMobile) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({
-          message: "User already exist with given alternate contact no ",
-        });
-    } else {
+     } 
+    //  else if (existingAlternateUserMobile) {
+    //   return res
+    //     .status(statusCode.CONFLICT.code)
+    //     .json({
+    //       message: "User already exist with given alternate contact no ",
+    //     });
+    // } 
+    else {
       console.log("req.body", req.body);
       const hashedPassword = await bcrypt.hash(password, 10); // Use 10 rounds for hashing
 
@@ -256,7 +265,7 @@ let createUser = async (req, res) => {
       const newUser = await user.create({
         title: encryptTitle,
         fullName: encryptfullName,
-        contactNo: encryptMobileNumber,
+        phoneNo: encryptMobileNumber,
         emailId: encryptemailId,
         userName: encryptUserName,
         password: hashedPassword,
@@ -264,7 +273,6 @@ let createUser = async (req, res) => {
         roleId: roleId,
         statusId: statusId,
         genderId: genderId,
-        alterateContactNo: encryptAlternateMobileNumber,
         createdDt: new Date(),
         createdBy: createdBy,
         updatedDt: new Date(),
@@ -272,10 +280,45 @@ let createUser = async (req, res) => {
       });
 
       console.log(newUser);
+     
+      let firstField = decrypt(encryptemailId);
+      let secondField = decrypt(encryptMobileNumber)
+      let Token = await mailToken({firstField,secondField})
+      let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
+  
+   
 
-      return res
-        .status(statusCode.SUCCESS.code)
-        .json({ message: "User created successfully " });
+        message = `Please verify your emailId.<br><br>
+        This is your emailId <b>${firstField}</b><br>
+        This is your password <b>${sentPassword}</b><br>
+        Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
+        <button style=" background-color: #4CAF50; border: none;
+         color: white;
+         padding: 15px 32px;
+         text-align: center;
+         text-decoration: none;
+         display: inline-block;
+         font-size: 16px;">Verify Email</button> </a>
+         </br></br>
+         This link is valid for 10 mins only  `;
+     
+     
+        try {
+            await sendEmail({
+              email:`${firstField}`,
+              subject:"please verify the email for your amabhoomi user creation",
+              html:`<p>${message}</p>`
+            }
+            )
+  
+            return res
+            .status(statusCode.SUCCESS.code)
+            .json({ message: "User created successfully  and mail is sent and please verify the mail " });       
+           }
+            catch (err) {
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:"user created but mail not sent"})
+        }
+   
     }
   } catch (err) {
     return res
@@ -286,41 +329,40 @@ let createUser = async (req, res) => {
 
 let updateUserData = async (req, res) => {
   try {
-    const {
+    let {
       userId,
       title,
       fullName,
       userName,
-      mobileNumber,
-      alternateMobileNo,
+      mobileNo,
       emailId,
       roleId,
       statusId,
       genderId,
     } = req.body; //await decrypt(req.body);
 
-    const encryptTitle = await encrypt(title);
-    const encryptfullName = await encrypt(fullName);
-    const encryptUserName = await encrypt(userName);
-    const encryptMobileNumber = await encrypt(mobileNumber);
-    const encryptemailId = await encrypt(emailId);
-    const encryptAlternateMobileNo = await encrypt(alternateMobileNo);
+  
     let updatedValueObject = {};
 
+    userId = decrypt(userId)
+
+    console.log('req body', req.body,userId)
     const getUser = await user.findOne({
       where: {
-        privateUserId: userId,
+        userId: userId,
       },
     });
     console.log(getUser, "getUser");
+
     if (getUser) {
-      if ((await decrypt(getUser.dataValues.fullName)) != fullName) {
-        updatedValueObject.fullName = encryptfullName;
+      if (getUser.dataValues.fullName != fullName && fullName) {
+        updatedValueObject.fullName = fullName;
       }
-      if ((await decrypt(getUser.userName)) != userName) {
+
+      if (getUser.userName != userName && userName) {
         let checkIsUsernameAlreadyPresent = await user.findOne({
           where: {
-            contactNo: encryptUserName,
+            userName: userName,
           },
         });
         if (checkIsUsernameAlreadyPresent) {
@@ -328,12 +370,15 @@ let updateUserData = async (req, res) => {
             message: "This username is already existing ",
           });
         }
-        updatedValueObject.userName = encryptUserName;
+        updatedValueObject.userName = userName;
       }
-      if ((await decrypt(getUser.contactNo)) != mobileNumber) {
+
+      console.log('decrypted mobileno',mobileNo )
+      if (getUser.phoneNo != mobileNo && mobileNo) {
+        console.log(decrypt(getUser.phoneNo),decrypt(mobileNo))
         let checkIsMobileAlreadyPresent = await user.findOne({
           where: {
-            contactNo: encryptMobileNumber,
+            phoneNo: mobileNo,
           },
         });
         if (checkIsMobileAlreadyPresent) {
@@ -341,32 +386,31 @@ let updateUserData = async (req, res) => {
             message: "This mobile no is already assigned to a existing user",
           });
         }
-        updatedValueObject.mobileNo = encryptMobileNumber;
+        updatedValueObject.phoneNo = mobileNo;
       }
 
-      if ((await decrypt(getUser.contactNo)) != alternateMobileNo) {
-        let checkIsAlternateMobileAlreadyPresent = await user.findOne({
-          where: {
-            contactNo: encryptAlternateMobileNo,
-          },
-        });
-        if (checkIsAlternateMobileAlreadyPresent) {
-          return res.status(statusCode.CONFLICT.code).json({
-            message: "This mobile no is already assigned to a existing user",
-          });
-        }
-        updatedValueObject.mobileNo = encryptMobileNumber;
+      // if ((await decrypt(getUser.phoneNo)) != alternateMobileNo) {
+      //   let checkIsAlternateMobileAlreadyPresent = await user.findOne({
+      //     where: {
+      //       contactNo: encryptAlternateMobileNo,
+      //     },
+      //   });
+      //   if (checkIsAlternateMobileAlreadyPresent) {
+      //     return res.status(statusCode.CONFLICT.code).json({
+      //       message: "This mobile no is already assigned to a existing user",
+      //     });
+      //   }
+      //   updatedValueObject.mobileNo = encryptMobileNumber;
+      // }
+      if (getUser.title != title && title) {
+        updatedValueObject.title = title;
       }
-      if ((await decrypt(getUser.title)) != title) {
-        updatedValueObject.title = encryptTitle;
-      }
-      if (
-        (await decrypt(getUser.dataValues.emailId)) != emailId &&
+      if (getUser.dataValues.emailId != emailId &&
         emailId != null
       ) {
         let checkIsEmailAlreadyPresent = await user.findOne({
           where: {
-            emailId: encryptemailId,
+            emailId: emailId,
           },
         });
         if (checkIsEmailAlreadyPresent) {
@@ -374,15 +418,15 @@ let updateUserData = async (req, res) => {
             message: "This email id is already assigned to a existing user",
           });
         }
-        updatedValueObject.emailId = encryptemailId;
+        updatedValueObject.emailId = emailId;
       }
-      if (getUser.roleId != roleId) {
+      if (getUser.roleId != roleId && roleId) {
         updatedValueObject.roleId = roleId;
       }
-      if (getUser.statusId != statusId) {
+      if (getUser.statusId != statusId && statusId) {
         updatedValueObject.statusId = statusId;
       }
-      if (getUser.gender != genderId) {
+      if (getUser.gender != genderId && genderId) {
         updatedValueObject.gender = genderId;
       }
 
@@ -390,7 +434,7 @@ let updateUserData = async (req, res) => {
         updatedValueObject,
         {
           where: {
-            privateUserId: getUser.privateUserId,
+            userId: getUser.userId,
           },
         }
       );
@@ -400,8 +444,8 @@ let updateUserData = async (req, res) => {
           .json({ message: "User record is updated successfully" });
       }
       return res
-        .status(statusCode.FORBIDDEN.code)
-        .json({ message: "User record is updated successfully" });
+        .status(statusCode.BAD_REQUEST.code)
+        .json({ message: "Not a single record is updated" });
     } else {
       return res
         .status(statusCode.BAD_REQUEST.code)
@@ -417,27 +461,28 @@ let updateUserData = async (req, res) => {
 let getUserById = async (req, res) => {
   try {
     const userId = req.params.id;
-
+    console.log('userID',userId)
     let specificUser = await sequelize.query(
-      `select title,fullName,emailId,userName,contactNo,roleId,statusId,genderId from amabhoomi.privateusers where privateuserid= ?`,
+      `select title,fullName,emailId,userName,phoneNo,roleId,statusId,genderId from amabhoomi.usermasters where userId= ?`,
       {
         replacements: [userId], // Pass the parameter value as an array
         type: Sequelize.QueryTypes.SELECT,
       }
     );
+    console.log('user', specificUser)
 
-    let userEncryptedData = await Promise.all(
-      specificUser.map(async (user) => {
-        return {
-          ...user,
-          title: await decrypt(user.title),
-          fullName: await decrypt(user.fullName),
-          emailId: await decrypt(user.emailId),
-          userName: await decrypt(user.userName),
-          contactNo: await decrypt(user.contactNo),
-        };
-      })
-    );
+    // let userEncryptedData = await Promise.all(
+    //   specificUser.map(async (user) => {
+    //     return {
+    //       ...user,
+    //       title: await decrypt(user.title),
+    //       fullName: await decrypt(user.fullName),
+    //       emailId: await decrypt(user.emailId),
+    //       userName: await decrypt(user.userName),
+    //       contactNo: await decrypt(user.contactNo),
+    //     };
+    //   })
+    // );
 
     return res
       .status(statusCode.SUCCESS.code)
@@ -723,6 +768,7 @@ let bookmarkingAddAction = async (req, res) => {
         statusId: 1,
         createdDt: new Date(),
         createdBy: userId,
+
       });
 
       console.log("newUserBookmark", newUserBookmark);
@@ -748,7 +794,7 @@ let bookmarkingRemoveAction = async (req, res) => {
     let facilityId = req.body.facilityId;
     let eventId = req.body.eventId;
 
-    const numUpdated = await bookmarks.update(
+    const [numUpdated] = await bookmarks.update(
       { statusId: 2 },
       { where: { bookmarkId: bookmarkId } }
     );

@@ -14,4 +14,6 @@ const userUpload = multer({storage: userStorage,
   limits: { fileSize: process.env.MAX_FILE_SIZE || '200KB' } 
 });
 
+
 module.exports = { eventUpload, userUpload };
+

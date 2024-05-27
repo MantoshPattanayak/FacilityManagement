@@ -6,4 +6,9 @@ const grievanceController = require("../../../../controllers/" + api_version + "
 //user submit grievance
 router.post('/submit-grievance', grievanceController.addGrievance);
 
+// view grievance list
+router.post('/viewgrievancelist', grievanceController.viewGrievanceList);
+// view grievance by id
+router.get('/viewgrievance/:grievanceId', grievanceController.viewGrievanceById);
+
 module.exports = router;

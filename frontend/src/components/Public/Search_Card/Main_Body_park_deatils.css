@@ -21,7 +21,7 @@
 }
 .name_park_img{
     padding: 140px;
-    font-size: 40px;
+    font-size: 50px;
     color:white;
 }
 
@@ -241,6 +241,10 @@
 }
 .gride_page{
     margin-right: 90px;
+    height: 100%;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
 }
 .filter_button{
     display: flex;
@@ -308,4 +312,6 @@ select{
 .table_Container1{
     padding: 30px;
 }
+
+
 

@@ -72,10 +72,11 @@ export default function EventList() {
 
   // Function to handle selectedTab button click  ------------------------------
   const handleTabClick = (e, tab) => {
-    if (tab != selectedTab)
-      setSelectedTab(tab);
-    else
-      setSelectedTab();
+    if (selectedTab.includes(tab)) {
+      setSelectedTab(selectedTab.filter(t => t !== tab));
+    } else {
+      setSelectedTab([...selectedTab, tab]);
+    }
     console.log('selectedTab', selectedTab);
   }
 
@@ -106,21 +107,34 @@ export default function EventList() {
 
   // filter the data according to filter options -----------------------------------------------------
   async function getFilteredData() {
-    let bodyParams = {};
-    switch (selectedTab) {    // ['Nearby', 'Popular', 'Free', 'Paid']
-      case 'Nearby':
-        setUserGeoLocation();
-        bodyParams = {
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          range: ''
-        }
-        break;
-      case 'Popular': bodyParams = { popular: 1 }; break;
-      case 'Free': bodyParams = { free: 1 }; break;
-      case 'Paid': bodyParams = { paid: 1 }; break;
-      default: break;
+    let bodyParams = {
+      facilityTypeId: facilityTypeId,
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude
+    };
+    console.log('body params before', bodyParams);
+
+    if (selectedTab.includes('Nearby')) {
+      console.log('first');
+      setUserGeoLocation();
+      bodyParams = {
+        ...bodyParams,
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        range: ''
+      }
     }
+    if (selectedTab.includes('Popular')) {
+      bodyParams = { ...bodyParams, popular: 1 };
+    }
+    if (selectedTab.includes('Free')) {
+      bodyParams = { ...bodyParams, free: 1 };
+    }
+    if (selectedTab.includes('Paid')) {
+      bodyParams = { ...bodyParams, paid: 1 };
+    }
+
+    console.log('body params after', bodyParams);
 
     try {
       setIsLoding(true)
@@ -149,8 +163,8 @@ export default function EventList() {
 
   // refresh page on searching, change in facility type or selecting filter options
   useEffect(() => {
-    if (selectedTab) {  //fetch facility details based on filter options
-      getFilteredData()
+    if (selectedTab.length > 0) {  //fetch facility details based on filter options
+      getFilteredData();
     }
     else { // fetch facility details based on selected facility type or searching value
       GetEventDetails();
@@ -198,7 +212,7 @@ export default function EventList() {
           {
             tabList?.length > 0 && tabList?.map((tab) => {
               return (
-                <button className={`event-button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
+                <button className={`event-button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
                   {tab}
                 </button>
               )
@@ -207,8 +221,8 @@ export default function EventList() {
         </div>
         <div class="event-gride_page ml-1">
           <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
-            <option value="grid">Grid</option>
-            <option value="list">List</option>
+            <option value="grid">Grid View</option>
+            <option value="list">List View</option>
           </select>
         </div>
       </div>
@@ -266,7 +280,10 @@ export default function EventList() {
                 <thead>
                   <tr>
                     <th scope="col">Name of the Event</th>
+                    <th scope="col">Event Date</th>
+                    <th scope="col">Event Timing</th>
                     <th scope="col">Location</th>
+                    <th scope="col">Distance</th>
                     <th className="event-left">Event Details</th>
                   </tr>
                 </thead>
@@ -274,7 +291,10 @@ export default function EventList() {
                   {eventListData?.length > 0 && eventListData.map((table_item, table_index) => (
                     <tr key={table_index}>
                       <td data-label="Name">{truncateName(table_item.eventName, 40)}</td>
+                      <td data-label="Event Date">{formatDate(table_item.eventDate)}</td>
+                      <td data-label="Event Timing">{formatTime(table_item.eventStartTime)} - {formatTime(table_item.eventEndTime)}</td>
                       <td data-label="Location">{truncateName(table_item.locationName, 40)}</td>
+                      <td data-label="Distance">{Number(table_item.distance?.toFixed(2)) || 10} km(s)</td>
                       <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
                         <Link
                           key={table_index}
@@ -301,7 +321,7 @@ export default function EventList() {
         )}
       </div>
       <ToastContainer />
-      <CommonFooter />
+
     </div>
   )
 }

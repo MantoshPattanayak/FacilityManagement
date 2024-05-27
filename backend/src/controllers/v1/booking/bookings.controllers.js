@@ -478,7 +478,7 @@ let addToCart = async (req,res)=>{
         let userId = req.user?.id || 1;
         let createdDt = new Date();
         let updatedDt = new Date();
-        let statusId =1
+        let statusId = 1
         let {entityId, entityTypeId, facilityPreference} = req.body
         console.log(typeof(entityId),'req.body',entityTypeId==2)
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
@@ -700,8 +700,9 @@ let viewCartByUserId = async(req,res)=>{
         if(findCartIdByUserId){
             console.log(findCartIdByUserId.cartId,'cartId')
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
-            amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.statusId = 1`,
-            { type: sequelize.QueryTypes.SELECT })
+            amabhoomi.cartitems c left join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.statusId = 1 and c.cartId = ?`,
+            { type: sequelize.QueryTypes.SELECT ,
+            replacements:[findCartIdByUserId.cartId]})
         //     let findCartItemsWRTCartId = await cartItem.findAll({
         //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
         //     where:{
@@ -767,7 +768,7 @@ let updateCart = async(req,res)=>{
     
         let userId = req.user?.id||1
         let cartItemId = req.params.cartItemId
-        let statusId = 0
+        let statusId = 2
 
         let findTheCartIdFromUserId = await cart.findOne({
             where:{

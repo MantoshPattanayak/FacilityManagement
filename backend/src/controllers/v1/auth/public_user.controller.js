@@ -219,8 +219,39 @@ const homePage = async (req, res) => {
       },
     });
 
-    let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
-    eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where ticketSalesEnabled =1 `;
+    // let fetchEventDetailsQuery = `select eventId, eventName, eventCategory,locationName,eventDate,eventStartTime,
+    // eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where ticketSalesEnabled =1 `;
+
+    let fetchEventDetailsQuery = `
+      SELECT 
+      ea.eventId,
+      ea.facilityId,
+      f.facilityname,
+      ea.eventName, 
+      ea.eventCategory, 
+      ea.locationName, 
+      ea.eventDate, 
+      ea.eventStartTime,
+      ea.eventEndTime,
+      ea.descriptionOfEvent,
+      ea.ticketSalesEnabled,
+      ea.ticketPrice,
+      ea.eventImagePath,
+      ea.additionalFilesPath,
+      TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
+      CASE
+        WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
+        THEN 'ACTIVE'
+        ELSE 'CLOSED'
+      END AS status,
+      ea.remarks,
+      ea.additionalDetails
+      FROM 
+      amabhoomi.eventactivities ea 
+      INNER JOIN amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
+      left join amabhoomi.facilities f on ea.facilityId = f.facilityId
+      where CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') <= CONVERT_TZ(ea.eventDate, @@session.time_zone, 'SYSTEM')
+      ORDER BY ea.eventDate DESC`;
 
     let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery);
     console.log(

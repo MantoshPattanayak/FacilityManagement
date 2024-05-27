@@ -4,6 +4,7 @@ const api = {
     LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
     PUBLIC_LOGIN_API: '/auth/publicLogin',
     PUBLIC_SIGNUP_API: '/auth/signUp',
+    FORGOT_PASSWORD_API:'/auth/forgotPassword', //put  mobileNo password
     PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
     PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
     MAP_DISPLAY_DATA: '/mapData/displayMapData',
@@ -65,6 +66,9 @@ const api = {
     // Public Notifications
     VIEW_NOTIFICATIONS_LIST_API: '/publicNotifications/viewList', //post givenReq page_size page_number currentDate
     ADD_NOTIFICATIONS_API: '/publicNotifications/add',  //post  notificationTitle, notificationContent, validFromDate, validToDate
+    VIEW_NOTIFICATION_DETAILS_API:'/publicNotifications/view', //get notificationId
+    EDIT_NOTIFICATION_DETAILS_API: '/publicNotifications/edit',   //put notificationTitle, notificationContent, validFromDate, validToDate, publicNotificationsId
+    // bookmarks
      ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
      REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
      VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate

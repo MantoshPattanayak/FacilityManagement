@@ -63,9 +63,12 @@ const publicNotifications = require("./routes/api/" +
   api_version +
   "/activity/publicnotifications");
 const reports = require("./routes/api/" + api_version + "/reports/reports");
-const grievanceRoute = require("./routes/api/" +
-  api_version +
-  "/configuration/grievance");
+
+// grievance
+const grievance = require('./routes/api/' + api_version + '/activity/grievance');
+
+const facilityRegistration = require('./routes/api/'+ api_version + '/mdm/registration')
+
 
 console.log(port, "port");
 
@@ -75,6 +78,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use('/static', express.static(uploadDir));
 
 app.use(express.json({ limit: "20mb" }));
 // app.use(passport.initialize());
@@ -121,6 +126,7 @@ app.use("/grievance",grievanceRoute)
 app.use("/faq", faqRoute);
 app.use("/publicNotifications", publicNotifications);
 app.use("/reports", reports);
+app.use('/grievance', grievance);
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);

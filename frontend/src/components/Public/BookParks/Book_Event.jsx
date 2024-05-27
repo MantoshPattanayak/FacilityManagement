@@ -298,7 +298,7 @@ const Book_Event=()=>{
                 </div>
             </div>
         </div>
-        <CommonFooter />
+
     </div>
     )
 }

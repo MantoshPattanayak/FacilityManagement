@@ -6,7 +6,9 @@ import AdminHeader from "../../../common/AdminHeader";
 
 // Location icon and image all types of image---------------------------------------------
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
-import Park_img from "../../../assets/park_img1.jpg";
+import Park_img from "../../../assets/Park_details.jpg";
+import sport_image from "../../../assets/sport_details_image.jpg"
+
 import Yoga_img from "../../../assets/Yoga_img.png";
 import Google_map from "../../../assets/Google_map.jpg";
 import correct_icon from "../../../assets/Correct_icon.png";
@@ -102,6 +104,7 @@ const Sub_Park_Details = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
+  
   function formatTime(time24) {
     //format 24 hour time as 12 hour time
     if (!time24) return;
@@ -134,8 +137,9 @@ const Sub_Park_Details = () => {
     <div className="Sub_Manu_Conatiner">
       {/* here Header -----------------------------------------------------*/}
       <PublicHeader />
-      {/* Here Heading Image (Below of header) */}
-      <div className="Header_Img">
+
+      {/* Here Heading Image (Below of header) and set the class Name according to Id  */}
+      <div className={FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1 ? "Header_Img" : FacilitiesData[0]?.facilityTypeId === 2 ? "playground_header_image" : FacilitiesData[0]?.facilityTypeId === 3 ? "MulitGroud" : ""}>
         <h1 className="text-park">
           {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
         </h1>
@@ -149,7 +153,10 @@ const Sub_Park_Details = () => {
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="map_img_main_conatiner">
         <div className="Image_conatiner">
-          <img className="Park_image" src={Park_img}></img>
+          <img className="Park_image"
+           src={
+            FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1 ? Park_img :FacilitiesData[0]?.facilityTypeId === 2 ? sport_image :FacilitiesData[0]?.facilityTypeId === 3 ? 'park_image' : 'park_image'
+           }></img>
         </div>
         <div className="Map_container">
           <span className="time_status">
@@ -171,6 +178,7 @@ const Sub_Park_Details = () => {
           </span>
 
           <span className="Button_ticket_container">
+
             {
               FacilitiesData[0]?.facilityTypeId == 1 ? (
                 <Link
@@ -188,7 +196,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by">Buy a Ticket</button>
+                  <button role="button_by">Buy  Ticket</button>
                 </Link>
               )
                 : FacilitiesData[0]?.facilityTypeId == 2 ? (
@@ -207,7 +215,7 @@ const Sub_Park_Details = () => {
                     }}
                     className="button-9"
                   >
-                    <button role="button_by">Buy a Ticket</button>
+                    <button role="button_by">Buy  Ticket</button>
                   </Link>
                 )
                   : (
@@ -226,7 +234,7 @@ const Sub_Park_Details = () => {
                       }}
                       className="button-9"
                     >
-                      <button role="button_by">Buy a Ticket</button>
+                      <button role="button_by">Buy  Ticket</button>
                     </Link>
                   )
             }
@@ -244,17 +252,17 @@ const Sub_Park_Details = () => {
                   )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
                   }`,
               }}
-              className="button-9"
+              className="button-10"
             >
-              <button role="button_by">Host Event</button>
+              <button role="button_by" className="name_button">Host Event</button>
             </Link>
 
           </span>
 
           <div className="Map_image">
-            <LoadScript  googleMapsApiKey={apiKey}>
+            <LoadScript googleMapsApiKey={apiKey}>
               <GoogleMap
-                ClassName= "Map_image_Goole"
+                ClassName="Map_image_Goole"
                 mapContainerStyle={{ height: "300px", width: "100%" }}
                 center={defaultCenter}
                 zoom={8}
@@ -371,7 +379,7 @@ const Sub_Park_Details = () => {
         </div>
       </div>
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-      <CommonFooter />
+
     </div >
   );
 };

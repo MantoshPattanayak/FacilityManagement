@@ -1,12 +1,12 @@
 import { faEye, faPenToSquare, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import AdminHeader from '../../../../common/AdminHeader';
-import Footer from '../../../../common/Footer';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { encryptData } from '../../../../utils/encryptData';
 import axiosHttpClient from '../../../../utils/axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import '../../../Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown.css';
+import CommonFooter from '../../../../common/CommonFooter';
 
 export default function ListOfUsers() {
 
@@ -29,7 +29,7 @@ export default function ListOfUsers() {
         { id: 12, name: 'ABC', number: '975XXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
     ];
 
-    const [tableData, setTableData] = useState([]);
+    const [tableData, setTableData] = useState(tableDummyData);
     const [searchOptions, setSearchOptions] = useState([]);
     const [givenReq, setGivenReq] = useState();
 
@@ -56,6 +56,7 @@ export default function ListOfUsers() {
     }
 
     useEffect(() => {
+        document.title = 'ADMIN | AMA BHOOMI';
         fetchListOfUserData();
     }, []);
 
@@ -135,7 +136,7 @@ export default function ListOfUsers() {
                     </table>
                 </div>
             </div>
-            <Footer />
+            <CommonFooter />
         </>
     )
 }

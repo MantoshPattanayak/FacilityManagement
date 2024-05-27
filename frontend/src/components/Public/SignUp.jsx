@@ -16,6 +16,7 @@ import { encryptData } from '../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import PublicHeader from '../../common/PublicHeader';
+import { Link } from 'react-router-dom';
 
 
 const SignUp = () => {
@@ -162,7 +163,8 @@ const SignUp = () => {
                 encryptEmail: encryptData(signupData.email),
                 encryptLanguage: encryptData(signupData.language),
                 encryptPassword: encryptData(signupData.password),
-                encryptPhoneNo: encryptData(mobileNumber)
+                encryptPhoneNo: encryptData(mobileNumber),
+                isEmailVerified: 1
             });
             console.log('Response:', response.data);
             // Redirect to home page after successful registration
@@ -214,6 +216,14 @@ const SignUp = () => {
     // here SingUp Page (Send the Mobile Number of User)
 
 
+    const [selectedDistance, setSelectedDistance] = useState(null);
+
+    // Function to handle distance selection
+    const handleDistanceSelect = (distance) => {
+        setSelectedDistance(distance);
+        // You can perform additional actions here, such as sending notifications or updating state
+    };
+
 
     return (
         <div>
@@ -236,7 +246,7 @@ const SignUp = () => {
                             </div>
                             {/* Option for SignIn */}
                             <div className="no-account">
-                                <p>Have an account?</p>'
+                                <p>Have an account?</p>
                                 <Link to='/login-signup'>
                                     Login
                                 </Link>
@@ -384,7 +394,33 @@ const SignUp = () => {
                                     <button className='activity-btn'>Badminton</button>
                                     <button className='activity-btn'>Rugby</button>
                                 </div>
-                            </div>
+                            </div><br />
+                            {/* ...... preffered area distance............ */}
+                            <div className="preffered-activity">
+            <label htmlFor="">
+                <span>Preferred Location</span>
+                (Set Preferred Location Radius: Choose a radius (e.g., 10km or 15km) to receive notifications for all parks within that distance.)
+            </label>
+            <div className="distance-dropdown">
+                <div className="dropdown">
+                    <button className="dropbtn">
+                        <FontAwesomeIcon icon={faPersonRunning} />
+                        {selectedDistance ? `${selectedDistance} km` : 'Select Distance'}
+                    </button>
+                    <div className="dropdown-content">
+                        <button onClick={() => handleDistanceSelect(5)}>5km</button>
+                        <button onClick={() => handleDistanceSelect(10)}>10km</button>
+                        <button onClick={() => handleDistanceSelect(15)}>15km</button>
+                        <button onClick={() => handleDistanceSelect(20)}>20km</button>
+                        <button onClick={() => handleDistanceSelect(25)}>25km</button>
+
+                        {/* Add more options as needed */}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
                             <div className="otp-btn" onClick={handleProfile}>
                                 <button type='submit' className="sendotp-btn">Proceed</button>
                             </div>
@@ -394,7 +430,7 @@ const SignUp = () => {
             }
             {showSuccessPopup && <SuccessPopup />}
 
-            <CommonFooter />
+          
             <ToastContainer />
         </div>
     )

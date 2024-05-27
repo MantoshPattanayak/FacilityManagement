@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminHeader from '../../../../common/AdminHeader';
-import Footer from '../../../../common/Footer';
+import CommonFooter from '../../../../common/CommonFooter';
 import '../../../../common/CommonFrom.css';
 import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../../../utils/axios';
@@ -300,7 +300,7 @@ export default function EditUser() {
                 </div>
             </div>
             <ToastContainer />
-            <Footer />
+            <CommonFooter />
         </div>
     )
 }

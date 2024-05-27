@@ -12,6 +12,7 @@
   column-gap: 4rem;
   margin-block: 5vh;
   justify-content: center;
+
 }
 
 .Card9 {
@@ -98,7 +99,7 @@
 }
 
 .money_icon_text9 {
-  font-size: 25px;
+  font-size: 15px;
   color: #4ECB71;
 }
 
@@ -150,6 +151,7 @@
   column-gap: 4rem;
   margin-block: 5vh;
   justify-content: center;
+
   }
 
   .Location_text9 {

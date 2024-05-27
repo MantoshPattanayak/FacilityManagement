@@ -16,7 +16,13 @@ const StandOut = () => {
                 <h1 className="About_heading">What Make Us Stand Out</h1>
                 <div className="About_us_flex_conatiner">
                     <div className="About_us_text">
-                        <h1 className="About_us_text_details" >Babasaheb Bhimrao Ambedkar Bus Terminal (BSABT), Bhubaneswar is a state-of-the-art <br></br>bus terminal developed as a hub for various bus routes within Odisha <br></br>and for linking Bhubaneswar to other states. It aims to enhance the experience of bus travellers to and from the Capital city.
+                        <h1 className="About_us_text_details" >
+                        "AMA BHOOMI" offer's convenient event booking and park reservation services to individuals and organizations,
+                            <br></br>enabling them to book events and parks in Bhubaneswar. With Ama Bhoomi, individuals and organizations 
+                            <br></br>can seamlessly plan and manage various events while also reserving parks within the city for recreational activities.
+                            <br></br>This platform serves as a centralized hub for event management, allowing users to browse through a diverse range of 
+                            <br></br>available parks and select the one that best suits their needs and preferences. Whether it's a community gathering, 
+                            <br></br>a corporate event, or a family celebration, Ama Bhoomi simplifies the process of securing the perfect venue.
                         </h1>
 
                     </div>

@@ -209,7 +209,7 @@ const handleLogout=()=>{
 
                     </div>
                 </aside>
-                <div className="right-container">
+                <div className="right-container-favorite">
                     {/* New div with paragraph and blue border */}
 
                     {/* <div className="form-container"> */}
@@ -259,7 +259,7 @@ const handleLogout=()=>{
 
 
             </div>
-            <CommonFooter />
+         
         </div>
 
     );

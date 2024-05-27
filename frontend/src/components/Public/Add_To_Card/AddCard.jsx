@@ -10,6 +10,7 @@ import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 // here useSate----------------------------------------------------------
 import { useEffect, useState } from "react";
 // import axios for (Fetch data) -------------------------------
@@ -20,6 +21,7 @@ import "./AddCard.css"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { decryptData } from "../../../utils/encryptData";
+import CommonFooter1 from "../../../common/Common_footer1";
 
 import { useSelector } from "react-redux";
 const Add_Card = () => {
@@ -78,7 +80,7 @@ const Add_Card = () => {
             
                 <div className="Add_Card_Box9">
                     <div className="Card9">
-                    <a href="/">{homeLanguageContent?.languageResourceValue.toUpperCase()}</a>
+                       <h1 className="card_text9">Cart</h1>
                     </div>
                     <div className="card_item_conatiner9" >
                         {GetViewCradData.length > 0 && GetViewCradData.map((cardItem) => (
@@ -107,8 +109,8 @@ const Add_Card = () => {
                                         </span>
                                     </div>
                                     <div className="Money_name_icon9">
-                                        <h1 className="money_icon_text9"><FontAwesomeIcon icon={faMoneyBillAlt} className="money-note-icon" /></h1>
-                                        <h1 className="Location_text9">INR 500 /_</h1>
+                                        <h1 className="money_icon_text9"><FontAwesomeIcon icon={faRupeeSign} className="money-note-icon" /></h1>
+                                        <h1 className="Location_text9">INR 0.00 /_</h1>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +118,7 @@ const Add_Card = () => {
                         {/*------------------------------------ Payment Button --------------------------------------------- */}
                         <div className="Button_pay9">
                             <button className="button-379" role="button">
-                                <FontAwesomeIcon icon={faCreditCard} className="pay-icon" />  Pay INR 1500.00
+                                <FontAwesomeIcon icon={faCreditCard} className="pay-icon" />  Pay INR 00.00
                             </button>
                         </div>
                     </div>
@@ -128,7 +130,7 @@ const Add_Card = () => {
 
             </div>
 
-            <CommonFooter />
+   
         </div>
     )
 }
