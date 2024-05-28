@@ -27,6 +27,7 @@ import { ToastContainer, toast } from 'react-toastify';
 // impport shimmerUi------------------------------------------
 import ShimmerUI from "./ShimmerUI";
 import { truncateName } from "../../../utils/utilityFunctions";
+import instance from "../../../../env";
 const Main_Body_Park_Details = () => {
   const defaultLocation = {
     latitude: 20.3010259,
@@ -351,7 +352,8 @@ const Main_Body_Park_Details = () => {
                     }`}
                   title={item.facilityname}
                 >
-                 <img className="Card_img" src={'http://127.0.0.1:8000/static/' + item.url} alt="Park" />
+                  {/* <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" /> */}
+                  <img className="Card_img" src={item.url ? instance().baseURL + '/static/' + item.url : (facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image')} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>

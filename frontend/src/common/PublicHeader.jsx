@@ -59,8 +59,8 @@ async function GetTotalNumberofCart() {
 }
 useEffect(() => {
   GetTotalNumberofCart()
-  const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
-  return () => clearInterval(intervalId);
+  // const intervalId = setInterval(GetTotalNumberofCart, 1000); // Poll every 5 seconds
+  // return () => clearInterval(intervalId);
 }, [])
 
   //function to handle log out of user
