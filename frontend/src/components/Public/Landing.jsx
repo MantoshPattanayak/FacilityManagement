@@ -79,6 +79,9 @@ const Landing = () => {
   const [notifications, setNotifications] = useState([]);
   const apiKey = 'AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao';
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
+  const [userLocation, setUserLocation] = useState(defaultCenter);
+  const [nearbyParks, setNearbyParks] = useState([]);
+  const [distanceRange, setDistanceRange] = useState(2);
   let randomKey = Math.random();
   let navigate = useNavigate();
 
@@ -100,7 +103,12 @@ const Landing = () => {
 
   useEffect(() => {
     fetchLandingPageData();
+    setUserGeoLocation();
   }, []);
+
+  useEffect(() => {
+    getNearbyFacilities();
+  }, [userLocation, distanceRange, facilityTypeId])
 
 
   // here Fetch the data -----------------------------------------------
@@ -117,6 +125,55 @@ const Landing = () => {
     }
     catch (err) {
       console.log(" here error", err)
+    }
+  }
+
+  // function to fetch user current location
+  function setUserGeoLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+          sessionStorage.setItem('location', JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }));
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setUserLocation(defaultCenter);
+          // sessionStorage.setItem('location', JSON.stringify(location));
+          // Handle error, e.g., display a message to the user
+        }
+      );
+    } else {
+      setUserLocation(defaultCenter);
+      console.error('Geolocation is not supported by this browser');
+      toast.error('Location permission not granted.');
+    }
+    return;
+  }
+
+  async function getNearbyFacilities() {
+    let bodyParams = {
+      facilityTypeId: facilityTypeId,
+      latitude: userLocation?.latitude || defaultCenter?.lat,
+      longitude: userLocation?.longitude || defaultCenter?.lng,
+      range: distanceRange
+    };
+    console.log('body params', bodyParams);
+
+    try {
+      let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
+      console.log(res.data.message, res.data.data.sort((a, b) => {return a.distance - b.distance}));
+      setNearbyParks(res.data.data.sort((a, b) => {return a.distance - b.distance}));
+    }
+    catch (error) {
+      console.error(error);
+      toast.error('Location permission not granted.')
     }
   }
 
@@ -392,7 +449,10 @@ const Landing = () => {
     setCurrentIndex((prevIndex) => (prevIndex === galleryData.length - 1 ? 0 : prevIndex + 1));
   };
 
-
+  //function to navigate user to facility details page
+  function handleNavigateForNearbyPark(e, facilityId) {
+    navigate(`/Sub_Park_Details?facilityId=${encryptDataId(facilityId)}`);
+  }
 
 
   return (
@@ -572,14 +632,31 @@ const Landing = () => {
           <div className="nearByFacilities-heading">
             <h1>Facilities Near Me</h1>
             <div className="nearByFacilities-buttons">
-              <button type="button">2km</button>
-              <button type="button">4km</button>
-              <button type="button">6km</button>
+              <button type="button" onClick={(e) => { setDistanceRange(2); }}>2km</button>
+              <button type="button" onClick={(e) => { setDistanceRange(4); }}>4km</button>
+              <button type="button" onClick={(e) => { setDistanceRange(6); }}>6km</button>
             </div>
           </div>
 
-          <div className="facililiy-list-map">
-            <div className="map-facilities">
+          <div className="facililiy-list-map overflow-y-scroll">
+            {
+              nearbyParks?.length > 0 ? nearbyParks?.map((park, index) => {
+                return(
+                  <Link 
+                    className="map-facilities hover:cursor-pointer" 
+                    key={index}
+                    to={{
+                      pathname: "/Sub_Park_Details",
+                      search: `?facilityId=${encryptDataId(park.facilityId)}`,
+                    }}
+                  >
+                    <p>{park.facilityname}</p>
+                  </Link>
+                )
+              })
+              : (facilityTypeId != 1 || facilityTypeId != 2) ? <div>Coming soon.</div> : <div>No data</div>
+            }
+            {/* <div className="map-facilities">
               <p>BMC Park</p>
             </div>
             <div className="map-facilities">
@@ -596,7 +673,7 @@ const Landing = () => {
             </div>
             <div className="map-facilities">
               <p>Badagada Village Park</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
