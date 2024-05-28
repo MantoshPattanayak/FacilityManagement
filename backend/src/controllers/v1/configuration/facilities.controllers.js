@@ -135,12 +135,12 @@ const viewParkDetails = async(req,res)=>{
             console.log(matchedData,'matchedData')
 
         }
-        const convertedData = convertImagesToBase64(matchedData);
+        // const convertedData = convertImagesToBase64(matchedData);
 
   
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:convertedData
+            data:matchedData
         })
 
 
