@@ -85,6 +85,23 @@ const searchParkFacilities = async (req, res) => {
     }
 };
 
+// Function to URL-encode file paths in the array
+function encodeUrls(facilitiesArray) {
+    console.log(facilitiesArray,'facilities Array')
+    return facilitiesArray.map(facility => {
+        // Check if the facility object has a "url" property
+        if (facility.url) {
+            // Encode the URL
+            facility.url = facility.url.split('/').map(encodeURIComponent).join('/');
+
+            // facility.url = encodeURIComponent(facility.url);
+        }
+        return facility;
+    });
+}
+
+
+
 const viewParkDetails = async(req,res)=>{
     try{
         let givenReq = req.body.givenReq?req.body.givenReq:null
@@ -113,7 +130,7 @@ const viewParkDetails = async(req,res)=>{
         facilities = await sequelize.query(facility,{
             replacements:[new Date(),facilityTypeId]
         })
-        console.log(2,facilities)
+        // console.log(2,facilities)
     }
 
         let matchedData = facilities[0];
@@ -132,15 +149,17 @@ const viewParkDetails = async(req,res)=>{
                 ))
             )
             
-            console.log(matchedData,'matchedData')
+            // console.log(matchedData,'matchedData')
 
         }
         // const convertedData = convertImagesToBase64(matchedData);
-
-  
+        // Call the function to encode URLs in the facilities array
+        const encodedFacilities = encodeUrls(matchedData);
+        
+        // console.log(encodedFacilities)
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:matchedData
+            data:encodedFacilities
         })
 
 
