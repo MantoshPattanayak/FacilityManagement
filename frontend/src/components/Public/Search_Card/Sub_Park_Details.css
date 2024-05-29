@@ -58,18 +58,12 @@
     height: 50vh;
     width: 100vh;
     border-radius: 20px;
-    border: 5px solid #cdd1ce;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #cdd1ce;
+    
     /* Add a subtle shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+   
 }
 
-.Park_image:hover {
-    transform: scale(1.01);
-    /* Scale up the image on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    /* Increase the shadow on hover */
-}
 
 /* --------------------------------------------------------here Map _conatiner -------------------------------- */
 .Map_container {
