@@ -153,10 +153,8 @@ const Sub_Park_Details = () => {
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="map_img_main_conatiner">
         <div className="Image_conatiner">
-          <img className="Park_image"
-           src={
-            FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1 ? Park_img :FacilitiesData[0]?.facilityTypeId === 2 ? sport_image :FacilitiesData[0]?.facilityTypeId === 3 ? 'park_image' : 'park_image'
-           }></img>
+           <img className="Park_image"src={ Park_img }></img>
+          
         </div>
         <div className="Map_container">
           <span className="time_status">

@@ -102,7 +102,7 @@ const Login = () => {
   useEffect(() => {}, [LogingDataPost]);
 
   return (
-    <div>
+    <div className="Main_container_Login">
       <PublicHeader />
 
       <div className="signup-container">
@@ -167,6 +167,7 @@ const Login = () => {
           </div>
         </form>
       </div>
+     
       <ToastContainer />
 
     </div>
