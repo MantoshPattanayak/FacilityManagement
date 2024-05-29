@@ -168,8 +168,8 @@ const Landing = () => {
 
     try {
       let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
-      console.log(res.data.message, res.data.data.sort((a, b) => {return a.distance - b.distance}));
-      setNearbyParks(res.data.data.sort((a, b) => {return a.distance - b.distance}));
+      console.log(res.data.message, res.data.data.sort((a, b) => { return a.distance - b.distance }));
+      setNearbyParks(res.data.data.sort((a, b) => { return a.distance - b.distance }));
     }
     catch (error) {
       console.error(error);
@@ -455,6 +455,19 @@ const Landing = () => {
   }
 
 
+  //------- Advatisemant -----------
+
+  const ad = [
+    adImg,
+    adImg,
+    adImg,
+    adImg,
+    adImg
+  ];
+
+
+
+
   return (
     <div className='landingcontainer'>
       <section className="bg-img">
@@ -641,9 +654,9 @@ const Landing = () => {
           <div className="facililiy-list-map overflow-y-scroll">
             {
               nearbyParks?.length > 0 ? nearbyParks?.map((park, index) => {
-                return(
-                  <Link 
-                    className="map-facilities hover:cursor-pointer" 
+                return (
+                  <Link
+                    className="map-facilities hover:cursor-pointer"
                     key={index}
                     to={{
                       pathname: "/Sub_Park_Details",
@@ -654,7 +667,7 @@ const Landing = () => {
                   </Link>
                 )
               })
-              : (facilityTypeId != 1 || facilityTypeId != 2) ? <div>Coming soon.</div> : <div>No data</div>
+                : (facilityTypeId != 1 || facilityTypeId != 2) ? <div>Coming soon.</div> : <div>No data</div>
             }
             {/* <div className="map-facilities">
               <p>BMC Park</p>
@@ -718,7 +731,7 @@ const Landing = () => {
 
               {eventNameLanding.length > 0 && eventNameLanding.map((event, index) => (
 
-                <Link key={index} className="carousel-slide2"  to={"/events-details?eventId=" + `${encryptData(event.eventId)}`}>
+                <Link key={index} className="carousel-slide2" to={"/events-details?eventId=" + `${encryptData(event.eventId)}`}>
                   <img className="Yoga_image2" src={Yoga_img} alt="Yoga Event"></img>
                   <div className="carousel-slide-text">
                     <h1 className="Name_yoga2">{event.eventName}</h1>
@@ -834,16 +847,23 @@ const Landing = () => {
 
 
 
-      {/* ------------Avatisement section -------------------------------------------------------------------------------------*/}
+      {/* ------------advertisement section -------------------------------------------------------------------------------------*/}
 
-      <div className="avatisement-Border">
-        <div className="avatisement-Content">
-          <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' />
+      <div className="avatisement-Border2">
+        <div className="avatisement-Content2">
+          {/* <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' /> */}
+          <div className="advertisement-Scroll2">
+            {ad.map((img, index) => (
+              <img src={img} alt={`ad-${index}`} className="advertisement-Image" key={index} />
+            ))}
+          </div>
         </div>
       </div>
+
+
       <div className="footer">
 
-      
+
       </div>
 
     </div>

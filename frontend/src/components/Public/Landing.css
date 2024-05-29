@@ -937,16 +937,6 @@ margin-top: 20px;
 
 
 
-
-
-
-
-
-
-
-
-
-
 .carousel-slide3 {
     position: relative;
     width: 100%;
@@ -1132,6 +1122,54 @@ margin-top: 20px;
 
 .carousel-image-container:hover .description {
     opacity: 1;
+}
+
+/* -----------  Advertisement section */
+
+/* AdCarousel.css */
+
+.avatisement-Border2{
+    max-width: 90vw;
+    margin: 0 auto; /* Centers the container */
+    overflow-x: hidden;
+    overflow: hidden;
+    position: relative;
+/* overflow-x: hidden; */
+}
+
+.avatisement-Content2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+    overflow: hidden;
+}
+
+.advertisement-Scroll2 {
+    display: flex;
+    width: 100%;
+    margin-bottom: 12vh;
+    animation: scroll 10s linear infinite;
+}
+
+.advertisement-Image {
+    width: auto;
+    height: 30vh;
+    padding: 20px;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.advertisement-Scroll:hover {
+    animation-play-state: paused;
 }
 
 
