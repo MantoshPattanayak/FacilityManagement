@@ -479,7 +479,7 @@ const Landing = () => {
           <span className='Search-Conatiner'>
             <h1>AMA BHOOMI</h1>
             <span className='about'>
-              <p className='about_text'>Ama Bhoomi stands for Assuring mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
+              <p className='about_text'>AMA BHOOMI stands for Assuring Mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
             </span>
             <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
             <input ref={searchInputRef} className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
@@ -535,7 +535,7 @@ const Landing = () => {
           </div>
           <div className="icon">
             <img src={Blueway} alt="" />
-            <h2>Waterways</h2>
+            <h2>Blueways</h2>
           </div>
         </div>
       </div>
@@ -768,7 +768,7 @@ const Landing = () => {
       <div className="exploreNewAct-Parent-Container">
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-          <h1>Explore New Activities</h1>
+          <h1>Explore New Activities And Book</h1>
         </div>
         <div className='exploreNewAct-outer'>
 

@@ -274,7 +274,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-14" src={MultiPark} alt="Multipark" />
-            <span className="button-text">Multipark</span>
+            <span className="button-text1">Multi purpose  Grounds</span>
           </button>
           {/* waterway */}
           <button
@@ -282,7 +282,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-14" src={greenway} alt="Multipark" />
-            <span className="button-text">Greenway</span>
+            <span className="button-text">Greenways</span>
           </button>
                {/* blueway */}
                <button
@@ -290,7 +290,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-14" src={blueway} alt="Multipark" />
-            <span className="button-text">Waterways</span>
+            <span className="button-text">Blueways</span>
           </button>
         </span>
       </div>
@@ -413,7 +413,12 @@ const Main_Body_Park_Details = () => {
         ) : (
           // Show message if no data is available
           <div className="no-data-message">
-            <img src={No_Data_icon} alt="No Data Found" />
+            {/* <img src={No_Data_icon} alt="No Data Found" /> */}
+            {
+              facilityTypeId == 1 || facilityTypeId == 2 ? 
+              <img src={No_Data_icon} alt="No Data Found" />
+              : <h1 className="Comming_son"><>Coming Soon...</></h1>
+            }
           </div>
         )}
       </div>
