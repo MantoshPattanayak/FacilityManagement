@@ -441,18 +441,6 @@ const Landing = () => {
 
   // const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? galleryData.length - 1 : prevIndex - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === galleryData.length - 1 ? 0 : prevIndex + 1));
-  };
-
-  //function to navigate user to facility details page
-  function handleNavigateForNearbyPark(e, facilityId) {
-    navigate(`/Sub_Park_Details?facilityId=${encryptDataId(facilityId)}`);
-  }
 
 
   //------- Advatisemant -----------
