@@ -98,8 +98,8 @@ db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 
-db1.faq.sync({
-  force: false,
+db1.services.sync({
+  alter: true,
 });
 
 module.exports = db1;
