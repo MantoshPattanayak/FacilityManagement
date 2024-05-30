@@ -127,6 +127,7 @@ app.use("/faq", faqRoute);
 app.use("/publicNotifications", publicNotifications);
 app.use("/reports", reports);
 app.use('/grievance', grievance);
+app.use('/adminFacility',facilityRegistration)
 
 // Use error logger middleware after all route handlers
 app.use(errorLogger);

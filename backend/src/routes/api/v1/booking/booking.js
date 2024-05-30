@@ -17,4 +17,6 @@ router.put('/updateCart/:cartItemId',booking.updateCart)
 router.get('/viewCartItemsWRTCartItemId/:cartItemId',booking.viewCartItemsWRTCartItemId)
 
 
+router.post('/generateQRCode', booking.generateQRCode)
+
 module.exports = router

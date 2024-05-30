@@ -13,6 +13,8 @@ const cart = db.cart
 const cartItem = db.cartItem
 const useractivitypreferences = db.userActivityPreference
 const { Op } = require('sequelize');
+var QRCode = require('qrcode')
+
 // events booking table
 const eventBooking = db.eventBookings;
 const moment = require('moment')
@@ -825,11 +827,35 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
         })
     }
 }
+
+
+let generateQrCode = async(req,res)=>{
+    try {
+        let {bookingId,facilityTypeId,facilityId} = req.body
+        if(!bookingId && !facilityTypeId && !facilityId){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:"Please provide required details"
+            })
+        }
+        let combinedData = `${bookingId},${facilityTypeId},${facilityId}`
+        let QRCode =  QRCode.toDataURL(bookingId)
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"Here is the QR code",
+            QRCodeUrl:QRCode
+        })
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
     addToCart,
     viewCartByUserId,
     updateCart,
-    viewCartItemsWRTCartItemId
+    viewCartItemsWRTCartItemId,
+    generateQrCode
 }

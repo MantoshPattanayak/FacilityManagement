@@ -9,7 +9,7 @@ const AmenityMaster = sequelize.define('amenitymaster',{
     amenityName:{
         type:DataTypes.STRING(80)
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{

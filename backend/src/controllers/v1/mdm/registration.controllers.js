@@ -5,11 +5,12 @@ const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const facilities = db.facilities;
+const facilityType = db.facilitytype
 const Sequelize = db.Sequelize;
-const bankDetails = db.bankDetail;
-const hostbooking = db.hostbookings
+let service = db.services
 const eventactivites = db.eventactivities
 const file = db.file;
+let amenities = db.amenitiesmaster
 const fileAttachment = db.fileattachment;
 const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares')
@@ -37,20 +38,23 @@ const registerFacility = async (req, res) => {
     let createFileData;
     let createFileAttachmentData;
     let entityType = 'events'
-    const {
+    let {
       
-      organisationPanCardNumber,
-      organisationName,
-      organisationAddress,
-      firstName,
-      lastName,
-      emailId,
-      phoneNo,
-      accountType,
-      beneficiaryName,
-      bankName,
-      bankIFSC,
-      accountNumber,
+      facilityType,
+      facilityName,
+      longitude,
+      latitude,
+      address,
+      pin,
+      area,
+      operatingHoursFrom,
+      operatingHoursTo,
+      operatingDays,  //here operating days will come in the form of array of data i.e. array of  days
+      services,  //here services will be given in the form of arraya of data i.e. array of services
+      otherServices, //here others will be given in the form of objects 
+      amenities, // here amenities will be given in the form of the array of amenities
+      otherAmenities, // here other amenities will be given in the form of objects
+      anyAdditionalDetails,
       eventCategory,
       eventTitle,
       facilityId,
@@ -309,8 +313,19 @@ console.log("here Reponse of Host event", req.body)
 
 const initialDataFetch = async (req,res)=>{
     try {
-        
-    } catch (error) {
+        let fetchFacilityTypes = await facilityType.findAll()
+        let fetchServices = await service.findAll()
+        let fetchAmenities = await amenities.findAll()
+      
+        return res.status(statusCode.SUCCESS.code).json(
+        {  message:`These are all initial dropdown data for facility Types, services, amenities`,
+        facilityType:fetchFacilityTypes,
+        fetchServices:fetchServices,
+        fetchAmenities:fetchAmenities
+
+        }
+        )
+    } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
