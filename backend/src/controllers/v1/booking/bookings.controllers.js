@@ -17,7 +17,7 @@ var QRCode = require('qrcode')
 
 // events booking table
 const eventBooking = db.eventBookings;
-const moment = require('moment')
+const moment = require('moment');
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -829,7 +829,7 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
 }
 
 
-let generateQrCode = async(req,res)=>{
+let generateQRCode = async(req,res)=>{
     try {
         let {bookingId,facilityTypeId,facilityId} = req.body
         if(!bookingId && !facilityTypeId && !facilityId){
@@ -838,11 +838,12 @@ let generateQrCode = async(req,res)=>{
             })
         }
         let combinedData = `${bookingId},${facilityTypeId},${facilityId}`
-        let QRCode =  QRCode.toDataURL(bookingId)
 
+        let QRCodeUrl = await QRCode.toDataURL(combinedData)
+        console.log('QRCODE', QRCodeUrl)
         return res.status(statusCode.SUCCESS.code).json({
             message:"Here is the QR code",
-            QRCodeUrl:QRCode
+            QRCodeUrl:QRCodeUrl
         })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -857,5 +858,5 @@ module.exports = {
     viewCartByUserId,
     updateCart,
     viewCartItemsWRTCartItemId,
-    generateQrCode
+    generateQRCode
 }
