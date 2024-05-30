@@ -2,10 +2,10 @@ module.exports = (sequelize,DataTypes)=>{
 
 
 const Services = sequelize.define('services',{
-    seriviceId:{
+    serviceId:{
         type:DataTypes.INTEGER,
-        autoIncrement:true,
-        primaryKey:true
+        primaryKey:true,
+        autoIncrement:true
     },
     code:{
         type:DataTypes.STRING(50)
