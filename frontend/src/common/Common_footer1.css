@@ -16,12 +16,9 @@
     justify-content: center;
    
 }
-.Ama_Logo{
-    height: 10vh;
-  
-}
+
 .Ama_name{
-    padding-top:8px;
+    padding-top:2px;
     font-size: 30px;
     font-weight: 800;
     padding-right: 7px; 
@@ -105,7 +102,7 @@
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    padding: 80px;
+ 
 }
 
 

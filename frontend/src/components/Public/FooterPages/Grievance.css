@@ -1,7 +1,4 @@
-*{
-    font-family:Georgia, 'Times New Roman', Times, serif;
-    font-weight:600;
-}
+
 .grievenceForm {
     width: 100%;
     display: flex;
@@ -9,7 +6,10 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin-top: 14vh;
 }
+
+
 
 .heading h2 {
     margin-bottom: 1.5vw;
@@ -35,6 +35,11 @@
     margin: 10px;
 }
 
+.insideRadioButton{
+    display: flex;
+    gap: 4px;
+}
+
 .grievanceContainer {
     width: 970px;
     display: flex;
@@ -43,6 +48,8 @@
     flex-direction: column;
     gap: 15px;
     height: auto;
+    margin-top: 5vh;
+    margin-bottom: 12vh; 
 }
 
 .row {
@@ -67,16 +74,34 @@
     height: 42px;
     border: 1px solid rgb(0, 0, 0, 30%);
     padding-left: 10px;
+    /* font-family: sans-serif; */
+    font-weight: normal;
 }
 
-.form-group2 input {
+/* .form-group2 input {
     width: 962px;
     height: 110px;
     border: 1px solid rgb(0, 0, 0, 30%);
     padding-left: 10px;
     display: flex;
     justify-content: start;
+    font-family: sans-serif;
+    font-weight: normal;
+} */
+
+.form-group2 input {
+    width: 962px;
+    height: 110px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    /* font-family: sans-serif; */
+    font-weight: normal;
+    resize: none; /* Prevents resizing by the user */
+    box-sizing: border-box; /* Ensures padding is included in the height */
+    overflow-wrap: break-word; /* Ensures words are wrapped if they are too long */
+    text-align: start; /* Aligns text to the right */
 }
+
 
 .levelCheckBox {
     display: flex;

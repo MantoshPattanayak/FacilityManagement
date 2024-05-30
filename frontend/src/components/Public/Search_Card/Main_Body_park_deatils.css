@@ -206,14 +206,28 @@
 .button-text {
     display: none;
     position: absolute;
-    bottom: -20px; /* Adjust this value to change the distance between image and text */
+    bottom: -30px; /* Adjust this value to change the distance between image and text */
     left: 50%;
     transform: translateX(-50%);
     color:green;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 600;
     
 }
+.button-text1{
+    display: none;
+    position: absolute;
+    bottom: -55px; /* Adjust this value to change the distance between image and text */
+    left: 50%;
+    transform: translateX(-50%);
+    color:green;
+    font-size: 15px;
+    font-weight: 600;
+}
+.image-button:hover .button-text1 {
+    display: block;
+}
+
 
 .image-button:hover .button-text {
     display: block;
@@ -313,5 +327,10 @@ select{
     padding: 30px;
 }
 
+
+.Comming_son{
+    font-size: 50px;
+    padding: 50px;
+}
 
 

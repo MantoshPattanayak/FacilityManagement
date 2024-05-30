@@ -41,7 +41,10 @@ body {
 .header-content {
     width: 94%;
 } */
-
+.adImg{
+    height: 20vh;
+    padding: 40px;
+}
 .header nav ul {
     margin: 0;
     padding: 0;
@@ -638,8 +641,8 @@ padding-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 150px;
-    gap: 80px;
+    padding-left: 8vw;
+    gap: 6vw;
 
 
 }
@@ -728,7 +731,8 @@ padding-bottom: 20px;
     flex-wrap: wrap;
     margin-top: 10px;
     padding: 4px;
-    padding-inline: 80px;
+    padding-inline: 8vw;
+    padding-block: 1vh;
     border-radius: 7px;
     justify-content: center;
     width: 91px;
@@ -745,6 +749,7 @@ padding-bottom: 20px;
 
 .parkList p {
     margin: 5px 0;
+    border-radius: 14px;
     width: 300px;
     color: rgba(255, 255, 255, 0.818);
 }
@@ -794,7 +799,7 @@ padding-bottom: 20px;
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 62%;
     height: 100%;
     display: flex;
     align-items: center;
@@ -933,16 +938,6 @@ margin-top: 20px;
     height: 200px;
     border-radius: 8px;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1132,6 +1127,54 @@ margin-top: 20px;
 
 .carousel-image-container:hover .description {
     opacity: 1;
+}
+
+/* -----------  Advertisement section */
+
+/* AdCarousel.css */
+
+.avatisement-Border2{
+    max-width: 90vw;
+    margin: 0 auto; /* Centers the container */
+    overflow-x: hidden;
+    overflow: hidden;
+    position: relative;
+/* overflow-x: hidden; */
+}
+
+.avatisement-Content2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+    overflow: hidden;
+}
+
+.advertisement-Scroll2 {
+    display: flex;
+    width: 100%;
+    margin-bottom: 12vh;
+    animation: scroll 10s linear infinite;
+}
+
+.advertisement-Image {
+    width: auto;
+    height: 30vh;
+    padding: 20px;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.advertisement-Scroll:hover {
+    animation-play-state: paused;
 }
 
 
@@ -1387,8 +1430,8 @@ margin-top: 20px;
 
 
 .exploreNewAct-outer {
-    padding-left: 76px;
-    gap: 80px;
+    padding-left: 12vw;
+    gap: 6vw;
 }
 
 
@@ -1510,9 +1553,9 @@ margin-top: 20px;
         display: flex;
         flex-wrap: wrap;
         margin-top: 7px;
-        padding: 2px;
+        padding: 5px;
         font-size: 8px;
-        border-radius: 7px;
+        border-radius: 8vw;
         justify-content: center;
         width: 91px;
         background-color: hsl(0, 0%, 52%, 0.5);
@@ -1656,5 +1699,10 @@ margin-top: 20px;
 }
 
 .avatisement-Image{
-    height: 70vh;
+ height: 40vh;
+ padding: 20px;
+}
+.avatisement-Content{
+    display: flex;
+    justify-content: space-between;
 }

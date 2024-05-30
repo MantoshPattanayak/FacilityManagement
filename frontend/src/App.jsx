@@ -74,7 +74,8 @@ import AssignGrievance from "./components/Admin/Activity/Grievance/AssignGrievan
 import ActionAgainstGrievance from "./components/Admin/Activity/Grievance/ActionAgainstGrievance";
 import CommonFooter1 from "./common/Common_footer1";
 import EditNotification from "./components/Admin/Activity/Notifications/EditNotification";
-
+//Grievance
+import Grievance from "./components/Public/FooterPages/Grievance";
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -229,6 +230,7 @@ function App() {
             <Route path="/activity/grievance" element={<ProtectedRoute><ViewGrievanceList /></ProtectedRoute>}/>
             <Route path="/activity/assign-grievance" element={<ProtectedRoute><AssignGrievance /></ProtectedRoute>}/>
             <Route path="/activity/grievance-action" element={<ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute>}/>
+            <Route path="/FooterPages/Grievance" element={<ProtectedRoute><Grievance /></ProtectedRoute>}/>
             {/* Activity - Grievance */}
             {/* ADMIN SECTION - UAC*/}
             <Route
