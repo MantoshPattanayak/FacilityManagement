@@ -76,7 +76,8 @@ import CommonFooter1 from "./common/Common_footer1";
 import EditNotification from "./components/Admin/Activity/Notifications/EditNotification";
 //Grievance
 import Grievance from "./components/Public/FooterPages/Grievance";
-
+// Booking_Bill
+import Bokking_Bill from "./components/Public/Booking_Bill/Booking_Bill";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -127,6 +128,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Add_Card/>
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/BookParks/Bokking_Bill"
+              element={
+                <ProtectedRoute>
+                  <Bokking_Bill/>
                 </ProtectedRoute>
               }
             />
