@@ -310,15 +310,7 @@ const toggleFilter = () => {
       </div>
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
-        {/* add filter option */}
-        {/* <div className="filter_option">
-          <div className="filter-icon">
-            <FontAwesomeIcon icon={faFilter} />
-          </div>
-          <div className="text-filter">
-            Filters
-          </div>
-        </div> */}
+        {/* add filter option.............. */}
          <div className="Filter_grid">
         <div className="filter-container">
           <div className="filter_option" onClick={toggleFilter}>
