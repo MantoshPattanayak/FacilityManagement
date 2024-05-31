@@ -269,7 +269,7 @@ const toggleFilter = () => {
             onClick={(e) => handleParkLogoClick(e, 1)}
             className="image-button"
           >
-            <img className="h-14" src={Event_img} alt="Event" />
+            <img className="h-20" src={Event_img} alt="Event" />
             <span className="button-text">Park</span>
           </button>
 
@@ -278,7 +278,7 @@ const toggleFilter = () => {
             onClick={(e) => handleParkLogoClick(e, 2)}
             className="image-button"
           >
-            <img className="h-14" src={Park_Logo} alt="Sports" />
+            <img className="h-20" src={Park_Logo} alt="Sports" />
             <span className="button-text">Playgrounds</span>
           </button>
 
@@ -287,15 +287,15 @@ const toggleFilter = () => {
             onClick={(e) => handleParkLogoClick(e, 3)}
             className="image-button"
           >
-            <img className="h-14" src={MultiPark} alt="Multipark" />
-            <span className="button-text1">Multi purpose  Grounds</span>
+            <img className="h-20" src={MultiPark} alt="Multipark" />
+            <span className="button-text1">Multipurpose  Grounds</span>
           </button>
           {/* waterway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 4)}
             className="image-button"
           >
-            <img className="h-14" src={greenway} alt="Multipark" />
+            <img className="h-20" src={greenway} alt="Multipark" />
             <span className="button-text">Greenways</span>
           </button>
           {/* blueway */}
@@ -303,7 +303,7 @@ const toggleFilter = () => {
             onClick={(e) => handleParkLogoClick(e, 5)}
             className="image-button"
           >
-            <img className="h-14" src={blueway} alt="Multipark" />
+            <img className="h-20" src={blueway} alt="Multipark" />
             <span className="button-text">Blueways</span>
           </button>
         </span>
@@ -350,15 +350,6 @@ const toggleFilter = () => {
         </div>
         {/* Other filter buttons and elements */}
       </div>
-
-
-
-
-
-
-
-
-
 
 
         <div className="filter_button">
