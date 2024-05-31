@@ -843,9 +843,15 @@ let generateQRCode = async(req,res)=>{
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
 
         let fetchBookingDetails = await facilitybookings.findOne({
+            
             where:{
                [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
-            }
+            },
+            include:[
+                {
+                    model:facilities
+                }
+            ]
         })
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
         console.log('QRCODE', fetchBookingDetails)
@@ -865,6 +871,8 @@ let generateQRCode = async(req,res)=>{
 
 let verifyTheQRCode = async(req,res)=>{
     try {
+        let {QrCodeData}= req.body
+
         
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -879,5 +887,6 @@ module.exports = {
     viewCartByUserId,
     updateCart,
     viewCartItemsWRTCartItemId,
-    generateQRCode
+    generateQRCode,
+    verifyTheQRCode
 }
