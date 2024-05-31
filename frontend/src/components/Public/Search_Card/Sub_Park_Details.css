@@ -456,10 +456,12 @@
 
     .Header_Img {
         height: 20vh;
+        margin-top: 17px;
     }
 
     .text-park {
         font-size: 28px;
+        padding: 12px;
     }
 
     .Park_image {
@@ -635,13 +637,13 @@
 
 
   /* carousel css final........... */
-  .carousel-container {
+  .carousel-container1 {
     position: relative;
     width: 700px;
     margin: 0;
   }
   
-  .carousel {
+  .carousel1 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -651,13 +653,13 @@
     border-radius: 10px;
   }
   
-  .carousel img {
+  .carousel1 img {
     width: 100%;
     height: auto;
     transition: transform 0.5s ease-in-out;
   }
   
-  .carousel-button {
+  .carousel1-button1 {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -668,15 +670,29 @@
     cursor: pointer;
   }
   
-  .carousel-button.left {
+  .carousel1-button1.left1 {
     left: 10px;
   }
   
-  .carousel-button.right {
+  .carousel1-button1.right1 {
     right: 10px;
   }
   
-  .carousel-button:hover {
+  .carousel1-button1:hover {
     background-color: rgba(0, 0, 0, 0.8);
   }
+  
+
+  /* media queries................ */
+    @media screen and (max-width: 500px) {
+        .text-park {
+            font-size: 23px;
+            
+        }
+        .text_location {
+            font-size: 23px;
+        }
+    }
+    
+    
   
