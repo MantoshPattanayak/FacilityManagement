@@ -831,14 +831,19 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
 
 let generateQRCode = async(req,res)=>{
     try {
-        let {bookingId,facilityTypeId,facilityId} = req.body
+        let {bookingId} = req.body
         let statusId = 1;
-        if(!bookingId && !facilityTypeId && !facilityId){
+        if(!bookingId){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide required details"
             })
         }
-        let combinedData = `${bookingId},${facilityTypeId},${facilityId}`
+        let fetchFacilityId =  await facilitybookings.findOne({
+            where:{
+                facilityBookingId:bookingId
+            }
+        })
+        let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
 
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
 
