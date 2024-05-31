@@ -11,6 +11,7 @@
    
    
     border: 1px dotted rgb(42, 42, 42);
+    margin-top: 150px;
   }
   
   .ticket-header {
@@ -49,7 +50,7 @@
     border-top: 1px solid rgb(93 104 114); 
     padding-top: 5px; 
   }
-  
+ 
 
   .Location_Park h1{
     color:rgb(68, 74, 79);
@@ -69,7 +70,7 @@
   }
 
   .Tciket_Date h1{
-    color:rgb(68, 74, 79);
+    color:rgb(81, 85, 89);
     font-weight: 500;
   }
   
@@ -78,7 +79,7 @@
     font-weight: 600;
   }
   .Ticekt_time h1{
-    color:rgb(68, 74, 79);
+    color:rgb(80, 83, 86);
     font-weight: 500;
   }
   .Ticekt_time h2{
@@ -174,4 +175,11 @@
   
     /* here Reponsive code */
   
+  }
+
+  .Name_Park h1{
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    color: #201f1f;
   }
