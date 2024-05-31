@@ -832,6 +832,7 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
 let generateQRCode = async(req,res)=>{
     try {
         let {bookingId,facilityTypeId,facilityId} = req.body
+        let statusId = 1;
         if(!bookingId && !facilityTypeId && !facilityId){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide required details"
@@ -840,11 +841,31 @@ let generateQRCode = async(req,res)=>{
         let combinedData = `${bookingId},${facilityTypeId},${facilityId}`
 
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
-        console.log('QRCODE', QRCodeUrl)
+
+        let fetchBookingDetails = await facilitybookings.findOne({
+            where:{
+               [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
+            }
+        })
+        fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
+        console.log('QRCODE', fetchBookingDetails)
+
         return res.status(statusCode.SUCCESS.code).json({
             message:"Here is the QR code",
-            QRCodeUrl:QRCodeUrl
+            bookingDetails:fetchBookingDetails
+            
         })
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+
+let verifyTheQRCode = async(req,res)=>{
+    try {
+        
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
