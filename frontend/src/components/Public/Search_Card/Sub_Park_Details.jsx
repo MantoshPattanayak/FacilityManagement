@@ -136,7 +136,7 @@ const Sub_Park_Details = () => {
 
   // carousel logic.........................................
 
-  const images = [Park_img, amabhoomi , Park_img, amabhoomi , Park_img];
+  const images = [Park_img, amabhoomi, Park_img, amabhoomi, Park_img];
 
   const [currentIndex1, setCurrentIndex1] = useState(0);
 
@@ -186,17 +186,17 @@ const Sub_Park_Details = () => {
             &gt;
           </button>
         </div> */}
- <div className="carousel-container1">
-      <div className="carousel1">
-        <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
-      </div>
-      <button className="carousel1-button1 left1" onClick={handlePrev}>
-        &lt;
-      </button>
-      <button className="carousel1-button1 right1" onClick={handleNext}>
-        &gt;
-      </button>
-    </div>
+        <div className="carousel-container1">
+          <div className="carousel1">
+            <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
+          </div>
+          <button className="carousel1-button1 left1" onClick={handlePrev}>
+            &lt;
+          </button>
+          <button className="carousel1-button1 right1" onClick={handleNext}>
+            &gt;
+          </button>
+        </div>
 
 
         <div className="Map_container">
