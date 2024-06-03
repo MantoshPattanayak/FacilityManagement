@@ -323,7 +323,7 @@ const Sub_Park_Details = () => {
           </div>
         </div>
       </div>
-
+<div className="other-contents">
       {/* -----------------------------services------------------------------------------ */}
       <div className="Service_Now_conatiner">
         <h1 className="Service_text">Services</h1>
@@ -418,6 +418,7 @@ const Sub_Park_Details = () => {
             })}
           {EventAvailable?.length == 0 && <p>No events.</p>}
         </div>
+      </div>
       </div>
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
 
