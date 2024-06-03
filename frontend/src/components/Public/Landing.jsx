@@ -16,6 +16,7 @@ import galleryImg5 from "../../assets/Gallery_Madhusudan_Park.jpg";
 import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
 import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
 import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
+import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
@@ -52,7 +53,7 @@ import { formatDate, formatDateYYYYMMDD, formatTime } from '../../utils/utilityF
 // import for slider
 
 
-const backGround_images = [ama_bhoomi_bgi, ama_bhoomi_bgi,ama_bhoomi_bgi];
+const backGround_images = [Landing_Img_1, galleryImg1,galleryImg3];
 
 const responsive = {
   superLargeDesktop: {
