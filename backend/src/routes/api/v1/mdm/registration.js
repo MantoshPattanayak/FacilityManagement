@@ -5,5 +5,6 @@ const registration = require("../../../../controllers/"+api_version+"/mdm/regist
 
 router.post("/facilityRegistration", registration.registerFacility);
 
+router.get("/initialData", registration.initialDataFetch);
 
 module.exports = router;

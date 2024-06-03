@@ -7,6 +7,7 @@ import AdminHeader from "../../../common/AdminHeader";
 // Location icon and image all types of image---------------------------------------------
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
 import Park_img from "../../../assets/Park_details.jpg";
+import amabhoomi from '../../../assets/ama_bhoomi_bgi.jpg';
 import sport_image from "../../../assets/sport_details_image.jpg"
 
 import Yoga_img from "../../../assets/Yoga_img.png";
@@ -91,20 +92,20 @@ const Sub_Park_Details = () => {
   }
 
   //Image swap  conatiner ------------------------------------------------
-  const containerRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  useEffect(() => {
-    const container = containerRef.current;
-    const interval = setInterval(() => {
-      const newIndex = (currentIndex + 1) % 10;
-      setCurrentIndex(newIndex);
-      container.scrollLeft = newIndex * container.offsetWidth;
-    }, 4000); // Change box set every 3 seconds
+  // const containerRef = useRef(null);
+  // const [currentIndex, setCurrentIndex] = useState(0);
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   const interval = setInterval(() => {
+  //     const newIndex = (currentIndex + 1) % 10;
+  //     setCurrentIndex(newIndex);
+  //     container.scrollLeft = newIndex * container.offsetWidth;
+  //   }, 4000); 
 
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+  //   return () => clearInterval(interval);
+  // }, [currentIndex]);
 
-  
+
   function formatTime(time24) {
     //format 24 hour time as 12 hour time
     if (!time24) return;
@@ -132,6 +133,23 @@ const Sub_Park_Details = () => {
     return `${day}-${month}-${year}`;
   }
 
+
+  // carousel logic.........................................
+
+  const images = [Park_img, amabhoomi , Park_img, amabhoomi , Park_img];
+
+  const [currentIndex1, setCurrentIndex1] = useState(0);
+
+
+  const handlePrev = () => {
+    setCurrentIndex1(currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex1(currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1);
+  };
+
+
   // Here Return Function ------------------------------------------------------------
   return (
     <div className="Sub_Manu_Conatiner">
@@ -152,10 +170,35 @@ const Sub_Park_Details = () => {
       </div>
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="map_img_main_conatiner">
-        <div className="Image_conatiner">
-           <img className="Park_image"src={ Park_img }></img>
-          
-        </div>
+        {/* <div className="Image_conatiner" ref={containerRef}>
+          <button className="carousel-button left" onClick={prevImage}>
+            &lt;
+          </button>
+          {images.map((images, index) => (
+            <img
+              key={index}
+              className="Park_image"
+              src={images}
+              alt={`Images ${index}`}
+            />
+          ))}
+          <button className="carousel-button right" onClick={nextImage}>
+            &gt;
+          </button>
+        </div> */}
+ <div className="carousel-container1">
+      <div className="carousel1">
+        <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
+      </div>
+      <button className="carousel1-button1 left1" onClick={handlePrev}>
+        &lt;
+      </button>
+      <button className="carousel1-button1 right1" onClick={handleNext}>
+        &gt;
+      </button>
+    </div>
+
+
         <div className="Map_container">
           <span className="time_status">
             <h1 className="time_text">

@@ -100,8 +100,13 @@ db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 
-db1.faq.sync({
-  force: false,
+
+
+db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
+db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
+db1.services.sync({
+  alter: true,
 });
 
 module.exports = db1;

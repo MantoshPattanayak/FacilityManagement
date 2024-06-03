@@ -8,9 +8,6 @@ const Facility = sequelize.define('facilities',{
         autoIncrement:true,
         primaryKey:true
     },
-    facilityMasterId:{
-        type:DataTypes.INTEGER
-    },
     facilityname:{
         type:DataTypes.STRING(255)
     },
@@ -66,9 +63,6 @@ const Facility = sequelize.define('facilities',{
         type:DataTypes.INTEGER
     },
     sat:{
-        type:DataTypes.INTEGER
-    },
-    privateUserId:{
         type:DataTypes.INTEGER
     },
     additionalDetails:{

@@ -251,10 +251,12 @@
   padding: 10px;
   margin-left: 90px;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  /* justify-content: space-between; */
 }
 .gride_page{
-    margin-right: 90px;
+    /* margin-right: 90px; */
+    margin-left: 48%;
     height: 100%;
     border: 0.0833vw solid #ccc;
     border-radius: 0.417vw;
@@ -333,4 +335,79 @@ select{
     padding: 50px;
 }
 
+.filter_option{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    gap: 5px;
+    height: 40px;
+}
+.filter-icon{
+    color: #029c3d;
+}
 
+
+
+
+
+
+
+ .main__body__park {
+   
+  }
+  
+  .filter-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .filter_option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+  
+  .filter_option:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .filter-icon {
+    margin-right: 5px;
+  }
+  
+  .text-filter {
+    font-size: 14px;
+  }
+  
+  .filter-dropdown {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+    z-index: 1;
+    width: 150px;
+  }
+  
+  .filter-dropdown label {
+    display: block;
+    padding: 5px 0;
+  }
+  
+  .filter-dropdown input {
+    margin-right: 5px;
+  }
+   
+
+
+
+
+ 

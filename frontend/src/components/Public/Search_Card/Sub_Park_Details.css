@@ -456,10 +456,12 @@
 
     .Header_Img {
         height: 20vh;
+        margin-top: 17px;
     }
 
     .text-park {
         font-size: 28px;
+        padding: 12px;
     }
 
     .Park_image {
@@ -484,3 +486,213 @@
         font-size: 24px;
     }
 }
+
+
+
+
+
+
+
+/* Add this CSS to style the carousel buttons */
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  
+  .carousel-button.left {
+    left: 10px;
+  }
+  
+  .carousel-button.right {
+    right: 10px;
+  }
+  
+  .Image_conatiner {
+    position: relative;
+  }
+  
+  .Map_container {
+    position: relative;
+  }
+  
+  .inner {
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .slide {
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .Event_img {
+    width: 100%;
+    height: auto;
+  }
+  
+
+
+
+  /* Sub_Park_Details.css */
+
+/* .Sub_Manu_Conatiner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .Image_conatiner {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+  
+  .Park_image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .carousel-button.left {
+    left: 0;
+  }
+  
+  .carousel-button.right {
+    right: 0;
+  } */
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* Sub_Park_Details.css */
+
+/* .Image_conatiner {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .carousel-slide {
+    flex: 0 0 100%; 
+    width: 100%; 
+    height: auto; 
+  }
+  
+  .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  
+  .carousel-button.left {
+    left: 10px;
+  }
+  
+  .carousel-button.right {
+    right: 10px;
+  } */
+  
+
+
+  /* carousel css final........... */
+  .carousel-container1 {
+    position: relative;
+    width: 700px;
+    margin: 0;
+  }
+  
+  .carousel1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+  }
+  
+  .carousel1 img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .carousel1-button1 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .carousel1-button1.left1 {
+    left: 10px;
+  }
+  
+  .carousel1-button1.right1 {
+    right: 10px;
+  }
+  
+  .carousel1-button1:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+
+  /* media queries................ */
+    @media screen and (max-width: 500px) {
+        .text-park {
+            font-size: 23px;
+            
+        }
+        .text_location {
+            font-size: 23px;
+        }
+    }
+    
+    
+  

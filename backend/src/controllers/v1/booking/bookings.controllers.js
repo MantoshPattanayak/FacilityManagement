@@ -13,9 +13,11 @@ const cart = db.cart
 const cartItem = db.cartItem
 const useractivitypreferences = db.userActivityPreference
 const { Op } = require('sequelize');
+var QRCode = require('qrcode')
+
 // events booking table
 const eventBooking = db.eventBookings;
-const moment = require('moment')
+const moment = require('moment');
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -825,11 +827,71 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
         })
     }
 }
+
+
+let generateQRCode = async(req,res)=>{
+    try {
+        let {bookingId} = req.body
+        let statusId = 1;
+        if(!bookingId){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:"Please provide required details"
+            })
+        }
+        let fetchFacilityId =  await facilitybookings.findOne({
+            where:{
+                facilityBookingId:bookingId
+            }
+        })
+        let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
+
+        let QRCodeUrl = await QRCode.toDataURL(combinedData)
+
+        let fetchBookingDetails = await facilitybookings.findOne({
+            
+            where:{
+               [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
+            },
+            include:[
+                {
+                    model:facilities
+                }
+            ]
+        })
+        fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
+        console.log('QRCODE', fetchBookingDetails)
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"Here is the QR code",
+            bookingDetails:fetchBookingDetails
+            
+        })
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+
+let verifyTheQRCode = async(req,res)=>{
+    try {
+        let {QrCodeData}= req.body
+
+        
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
     addToCart,
     viewCartByUserId,
     updateCart,
-    viewCartItemsWRTCartItemId
+    viewCartItemsWRTCartItemId,
+    generateQRCode,
+    verifyTheQRCode
 }
