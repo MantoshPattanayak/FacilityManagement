@@ -104,6 +104,8 @@ db1.publicnotifications = require('./publicnotifications.models')(sequelize, Dat
 
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+//facility activities
+db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
 
 db1.inventorymaster.sync({
   alter: false,
