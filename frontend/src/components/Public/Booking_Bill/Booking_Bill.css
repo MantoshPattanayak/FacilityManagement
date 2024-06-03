@@ -8,7 +8,8 @@
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-   
+    max-width: 400px;
+    margin: 20px auto;
    
     border: 1px dotted rgb(42, 42, 42);
     margin-top: 150px;
