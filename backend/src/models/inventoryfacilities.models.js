@@ -1,10 +1,14 @@
 module.exports = (sequelize,DataTypes)=>{
 
-const ParkInventoryFacilities = sequelize.define('parkinventoryfacilities',{
+const InventoryFacilities = sequelize.define('inventoryfacilities',{
     equipmentfacilityId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
         primaryKey:true
+    },
+    facilityId:{
+        type:DataTypes.INTEGER
+
     },
     equipmentId:{
         type:DataTypes.INTEGER
@@ -47,5 +51,5 @@ const ParkInventoryFacilities = sequelize.define('parkinventoryfacilities',{
 }
 
 )
-return ParkInventoryFacilities
+return InventoryFacilities
 }

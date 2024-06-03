@@ -1,7 +1,7 @@
 module.exports = (sequelize,DataTypes)=>{
 
 
-const ParkInventory = sequelize.define('parkinventory',{
+const InventoryMaster = sequelize.define('inventorymaster',{
     equipmentId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
@@ -51,5 +51,5 @@ const ParkInventory = sequelize.define('parkinventory',{
 }
 
 )
-return ParkInventory
+return InventoryMaster
 }
