@@ -24,7 +24,7 @@
 }
 .text-park {
     padding-top: 90px;
-    font-size: 50px;
+    font-size: 42px;
     color: #fff;
     font-weight: 600;
     margin-left: 40px;
@@ -213,6 +213,7 @@
 /* --------------------------------------------------- Service Conatiner start--------------------------------------------------- */
 .Service_Now_conatiner {
     padding: 40px;
+    margin-top: 114px;
 }
 
 .Service_text {
@@ -453,6 +454,23 @@
         flex-direction: column;
         align-items: center;
     } */
+    .map_img_main_conatiner {
+        display:unset;
+        margin-top: 70px;
+       
+    }
+    .carousel-container1{
+        margin-top: 20px;
+        margin-left: 15%;
+    }
+    .carousel1{
+        /* margin-top: 20px;
+        margin-left: 20%; */
+    }
+    .Map_container {
+        margin-left: 35%;
+        margin-top: 20px;
+    }
 
     .Header_Img {
         height: 20vh;
@@ -485,9 +503,24 @@
     .Service_text {
         font-size: 24px;
     }
+    .Service_Now_conatiner{
+        margin-top: 25%;
+    }
 }
 
-
+/* @media screen and (min-width: 769px) and (max-width: 1023px) {
+    .Header_Img {
+      height: 18vh;
+      margin-top: 7px;
+    }
+  
+    .carousel-container1 {
+      margin-top: 10px;
+      margin-left: 13%;
+      width: 94%;
+    }
+  } */
+  
 
 
 
@@ -640,7 +673,7 @@
   .carousel-container1 {
     position: relative;
     width: 700px;
-    margin: 0;
+    /* margin: 0; */
   }
   
   .carousel1 {
@@ -681,18 +714,146 @@
   .carousel1-button1:hover {
     background-color: rgba(0, 0, 0, 0.8);
   }
+     
   
 
-  /* media queries................ */
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 1024px) {
+        .Header_Img {
+            height: 18vh;
+            margin-top: 5px;
+          }
+        
+          .carousel-container1 {
+            margin-top: 20px;
+            margin-left: 5%;
+            width: 90%;
+          }
+      
         .text-park {
-            font-size: 23px;
-            
+          font-size: 28px;
+          padding: 12px;
+        }
+      
+        .Park_image {
+          height: 38vh;
+          width: auto;
+          border-radius: 12px;
+        }
+      
+        .Map_container {
+          margin-left: 24%;
+          margin-top: 20px;
+        }
+      
+     
+      
+        .carousel1 {
+          /* margin-top: 20px;
+          margin-left: 20%; */
+        }
+      
+        .Service_text {
+          font-size: 24px;
+        }
+      }
+      
+      @media screen and (max-width: 600px) {
+        .map_img_main_conatiner {
+          display: unset;
+          margin-top: 70px;
+        }
+      
+        .carousel-slide {
+          flex: 0 0 100%;
+          width: 100%;
+          height: auto;
+        }
+      
+        .carousel-container1 {
+          margin-top: 20px;
+          margin-left: 0%;
+        }
+      
+        .carousel1 {
+          /* margin-top: 20px;
+          margin-left: 20%; */
+        }
+      
+        .Map_container {
+          margin-left: 7%;
+          margin-top: 20px;
+        }
+      
+        .Header_Img {
+            height: 15vh;
+            margin-top: 5px;
+          }
+        
+          .carousel-container1 {
+            margin-top: 20px;
+            margin-left: 5%;
+            width: 90%; /* Adjust width for better responsiveness */
+          }
+      
+        .text-park {
+          font-size: 28px;
+          padding: 12px;
+        }
+      
+        .Park_image {
+          height: 38vh;
+          width: auto;
+          border-radius: 12px;
+        }
+      
+        .Service_text {
+          font-size: 24px;
+        }
+      
+        .Service_Now_conatiner {
+          padding: 20px;
+          margin-top: 44%;
+        }
+      
+        .About_text {
+          font-size: 14px;
+        }
+      
+        .Number {
+          font-size: 14px;
+        }
+        .text-park {    
+            font-size: 24px;
         }
         .text_location {
-            font-size: 23px;
+            font-size: 25px;
         }
-    }
-    
-    
-  
+      }
+      @media screen and (max-width: 420px) {
+        .Header_Img {
+            /* height: 15vh; */
+            margin-top: 17px;
+            width: 139vw;
+        }
+        
+        .carousel-container1 {
+            margin-top: -30px;
+            margin-left: 21%;
+            /* margin-right: auto; */
+            width: 100%;
+        }
+          .Map_container {
+            margin-left: 28%;
+            margin-top: -40px;
+          }
+          .Service_Now_conatiner {
+            margin-top: 216px;
+        }
+        .text-park {
+            font-size: 20px;
+        }
+        .text_location {
+            font-size: 18px;
+        }
+      }
+      
