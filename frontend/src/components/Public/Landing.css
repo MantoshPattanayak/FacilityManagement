@@ -41,10 +41,11 @@ body {
 .header-content {
     width: 94%;
 } */
-.adImg{
+.adImg {
     height: 20vh;
     padding: 40px;
 }
+
 .header nav ul {
     margin: 0;
     padding: 0;
@@ -99,6 +100,7 @@ body {
     justify-content: end;
     gap: 0.5vw;
 }
+
 .abBgButton svg {
     height: auto;
     width: 2vw;
@@ -249,12 +251,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 13vh;
+    height: 15vh;
 }
 
 .icon1 {
     margin: 10px;
     position: relative;
+}
+
+.icon1_button {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .text1 {
@@ -266,6 +275,49 @@ body {
     transition: opacity 0.3s ease-in-out;
 
     color: #013409;
+    padding: 0px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    /* margin-left: 20px; */
+}
+
+.text2 {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+    color: #013409;
+    padding: 0px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    /* margin-left: 20px; */
+}
+
+.clicked-text-icon {
+    position: absolute;
+    /* top: 60%;
+    left: 20%; */
+    top: 57%;
+    left: -8%;
+
+    color: #013409;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    /* margin-top: 35px; */
+}
+
+.clicked-text-icon3 {
+    position: absolute;
+    top: 61%;
+    left: 22%;
+    color: #013409;
     padding: 10px;
     border-radius: 5px;
     font-size: 13px;
@@ -274,12 +326,12 @@ body {
 
 .icon1 img {
     height: 8vh;
+    /* background-color: palegoldenrod; */
 }
 
 .icon1:hover h2 {
     opacity: 1;
 }
-
 
 .map-bar {
     display: flex;
@@ -290,7 +342,8 @@ body {
 
 .mapSearchButton input {
     border: 1px solid rgb(2, 54, 145);
-    width: 264px;
+    /* width: 264px; */
+    width: 300px;
     height: 43px;
     padding: 12px;
 
@@ -579,9 +632,9 @@ padding-bottom: 20px;
     color: #019f13;
     font-weight: 600;
     width: 18vw;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .carousel-slide-location {
@@ -856,12 +909,12 @@ margin-top: 20px;
     justify-content: space-between;
 }
 
-.galleryTitleLeft{
+.galleryTitleLeft {
     display: flex;
     gap: 1vw;
 }
 
-.viewMoreGallery{
+.viewMoreGallery {
     display: flex;
     gap: 2px;
     background-color: #3AB757;
@@ -1162,13 +1215,14 @@ margin-top: 20px;
 
 /* AdCarousel.css */
 
-.avatisement-Border2{
+.avatisement-Border2 {
     max-width: 90vw;
-    margin: 0 auto; /* Centers the container */
+    margin: 0 auto;
+    /* Centers the container */
     overflow-x: hidden;
     overflow: hidden;
     position: relative;
-/* overflow-x: hidden; */
+    /* overflow-x: hidden; */
 }
 
 .avatisement-Content2 {
@@ -1176,7 +1230,8 @@ margin-top: 20px;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 200px; /* Adjust height as needed */
+    height: 200px;
+    /* Adjust height as needed */
     overflow: hidden;
 }
 
@@ -1197,6 +1252,7 @@ margin-top: 20px;
     0% {
         transform: translateX(0);
     }
+
     100% {
         transform: translateX(-100%);
     }
@@ -1215,15 +1271,17 @@ margin-top: 20px;
     .bg-img {
         height: 50vh;
     }
+
     .icon1 img {
         height: auto;
         width: auto;
     }
+
     .Yoga_image2 {
         height: auto;
     }
 
-    .carousel-images{
+    .carousel-images {
         width: auto;
         height: auto;
     }
@@ -1347,7 +1405,7 @@ margin-top: 20px;
         height: 32px;
     }
 
-    .map-icons{
+    .map-icons {
         height: 4vh;
     }
 
@@ -1445,12 +1503,12 @@ margin-top: 20px;
         gap: 0px;
     }
 
-    .carousel-slide2{
+    .carousel-slide2 {
         width: 26vw;
         height: auto;
-    padding-top: 9px;
+        padding-top: 9px;
     }
-    
+
 
 }
 
@@ -1467,7 +1525,7 @@ margin-top: 20px;
 /* ---------------Gallery section --------------------------------*/
 
 
-@media screen and (max-width: 575px){
+@media screen and (max-width: 575px) {
 
     .landing-page_contant {
         align-items: center;
@@ -1490,7 +1548,7 @@ margin-top: 20px;
         height: 11vh;
     }
 
-/* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
+    /* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
     .map-parentContainer {
         flex-direction: column;
     }
@@ -1505,7 +1563,7 @@ margin-top: 20px;
         width: 88%;
     }
 
-    .mapSearchButton input{
+    .mapSearchButton input {
         width: 308px;
     }
 
@@ -1523,16 +1581,16 @@ margin-top: 20px;
         font-size: 16px;
     }
 
-    .nearByFacilities{
+    .nearByFacilities {
         width: 88%;
     }
 
-    .facililiy-list-map{
+    .facililiy-list-map {
         height: 180px;
-    overflow-y: auto;
+        overflow-y: auto;
     }
 
-    .nearByFacilities{
+    .nearByFacilities {
         height: 246px;
     }
 
@@ -1540,6 +1598,7 @@ margin-top: 20px;
     .EventContainerTitle h1 {
         font-size: 18px;
     }
+
     .carousel-slide2 {
         width: 44vw;
         height: auto;
@@ -1548,16 +1607,17 @@ margin-top: 20px;
 
     .Name_yoga2 {
         font-size: 12px;
-    font-weight: 600;
-    width: 40vw;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+        font-weight: 600;
+        width: 40vw;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .Yoga_image2 {
         width: 38vw;
     }
+
     .carousel-slide-text {
         width: 44vw;
     }
@@ -1604,6 +1664,7 @@ margin-top: 20px;
         border-radius: 4px;
         color: black;
     }
+
     .parkList p {
         margin: 5px 0;
         font-size: 10px;
@@ -1620,15 +1681,15 @@ margin-top: 20px;
         font-size: 18px;
     }
 
-    .carousel-image-container{
-        margin:0 0px ;
+    .carousel-image-container {
+        margin: 0 0px;
     }
 
     .galleryTitle h1 {
         font-size: 18px;
     }
 
-    .greenHeader{
+    .greenHeader {
         width: 4px;
         height: 26px;
     }
@@ -1658,19 +1719,23 @@ margin-top: 20px;
 
 
 
-@media screen and (max-width: 430px){
-    .landing-page_contant{
+@media screen and (max-width: 430px) {
+    .landing-page_contant {
         margin-top: 0px;
     }
+
     .Search-Conatiner h1 {
         font-size: 28px;
     }
+
     .Search-Conatiner p {
         font-size: 12px;
     }
+
     .Search-Conatiner h2 {
         font-size: 16px;
     }
+
     .search-bar {
         padding: 16px;
         font-size: 10px;
@@ -1681,9 +1746,11 @@ margin-top: 20px;
     .icon h2 {
         font-size: 6px;
     }
+
     .icon img {
         height: 54px;
     }
+
     .logos {
         height: 81px;
     }
@@ -1693,15 +1760,18 @@ margin-top: 20px;
     .mapSearchButton input {
         width: 265px;
     }
+
     .nearByFacilities-heading h1 {
         font-weight: 500;
         font-size: 14px;
         width: 130px;
     }
+
     .nearByFacilities-heading {
         width: 250px;
         gap: 16vw;
     }
+
     .nearByFacilities-heading {
         margin-bottom: 2px;
     }
@@ -1722,16 +1792,18 @@ margin-top: 20px;
     .carousel-image {
         height: 212px;
     }
+
     .carousel-image-container {
         height: 260px;
     }
 }
 
-.avatisement-Image{
- height: 40vh;
- padding: 20px;
+.avatisement-Image {
+    height: 40vh;
+    padding: 20px;
 }
-.avatisement-Content{
+
+.avatisement-Content {
     display: flex;
     justify-content: space-between;
 }
