@@ -22,6 +22,7 @@ import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
 import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
 import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
 import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
+// import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
@@ -98,12 +99,41 @@ const Landing = () => {
   let navigate = useNavigate();
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
+  // --------------Explore new Activities-------------------------------------------------------------
+  // State to keep track of the selected activity
+  const [selectedActivity, setSelectedActivity] = useState(null);
+
+  const [exploreNewActivities, setExploreNewActivities] = useState([
+    {
+      game: "Tennis",
+      parks: ["Kalinga Stadium", "Saheed Nagar Sports Complex"],
+    },
+    {
+      game: "Cricket",
+      parks: ["Ruchika High School, Unit - 6", "Saheed Nagar Sports Complex"],
+    },
+    {
+      game: "Football",
+      parks: [
+        "Kalinga Stadium",
+        "Bhubaneswar Footbal Academy",
+        "BJB Nagar Field",
+      ],
+    },
+    {
+      game: "Yoga",
+      parks: ["Buddha Jayanti Park", "Acharya Vihar Colony Park"],
+    },
+  ]);
+
   const handleNextImage = () => {
+    console.log(1);
     setCurrentIndexBg(
       (prevIndex) => (prevIndex + 1) % backGround_images.length
     );
   };
   const handlePrevImage = () => {
+    console.log(2);
     setCurrentIndexBg(
       (prevIndex) =>
         (prevIndex - 1 + backGround_images.length) % backGround_images.length
@@ -517,7 +547,38 @@ const Landing = () => {
               type="text"
               name="search"
               placeholder="Search by Name and Location"
-            ></input>
+              value={inputFacility}
+              autoComplete="off"
+              onChange={handleInputFacility}
+            />
+            {suggestions?.length > 0 && inputFacility && (
+              <ul className="suggestions">
+                {suggestions.length > 0 ? (
+                  suggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className={
+                        suggestion.facilityId === activeSuggestionIndex
+                          ? "active"
+                          : ""
+                      }
+                      onClick={(e) =>
+                        navigate(
+                          "/Sub_Park_Details" +
+                            `?facilityId=${encryptDataId(
+                              suggestion.facilityId
+                            )}`
+                        )
+                      }
+                    >
+                      {suggestion.facilityname}
+                    </li>
+                  ))
+                ) : (
+                  <li>No suggestions available</li>
+                )}
+              </ul>
+            )}
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
@@ -910,7 +971,7 @@ const Landing = () => {
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
-            {exploreNewActivies.map((activity, index) => (
+            {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
                 className={`activity ${
