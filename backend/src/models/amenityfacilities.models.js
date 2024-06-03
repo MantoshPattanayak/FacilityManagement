@@ -2,7 +2,7 @@ module.exports = (sequelize,DataTypes)=>{
 
 
 const FacilityAmenity = sequelize.define('facilityamenities',{
-    amenityfacilityId:{
+    amenityFacilityId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
         primaryKey:true
