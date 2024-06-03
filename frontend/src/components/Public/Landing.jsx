@@ -16,9 +16,14 @@ import galleryImg5 from "../../assets/Gallery_Madhusudan_Park.jpg";
 import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
 import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
 import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
+import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
-import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSquareCaretLeft,
+  faSquareCaretRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -46,6 +51,8 @@ import { encryptData } from '../../utils/encryptData';
 import { formatDate, formatDateYYYYMMDD, formatTime } from '../../utils/utilityFunctions.js';
 // import for slider
 
+
+const backGround_images = [ama_bhoomi_bgi, ama_bhoomi_bgi,ama_bhoomi_bgi];
 
 const responsive = {
   superLargeDesktop: {
@@ -84,6 +91,21 @@ const Landing = () => {
   const [distanceRange, setDistanceRange] = useState(2);
   let randomKey = Math.random();
   let navigate = useNavigate();
+
+
+  const [currentIndexBg, setCurrentIndexBg] = useState(0);
+  const handleNextImage = () => {
+    setCurrentIndexBg(
+      (prevIndex) => (prevIndex + 1) % backGround_images.length
+    );
+  };
+  const handlePrevImage = () => {
+    setCurrentIndexBg(
+      (prevIndex) =>
+        (prevIndex - 1 + backGround_images.length) % backGround_images.length
+    );
+  };
+  const selectedImage = backGround_images[currentIndexBg];
 
 
   async function fetchLandingPageData() {
@@ -470,22 +492,53 @@ const Landing = () => {
 
   return (
     <div className='landingcontainer'>
-      <section className="bg-img">
+      <section
+        className="bg-img"
+        style={{
+          backgroundImage: `linear-gradient(to right, #010101b5 20%, transparent), url(${selectedImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          opacity: "100%",
+          maxHeight: "100%",
+          marginBottom: "1px",
+          padding: "100px",
+          width: "100vw",
+          height: "100vh",
+          position: "relative",
+        }}
+      >
         <PublicHeader />
-
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
-
-        <div className='landing-page_contant'>
-          <span className='Search-Conatiner'>
+        <div className="landing-page_contant">
+          <span className="Search-Conatiner">
             <h1>AMA BHOOMI</h1>
-            <span className='about'>
-              <p className='about_text'>AMA BHOOMI stands for Assuring Mass Access through BHubaneswar Open Spaces <br></br>and Ownership Management Initiative. </p>
+            <span className="about">
+              <p className="about_text">
+                AMA BHOOMI stands for Assuring Mass Access through BHubaneswar
+                Open Spaces <br></br>and Ownership Management Initiative.{" "}
+              </p>
             </span>
-            <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
-            <input ref={searchInputRef} className='search-bar' type='text' name="search" placeholder="Search by Name and Location"></input>
-
+            <h2 className="typing-animation">
+              Explore, Book and Enjoy Open Spaces{" "}
+            </h2>
+            <input
+              ref={searchInputRef}
+              className="search-bar"
+              type="text"
+              name="search"
+              placeholder="Search by Name and Location"
+            ></input>
           </span>
-
+          <div className="abBgButton">
+            <FontAwesomeIcon
+              onClick={handlePrevImage}
+              icon={faSquareCaretLeft}
+            />
+            <FontAwesomeIcon
+              onClick={handleNextImage}
+              icon={faSquareCaretRight}
+            />
+          </div>
         </div>
       </section>
 
@@ -712,9 +765,20 @@ const Landing = () => {
       {/* ------Event details card-------------------------------------------------------------------- */}
 
       <div className="EventContainerlanding">
-        <div className="EventContainerTitle">
+        {/* <div className="EventContainerTitle">
           <div className="greenHeader"></div>
           <h1>Current Events</h1>
+        </div> */}
+
+        <div className="galleryTitle">
+          <div className="galleryTitleLeft">
+            <div className="greenHeader"></div>
+            <h1>Current Events</h1>
+          </div>
+          <button className="viewMoreGallery">
+            <Link to="/events" >View All</Link>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
         </div>
 
         {/* .........Card section scroll using carousel ..........*/}
@@ -816,8 +880,14 @@ const Landing = () => {
 
       <div className="galleryOuter">
         <div className="galleryTitle">
-          <div className="greenHeader"></div>
-          <h1>Gallery</h1>
+          <div className="galleryTitleLeft">
+            <div className="greenHeader"></div>
+            <h1>Gallery</h1>
+          </div>
+          <div className="viewMoreGallery">
+            <Link>View All</Link>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </div>
         </div>
 
         <div className="carousel">
