@@ -181,7 +181,7 @@
     margin: 12px 0 0;
     outline: none;
     overflow: hidden;
-    padding: 0 25px;
+    padding: 11px 25px;
     position: relative;
     text-align: center;
     text-transform: none;
@@ -213,7 +213,7 @@
 /* --------------------------------------------------- Service Conatiner start--------------------------------------------------- */
 .Service_Now_conatiner {
     padding: 40px;
-    margin-top: 114px;
+    margin-top: 25px;
 }
 
 .Service_text {
@@ -741,7 +741,7 @@
         }
       
         .Map_container {
-          margin-left: 24%;
+          margin-left: 5%;
           margin-top: 20px;
         }
       
@@ -801,12 +801,12 @@
         }
       
         .Service_text {
-          font-size: 24px;
+          font-size: 20px;
         }
       
         .Service_Now_conatiner {
           padding: 20px;
-          margin-top: 44%;
+          /* margin-top: 44%; */
         }
       
         .About_text {
@@ -827,21 +827,24 @@
         .Header_Img {
             /* height: 15vh; */
             margin-top: 17px;
-            width: 139vw;
+            width: 131%;
+        }
+        .Amenities_name {
+            font-size: 17px;
         }
         
         .carousel-container1 {
             margin-top: -30px;
-            margin-left: 21%;
+            margin-left: 8%;
             /* margin-right: auto; */
             width: 100%;
         }
           .Map_container {
-            margin-left: 28%;
+            /* margin-left: 28%; */
             margin-top: -40px;
           }
           .Service_Now_conatiner {
-            margin-top: 216px;
+            margin-top: 52px;
         }
         .text-park {
             font-size: 20px;
@@ -851,3 +854,7 @@
         }
       }
       
+
+      .other-contents{
+        padding: 5px;
+      }
