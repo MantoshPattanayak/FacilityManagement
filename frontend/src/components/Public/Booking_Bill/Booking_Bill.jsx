@@ -127,7 +127,7 @@ const Bokking_Bill = () => {
                     )}
                 </div>
                 <span className="Share_icon">
-                    <FontAwesomeIcon icon={faShareAlt} className="share-icon_font" />
+                    {/* <FontAwesomeIcon icon={faShareAlt} className="share-icon_font" /> */}
                 </span>
 
                 <div className="ticket-header">
