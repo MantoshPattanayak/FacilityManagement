@@ -186,14 +186,14 @@ const Sub_Park_Details = () => {
             &gt;
           </button>
         </div> */}
- <div className="carousel-container">
-      <div className="carousel">
+ <div className="carousel-container1">
+      <div className="carousel1">
         <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
       </div>
-      <button className="carousel-button left" onClick={handlePrev}>
+      <button className="carousel1-button1 left1" onClick={handlePrev}>
         &lt;
       </button>
-      <button className="carousel-button right" onClick={handleNext}>
+      <button className="carousel1-button1 right1" onClick={handleNext}>
         &gt;
       </button>
     </div>
