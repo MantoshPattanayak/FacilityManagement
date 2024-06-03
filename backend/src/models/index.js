@@ -100,13 +100,15 @@ db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 
-
+db1.clicklog = require('./clicklog.models')(sequelize,DataTypes)
 
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
-db1.inventorymaster.sync({
-  alter: false,
+
+
+db1.clicklog.sync({
+  force: false,
 });
 
 module.exports = db1;

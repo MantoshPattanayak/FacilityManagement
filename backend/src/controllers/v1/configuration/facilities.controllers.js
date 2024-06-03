@@ -218,6 +218,9 @@ const viewParkById = async (req,res)=>{
             {
                 replacements:[facilityId]
             })
+        // if the facilityType is playground then this facility activities will display some data
+        
+        // let fetchfacilitiesActivities = await 
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
            facilitiesData: fetchTheFacilitiesDetailsData[0],
