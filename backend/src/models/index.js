@@ -107,7 +107,11 @@ db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 //facility activities
 db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
 
+db1.facilities.hasMany(db1.facilityactivities,{foreignKey:"facilityId"})
+db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 
+db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"})
+db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
 
 db1.clicklog.sync({
   force: false,

@@ -10,6 +10,8 @@ const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch s
 const Sequelize = db.Sequelize
 
 let facilitiesTable = db.facilities;
+let facilitiesActivities = db.facilityactivities
+let userActivity = db.useractivitymasters;
 const fs = require('fs');
 
 
@@ -187,6 +189,11 @@ const autoSuggestionForViewParkDetails = async (req,res)=>{
 const viewParkById = async (req,res)=>{
     try{
         let facilityId = req.params.facilityId? req.params.facilityId:null;
+        let findFacilityTypeId = await facilitiesTable.findOne({
+            where:{
+                facilityId:facilityId
+            }
+        })
         if(facilityId){
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
@@ -220,13 +227,26 @@ const viewParkById = async (req,res)=>{
             })
         // if the facilityType is playground then this facility activities will display some data
         
-        // let fetchfacilitiesActivities = await 
+        let fetchfacilitiesActivities = await facilitiesActivities.findAll({
+            where:{
+                facilityTypeId:findFacilityTypeId.facilityTypeId
+            },
+            include:[
+               { 
+                model:facilitiesTable
+                },
+                {
+                    model:userActivity
+                }
+            ]
+        })
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
            facilitiesData: fetchTheFacilitiesDetailsData[0],
            eventDetails:fetchEventDetailsData[0],
             amenitiesData:fethAmenitiesDetailsDataData[0],
-            serviceData:fetchServicesDetailsData[0]
+            serviceData:fetchServicesDetailsData[0],
+            fetchfacilitiesActivities:fetchfacilitiesActivities
         })
         }
         else{
