@@ -179,7 +179,38 @@ body {
     color: white;
     border-radius: 12px;
     padding: 20px;
+    position: relative; /*auto-sugegst*/
 }
+
+/* auto-suggest section - start*/
+.suggestions {
+    border: 1px solid #ccc;
+    border-radius: 0px 0px 10px 10px;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 30%;
+    background-color: #fff;
+    z-index: 99;
+    list-style-type: none;    
+}
+
+.suggestions li {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.suggestions li.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.suggestions li:hover {
+    background-color: #ddd;
+}
+/* auto-suggest section - end*/
 
 .view-map-button {
     padding: 5px;
@@ -1269,7 +1300,12 @@ margin-top: 20px;
 }
 
 
-
+@media screen and (min-width: 1025px) {
+    /*---- suggestion section----*/
+    .suggestions {
+        top: 520px;
+    }
+}
 
 @media screen and (max-width: 1024px) {
 
@@ -1321,7 +1357,10 @@ margin-top: 20px;
         height: 350px;
     }
 
-
+    /*---- suggestion section----*/
+    .suggestions {
+        top: 417px;
+    }
 
     /* --Logo sticker---------------------------------- */
     .logos {
@@ -1654,6 +1693,17 @@ margin-top: 20px;
         margin-top: 0vh;
     }
 
+
+    /*auto-suggest section css*/
+    .autosuggest {
+        width: 100%;
+        max-width: none;
+    }
+
+    .suggestions li {
+        padding: 6px;
+        font-size: 14px;
+    }
 }
 
 
@@ -1706,6 +1756,13 @@ margin-top: 20px;
         margin-bottom: 2px;
     }
 
+    /*---- suggestion section----*/
+    .suggestions {
+        top: 380px;
+        width: 66%
+    }
+
+
     /* --------------------Event details card----------------- */
 
     .Yoga_date_time2 {
@@ -1727,6 +1784,12 @@ margin-top: 20px;
     }
 }
 
+@media screen and (max-width: 360px){
+    .suggestions {
+        top: 317px;
+        width: 75%;
+    }
+}
 .avatisement-Image{
  height: 40vh;
  padding: 20px;
