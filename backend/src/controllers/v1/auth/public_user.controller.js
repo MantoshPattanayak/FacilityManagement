@@ -280,7 +280,14 @@ const homePage = async (req, res) => {
       replacements: [new Date(), new Date()]
     })
 
-    
+    let facilityActivitiesFetchQuery = `
+      select fa.id, f.facilityId, f.facilityTypeId, f.facilityname, u.userActivityId, u.userActivityName
+      from amabhoomi.facilityactivities fa
+      inner join amabhoomi.facilities f on f.facilityId = fa.facilityId
+      inner join amabhoomi.useractivitymasters u on fa.activityId = u.userActivityId
+    `;
+
+    let facilityActivitiesData = await sequelize.query(facilityActivitiesFetchQuery);
 
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
@@ -288,7 +295,8 @@ const homePage = async (req, res) => {
       eventDetailsData: fetchEventDetailsData[0],
       amenityDetails: fetchAllAmenities[0],
       servicesDetails: fetchAllServices[0],
-      notificationsList:viewNotificationsListQueryData
+      notificationsList:viewNotificationsListQueryData,
+      exploreActivities: facilityActivitiesData[0]
     });
   } catch (err) {
     return res

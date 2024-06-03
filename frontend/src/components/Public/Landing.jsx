@@ -16,7 +16,9 @@ import galleryImg5 from "../../assets/Gallery_Madhusudan_Park.jpg";
 import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
 import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
 import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
-import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
+import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
+// import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
+import ama_bhoomi_bgi from '../../assets/ama_bhoomi_bgi.jpg';
 import badminton from "../../assets/explore new activity badminton.png";
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
@@ -52,7 +54,7 @@ import { formatDate, formatDateYYYYMMDD, formatTime } from '../../utils/utilityF
 // import for slider
 
 
-const backGround_images = [ama_bhoomi_bgi, ama_bhoomi_bgi,ama_bhoomi_bgi];
+const backGround_images = [Landing_Img_1, galleryImg1,galleryImg3];
 
 const responsive = {
   superLargeDesktop: {
@@ -91,15 +93,43 @@ const Landing = () => {
   const [distanceRange, setDistanceRange] = useState(2);
   let randomKey = Math.random();
   let navigate = useNavigate();
-
+  //set auto-suggest facilties
+  const [inputFacility, setInputFacility] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
+  // --------------Explore new Activities-------------------------------------------------------------
+  // State to keep track of the selected activity
+  const [selectedActivity, setSelectedActivity] = useState(null);
+
+  const [exploreNewActivities, setExploreNewActivities] = useState([
+    {
+      game: 'Tennis',
+      parks: ['Kalinga Stadium', 'Saheed Nagar Sports Complex']
+    },
+    {
+      game: 'Cricket',
+      parks: ['Ruchika High School, Unit - 6', 'Saheed Nagar Sports Complex']
+    },
+    {
+      game: 'Football',
+      parks: ['Kalinga Stadium', 'Bhubaneswar Footbal Academy', 'BJB Nagar Field']
+    },
+    {
+      game: 'Yoga',
+      parks: ['Buddha Jayanti Park', 'Acharya Vihar Colony Park']
+    }
+  ]);
+
   const handleNextImage = () => {
+    console.log(1)
     setCurrentIndexBg(
       (prevIndex) => (prevIndex + 1) % backGround_images.length
     );
   };
   const handlePrevImage = () => {
+    console.log(2);
     setCurrentIndexBg(
       (prevIndex) =>
         (prevIndex - 1 + backGround_images.length) % backGround_images.length
@@ -107,21 +137,55 @@ const Landing = () => {
   };
   const selectedImage = backGround_images[currentIndexBg];
 
+  //function to modify and set explore new activities section data
+  function handleExploreActivitiesData(exploreData) {
+    let modifiedData = [];
 
+    for (let i = 0; i < exploreData.length; i++) {
+        let currentData = exploreData[i];
+        
+        // Use find to check if the game already exists in modifiedData
+        let existingGame = modifiedData.find(data => data.game === currentData.userActivityName);
+
+        if (existingGame) {
+            // If the game exists, push the park information to the parks array
+            existingGame.parks.push({
+                facilityname: currentData.facilityname,
+                facilityId: currentData.facilityId
+            });
+        } else {
+            // If the game does not exist, create a new game entry with park information
+            modifiedData.push({
+                game: currentData.userActivityName,
+                parks: [{
+                    facilityname: currentData.facilityname,
+                    facilityId: currentData.facilityId
+                }]
+            });
+        }
+    }
+
+    console.log('modified data', modifiedData);
+    return modifiedData; // Return the modified data as JSON
+}
+
+  //function to fetch landing page data
   async function fetchLandingPageData() {
     try {
       let resLanding = await axiosHttpClient('LandingApi', 'get');
       console.log('Here is the Landing Page API data', resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
-      console.log(resLanding.data.notificationsList);
-      console.log("bla blab bla", resLanding.data.eventDetailsData)
+      // console.log(resLanding.data.notificationsList);
+      // console.log("bla blab bla", resLanding.data.eventDetailsData)
+      let modifiedData = handleExploreActivitiesData(resLanding.data.exploreActivities);
+      setExploreNewActivities(modifiedData);
     }
     catch (error) {
       console.error("Error fetching the Landing Page API data: ", error);
     }
   }
-
+  
 
   useEffect(() => {
     fetchLandingPageData();
@@ -131,6 +195,28 @@ const Landing = () => {
   useEffect(() => {
     getNearbyFacilities();
   }, [userLocation, distanceRange, facilityTypeId])
+
+  //function to fetch suggestions of facilities on input by user
+  async function fetchAutoSuggestData(){
+    try{
+      let response = await axiosHttpClient('View_Park_Data', 'post', {
+        givenReq: inputFacility,
+        facilityTypeId: null
+      });
+
+      console.log('auto suggest facility data', response.data.data);
+      setSuggestions(response.data.data);
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
+
+  function handleInputFacility(e, facilityId){
+    e.preventDefault();
+    setInputFacility(e.target.value);
+    setActiveSuggestionIndex(facilityId);
+  }
 
 
   // here Fetch the data -----------------------------------------------
@@ -216,6 +302,11 @@ const Landing = () => {
     };
   }, []);
 
+  //refresh on user input to show suggestions of facilities
+  useEffect(() => {
+    if(inputFacility)
+      fetchAutoSuggestData();
+  }, [inputFacility])
 
 
   // Handle Chnage ----------------------------------------------------------------
@@ -257,80 +348,6 @@ const Landing = () => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  const events = [
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM",
-      link: "/Sub_Park_Details"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-    {
-      imgSrc: Yoga_img,
-      name: "National Yoga Day Celebration",
-      location: "Buddha jayanti Park, Lumbini Vihar, Bhubaneswar",
-      date: "22 Mar 2024",
-      time: "7:00 AM - 10:00AM"
-    },
-
-  ]
 
   // const handleEventClick = (link, event) => {
   //   event.preventDefault();
@@ -379,29 +396,6 @@ const Landing = () => {
   //     });
   //   };
   // }, []);
-
-  // --------------Explore new Activities-------------------------------------------------------------
-  // State to keep track of the selected activity
-  const [selectedActivity, setSelectedActivity] = useState(null);
-
-  const exploreNewActivies = [
-    {
-      game: 'Tennis',
-      parks: ['Kalinga Stadium', 'Saheed Nagar Sports Complex']
-    },
-    {
-      game: 'Cricket',
-      parks: ['Ruchika High School, Unit - 6', 'Saheed Nagar Sports Complex']
-    },
-    {
-      game: 'Football',
-      parks: ['Kalinga Stadium', 'Bhubaneswar Footbal Academy', 'BJB Nagar Field']
-    },
-    {
-      game: 'Yoga',
-      parks: ['Buddha Jayanti Park', 'Acharya Vihar Colony Park']
-    }
-  ];
 
 
 
@@ -506,16 +500,26 @@ const Landing = () => {
                 Open Spaces <br></br>and Ownership Management Initiative.{" "}
               </p>
             </span>
-            <h2 className="typing-animation">
-              Explore, Book and Enjoy Open Spaces{" "}
-            </h2>
-            <input
-              ref={searchInputRef}
-              className="search-bar"
-              type="text"
-              name="search"
-              placeholder="Search by Name and Location"
-            ></input>
+            <h2 className='typing-animation'>Explore, Book and  Enjoy Open Spaces </h2>
+            <input ref={searchInputRef} className='search-bar' type='text' name="search" placeholder="Search by Name and Location" value={inputFacility} autoComplete='off' onChange={handleInputFacility}/>
+            {
+              suggestions?.length > 0 && inputFacility && (
+                <ul className="suggestions">
+                    {suggestions.length > 0 ? (
+                        suggestions.map((suggestion, index) => (
+                            <li
+                                key={index}
+                                className={suggestion.facilityId === activeSuggestionIndex ? 'active' : ''}
+                                onClick={(e) => navigate('/Sub_Park_Details' + `?facilityId=${encryptDataId(suggestion.facilityId)}`)}
+                            >
+                                {suggestion.facilityname}
+                            </li>
+                        ))
+                    ) : (
+                        <li>No suggestions available</li>
+                    )}
+                </ul>
+            )}
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
@@ -828,7 +832,7 @@ const Landing = () => {
 
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
-            {exploreNewActivies.map((activity, index) => (
+            {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
                 className={`activity ${selectedActivity === index ? 'selected' : ''}`}
@@ -841,13 +845,13 @@ const Landing = () => {
           <div className="image-secondDiv">
             <img className='h-80' src={badminton} alt="" />
             <div className="exploreNewAct-secondDiv">
-              {exploreNewActivies.map((activity, index) => (
+              {exploreNewActivities?.length > 0 && exploreNewActivities?.map((activity, index) => (
                 selectedActivity === index && (
                   <div className="parkList" key={index}>
                     {activity.parks.map((park, idx) => (
                       <div className="parkItem" key={idx}>
-                        <p>{park}</p>
-                        <button className="bookButton">Book</button>
+                        <p>{park.facilityname}</p>
+                        <button className="bookButton" onClick={(e) => { navigate('/Sub_Park_Details' + `?facilityId=${encryptDataId(park.facilityId)}`) }}>Book</button>
                         <FontAwesomeIcon icon={faBookmark} className="bookmarkIcon" />
                       </div>
                     ))}
