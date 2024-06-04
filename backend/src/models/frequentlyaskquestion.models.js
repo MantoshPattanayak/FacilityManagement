@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
+    facilityTypeId: {
+      type: DataTypes.INTEGER,
+      defaultValue: null
+    },
     questionInEnglish: {
       type: DataTypes.STRING(255),
     },

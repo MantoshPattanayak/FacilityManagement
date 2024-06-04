@@ -3,6 +3,7 @@ const statusCode = require("../../../utils/statusCode");
 const db = require("../../../models");
 const grievanceMasters = db.grievancemasters;
 const statusMasters = db.statusmaster;
+const feedbacks = db.feedback
 
 // insert grievance - start
 let addGrievance = async (req, res) => {
@@ -105,8 +106,46 @@ let viewGrievanceById = async (req, res) => {
 }
 // view grievance details by id - end
 
+//create feedback -start
+const createFeedback = async (req, res) => {
+    try {
+      let createFeedback;
+      const {
+       name,
+       mobile,
+       email,
+       subject,
+       feedback,
+       isWhatsappNumber
+      } = req.body;
+      createFeedback = await feedbacks.create({
+          name: name,
+          mobile: mobile,
+          email: email,
+          subject: subject,
+          feedback: feedback,
+          isWhatsappNumber: isWhatsappNumber
+        });
+        if (createFeedback) {
+          return res.status(statusCode.SUCCESS.code).json({
+            message: "Feedback created successfully",
+          });
+        }
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message: "Feedback is not created",
+        });
+      
+    } catch (error) {
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message: error.message,
+      });
+    }
+  };
+//create feedback -end 
+
 module.exports = {
     addGrievance,
     viewGrievanceList,
-    viewGrievanceById
+    viewGrievanceById,
+    createFeedback
 }
