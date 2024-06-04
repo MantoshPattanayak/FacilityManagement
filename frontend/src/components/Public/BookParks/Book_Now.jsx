@@ -3,15 +3,25 @@ import "../../Public/BookParks/Book_Now.css";
 import AdminHeader from "../../../common/AdminHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
-import { faC, faCartShopping, faXmark } from "@fortawesome/free-solid-svg-icons"; // Import the icon
+import {
+  faC,
+  faCartShopping,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons"; // Import the icon
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCreditCard,
+  faPlus,
+  faMinus,
+  faIndianRupeeSign,
+} from "@fortawesome/free-solid-svg-icons";
 
-// Import Aixos method---------------------------------------------
+// Import Axios method---------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Import Navigate and Crypto -----------------------------------
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { decryptData } from "../../../utils/encryptData";
+import { encryptData } from "../../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import PublicHeader from "../../../common/PublicHeader";
@@ -19,26 +29,37 @@ import { formatDate } from "../../../utils/utilityFunctions";
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
-  // UseSate for get data -------------------------------------
+  // UseState for getting data -------------------------------------
   const [FacilitiesData, setFacilitiesData] = useState([]);
-  //here Location / crypto and navigate the page---------------
+  // Here Location / crypto and navigate the page---------------
   const location = useLocation();
   const action = new URLSearchParams(location.search).get("action");
   const navigate = useNavigate();
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
+
   const [formData, setFormData] = useState({
-    totalMembers: "",
+    totalMembers: 0,
+    children: 0,
+    seniorCitizen: 0,
+    others: 0,
     amount: "10.00",
     activityPreference: [],
     otherActivities: "",
     bookingDate: new Date().toISOString().split("T")[0],
-    startTime: "",
-    durationInHours: "",
+    startTime: new Date().toTimeString().split(" ")[0],
+    durationInHours: 0,
     facilityId: "",
     entityId: "",
     entityTypeId: "",
     facilityPreference: "",
+    priceBook: 0,
   });
+
+  let facilityId = decryptData(
+    new URLSearchParams(location.search).get("facilityId")
+  );
+
+  const encryptedFacilityId = encryptData(facilityId);
 
   // Here Get the data of Sub_park_details------------------------------------------
   async function getSub_park_details(facilityId) {
@@ -79,9 +100,9 @@ const Book_Now = () => {
 
   // UseEffect for Update/Call API--------------------------------
   useEffect(() => {
-    let facilityId = decryptData(
-      new URLSearchParams(location.search).get("facilityId")
-    );
+    // let facilityId = decryptData(
+    //   new URLSearchParams(location.search).get("facilityId")
+    // );
     console.log("facilityId", facilityId);
     getSub_park_details(facilityId);
     getParkBookingInitialData();
@@ -100,7 +121,6 @@ const Book_Now = () => {
     } else {
       setSelectedGames([...selectedGames, game]);
     }
-    // setFormData({...formData, ['activityPreference']: selectedGames});
     console.log("selectedGames", selectedGames);
   };
 
@@ -108,9 +128,41 @@ const Book_Now = () => {
     e.preventDefault();
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log("here fromdata", formData);
+    if (name === "durationInHours" && value >= 0) {
+      setFormData({ ...formData, durationInHours: Number(value) });
+    }
+
+    const totalMembers =
+      (name === "children" ? intValue : parseInt(formData.children)) +
+      (name === "seniorCitizen" ? intValue : parseInt(formData.seniorCitizen)) +
+      (name === "others" ? intValue : parseInt(formData.others));
+
+    console.log("here formData", formData);
   };
-  // here Add to Cart -------------------------------------------------------------------------------------------
+  const temp =
+    parseInt(formData.children) +
+    parseInt(formData.seniorCitizen) +
+    parseInt(formData.others);
+  const totalMembers = temp <= 40 ? temp : 40;
+  // const totalMembers =
+  //   parseInt(formData.children) +
+  //   parseInt(formData.seniorCitizen) +
+  //   parseInt(formData.others);
+
+  const handleDecrease = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      durationInHours: Math.max(0, prevData.durationInHours - 1),
+    }));
+  };
+
+  const handleIncrease = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      durationInHours: prevData.durationInHours + 1,
+    }));
+  };
+
   async function handleAddtoCart() {
     let modifiedFormData = {
       ...formData,
@@ -126,7 +178,7 @@ const Book_Now = () => {
           otherActivities: modifiedFormData.otherActivities,
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
-          duration: modifiedFormData.duration,
+          duration: modifiedFormData.durationInHours,
           price: modifiedFormData.price,
         };
 
@@ -149,14 +201,13 @@ const Book_Now = () => {
         });
       } catch (error) {
         console.log(error);
-        toast.error("Add to Cart  failed.Try agin");
+        toast.error("Add to Cart  failed. Try again.");
       }
     } else {
       toast.error("Please fill the required data.");
     }
   }
 
-  // HandleSubmit (Proceed to Payment) ---------------------------------------------------------------------------------------------------
   async function handleSubmitAndProceed() {
     let modifiedFormData = {
       ...formData,
@@ -192,7 +243,7 @@ const Book_Now = () => {
         });
       } catch (error) {
         console.log(error);
-        toast.error("Booking details submission failedc.");
+        toast.error("Booking details submission failed.");
       }
     } else {
       toast.error("Please fill the required data.");
@@ -218,35 +269,71 @@ const Book_Now = () => {
 
   return (
     <div className="Book_Now_Min_conatiner">
-      <ToastContainer />
-      <PublicHeader />
+      <PublicHeader/>
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading">
             <h1>
-              
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <Link to="/Sub_Park_Details"><FontAwesomeIcon icon={faXmark}/></Link>
-            
+            <Link to="/Sub_Park_Details?facilityId">
+              <FontAwesomeIcon icon={faXmark} />
+            </Link>
           </div>
           <div className="address">
             <p> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
           </div>
-
-          <div className="input-fields">
-            <p>Total Members</p>
-            <input
-              type="number"
-              name="totalMembers"
-              value={formData.totalMembers}
-              id=""
-              className="member-input"
-              onChange={handleChangeInput}
-            />
+          <div className="input-fields0">
+            <div className="input-fields">
+              <p>Total Members</p>
+              <input
+                type="number"
+                name="totalMembers"
+                value={totalMembers}
+                id=""
+                className="member-input"
+                onChange={handleChangeInput}
+              />
+            </div>
+            <div className="input-fields">
+              <p>Children</p>
+              <input
+                type="number"
+                name="children"
+                value={formData.children}
+                id=""
+                className="member-input"
+                onChange={handleChangeInput}
+                min="0"
+              />
+            </div>
+            <div className="input-fields">
+              <p>Senior-citizen</p>
+              <input
+                type="number"
+                name="seniorCitizen"
+                value={formData.seniorCitizen}
+                id=""
+                className="member-input"
+                onChange={handleChangeInput}
+                min="0"
+              />
+            </div>
+            <div className="input-fields">
+              <p>Others</p>
+              <input
+                type="number"
+                name="others"
+                value={formData.others}
+                id=""
+                className="member-input"
+                onChange={handleChangeInput}
+                min="0"
+              />
+            </div>
           </div>
-          <br />
 
+          <br />
           <div className="activity-preference">
             <span>Activity Preference</span>
             <div className="games">
@@ -267,7 +354,6 @@ const Book_Now = () => {
                 })}
             </div>
           </div>
-
           <div className="other-activities">
             <label htmlFor="activities">Other Activities(if any)</label>
             <input
@@ -280,7 +366,6 @@ const Book_Now = () => {
             />
           </div>
           <br />
-
           <div className="date">
             <label htmlFor="">Date :</label>
             <input
@@ -293,7 +378,6 @@ const Book_Now = () => {
             />
           </div>
           <br />
-
           <div className="start-time">
             <label htmlFor=""> Start Time :</label>
             <input
@@ -305,19 +389,42 @@ const Book_Now = () => {
               onChange={handleChangeInput}
             />
           </div>
-
           <div className="duration">
-            <label htmlFor=""> Duration :</label>
+            <label htmlFor=""> Duration (in hours) :</label>
+            <div className="bookDuration">
+              <FontAwesomeIcon onClick={handleDecrease} icon={faMinus} />
+              <input
+                type="number"
+                name="durationInHours"
+                value={formData.durationInHours}
+                id="duration"
+                className="input-field-date-duration"
+                onChange={handleChangeInput}
+                min="0"
+              />
+              <FontAwesomeIcon onClick={handleIncrease} icon={faPlus} />
+            </div>
+          </div>
+          {/* <div className="priceBook">
+            <label htmlFor=""> Price (in rupees) :</label>
             <input
               type="number"
-              name="durationInHours"
-              value={formData.durationInHours}
+              name="price"
+              value={parseInt(formatDate.amount) * parseInt(formData.others)}
               id=""
-              className="input-field-date"
+              className="input-field-price"
               onChange={handleChangeInput}
+              min="0"
             />
+          </div> */}
+          <div className="priceBook">
+            <label htmlFor=""> Price (in rupees) :</label>
+            <span className="price-display">
+              <FontAwesomeIcon icon={faIndianRupeeSign} />
+              <b>{parseInt(formData.amount) * parseInt(formData.others)}</b>
+              <b>/-</b>
+            </span>
           </div>
-
           {/* Add to cart button */}
           <div className="Add_to_card_main_conatiner">
             <div className="button_Book_Now">
@@ -339,7 +446,7 @@ const Book_Now = () => {
           </div>
         </div>
       </div>
-      <CommonFooter />
+       <CommonFooter/>
     </div>
   );
 };

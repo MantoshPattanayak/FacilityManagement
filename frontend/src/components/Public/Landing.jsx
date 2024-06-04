@@ -1,4 +1,5 @@
 import "./Landing.css";
+import gif from '../../assets/newImg.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
@@ -146,8 +147,8 @@ const Landing = () => {
   const selectedImage = backGround_images[currentIndexBg];
 
   //function to fetch suggestions of facilities on input by user
-  async function fetchAutoSuggestData(){
-    try{
+  async function fetchAutoSuggestData() {
+    try {
       let response = await axiosHttpClient('View_Park_Data', 'post', {
         givenReq: inputFacility,
         facilityTypeId: null
@@ -156,7 +157,7 @@ const Landing = () => {
       console.log('auto suggest facility data', response.data.data);
       setSuggestions(response.data.data);
     }
-    catch(error){
+    catch (error) {
       console.error(error);
     }
   }
@@ -813,8 +814,16 @@ const Landing = () => {
           <marquee behavior="" direction="left">
             <div className="flex">
               {notifications.map((notification) => {
+                const createdAtDate = new Date(notification.createdAt);
+                const currentDate = new Date();
+                const diffInDays = Math.round((currentDate - createdAtDate) / (1000 * 3600 * 24));
                 return (
-                  <p>{notification.publicNotificationsContent} &nbsp; &nbsp;</p>
+                  <p className="notce2para">
+                    {diffInDays <= 100 ? <span style={{ backgroundColor: 'green', color:'white', marginRight:'4px',marginLeft:'5vw', borderRadius:'4px', fontSize:'18px' }}>New </span> : ''}
+                    {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
+
+                    {notification.publicNotificationsContent} &nbsp; &nbsp;
+                  </p>
                 );
               })}
             </div>
