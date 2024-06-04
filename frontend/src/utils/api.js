@@ -27,6 +27,7 @@ const api = {
      View_Park_Data:'/mapData/viewParkDetails',
      View_By_ParkId:'/mapData/viewParkById',        
      VIEW_NEARBY_PARKS_API: '/mapData/nearByDataInMap',     //post    latitude,longitude,facilityTypeId,range
+     VIEW_FILTER_OPTIONS_API: '/mapData/filterList',     //get
     // Recourece Api
     RESOURCE_VIEW_BY_ID_API: '/resource/resourceId', //get /resource//resourceId/:id
     RESOURCE_CREATE_API: '/resource/createResource',    //POST
