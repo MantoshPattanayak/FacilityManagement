@@ -105,7 +105,7 @@ const Landing = () => {
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(0);
 
   const [exploreNewActivities, setExploreNewActivities] = useState([
     {
@@ -676,11 +676,11 @@ const Landing = () => {
                   </div>
                   {selectedButton === 5 ? (
                     <div>
-                      <h2 className="clicked-text-icon">Waterways</h2>
+                      <h2 className="clicked-text-icon">Blueways</h2>
                     </div>
                   ) : (
                     <div>
-                      <h2 className="text1">Waterways</h2>
+                      <h2 className="text1">Blueways</h2>
                     </div>
                   )}
                 </button>
@@ -801,24 +801,6 @@ const Landing = () => {
             ) : (
               <div>No data</div>
             )}
-            {/* <div className="map-facilities">
-              <p>BMC Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>IG park</p>
-            </div>
-            <div className="map-facilities">
-              <p>G.L Colony Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>Kharvela Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>Nicco Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>Badagada Village Park</p>
-            </div> */}
           </div>
         </div>
       </div>
@@ -836,8 +818,6 @@ const Landing = () => {
                 );
               })}
             </div>
-            {/* Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will inaugurate a new open park at Old Town,
-            "Join us for the grand opening of our new park! "   */}
           </marquee>
         </div>
       </div>
