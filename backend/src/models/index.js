@@ -35,8 +35,8 @@ db1.bookinghistory = require("./bookinghistory.models")(sequelize, DataTypes);
 db1.cart = require("./cart.models")(sequelize, DataTypes);
 db1.facilities = require("./facilities.models")(sequelize, DataTypes);
 db1.facilitytype = require("./facilitytype.models")(sequelize, DataTypes);
-db1.parkinventory = require("./parkinventory.models")(sequelize, DataTypes);
-db1.parkinventoryfacilities = require("./parkinventoryfacilities.models")(
+db1.inventorymaster = require("./inventorymaster.models")(sequelize, DataTypes);
+db1.inventoryfacilities = require("./inventoryfacilities.models")(
   sequelize,
   DataTypes
 );
@@ -88,6 +88,8 @@ db1.cart = require('./cart.models')(sequelize,DataTypes);
 db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
 // event bookings table
 db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
+//eventactivities - event masters
+db1.eventActivities = require('./eventactivities.models')(sequelize, DataTypes)
 
 // userActivityPreference
 
@@ -101,8 +103,15 @@ db1.publicnotifications = require('./publicnotifications.models')(sequelize, Dat
 db1.faq = require('./frequentlyaskquestion.models')(sequelize,DataTypes)
 //feedback
 db1.feedback = require('./feedback.model')(sequelize, DataTypes)
-db1.faq.sync({
-  force: false,
+
+
+db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
+db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+//facility activities
+db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
+
+db1.inventorymaster.sync({
+  alter: false,
 });
 
 module.exports = db1;

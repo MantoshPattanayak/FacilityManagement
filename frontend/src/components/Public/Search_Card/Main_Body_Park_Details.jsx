@@ -1,10 +1,10 @@
 // Function of Main Container ---------------------------------------
 import Cardimg from "../../../assets/Card_img.png";
-import sport_image2 from "../../../assets/Sport_image.jpg" 
+import sport_image2 from "../../../assets/Sport_image.jpg"
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faFilter } from "@fortawesome/free-solid-svg-icons";
 // Axios for Call the API --------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Common footer---------------------------- ----------------
@@ -49,7 +49,10 @@ const Main_Body_Park_Details = () => {
   // for Faciltiy ----------------------------------------------------------------
   const [facilityTypeId, setFacilityTypeId] = useState();
   const [selectedTab, setSelectedTab] = useState([]);
+  // , 'Free', 'Paid' (for now remove free and paid u can add if needed) 
   const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
+  // for filter..........................................
+  const filterpark = ['ChildrenPark', 'Boating', 'Skating', 'Yoga', 'Dance']
 
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
@@ -208,6 +211,17 @@ const Main_Body_Park_Details = () => {
   }, [givenReq, facilityTypeId, selectedTab]);
 
 
+
+
+
+// filter logic
+const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+const toggleFilter = () => {
+  setIsFilterOpen(!isFilterOpen);
+};
+
+
   //Return here------------------------------------------------------------------------------------------------------------
   return (
     <div className="main__body__park">
@@ -255,7 +269,7 @@ const Main_Body_Park_Details = () => {
             onClick={(e) => handleParkLogoClick(e, 1)}
             className="image-button"
           >
-            <img className="h-14" src={Event_img} alt="Event" />
+            <img className="h-20" src={Event_img} alt="Event" />
             <span className="button-text">Park</span>
           </button>
 
@@ -264,7 +278,7 @@ const Main_Body_Park_Details = () => {
             onClick={(e) => handleParkLogoClick(e, 2)}
             className="image-button"
           >
-            <img className="h-14" src={Park_Logo} alt="Sports" />
+            <img className="h-20" src={Park_Logo} alt="Sports" />
             <span className="button-text">Playgrounds</span>
           </button>
 
@@ -273,29 +287,63 @@ const Main_Body_Park_Details = () => {
             onClick={(e) => handleParkLogoClick(e, 3)}
             className="image-button"
           >
-            <img className="h-14" src={MultiPark} alt="Multipark" />
-            <span className="button-text">Multipark</span>
+            <img className="h-20" src={MultiPark} alt="Multipark" />
+            <span className="button-text1">Multipurpose  Grounds</span>
           </button>
           {/* waterway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 4)}
             className="image-button"
           >
-            <img className="h-14" src={greenway} alt="Multipark" />
-            <span className="button-text">Greenway</span>
+            <img className="h-20" src={greenway} alt="Multipark" />
+            <span className="button-text">Greenways</span>
           </button>
-               {/* blueway */}
-               <button
+          {/* blueway */}
+          <button
             onClick={(e) => handleParkLogoClick(e, 5)}
             className="image-button"
           >
-            <img className="h-14" src={blueway} alt="Multipark" />
-            <span className="button-text">Waterways</span>
+            <img className="h-20" src={blueway} alt="Multipark" />
+            <span className="button-text">Blueways</span>
           </button>
         </span>
       </div>
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
+        {/* add filter option.............. */}
+         <div className="Filter_grid">
+        <div className="filter-container">
+          <div className="filter_option" onClick={toggleFilter}>
+            <div className="filter-icon">
+              <FontAwesomeIcon icon={faFilter} />
+            </div>
+            <div className="text-filter">Filters</div>
+          </div>
+          {isFilterOpen && (
+            <div className="filter-dropdown">
+              <label>
+                <input type="checkbox" name="yoga" />
+                Yoga
+              </label>
+              <label>
+                <input type="checkbox" name="boating" />
+                Boating
+              </label>
+              <label>
+                <input type="checkbox" name="garden" />
+                Garden
+              </label>
+              <label>
+                <input type="checkbox" name="dance" />
+                Dance
+              </label>
+            </div>
+          )}
+        </div>
+        {/* Other filter buttons and elements */}
+      </div>
+
+
         <div className="filter_button">
           {
             tabList?.length > 0 && tabList?.map((tab) => {
@@ -353,7 +401,7 @@ const Main_Body_Park_Details = () => {
                   title={item.facilityname}
                 >
                   {/* <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" /> */}
-                  <img className="Card_img" src={item.url ? instance().baseURL + '/static/' + item.url : (facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image')} alt="Park" />
+                  <img className="Card_img" src={item.url ? instance().baseURL + '/static/' + item.url : (facilityTypeId === 1 ? Cardimg : facilityTypeId === 2 ? sport_image2 : 'park_image')} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
@@ -378,8 +426,8 @@ const Main_Body_Park_Details = () => {
               <table>
                 <thead>
                   <tr>
-                    <th scope="col">Name of the Park</th>
-                    <th scope="col">Location</th>
+                    <th scope="col "  className="text-left" >Name </th>
+                    <th scope="col"  className="text-left">Location</th>
                     <th scope="col">Distance</th>
                     <th scope="col">Park Status</th>
                     <th className="left">Details</th>
@@ -388,8 +436,8 @@ const Main_Body_Park_Details = () => {
                 <tbody>
                   {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
                     <tr key={table_index}>
-                      <td data-label="Name">{table_item.facilityname}</td>
-                      <td data-label="Location">{table_item.address}</td>
+                      <td data-label="Name" className="text-left">{table_item.facilityname}</td>
+                      <td data-label="Location" className="text-left">{table_item.address}</td>
                       <td data-label='Distance'>{Number(table_item.distance?.toFixed(2)) || 10} km(s)</td>
                       <td data-label='Park Status' className={`Avilable ${table_item.status == "open" ? "text-green-500" : "text-red-500"}`}>{table_item.status?.charAt(0).toUpperCase() + table_item.status?.slice(1)}</td>
                       <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
@@ -413,7 +461,12 @@ const Main_Body_Park_Details = () => {
         ) : (
           // Show message if no data is available
           <div className="no-data-message">
-            <img src={No_Data_icon} alt="No Data Found" />
+            {/* <img src={No_Data_icon} alt="No Data Found" /> */}
+            {
+              facilityTypeId == 1 || facilityTypeId == 2 ?
+                <img src={No_Data_icon} alt="No Data Found" />
+                : <h1 className="Comming_son"><>Coming Soon...</></h1>
+            }
           </div>
         )}
       </div>

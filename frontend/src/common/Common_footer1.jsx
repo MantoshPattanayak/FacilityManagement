@@ -9,10 +9,10 @@ const CommonFooter1 = () => {
     return (
         <div>
             <footer className="common-footer">
-                <div className='header_footer'>
+                {/* <div className='header_footer'>
                     <img className='Ama_Logo' src={Logo}></img>
                     <h1 className='Ama_name'> AMA BHOOMI</h1>
-                </div>
+                </div> */}
 
                 <div className="footer-content">
                     <div className="footer-column1">

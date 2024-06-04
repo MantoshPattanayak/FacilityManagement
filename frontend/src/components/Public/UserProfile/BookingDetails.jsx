@@ -19,6 +19,7 @@ import No_Data_icon from "../../../assets/No_Data_icon.png";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { decryptData } from "../../../utils/encryptData";
 // import format
+import Bokking_Bill from "../Booking_Bill/Booking_Bill";
 // redux --------------------------------------------------------------------------
 import { useDispatch } from 'react-redux';
 import { Logout } from "../../../utils/authSlice";
@@ -136,146 +137,151 @@ const BookingDetails = () => {
     dispatch(Logout());
     navigate('/')
   }
+  // here Function to encryptDataid (Pass the Id)----------------------------------------------
+  function encryptDataId(id) {
+    let res = encryptData(id);
+    return res;
+  }
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+  const handleDetailsClick = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
   return (
     <div>
       <PublicHeader />
       {/* <div className="booking-dtails-container"> */}
-        <div className="booking-dtails-container">
-          <aside className="profile-leftside--Body">
-            <div className="profile-view--Body">
-              <div className="profile-about">
-                <p>{userName}</p>
-                <p>{emailId}</p>
-                <p>{phoneNo}</p>
-              </div>
+      <div className="booking-dtails-container">
+        <aside className="profile-leftside--Body">
+          <div className="profile-view--Body">
+            <div className="profile-about">
+              <p>{userName}</p>
+              <p>{emailId}</p>
+              <p>{phoneNo}</p>
             </div>
-            <div>
-              <ul className="profile-button--Section">
-                <li>
-                  <Link to="/Profile" className="">
-                    Edit User Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/BookingDetails"
-                    className="profile-button"
-                    style={{ color: 'white', backgroundColor: 'green' }}
-                  >
-                    Booking Details
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/UserProfile/Favorites">
-                    Favorites
-                  </Link>
-                </li>
-              </ul>
-              {/* Logout Button */}
-              <button className="button-67 " onClick={handleLogout}>
-                <h1>Logout</h1>
-                <FontAwesomeIcon icon={faArrowRightFromBracket} />
-              </button>
+          </div>
+          <div>
+            <ul className="profile-button--Section">
+              <li>
+                <Link to="/Profile" className="">
+                  Edit User Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/BookingDetails"
+                  className="profile-button"
+                  style={{ color: 'white', backgroundColor: 'green' }}
+                >
+                  Booking Details
+                </Link>
+              </li>
+              <li>
+                <Link to="/UserProfile/Favorites">
+                  Favorites
+                </Link>
+              </li>
+            </ul>
+            {/* Logout Button */}
+            <button className="button-67 " onClick={handleLogout}>
+              <h1>Logout</h1>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            </button>
 
-            </div>
-          </aside>
-          <div className="right-container-favorite">
-            {/* New div with paragraph and blue border */}
-            {/* <div className="form-container"> */}
-            <div className="eventdetails-tab">
-              {tab?.length > 0 &&
-                tab.map((tabData) => {
-                  if (tabData.active) {
-                    return (
-                      <div
-                        className="active"
+          </div>
+        </aside>
+        <div className="right-container-favorite">
+          {/* New div with paragraph and blue border */}
+          {/* <div className="form-container"> */}
+          <div className="eventdetails-tab">
+            {tab?.length > 0 &&
+              tab.map((tabData) => {
+                if (tabData.active) {
+                  return (
+                    <div
+                      className="active"
+                      onClick={(e) => manageCurrentTab(e, tabData.tabName)}
+                    >
+                      <button
                         onClick={(e) => manageCurrentTab(e, tabData.tabName)}
                       >
-                        <button
-                          onClick={(e) => manageCurrentTab(e, tabData.tabName)}
-                        >
-                          {tabData.tabName}
-                        </button>
+                        {tabData.tabName}
+                      </button>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
+                      <button
+                        onClick={(e) => manageCurrentTab(e, tabData.tabName)}
+                      >
+                        {tabData.tabName}
+                      </button>
+                    </div>
+                  );
+                }
+              })}
+          </div>
+          {
+            eventDetailsData?.length > 0 &&
+            <div className="eventdetails-cardsection">
+              {eventDetailsData?.length > 0 &&
+                eventDetailsData?.map((event) => {
+                  return (
+                    <div className="eventdetails-carddetails">
+                      <div className="eventdetails-photo">
+                        <img src={eventPhoto} />
                       </div>
-                    );
-                  } else {
-                    return (
-                      <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
-                        <button
-                          onClick={(e) => manageCurrentTab(e, tabData.tabName)}
-                        >
-                          {tabData.tabName}
-                        </button>
-                      </div>
-                    );
-                  }
-                })}
-            </div>
-            {
-              eventDetailsData?.length > 0 &&
-              <div className="eventdetails-cardsection">
-                {eventDetailsData?.length > 0 &&
-                  eventDetailsData?.map((event) => {
-                    return (
-                      <div className="eventdetails-carddetails">
-                        <div className="eventdetails-photo">
-                          <img src={eventPhoto} />
+                      <div className="eventdetails-details">
+                        <div className="eventdetails-details-eventname">
+                          {event.name}
                         </div>
-                        <div className="eventdetails-details">
-                          <div className="eventdetails-details-eventname">
-                            {event.name}
-                          </div>
-                          <div className="eventdetails-details-eventAddress">
-                            {event.location}
-                          </div>
-                          <div className="flex justify-between eventdetails-details-eventTime">
-                            <div className="booking-date">Booking Date {formatDate(event.bookingDate)}</div>
-                            {/* <div>
+                        <div className="eventdetails-details-eventAddress">
+                          {event.location}
+                        </div>
+                        <div className="flex justify-between eventdetails-details-eventTime">
+                          <div className="booking-date">Booking Date {formatDate(event.bookingDate)}</div>
+                          {/* <div>
                               <FontAwesomeIcon icon={faClock} />{" "}
                               {calculateTime(event.createdDate)} ago
                             </div> */}
-                          </div>
-                          {
-                            event.type == 'Parks' ?
-                              <Link
-                                className="eventdetails-eventbutton"
-                                to={{
-                                  pathname: "/Sub_Park_Details",
-                                  search: `?facilityId=${encryptData(event.Id)}`,
-                                }}
-                              >
-                                Details
-                              </Link>
-                              : event.type == 'Playgrounds' ?
-                                <Link
-                                  className="eventdetails-eventbutton"
-                                  to={{
-                                    pathname: "/Sub_Park_Details",
-                                    search: `?facilityId=${encryptData(event.Id)}`,
-                                  }}
-                                >
-                                  Details
-                                </Link> : null
-                          }
-
                         </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            }
 
-            {
-              eventDetailsData?.length == 0 &&
-              <div className="flex justify-center w-full">
-                <img src={No_Data_icon} alt="No Data Found" />
-              </div>
-            }
-          </div>
+
+                        <Link
+
+               
+                          to={{
+                            pathname: "/BookParks/Bokking_Bill",
+                            search: `?bookingId=${encryptDataId(event.bookingId)}`,
+                          }}
+                          className="eventdetails-eventbutton"
+
+                        >
+                          Details
+                        </Link>
+
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          }
+
+          {
+            eventDetailsData?.length == 0 &&
+            <div className="flex justify-center w-full">
+              <img src={No_Data_icon} alt="No Data Found" />
+            </div>
+          }
         </div>
       </div>
+    </div>
 
     // </div>
     // </div>

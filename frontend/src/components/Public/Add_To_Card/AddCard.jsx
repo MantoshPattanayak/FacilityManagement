@@ -118,7 +118,7 @@ const Add_Card = () => {
                         {/*------------------------------------ Payment Button --------------------------------------------- */}
                         <div className="Button_pay9">
                             <button className="button-379" role="button">
-                                <FontAwesomeIcon icon={faCreditCard} className="pay-icon" />  Pay INR 00.00
+                                 <FontAwesomeIcon icon={faCreditCard} className="pay-icon" />  Pay INR 00.00
                             </button>
                         </div>
                     </div>

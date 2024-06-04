@@ -4,7 +4,10 @@ const db = require('../../../models')
 const bcrypt = require('bcrypt')
 const { decrypt } = require('../../../middlewares/decryption.middlewares')
 const { encrypt } = require('../../../middlewares/encryption.middlewares')
-const eventMasters = db.eventmasters;
+const eventMasters = db.eventActivities;
+const sendEmail = require('../../../utils/generateEmail');
+const mailToken = require('../../../middlewares/mailToken.middlewares');
+const hosteventdetails = db.hosteventdetails;
 
 let viewList = async (req, res) => {
     try {
@@ -84,6 +87,9 @@ let performAction = async (req, res) => {
     try {
         let eventId = req.params.eventId;
         let action = req.body.action;
+        let reasonForRejection = req.body.reasonForRejection;
+
+        console.log({ eventId, action });
 
         let fetchStatusMasterListQuery = `select statusId, statusCode, description, parentStatusCode from amabhoomi.statusmasters s
         where parentStatusCode = 'HOSTING_STATUS'`;
@@ -100,7 +106,9 @@ let performAction = async (req, res) => {
                 (status) => { return status.statusCode == 'APPROVED' }
         );
 
-        let [updateCount, updateTheStatusOfEvent] = await eventMasters.update({ status: statusId }, {
+        console.log('statusId', statusId);
+
+        let [updateCount] = await eventMasters.update({ statusId: parseInt(statusId) }, {
             where: {
                 eventId: eventId
             }
@@ -138,6 +146,47 @@ let performAction = async (req, res) => {
 
         console.log('updateAction', updateCount);
 
+        // fetch event host details
+        let fetchHostDetails = await hosteventdetails.findOne({
+            where: {
+                eventId: eventId
+            }
+        });
+
+        console.log('host event details', fetchHostDetails);
+
+        // send mail notification to the user for host event request
+        let firstField = fetchHostDetails?.emailId;
+        let secondField = fetchHostDetails?.phoneNo || '';
+        let token = await mailToken({firstField, secondField});
+        let messageBody = null;
+
+        if(action == 0){    // if host event request is rejected
+            messageBody = `
+                Hello Sir/Madam,
+                Your request for hosting an event is rejected due to the following mentioned reasons:<br/>
+                ${reasonForRejection}<br/>
+
+                Thank you for using AMA BHOOMI.
+            `;
+        }
+        else if(action == 1){   //if host event request is approved
+            messageBody = `Hello Sir/Madam,
+            Your request for hosting an event is approved. Please do the required payment<br/>
+            Thank you for using AMA BHOOMI.`
+        }
+
+        try {
+            await sendEmail({
+                emailId: `${fetchHostDetails?.emailId}`,
+                subject: "Event host request rejected",
+                html: `<p>${messageBody}</p>`
+            })
+        }
+        catch(error){
+            console.error('Not able to send the email currently!', error);
+        }
+
         if(updateCount > 0) {
             res.status(statusCode.SUCCESS.code).send({
                 message: (action == 0) ? 'Event host request is rejected.' : 'Event host request is approved.'
@@ -154,8 +203,18 @@ let performAction = async (req, res) => {
     }
 }
 
+let modifyAction = async (req, res) => {
+    try {
+
+    }
+    catch(error){
+
+    }
+}
+
 module.exports = {
     viewList,
     viewId,
-    performAction
+    performAction,
+    modifyAction
 }
