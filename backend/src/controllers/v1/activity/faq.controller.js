@@ -6,7 +6,7 @@ const createFaq = async (req, res) => {
   try {
     console.log("12");
     let createFaq;
-    const { questionInEnglish, answerInEnglish, questionInOdia, answerInOdia } =
+    const { facilityTypeId,questionInEnglish, answerInEnglish, questionInOdia, answerInOdia } =
       req.body;
     console.log("hello", req.body);
 
@@ -34,6 +34,7 @@ const createFaq = async (req, res) => {
       });
     }
     createFaq = await faq.create({
+      facilityTypeId:  facilityTypeId,
       questionInEnglish: questionInEnglish,
       answerInEnglish: answerInEnglish,
       questionInOdia: questionInOdia,

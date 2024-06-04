@@ -10,5 +10,6 @@ router.post('/submit-grievance', grievanceController.addGrievance);
 router.post('/viewgrievancelist', grievanceController.viewGrievanceList);
 // view grievance by id
 router.get('/viewgrievance/:grievanceId', grievanceController.viewGrievanceById);
-
+// create feedack
+router.post("/createFeedback", grievanceController.createFeedback); 
 module.exports = router;
