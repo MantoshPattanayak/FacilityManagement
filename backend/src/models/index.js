@@ -101,11 +101,13 @@ db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 
 db1.clicklog = require('./clicklog.models')(sequelize,DataTypes)
+//facility activities
+db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
+// facility tariff
+db1.facilitytariff = require('./facilitytariff.models')(sequelize,DataTypes)
 
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
-//facility activities
-db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
 
 db1.facilities.hasMany(db1.facilityactivities,{foreignKey:"facilityId"})
 db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
@@ -113,8 +115,9 @@ db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"})
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
 
-db1.clicklog.sync({
-  force: false,
+
+db1.facilitytariff.sync({
+  alter: true,
 });
 
 module.exports = db1;

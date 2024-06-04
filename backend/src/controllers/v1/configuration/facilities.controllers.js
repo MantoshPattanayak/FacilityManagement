@@ -12,6 +12,8 @@ const Sequelize = db.Sequelize
 let facilitiesTable = db.facilities;
 let facilitiesActivities = db.facilityactivities
 let userActivity = db.useractivitymasters;
+let facilityTariff = db.facilitytariff
+let userBookmark = db.bookmarks
 const fs = require('fs');
 
 
@@ -106,6 +108,7 @@ function encodeUrls(facilitiesArray) {
 
 const viewParkDetails = async(req,res)=>{
     try{
+        let userId = req.user?.id || 1
         let givenReq = req.body.givenReq?req.body.givenReq:null
         let facilityTypeId = req.body.facilityTypeId?req.body.facilityTypeId:null
         console.log(givenReq,'givenReq ')
@@ -157,11 +160,17 @@ const viewParkDetails = async(req,res)=>{
         // const convertedData = convertImagesToBase64(matchedData);
         // Call the function to encode URLs in the facilities array
         const encodedFacilities = encodeUrls(matchedData);
-        
+        // fetch bookmark details
+        let fetchBookmarkDetails = await userBookmark.findAll({
+            where:{
+                publicUserId:userId
+            }
+        })
         // console.log(encodedFacilities)
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:encodedFacilities
+            data:encodedFacilities,
+            bookmarkDetails:fetchBookmarkDetails
         })
 
 
@@ -188,6 +197,7 @@ const autoSuggestionForViewParkDetails = async (req,res)=>{
 
 const viewParkById = async (req,res)=>{
     try{
+        let userId = req.user?.id || 1;
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         let findFacilityTypeId = await facilitiesTable.findOne({
             where:{
@@ -240,13 +250,26 @@ const viewParkById = async (req,res)=>{
                 }
             ]
         })
+
+        let fetchTariff = await facilityTariff.findOne({
+            where:{
+                facilityId:facilityId
+            }
+        })
+        let fetchBookmarkDetails = await userBookmark.findAll({
+            where:{
+                publicUserId:userId
+            }
+        })
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
            facilitiesData: fetchTheFacilitiesDetailsData[0],
            eventDetails:fetchEventDetailsData[0],
             amenitiesData:fethAmenitiesDetailsDataData[0],
             serviceData:fetchServicesDetailsData[0],
-            fetchfacilitiesActivities:fetchfacilitiesActivities
+            fetchfacilitiesActivities:fetchfacilitiesActivities,
+            fetchTariffData:fetchTariff,
+            fetchBookmarkDetails:fetchBookmarkDetails
         })
         }
         else{
