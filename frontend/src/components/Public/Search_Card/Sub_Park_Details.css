@@ -93,7 +93,7 @@
 
 .Open_Button {
 
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 700;
     border: 1px 2px soild red;
 }
@@ -104,6 +104,14 @@
 
 .closed {
     color: rgb(191, 42, 42);
+}
+.bookmark{
+    right: 0;
+    margin-left: 40%;
+}
+.bookmark:hover{
+color: #019f13;
+cursor: pointer;
 }
 
 .Button_ticket_container {
@@ -130,9 +138,11 @@
     margin: 12px 0 0;
     outline: none;
     overflow: hidden;
-    padding: 0 25px;
+    padding: -1 25px;
     position: relative;
     text-align: center;
+    display: flex;
+    align-items: center;
     text-transform: none;
     transform: translateZ(0);
     transition: all .2s, box-shadow .08s ease-in;
@@ -140,6 +150,7 @@
     -webkit-user-select: none;
     touch-action: manipulation;
     width: 45%;
+    font-size: small;
 }
 
 .button-10:disabled {
@@ -191,6 +202,7 @@
     -webkit-user-select: none;
     touch-action: manipulation;
     width: 45%;
+    font-size: small;
 }
 
 .button-9:disabled {
@@ -427,7 +439,7 @@
     }
 
     .Open_Button {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .button-9 {
@@ -446,9 +458,17 @@
     .Number {
         font-size: 14px;
     }
+    .bookmark{
+        
+        margin-left: 16%;
+    }
+
 }
 
 @media screen and (max-width: 1024px) {
+    .open{
+        margin-left: 85px;
+    }
     /* .map_img_main_conatiner {
         display: flex;
         flex-direction: column;
@@ -857,4 +877,7 @@
 
       .other-contents{
         padding: 5px;
+      }
+      .date_text{
+        font-weight: 500;
       }
