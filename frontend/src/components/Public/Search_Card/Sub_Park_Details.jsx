@@ -67,7 +67,7 @@ const Sub_Park_Details = () => {
         facilityId
       );
 
-      console.log("here Response", res);
+      console.log("here Response of park_details", res);
       setServiceData(res.data.serviceData);
       setAmenitiesData(res.data.amenitiesData);
       setEventAvailable(res.data.eventDetails);

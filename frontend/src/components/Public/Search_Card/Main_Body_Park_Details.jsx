@@ -426,8 +426,8 @@ const toggleFilter = () => {
               <table>
                 <thead>
                   <tr>
-                    <th scope="col">Name of the Park</th>
-                    <th scope="col">Location</th>
+                    <th scope="col "  className="text-left" >Name </th>
+                    <th scope="col"  className="text-left">Location</th>
                     <th scope="col">Distance</th>
                     <th scope="col">Park Status</th>
                     <th className="left">Details</th>
@@ -436,8 +436,8 @@ const toggleFilter = () => {
                 <tbody>
                   {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
                     <tr key={table_index}>
-                      <td data-label="Name">{table_item.facilityname}</td>
-                      <td data-label="Location">{table_item.address}</td>
+                      <td data-label="Name" className="text-left">{table_item.facilityname}</td>
+                      <td data-label="Location" className="text-left">{table_item.address}</td>
                       <td data-label='Distance'>{Number(table_item.distance?.toFixed(2)) || 10} km(s)</td>
                       <td data-label='Park Status' className={`Avilable ${table_item.status == "open" ? "text-green-500" : "text-red-500"}`}>{table_item.status?.charAt(0).toUpperCase() + table_item.status?.slice(1)}</td>
                       <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}

@@ -29,7 +29,7 @@
   .search_text_conatiner{
     display: flex;
     justify-content: space-between;
-    padding: 12px;
+    padding: 10px;
   }
 
     .search_field_button {
