@@ -819,7 +819,7 @@ const Landing = () => {
                 const diffInDays = Math.round((currentDate - createdAtDate) / (1000 * 3600 * 24));
                 return (
                   <p className="notce2para">
-                    {diffInDays <= 100 ? <span style={{ backgroundColor: 'green', color:'white', marginRight:'4px',marginLeft:'5vw', borderRadius:'4px', fontSize:'18px' }}>New </span> : ''}
+                    {diffInDays <= 100 ? <p className="New_text"> New </p> : ''}
                     {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
 
                     {notification.publicNotificationsContent} &nbsp; &nbsp;
