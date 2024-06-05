@@ -109,7 +109,8 @@ db1.facilitytariff = require('./facilitytariff.models')(sequelize,DataTypes)
 db1.faq = require('./frequentlyaskquestion.models')(sequelize,DataTypes)
 //feedback
 db1.feedback = require('./feedback.model')(sequelize, DataTypes)
-
+db1.departmentmasters = require('./departmentmasters.models')(sequelize, DataTypes)
+db1.grievancecategories = require('./grievancecategories.models')(sequelize, DataTypes)
 
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
