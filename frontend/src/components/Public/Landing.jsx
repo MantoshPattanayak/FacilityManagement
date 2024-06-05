@@ -23,6 +23,9 @@ import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
 import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
 import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
 import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
+import ad1 from "../../assets/ad1.png";
+import ad2 from "../../assets/ad2.png";
+import ad3 from "../../assets/ad3.png";
 // import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/explore new activity badminton.png";
@@ -472,25 +475,50 @@ const Landing = () => {
 
   //------- Advatisemant -----------
 
-  const ad = [adImg, adImg, adImg, adImg, adImg];
+  const ad = [adImg,ad1, ad2, ad3];
+
+  // Home page image
+  const getStyles = () => {
+    const width = window.innerWidth;
+    const baseStyle = {
+      backgroundImage: `linear-gradient(to right, #010101b5 20%, transparent), url(${selectedImage})`,
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      opacity: "100%",
+      maxHeight: "100%",
+      marginBottom: "1px",
+      padding: "100px",
+      width: "100vw",
+      height: "100vh",
+      position: "relative",
+    };
+
+    if (width < 1190) {
+      return {
+        ...baseStyle,
+        height: "36vh",
+      };
+    } else if (width < 1200) {
+      return {
+        ...baseStyle,
+        height: "50vh",
+      };
+    } else if (width < 1400) {
+      return {
+        ...baseStyle,
+        height: "38vh",
+      };
+    } else {
+      return baseStyle;
+    }
+  };
+
+  const styles = getStyles();
+
 
   return (
     <div className="landingcontainer">
-      <section
-        className="bg-img"
-        style={{
-          backgroundImage: `linear-gradient(to right, #010101b5 20%, transparent), url(${selectedImage})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          opacity: "100%",
-          maxHeight: "100%",
-          marginBottom: "1px",
-          padding: "100px",
-          width: "100vw",
-          height: "100vh",
-          position: "relative",
-        }}
-      >
+      <section className="bg-img" style={styles}>
         <PublicHeader />
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
@@ -853,7 +881,7 @@ const Landing = () => {
         {/* .........Card section scroll using carousel ..........*/}
 
         <div className="carousel">
-          <button className="carousel-button left" onClick={prevImage}>
+          <button className="carousel-button2 left" onClick={prevImage}>
             &lt;
           </button>
           <div className="carousel-container">
@@ -907,7 +935,7 @@ const Landing = () => {
               ))} */}
             </div>
           </div>
-          <button className="carousel-button right" onClick={nextImage}>
+          <button className="carousel-button2 right" onClick={nextImage}>
             &gt;
           </button>
         </div>
@@ -970,7 +998,7 @@ const Landing = () => {
         </div>
 
         <div className="carousel">
-          <button className="carousel-button left" onClick={prevImage}>
+          <button className="carousel-button2 left" onClick={prevImage}>
             &lt;
           </button>
           <div className="carousel-container">
@@ -991,7 +1019,7 @@ const Landing = () => {
               ))}
             </div>
           </div>
-          <button className="carousel-button right" onClick={nextImage}>
+          <button className="carousel-button2 right" onClick={nextImage}>
             &gt;
           </button>
         </div>
