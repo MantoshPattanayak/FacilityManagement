@@ -54,10 +54,10 @@ const Main_Body_Park_Details = () => {
   // for filter..........................................
   const [filters, setFilters] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState({
-    Activity: [],
-    Amenities: [],
-    EventCategories: [],
-    Services: []
+    Activity: new Array(),
+    Amenities: new Array(),
+    EventCategories: new Array(),
+    Services: new Array()
   });
 
   // Use Navigate for Navigate the page ----------------------------------------------
@@ -109,7 +109,8 @@ const Main_Body_Park_Details = () => {
     e.preventDefault();
     let filterSelected = JSON.parse(JSON.stringify(selectedFilter));
     if (filterSelected[filterType].includes(id)) {
-      filterSelected[filterType] = filterSelected[filterType].filter((data) => { return data.id != id });
+      // console.log('id includes...', id);
+      filterSelected[filterType] = filterSelected[filterType].filter((data)=> {return data != id});
     }
     else {
       filterSelected[filterType].push(id);
@@ -382,7 +383,7 @@ const Main_Body_Park_Details = () => {
                       if (selectedFilter.Activity.includes(activity.userActivityId)) {
                         return (
                           <label>
-                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked />
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={true}/>
                             {activity.userActivityName}
                           </label>
                         )
@@ -390,7 +391,7 @@ const Main_Body_Park_Details = () => {
                       else {
                         return (
                           <label>
-                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} />
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={false}/>
                             {activity.userActivityName}
                           </label>
                         )

@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import "./Sub_Park_Details.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-
 // Here Import Admin Header AND fOOTER ------------------------------------
 import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
@@ -34,6 +31,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import PublicHeader from "../../../common/PublicHeader";
+import Book_Now from "../BookParks/Book_Now";
 // Here Funcation of Sub_park_details------------------------------------------
 const Sub_Park_Details = () => {
   // UseSate for get data -------------------------------------
@@ -53,7 +51,15 @@ const Sub_Park_Details = () => {
   const navigate = useNavigate();
   const isUserLoggedIn = sessionStorage.getItem("isUserLoggedIn") || 0;
   const [toRoute, setToRoute] = useState();
-  const [operatingDays, setOperatingDays] = useState([]);
+
+  //Here is the popup state
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+
   // Here Map Api keys ------------------------------------------------------------
 
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
@@ -71,44 +77,11 @@ const Sub_Park_Details = () => {
         facilityId
       );
 
-      console.log("here Response of park_details", res);
+      console.log("here Response", res);
       setServiceData(res.data.serviceData);
       setAmenitiesData(res.data.amenitiesData);
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
-      setOperatingDaysFromRes(res);
-
-      function setOperatingDaysFromRes(res) {
-        let operatingDaysFromRes = new Array();
-        console.log(res.data.facilitiesData[0]);
-        // console.log(res.data.facilitiesData[0].sun);
-
-        if (res.data.facilitiesData[0].sun == 1) {
-          operatingDaysFromRes.push('Sun');
-        }
-        if (res.data.facilitiesData[0].mon == 1) {
-          operatingDaysFromRes.push('Mon');
-        }
-        if (res.data.facilitiesData[0].tue == 1) {
-          operatingDaysFromRes.push('Tue');
-        }
-        if (res.data.facilitiesData[0].wed == 1) {
-          operatingDaysFromRes.push('Wed');
-        }
-        if (res.data.facilitiesData[0].thu == 1) {
-          operatingDaysFromRes.push('Thu');
-        }
-        if (res.data.facilitiesData[0].fri == 1) {
-          operatingDaysFromRes.push('Fri');
-        }
-        if (res.data.facilitiesData[0].sat == 1) {
-          operatingDaysFromRes.push('Sat');
-        }
-        
-        console.log('operatingDays', operatingDaysFromRes);
-        setOperatingDays(operatingDaysFromRes);
-        return;
-      }
     } catch (err) {
       console.log("here Error", err);
     }
@@ -128,18 +101,18 @@ const Sub_Park_Details = () => {
     return res;
   }
 
-  //Image swap  conatiner ------------------------------------------------
+  //Image swap conatiner ------------------------------------------------
   // const containerRef = useRef(null);
   // const [currentIndex, setCurrentIndex] = useState(0);
   // useEffect(() => {
-  //   const container = containerRef.current;
-  //   const interval = setInterval(() => {
-  //     const newIndex = (currentIndex + 1) % 10;
-  //     setCurrentIndex(newIndex);
-  //     container.scrollLeft = newIndex * container.offsetWidth;
-  //   }, 4000); 
+  // const container = containerRef.current;
+  // const interval = setInterval(() => {
+  // const newIndex = (currentIndex + 1) % 10;
+  // setCurrentIndex(newIndex);
+  // container.scrollLeft = newIndex * container.offsetWidth;
+  // }, 4000);
 
-  //   return () => clearInterval(interval);
+  // return () => clearInterval(interval);
   // }, [currentIndex]);
 
 
@@ -193,7 +166,7 @@ const Sub_Park_Details = () => {
       {/* here Header -----------------------------------------------------*/}
       <PublicHeader />
 
-      {/* Here Heading Image (Below of header) and set the class Name according to Id  */}
+      {/* Here Heading Image (Below of header) and set the class Name according to Id */}
       <div className={FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1 ? "Header_Img" : FacilitiesData[0]?.facilityTypeId === 2 ? "playground_header_image" : FacilitiesData[0]?.facilityTypeId === 3 ? "MulitGroud" : ""}>
         <h1 className="text-park">
           {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
@@ -208,21 +181,21 @@ const Sub_Park_Details = () => {
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="map_img_main_conatiner">
         {/* <div className="Image_conatiner" ref={containerRef}>
-          <button className="carousel-button left" onClick={prevImage}>
-            &lt;
-          </button>
-          {images.map((images, index) => (
-            <img
-              key={index}
-              className="Park_image"
-              src={images}
-              alt={`Images ${index}`}
-            />
-          ))}
-          <button className="carousel-button right" onClick={nextImage}>
-            &gt;
-          </button>
-        </div> */}
+<button className="carousel-button left" onClick={prevImage}>
+&lt;
+</button>
+{images.map((images, index) => (
+<img
+key={index}
+className="Park_image"
+src={images}
+alt={`Images ${index}`}
+/>
+))}
+<button className="carousel-button right" onClick={nextImage}>
+&gt;
+</button>
+</div> */}
         <div className="carousel-container1">
           <div className="carousel1">
             <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
@@ -237,33 +210,22 @@ const Sub_Park_Details = () => {
 
 
         <div className="Map_container">
-          <span className="time_status flex flex-col">
-            <div className="flex">
-              <h1 className="time_text">
-                {" "}
-                Timing : {formatTime(
-                  FacilitiesData[0]?.operatingHoursFrom
-                )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
-              </h1>
-              <button
-                className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
-                  ? "open"
-                  : "closed"
-                  }`}
-              >
-                {FacilitiesData?.length > 0 &&
-                  FacilitiesData[0]?.status.toUpperCase()}
-              </button>
-              <div className="bookmark">
-                <FontAwesomeIcon icon={faBookmark} />
-              </div>
-            </div>
-            {/* show day in the ui.................................................................... */}
-            <div>
-              <h1 className="date_text text-[12px]">
-                Day:{operatingDays.toString()}
-              </h1>
-            </div>
+          <span className="time_status">
+            <h1 className="time_text">
+              {" "}
+              Timing : {formatTime(
+                FacilitiesData[0]?.operatingHoursFrom
+              )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+            </h1>
+            <button
+              className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
+                ? "open"
+                : "closed"
+                }`}
+            >
+              {FacilitiesData?.length > 0 &&
+                FacilitiesData[0]?.status.toUpperCase()}
+            </button>
           </span>
 
           <span className="Button_ticket_container">
@@ -285,7 +247,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by">Buy  Ticket</button>
+                  <button role="button_by" onClick={togglePopup}>Buy Ticket</button>
                 </Link>
               )
                 : FacilitiesData[0]?.facilityTypeId == 2 ? (
@@ -304,7 +266,7 @@ const Sub_Park_Details = () => {
                     }}
                     className="button-9"
                   >
-                    <button role="button_by">Buy  Ticket</button>
+                    <button role="button_by">Buy Ticket</button>
                   </Link>
                 )
                   : (
@@ -323,7 +285,7 @@ const Sub_Park_Details = () => {
                       }}
                       className="button-9"
                     >
-                      <button role="button_by">Buy  Ticket</button>
+                      <button role="button_by">Buy Ticket</button>
                     </Link>
                   )
             }
@@ -467,9 +429,10 @@ const Sub_Park_Details = () => {
             {EventAvailable?.length == 0 && <p>No events.</p>}
           </div>
         </div>
+        {/* <Book_Now/> */}
       </div>
+      
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-
     </div >
   );
 };
