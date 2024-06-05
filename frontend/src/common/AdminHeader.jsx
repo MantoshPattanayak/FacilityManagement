@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import APP_LOGO from "../assets/ama-bhoomi_logo.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminHeader = () => {
   const [isMenuActive, setMenuActive] = useState(false);
@@ -79,9 +79,11 @@ const AdminHeader = () => {
   return (
     <header className="header" id="header">
       <section className="wrapper container">
-        <a href={`${isAdminLoggedIn == 1 ? '/Dashboard/AdminDashboard' : '/admin-login'}`} className="brand">
-          <img className="ama_bhoomi_logo" src={APP_LOGO} alt="App Logo"  />
-        </a>
+        <Link to={`${isAdminLoggedIn == 1 ? '/Dashboard/AdminDashboard' : '/admin-login'}`} className="brand">
+          <div className="logo-ama-boomi">
+            <img src={APP_LOGO} alt="ama bhoomi logo" className="h-[100%] top-0 absolute" />
+          </div>
+        </Link>
         <div className="burger" id="burger" onClick={toggleMenu}>
           <span className="burger-line"></span>
           <span className="burger-line"></span>
