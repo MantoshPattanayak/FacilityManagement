@@ -16,4 +16,6 @@ router.get('/viewParkById/:facilityId',facilities.viewParkById)
 
 router.post('/nearByDataInMap',facilities.nearByDataInMap)
 
+router.get('/filterList', facilities.facilityFilterOption)
+
 module.exports = router

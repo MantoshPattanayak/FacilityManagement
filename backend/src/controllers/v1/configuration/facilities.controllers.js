@@ -790,11 +790,39 @@ const nearByDataInMap = async (req, res) => {
     }
 };
 
+// api to fetch filter option based on facility type
+const facilityFilterOption = async (req, res) => {
+    let facilityTypeId = req.params.facilityTypeId;
+    
+    let fetchActivityMaster = await sequelize.query(`
+        select * from amabhoomi.useractivitymasters u
+    `);
+
+    let fetchAmenitiesMaster = await sequelize.query(`
+        select * from amabhoomi.amenitymasters a
+    `);
+
+    let fetchServicesMaster = await sequelize.query(`
+        select * from amabhoomi.services s
+    `);
+
+    let fetchEventCategories = await sequelize.query(`
+        select * from amabhoomi.eventcategorymasters e 
+    `);
+
+    // console.log('fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster', { fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster });
+
+    res.status(statusCode.SUCCESS.code).json({
+        message: 'Activity, Amenity, Services List',
+        fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster, fetchEventCategories
+    })
+}
 
 module.exports ={
     displayMapData,
     searchParkFacilities,
     viewParkDetails,
     viewParkById,
-    nearByDataInMap
+    nearByDataInMap,
+    facilityFilterOption
 }
