@@ -242,7 +242,7 @@ function App() {
             <Route path="/activity/grievance" element={<ProtectedRoute><ViewGrievanceList /></ProtectedRoute>}/>
             <Route path="/activity/assign-grievance" element={<ProtectedRoute><AssignGrievance /></ProtectedRoute>}/>
             <Route path="/activity/grievance-action" element={<ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute>}/>
-            <Route path="/FooterPages/Grievance" element={<ProtectedRoute><Grievance /></ProtectedRoute>}/>
+            <Route path="/grievance-feedback-form" element={<ProtectedRoute><Grievance /></ProtectedRoute>}/>
             {/* Activity - Grievance */}
             {/* ADMIN SECTION - UAC*/}
             <Route
