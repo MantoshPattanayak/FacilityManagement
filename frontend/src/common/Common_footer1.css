@@ -1,216 +1,233 @@
 /* Common Footer Styles */
 .common-footer {
-    background-color:rgb(177, 176, 176);
-    color: #fff;
-    padding: 2rem 0;
-    position: relative; /* Change position to relative */
+  background-color: rgb(177, 176, 176);
+  color: #fff;
+  padding: 2rem 0;
+  position: relative;
+  /* Change position to relative */
 }
 
 .header_footer {
-    position: absolute; /* Position the header_footer absolutely */
-    top: 0; /* Place it at the top of the footer */
-    left: 0; /* Align it to the left */
-    width: 100%; /* Make it take the full width of the footer */
-    background-color: rgb(155, 153, 153);
-    display: flex;
-    justify-content: center;
-   
+  position: absolute;
+  /* Position the header_footer absolutely */
+  top: 0;
+  /* Place it at the top of the footer */
+  left: 0;
+  /* Align it to the left */
+  width: 100%;
+  /* Make it take the full width of the footer */
+  background-color: rgb(155, 153, 153);
+  display: flex;
+  justify-content: center;
+
 }
 
-.Ama_name{
-    padding-top:2px;
-    font-size: 30px;
-    font-weight: 800;
-    padding-right: 7px; 
-    border-right: 3px dotted rgb(242, 242, 242) ;
-    font-style: italic;
-    
-   
+.Ama_name {
+  padding-top: 2px;
+  font-size: 30px;
+  font-weight: 800;
+  padding-right: 7px;
+  border-right: 3px dotted rgb(242, 242, 242);
+  font-style: italic;
+
+
 }
-.Amam_text{
-    font-size: 40px;
-    color: black;
-    font-weight: 700;
+
+.Amam_text {
+  font-size: 40px;
+  color: black;
+  font-weight: 700;
 }
-.p_text_ama{
-    font-size: 18px;
-    color: rgb(18, 18, 18);
-}
-.donwload_name{
-    font-size: 20px;
-    color: black;
-    font-weight:600 ;
+
+.p_text_ama {
+  font-size: 18px;
+  color: rgb(18, 18, 18);
 }
 
 .donwload_name {
-    font-size: 20px;
-    color: black;
-    font-weight: 600;
-    margin-right: 10px;
-  }
-  
-  .Downlad_Appp {
-  
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .donwload_name {
-    font-size: 20px;
-    color: black;
-    font-weight: 600;
- 
-  }
-  
-  .input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  
-  .Input_text_send_mail {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-     width: 50%;
-   
-  }
-  
-  .Input_text_send_mail::placeholder {
-    color: #999;
-  }
-  
-  .paper-plane-icon {
-    margin-left: -40px; /* Adjust the spacing between input and icon */
-    color: #747272;
-    cursor: pointer;
-    font-size: 30px;
-  }
+  font-size: 20px;
+  color: black;
+  font-weight: 600;
+}
 
-  .App_download{
-    display: flex;
-    padding-top: 40px;
- 
-  }
-  .download_image{
-    height: 7vh;
+.donwload_name {
+  font-size: 20px;
+  color: black;
+  font-weight: 600;
+  margin-right: 10px;
+}
 
-  }
-  
-  
+.Downlad_Appp {
+
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.donwload_name {
+  font-size: 20px;
+  color: black;
+  font-weight: 600;
+
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.Input_text_send_mail {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 50%;
+
+}
+
+.Input_text_send_mail::placeholder {
+  color: #999;
+}
+
+.paper-plane-icon {
+  margin-left: -40px;
+  /* Adjust the spacing between input and icon */
+  color: #747272;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.App_download {
+  display: flex;
+  padding-top: 40px;
+
+}
+
+.download_image {
+  height: 7vh;
+
+}
+
+
 .footer-content {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
- 
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
 }
 
 
 .footer-column2 {
-    flex: 1;
-    margin: 0 1rem;
-    padding-top: 40px;
-  
+  flex: 1;
+  margin: 0 1rem;
+  padding-top: 40px;
 
-    
+
+
 }
 
 .footer-column2 ul {
-    list-style-type: none;
-    padding: 0;
-  
+  list-style-type: none;
+  padding: 0;
+
 }
 
 .footer-column2 ul li {
-    margin-bottom: 0.5rem;
-    border-right: 1px dotted rgb(250, 250, 250);
-    padding-right: 7px;
-   
+  margin-bottom: 0.5rem;
+  border-right: 1px dotted rgb(250, 250, 250);
+  padding-right: 7px;
 
-   
+
+
 }
 
 .footer-column2 ul li a {
-    color: black;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
+  color: black;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
 }
 
 
-.Ul_contact_partner{
-    display: flex;
-    justify-content: space-evenly;
-    border-bottom: 0.5px dotted rgb(252, 252, 252);
-    
+.Ul_contact_partner {
+  display: flex;
+  justify-content: space-evenly;
+  border-bottom: 0.5px dotted rgb(252, 252, 252);
+
 }
-.Socail_media{
-    padding-top: 100px;
+
+.Socail_media {
+  padding-top: 100px;
 }
-.socail_media_text{
-    font-size: 20px;
-    color: black;
-    font-weight: 600;
-    border-bottom: 1px solid white;
-   
+
+.socail_media_text {
+  font-size: 20px;
+  color: black;
+  font-weight: 600;
+  border-bottom: 1px solid white;
+
 }
 
 .social-icons {
-    display: flex;
-    padding-top: 20px;
-    gap: 40px;
-  }
-  
-  .social-icon {
-    font-size: 40px;
-    margin-right: 10px;
-    border-radius: 50%;
-    padding: 12px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    transition: all 0.3s ease; 
-  }
-  
-  .social-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
-  }
-  
-  .social-icon:active {
-    transform: scale(0.9); 
-    box-shadow: none; 
-  }
-  
-
-  
-  .whatsapp-icon {
-    color: #25D366; /* WhatsApp brand color */
-  }
-  
-  .instagram-icon {
-    color: #E4405F; /* Instagram brand color */
-  }
-  
-  .facebook-icon {
-    color: #3B5998; /* Facebook brand color */
-  }
-  
-  .twitter-icon {
-    color: #1DA1F2; /* Twitter brand color */
-  }
-  
-
-
-
-
-
-.term_condtion_conatiner{
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  padding-top: 20px;
+  gap: 40px;
 }
-.term_condtion_conatiner p{
-    font-size: 13px;
-    color: black;
+
+.social-icon {
+  font-size: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+  padding: 12px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon:active {
+  transform: scale(0.9);
+  box-shadow: none;
+}
+
+
+
+.whatsapp-icon {
+  color: #25D366;
+  /* WhatsApp brand color */
+}
+
+.instagram-icon {
+  color: #E4405F;
+  /* Instagram brand color */
+}
+
+.facebook-icon {
+  color: #3B5998;
+  /* Facebook brand color */
+}
+
+.twitter-icon {
+  color: #1DA1F2;
+  /* Twitter brand color */
+}
+
+
+
+
+
+
+.term_condtion_conatiner {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.term_condtion_conatiner p {
+  font-size: 13px;
+  color: black;
 }
 
 
@@ -218,11 +235,11 @@
 
 
 .footer-column1 {
-    flex: 2;
-    margin: 0 1rem;
-    border-right: 1px dotted white;
+  flex: 2;
+  margin: 0 1rem;
+  border-right: 1px dotted white;
 
-    
+
 }
 
 
@@ -232,31 +249,123 @@
 
 
 .footer-column ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 .footer-column ul li {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .footer-column ul li a {
-    color: #fff;
-    text-decoration: none;
+  color: #fff;
+  text-decoration: none;
 }
 
 .footer-bottom {
-    position: absolute; 
-   
-    left: 0; 
-    width: 100%; 
-    background-color: rgb(162, 162, 162);
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-}
-.footer-bottom P{
-    color: black;
-    font-size: 15px;
+  position: absolute;
+
+  left: 0;
+  width: 100%;
+  background-color: rgb(162, 162, 162);
+  display: flex;
+  justify-content: center;
+  padding: 20px;
 }
 
+.footer-bottom P {
+  color: black;
+  font-size: 15px;
+}
+
+
+
+/* @media screen and (max-width: 413px) {
+  * {
+    font-size: 12px;
+  }
+
+  .app-store-icons {
+    margin-top: 0px;
+  }
+
+  .right-section-footer {
+    margin-top: -25px;
+  }
+
+  .input-with-icon {
+    margin-right: 66px;
+  }
+
+
+
+  .Amam_text {
+    font-size: 26px;
+  }
+
+  .p_text_ama {
+    font-size: 12px;
+  }
+
+  .donwload_name {
+    font-size: 15px;
+  }
+
+  .App_download {
+    padding-top: 8px;
+  }
+  .download_image {
+    height: 4vh;
+}
+} */
+
+@media screen and (max-width: 550px) {
+  * {
+    font-size: 13px;
+  }
+
+  .app-store-icons {
+    margin-top: 0px;
+  }
+
+  .Amam_text {
+    font-size: 26px;
+  }
+
+  .p_text_ama {
+    font-size: 12px;
+  }
+
+  .donwload_name {
+    font-size: 15px;
+  }
+
+  .App_download {
+    padding-top: 8px;
+  }
+
+  .download_image {
+    height: 4vh;
+  }
+
+  .footer-column2 {
+    padding-top: 0px;
+  }
+
+  .Socail_media {
+    padding-top: 24px;
+  }
+
+  .socail_media_text {
+    font-size: 18px;
+  }
+  .social-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .social-icons {
+    padding-top: 20px;
+    justify-content: space-between;
+    padding-inline: 16px;
+}
+}

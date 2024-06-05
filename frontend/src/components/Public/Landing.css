@@ -1464,7 +1464,8 @@ margin-top: 20px;
 
     /*---- suggestion section----*/
     .suggestions {
-        top: 417px;
+        /* top: 417px; */
+        top: 326px;
     }
 
     /* --Logo sticker---------------------------------- */
@@ -1916,7 +1917,7 @@ margin-top: 20px;
 
     /*---- suggestion section----*/
     .suggestions {
-        top: 380px;
+        top: 326px;
         width: 66%
     }
 
