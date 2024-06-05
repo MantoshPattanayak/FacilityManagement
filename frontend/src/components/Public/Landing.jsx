@@ -475,7 +475,7 @@ const Landing = () => {
 
   //------- Advatisemant -----------
 
-  const ad = [adImg,ad1, ad2, ad3];
+  const ad = [adImg, ad1, ad2, ad3];
 
   // Home page image
   const getStyles = () => {
