@@ -25,7 +25,6 @@ const sendEmail = require('../../../utils/generateEmail')
 // Initialize Firebase Admin SDK
 // var serviceAccount = require("D:/AmaBhoomiProject/amabhoomi-25a8a-firebase-adminsdk-ggc8d-a61a7fdad5.json");
 
-const { request } = require("express");
 
 // admin.initializeApp({
 //   credential: admin.credential.cert(serviceAccount)

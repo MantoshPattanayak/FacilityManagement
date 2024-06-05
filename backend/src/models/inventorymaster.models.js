@@ -16,7 +16,7 @@ const InventoryMaster = sequelize.define('inventorymaster',{
     equipmentAvailable:{
         type:DataTypes.INTEGER
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{

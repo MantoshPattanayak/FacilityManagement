@@ -419,7 +419,7 @@ const initialDataFetch = async (req,res)=>{
             statusId:statusId
           }
         })
-        let fetchServices = await service.findAll(
+        let fetchServices = await serviceMaster.findAll(
           {
             where: {
               statusId:statusId

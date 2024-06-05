@@ -122,7 +122,7 @@ db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId
 
 
 db1.facilitytariff.sync({
-  alter: true,
+  alter: false,
 });
 
 module.exports = db1;
