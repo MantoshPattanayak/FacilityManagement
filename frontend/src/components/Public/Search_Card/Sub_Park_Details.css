@@ -105,14 +105,19 @@
 .closed {
     color: rgb(191, 42, 42);
 }
-.bookmark{
+
+.bookmark {
+    cursor: pointer;
+    font-size: 24px;
+    color: rgb(137, 127, 127); 
     right: 0;
     margin-left: 40%;
-}
-.bookmark:hover{
-color: #019f13;
-cursor: pointer;
-}
+  }
+  
+  .bookmark.bookmarked {
+    color: green; /* Color when bookmarked */
+  }
+  
 
 .Button_ticket_container {
     display: flex;
