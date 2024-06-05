@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Profile.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { faTrash, faUser, faEnvelope, faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faUser, faEnvelope, faMobileScreenButton, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
@@ -180,7 +180,7 @@ export default function Profile() {
   async function fetchProfileDetails() {
     try {
       let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
-      console.log('response of fetch profile api', res.data.public_user);
+      console.log('response of fetch profile api', res.data);
 
       let userName = decryptData(res.data.public_user.userName);
       let firstName = decryptData(res.data.public_user.firstName);
@@ -262,22 +262,22 @@ export default function Profile() {
                 </div>
 
                 <div className="profile-about-icon" >
-                <FontAwesomeIcon icon={faEnvelope} />
+                  <FontAwesomeIcon icon={faEnvelope} />
                   <p>{formData.emailId}</p>
                 </div>
 
                 <div className="profile-about-icon" >
-                <FontAwesomeIcon icon={faMobileScreenButton} />
+                  <FontAwesomeIcon icon={faMobileScreenButton} />
                   <p>{formData.phoneNo}</p>
                 </div>
-                
+
               </div>
             </div>
             <div>
               <ul className="profile-button--Section">
                 <li>
                   <Link
-                    to="/ProfileHistory"
+                    to="/Profile"
                     className="profile-button"
                     style={{ color: 'white', backgroundColor: "green" }}
                   >
@@ -364,8 +364,26 @@ export default function Profile() {
                     <option>ଓଡ଼ିଆ</option>
                   </select>
                 </div>
+                <div className="nearby-location">
+                  <label htmlFor="nearby location">Preferred Location</label>
+                  <div className="preferred-locations ">
+                    <button>
+                      <span>Patia</span>
+                    </button>
+                    <button>
+                      <span>Jaydev vihar</span>
+                    </button>
+                    <button>
+                      <span>Vani vihar</span>
+                    </button>
+                    <button>
+                      <span>Baramunda</span>
+                    </button>
 
-                <div className="profile-formContainer_Inner">
+                  </div>
+                </div>
+
+                {/* <div className="profile-formContainer_Inner">
                   <label htmlFor="password">New Password</label>
                   <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
                 </div>
@@ -374,7 +392,7 @@ export default function Profile() {
                   <label htmlFor="NewPassword">Reenter New Password</label>
                   <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
                   {errors.password && <span className="error">{errors.password}</span>}
-                </div>
+                </div> */}
               </div>
 
               {/* choose preffered Activity */}
