@@ -41,6 +41,7 @@ body {
 .header-content {
     width: 94%;
 } */
+
 .adImg {
     height: 20vh;
     padding: 40px;
@@ -565,7 +566,7 @@ padding-bottom: 20px;
     /* clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); */
 }
 
-.notce2para{
+.notce2para {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -717,18 +718,18 @@ padding-bottom: 20px;
     font-size: 10px;
 }
 
-.carousel-button {
+.carousel-button2 {
     background-color: transparent;
     border: none;
     font-size: 24px;
     cursor: pointer;
 }
 
-.carousel-button.left {
+.carousel-button2.left {
     margin-right: auto;
 }
 
-.carousel-button.right {
+.carousel-button2.right {
     margin-left: auto;
 }
 
@@ -1142,7 +1143,7 @@ margin-top: 20px;
     /* margin-inline: 5px; */
 }
 
-.carousel-button {
+.carousel-button2 {
     background: none;
     border: none;
     font-size: 2rem;
@@ -1151,7 +1152,6 @@ margin-top: 20px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 1;
     width: 2rem;
     height: 2rem;
     background-color: rgba(0, 0, 0, 0.7);
@@ -1160,13 +1160,14 @@ margin-top: 20px;
     justify-content: center;
     align-items: center;
     padding-bottom: 5px;
+    z-index: 10;
 }
 
-.carousel-button.left {
+.carousel-button2.left {
     left: 10px;
 }
 
-.carousel-button.right {
+.carousel-button2.right {
     right: 10px;
 }
 
@@ -1190,7 +1191,7 @@ margin-top: 20px;
     /* Chrome, Safari, and Opera */
 }
 
-.carousel-button {
+.carousel-button2 {
     background-color: rgb(0, 0, 0, 0.64);
     border: none;
     font-size: 2rem;
@@ -1269,7 +1270,7 @@ margin-top: 20px;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 200px;
+    height: 50vh;
     /* Adjust height as needed */
     overflow: hidden;
 }
@@ -1278,12 +1279,12 @@ margin-top: 20px;
     display: flex;
     width: 100%;
     margin-bottom: 12vh;
-    animation: scroll 10s linear infinite;
+    animation: scroll 20s linear infinite;
 }
 
 .advertisement-Image {
     width: auto;
-    height: 30vh;
+    height: 50vh;
     padding: 20px;
 }
 
@@ -1297,14 +1298,47 @@ margin-top: 20px;
     }
 }
 
-.advertisement-Scroll:hover {
+/* .advertisement-Scroll:hover {
     animation-play-state: paused;
+} */
+
+.avatisement-Border2:hover .advertisement-Scroll2 {
+    animation-play-state: paused;
+    cursor: pointer;
 }
 
 
 /* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1400px) {
+
+    /*---- event card section----*/
+    .carousel-slide2 {
+        height: 17vh;
+    }
+
+    .exploreNewAct-Parent-Container {
+        height: 28vh;
+    }
+
+    .advertisement-Image {
+        height: 24vh;
+    }
+    .galleryOuter {
+        gap: 0vh;
+        margin-block: 4vh;
+    }
+    .avatisement-Content2{
+        height: auto;
+    }
+    .advertisement-Scroll2{
+        margin-bottom: 6vh;
+    }
+
+}
+
+
+@media screen and (max-width: 1200px) {
 
 
     .bg-img {
@@ -1366,7 +1400,7 @@ margin-top: 20px;
 }
 
 
-@media screen and (min-width: 1025px) {
+@media screen and (min-width: 1200px) {
 
     /*---- suggestion section----*/
     .suggestions {
@@ -1374,7 +1408,11 @@ margin-top: 20px;
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
+
+    .bg-img {
+        height: 50vh;
+    }
 
     /* header-content  Fonnt size-------------- */
     .header nav ul li a {
@@ -1489,6 +1527,14 @@ margin-top: 20px;
         font-family: 'Roboto';
     }
 
+    /* Logo section ------------------*/
+
+    .logo-section {
+        align-items: center;
+        height: 110px;
+    }
+
+
     /* ------Event details card---------------------------------------------------- */
     /* .Name_yoga {
         width: 135px;
@@ -1552,22 +1598,42 @@ margin-top: 20px;
     }
 
     .carousel-slide2 {
-        width: 26vw;
-        height: auto;
+        /* width: 26vw;
+        height: auto; */
+        width: 20vw;
+        height: 17vh;
         padding-top: 9px;
     }
 
 
-}
+     /* ---------Current events ------ */
 
+     .carousel-slide2 {
+        width: 26vw;
+        height: 22vh;
+        padding-top: 9px;
+    }
 
-/* {------------ Explore new activities-----------} */
+    .Yoga_image2 {
+        width: 25vw;
+        height: auto;
+        padding: 10px;
+    }
+
+    /* {------------ Explore new activities-----------} */
 
 
 .exploreNewAct-outer {
     padding-left: 12vw;
     gap: 6vw;
 }
+.exploreNewAct-secondDiv{
+    width: 94%;
+}
+}
+
+
+
 
 
 /* ---------------Gallery section --------------------------------*/
@@ -1586,6 +1652,7 @@ margin-top: 20px;
         justify-content: space-between;
     }
 
+    
     /* {----------Logo sticker------------------------------------------------------------------------} */
 
     .icon h2 {
@@ -1779,6 +1846,18 @@ margin-top: 20px;
 
 
 @media screen and (max-width: 430px) {
+
+    .Search-Conatiner {
+     height: 25vh;   
+     padding: 13px;
+    }
+
+    .bg-img{
+        height: 40vh;
+    }
+    .abBgButton{
+        margin-left: 67vw;
+    }
     .landing-page_contant {
         margin-top: 0px;
     }
