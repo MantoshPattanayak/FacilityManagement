@@ -90,6 +90,8 @@ const api = {
    VIEW_EVENT_BY_ID_API: '/eventactivites/viewEventactivitiesById', // get eventId
    // Here Ticket Bill Api ----------------------
    VIEW_TICKET_BILL_API: '/booking/generateQRCode', //post
+   // Get Facility Initail Data--------------------
+   Get_Facility_Intail_Data:'/adminFacility/initialData', // get Method
 }
 
 export default api;

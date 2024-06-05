@@ -78,6 +78,8 @@ import EditNotification from "./components/Admin/Activity/Notifications/EditNoti
 import Grievance from "./components/Public/FooterPages/Grievance";
 // Booking_Bill
 import Bokking_Bill from "./components/Public/Booking_Bill/Booking_Bill";
+// Faclity Reg----------------
+import Facility_Reg from "./components/Admin/Facility/Facility_Reg";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -92,6 +94,7 @@ function App() {
             {/* HOME */}
             
             <Route path='/' element={<Landing />}/>
+            <Route path='/Facility_Reg' element={<Facility_Reg />}/>
             <Route path="/PublicLoader" element={<PublicLoader />} />
             <Route path="/facilities" element={<Main_Body_Park_Details />} />
             <Route path="/Event_hostPage" element={<Event_hostPage />} />
