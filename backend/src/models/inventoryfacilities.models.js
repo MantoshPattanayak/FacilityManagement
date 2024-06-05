@@ -16,7 +16,7 @@ const InventoryFacilities = sequelize.define('inventoryfacilities',{
     count:{
         type:DataTypes.INTEGER
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{
