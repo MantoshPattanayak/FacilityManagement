@@ -1959,3 +1959,16 @@ margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
+
+/* notice (New) */
+.New_text{
+    background: #121FCF;
+    background: linear-gradient(to right, #121FCF 16%, #CF1512 0%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+     margin-top: -10px;
+     transform: rotate(-4deg);
+     font-size: 15px;
+ 
+}
