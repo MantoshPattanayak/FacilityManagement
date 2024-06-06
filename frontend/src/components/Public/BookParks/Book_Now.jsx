@@ -41,7 +41,7 @@ const Book_Now = () => {
     totalMembers: 0,
     children: 0,
     seniorCitizen: 0,
-    others: 0,
+    adults: 0,
     amount: "10.00",
     activityPreference: [],
     otherActivities: "",
@@ -124,30 +124,59 @@ const Book_Now = () => {
     console.log("selectedGames", selectedGames);
   };
 
+  // const handleChangeInput = (e) => {
+  //   e.preventDefault();
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  //   if (name === "durationInHours" && value >= 0) {
+  //     setFormData({ ...formData, durationInHours: Number(value) });
+  //   }
+
+  //   // const totalMembers =
+  //   totalMembers=
+  //     (name === "children" ? intValue : parseInt(formData.children)) +
+  //     (name === "seniorCitizen" ? intValue : parseInt(formData.seniorCitizen)) +
+  //     (name === "adults" ? intValue : parseInt(formData.adults));
+
+  //     setFormData({
+  //       ...formData,
+  //       totalMembers: totalMembers,
+  //       [name]: intValue,
+  //     });
+
+  //   console.log("here formData", formData);
+  // };
+
   const handleChangeInput = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    if (name === "durationInHours" && value >= 0) {
-      setFormData({ ...formData, durationInHours: Number(value) });
-    }
 
-    const totalMembers =
-      (name === "children" ? intValue : parseInt(formData.children)) +
-      (name === "seniorCitizen" ? intValue : parseInt(formData.seniorCitizen)) +
-      (name === "others" ? intValue : parseInt(formData.others));
+    let intValue = parseInt(value) || 0;
 
-    console.log("here formData", formData);
+    const updatedFormData = {
+      ...formData,
+      [name]: intValue,
+      totalMembers:
+        (name === "children" ? intValue : formData.children) +
+        (name === "seniorCitizen" ? intValue : formData.seniorCitizen) +
+        (name === "adults" ? intValue : formData.adults),
+    };
+
+    
+
+    setFormData(updatedFormData);
+
+    console.log("Updated formData", updatedFormData);
   };
   const temp =
     parseInt(formData.children) +
     parseInt(formData.seniorCitizen) +
-    parseInt(formData.others);
+    parseInt(formData.adults);
   const totalMembers = temp <= 40 ? temp : 40;
   // const totalMembers =
   //   parseInt(formData.children) +
   //   parseInt(formData.seniorCitizen) +
-  //   parseInt(formData.others);
+  //   parseInt(formData.adults);
 
   const handleDecrease = () => {
     setFormData((prevData) => ({
@@ -289,10 +318,11 @@ const Book_Now = () => {
               <input
                 type="number"
                 name="totalMembers"
-                value={totalMembers}
+                value={formData.totalMembers}
                 id=""
                 className="member-input"
                 onChange={handleChangeInput}
+                disabled
               />
             </div>
             <div className="input-fields">
@@ -320,11 +350,11 @@ const Book_Now = () => {
               />
             </div>
             <div className="input-fields">
-              <p>Others</p>
+              <p>adults</p>
               <input
                 type="number"
-                name="others"
-                value={formData.others}
+                name="adults"
+                value={formData.adults}
                 id=""
                 className="member-input"
                 onChange={handleChangeInput}
@@ -410,7 +440,7 @@ const Book_Now = () => {
             <input
               type="number"
               name="price"
-              value={parseInt(formatDate.amount) * parseInt(formData.others)}
+              value={parseInt(formatDate.amount) * parseInt(formData.adults)}
               id=""
               className="input-field-price"
               onChange={handleChangeInput}
@@ -418,10 +448,10 @@ const Book_Now = () => {
             />
           </div> */}
           <div className="priceBook">
-            <label htmlFor=""> Price (in rupees) :</label>
+            <label htmlFor=""> Amount (in rupees) :</label>
             <span className="price-display">
               <FontAwesomeIcon icon={faIndianRupeeSign} />
-              <b>{parseInt(formData.amount) * parseInt(formData.others)}</b>
+              <b>{parseInt(formData.amount) * parseInt(formData.adults)}</b>
               <b>/-</b>
             </span>
           </div>
@@ -446,7 +476,7 @@ const Book_Now = () => {
           </div>
         </div>
       </div>
-       <CommonFooter/>
+       {/* <CommonFooter/> */}
     </div>
   );
 };
