@@ -506,7 +506,7 @@ const Landing = () => {
     } else if (width < 1400) {
       return {
         ...baseStyle,
-        height: "38vh",
+        height: "110vh",
       };
     } else {
       return baseStyle;

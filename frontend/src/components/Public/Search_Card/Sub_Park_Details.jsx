@@ -189,6 +189,7 @@ const Sub_Park_Details = () => {
                   FacilitiesData[0]?.operatingHoursFrom
                 )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
               </h1>
+              {/* <div className="open-close-btn">
               <button
                 className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
                   ? "open"
@@ -198,17 +199,32 @@ const Sub_Park_Details = () => {
                 {FacilitiesData?.length > 0 &&
                   FacilitiesData[0]?.status.toUpperCase()}
               </button>
+              </div> */}
 
               <div className={`bookmark ${isBookmarked ? 'bookmarked' : ''}`} onClick={handleBookmarkClick}>
                 <FontAwesomeIcon icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular} />
               </div>
             </div>
 
-            <div>
+            <div className="day-open-close-status">
               <h1 className="date_text text-[12px]">
                 Day:{operatingDays.toString()}
               </h1>
+
+              <div className="open-close-btn">
+              <button
+                className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
+                  ? "open"
+                  : "closed"
+                  }`}
+              >
+                {FacilitiesData?.length > 0 &&
+                  FacilitiesData[0]?.status.toUpperCase()}
+              </button>
+              </div>
             </div>
+
+
           </span>
 
           <span className="Button_ticket_container">
