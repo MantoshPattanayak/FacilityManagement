@@ -26,7 +26,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import PublicHeader from "../../../common/PublicHeader";
 import { formatDate } from "../../../utils/utilityFunctions";
-import { error } from "winston";
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -163,7 +162,7 @@ const Book_Now = () => {
         (name === "adults" ? intValue : formData.adults),
     };
 
-    if(totalMembers > 40) toast.error("total members can not more than 40")
+    
 
     setFormData(updatedFormData);
 
@@ -298,8 +297,7 @@ const Book_Now = () => {
   };
 
   return (
-    <div className="Book_Now_Min_conatiner" >
-      <ToastContainer/>
+    <div className="Book_Now_Min_conatiner">
       <PublicHeader/>
       <div className="booknow-container">
         <div className="park-container">
@@ -307,7 +305,7 @@ const Book_Now = () => {
             <h1>
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <Link to={`/Sub_Park_Details?facilityId=${encryptData(facilityId)}`}>
+            <Link to="/Sub_Park_Details?facilityId">
               <FontAwesomeIcon icon={faXmark} />
             </Link>
           </div>
