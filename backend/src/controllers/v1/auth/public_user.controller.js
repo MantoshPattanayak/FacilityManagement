@@ -228,7 +228,7 @@ const homePage = async (req, res) => {
       ea.facilityId,
       f.facilityname,
       ea.eventName, 
-      ea.eventCategory, 
+      ea.eventCategoryId, 
       ea.locationName, 
       ea.eventDate, 
       ea.eventStartTime,
