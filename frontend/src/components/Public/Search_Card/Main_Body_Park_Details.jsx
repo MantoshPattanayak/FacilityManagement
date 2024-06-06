@@ -536,6 +536,7 @@ const Main_Body_Park_Details = () => {
                       >
                         {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
                       </button>
+                      
                       <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
                     </span>
                   </div>

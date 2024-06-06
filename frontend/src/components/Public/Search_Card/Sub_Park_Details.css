@@ -86,7 +86,7 @@
 }
 
 .time_text {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: #484747;
 }
@@ -111,7 +111,7 @@
     font-size: 24px;
     color: rgb(137, 127, 127); 
     right: 0;
-    margin-left: 40%;
+    margin-left: 7%;
   }
   
   .bookmark.bookmarked {
@@ -692,8 +692,16 @@
     right: 10px;
   } */
   
-
-
+.day-open-close-status{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+}
+.open-close-btn{
+  float: right;
+  margin: 6px;
+}
   /* carousel css final........... */
   .carousel-container1 {
     position: relative;
@@ -774,6 +782,18 @@
         .Service_text {
           font-size: 24px;
         }
+
+        .day-open-close-status{
+          display: unset;
+          align-items: center;
+          justify-content: center;
+         
+        }
+        .open-close-btn{
+          /* float: right; */
+          margin: 1px;
+        }
+        
       }
       
       @media screen and (max-width: 600px) {
@@ -800,7 +820,7 @@
       
         .Map_container {
           margin-left: 7%;
-          margin-top: 20px;
+          margin-top: -20px;
         }
       
         .Header_Img {
@@ -831,7 +851,7 @@
       
         .Service_Now_conatiner {
           padding: 20px;
-          /* margin-top: 44%; */
+          margin-top: 44%;
         }
       
         .About_text {
@@ -885,4 +905,43 @@
       }
       .date_text{
         font-weight: 500;
+      }
+      @media screen and (max-width:550px){
+        .Search_container{
+          display: grid;
+          grid-template-columns: minmax(90vw, 1fr);
+          align-items: center;
+          justify-content: center;
+        }
+
+        .Filter_grid{
+          margin: auto;
+        }
+        .button-59{
+          font-size: 15px;
+          height: 30px;
+          
+        }
+        .gride_page{
+          height: 30px;
+          font-size: 10px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .gride_page select option{
+          font-size: 10px;
+          width: 26px;
+          height: 20px;
+        }
+        .filter_option{
+          height:30px;
+          margin-left: 5px;
+          font-size: 10px;
+        }
+        .text-filter{
+          font-size: 10px;
+          font-weight: 600;
+        }
       }
