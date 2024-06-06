@@ -179,6 +179,23 @@ const viewParkDetails = async(req,res)=>{
                 });
             }
         }
+        if (facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            facility += ` WHERE f.facilityTypeId=?`;   
+        
+            facilities = await sequelize.query(facility, {
+                replacements: [new Date(),facilityTypeId]
+            });
+        }
+
+        if (!facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            facilities = await sequelize.query(facility, {
+                replacements: [new Date()]
+            });
+        }
     
 
     
@@ -750,9 +767,9 @@ const nearByDataInMap = async (req, res) => {
             
             console.log('24')
             if (filterConditions.length > 0 && !facilityTypeId) {
-                console.log('filter condn', filterConditions,facility)
+                console.log('filter condn', filterConditions)
                 fetchFacilitiesQuery += ` WHERE ${filterConditions.join(' AND ')}`;
-                console.log('facility',facility)
+                console.log('facility')
               
             }
             if (facilityTypeId) {
@@ -782,17 +799,25 @@ const nearByDataInMap = async (req, res) => {
         //     fetchFacilitiesQuery += ` where ft.facilityId IS NULL`
         // }
 
+        if (facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
+            replacements.push(facilityTypeId);
+
+        }
+
         // Group by facilityId
         fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
         console.log(fetchFacilitiesQuery,'fetchFacilitiesQuery')
         // Sort order
-        if (order == 1) {
-            // Ascending order
-            fetchFacilitiesQuery += ` ORDER BY f.facilityname ASC`;
-        } else if (order == 2) {
-            // Descending order
-            fetchFacilitiesQuery += ` ORDER BY f.facilityname DESC`;
-        }
+        // if (order == 1) {
+        //     // Ascending order
+        //     fetchFacilitiesQuery += ` ORDER BY f.facilityname ASC`;
+        // } else if (order == 2) {
+        //     // Descending order
+        //     fetchFacilitiesQuery += ` ORDER BY f.facilityname DESC`;
+        // }
 
         // Execute the constructed query
         const fetchFacilities = await sequelize.query(fetchFacilitiesQuery, {
@@ -842,12 +867,14 @@ const nearByDataInMap = async (req, res) => {
                 return nameB.localeCompare(nameA);
             });
         }
+        console.log('get near by data')
         // Construct response
-        const convertedData = convertImagesToBase64(getNearByData);
+        // const convertedData = convertImagesToBase64(getNearByData);
+        const encodedFacilities = encodeUrls(getNearByData);
 
         return res.status(statusCode.SUCCESS.code).json({
             message: 'Nearby data retrieved successfully',
-            data: convertedData // Assuming fetchFacilities is an array with the result at index 0
+            data: encodedFacilities // Assuming fetchFacilities is an array with the result at index 0
         });
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
