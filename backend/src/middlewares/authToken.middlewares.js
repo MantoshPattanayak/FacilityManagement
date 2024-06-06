@@ -4,6 +4,8 @@ const db = require("../models/index.js");
 const User = db.usermaster;
 let authSessions = db.authsessions;
 let {Op}= require('sequelize')
+let encrypt = require('./encryption.middlewares.js')
+let decrypt = require('./decryption.middlewares.js')
 function authenticateToken(req, res, next) {
   try {
     console.log('new date', new Date())
