@@ -20,22 +20,22 @@ const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares');
 let inventoryMaster = db.inventorymaster
 let inventoryFacilities = db.inventoryfacilities
-
+const { Op } = require('sequelize');
 let user = db.usermaster
 
 // Admin facility registration
 
 const registerFacility = async (req, res) => {
   try {
-
+     console.log("check Api", "1")
     let userId = req.user?.id || 1;
+    let statusId = 1;
 
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
       }
     })
-    let statusId = 1;
 
     let ownership = "BDA"
     let {
@@ -60,7 +60,7 @@ const registerFacility = async (req, res) => {
       facilityImage,
       parkInventory
     } = req.body;
-
+     console.log("here Req",req.body)
     let createFacilities = await facilities.create({
       facilityName:facilityName,
       ownership:ownership,
@@ -72,13 +72,13 @@ const registerFacility = async (req, res) => {
       operatingHoursFrom:operatingHoursFrom,
       operatingHoursTo:operatingHoursTo,
       areaAcres:area,
-      sun:operatingDays.sun,
-      mon:operatingDays.mon,
-      tue:operatingDays.tue,
-      wed:operatingDays.wed,
-      thu:operatingDays.thu,
-      fri:operatingDays.fri,
-      sat:operatingDays.sat,
+      sun:operatingDays?.sun || 0,
+      mon:operatingDays?.mon || 0,
+      tue:operatingDays?.tue || 0,
+      wed:operatingDays?.wed || 0,
+      thu:operatingDays?.thu || 0,
+      fri:operatingDays?.fri || 0,
+      sat:operatingDays?.sat || 0,
       additionalDetails:additionalDetails
     })
 
