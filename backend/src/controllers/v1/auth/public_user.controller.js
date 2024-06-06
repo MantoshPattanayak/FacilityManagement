@@ -154,7 +154,7 @@ const viewpublicUser = async (req, res) => {
   try {
     console.log(21)
     let userId = req.user?.id || 1;
-    let publicRole = null
+    let publicRole = 4
     let statusId = 1;
     let showpublic_user = await user.findOne({
       where: {

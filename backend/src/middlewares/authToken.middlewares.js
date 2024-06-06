@@ -36,7 +36,7 @@ function authenticateToken(req, res, next) {
       } else {
         let checkIfTheSessionIsActiveOrNot = await authSessions.findOne({
           where:{
-            [Op.and]:[{active:statusId},{sessionId:sessionId}]
+            [Op.and]:[{active:statusId},{sessionId:decrypt(sessionId)}]
           }
         })
         if(!checkIfTheSessionIsActiveOrNot){
@@ -45,6 +45,7 @@ function authenticateToken(req, res, next) {
           })
         }
         req.user = findUser;
+        req.session = sessionId;
         next();
       }
     });
