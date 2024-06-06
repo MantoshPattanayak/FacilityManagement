@@ -90,8 +90,9 @@ const api = {
    VIEW_EVENT_BY_ID_API: '/eventactivites/viewEventactivitiesById', // get eventId
    // Here Ticket Bill Api ----------------------
    VIEW_TICKET_BILL_API: '/booking/generateQRCode', //post
-   // Get Facility Initail Data--------------------
+   // Get Facility Initail Data Admin--------------------
    Get_Facility_Intail_Data:'/adminFacility/initialData', // get Method
+   Facility_Reg_Api:'/adminFacility/facilityRegistration', // Post Method
    //grievance-feedback for user
    GRIEVANCE_INITIAL_DATA_API: '/grievance/initial-data',  //get
    USER_SUBMIT_GRIEVANCE_API: '/grievance/submit-grievance',   //post   fullname, emailId, phoneNo, subject, details, statusId, filepath, isWhatsappNumber
