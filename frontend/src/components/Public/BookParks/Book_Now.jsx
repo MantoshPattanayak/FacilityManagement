@@ -307,7 +307,7 @@ const Book_Now = () => {
             <h1>
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <Link to="/Sub_Park_Details?facilityId">
+            <Link to={`/Sub_Park_Details?facilityId=${encryptData(facilityId)}`}>
               <FontAwesomeIcon icon={faXmark} />
             </Link>
           </div>

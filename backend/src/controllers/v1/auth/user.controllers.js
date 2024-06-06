@@ -184,6 +184,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
       // Check if OTP verification was successful
       console.log(1,req.body)
+      let roleId = 4;
       let statusId = 1;
       let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
 
@@ -215,7 +216,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
              // Check if the user exists in the database
              let isUserExist = await user.findOne({
               where:{
-               [Op.and]:[{ phoneNo:mobileNo},{statusId:statusId},{roleId:null}]
+               [Op.and]:[{ phoneNo:mobileNo},{statusId:statusId},{roleId:roleId}]
               }
             })
             // console.log(isUserExist,'check user')
@@ -240,7 +241,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
           }
 
           console.log('here upto it is coming')
-          let {accessToken, refreshToken, options} = tokenGenerationAndSessionStatus
+          let {accessToken, refreshToken, options,sessionId} = tokenGenerationAndSessionStatus
                   //menu items list fetch
         //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
         //     inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
@@ -279,7 +280,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
 
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: "please render the login page", username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken, decideSignUpOrLogin:1 });
+        .json({ message: "please render the login page", username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken, decideSignUpOrLogin:1,sid:sessionId });
 
         }
         else{

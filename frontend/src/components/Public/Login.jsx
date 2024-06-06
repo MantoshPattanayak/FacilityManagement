@@ -121,8 +121,8 @@ const Login = () => {
       }
     }
     // Password validation
-    if (!value.Password) {
-      err.password = "Please Enter your password";
+    if (!value.otp) {
+      err.password = "Please enter your OTP";
     }
     return err;
   };
