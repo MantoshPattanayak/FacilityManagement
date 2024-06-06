@@ -767,7 +767,7 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
     // if active
     if(checkForActiveSession){
 
-      let updateTheSessionToInactive = await authSessions.update({active:0},{
+      let updateTheSessionToInactive = await authSessions.update({active:2},{
         where:{
           sessionId:checkForActiveSession.sessionId}
       })
@@ -890,7 +890,7 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
     return {
       accessToken:accessToken,
       refreshToken:refreshToken,
-      sessionId:sessionId,
+      sessionId:encrypt(sessionId),
       options:options
     }
 
@@ -1197,11 +1197,17 @@ let privateLogin = async(req,res)=>{
 
 let logout = async (req, res) => {
    try {
+    let userId = req.user?.id || 1; 
+    let sessionId = decrypt(req.session)
      const options = {
          expires: new Date(Date.now() - 1), // Expire the cookie immediately
          httpOnly: true,
          secure: true
      };
+     let updateTheSessionToInactive = await authSessions.update({active:2},{
+      where:{
+        sessionId:sessionId}
+    })
      // Clear both access token and refresh token cookies
      res.clearCookie('accessToken', options);
      res.clearCookie('refreshToken', options);
