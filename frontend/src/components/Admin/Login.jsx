@@ -3,13 +3,16 @@ import "../Public/Login.css";
 import AdminHeader from "../../common/AdminHeader";
 // Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import PublicHeader from "../../common/PublicHeader";
 // EncrptData here --------------------------------------------------------
 import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import CommonFooter from "../../common/CommonFooter";
+// here import useDispatch to store the 
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from "../../utils/authSlice";
 
 const AdminLogin = () => {
   // UseState for Post the data---------------------------------
@@ -17,6 +20,7 @@ const AdminLogin = () => {
     Mobile: "",
     Password: "",
   });
+  const dispatch = useDispatch();
   let navigate = useNavigate();
   const location = useLocation();
   // Aysnc functaion for Post the data ------------------------
@@ -30,12 +34,19 @@ const AdminLogin = () => {
 
     if (Object.keys(errors).length === 0) {
       try {
-        const res = await axiosHttpClient("User_Login", "post", {
+        const res = await axiosHttpClient("ADMIN_LOGIN_API", "post", {
           encryptMobile: encryptData(LogingDataPost.Mobile),
           encryptPassword: encryptData(LogingDataPost.Password),
         });
         console.log("response after log in", res);
         sessionStorage.setItem("isAdminLoggedIn", 1);
+        // Dispatch login success action with tokens and user data
+        dispatch(loginSuccess({
+          accessToken: res.data.accessToken,
+          refreshToken: res.data.refreshToken,
+          user: res.data.user,
+          sid: res.data.sid
+        }));
         toast.success("Login successfully.");
         navigate('/Dashboard/AdminDashboard');
       } catch (err) {
@@ -81,10 +92,10 @@ const AdminLogin = () => {
   useEffect(() => {}, [LogingDataPost]);
 
   return (
-    <div>
+    <div className="Main_container_Login">
       <AdminHeader />
-
       <div className="signup-container">
+        <div className="flex justify-center"><h1 className="font-bold">Admin login</h1></div>
         <form className="context" onSubmit={HandleSubmit}>
           <div className="inputs">
             <div className="text">
@@ -123,20 +134,18 @@ const AdminLogin = () => {
             </button>
           </div>
 
-          {/* <div className="login-options">
+          <div className="login-options">
             <div className="forgot-password">
               <a href="#">Forgot Password?</a>
             </div>
 
             <div className="login-otp">
-              <a href="#">Login with OTP</a>
+              <Link to="/">Back to Home</Link>
             </div>
-          </div> */}
+          </div>
         </form>
       </div>
       <ToastContainer />
-
-      <CommonFooter />
     </div>
   );
 };

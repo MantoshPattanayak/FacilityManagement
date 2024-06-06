@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             primaryKey: true
         },
+        grievanceCategoryId: {
+            type: DataTypes.INTEGER,
+        },
         fullname: {
             type: DataTypes.STRING(25),
             allowNull: true
@@ -34,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         actionTakenDate: {
             type: DataTypes.DATE,
+            allowNull: true
+        },
+        response: {
+            type: DataTypes.STRING(200),
+            allowNull: true,
+        },
+        responseFilePath: {
+            type: DataTypes.STRING(255),
             allowNull: true
         },
         createdBy: {
