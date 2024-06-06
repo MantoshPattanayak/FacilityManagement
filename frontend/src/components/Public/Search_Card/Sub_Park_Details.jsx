@@ -386,7 +386,7 @@ const Sub_Park_Details = () => {
                 return (
                   <div
                     className="carousel-container"
-                    ref={containerRef}
+                    // ref={containerRef}
                     key={index}
                   >
                     <div className="carousel-slide">

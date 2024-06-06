@@ -261,7 +261,7 @@ const viewParkById = async (req,res)=>{
             replacements:[new Date(), facilityId]
         })
 
-        let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
+        let fetchEventDetailsQuery = `select eventName, eventCategoryId,locationName,eventDate,eventStartTime,
         eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where facilityId=? and ticketSalesEnabled =1 `
 
         let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
