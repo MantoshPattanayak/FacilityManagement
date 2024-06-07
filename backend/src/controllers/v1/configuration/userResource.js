@@ -73,7 +73,7 @@ let insertUserResource = async (req, res) => {
     try {
         let userId = req.body.userId;
         let status = req.body.status;
-        let user = req.user?.id||1;
+        let user = req.user?.userId||1;
         let date = new Date();
         let {resourceList} = req.body;
 

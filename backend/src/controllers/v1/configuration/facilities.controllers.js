@@ -108,7 +108,7 @@ function encodeUrls(facilitiesArray) {
 
 const viewParkDetails = async(req,res)=>{
     try{
-        let userId = req.user?.id || 1
+        let userId = req.user?.userId || 1
         let givenReq = req.body.givenReq?req.body.givenReq:null
         let facilityTypeId = req.body.facilityTypeId?req.body.facilityTypeId:null
         let selectedFilter = req.body.selectedFilter?req.body.selectedFilter:null;
@@ -260,7 +260,7 @@ const autoSuggestionForViewParkDetails = async (req,res)=>{
 
 const viewParkById = async (req,res)=>{
     try{
-        let userId = req.user?.id || 1;
+        let userId = req.user?.userId || 1;
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         let findFacilityTypeId = await facilitiesTable.findOne({
             where:{

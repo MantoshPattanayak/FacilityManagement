@@ -221,8 +221,8 @@ let createUser = async (req, res) => {
       encryptMobileNumber,
     );
 
-    const createdBy = req.user?.id || 1;
-    const updatedBy = req.user?.id || 1;
+    const createdBy = req.user?.userId || 1;
+    const updatedBy = req.user?.userId || 1;
     console.log("1");
     const existingUserMobile = await user.findOne({
       where: { phoneNo: encryptMobileNumber },
@@ -545,7 +545,7 @@ let fetchInitialData = async (req, res) => {
 
 let viewBookings = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let fromDate = req.body.fromDate
       ? new Date(req.body.fromDate)
       : null || null;
@@ -744,7 +744,7 @@ let initalFilterDataForBooking = async (req, res) => {
 
 let bookmarkingAddAction = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let facilityId = req.body.facilityId;
     let eventId = req.body.eventId;
 
@@ -789,7 +789,7 @@ let bookmarkingAddAction = async (req, res) => {
 
 let bookmarkingRemoveAction = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let bookmarkId = req.body.bookmarkId;
     let facilityId = req.body.facilityId;
     let eventId = req.body.eventId;
@@ -817,7 +817,7 @@ let bookmarkingRemoveAction = async (req, res) => {
 
 let viewBookmarksListForUser = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let facilityType = req.body.facilityType; //EVENTS   PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND
     let fromDate = req.body.fromDate
       ? new Date(req.body.fromDate)

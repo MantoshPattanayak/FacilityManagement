@@ -383,7 +383,7 @@ export default function Profile() {
                     <option>ଓଡ଼ିଆ</option>
                   </select>
                 </div>
-                <div className="nearby-location">
+                {/* <div className="nearby-location">
                   <label htmlFor="nearby location">Preferred Location</label>
                   <div className="preferred-locations ">
                     <button>
@@ -400,7 +400,7 @@ export default function Profile() {
                     </button>
 
                   </div>
-                </div>
+                </div> */}
 
                 {/* <div className="profile-formContainer_Inner">
                   <label htmlFor="password">New Password</label>

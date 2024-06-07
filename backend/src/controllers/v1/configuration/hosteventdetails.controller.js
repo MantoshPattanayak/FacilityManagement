@@ -16,7 +16,7 @@ let user = db.usermaster
 const createHosteventdetails = async (req, res) => {
   try {
 
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
 
     findTheRoleFromTheUserId = await user.findOne({
       where:{
