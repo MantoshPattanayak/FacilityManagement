@@ -23,7 +23,7 @@ let parkBookingTestForPark = async (req, res) => {
         /**
          * @facilitytype park
          */
-        let userId = req.user?.id || 1;
+        let userId = req.user?.userId || 1;
         let {
             facilityId,
             totalMembers,
@@ -208,7 +208,7 @@ let parkBooking = async (req, res) => {
             entityTypeId,
             facilityPreference
         });
-        let userId = req.user?.id || 1;
+        let userId = req.user?.userId || 1;
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -477,7 +477,7 @@ let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityT
 let addToCart = async (req,res)=>{
     try {
         console.log('here reponse of sports',req.body)
-        let userId = req.user?.id || 1;
+        let userId = req.user?.userId || 1;
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId = 1
@@ -693,7 +693,7 @@ let addToCart = async (req,res)=>{
 
 let viewCartByUserId = async(req,res)=>{
     try {
-        const userId = req.user?.id || 1
+        const userId = req.user?.userId || 1
         let findCartIdByUserId = await cart.findOne({
             where:{
             [Op.and]:[{userId: userId},{statusId:1}]
@@ -768,7 +768,7 @@ let viewCartByUserId = async(req,res)=>{
 let updateCart = async(req,res)=>{
     try {
     
-        let userId = req.user?.id||1
+        let userId = req.user?.userId||1
         let cartItemId = req.params.cartItemId
         let statusId = 2
 

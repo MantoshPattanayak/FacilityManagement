@@ -9,7 +9,7 @@ const publicNotifications = db.publicnotifications;
 let addNewNotification = async (req, res) => {
     try{
         let { notificationTitle, notificationContent, validFromDate, validToDate } = req.body;
-        let userId = req.user?.id || 1;
+        let userId = req.user?.userId || 1;
 
         if(notificationTitle == '' || notificationContent == '' || validFromDate == '' || validToDate == '' || notificationTitle == null || notificationContent == null || validFromDate == null || validToDate == null){
             res.status(statusCode.BAD_REQUEST.code).json({
@@ -124,7 +124,7 @@ let viewNotificationById = async (req, res) => {
 let editNotification = async (req, res) => {
     try{
         let { notificationTitle, notificationContent, validFromDate, validToDate, publicNotificationsId } = req.body;
-        let userId = req.user?.id || 1;
+        let userId = req.user?.userId || 1;
 
         console.log({ notificationTitle, notificationContent, validFromDate, validToDate, publicNotificationsId });
 

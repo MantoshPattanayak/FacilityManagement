@@ -28,7 +28,7 @@ let user = db.usermaster
 const registerFacility = async (req, res) => {
   try {
      console.log("check Api", "1")
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let statusId = 1;
 
     findTheRoleFromTheUserId = await user.findOne({

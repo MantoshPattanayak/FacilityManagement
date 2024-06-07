@@ -65,7 +65,7 @@ const insertRoleResource = async (req, res) => {
     
         // resourceList = await decrypt(resourceList)
         // status = await decrypt(status)
-        let user = req.user?.id||1; // Assuming user Id is stored in req.user.id
+        let user = req.user?.userId||1; // Assuming user Id is stored in req.user.id
         let date = new Date();
         // Check for duplicates in all resources using raw query with join
         const duplicateCheckQuery = `
@@ -180,7 +180,7 @@ let updateRoleResource = async (req, res) => {
     try {
    
         let { id, statusId } = req.body;
-        let user = req.user?.id||1;
+        let user = req.user?.userId||1;
         let date = 'NOW()';
 
         let  [updateTheStatusOfRoleCount,updateTheStatusOfRole] = await roleresource.update({statusId:statusId},{
