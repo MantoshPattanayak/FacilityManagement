@@ -172,19 +172,58 @@ const Book_Now_Sport = () => {
                     </div>
                     <div class="bookingFormWrapper">
                         <form class="bookingForm">
-                            <div class="formGroup">
-                                <span class="fieldName" >Sport:</span>
-                                <select class="formSelect"
-                                    name="sports"
-                                    value={formData.sports}
-                                    onChange={handleChangeInput} >
-                                    <option value="football">Football</option>
-                                    <option value="basketball">Basketball</option>
-                                    <option value="tennis">Tennis</option>
-                                    <option value="swimming">Swimming</option>
-                                </select>
-                            </div>
-                            <div class="formGroup">
+                        <div class="formGroup">
+    <span class="fieldName">Sport<span className="required-asterisk">*</span>:</span>
+    <select class="formSelect"
+        name="sports"
+        value={formData.sports}
+        onChange={handleChangeInput} >
+        <option value="football">Football</option>
+        <option value="basketball">Basketball</option>
+        <option value="tennis">Tennis</option>
+        <option value="swimming">Swimming</option>
+    </select>
+</div>
+<div class="formGroup">
+    <span class="fieldName">Date<span className="required-asterisk">*</span>:</span>
+    <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
+</div>
+<div class="formGroup">
+    <span class="fieldName">Start Time<span className="required-asterisk">*</span>:</span>
+    <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
+</div>
+<div class="formGroup">
+    <span class="fieldName">End Time<span className="required-asterisk">*</span>:</span>
+    <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
+</div>
+<div class="formGroup">
+    <span class="fieldName">No of Player<span className="required-asterisk">*</span></span>
+    <div className="increament_decrement_conatiner">
+        <button
+            type="button"
+            className="decrement-button"
+            onClick={handleDecrement}
+        >
+            <FontAwesomeIcon icon={faMinus} />
+        </button>
+        <input
+            type="text"
+            className="formInput_Add_member"
+            value={formData.facilityPreference.playersLimit}
+            name="playersLimit"
+            onChange={handleChangeInput}
+        />
+        <button
+            type="button"
+            className="increment-button"
+            onClick={handleIncrement}
+        >
+            <FontAwesomeIcon icon={faPlus} />
+        </button>
+    </div>
+</div>
+
+                            {/* <div class="formGroup">
                                 <span class="fieldName"   >Date:</span>
                                 <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
                             </div>
@@ -222,7 +261,7 @@ const Book_Now_Sport = () => {
                                         <FontAwesomeIcon icon={faPlus} />
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                             <div class="formGroup">
                                 <span class="fieldName">Price</span>
                                 <h1 className="price_Sport">INR 00.00/_</h1>
