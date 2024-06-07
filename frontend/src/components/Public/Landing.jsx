@@ -66,9 +66,9 @@ import {
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
 
+// mediaquary for responsive landing page
 const responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 5,
   },
@@ -503,7 +503,7 @@ const Landing = () => {
         ...baseStyle,
         height: "50vh",
       };
-    } else if (width < 1400) {
+    } else if (width < 1600) {
       return {
         ...baseStyle,
         height: "110vh",

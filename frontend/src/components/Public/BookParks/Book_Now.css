@@ -93,12 +93,12 @@
 
 /* Add hover effect */
 .game-btn:hover {
-  background-color: #19ba62;
+  background-color: #3AB757;
 }
 
 /* Add selected style */
 .game-btn.selected {
-  background-color: #19ba62;
+  background-color: #3AB757;
 }
 
 .other-activities {
@@ -363,7 +363,7 @@
 
 
 .AddToCartButton {
-  background-color: #00bd58;
+  background-color: #3AB757;
   border: none;
   color: white;
   padding: 8px 12px;
@@ -389,7 +389,7 @@
 
 
 .addtocart-btn {
-  background-color: #008c33;
+  background-color: #3AB757;
   border: none;
   color: white;
   padding: 8px 12px;

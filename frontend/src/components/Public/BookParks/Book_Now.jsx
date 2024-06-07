@@ -36,6 +36,8 @@ const Book_Now = () => {
   const action = new URLSearchParams(location.search).get("action");
   const navigate = useNavigate();
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [amount1, setAmount1] = useState([0]);
 
   const [formData, setFormData] = useState({
     totalMembers: 0,
@@ -59,8 +61,6 @@ const Book_Now = () => {
     new URLSearchParams(location.search).get("facilityId")
   );
 
-  const encryptedFacilityId = encryptData(facilityId);
-
   // Here Get the data of Sub_park_details------------------------------------------
   async function getSub_park_details(facilityId) {
     console.log("facilityId", facilityId);
@@ -69,7 +69,7 @@ const Book_Now = () => {
       let res = await axiosHttpClient(
         "View_By_ParkId",
         "get",
-        null,
+        '',
         facilityId
       );
 
@@ -82,7 +82,7 @@ const Book_Now = () => {
         ["entityId"]: facilityId,
       });
     } catch (err) {
-      console.log("here Error", err);
+      console.log("here Error of park data", err);
     }
   }
 
@@ -92,6 +92,7 @@ const Book_Now = () => {
       let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
 
       console.log("getParkBookingInitialData", res);
+      console.log("getParkBookingInitialData1232345", res.data.data);
       setActivityPreferenceData(res.data.data);
     } catch (err) {
       console.log("here Error", err);
@@ -124,48 +125,39 @@ const Book_Now = () => {
     console.log("selectedGames", selectedGames);
   };
 
-  // const handleChangeInput = (e) => {
-  //   e.preventDefault();
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-  //   if (name === "durationInHours" && value >= 0) {
-  //     setFormData({ ...formData, durationInHours: Number(value) });
-  //   }
-
-  //   // const totalMembers =
-  //   totalMembers=
-  //     (name === "children" ? intValue : parseInt(formData.children)) +
-  //     (name === "seniorCitizen" ? intValue : parseInt(formData.seniorCitizen)) +
-  //     (name === "adults" ? intValue : parseInt(formData.adults));
-
-  //     setFormData({
-  //       ...formData,
-  //       totalMembers: totalMembers,
-  //       [name]: intValue,
-  //     });
-
-  //   console.log("here formData", formData);
-  // };
 
   const handleChangeInput = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
 
-    let intValue = parseInt(value) || 0;
+    let intValue = parseInt(value);
 
     const updatedFormData = {
       ...formData,
-      [name]: intValue,
-      totalMembers:
-        (name === "children" ? intValue : formData.children) +
-        (name === "seniorCitizen" ? intValue : formData.seniorCitizen) +
-        (name === "adults" ? intValue : formData.adults),
+      [name]: isNaN(value) ? value : intValue,
     };
 
-    
+    // Calculate the total members if any of the member inputs are changed
+    if (["children", "seniorCitizen", "adults"].includes(name)) {
+      updatedFormData.totalMembers =
+        (name === "children" ? intValue : formData.children) +
+        (name === "seniorCitizen" ? intValue : formData.seniorCitizen) +
+        (name === "adults" ? intValue : formData.adults);
+    }
+
+    // Show toast if total members exceed 40
+    if (updatedFormData.totalMembers > 40) {
+      toast.error("Total members cannot exceed 40.");
+      updatedFormData.totalMembers = 40; // Adjust to maximum limit
+    }
+
+    // setamount(formData)
+    console.log("qwertyuiop", formData.amount)
+    setAmount1(formData.amount);
+
+    setIsDisabled(updatedFormData.totalMembers > 40);
 
     setFormData(updatedFormData);
-
     console.log("Updated formData", updatedFormData);
   };
   const temp =
@@ -208,7 +200,7 @@ const Book_Now = () => {
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
           duration: modifiedFormData.durationInHours,
-          price: modifiedFormData.price,
+          price: amount1 * modifiedFormData.adults
         };
 
         // Prepare request body
@@ -246,7 +238,7 @@ const Book_Now = () => {
     const validationError = validation(modifiedFormData);
     let facilityPreference = {
       totalMembers: modifiedFormData.totalMembers,
-      amount: modifiedFormData.amount,
+      amount: amount1 * modifiedFormData.adults,
       activityPreference: modifiedFormData.activityPreference,
       otherActivities: modifiedFormData.otherActivities,
       bookingDate: modifiedFormData.bookingDate,
@@ -298,14 +290,15 @@ const Book_Now = () => {
 
   return (
     <div className="Book_Now_Min_conatiner">
-      <PublicHeader/>
+      <ToastContainer />
+      <PublicHeader />
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading">
             <h1>
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <Link to="/Sub_Park_Details?facilityId">
+            <Link to={`/Sub_Park_Details?facilityId=${encryptData(facilityId)}`}>
               <FontAwesomeIcon icon={faXmark} />
             </Link>
           </div>
@@ -371,11 +364,10 @@ const Book_Now = () => {
                 activityPreferenceData.map((activity) => {
                   return (
                     <button
-                      className={`game-btn ${
-                        selectedGames.includes(activity.userActivityId)
-                          ? "selected"
-                          : ""
-                      }`}
+                      className={`game-btn ${selectedGames.includes(activity.userActivityId)
+                        ? "selected"
+                        : ""
+                        }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
@@ -390,9 +382,9 @@ const Book_Now = () => {
               type="text"
               name="otherActivities"
               value={formData.otherActivities}
-              id=""
+              id="otherActivities"
               className="input-field-otheractivities"
-              onChange={handleChangeInput}
+              onChange={handleChangeInput} gh
             />
           </div>
           <br />
@@ -451,7 +443,7 @@ const Book_Now = () => {
             <label htmlFor=""> Amount (in rupees) :</label>
             <span className="price-display">
               <FontAwesomeIcon icon={faIndianRupeeSign} />
-              <b>{parseInt(formData.amount) * parseInt(formData.adults)}</b>
+              <b>{amount1 * parseInt(formData.adults)}</b>
               <b>/-</b>
             </span>
           </div>
@@ -459,7 +451,7 @@ const Book_Now = () => {
           <div className="Add_to_card_main_conatiner">
             <div className="button_Book_Now">
               {/* <a href=''> */}
-              <button class="AddToCartButton" onClick={handleAddtoCart}>
+              <button className="AddToCartButton" onClick={handleAddtoCart} disabled={isDisabled}>
                 <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                 Add to Cart
               </button>
@@ -468,6 +460,7 @@ const Book_Now = () => {
               <button
                 className="addtocart-btn"
                 onClick={handleSubmitAndProceed}
+                disabled={isDisabled}
               >
                 <FontAwesomeIcon icon={faCreditCard} className="Icon" />
                 Proceed to Payment
@@ -476,7 +469,8 @@ const Book_Now = () => {
           </div>
         </div>
       </div>
-       {/* <CommonFooter/> */}
+      {/* <CommonFooter/> */}
+      <ToastContainer />
     </div>
   );
 };
