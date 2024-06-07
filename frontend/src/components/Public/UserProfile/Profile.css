@@ -307,3 +307,37 @@
     /* border: 2px solid black; */
   }
 }
+
+/* preferred location */
+.preferred-locations button {
+  background-color: white; 
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  color: black;
+  padding: 8px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.preferred-locations button:hover{
+  background-color:rgb(25, 121, 31);
+}
+
+
+
+
+
+
+
+
+.required-asterisk {
+  color: red;
+  margin-left: 5px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+}

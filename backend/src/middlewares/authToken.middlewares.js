@@ -4,6 +4,8 @@ const db = require("../models/index.js");
 const User = db.usermaster;
 let authSessions = db.authsessions;
 let {Op}= require('sequelize')
+let {encrypt} = require('./encryption.middlewares.js')
+let {decrypt} = require('./decryption.middlewares.js')
 function authenticateToken(req, res, next) {
   try {
     console.log('new date', new Date())
@@ -31,20 +33,22 @@ function authenticateToken(req, res, next) {
 
     
       // console.log(query.rows);
-      if (findUser.statusId == 0) {
+      if (findUser.statusId == 2) {
         return res.status(statusCode.UNAUTHORIZED.code).json({ message: 'You are inactive user' });
       } else {
-        let checkIfTheSessionIsActiveOrNot = await authSessions.findOne({
-          where:{
-            [Op.and]:[{active:statusId},{sessionId:sessionId}]
-          }
-        })
-        if(!checkIfTheSessionIsActiveOrNot){
-          return res.status(statusCode.UNAUTHORIZED.code).json({
-            message:"One session is already in active mode"
-          })
-        }
+        // let checkIfTheSessionIsActiveOrNot = await authSessions.findOne({
+        //   where:{
+        //     [Op.and]:[{active:statusId},{sessionId:decrypt(sessionId)}]
+        //   }
+        // })
+        // console.log(checkIfTheSessionIsActiveOrNot,"check if the session is active or not")
+        // if(!checkIfTheSessionIsActiveOrNot){
+        //   return res.status(statusCode.UNAUTHORIZED.code).json({
+        //     message:"One session is already in active mode"
+        //   })
+        // }
         req.user = findUser;
+        req.session = sessionId;
         next();
       }
     });

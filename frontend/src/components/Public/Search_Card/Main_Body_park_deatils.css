@@ -1,29 +1,34 @@
 .main__body__park {
-    padding-top: 50px; /* Add space at the top for the header */
+    padding-top: 50px;
+    /* Add space at the top for the header */
 }
-.park-body-1{
+
+.park-body-1 {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Park_BackGround_img.png");
     height: 30vh;
     background-size: cover;
     background-repeat: no-repeat;
 }
-.park-body-3{
+
+.park-body-3 {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/MultiPark.jpg");
     height: 30vh;
     background-size: cover;
     background-repeat: no-repeat;
 }
-.park-body-2{
+
+.park-body-2 {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Sport.png");
     height: 30vh;
     background-size: cover;
     background-repeat: no-repeat;
 }
-.name_park_img{
+
+.name_park_img {
     padding: 105px;
     font-size: 42px;
-    color:white;
-  
+    color: white;
+
 }
 
 
@@ -40,28 +45,28 @@
 
 .card-container {
     display: flex;
-    flex-wrap: wrap; /* Allow cards to wrap to the next line */
-    justify-content: center; /* Center cards horizontally */
-   
+    flex-wrap: wrap;
+    /* Allow cards to wrap to the next line */
+    justify-content: center;
+    /* Center cards horizontally */
+
 }
 
 
 
 
 
-
-
-
-
-.park-card-1{
+.park-card-1 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px); /* Adjust width for padding */
-    max-width: 300px; /* Limit maximum width for better responsiveness */
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
     padding: 8px;
     gap: 14px;
     margin: 20px;
     border-radius: 18px;
-    background-color:#E0F8E5;
+    background-color: #E0F8E5;
     overflow: hidden;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -70,10 +75,13 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
-.park-card-2{
+
+.park-card-2 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px); /* Adjust width for padding */
-    max-width: 300px; /* Limit maximum width for better responsiveness */
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
     padding: 8px;
     gap: 14px;
     margin: 20px;
@@ -87,10 +95,13 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
-.park-card-3{
+
+.park-card-3 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
-    width: calc(100% - 40px); /* Adjust width for padding */
-    max-width: 300px; /* Limit maximum width for better responsiveness */
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
     padding: 8px;
     gap: 14px;
     margin: 20px;
@@ -104,6 +115,7 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
+
 .Card_img {
     width: 100%;
     border-radius: 15px;
@@ -124,10 +136,10 @@
     margin-bottom: 5px;
 }
 
-.ark_location{
+.ark_location {
     font-size: 7px;
     color: #2f2f2f;
-   
+
 }
 
 .distance {
@@ -146,7 +158,7 @@
 
 
 /* here Search --------------------------------------*/
-.Search_container{
+.Search_container {
     display: flex;
     justify-content: space-between;
     padding: 8px;
@@ -158,27 +170,36 @@
 /* Adjust styling to make it resemble Google's search input */
 .search-container1 {
     position: relative;
-    width: 300px; /* Adjust width as needed */
+    width: 300px;
+    /* Adjust width as needed */
 }
 
 /* Style the input field */
 .Search_input {
     width: 100%;
-    padding: 8px; /* Add padding to top and bottom */
-    padding-left: 40px; /* Add more padding on the left to accommodate the icon */
-    border: 2px solid #ccc; /* Increase border thickness */
-    border-radius: 8px; /* Increase border radius for rounded corners */
+    padding: 8px;
+    /* Add padding to top and bottom */
+    padding-left: 40px;
+    /* Add more padding on the left to accommodate the icon */
+    border: 2px solid #ccc;
+    /* Increase border thickness */
+    border-radius: 8px;
+    /* Increase border radius for rounded corners */
     font-size: 16px;
-    color: #333; /* Text color */
-    background-color: #f9f9f9; /* Background color */
-    transition: border-color 0.3s; /* Smooth transition for border color */
+    color: #333;
+    /* Text color */
+    background-color: #f9f9f9;
+    /* Background color */
+    transition: border-color 0.3s;
+    /* Smooth transition for border color */
 }
 
 /* Style the search icon */
 .search-icon {
     position: absolute;
     top: 55%;
-    left: 10px; /* Adjust the position to the left */
+    left: 10px;
+    /* Adjust the position to the left */
     transform: translateY(-50%);
     color: #888;
 }
@@ -191,8 +212,10 @@
 
 /* Highlight border color on focus */
 .Search_input:focus {
-    border-color: #029c3d; /* Change border color on focus */
-    outline: none; /* Remove default focus outline */
+    border-color: #029c3d;
+    /* Change border color on focus */
+    outline: none;
+    /* Remove default focus outline */
 }
 
 
@@ -205,26 +228,42 @@
 }
 
 .button-text {
-    display: none;
-    position: absolute;
-    bottom: -30px; /* Adjust this value to change the distance between image and text */
-    left: 50%;
-    transform: translateX(-50%);
-    color:green;
-    font-size: 15px;
-    font-weight: 600;
+    display: none; 
+     position: absolute;
+    bottom: -30px;
     
-}
-.button-text1{
-    display: none;
-    position: absolute;
-    bottom: -55px; /* Adjust this value to change the distance between image and text */
     left: 50%;
     transform: translateX(-50%);
-    color:green;
+    color: green;
+    font-size: 15px;
+    font-weight: 600;
+
+/* position: absolute;
+top: 61%;
+left: 22%;
+color: #013409;
+
+
+padding: 10px;
+border-radius: 5px;
+font-size: 13px;
+font-weight: 700; */
+ 
+
+}
+
+.button-text1 {
+    display: none;
+    position: absolute;
+    bottom: -55px;
+    /* Adjust this value to change the distance between image and text */
+    left: 50%;
+    transform: translateX(-50%);
+    color: green;
     font-size: 15px;
     font-weight: 600;
 }
+
 .image-button:hover .button-text1 {
     display: block;
 }
@@ -235,10 +274,10 @@
 }
 
 /* Name of Park */
-.name_park{
+.name_park {
     font-size: 35px;
     font-weight: 600;
-   color: rgb(0, 109, 0);
+    color: rgb(0, 109, 0);
     margin-left: 120px;
 }
 
@@ -248,14 +287,16 @@
 /* Filter On Click of Button Free, Paid , NearBy, Popular --------------------------------------------------------- */
 
 
-.Filter_grid{
-  padding: 10px;
-  margin-left: 90px;
-  display: flex;
-  align-items: center;
-  /* justify-content: space-between; */
+.Filter_grid {
+    /* padding: 10px; */
+    margin-left: 99px;
+    margin-right: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
-.gride_page{
+
+.gride_page {
     /* margin-right: 90px; */
     margin-left: 48%;
     height: 100%;
@@ -263,88 +304,91 @@
     border-radius: 0.417vw;
     background-color: ghostwhite;
 }
-.filter_button{
+
+.filter_button {
     display: flex;
     gap: 10px;
 }
+
 /* drop down */
 
-select{
-    border:none;
+select {
+    border: none;
     padding: 20px 20px;
-    border-radius:5px;
-  }
-  
-  select:focus{
-    outline:none;
-  }
+    border-radius: 5px;
+}
+
+select:focus {
+    outline: none;
+}
 
 .button-59 {
-  align-items: center;
-  background-color: #fff;
-  border: 2px solid #01b116;
-  box-sizing: border-box;
-  color: #000;
-  cursor: pointer;
-  display: inline-flex;
-  fill: #000;
-  font-family: Inter,sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  height: 35px;
-  justify-content: center;
-  outline: 0;
-  padding: 2px;
-  text-align: center;
-  min-width: 100px;
-  text-decoration: none;
-  transition: all .3s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  border-radius: 10px;
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #01b116;
+    box-sizing: border-box;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    fill: #000;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 35px;
+    justify-content: center;
+    outline: 0;
+    padding: 2px;
+    text-align: center;
+    min-width: 100px;
+    text-decoration: none;
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border-radius: 10px;
 
 }
 
 .button-59:focus {
-  color: #171e29;
+    color: #171e29;
 }
 
 .button-59:hover {
-  border-color: rgb(4, 156, 1);
-    background-color:rgb(2, 125, 0) ;
+    border-color: rgb(4, 156, 1);
+    background-color: rgb(2, 125, 0);
     color: #fff;
-  fill: #06f;
+    fill: #06f;
 }
 
 
 
 @media (min-width: 768px) {
-  .button-59 {
-    min-width: 100px;
-  }
+    .button-59 {
+        min-width: 100px;
+    }
 }
 
 /* here Table (List design) --------------------------- */
-.table_Container1{
+.table_Container1 {
     padding: 30px;
 }
 
 
-.Comming_son{
+.Comming_son {
     font-size: 50px;
     padding: 50px;
 }
 
-.filter_option{
+.filter_option {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 20px;
     gap: 5px;
-    height: 40px;
+    height: 35px;
 }
-.filter-icon{
+
+.filter-icon {
     color: #029c3d;
 }
 
@@ -354,16 +398,14 @@ select{
 
 
 
- .main__body__park {
-   
-  }
-  
-  .filter-container {
+.main__body__park {}
+
+.filter-container {
     position: relative;
     display: inline-block;
-  }
-  
-  .filter_option {
+}
+
+.filter_option {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -371,22 +413,22 @@ select{
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #fff;
-  }
-  
-  .filter_option:hover {
+}
+
+.filter_option:hover {
     background-color: #f0f0f0;
-  }
-  
-  .filter-icon {
+}
+
+.filter-icon {
     margin-right: 5px;
-  }
-  
-  .text-filter {
+}
+
+.text-filter {
     font-size: 14px;
-  }
-  
-  .filter-dropdown {
-    display: block;
+}
+
+.filter-dropdown {
+    /* display: block; */
     position: absolute;
     top: 100%;
     left: 0;
@@ -395,20 +437,40 @@ select{
     padding: 10px;
     border-radius: 4px;
     z-index: 1;
-    width: 150px;
-  }
-  
-  .filter-dropdown label {
+    width: 400px;
+}
+
+.filter-dropdown label {
     display: block;
     padding: 5px 0;
-  }
-  
-  .filter-dropdown input {
+}
+
+.filter-dropdown input {
     margin-right: 5px;
-  }
-   
+}
 
 
+@media screen and (max-width: 1024px) {
 
+    /* Search container here............... */
+    .Search_container {
+        display: grid;
+    }
 
- 
+    .filter-dropdown {
+        width: 330px;
+    }
+
+    .filter-dropdown label {
+        padding: 3px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .Filter_grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+    }
+}

@@ -11,8 +11,12 @@ let user = db.usermaster
 const {Op} = require('sequelize')
 const updatepublic_user = async (req, res) => {
   try {
+    console.log('req body', req.body, req.user.userId)
     let statusId = 1;
+    let userId = req.user.userId;
+    console.log(userId,'userId',req.user.userId)
     let {
+<<<<<<< HEAD
       userId,
       encryptTitle:title,
       encryptFirstName:firstName,
@@ -25,64 +29,85 @@ const updatepublic_user = async (req, res) => {
       encryptEmail:emailId,
       //profilePicture,
       encryptActivity:activities
+=======
+      title,
+      firstName,
+      middleName,
+      lastName,
+      userName,
+      password,
+      phoneNo,
+      altPhoneNo,
+      emailId,
+      profilePicture,
+>>>>>>> 432dc18fa8f80874363df575f6c5d36f154c32b0
     } = req.body;
-
+// console.log("Update Profile", req.body)
     let params = {};
-
-    const existuserName = await user.findOne({
-      where: { userName: userName, statusId:statusId,roleId:null},
-    });
-    const existingphoneNo = await user.findOne({
-      where: { phoneNo: phoneNo,statusId:statusId, roleId:null },
-    });
-    const existingaltPhoneNo = await user.findOne({
-      where: { altPhoneNo: altPhoneNo, statusId:statusId, roleId:null },
-    });
-    const existingemailId = await user.findOne({
-      where: { emailId: emailId ,statusId:statusId, roleId:null },
-    });
-
-    if (existuserName) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same userName" });
-    } else if (existingphoneNo) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same phoneNo" });
-    } else if (existingaltPhoneNo) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same altPhoneNo" });
-    } else if (existingemailId) {
-      return res.status(statusCode.CONFLICT.code).json({
-        message: "User already exist with given emailId",
-      });
-    }
+    let roleId =4;
+  
+ 
     let findPublicuserWithTheGivenId = await user.findOne({
       where: {
         userId: userId,
       },
     });
-    if (findPublicuserWithTheGivenId.title != title) {
+    console.log('2323')
+    if (findPublicuserWithTheGivenId.title != title && title) {
+      console.log('70')
       params.title = title;
-    } else if (findPublicuserWithTheGivenId.firstName != firstName) {
+    } else if (findPublicuserWithTheGivenId.firstName != firstName && firstName) {
+      console.log('firstname', firstName, '73')
       params.firstName = firstName;
-    } else if (findPublicuserWithTheGivenId.middleName != middleName) {
+    } else if (findPublicuserWithTheGivenId.middleName != middleName && middleName) {
       params.middleName = middleName;
-    } else if (findPublicuserWithTheGivenId.lastName != lastName) {
+    } else if (findPublicuserWithTheGivenId.lastName != lastName && lastName) {
       params.lastName = lastName;
-    } else if (findPublicuserWithTheGivenId.userName != userName) {
-      params.userName = userName;
-    } else if (findPublicuserWithTheGivenId.password != password) {
+    } else if (findPublicuserWithTheGivenId.userName != userName && userName) {
+        const existuserName = await user.findOne({
+          where: { userName: userName, statusId:statusId,roleId:roleId},
+        });
+        if (existuserName) {
+          return res
+            .status(statusCode.CONFLICT.code)
+            .json({ message: "User already exist same userName" });
+        }
+        params.userName = userName;
+    } else if (findPublicuserWithTheGivenId.password != password && password) {
       params.password = password;
-    } else if (findPublicuserWithTheGivenId.phoneNo != phoneNo) {
+    } else if (findPublicuserWithTheGivenId.phoneNo != phoneNo && phoneNo) {
+      const existingphoneNo = await user.findOne({
+        where: { phoneNo: phoneNo,statusId:statusId, roleId:roleId },
+      });
+      if (existingphoneNo) {
+        return res
+          .status(statusCode.CONFLICT.code)
+          .json({ message: "User already exist same phoneNo" });
+      } 
       params.phoneNo = phoneNo;
-    } else if (findPublicuserWithTheGivenId.altPhoneNo != altPhoneNo) {
+    } else if (findPublicuserWithTheGivenId.altPhoneNo != altPhoneNo && altPhoneNo) {
+        const existingaltPhoneNo = await user.findOne({
+          where: { altPhoneNo: altPhoneNo, statusId:statusId, roleId:roleId },
+        });
+        if (existingaltPhoneNo) {
+          return res
+            .status(statusCode.CONFLICT.code)
+            .json({ message: "User already exist same altPhoneNo" });
+        }
       params.altPhoneNo = altPhoneNo;
-    } else if (findPublicuserWithTheGivenId.emailId != emailId) {
+    } else if (findPublicuserWithTheGivenId.emailId != emailId && emailId) {
+      
+        const existingemailId = await user.findOne({
+          where: { emailId: emailId ,statusId:statusId, roleId:roleId },
+        });
+        if (existingemailId) {
+          return res.status(statusCode.CONFLICT.code).json({
+            message: "User already exist with given emailId",
+          });
+        }
       params.emailId = emailId;
     }
+<<<<<<< HEAD
 
     try {
       let [updatepublicUserCount, updatepublicUserData] =
@@ -139,6 +164,17 @@ const updatepublic_user = async (req, res) => {
       })
     }
      if (updatepublicUserCount >= 0) {
+=======
+    let [updatepublicUserCount, updatepublicUserData] =
+      await user.update(params, {
+        where: {
+          [Op.and]: [{userId: userId},{statusId:statusId},]
+         },
+      });
+
+      console.log('update public user count', updatepublicUserCount)
+    if (updatepublicUserCount >= 1) {
+>>>>>>> 432dc18fa8f80874363df575f6c5d36f154c32b0
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
       });
@@ -147,7 +183,6 @@ const updatepublic_user = async (req, res) => {
         message: "Not Updated ",
       });
     }
-    console.log(updatepublicUserData, "skbskb", updatepublicUserCount);
   } catch (error) {
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
@@ -203,9 +238,9 @@ const updatepublic_user = async (req, res) => {
 const viewpublicUser = async (req, res) => {
   console.log("view user profile details");
   try {
-    console.log(21)
-    let userId = req.user?.id || 1;
-    let publicRole = null
+    console.log(21, req.user.userId)
+    let userId = req.user?.userId || 1;
+    let publicRole = 4
     let statusId = 1;
     let showpublic_user = await user.findOne({
       where: {
@@ -279,7 +314,7 @@ const homePage = async (req, res) => {
       ea.facilityId,
       f.facilityname,
       ea.eventName, 
-      ea.eventCategory, 
+      ea.eventCategoryId, 
       ea.locationName, 
       ea.eventDate, 
       ea.eventStartTime,

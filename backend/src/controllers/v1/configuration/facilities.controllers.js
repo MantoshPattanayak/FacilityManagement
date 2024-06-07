@@ -10,6 +10,10 @@ const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch s
 const Sequelize = db.Sequelize
 
 let facilitiesTable = db.facilities;
+let facilitiesActivities = db.facilityactivities
+let userActivity = db.useractivitymasters;
+let facilityTariff = db.facilitytariff
+let userBookmark = db.bookmarks
 const fs = require('fs');
 
 
@@ -104,35 +108,97 @@ function encodeUrls(facilitiesArray) {
 
 const viewParkDetails = async(req,res)=>{
     try{
+        let userId = req.user?.userId || 1
         let givenReq = req.body.givenReq?req.body.givenReq:null
         let facilityTypeId = req.body.facilityTypeId?req.body.facilityTypeId:null
+        let selectedFilter = req.body.selectedFilter?req.body.selectedFilter:null;
         console.log(givenReq,'givenReq ')
-        console.log("fileid", facilityTypeId)
+        console.log("fileid", facilityTypeId,'selected filter',selectedFilter)
 
         let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership, fl.url
         from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId`
-   
-        let facilities = await sequelize.query(facility,{
-            replacements:[new Date()]
-        })
+        
+        let facilities;
 
-       if(facilityTypeId){
-        console.log(1)
-         facility = `select facilityId, facilityname,facilityTypeId,case 
-            when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
-            else 'closed'
-        end as status, address,latitude,longitude,areaAcres,ownership, sun, mon, tue, wed, thu, fri, sat, fl.url
-        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where f.facilityTypeId=?`
-       
-        facilities = await sequelize.query(facility,{
-            replacements:[new Date(),facilityTypeId]
-        })
-        // console.log(2,facilities)
-    }
+        if (selectedFilter) {
+            console.log('selected filter')
+            let filterConditions = [];
+        
+            if (selectedFilter.Amenities.length > 0) {
+                console.log('1')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityamenities WHERE amenityId IN (${selectedFilter.Amenities.join(',')}))`);
+            }
+            
+            if (selectedFilter.Activity.length > 0) {
+                console.log('2')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityactivities WHERE activityId IN (${selectedFilter.Activity.join(',')}))`);
+            }
+            if (selectedFilter.EventCategories.length > 0) {
+                let eventIds =[]
+                for (let i of selectedFilter.EventCategories) {
+                    console.log('i',i)
+                    let eventActivity = await sequelize.query('SELECT eat.eventId FROM eventcategorymasters ecm INNER JOIN eventactivities eat ON eat.eventCategoryId = ecm.eventCategoryId WHERE ecm.eventCategoryId = ?', {
+                        replacements: [i],
+                        type:Sequelize.QueryTypes.SELECT
+                    });
+                    eventIds.push(eventActivity[0].eventId)
+                    console.log('event ids',eventActivity)
+                }
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM eventactivities WHERE eventId IN (${eventIds.join(',')}))`);
 
+            }
+        
+            if (selectedFilter.Services.length > 0) {
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM servicefacilities WHERE serviceId IN (${selectedFilter.Services.join(',')}))`);
+            }
+            
+            console.log('24')
+            if (filterConditions.length > 0 && !facilityTypeId) {
+                console.log('filter condn', filterConditions,facility)
+                facility += ` WHERE ${filterConditions.join(' AND ')}`;
+                console.log('facility',facility)
+                 facilities = await sequelize.query(facility,{
+                    replacements:[new Date()]
+                })
+            }
+            if (facilityTypeId) {
+                console.log('25')
+
+                facility += ` WHERE f.facilityTypeId=?`;
+            
+                if (filterConditions.length) {
+                    // Add selected filter conditions
+                    facility += ` AND ${filterConditions.join(' AND ')}`;
+                }
+            
+                facilities = await sequelize.query(facility, {
+                    replacements: [new Date(),facilityTypeId]
+                });
+            }
+        }
+        if (facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            facility += ` WHERE f.facilityTypeId=?`;   
+        
+            facilities = await sequelize.query(facility, {
+                replacements: [new Date(),facilityTypeId]
+            });
+        }
+
+        if (!facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            facilities = await sequelize.query(facility, {
+                replacements: [new Date()]
+            });
+        }
+    
+
+    
         let matchedData = facilities[0];
         console.log('givenReq',givenReq)
         if(givenReq){
@@ -155,11 +221,19 @@ const viewParkDetails = async(req,res)=>{
         // const convertedData = convertImagesToBase64(matchedData);
         // Call the function to encode URLs in the facilities array
         const encodedFacilities = encodeUrls(matchedData);
-        
+        // fetch bookmark details
+        let fetchBookmarkDetails = await userBookmark.findAll({
+            where:{
+                publicUserId:userId
+            }
+        })
         // console.log(encodedFacilities)
+        // if selected filter comes 
+        
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:encodedFacilities
+            data:encodedFacilities,
+            bookmarkDetails:fetchBookmarkDetails
         })
 
 
@@ -186,7 +260,13 @@ const autoSuggestionForViewParkDetails = async (req,res)=>{
 
 const viewParkById = async (req,res)=>{
     try{
+        let userId = req.user?.userId || 1;
         let facilityId = req.params.facilityId? req.params.facilityId:null;
+        let findFacilityTypeId = await facilitiesTable.findOne({
+            where:{
+                facilityId:facilityId
+            }
+        })
         if(facilityId){
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
@@ -198,7 +278,7 @@ const viewParkById = async (req,res)=>{
             replacements:[new Date(), facilityId]
         })
 
-        let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
+        let fetchEventDetailsQuery = `select eventName, eventCategoryId,locationName,eventDate,eventStartTime,
         eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where facilityId=? and ticketSalesEnabled =1 `
 
         let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
@@ -218,12 +298,41 @@ const viewParkById = async (req,res)=>{
             {
                 replacements:[facilityId]
             })
+        // if the facilityType is playground then this facility activities will display some data
+        
+        let fetchfacilitiesActivities = await facilitiesActivities.findAll({
+            where:{
+                facilityTypeId:findFacilityTypeId.facilityTypeId
+            },
+            include:[
+               { 
+                model:facilitiesTable
+                },
+                {
+                    model:userActivity
+                }
+            ]
+        })
+
+        let fetchTariff = await facilityTariff.findOne({
+            where:{
+                facilityId:facilityId
+            }
+        })
+        let fetchBookmarkDetails = await userBookmark.findAll({
+            where:{
+                publicUserId:userId
+            }
+        })
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
            facilitiesData: fetchTheFacilitiesDetailsData[0],
            eventDetails:fetchEventDetailsData[0],
             amenitiesData:fethAmenitiesDetailsDataData[0],
-            serviceData:fetchServicesDetailsData[0]
+            serviceData:fetchServicesDetailsData[0],
+            fetchfacilitiesActivities:fetchfacilitiesActivities,
+            fetchTariffData:fetchTariff,
+            fetchBookmarkDetails:fetchBookmarkDetails
         })
         }
         else{
@@ -551,7 +660,7 @@ function convertImagesToBase64(dataArray) {
 
 const nearByDataInMap = async (req, res) => {
     try {
-        let { latitude, longitude, facilityTypeId, range, popular, free, paid, order } = req.body;
+        let { latitude, longitude, facilityTypeId, range, popular, free, paid, order,selectedFilter } = req.body;
 
         // Default range is set to 20 if not provided
         range = range ? range : 20;
@@ -583,58 +692,132 @@ const nearByDataInMap = async (req, res) => {
         LEFT JOIN 
             amabhoomi.files fl ON fl.fileId = fa.fileId`;
 
-        if (free && paid && popular ) {
-            console.log('free paid popular')
-                fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId
-                LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
-        }
+        // if (free && paid && popular ) {
+        //     console.log('free paid popular')
+        //         fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId
+        //         LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
+        // }
 
-        if (free && paid && !popular ) {
-            fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
-        }
-        if (free && popular && !paid) {
-            fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId
-            INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId `;
-        }
+        // if (free && paid && !popular ) {
+        //     fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
+        // }
+        // if (free && popular && !paid) {
+        //     fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId
+        //     INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId `;
+        // }
 
-        if (paid && popular && !free ) {
-            fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId
-            INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId `;
-        }
+        // if (paid && popular && !free ) {
+        //     fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId
+        //     INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId `;
+        // }
+
         // Apply filter conditions based on popular, free, paid
-        if (popular && !free && !paid) {
+
+        // if (popular && !free && !paid) {
+        //     fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId`;
+        // }
+
+        // if (free && !popular && !paid) {
+        //     fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
+        // }
+        // if (paid && !free && !popular) {
+        //     fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId`;
+        // }
+
+         if (popular) {
             fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId`;
         }
-        if (free && !popular && !paid) {
-            fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
-        }
-        if (paid && !free && !popular) {
-            fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId`;
+
+        if (selectedFilter) {
+            console.log('selected filter')
+            let filterConditions = [];
+        
+            if (selectedFilter.Amenities.length > 0) {
+                console.log('1')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityamenities WHERE amenityId IN (${selectedFilter.Amenities.join(',')}))`);
+            }
+            
+            if (selectedFilter.Activity.length > 0) {
+                console.log('2')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityactivities WHERE activityId IN (${selectedFilter.Activity.join(',')}))`);
+            }
+            if (selectedFilter.EventCategories.length > 0) {
+                let eventIds =[]
+                for (let i of selectedFilter.EventCategories) {
+                    console.log('i',i)
+                    let eventActivity = await sequelize.query('SELECT eat.eventId FROM eventcategorymasters ecm INNER JOIN eventactivities eat ON eat.eventCategoryId = ecm.eventCategoryId WHERE ecm.eventCategoryId = ?', {
+                        replacements: [i],
+                        type:Sequelize.QueryTypes.SELECT
+                    });
+                    console.log('event ids',eventActivity)
+                    if(eventActivity.length>0){
+                        eventIds.push(eventActivity[0].eventId)
+                    }
+                }
+                console.log('eventIds',eventIds)
+                if(eventIds.length>0){
+                    filterConditions.push(`f.facilityId IN (SELECT facilityId FROM eventactivities WHERE eventId IN (${eventIds.join(',')}))`);
+                }
+
+            }
+        
+            if (selectedFilter.Services.length > 0) {
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM servicefacilities WHERE serviceId IN (${selectedFilter.Services.join(',')}))`);
+            }
+            
+            console.log('24')
+            if (filterConditions.length > 0 && !facilityTypeId) {
+                console.log('filter condn', filterConditions)
+                fetchFacilitiesQuery += ` WHERE ${filterConditions.join(' AND ')}`;
+                console.log('facility')
+              
+            }
+            if (facilityTypeId) {
+                console.log('25')
+
+                fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
+            
+                if (filterConditions.length) {
+                    // Add selected filter conditions
+                    fetchFacilitiesQuery += ` AND ${filterConditions.join(' AND ')}`;
+                }
+            
+                replacements.push(facilityTypeId);
+
+            }
         }
           // Filter by facilityTypeId if provided
-          if (facilityTypeId) {
-            fetchFacilitiesQuery += ` WHERE f.facilityTypeId = ?`;
-            if(free && !paid){
-                fetchFacilitiesQuery += ` and ft.facilityId IS NULL`
-            }
-            replacements.push(facilityTypeId);
-        }
+        //   if (facilityTypeId) {
+        //     fetchFacilitiesQuery += ` WHERE f.facilityTypeId = ?`;
+            // if(free && !paid){
+            //     fetchFacilitiesQuery += ` and ft.facilityId IS NULL`
+            // }
+        //     replacements.push(facilityTypeId);
+        // }
 
-        if(free && !facilityTypeId && !paid){
-            fetchFacilitiesQuery += ` where ft.facilityId IS NULL`
+        // if(free && !facilityTypeId && !paid){
+        //     fetchFacilitiesQuery += ` where ft.facilityId IS NULL`
+        // }
+
+        if (facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
+            replacements.push(facilityTypeId);
+
         }
 
         // Group by facilityId
         fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
         console.log(fetchFacilitiesQuery,'fetchFacilitiesQuery')
         // Sort order
-        if (order == 1) {
-            // Ascending order
-            fetchFacilitiesQuery += ` ORDER BY f.facilityname ASC`;
-        } else if (order == 2) {
-            // Descending order
-            fetchFacilitiesQuery += ` ORDER BY f.facilityname DESC`;
-        }
+        // if (order == 1) {
+        //     // Ascending order
+        //     fetchFacilitiesQuery += ` ORDER BY f.facilityname ASC`;
+        // } else if (order == 2) {
+        //     // Descending order
+        //     fetchFacilitiesQuery += ` ORDER BY f.facilityname DESC`;
+        // }
 
         // Execute the constructed query
         const fetchFacilities = await sequelize.query(fetchFacilitiesQuery, {
@@ -684,12 +867,14 @@ const nearByDataInMap = async (req, res) => {
                 return nameB.localeCompare(nameA);
             });
         }
+        console.log('get near by data')
         // Construct response
-        const convertedData = convertImagesToBase64(getNearByData);
+        // const convertedData = convertImagesToBase64(getNearByData);
+        const encodedFacilities = encodeUrls(getNearByData);
 
         return res.status(statusCode.SUCCESS.code).json({
             message: 'Nearby data retrieved successfully',
-            data: convertedData // Assuming fetchFacilities is an array with the result at index 0
+            data: encodedFacilities // Assuming fetchFacilities is an array with the result at index 0
         });
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -698,11 +883,39 @@ const nearByDataInMap = async (req, res) => {
     }
 };
 
+// api to fetch filter option based on facility type
+const facilityFilterOption = async (req, res) => {
+    let facilityTypeId = req.params.facilityTypeId;
+    
+    let fetchActivityMaster = await sequelize.query(`
+        select * from amabhoomi.useractivitymasters u
+    `);
+
+    let fetchAmenitiesMaster = await sequelize.query(`
+        select * from amabhoomi.amenitymasters a
+    `);
+
+    let fetchServicesMaster = await sequelize.query(`
+        select * from amabhoomi.services s
+    `);
+
+    let fetchEventCategories = await sequelize.query(`
+        select * from amabhoomi.eventcategorymasters e 
+    `);
+
+    // console.log('fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster', { fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster });
+
+    res.status(statusCode.SUCCESS.code).json({
+        message: 'Activity, Amenity, Services List',
+        fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster, fetchEventCategories
+    })
+}
 
 module.exports ={
     displayMapData,
     searchParkFacilities,
     viewParkDetails,
     viewParkById,
-    nearByDataInMap
+    nearByDataInMap,
+    facilityFilterOption
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Profile.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { faTrash, faUser, faEnvelope, faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faUser, faEnvelope, faMobileScreenButton, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
@@ -30,9 +30,25 @@ export default function Profile() {
     password: '',
     userId: ''
   });
+  const [activityData, setActivityData] = useState([]);
+  // API call to fetch preferred activities data
+  async function getActivitiesData() {
+    try {
+      let res = await axiosHttpClient("VIEW_FILTER_OPTIONS_API", "get");
+      console.log("getActivitiesData", res.data.fetchActivityMaster[0]);
+      setActivityData(res.data.fetchActivityMaster[0]);
+    }
+    catch (err) {
+      console.log("there is an error ", err);
+    }
+  }
+  useEffect(() => {
+    getActivitiesData();
+  }, []);
   // const [inputdata, setInputdata] = useState(formData);
 
-  const handleActivityToggle = (activity) => {
+  const handleActivityToggle = (e, activity) => {
+    e.preventDefault();
     if (selectedActivities.includes(activity)) {
       setSelectedActivities(
         selectedActivities.filter((item) => item !== activity)
@@ -40,6 +56,7 @@ export default function Profile() {
     } else {
       setSelectedActivities([...selectedActivities, activity]);
     }
+    console.log('selectedActivities', selectedActivities);
   };
 
 
@@ -127,7 +144,8 @@ export default function Profile() {
         lastName: encryptData(formData.lastName),
         emailId: encryptData(formData.emailId),
         language: encryptData(formData.language),
-        password: encryptData(formData.password)
+        password: encryptData(formData.password),
+        activityPreference: selectedActivities.map((activity) => { return encryptData(activity) })
       }, null);
 
       // Log updated form data after successful update
@@ -180,7 +198,7 @@ export default function Profile() {
   async function fetchProfileDetails() {
     try {
       let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
-      console.log('response of fetch profile api', res.data.public_user);
+      console.log('response of fetch profile api', res.data);
 
       let userName = decryptData(res.data.public_user.userName);
       let firstName = decryptData(res.data.public_user.firstName);
@@ -262,22 +280,22 @@ export default function Profile() {
                 </div>
 
                 <div className="profile-about-icon" >
-                <FontAwesomeIcon icon={faEnvelope} />
+                  <FontAwesomeIcon icon={faEnvelope} />
                   <p>{formData.emailId}</p>
                 </div>
 
                 <div className="profile-about-icon" >
-                <FontAwesomeIcon icon={faMobileScreenButton} />
+                  <FontAwesomeIcon icon={faMobileScreenButton} />
                   <p>{formData.phoneNo}</p>
                 </div>
-                
+
               </div>
             </div>
             <div>
               <ul className="profile-button--Section">
                 <li>
                   <Link
-                    to="/ProfileHistory"
+                    to="/Profile"
                     className="profile-button"
                     style={{ color: 'white', backgroundColor: "green" }}
                   >
@@ -340,19 +358,20 @@ export default function Profile() {
 
               <div className="profile-formContainer">
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">First Name<span className="required-asterisk">*</span></label>
                   <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">Last Name<span className="required-asterisk">*</span></label>
                   <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">Email<span className="required-asterisk">*</span></label>
                   <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
                   {errors.email && <span className="error">{errors.email}</span>}
                 </div>
@@ -364,8 +383,26 @@ export default function Profile() {
                     <option>ଓଡ଼ିଆ</option>
                   </select>
                 </div>
+                {/* <div className="nearby-location">
+                  <label htmlFor="nearby location">Preferred Location</label>
+                  <div className="preferred-locations ">
+                    <button>
+                      <span>Patia</span>
+                    </button>
+                    <button>
+                      <span>Jaydev vihar</span>
+                    </button>
+                    <button>
+                      <span>Vani vihar</span>
+                    </button>
+                    <button>
+                      <span>Baramunda</span>
+                    </button>
 
-                <div className="profile-formContainer_Inner">
+                  </div>
+                </div> */}
+
+                {/* <div className="profile-formContainer_Inner">
                   <label htmlFor="password">New Password</label>
                   <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
                 </div>
@@ -374,7 +411,7 @@ export default function Profile() {
                   <label htmlFor="NewPassword">Reenter New Password</label>
                   <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
                   {errors.password && <span className="error">{errors.password}</span>}
-                </div>
+                </div> */}
               </div>
 
               {/* choose preffered Activity */}
@@ -387,96 +424,23 @@ export default function Profile() {
                 </h2>
                 {/* <form onSubmit={handleSubmit}> */}
                 <div className="profile--Activity-options">
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Running")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Running")}
-                  >
-                    <span>🏃 Running</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Yoga")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Yoga")}
-                  >
-                    <span>🧘 Yoga</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Open-Gym")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Open-Gym")}
-                  >
-                    <span>🏋️ Open-Gym</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Swimming")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Swimming")}
-                  >
-                    <span>🏊 Swimming</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Cricket")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Cricket")}
-                  >
-                    <span>🏏 Cricket</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Football")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Football")}
-                  >
-                    <span>⚽ Football</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Volleyball")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Volleyball")}
-                  >
-                    <span>🏐 Volleyball</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Badminton")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Badminton")}
-                  >
-                    <span>🏸 Badminton</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Library")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Library")}
-                  >
-                    <span>📚 Library</span>
-                  </button>
-                  <button
-                    className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes("Boating")
-                      ? "border-solid bg-green-800 text-white"
-                      : "border-solid border border-gray-600 "
-                      } text-black`}
-                    onClick={() => handleActivityToggle("Boating")}
-                  >
-                    <span>🛶 Boating</span>
-                  </button>
+                  {activityData?.length > 0 &&
+                    activityData.map((activity) => {
+                      return (
+                        <button
+                          className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes(activity.userActivityId)
+                            ? "border-solid bg-green-800 text-white"
+                            : "border-solid border border-gray-600 "
+                            } text-black`}
+                          onClick={(e) => handleActivityToggle(e, activity.userActivityId)}
+                        >
+                          <span>{activity.userActivityName}</span>
+                        </button>
+                      )
+                    })
+
+                  }
+
                   {/* Add more buttons for other activities */}
                 </div>
                 <button

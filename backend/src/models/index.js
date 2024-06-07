@@ -99,20 +99,40 @@ db1.grievancemasters = require('./grievancemasters.models')(sequelize, DataTypes
 db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes)
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
+
+db1.clicklog = require('./clicklog.models')(sequelize,DataTypes)
+//facility activities
+db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
+// facility tariff
+db1.facilitytariff = require('./facilitytariff.models')(sequelize,DataTypes)
 //frequentlyaskquestion
 db1.faq = require('./frequentlyaskquestion.models')(sequelize,DataTypes)
 //feedback
 db1.feedback = require('./feedback.model')(sequelize, DataTypes)
+<<<<<<< HEAD
 //promotion
 db1.promotions = require('./promotion.model')(sequelize, DataTypes)
 
+=======
+db1.departmentmasters = require('./departmentmasters.models')(sequelize, DataTypes)
+db1.grievancecategories = require('./grievancecategories.models')(sequelize, DataTypes)
+>>>>>>> 432dc18fa8f80874363df575f6c5d36f154c32b0
 
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
-//facility activities
-db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
 
+<<<<<<< HEAD
 db1.promotions.sync({
+=======
+db1.facilities.hasMany(db1.facilityactivities,{foreignKey:"facilityId"})
+db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
+
+db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"})
+db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
+
+
+db1.faq.sync({
+>>>>>>> 432dc18fa8f80874363df575f6c5d36f154c32b0
   alter: false,
 });
 

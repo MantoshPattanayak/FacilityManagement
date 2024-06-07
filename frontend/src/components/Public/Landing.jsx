@@ -1,4 +1,5 @@
 import "./Landing.css";
+import gif from '../../assets/newImg.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
@@ -22,6 +23,9 @@ import galleryImg6 from "../../assets/Gallery_Mukharjee_Park.jpg";
 import galleryImg7 from "../../assets/Gallery_Prachi Park_Damana.jpg";
 import galleryImg8 from "../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
 import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
+import ad1 from "../../assets/ad1.png";
+import ad2 from "../../assets/ad2.png";
+import ad3 from "../../assets/ad3.png";
 // import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/explore new activity badminton.png";
@@ -62,9 +66,9 @@ import {
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
 
+// mediaquary for responsive landing page
 const responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 5,
   },
@@ -105,7 +109,7 @@ const Landing = () => {
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(0);
 
   const [exploreNewActivities, setExploreNewActivities] = useState([
     {
@@ -146,8 +150,8 @@ const Landing = () => {
   const selectedImage = backGround_images[currentIndexBg];
 
   //function to fetch suggestions of facilities on input by user
-  async function fetchAutoSuggestData(){
-    try{
+  async function fetchAutoSuggestData() {
+    try {
       let response = await axiosHttpClient('View_Park_Data', 'post', {
         givenReq: inputFacility,
         facilityTypeId: null
@@ -156,7 +160,7 @@ const Landing = () => {
       console.log('auto suggest facility data', response.data.data);
       setSuggestions(response.data.data);
     }
-    catch(error){
+    catch (error) {
       console.error(error);
     }
   }
@@ -471,25 +475,50 @@ const Landing = () => {
 
   //------- Advatisemant -----------
 
-  const ad = [adImg, adImg, adImg, adImg, adImg];
+  const ad = [adImg, ad1, ad2, ad3];
+
+  // Home page image
+  const getStyles = () => {
+    const width = window.innerWidth;
+    const baseStyle = {
+      backgroundImage: `linear-gradient(to right, #010101b5 20%, transparent), url(${selectedImage})`,
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      opacity: "100%",
+      maxHeight: "100%",
+      marginBottom: "1px",
+      padding: "100px",
+      width: "100vw",
+      height: "100vh",
+      position: "relative",
+    };
+
+    if (width < 1190) {
+      return {
+        ...baseStyle,
+        height: "36vh",
+      };
+    } else if (width < 1200) {
+      return {
+        ...baseStyle,
+        height: "50vh",
+      };
+    } else if (width < 1600) {
+      return {
+        ...baseStyle,
+        height: "110vh",
+      };
+    } else {
+      return baseStyle;
+    }
+  };
+
+  const styles = getStyles();
+
 
   return (
     <div className="landingcontainer">
-      <section
-        className="bg-img"
-        style={{
-          backgroundImage: `linear-gradient(to right, #010101b5 20%, transparent), url(${selectedImage})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          opacity: "100%",
-          maxHeight: "100%",
-          marginBottom: "1px",
-          padding: "100px",
-          width: "100vw",
-          height: "100vh",
-          position: "relative",
-        }}
-      >
+      <section className="bg-img" style={styles}>
         <PublicHeader />
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
@@ -676,11 +705,11 @@ const Landing = () => {
                   </div>
                   {selectedButton === 5 ? (
                     <div>
-                      <h2 className="clicked-text-icon">Waterways</h2>
+                      <h2 className="clicked-text-icon">Blueways</h2>
                     </div>
                   ) : (
                     <div>
-                      <h2 className="text1">Waterways</h2>
+                      <h2 className="text1">Blueways</h2>
                     </div>
                   )}
                 </button>
@@ -801,24 +830,6 @@ const Landing = () => {
             ) : (
               <div>No data</div>
             )}
-            {/* <div className="map-facilities">
-              <p>BMC Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>IG park</p>
-            </div>
-            <div className="map-facilities">
-              <p>G.L Colony Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>Kharvela Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>Nicco Park</p>
-            </div>
-            <div className="map-facilities">
-              <p>Badagada Village Park</p>
-            </div> */}
           </div>
         </div>
       </div>
@@ -831,13 +842,19 @@ const Landing = () => {
           <marquee behavior="" direction="left">
             <div className="flex">
               {notifications.map((notification) => {
+                const createdAtDate = new Date(notification.createdAt);
+                const currentDate = new Date();
+                const diffInDays = Math.round((currentDate - createdAtDate) / (1000 * 3600 * 24));
                 return (
-                  <p>{notification.publicNotificationsContent} &nbsp; &nbsp;</p>
+                  <p className="notce2para">
+                    {diffInDays <= 100 ? <p className="New_text"> New </p> : ''}
+                    {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
+
+                    {notification.publicNotificationsContent} &nbsp; &nbsp;
+                  </p>
                 );
               })}
             </div>
-            {/* Today, the Honorable Chief Minister, Mrs. Naveen Patnaik, will inaugurate a new open park at Old Town,
-            "Join us for the grand opening of our new park! "   */}
           </marquee>
         </div>
       </div>
@@ -864,7 +881,7 @@ const Landing = () => {
         {/* .........Card section scroll using carousel ..........*/}
 
         <div className="carousel">
-          <button className="carousel-button left" onClick={prevImage}>
+          <button className="carousel-button2 left" onClick={prevImage}>
             &lt;
           </button>
           <div className="carousel-container">
@@ -918,7 +935,7 @@ const Landing = () => {
               ))} */}
             </div>
           </div>
-          <button className="carousel-button right" onClick={nextImage}>
+          <button className="carousel-button2 right" onClick={nextImage}>
             &gt;
           </button>
         </div>
@@ -981,7 +998,7 @@ const Landing = () => {
         </div>
 
         <div className="carousel">
-          <button className="carousel-button left" onClick={prevImage}>
+          <button className="carousel-button2 left" onClick={prevImage}>
             &lt;
           </button>
           <div className="carousel-container">
@@ -1002,7 +1019,7 @@ const Landing = () => {
               ))}
             </div>
           </div>
-          <button className="carousel-button right" onClick={nextImage}>
+          <button className="carousel-button2 right" onClick={nextImage}>
             &gt;
           </button>
         </div>

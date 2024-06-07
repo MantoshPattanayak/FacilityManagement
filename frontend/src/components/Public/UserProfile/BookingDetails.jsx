@@ -9,6 +9,7 @@ import {
   faClock,
   faUser,
   faRightFromBracket,
+  faEnvelope, faMobileScreenButton
 } from "@fortawesome/free-solid-svg-icons";
 import CommonFooter from "../../../common/CommonFooter";
 import axiosHttpClient from "../../../utils/axios";
@@ -120,7 +121,7 @@ const BookingDetails = () => {
       let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
       console.log('response of fetch profile api', res.data.public_user);
 
-      setUserName(decryptData(res.data.public_user.userName));
+      setUserName(decryptData(res.data.public_user.firstName) + ' ' + decryptData(res.data.public_user.lastName));
       setEmailId(decryptData(res.data.public_user.emailId));
       setPhoneNo(decryptData(res.data.public_user.phoneNo));
     }
@@ -160,9 +161,20 @@ const BookingDetails = () => {
         <aside className="profile-leftside--Body">
           <div className="profile-view--Body">
             <div className="profile-about">
-              <p>{userName}</p>
-              <p>{emailId}</p>
-              <p>{phoneNo}</p>
+              <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faUser} />
+                <p>{userName}</p>
+              </div>
+
+              <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faEnvelope} />
+                <p>{emailId}</p>
+              </div>
+
+              <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faMobileScreenButton} />
+                <p>{phoneNo}</p>
+              </div>
             </div>
           </div>
           <div>
@@ -255,7 +267,7 @@ const BookingDetails = () => {
 
                         <Link
 
-               
+
                           to={{
                             pathname: "/BookParks/Bokking_Bill",
                             search: `?bookingId=${encryptDataId(event.bookingId)}`,

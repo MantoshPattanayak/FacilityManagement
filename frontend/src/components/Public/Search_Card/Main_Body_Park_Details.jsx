@@ -4,7 +4,7 @@ import sport_image2 from "../../../assets/Sport_image.jpg"
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faFilter, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 // Axios for Call the API --------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Common footer---------------------------- ----------------
@@ -50,9 +50,15 @@ const Main_Body_Park_Details = () => {
   const [facilityTypeId, setFacilityTypeId] = useState();
   const [selectedTab, setSelectedTab] = useState([]);
   // , 'Free', 'Paid' (for now remove free and paid u can add if needed) 
-  const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
+  const tabList = ['Nearby', 'Popular']; // ['Nearby', 'Popular', 'Free', 'Paid']
   // for filter..........................................
-  const filterpark = ['ChildrenPark', 'Boating', 'Skating', 'Yoga', 'Dance']
+  const [filters, setFilters] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState({
+    Activity: new Array(),
+    Amenities: new Array(),
+    EventCategories: new Array(),
+    Services: new Array()
+  });
 
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
@@ -68,7 +74,8 @@ const Main_Body_Park_Details = () => {
       setIsLoding(true)
       let res = await axiosHttpClient("View_Park_Data", "post", {
         givenReq: givenReq,
-        facilityTypeId: facilityTypeId
+        facilityTypeId: facilityTypeId,
+        selectedFilter
       });
       console.log("here Response of Park", res);
       setDisPlayParkData(res.data.data);
@@ -77,6 +84,52 @@ const Main_Body_Park_Details = () => {
       console.log("here Error of Park", err);
       setIsLoding(false);
     }
+  }
+
+  //function to fetch filter options
+  async function fetchFilterOptions() {
+    try {
+      let res = await axiosHttpClient('VIEW_FILTER_OPTIONS_API', 'get');
+      console.log('response of filter api', res);
+      let filterOptions = {
+        Activity: res.data.fetchActivityMaster[0],
+        Amenities: res.data.fetchAmenitiesMaster[0],
+        EventCategories: res.data.fetchEventCategories[0],
+        Services: res.data.fetchServicesMaster[0]
+      }
+      setFilters(filterOptions);
+    }
+    catch (err) {
+      console.error(err);
+    }
+  }
+
+  //  function to set filter selection
+  function handleFilterSelection(e, id, filterType) {
+    e.preventDefault();
+    let filterSelected = JSON.parse(JSON.stringify(selectedFilter));
+    if (filterSelected[filterType].includes(id)) {
+      // console.log('id includes...', id);
+      filterSelected[filterType] = filterSelected[filterType].filter((data)=> {return data != id});
+    }
+    else {
+      filterSelected[filterType].push(id);
+    }
+    setSelectedFilter(filterSelected);
+    return;
+  }
+
+  //function to clear all filter selection
+  function clearFilterSelection(e) {
+    // e.preventDefault();
+    setSelectedFilter({
+      Activity: [],
+      Amenities: [],
+      EventCategories: [],
+      Services: []
+    });
+    setIsFilterOpen(false);
+    return;
   }
 
   // Function to handle selectedTab button click  ------------------------------
@@ -133,7 +186,8 @@ const Main_Body_Park_Details = () => {
         ...bodyParams,
         latitude: userLocation.latitude || defaultLocation.latitude,
         longitude: userLocation.longitude || defaultLocation.latitude,
-        range: ''
+        range: '',
+        selectedFilter
       }
     }
     if (selectedTab.includes('Popular')) {
@@ -186,6 +240,8 @@ const Main_Body_Park_Details = () => {
       console.error('json parse error');
       sessionStorage.setItem('location', JSON.stringify({}));
     }
+    //api call to fetch filter options
+    fetchFilterOptions();
     // on page load, if we have facilityTypeId from homepage, 
     // then set facilityType or else set default facilityType to 1 (Parks)
     if (facilityIdTypeFetch)
@@ -208,18 +264,16 @@ const Main_Body_Park_Details = () => {
     else { // fetch facility details based on selected facility type or searching value
       GetParkDetails();
     }
-  }, [givenReq, facilityTypeId, selectedTab]);
+    console.log('selectedFilter', selectedFilter);
+  }, [givenReq, facilityTypeId, selectedTab, selectedFilter]);
 
 
+  // filter logic
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-
-
-// filter logic
-const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-const toggleFilter = () => {
-  setIsFilterOpen(!isFilterOpen);
-};
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
 
 
   //Return here------------------------------------------------------------------------------------------------------------
@@ -310,41 +364,109 @@ const toggleFilter = () => {
       </div>
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
+
         {/* add filter option.............. */}
-         <div className="Filter_grid">
-        <div className="filter-container">
-          <div className="filter_option" onClick={toggleFilter}>
-            <div className="filter-icon">
-              <FontAwesomeIcon icon={faFilter} />
+        <div className="grid grid-cols-3 gap-x-2 items-center">
+          <div className="filter-container col-span-1">
+            <div className="filter_option" onClick={toggleFilter}>
+              <div className="filter-icon">
+                <FontAwesomeIcon icon={faFilter} />
+              </div>
+              <div className="text-filter">Filters</div>
             </div>
-            <div className="text-filter">Filters</div>
+            {isFilterOpen && (
+              <div className="filter-dropdown grid grid-cols-3 gap-x-3">
+                <div className="col-span-1">
+                  <b>Activities</b>
+                  {
+                    filters?.Activity?.length > 0 && filters.Activity.map((activity, index) => {
+                      if (selectedFilter.Activity.includes(activity.userActivityId)) {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={true}/>
+                            {activity.userActivityName}
+                          </label>
+                        )
+                      }
+                      else {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={false}/>
+                            {activity.userActivityName}
+                          </label>
+                        )
+                      }
+                    })
+                  }
+                </div>
+                <div className="col-span-1">
+                  <b>Amenities</b>
+                  {
+                    filters?.Amenities?.length > 0 && filters.Amenities.map((amenity, index) => {
+                      if (selectedFilter.Amenities.includes(amenity.amenityId)) {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, amenity.amenityId, 'Amenities')} checked />
+                            {amenity.amenityName}
+                          </label>
+                        )
+                      }
+                      else {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, amenity.amenityId, 'Amenities')} />
+                            {amenity.amenityName}
+                          </label>
+                        )
+                      }
+                    })
+                  }
+                </div>
+                <div className="col-span-1">
+                  <b>Services</b>
+                  {
+                    filters?.Services?.length > 0 && filters.Services.map((service, index) => {
+                      if (selectedFilter.Services.includes(service.serviceId)) {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, service.serviceId, 'Services')} checked />
+                            {service.description}
+                          </label>
+                        )
+                      }
+                      else {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, service.serviceId, 'Services')} />
+                            {service.description}
+                          </label>
+                        )
+                      }
+                    })
+                  }
+                </div>
+                <div className="cursor-pointer" onClick={clearFilterSelection}>
+                  <FontAwesomeIcon icon={faTrashCan} /> Clear
+                </div>
+              </div>
+            )}
           </div>
-          {isFilterOpen && (
-            <div className="filter-dropdown">
-              <label>
-                <input type="checkbox" name="yoga" />
-                Yoga
-              </label>
-              <label>
-                <input type="checkbox" name="boating" />
-                Boating
-              </label>
-              <label>
-                <input type="checkbox" name="garden" />
-                Garden
-              </label>
-              <label>
-                <input type="checkbox" name="dance" />
-                Dance
-              </label>
-            </div>
-          )}
+          {/* Other filter buttons and elements */}
+          <div className="filter_button col-span-2">
+            {
+              tabList?.length > 0 && tabList?.map((tab) => {
+                return (
+                  <button className={`button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
+                    {tab}
+                  </button>
+                )
+              })
+            }
+          </div>
         </div>
-        {/* Other filter buttons and elements */}
-      </div>
 
 
-        <div className="filter_button">
+        {/* <div className="filter_button">
           {
             tabList?.length > 0 && tabList?.map((tab) => {
               return (
@@ -354,7 +476,7 @@ const toggleFilter = () => {
               )
             })
           }
-        </div>
+        </div> */}
         <div className="gride_page">
           <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
             <option value="grid">Grid View</option>
@@ -405,7 +527,7 @@ const toggleFilter = () => {
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
-                      <h3 className="park_location">{item.address}</h3>
+                      <h3 className="park_location">{truncateName(item.address, 25)}</h3>
                     </span>
                     <span className="Avil_Dis">
                       <button
@@ -414,6 +536,7 @@ const toggleFilter = () => {
                       >
                         {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
                       </button>
+                      
                       <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
                     </span>
                   </div>
@@ -426,8 +549,8 @@ const toggleFilter = () => {
               <table>
                 <thead>
                   <tr>
-                    <th scope="col "  className="text-left" >Name </th>
-                    <th scope="col"  className="text-left">Location</th>
+                    <th scope="col " className="text-left" >Name </th>
+                    <th scope="col" className="text-left">Location</th>
                     <th scope="col">Distance</th>
                     <th scope="col">Park Status</th>
                     <th className="left">Details</th>

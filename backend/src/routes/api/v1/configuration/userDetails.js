@@ -4,6 +4,7 @@ let api_version = process.env.API_VERSION;
 
 let userDetails = require('../../../../controllers/'+api_version+'/configuration/userDetails.controllers')
 
+let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 router.post('/createUser',userDetails.createUser)
 
 router.get('/getUserById/:id',userDetails.getUserById)
@@ -24,6 +25,6 @@ router.post('/bookmarkingAddAction', userDetails.bookmarkingAddAction);
 
 router.post('/bookmarkingRemoveAction', userDetails.bookmarkingRemoveAction);
 
-router.post('/viewBookmarks', userDetails.viewBookmarksListForUser);
+router.post('/viewBookmarks',authenticateToken, userDetails.viewBookmarksListForUser);
 
 module.exports = router
