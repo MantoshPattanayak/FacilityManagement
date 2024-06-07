@@ -14,16 +14,17 @@ const updatepublic_user = async (req, res) => {
     let statusId = 1;
     let {
       userId,
-      title,
-      firstName,
-      middleName,
-      lastName,
-      userName,
-      password,
-      phoneNo,
-      altPhoneNo,
-      emailId,
-      profilePicture,
+      encryptTitle:title,
+      encryptFirstName:firstName,
+      encryptMiddleName:middleName,
+      encryptLastName:lastName,
+      encryptUserName:userName,
+      //password,
+      encryptPhoneNo:phoneNo,
+      encryptAltPhoneNo:altPhoneNo,
+      encryptEmail:emailId,
+      //profilePicture,
+      encryptActivity:activities
     } = req.body;
 
     let params = {};
@@ -82,12 +83,62 @@ const updatepublic_user = async (req, res) => {
     } else if (findPublicuserWithTheGivenId.emailId != emailId) {
       params.emailId = emailId;
     }
-    let [updatepublicUserCount, updatepublicUserData] =
-      await user.update(params, {
-        where: { userId: userId },
-      });
 
-    if (updatepublicUserCount >= 0) {
+    try {
+      let [updatepublicUserCount, updatepublicUserData] =
+        await user.update(params, {
+          where: { userId: userId },
+        });
+    
+      if (activities) {
+        let fetchUserActivities = await useractivitypreferencesModels.findAll({
+          where: {
+            userId: userId,
+          },
+        });
+    
+        let fetchActivities = fetchUserActivities.map((data) => {
+          return data.userActivityId;
+        });
+    
+        for (let activity of activities) {
+          if (!fetchActivities.includes(activity)) {
+            await useractivitypreferencesModels.create(
+              {
+                userId: userId,
+                userActivityId: activity,
+              },
+              { transaction: t }
+            );
+          }
+        }
+    
+        // Update status to 2 for removed activities
+        for (let fetchActivity of fetchActivities) {
+          if (!activities.includes(fetchActivity)) {
+            await useractivitypreferencesModels.update(
+              { status: 2 },
+              { where: { userId: userId, userActivityId: fetchActivity }, transaction: t }
+            );
+          }
+          
+          await transaction.commit();
+
+          res.status(statusCode.SUCCESS.code).json({
+              message: 'User profile updated',
+          })
+        }
+      }
+    } catch (error) {
+      if (transaction) await transaction.rollback();
+
+      console.error('Error User profile not updated:', error);
+      res.status(statusCode.BAD_REQUEST.code).json({
+          message: 'user profile not updated!',
+          data: []
+      })
+    }
+     if (updatepublicUserCount >= 0) {
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
       });

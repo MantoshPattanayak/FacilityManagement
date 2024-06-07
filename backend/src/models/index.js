@@ -103,6 +103,8 @@ db1.publicnotifications = require('./publicnotifications.models')(sequelize, Dat
 db1.faq = require('./frequentlyaskquestion.models')(sequelize,DataTypes)
 //feedback
 db1.feedback = require('./feedback.model')(sequelize, DataTypes)
+//promotion
+db1.promotions = require('./promotion.model')(sequelize, DataTypes)
 
 
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
@@ -110,7 +112,7 @@ db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 //facility activities
 db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
 
-db1.inventorymaster.sync({
+db1.promotions.sync({
   alter: false,
 });
 

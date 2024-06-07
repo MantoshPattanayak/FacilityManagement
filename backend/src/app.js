@@ -63,6 +63,8 @@ const publicNotifications = require("./routes/api/" +
   api_version +
   "/activity/publicnotifications");
 const reports = require("./routes/api/" + api_version + "/reports/reports");
+//promotion
+const promotionRoute = require('./routes/api/' + api_version + '/activity/promotion')
 
 // grievance
 const grievance = require('./routes/api/' + api_version + '/activity/grievance');
@@ -128,7 +130,8 @@ app.use("/publicNotifications", publicNotifications);
 app.use("/reports", reports);
 app.use('/grievance', grievance);
 app.use('/adminFacility',facilityRegistration)
-
+//promotion
+app.use("/promotion", promotionRoute)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
