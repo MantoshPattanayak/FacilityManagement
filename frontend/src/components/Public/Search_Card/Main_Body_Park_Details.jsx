@@ -527,7 +527,7 @@ const Main_Body_Park_Details = () => {
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
-                      <h3 className="park_location">{item.address}</h3>
+                      <h3 className="park_location">{truncateName(item.address, 25)}</h3>
                     </span>
                     <span className="Avil_Dis">
                       <button

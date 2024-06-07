@@ -145,7 +145,7 @@ export default function Profile() {
         emailId: encryptData(formData.emailId),
         language: encryptData(formData.language),
         password: encryptData(formData.password),
-        activityPreference: selectedActivities.map((activity) => {return encryptData(activity)})
+        activityPreference: selectedActivities.map((activity) => { return encryptData(activity) })
       }, null);
 
       // Log updated form data after successful update
@@ -358,19 +358,20 @@ export default function Profile() {
 
               <div className="profile-formContainer">
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">First Name<span className="required-asterisk">*</span></label>
                   <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">Last Name<span className="required-asterisk">*</span></label>
                   <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">Email<span className="required-asterisk">*</span></label>
                   <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
                   {errors.email && <span className="error">{errors.email}</span>}
                 </div>

@@ -324,3 +324,20 @@
 .preferred-locations button:hover{
   background-color:rgb(25, 121, 31);
 }
+
+
+
+
+
+
+
+
+.required-asterisk {
+  color: red;
+  margin-left: 5px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+}

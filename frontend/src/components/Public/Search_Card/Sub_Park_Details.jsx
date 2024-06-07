@@ -8,6 +8,7 @@ import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
 
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
+import { MdHomeRepairService } from 'react-icons/md';
 import Park_img from "../../../assets/Park_details.jpg";
 import amabhoomi from '../../../assets/ama_bhoomi_bgi.jpg';
 import sport_image from "../../../assets/sport_details_image.jpg";
@@ -185,9 +186,12 @@ const Sub_Park_Details = () => {
           <span className="time_status flex flex-col">
             <div className="flex">
               <h1 className="time_text">
-                Timing : {formatTime(
+               <p className="timing-day">Timing :</p>
+               <span className="timing-day-text">
+                  {formatTime(
                   FacilitiesData[0]?.operatingHoursFrom
                 )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+                </span>
               </h1>
               {/* <div className="open-close-btn">
               <button
@@ -208,19 +212,20 @@ const Sub_Park_Details = () => {
 
             <div className="day-open-close-status">
               <h1 className="date_text text-[12px]">
-                Day:{operatingDays.toString()}
+              <p className="timing-day">Day :</p> 
+               <span className="timing-day-text">{operatingDays.toString()}</span>
               </h1>
 
               <div className="open-close-btn">
-              <button
-                className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
-                  ? "open"
-                  : "closed"
-                  }`}
-              >
-                {FacilitiesData?.length > 0 &&
-                  FacilitiesData[0]?.status.toUpperCase()}
-              </button>
+                <button
+                  className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
+                    ? "open"
+                    : "closed"
+                    }`}
+                >
+                  {FacilitiesData?.length > 0 &&
+                    FacilitiesData[0]?.status.toUpperCase()}
+                </button>
               </div>
             </div>
 
@@ -340,11 +345,14 @@ const Sub_Park_Details = () => {
             ServiceData?.map((item, index) => (
               <div className="Service_Avilable" key={index}>
                 <div className="service_item">
-                  <img
+                  {/* <img
                     className="service_Avil_img"
                     src={Park_img}
                     alt="Parking"
-                  />
+                  /> */}
+                  <div className="service-icon">
+                  <MdHomeRepairService size={80} color="green" />
+                  </div>
                   <p className="service_name">{item.code}</p>
                 </div>
               </div>
@@ -390,7 +398,6 @@ const Sub_Park_Details = () => {
             <h1 className="Number">
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
             </h1>
-            <h1 className="Number">9192847567</h1>
           </div>
         </div>
         {/* -------------------------Event Available ----------------------------------------------------------- */}
@@ -430,7 +437,7 @@ const Sub_Park_Details = () => {
         </div>
         {/* <Book_Now/> */}
       </div>
-      
+
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
     </div >
   );
