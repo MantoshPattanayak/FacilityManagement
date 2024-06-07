@@ -24,7 +24,7 @@ const CommonFooter = () => {
                   className="input-field-link"
                   placeholder="Enter phone number to receive the link"
                 />
-                 <FontAwesomeIcon icon={faArrowRight} className="input-icon" />
+                <FontAwesomeIcon icon={faArrowRight} className="input-icon" />
               </div>
             </div>
 
@@ -36,36 +36,36 @@ const CommonFooter = () => {
         </div>
 
         <div className="right-section-footer">
-        <div class="middle-section">
-          <ul>
-            <li><a href="#"> Resources</a></li>
-            <li><a href="#">Contact</a></li>
-            <li> <a href="#">Partner with us</a> </li>
-            <li> <a href="#"> Grievance</a></li>
-            <li> <a href="#">Feedback</a> </li>
-            <li> <a href="#">twitter</a> </li>
-            <li> <a href="#">facebook</a> </li>
-          </ul>
-        </div>
-        <div class="middle-right-section">
-          <ul>
-            <li> <a href="#">Resources</a> </li>
-            <li> <a href="#">Contact</a> </li>
-            <li> <a href="#">Partner with us</a> </li>
-            <li> <a href="#">Grievance</a> </li>
-            <li> <a href="#">Feedback</a> </li>
-          </ul>
-        </div>
-        <div class="last-right-section">
-          <ul>
-            <li> <a href="#">Help and support</a> </li>
-            <li> <a href="#"> social</a></li>
-            <li> <a href="#">twitter</a> </li>
-            <li> <a href="#">facebook</a> </li>
-            <li> <a href="#">Feedback</a> </li>
-           
-          </ul>
-        </div>
+          <div class="middle-section">
+            <ul>
+              <li><a href="#"> Resources</a></li>
+              <li><a href="#">Contact</a></li>
+              <li> <a href="#">Partner with us</a> </li>
+              <li> <a href="#"> Grievance</a></li>
+              <li> <a href="#">Feedback</a> </li>
+              <li> <a href="#">twitter</a> </li>
+              <li> <a href="#">facebook</a> </li>
+            </ul>
+          </div>
+          <div class="middle-right-section">
+            <ul>
+              <li> <a href="#">Resources</a> </li>
+              <li> <a href="#">Contact</a> </li>
+              <li> <a href="#">Partner with us</a> </li>
+              <li> <a href="#">Grievance</a> </li>
+              <li> <a href="#">Feedback</a> </li>
+            </ul>
+          </div>
+          <div class="last-right-section">
+            <ul>
+              <li> <a href="#">Help and support</a> </li>
+              <li> <a href="#"> social</a></li>
+              <li> <a href="#">twitter</a> </li>
+              <li> <a href="#">facebook</a> </li>
+              <li> <a href="#">Feedback</a> </li>
+
+            </ul>
+          </div>
         </div>
       </footer>
     </div>

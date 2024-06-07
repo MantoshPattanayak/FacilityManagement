@@ -122,7 +122,7 @@ db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"}
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
 
 
-db1.facilitytariff.sync({
+db1.faq.sync({
   alter: false,
 });
 

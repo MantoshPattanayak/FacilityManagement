@@ -67,10 +67,10 @@ let generateOTPHandler = async (req,res)=> {
     console.log('1',req.body)
 
     let {encryptMobile:mobileNo}=req.body
-    let length=4
+    let length=6
     let numberValue = '1234567890'
     let expiryTime = new Date();
-    expiryTime = expiryTime.setMinutes(expiryTime.getMinutes() + 5);
+    expiryTime = expiryTime.setMinutes(expiryTime.getMinutes() + 1);
 
     // let otp="";
     // for(let i=0;i<length;i++){
@@ -78,7 +78,7 @@ let generateOTPHandler = async (req,res)=> {
     //   otp += numberValue[otpIndex]
     // }
 
-    let otp = "1234"
+    let otp = "123456"
 
     if(mobileNo){
       // first check if the otp is actually present or not
@@ -767,10 +767,11 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
     // if active
     if(checkForActiveSession){
 
-      let updateTheSessionToInactive = await authSessions.update({active:0},{
+      let updateTheSessionToInactive = await authSessions.update({active:2},{
         where:{
           sessionId:checkForActiveSession.sessionId}
       })
+      console.log('update the session To inactive', updateTheSessionToInactive)
         // after inactive
         if(updateTheSessionToInactive.length>0){
           // check if it is present in the device table or not
@@ -824,9 +825,11 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
 
               sessionId = insertToAuthSession.sessionId
             }
-          
+            console.log('session id ', sessionId)
           }
           else{
+            console.log('session id2 ', sessionId)
+
               // insert to device table 
               let insertToDeviceTable = await deviceLogin.create({
                 deviceType:deviceInfo.deviceType,
@@ -852,8 +855,11 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
               sessionId = insertToAuthSession.sessionId
 
           }
+          console.log('session 3',sessionId)
         }
         else{
+          console.log('session 4',sessionId)
+
           return {
             error:'Something Went Wrong'
           }
@@ -887,10 +893,11 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
         })
         sessionId = insertToAuthSession.sessionId
     }
+    console.log('session id5', encrypt(sessionId), sessionId)
     return {
       accessToken:accessToken,
       refreshToken:refreshToken,
-      sessionId:sessionId,
+      sessionId:encrypt(sessionId),
       options:options
     }
 
@@ -1197,11 +1204,17 @@ let privateLogin = async(req,res)=>{
 
 let logout = async (req, res) => {
    try {
+    let userId = req.user?.id || 1; 
+    let sessionId = decrypt(req.session)
      const options = {
          expires: new Date(Date.now() - 1), // Expire the cookie immediately
          httpOnly: true,
          secure: true
      };
+     let updateTheSessionToInactive = await authSessions.update({active:2},{
+      where:{
+        sessionId:sessionId}
+    })
      // Clear both access token and refresh token cookies
      res.clearCookie('accessToken', options);
      res.clearCookie('refreshToken', options);

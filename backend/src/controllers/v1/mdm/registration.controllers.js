@@ -12,28 +12,30 @@ let serviceMaster = db.services
 let amenityFacility = db.amenityfacilities
 let amenityMaster = db.amenitiesmaster
 const file = db.file;
+let activityMaster = db.useractivitymasters
 let amenities = db.amenitiesmaster
+// let eventCategory = db.eventCategory
 const fileAttachment = db.fileattachment;
 const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares');
 let inventoryMaster = db.inventorymaster
 let inventoryFacilities = db.inventoryfacilities
-
+const { Op } = require('sequelize');
 let user = db.usermaster
 
 // Admin facility registration
 
 const registerFacility = async (req, res) => {
   try {
-
+     console.log("check Api", "1")
     let userId = req.user?.id || 1;
+    let statusId = 1;
 
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
       }
     })
-    let statusId = 1;
 
     let ownership = "BDA"
     let {
@@ -58,7 +60,7 @@ const registerFacility = async (req, res) => {
       facilityImage,
       parkInventory
     } = req.body;
-
+     console.log("here Req",req.body)
     let createFacilities = await facilities.create({
       facilityName:facilityName,
       ownership:ownership,
@@ -70,13 +72,13 @@ const registerFacility = async (req, res) => {
       operatingHoursFrom:operatingHoursFrom,
       operatingHoursTo:operatingHoursTo,
       areaAcres:area,
-      sun:operatingDays.sun,
-      mon:operatingDays.mon,
-      tue:operatingDays.tue,
-      wed:operatingDays.wed,
-      thu:operatingDays.thu,
-      fri:operatingDays.fri,
-      sat:operatingDays.sat,
+      sun:operatingDays?.sun || 0,
+      mon:operatingDays?.mon || 0,
+      tue:operatingDays?.tue || 0,
+      wed:operatingDays?.wed || 0,
+      thu:operatingDays?.thu || 0,
+      fri:operatingDays?.fri || 0,
+      sat:operatingDays?.sat || 0,
       additionalDetails:additionalDetails
     })
 
@@ -185,84 +187,84 @@ const registerFacility = async (req, res) => {
             })
 
             // upload amenities Images 
-            if (amenitiesImage) {
-              let entityType = 'amenities'
-              const errors = [];
-              let amenityImages = Object.values(amenitiesImage) 
+            // if (amenitiesImage) {
+            //   let entityType = 'amenities'
+            //   const errors = [];
+            //   let amenityImages = Object.values(amenitiesImage) 
           
-              for (let i = 0; i < amenityImages.length; i++) {
-                let amenityFile = amenityImages[i];
-                let uploadamenityFilePath = null;
-                let uploadamenityFilePath2 = null;
-                const uploadDir = process.env.UPLOAD_DIR;
-                const base64UploadamenityFile = amenityFile ? amenityFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-                const mimeMatch = amenityFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-                const mime = mimeMatch ? mimeMatch[1] : null;
+            //   for (let i = 0; i < amenityImages.length; i++) {
+            //     let amenityFile = amenityImages[i];
+            //     let uploadamenityFilePath = null;
+            //     let uploadamenityFilePath2 = null;
+            //     const uploadDir = process.env.UPLOAD_DIR;
+            //     const base64UploadamenityFile = amenityFile ? amenityFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
+            //     const mimeMatch = amenityFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
+            //     const mime = mimeMatch ? mimeMatch[1] : null;
           
-                if ([
-                  "image/jpeg",
-                  "image/png",
-                  "application/pdf",
-                  "application/msword",
-                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                ].includes(mime)) {
-                  // convert base 64 to buffer for image or document or set to null if not present
-                  const uploadAmenityFileBuffer = amenityFile ? Buffer.from(base64UploadamenityFile, "base64") : null;
-                  if (uploadAmenityFileBuffer) {
-                    const amenityFileDir = path.join(uploadDir, "amenityImages");
+            //     if ([
+            //       "image/jpeg",
+            //       "image/png",
+            //       "application/pdf",
+            //       "application/msword",
+            //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            //     ].includes(mime)) {
+            //       // convert base 64 to buffer for image or document or set to null if not present
+            //       const uploadAmenityFileBuffer = amenityFile ? Buffer.from(base64UploadamenityFile, "base64") : null;
+            //       if (uploadAmenityFileBuffer) {
+            //         const amenityFileDir = path.join(uploadDir, "amenityImages");
           
-                    // ensure the event image directory exists
-                    if (!fs.existsSync(amenityFileDir)) {
-                      fs.mkdirSync(amenityFileDir, { recursive: true });
-                    }
-                    const fileExtension = mime ? mime.split("/")[1] : "txt";
-                    uploadamenityFilePath = `${uploadDir}/amenityFileDir/${createAmenities.amenityFacilityId}${findTheAmenityName.amenityName}.${fileExtension}`;
+            //         // ensure the event image directory exists
+            //         if (!fs.existsSync(amenityFileDir)) {
+            //           fs.mkdirSync(amenityFileDir, { recursive: true });
+            //         }
+            //         const fileExtension = mime ? mime.split("/")[1] : "txt";
+            //         uploadamenityFilePath = `${uploadDir}/amenityFileDir/${createAmenities.amenityFacilityId}${findTheAmenityName.amenityName}.${fileExtension}`;
 
-                    fs.writeFileSync(uploadamenityFilePath, uploadAmenityFileBuffer);
+            //         fs.writeFileSync(uploadamenityFilePath, uploadAmenityFileBuffer);
 
-                    uploadamenityFilePath2 = `/amenityFileDir/${createAmenities.facilityId}${findTheAmenityName.amenityName}.${fileExtension}`;
+            //         uploadamenityFilePath2 = `/amenityFileDir/${createAmenities.facilityId}${findTheAmenityName.amenityName}.${fileExtension}`;
           
-                    let fileName = `${createAmenities.amenityFacilityId}${findTheAmenityName.facilityName}.${fileExtension}`;
-                    let fileType = mime ? mime.split("/")[0] : 'unknown';
+            //         let fileName = `${createAmenities.amenityFacilityId}${findTheAmenityName.facilityName}.${fileExtension}`;
+            //         let fileType = mime ? mime.split("/")[0] : 'unknown';
           
-                    // insert to file table and file attachment table
-                    let createFile = await file.create({
-                      fileName: fileName,
-                      fileType: fileType,
-                      url: uploadamenityFilePath2,
-                      statusId: 1,
-                      createdDt: now(),
-                      updatedDt: now()
-                    });
+            //         // insert to file table and file attachment table
+            //         let createFile = await file.create({
+            //           fileName: fileName,
+            //           fileType: fileType,
+            //           url: uploadamenityFilePath2,
+            //           statusId: 1,
+            //           createdDt: now(),
+            //           updatedDt: now()
+            //         });
           
-                    if (!createFile) {
-                      errors.push(`Failed to create file  for facility file at index ${i}`);
-                    } else {
-                      // Insert into file attachment table
-                      let createFileAttachment = await fileAttachment.create({
-                        entityId: createAmenities.amenityFacilityId,
-                        entityType: entityType,
-                        fileId: createFile.fileId,
-                        statusId: 1,
-                        filePurpose: "amenityImage"
-                      });
+            //         if (!createFile) {
+            //           errors.push(`Failed to create file  for facility file at index ${i}`);
+            //         } else {
+            //           // Insert into file attachment table
+            //           let createFileAttachment = await fileAttachment.create({
+            //             entityId: createAmenities.amenityFacilityId,
+            //             entityType: entityType,
+            //             fileId: createFile.fileId,
+            //             statusId: 1,
+            //             filePurpose: "amenityImage"
+            //           });
           
-                      if (!createFileAttachment) {
-                        errors.push(`Failed to create file attachment for facility file at index ${i}`);
-                      }
-                    }
-                  }
-                } else {
-                  errors.push(`Invalid File type for facility file at index ${i}`);
-                }
-              }
+            //           if (!createFileAttachment) {
+            //             errors.push(`Failed to create file attachment for facility file at index ${i}`);
+            //           }
+            //         }
+            //       }
+            //     } else {
+            //       errors.push(`Invalid File type for facility file at index ${i}`);
+            //     }
+            //   }
           
-              if (errors.length > 0) {
-                // Handle errors here, you can log them or do any other necessary action.
-                console.error("Errors occurred while processing additional files:", errors);
-                return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
-              }
-            }
+            //   if (errors.length > 0) {
+            //     // Handle errors here, you can log them or do any other necessary action.
+            //     console.error("Errors occurred while processing additional files:", errors);
+            //     return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
+            //   }
+            // }
           })
           
       
@@ -290,84 +292,84 @@ const registerFacility = async (req, res) => {
         }
       })
 
-      if (servicesImage) {
-        let entityType = 'services'
-        const errors = [];
-        let serviceImages = Object.values(servicesImage) 
+      // if (servicesImage) {
+      //   let entityType = 'services'
+      //   const errors = [];
+      //   let serviceImages = Object.values(servicesImage) 
     
-        for (let i = 0; i < serviceImages.length; i++) {
-          let serviceFile = serviceImages[i];
-          let uploadserviceFilePath = null;
-          let uploadserviceFilePath2 = null;
-          const uploadDir = process.env.UPLOAD_DIR;
-          const base64UploadServiceFile = serviceFile ? serviceFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-          const mimeMatch = serviceFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-          const mime = mimeMatch ? mimeMatch[1] : null;
+      //   for (let i = 0; i < serviceImages.length; i++) {
+      //     let serviceFile = serviceImages[i];
+      //     let uploadserviceFilePath = null;
+      //     let uploadserviceFilePath2 = null;
+      //     const uploadDir = process.env.UPLOAD_DIR;
+      //     const base64UploadServiceFile = serviceFile ? serviceFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
+      //     const mimeMatch = serviceFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
+      //     const mime = mimeMatch ? mimeMatch[1] : null;
     
-          if ([
-            "image/jpeg",
-            "image/png",
-            "application/pdf",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          ].includes(mime)) {
-            // convert base 64 to buffer for image or document or set to null if not present
-            const uploadServiceFileBuffer = serviceFile ? Buffer.from(base64UploadServiceFile, "base64") : null;
-            if (uploadServiceFileBuffer) {
-              const serviceFileDir = path.join(uploadDir, "serviceImages");
+      //     if ([
+      //       "image/jpeg",
+      //       "image/png",
+      //       "application/pdf",
+      //       "application/msword",
+      //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      //     ].includes(mime)) {
+      //       // convert base 64 to buffer for image or document or set to null if not present
+      //       const uploadServiceFileBuffer = serviceFile ? Buffer.from(base64UploadServiceFile, "base64") : null;
+      //       if (uploadServiceFileBuffer) {
+      //         const serviceFileDir = path.join(uploadDir, "serviceImages");
     
-              // ensure the event image directory exists
-              if (!fs.existsSync(serviceFileDir)) {
-                fs.mkdirSync(serviceFileDir, { recursive: true });
-              }
-              const fileExtension = mime ? mime.split("/")[1] : "txt";
-              uploadserviceFilePath = `${uploadDir}/serviceFileDir/${createServices.serviceFacilityId}${findTheServiceName.code}.${fileExtension}`;
+      //         // ensure the event image directory exists
+      //         if (!fs.existsSync(serviceFileDir)) {
+      //           fs.mkdirSync(serviceFileDir, { recursive: true });
+      //         }
+      //         const fileExtension = mime ? mime.split("/")[1] : "txt";
+      //         uploadserviceFilePath = `${uploadDir}/serviceFileDir/${createServices.serviceFacilityId}${findTheServiceName.code}.${fileExtension}`;
 
-              fs.writeFileSync(uploadserviceFilePath, uploadServiceFileBuffer);
+      //         fs.writeFileSync(uploadserviceFilePath, uploadServiceFileBuffer);
 
-              uploadserviceFilePath2 = `/amenityFileDir/${createServices.serviceFacilityId}${findTheServiceName.code}.${fileExtension}`;
+      //         uploadserviceFilePath2 = `/amenityFileDir/${createServices.serviceFacilityId}${findTheServiceName.code}.${fileExtension}`;
     
-              let fileName = `${createAmenities.amenityFacilityId}${findTheAmenityName.facilityName}.${fileExtension}`;
-              let fileType = mime ? mime.split("/")[0] : 'unknown';
+      //         let fileName = `${createAmenities.amenityFacilityId}${findTheAmenityName.facilityName}.${fileExtension}`;
+      //         let fileType = mime ? mime.split("/")[0] : 'unknown';
     
-              // insert to file table and file attachment table
-              let createFile = await file.create({
-                fileName: fileName,
-                fileType: fileType,
-                url: uploadserviceFilePath2,
-                statusId: 1,
-                createdDt: now(),
-                updatedDt: now()
-              });
+      //         // insert to file table and file attachment table
+      //         let createFile = await file.create({
+      //           fileName: fileName,
+      //           fileType: fileType,
+      //           url: uploadserviceFilePath2,
+      //           statusId: 1,
+      //           createdDt: now(),
+      //           updatedDt: now()
+      //         });
     
-              if (!createFile) {
-                errors.push(`Failed to create file  for facility file at index ${i}`);
-              } else {
-                // Insert into file attachment table
-                let createFileAttachment = await fileAttachment.create({
-                  entityId: createServices.serviceFacilityId,
-                  entityType: entityType,
-                  fileId: createFile.fileId,
-                  statusId: 1,
-                  filePurpose: "serviceImage"
-                });
+      //         if (!createFile) {
+      //           errors.push(`Failed to create file  for facility file at index ${i}`);
+      //         } else {
+      //           // Insert into file attachment table
+      //           let createFileAttachment = await fileAttachment.create({
+      //             entityId: createServices.serviceFacilityId,
+      //             entityType: entityType,
+      //             fileId: createFile.fileId,
+      //             statusId: 1,
+      //             filePurpose: "serviceImage"
+      //           });
     
-                if (!createFileAttachment) {
-                  errors.push(`Failed to create file attachment for facility file at index ${i}`);
-                }
-              }
-            }
-          } else {
-            errors.push(`Invalid File type for facility file at index ${i}`);
-          }
-        }
+      //           if (!createFileAttachment) {
+      //             errors.push(`Failed to create file attachment for facility file at index ${i}`);
+      //           }
+      //         }
+      //       }
+      //     } else {
+      //       errors.push(`Invalid File type for facility file at index ${i}`);
+      //     }
+      //   }
     
-        if (errors.length > 0) {
-          // Handle errors here, you can log them or do any other necessary action.
-          console.error("Errors occurred while processing additional files:", errors);
-          return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
-        }
-      }
+      //   if (errors.length > 0) {
+      //     // Handle errors here, you can log them or do any other necessary action.
+      //     console.error("Errors occurred while processing additional files:", errors);
+      //     return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
+      //   }
+      // }
     })
     
   }
@@ -440,14 +442,27 @@ const initialDataFetch = async (req,res)=>{
             }
           }
         )
+        let fetchActivityMaster = await activityMaster.findAll({
+          where:{
+            statusId:statusId
+          }
+        })
+        let fetchEventCategories = await sequelize.query(`select * from amabhoomi.eventcategorymasters`,{
+          where:{
+            statusId:statusId
+          },
+          type:Sequelize.QueryTypes.SELECT,
+          
+        })
       
         return res.status(statusCode.SUCCESS.code).json(
         {  message:`These are all initial dropdown data for facility Types, services, amenities`,
         facilityType:fetchFacilityTypes,
         fetchServices:fetchServices,
         fetchAmenities:fetchAmenities,
-        fetchInventory:fetchInventory
-
+        fetchInventory:fetchInventory,
+        fetchActivity:fetchActivityMaster,
+        fetchEventCategory:fetchEventCategories
         }
         )
     } catch (err) {

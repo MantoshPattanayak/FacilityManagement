@@ -1,6 +1,7 @@
 .bookmark-icon{
    margin-left: auto;
    color: green;
+   cursor: pointer;
 }
 .event-details{
     margin-left: auto;
