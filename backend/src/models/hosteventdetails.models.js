@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(25),
         },
         category: {
-            type: DataTypes.STRING(25),
+            type: DataTypes.INTEGER,
         },
         organisationAddress: {
             type: DataTypes.STRING(50),
@@ -64,11 +64,11 @@ module.exports = (sequelize, DataTypes) => {
         updatedBy: {
             type: DataTypes.INTEGER,
         },
-        createdOn: {
+        createdDt: {
             type: DataTypes.DATE,
             defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
         },
-        updatedOn: {
+        updatedDt: {
             type: DataTypes.DATE,
         }
     }
