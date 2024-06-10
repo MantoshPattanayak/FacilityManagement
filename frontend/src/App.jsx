@@ -19,7 +19,7 @@ import ReviewEventDetailsList from "./components/Admin/Activity/ReviewEventDetai
 //import public files here
 import SignUp from "./components/Public/SignUp";
 import Login from "./components/Public/Login";
-import ForgotPassword from'./components/Public/Forgot_Password/ForgotPassword';
+import ForgotPassword from "./components/Public/Forgot_Password/ForgotPassword";
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
@@ -45,7 +45,7 @@ import ParkPayment from "./common/ParkPayment";
 import Event_hostPage from "./components/Public/Event_Host/Event_hostPage";
 import HostEvent from "./components/Public/UserProfile/HostEvent";
 import Profile from "./components/Public/UserProfile/Profile";
-import ProfileHistory from './components/Public/UserProfile/ProfileHistory';
+import ProfileHistory from "./components/Public/UserProfile/ProfileHistory";
 import About from "./components/Public/About_And_FQA_PAGE/About";
 import History from "./components/Public/About_And_FQA_PAGE/History";
 import Organogram from "./components/Public/About_And_FQA_PAGE/Organogram";
@@ -67,7 +67,7 @@ import PublicLoader from "./common/PublicLoader";
 // here Import Admin Page -----------------xxxx----------------------
 import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
 // import provider for connect to our app
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
 import ViewGrievanceList from "./components/Admin/Activity/Grievance/ViewGrievanceList";
 import AssignGrievance from "./components/Admin/Activity/Grievance/AssignGrievance";
@@ -87,342 +87,366 @@ function App() {
     <>
       {/* PUBLIC SECTION */}
       <Provider store={appStore}>
-      <BrowserRouter basename={instance().baseName}>
-        <div>
-          {/* <AdminHeader /> */}
-          <Routes>
-            {/* HOME */}
-            
-            <Route path='/' element={<Landing />}/>
-            <Route path='/Facility_Reg' element={<Facility_Reg />}/>
-            <Route path="/PublicLoader" element={<PublicLoader />} />
-            <Route path="/facilities" element={<Main_Body_Park_Details />} />
-            <Route path="/Event_hostPage" element={<Event_hostPage />} />
-            <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
-            <Route path="/BookingDetails" element={<BookingDetails />} />
-            <Route path="/About" element={<About/>} />
-            <Route path="/History" element={<History/>} />
-            <Route path="/Organogram" element={<Organogram/>} />
-            <Route path="/Stakeholders" element={<Stakeholders/>} />
-            <Route path="/StandOut" element={<StandOut/>} />
-            <Route path="/faqs" element={<FqaPage/>} />
-          
-            {/* Public (Book Parks)  */}
-            <Route
-              path="/BookParks/Book_Now_Sport"
-              element={
-                <ProtectedRoute>
-                  <Book_Now_Sport />
-                </ProtectedRoute>
-              }
-            />
+        <BrowserRouter basename={instance().baseName}>
+          <div>
+            {/* <AdminHeader /> */}
+            <Routes>
+              {/* HOME */}
+
+              <Route path="/" element={<Landing />} />
+              <Route path="/Facility_Reg" element={<Facility_Reg />} />
+              <Route path="/PublicLoader" element={<PublicLoader />} />
+              <Route path="/facilities" element={<Main_Body_Park_Details />} />
+              <Route path="/Event_hostPage" element={<Event_hostPage />} />
+              <Route path="/Sub_Park_Details" element={<Sub_Park_Details />} />
+              <Route path="/BookingDetails" element={<BookingDetails />} />
+              <Route path="/About" element={<About />} />
+              <Route path="/History" element={<History />} />
+              <Route path="/Organogram" element={<Organogram />} />
+              <Route path="/Stakeholders" element={<Stakeholders />} />
+              <Route path="/StandOut" element={<StandOut />} />
+              <Route path="/faqs" element={<FqaPage />} />
+
+              {/* Public (Book Parks)  */}
+              <Route
+                path="/BookParks/Book_Now_Sport"
+                element={
+                  <ProtectedRoute>
+                    <Book_Now_Sport />
+                  </ProtectedRoute>
+                }
+              />
               {/* Public (sport)  */}
               <Route
-              path="/BookParks/Book_Now"
-              element={
-                <ProtectedRoute>
-                  <Book_Now />
-                </ProtectedRoute>
-              }
-            />
+                path="/BookParks/Book_Now"
+                element={
+                  <ProtectedRoute>
+                    <Book_Now />
+                  </ProtectedRoute>
+                }
+              />
               {/* Public (Add to Crad)  */}
               <Route
-              path="/BookParks/Add_Card"
-              element={
-                <ProtectedRoute>
-                  <Add_Card/>
-                </ProtectedRoute>
-              }
-            />
-               <Route
-              path="/BookParks/Bokking_Bill"
-              element={
-                <ProtectedRoute>
-                  <Bokking_Bill/>
-                </ProtectedRoute>
-              }
-            />
-            {/* Public (Book Details)  */}
-            <Route
-              path="/profile/booking-details"
-              element={
-                <ProtectedRoute>
-                  <BookingDetails />
-                </ProtectedRoute>
-              }
-            />
-            {/* Public (Favorites)  */}
-            <Route
-              path="/UserProfile/Favorites"
-              element={
-                <ProtectedRoute>
-                  <Favorites />
-                </ProtectedRoute>
-              }
-            />
-            {/* Public (ProfileHistory)  */}
-            <Route
-              path="/UserProfile/ProfileHistory"
-              element={
-                <ProtectedRoute>
-                  <ProfileHistory />
-                </ProtectedRoute>
-              }
-            />
+                path="/BookParks/Add_Card"
+                element={
+                  <ProtectedRoute>
+                    <Add_Card />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/BookParks/Bokking_Bill"
+                element={
+                  <ProtectedRoute>
+                    <Bokking_Bill />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Public (Book Details)  */}
+              <Route
+                path="/profile/booking-details"
+                element={
+                  <ProtectedRoute>
+                    <BookingDetails />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Public (Favorites)  */}
+              <Route
+                path="/UserProfile/Favorites"
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Public (ProfileHistory)  */}
+              <Route
+                path="/UserProfile/ProfileHistory"
+                element={
+                  <ProtectedRoute>
+                    <ProfileHistory />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* User-Profile */}
-            <Route
-              path="/Profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            
+              {/* User-Profile */}
+              <Route
+                path="/Profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Public User Login */}
-            <Route path="/login-signup" element={<Login />} />
-            <Route path="/login/SignUp" element={<SignUp />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
+              {/* Public User Login */}
+              <Route path="/login-signup" element={<Login />} />
+              <Route path="/login/SignUp" element={<SignUp />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
 
+              {/* use Section  */}
 
-            {/* use Section  */}
+              {/* Events */}
+              <Route path="/events" element={<EventList />} />
+              <Route path="/events-details" element={<Details />} />
+              <Route path="/event-book" element={<Book_Event />} />
 
-            {/* Events */}
-            <Route path="/events" element={<EventList />} />
-            <Route path="/events-details" element={<Details />} />
-            <Route path="/event-book" element={<Book_Event />} />
+              {/* ADMIN SECTION - Login */}
+              <Route path="/admin-login" element={<AdminLogin />} />
+              {/* ADMIN SECTION - Activity */}
 
-            {/* ADMIN SECTION - Login */}
-            <Route path="/admin-login" element={<AdminLogin />} />
-            {/* ADMIN SECTION - Activity */}
+              <Route
+                path="/Activity/ReviewUserRating"
+                element={
+                  <ProtectedRoute>
+                    <ReviewUserRating />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Activity/ReviewEventDetailsList"
+                element={
+                  <ProtectedRoute>
+                    <ReviewEventDetailsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Activity/AddNewNotification"
+                element={
+                  <ProtectedRoute>
+                    <AddNewNotification />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Activity/ViewNotifications"
+                element={
+                  <ProtectedRoute>
+                    <ViewNotifications />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Activity/EditNotification"
+                element={
+                  <ProtectedRoute>
+                    <EditNotification />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Activity - Grievance */}
+              <Route
+                path="/activity/grievance"
+                element={
+                  <ProtectedRoute>
+                    <ViewGrievanceList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/activity/assign-grievance"
+                element={
+                  <ProtectedRoute>
+                    <AssignGrievance />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/activity/grievance-action"
+                element={
+                  <ProtectedRoute>
+                    <ActionAgainstGrievance />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/grievance-feedback-form"
+                element={
+                  <ProtectedRoute>
+                    <Grievance />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Activity - Grievance */}
+              {/* ADMIN SECTION - UAC*/}
+              <Route
+                path="/UAC/Resource/ListOfResources"
+                element={
+                  <ProtectedRoute>
+                    <ListOfResources />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Resource/CreateResource"
+                element={
+                  <ProtectedRoute>
+                    <CreateResource />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Resource/EditResource"
+                element={
+                  <ProtectedRoute>
+                    <EditResource />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Role/ListOfRoles"
+                element={
+                  <ProtectedRoute>
+                    <ListOfRoles />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Role/CreateRole"
+                element={
+                  <ProtectedRoute>
+                    <CreateRole />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Role/EditRole"
+                element={
+                  <ProtectedRoute>
+                    <EditRole />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Users/ListOfUsers"
+                element={
+                  <ProtectedRoute>
+                    <ListOfUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Users/Create"
+                element={
+                  <ProtectedRoute>
+                    <CreateNewUser />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Users/Edit"
+                element={
+                  <ProtectedRoute>
+                    <EditUser />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Recource */}
+              <Route
+                path="/UAC/Resources/ListOfResources"
+                element={
+                  <ProtectedRoute>
+                    <ListOfResources />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Resources/CreateResource"
+                element={
+                  <ProtectedRoute>
+                    <CreateResource />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Resources/EditDisplayResource"
+                element={
+                  <ProtectedRoute>
+                    <EditDisplayResource />
+                  </ProtectedRoute>
+                }
+              />
+              {/* user Recource */}
+              <Route
+                path="/UAC/Users/CreateUserResourceMapping"
+                element={
+                  <ProtectedRoute>
+                    <CreateUserResourceMapping />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/Users/UserResourceMappingList"
+                element={
+                  <ProtectedRoute>
+                    <UserResourceMappingList />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Role-Resource mapping  */}
+              <Route
+                path="/UAC/RoleResource/Create"
+                element={
+                  <ProtectedRoute>
+                    <CreateRoleResourceMapping />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/RoleResource/View"
+                element={
+                  <ProtectedRoute>
+                    <RoleResourceMappingList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-            <Route
-              path="/Activity/ReviewUserRating"
-              element={
-                <ProtectedRoute>
-                  <ReviewUserRating />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/Activity/ReviewEventDetailsList"
-              element={
-                <ProtectedRoute>
-                  <ReviewEventDetailsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/Activity/AddNewNotification"
-              element={
-                <ProtectedRoute>
-                  <AddNewNotification />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/Activity/ViewNotifications"
-              element={
-                <ProtectedRoute>
-                  <ViewNotifications />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/Activity/EditNotification"
-              element={
-                <ProtectedRoute>
-                  <EditNotification />
-                </ProtectedRoute>
-              }
-            />
-            {/* Activity - Grievance */}
-            <Route path="/activity/grievance" element={<ProtectedRoute><ViewGrievanceList /></ProtectedRoute>}/>
-            <Route path="/activity/assign-grievance" element={<ProtectedRoute><AssignGrievance /></ProtectedRoute>}/>
-            <Route path="/activity/grievance-action" element={<ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute>}/>
-            <Route path="/grievance-feedback-form" element={<ProtectedRoute><Grievance /></ProtectedRoute>}/>
-            {/* Activity - Grievance */}
-            {/* ADMIN SECTION - UAC*/}
-            <Route
-              path="/UAC/Resource/ListOfResources"
-              element={
-                <ProtectedRoute>
-                  <ListOfResources />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Resource/CreateResource"
-              element={
-                <ProtectedRoute>
-                  <CreateResource />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Resource/EditResource"
-              element={
-                <ProtectedRoute>
-                  <EditResource />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Role/ListOfRoles"
-              element={
-                <ProtectedRoute>
-                  <ListOfRoles />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Role/CreateRole"
-              element={
-                <ProtectedRoute>
-                  <CreateRole />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Role/EditRole"
-              element={
-                <ProtectedRoute>
-                  <EditRole />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Users/ListOfUsers"
-              element={
-                <ProtectedRoute>
-                  <ListOfUsers />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Users/Create"
-              element={
-                <ProtectedRoute>
-                  <CreateNewUser />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Users/Edit"
-              element={
-                <ProtectedRoute>
-                  <EditUser />
-                </ProtectedRoute>
-              }
-            />
-            {/* Recource */}
-            <Route
-              path="/UAC/Resources/ListOfResources"
-              element={
-                <ProtectedRoute>
-                  <ListOfResources />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Resources/CreateResource"
-              element={
-                <ProtectedRoute>
-                  <CreateResource />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Resources/EditDisplayResource"
-              element={
-                <ProtectedRoute>
-                  <EditDisplayResource />
-                </ProtectedRoute>
-              }
-            />
-            {/* user Recource */}
-            <Route
-              path="/UAC/Users/CreateUserResourceMapping"
-              element={
-                <ProtectedRoute>
-                  <CreateUserResourceMapping />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/Users/UserResourceMappingList"
-              element={
-                <ProtectedRoute>
-                  <UserResourceMappingList />
-                </ProtectedRoute>
-              }
-            />
-            {/* Role-Resource mapping  */}
-            <Route
-              path="/UAC/RoleResource/Create"
-              element={
-                <ProtectedRoute>
-                  <CreateRoleResourceMapping />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/UAC/RoleResource/View"
-              element={
-                <ProtectedRoute>
-                  <RoleResourceMappingList />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/unauthorized" element={<UnauthorizedPage />} />
+              {/* DASHBOARD SECTION */}
+              <Route
+                path="/Dashboard/AdminDashboard"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* DASHBOARD SECTION */}
-            <Route
-              path="/Dashboard/AdminDashboard"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+              {/* Payment-razorPay */}
+              <Route
+                path="/paymentSection"
+                element={
+                  <ProtectedRoute>
+                    <PaymentHome />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Admin Traiff Page */}
+              <Route
+                path="/TariffDetails"
+                element={
+                  <ProtectedRoute>
+                    <TariffDetails />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Payment-razorPay */}
-            <Route
-              path="/paymentSection"
-              element={
-                <ProtectedRoute>
-                  <PaymentHome />
-                </ProtectedRoute>
-              }
-            />
-                 {/* Admin Traiff Page */}
-          <Route
-              path="/TariffDetails"
-              element={
-                <ProtectedRoute>
-                  <TariffDetails />
-                </ProtectedRoute>
-              }
-            />
-     
-            <Route
-              path="/ParkPayment"
-              element={
-                <ProtectedRoute>
-                  <ParkPayment />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-          {/* <Footer /> */}
-          <CommonFooter1/>
-     
-        </div>
-      </BrowserRouter>
+              <Route
+                path="/ParkPayment"
+                element={
+                  <ProtectedRoute>
+                    <ParkPayment />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+            {/* <Footer /> */}
+            <CommonFooter1 />
+          </div>
+        </BrowserRouter>
       </Provider>
-    
     </>
   );
 }

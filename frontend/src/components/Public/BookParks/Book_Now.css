@@ -8,7 +8,7 @@
 
 .booknow-container {
   width: 56vw;
-  height: 144vh;
+  height: 155vh;
   /* margin-top: 7%; */
   margin-left: 33%;
   box-sizing: border-box;
@@ -21,7 +21,7 @@
 .park-container {
   width: 45vw;
   /* height: 115vh; */
-  height: 120vh;
+  height: 132vh;
   border: 1px solid rgb(193, 191, 191);
   border-radius: 5px;
   float: left;
@@ -135,6 +135,32 @@
     right: 0%;
   } */
 
+
+
+/* ----Duration----- */
+.input-container {
+  position: relative;
+  display: inline-block;
+}
+
+
+.icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.icon.minus {
+  left: 10px;
+  color: black;
+}
+
+.icon.plus {
+  right: 10px;
+  color: black;
+}
+
 .duration {
   margin-top: 20px;
   display: flex;
@@ -144,15 +170,24 @@
 }
 
 .input-field-date-duration {
-  width: calc(100% - 110px);
+  /* width: calc(100% - 110px); */
   /* Make inputs full width minus space for labels */
 
-  float: right;
+  /* float: right;
   width: 8vw;
   height: 38px;
   border: 1px solid black;
   border-radius: 5px;
-  padding: 6px;
+  padding: 6px; */
+  width: 100%;
+  padding-left: 70px;
+  /* Adjust the padding to make space for the icon */
+  /* padding-right: 30px; */
+  /* Adjust the padding to make space for the icon */
+  box-sizing: border-box;
+  height: 38px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .bookDuration {
