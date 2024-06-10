@@ -744,37 +744,94 @@ let initalFilterDataForBooking = async (req, res) => {
 
 let bookmarkingAddAction = async (req, res) => {
   try {
-    let userId = req.user?.userId || 1;
-    let facilityId = req.body.facilityId;
-    let eventId = req.body.eventId;
+    let userId = req.user?.userId || 9;
+    let facilityId = req.body.facilityId || null;
+    let eventId = req.body.eventId || null;
 
+    console.log({facilityId, eventId, userId});
     if (facilityId) {
-      const newUserBookmark = await bookmarks.create({
-        publicUserId: userId,
-        facilityId: facilityId,
-        statusId: 1,
-        createdDt: new Date(),
-        createdBy: userId,
+      const existingUserBookmark = await bookmarks.findOne({
+        where: {
+          facilityId: facilityId,
+          publicUserId: userId,
+        }
       });
+      console.log(1)
+      console.log('existing facility bookmark', existingUserBookmark?.bookmarkId);
+      console.log(2)
+      if(existingUserBookmark?.bookmarkId){
+        const [bookmarkUpdate] = await bookmarks.update(
+          { statusId: 1 },
+          { where: { bookmarkId: existingUserBookmark.bookmarkId } }
+        );
 
-      console.log("newUserBookmark", newUserBookmark);
-      res.status(statusCode.SUCCESS.code).json({
-        message: "New bookmark added!",
-      });
+        if(bookmarkUpdate > 0) {
+          res.status(statusCode.SUCCESS.code).json({
+            message: 'Bookmark added successfully!'
+          });
+        }
+        else{
+          res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: 'Bookmarking failed! Please try again.'
+          });
+        }
+      }
+      else{
+        const newUserBookmark = await bookmarks.create({
+          publicUserId: userId,
+          facilityId: facilityId,
+          statusId: 1,
+          createdDt: new Date(),
+          createdBy: userId,
+        });
+  
+        console.log("newUserBookmark", newUserBookmark);
+        res.status(statusCode.SUCCESS.code).json({
+          message: "New bookmark added!",
+        });
+      }
     } else if (eventId) {
-      const newUserBookmark = await bookmarks.create({
-        publicUserId: userId,
-        eventId: eventId,
-        statusId: 1,
-        createdDt: new Date(),
-        createdBy: userId,
 
+      const existingUserBookmark = await bookmarks.findOne({
+        where: {
+          eventId: eventId,
+          publicUserId: userId
+        }
       });
 
-      console.log("newUserBookmark", newUserBookmark);
-      res.status(statusCode.SUCCESS.code).json({
-        message: "New bookmark added!",
-      });
+      console.log('existing event bookmark', existingUserBookmark.bookmarkId);
+
+      if(existingUserBookmark.bookmarkId){
+        const [bookmarkUpdate] = await bookmarks.update(
+          { statusId: 1 },
+          { where: { bookmarkId: existingUserBookmark.bookmarkId } }
+        );
+
+        if(bookmarkUpdate > 0) {
+          res.status(statusCode.SUCCESS.code).json({
+            message: 'Bookmark added successfully!'
+          });
+        }
+        else{
+          res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: 'Bookmarking failed! Please try again.'
+          });
+        }
+      }
+      else{
+        const newUserBookmark = await bookmarks.create({
+          publicUserId: userId,
+          eventId: eventId,
+          statusId: 1,
+          createdDt: new Date(),
+          createdBy: userId,
+        });
+  
+        console.log("newUserBookmark", newUserBookmark);
+        res.status(statusCode.SUCCESS.code).json({
+          message: "New bookmark added!",
+        });
+      }
     } else {
       res.status(statusCode.BAD_REQUEST.code).json({
         message: "Bookmarking failed!",
