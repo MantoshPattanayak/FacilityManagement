@@ -249,14 +249,13 @@ const homePage = async (req, res) => {
       ea.ticketSalesEnabled,
       ea.ticketPrice,
       ea.eventImagePath,
-      ea.additionalFilesPath,
+      ea.additionalFilePath,
       TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
       CASE
         WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
         THEN 'ACTIVE'
         ELSE 'CLOSED'
       END AS status,
-      ea.remarks,
       ea.additionalDetails
       FROM 
       amabhoomi.eventactivities ea 
