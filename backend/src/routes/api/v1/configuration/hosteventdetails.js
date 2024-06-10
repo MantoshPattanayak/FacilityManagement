@@ -11,5 +11,7 @@ router.post("/createHosteventdetails",eventUpload.fields([
 
 router.get("/bankService", hosteventdetails.bankService);
 router.get("/eventDropdown", hosteventdetails.eventDropdownData);
+router.get("/findEventHostDetailsData", hosteventdetails.findEventHostDetailsData);
+
 
 module.exports = router;
