@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from 'react-redux';
 import { Logout } from "../../../utils/authSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Profile() {
   const dispatch = useDispatch(); // Initialize dispatch
   const navigate = useNavigate();
@@ -145,7 +147,7 @@ export default function Profile() {
         emailId: encryptData(formData.emailId),
         language: encryptData(formData.language),
         password: encryptData(formData.password),
-        activityPreference: selectedActivities.map((activity) => {return encryptData(activity)})
+        activityPreference: selectedActivities.map((activity) => { return encryptData(activity) })
       }, null);
 
       // Log updated form data after successful update
@@ -189,9 +191,28 @@ export default function Profile() {
     setPhotoUrl(null);
   };
   //handle for Logout ------------------------------------
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    // logOutUser(e);
     dispatch(Logout());
-    navigate('/')
+    async function logOutAPI() {
+      try {
+        let res = await axiosHttpClient('LOGOUT_API', 'post');
+        console.log(res.data);
+        toast.success('Logged out successfully!!', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    logOutAPI();
   }
 
   // get profile data from api
@@ -221,6 +242,17 @@ export default function Profile() {
     }
     catch (error) {
       console.error(error);
+      if (error.respone.status == 401) {
+        toast.error('You are logged out. Kindly login first.', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        })
+      }
     }
   }
 
@@ -318,7 +350,7 @@ export default function Profile() {
 
               </ul>
               {/* Logout Button */}
-              <button className="button-67 " onClick={handleLogout}>
+              <button className="button-67 " onClick={(e) => { handleLogout(e); navigate('/') }}>
                 <h1>Logout</h1>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>
@@ -358,19 +390,20 @@ export default function Profile() {
 
               <div className="profile-formContainer">
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">First Name<span className="required-asterisk">*</span></label>
                   <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">Last Name<span className="required-asterisk">*</span></label>
                   <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">Email<span className="required-asterisk">*</span></label>
                   <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
                   {errors.email && <span className="error">{errors.email}</span>}
                 </div>
@@ -382,7 +415,7 @@ export default function Profile() {
                     <option>ଓଡ଼ିଆ</option>
                   </select>
                 </div>
-                <div className="nearby-location">
+                {/* <div className="nearby-location">
                   <label htmlFor="nearby location">Preferred Location</label>
                   <div className="preferred-locations ">
                     <button>
@@ -399,7 +432,7 @@ export default function Profile() {
                     </button>
 
                   </div>
-                </div>
+                </div> */}
 
                 {/* <div className="profile-formContainer_Inner">
                   <label htmlFor="password">New Password</label>

@@ -87,7 +87,7 @@ body {
     gap: 24px;
     /* width: 630px; */
     border: 1px solid rgba(0, 0, 0, 0.2);
-    height: 90vh;
+    height: 450px;
     overflow-y: scroll;
 }
 .eventdetails-carddetails {
@@ -114,7 +114,7 @@ body {
 }
 .eventdetails-details-eventname {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 16px;
 }
 .eventdetails-details-eventAddress {
     font-size: 14px;
@@ -318,7 +318,7 @@ body {
     }
     .eventdetails-details-eventname {
         font-weight: bold;
-        font-size: 15px;
+        font-size: 12px;
     }
     .eventdetails-eventbutton {
         display: flex;
@@ -420,7 +420,7 @@ body {
     }
     .eventdetails-details-eventname {
         font-weight: 600;
-        font-size: 12px;
+        font-size: 10px;
     }
     .eventdetails-details-eventAddress {
         font-weight: 300;

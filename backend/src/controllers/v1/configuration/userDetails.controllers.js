@@ -221,8 +221,8 @@ let createUser = async (req, res) => {
       encryptMobileNumber,
     );
 
-    const createdBy = req.user?.id || 1;
-    const updatedBy = req.user?.id || 1;
+    const createdBy = req.user?.userId || 1;
+    const updatedBy = req.user?.userId || 1;
     console.log("1");
     const existingUserMobile = await user.findOne({
       where: { phoneNo: encryptMobileNumber },
@@ -545,7 +545,7 @@ let fetchInitialData = async (req, res) => {
 
 let viewBookings = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let fromDate = req.body.fromDate
       ? new Date(req.body.fromDate)
       : null || null;
@@ -574,7 +574,7 @@ let viewBookings = async (req, res) => {
        */
 
     let searchQueryEvents = `select 
-        fb.eventBookingId as bookingId, f.eventId as Id, f.eventName as name, f.eventCategory, f.locationName as location, 
+        fb.eventBookingId as bookingId, f.eventId as Id, f.eventName as name, f.eventCategoryId, f.locationName as location, 
         fb.bookingDate, s.statusCode, 'EVENTS' as type, fb.createdOn as createdDate
       from amabhoomi.eventbookings fb
       inner join amabhoomi.eventactivities f on f.eventId = fb.eventId
@@ -744,37 +744,94 @@ let initalFilterDataForBooking = async (req, res) => {
 
 let bookmarkingAddAction = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
-    let facilityId = req.body.facilityId;
-    let eventId = req.body.eventId;
+    let userId = req.user?.userId || 9;
+    let facilityId = req.body.facilityId || null;
+    let eventId = req.body.eventId || null;
 
+    console.log({facilityId, eventId, userId});
     if (facilityId) {
-      const newUserBookmark = await bookmarks.create({
-        publicUserId: userId,
-        facilityId: facilityId,
-        statusId: 1,
-        createdDt: new Date(),
-        createdBy: userId,
+      const existingUserBookmark = await bookmarks.findOne({
+        where: {
+          facilityId: facilityId,
+          publicUserId: userId,
+        }
       });
+      console.log(1)
+      console.log('existing facility bookmark', existingUserBookmark?.bookmarkId);
+      console.log(2)
+      if(existingUserBookmark?.bookmarkId){
+        const [bookmarkUpdate] = await bookmarks.update(
+          { statusId: 1 },
+          { where: { bookmarkId: existingUserBookmark.bookmarkId } }
+        );
 
-      console.log("newUserBookmark", newUserBookmark);
-      res.status(statusCode.SUCCESS.code).json({
-        message: "New bookmark added!",
-      });
+        if(bookmarkUpdate > 0) {
+          res.status(statusCode.SUCCESS.code).json({
+            message: 'Bookmark added successfully!'
+          });
+        }
+        else{
+          res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: 'Bookmarking failed! Please try again.'
+          });
+        }
+      }
+      else{
+        const newUserBookmark = await bookmarks.create({
+          publicUserId: userId,
+          facilityId: facilityId,
+          statusId: 1,
+          createdDt: new Date(),
+          createdBy: userId,
+        });
+  
+        console.log("newUserBookmark", newUserBookmark);
+        res.status(statusCode.SUCCESS.code).json({
+          message: "New bookmark added!",
+        });
+      }
     } else if (eventId) {
-      const newUserBookmark = await bookmarks.create({
-        publicUserId: userId,
-        eventId: eventId,
-        statusId: 1,
-        createdDt: new Date(),
-        createdBy: userId,
 
+      const existingUserBookmark = await bookmarks.findOne({
+        where: {
+          eventId: eventId,
+          publicUserId: userId
+        }
       });
 
-      console.log("newUserBookmark", newUserBookmark);
-      res.status(statusCode.SUCCESS.code).json({
-        message: "New bookmark added!",
-      });
+      console.log('existing event bookmark', existingUserBookmark.bookmarkId);
+
+      if(existingUserBookmark.bookmarkId){
+        const [bookmarkUpdate] = await bookmarks.update(
+          { statusId: 1 },
+          { where: { bookmarkId: existingUserBookmark.bookmarkId } }
+        );
+
+        if(bookmarkUpdate > 0) {
+          res.status(statusCode.SUCCESS.code).json({
+            message: 'Bookmark added successfully!'
+          });
+        }
+        else{
+          res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: 'Bookmarking failed! Please try again.'
+          });
+        }
+      }
+      else{
+        const newUserBookmark = await bookmarks.create({
+          publicUserId: userId,
+          eventId: eventId,
+          statusId: 1,
+          createdDt: new Date(),
+          createdBy: userId,
+        });
+  
+        console.log("newUserBookmark", newUserBookmark);
+        res.status(statusCode.SUCCESS.code).json({
+          message: "New bookmark added!",
+        });
+      }
     } else {
       res.status(statusCode.BAD_REQUEST.code).json({
         message: "Bookmarking failed!",
@@ -789,7 +846,7 @@ let bookmarkingAddAction = async (req, res) => {
 
 let bookmarkingRemoveAction = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let bookmarkId = req.body.bookmarkId;
     let facilityId = req.body.facilityId;
     let eventId = req.body.eventId;
@@ -817,7 +874,7 @@ let bookmarkingRemoveAction = async (req, res) => {
 
 let viewBookmarksListForUser = async (req, res) => {
   try {
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let facilityType = req.body.facilityType; //EVENTS   PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND
     let fromDate = req.body.fromDate
       ? new Date(req.body.fromDate)
@@ -827,12 +884,15 @@ let viewBookmarksListForUser = async (req, res) => {
     console.log({ userId, facilityType, fromDate, toDate });
 
     let fetchBookmarkListForFacilitiesQuery = `  
-      select 
-        p.bookmarkId, f.facilityId, f.facilityname, f.address, f2.description as facilityType
+      select
+        p.bookmarkId, f.facilityId as id, f.facilityname as name, f.address, p.publicUserId as userid,
+        f2.description as facilityType, f2.facilitytypeId, p.createdOn as bookmarkDate, f4.url, s.statusCode
       from amabhoomi.publicuserbookmarks p
       inner join amabhoomi.facilities f on p.facilityId = f.facilityId
       inner join amabhoomi.statusmasters s on s.statusId = p.statusId and s.parentStatusCode = 'RECORD_STATUS'
       inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityTypeId
+      left join amabhoomi.fileattachments f3 on f3.entityId = f.facilityId and f3.entityType = 'facilities'
+      left join amabhoomi.files f4 on f3.fileId = f4.fileId
       where p.publicUserId = ?
       AND (? IS NULL OR CAST(p.createdOn as DATE) >= CAST(? as DATE))
       AND (? IS NULL OR cast(p.createdOn as DATE) <= CAST(? as DATE))
@@ -841,18 +901,50 @@ let viewBookmarksListForUser = async (req, res) => {
 
     let fetchBookmarkListForEventsQuery = `
       select
-        p.bookmarkId, e.eventName, e.eventId, e.locationName, e.eventDate, 'Event' as facilityType
+        p.bookmarkId, e.eventName as name, e.eventId as id, e.locationName as address, e.eventDate, 
+        'Event' as facilityType, p.createdOn as bookmarkDate, f4.url, s.statusCode
       from amabhoomi.publicuserbookmarks p
       inner join amabhoomi.eventactivities e on p.eventId = e.eventId
       inner join amabhoomi.statusmasters s on s.statusId = p.statusId and s.parentStatusCode = 'RECORD_STATUS'
+      left join amabhoomi.fileattachments f3 on f3.entityId = e.eventId and f3.entityType = 'events'
+      left join amabhoomi.files f4 on f3.fileId = f4.fileId
       where p.publicUserId = ?
       AND (? IS NULL OR CAST(p.createdOn as DATE) >= CAST(? as DATE))
       AND (? IS NULL OR cast(p.createdOn as DATE) <= CAST(? as DATE))
       and s.statusCode = 'ACTIVE'
     `;
 
-    let searchQueryResult = null;
+    // run query to fetch facility bookmarks and event bookmarks
+    let searchQueryResult = await sequelize.query(
+      fetchBookmarkListForFacilitiesQuery,
+      {
+        replacements: [userId, fromDate, fromDate, toDate, toDate],
+        type: Sequelize.QueryTypes.SELECT,
+      }
+    );
+    
+    let searchEventResult = await sequelize.query(
+      fetchBookmarkListForEventsQuery,
+      {
+        replacements: [userId, fromDate, fromDate, toDate, toDate],
+        type: Sequelize.QueryTypes.SELECT,
+      }
+    )
 
+    res.status(statusCode.SUCCESS.code).json({
+      message: 'Bookmark list',
+      data: [...searchQueryResult.map((facility) => {
+        if(facility.url)
+          facility.url = encodeURIComponent(facility.url);
+        return facility;
+      }), ...searchEventResult.map((event) => {
+        if(event.url)
+          event.url = encodeURIComponent(event.url);
+        return event;
+      })]
+    });
+
+    /*
     if (facilityType != "EVENTS" && facilityType != "EVENT_HOST_REQUEST") {
       //search for PARKS  PLAYGROUNDS   MULTIPURPOSE_GROUND bookmarks
       searchQueryResult = await sequelize.query(
@@ -891,7 +983,7 @@ let viewBookmarksListForUser = async (req, res) => {
         message: "Please provide filter options.",
         data: [],
       });
-    }
+    }*/
   } catch (error) {
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)

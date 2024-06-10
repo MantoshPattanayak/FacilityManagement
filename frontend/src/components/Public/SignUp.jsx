@@ -61,20 +61,20 @@ const SignUp = () => {
     const handleActivityToggle = (e, activity) => {
         e.preventDefault();
         if (selectedActivities.includes(activity)) {
-          setSelectedActivities(
-            selectedActivities.filter((item) => item !== activity)
-          );
+            setSelectedActivities(
+                selectedActivities.filter((item) => item !== activity)
+            );
         } else {
-          setSelectedActivities([...selectedActivities, activity]);
+            setSelectedActivities([...selectedActivities, activity]);
         }
         console.log('selectedActivities', selectedActivities);
-      };
+    };
 
-      const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         // handle form submission with selectedActivities
         console.log("Selected Activities:", selectedActivities);
-      };
+    };
 
 
     const handleChange = (e) => {
@@ -90,14 +90,14 @@ const SignUp = () => {
             // case 'email':
             //     error = !regex.EMAIL.test(value) || value.length > dataLength.EMAIL ? 'Invalid email' : '';
             //     break;
-            case 'password':
-                error = !regex.PASSWORD.test(value) || value.length > dataLength.PASSWORD ? 'Invalid password' : '';
-                break;
-            case 'confirmPassword':
-                // Validate confirm password
-                error = value !== signupData.password ? 'Passwords do not match' : '';
-                setConfirmPasswordError(error);
-                break;
+            // case 'password':
+            //     error = !regex.PASSWORD.test(value) || value.length > dataLength.PASSWORD ? 'Invalid password' : '';
+            //     break;
+            // case 'confirmPassword':
+            //     // Validate confirm password
+            //     error = value !== signupData.password ? 'Passwords do not match' : '';
+            //     setConfirmPasswordError(error);
+            //     break;
             default:
                 break;
         }
@@ -200,7 +200,7 @@ const SignUp = () => {
                 encryptPassword: encryptData(signupData.password),
                 encryptPhoneNo: encryptData(mobileNumber),
                 isEmailVerified: 1,
-                encryptActivity: selectedActivities.map((activity) => {return encryptData(activity)})
+                encryptActivity: selectedActivities.map((activity) => { return encryptData(activity) })
             });
             console.log('Response:', response.data);
             // Redirect to home page after successful registration
@@ -385,48 +385,20 @@ const SignUp = () => {
                                         {signupData.emailError && <p className="error-message">Invalid email</p>} {/* Display error message */}
                                     </div>
 
-                                    <div className="name-field">
-                                        <label htmlFor="">
-                                            Password
-                                        </label>
-                                        <input
-                                            className={`input-field ${signupData.passwordError ? 'input-error' : ''}`} // Apply input-error class if there's an error
-                                            type="password"
-                                            name='password'
-                                            onChange={handleChange}
-                                            value={signupData.password}
-                                            placeholder='Create Password'
-                                        />
-                                        {signupData.passwordError && <p className="error-message">Invalid password</p>} {/* Display error message */}
-                                    </div>
-
-                                    <div className="name-field">
-                                        <label htmlFor="">
-                                            Confirm Password
-                                        </label>
-                                        <input
-                                            className={`input-field ${confirmPasswordError ? 'input-error' : ''}`}
-                                            type="password"
-                                            name='confirmPassword'
-                                            onChange={handleChange}
-                                            value={signupData.confirmPassword}
-                                            placeholder='Confirm Password'
-                                        />
-                                        {confirmPasswordError && <p className="error-message">{confirmPasswordError}</p>}
-                                    </div>
+                                   
 
                                 </div><br />
-               {/* ...........Preferred Activity....................... */}
+                                {/* ...........Preferred Activity....................... */}
                                 <div className="preffered-activity">
                                     <label htmlFor=""><span>Preferred Activity</span>   (user can select multiple activities)</label>
                                     <div className="activities-buttons">
                                         {activityData?.length > 0 &&
                                             activityData.map((activity) => {
                                                 return (
-                                                    <button className='activity-btn' 
-                                                    onClick={(e) => handleActivityToggle(e, activity.userActivityId)}
+                                                    <button className='activity-btn'
+                                                        onClick={(e) => handleActivityToggle(e, activity.userActivityId)}
                                                     >
-                                                    <span>{activity.userActivityName}</span>
+                                                        <span>{activity.userActivityName}</span>
                                                     </button>
 
                                                 )
@@ -465,7 +437,7 @@ const SignUp = () => {
                                 </div>
                             </div>
                         </div>
-                     </form>
+                    </form>
                 )
             }
             {showSuccessPopup && <SuccessPopup />}

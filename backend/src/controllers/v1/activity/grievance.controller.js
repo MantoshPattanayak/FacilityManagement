@@ -219,7 +219,7 @@ let viewGrievanceById = async (req, res) => {
 //action taken against grievance - start
 let actionTaken = async (req, res) => {
     try {
-        let userId = req.user?.id;
+        let userId = req.user?.userId;
         let {
             grievanceMasterId,
             response,

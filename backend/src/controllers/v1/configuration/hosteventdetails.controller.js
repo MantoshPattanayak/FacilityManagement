@@ -17,7 +17,7 @@ let user = db.usermaster
 const createHosteventdetails = async (req, res) => {
   try {
 
-    let userId = req.user?.id || 1;
+    let userId = req.user?.userId || 1;
     let createdDt = new Date();
     let updatedDt = new Date();
 

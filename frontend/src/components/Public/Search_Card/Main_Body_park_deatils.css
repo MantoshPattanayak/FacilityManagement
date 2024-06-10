@@ -228,15 +228,27 @@
 }
 
 .button-text {
-    display: none;
-    position: absolute;
+    display: none; 
+     position: absolute;
     bottom: -30px;
-    /* Adjust this value to change the distance between image and text */
+    
     left: 50%;
     transform: translateX(-50%);
     color: green;
     font-size: 15px;
     font-weight: 600;
+
+/* position: absolute;
+top: 61%;
+left: 22%;
+color: #013409;
+
+
+padding: 10px;
+border-radius: 5px;
+font-size: 13px;
+font-weight: 700; */
+ 
 
 }
 

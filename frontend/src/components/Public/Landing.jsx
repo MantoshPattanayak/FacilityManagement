@@ -28,7 +28,15 @@ import ad2 from "../../assets/ad2.png";
 import ad3 from "../../assets/ad3.png";
 // import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
-import badminton from "../../assets/explore new activity badminton.png";
+import badminton from "../../assets/badminton_ENA.png";
+import badmintonBg from "../../assets/Explore_New_Activity_background.png";
+import cricket_bg from "../../assets/cricket_bg_ENA.jpg";
+import cricket_1 from "../../assets/cricket_ENA.jpg";
+import football_bg from "../../assets/football_bg_ENA.jpg";
+import football_1 from "../../assets/football_ENA.jpg";
+import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
+import yoga_1 from "../../assets/Yoga__ENA.jpg";
+// import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -66,9 +74,9 @@ import {
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
 
+// mediaquary for responsive landing page
 const responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 5,
   },
@@ -112,13 +120,18 @@ const Landing = () => {
   const [selectedActivity, setSelectedActivity] = useState(0);
 
   const [exploreNewActivities, setExploreNewActivities] = useState([
+
     {
       game: "Tennis",
       parks: ["Kalinga Stadium", "Saheed Nagar Sports Complex"],
+      imgENA: badminton,
+      imgENAbg: badmintonBg
     },
     {
       game: "Cricket",
       parks: ["Ruchika High School, Unit - 6", "Saheed Nagar Sports Complex"],
+      imgENA: cricket_1,
+      imgENAbg: cricket_bg
     },
     {
       game: "Football",
@@ -127,12 +140,24 @@ const Landing = () => {
         "Bhubaneswar Footbal Academy",
         "BJB Nagar Field",
       ],
+      imgENA: football_1,
+      imgENAbg: football_bg
     },
     {
       game: "Yoga",
       parks: ["Buddha Jayanti Park", "Acharya Vihar Colony Park"],
+      imgENA: yoga_1,
+      imgENAbg: yoga_bg
     },
   ]);
+
+
+
+  // const currentImage = yoga_bg; 
+  // const currentInnerImage = yoga_1; 
+
+  const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
+  const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
 
   const handleNextImage = () => {
     console.log(1);
@@ -181,6 +206,7 @@ const Landing = () => {
           facilityname: currentData.facilityname,
           facilityId: currentData.facilityId
         });
+
       } else {
         // If the game does not exist, create a new game entry with park information
         modifiedData.push({
@@ -196,6 +222,7 @@ const Landing = () => {
     console.log('modified data', modifiedData);
     return modifiedData; // Return the modified data as JSON
   }
+
   async function fetchLandingPageData() {
     try {
       let resLanding = await axiosHttpClient("LandingApi", "get");
@@ -418,9 +445,45 @@ const Landing = () => {
 
   // handleGameClick ------------------------------------------------
 
-  const handleGameClick = (index) => {
+  const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
+    // setSelectedActivity(index);
+    // if(selectedActivity !== null){
+    //   if (activity.game === "Cricket") {
+    //     setCurrentImage(cricket_bg);
+    //     setCurrentInnerImage(cricket_1);
+    //   } else if (activity.game === "Football") {
+    //     setCurrentImage(football_bg);
+    //     setCurrentInnerImage(football_1);
+    //   }
+    // }
+    if (activity === "Football") {
+      setCurrentImage(football_bg);
+      setCurrentInnerImage(football_1);
+    }
+    else if(activity === "Cricket"){
+      setCurrentImage(cricket_bg);
+      setCurrentInnerImage(cricket_1);
+    }
+    else if(activity === "Tennis"){
+      setCurrentImage(badmintonBg);
+      setCurrentInnerImage(badminton);
+    }
+    else{
+      setCurrentImage(yoga_bg);
+      setCurrentInnerImage(yoga_1);
+    }
   };
+
+  // const changeImg = (activityname) => {
+  //   if (activityname === "Cricket") {
+  //     setCurrentImage(cricket_bg);
+  //     setCurrentInnerImage(cricket_1);
+  //   } else if (activityname === "Football") {
+  //     setCurrentImage(football_bg);
+  //     setCurrentInnerImage(football_1);
+  //   }
+  // };
 
   //Gallery section
 
@@ -503,7 +566,7 @@ const Landing = () => {
         ...baseStyle,
         height: "50vh",
       };
-    } else if (width < 1400) {
+    } else if (width < 1600) {
       return {
         ...baseStyle,
         height: "110vh",
@@ -943,7 +1006,17 @@ const Landing = () => {
 
       {/*------------ Explore new activities----------- */}
 
-      <div className="exploreNewAct-Parent-Container">
+      <div className="exploreNewAct-Parent-Container"
+        style={{
+          backgroundImage: `linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${currentImage})`,
+          width: '100%',
+          height: '70vh',
+          // height: '100%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative',
+        }}
+      >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
           <h1>Explore New Activities And Book</h1>
@@ -956,14 +1029,14 @@ const Landing = () => {
                 key={index}
                 className={`activity ${selectedActivity === index ? "selected" : ""
                   }`}
-                onClick={() => handleGameClick(index)} // Set selected activity on click
+                onClick={() => handleGameClick(index, activity.game) } // Set selected activity on click
               >
                 {activity.game}
               </button>
             ))}
           </div>
           <div className="image-secondDiv">
-            <img className='h-80' src={badminton} alt="" />
+            <img className='h-80' src={currentInnerImage} alt={exploreNewActivities[selectedActivity].game} />
             <div className="exploreNewAct-secondDiv">
               {exploreNewActivities?.length > 0 && exploreNewActivities?.map((activity, index) => (
                 selectedActivity === index && (

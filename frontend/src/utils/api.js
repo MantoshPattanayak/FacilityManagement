@@ -4,6 +4,7 @@ const api = {
    LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
    PUBLIC_LOGIN_API: '/auth/publicLogin',
    PUBLIC_SIGNUP_API: '/auth/signUp',
+   LOGOUT_API: '/logout',  //post
    FORGOT_PASSWORD_API: '/auth/forgotPassword', //put  mobileNo password
    PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
    PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
@@ -90,8 +91,9 @@ const api = {
    VIEW_EVENT_BY_ID_API: '/eventactivites/viewEventactivitiesById', // get eventId
    // Here Ticket Bill Api ----------------------
    VIEW_TICKET_BILL_API: '/booking/generateQRCode', //post
-   // Get Facility Initail Data--------------------
+   // Get Facility Initail Data Admin--------------------
    Get_Facility_Intail_Data:'/adminFacility/initialData', // get Method
+   Facility_Reg_Api:'/adminFacility/facilityRegistration', // Post Method
    //grievance-feedback for user
    GRIEVANCE_INITIAL_DATA_API: '/grievance/initial-data',  //get
    USER_SUBMIT_GRIEVANCE_API: '/grievance/submit-grievance',   //post   fullname, emailId, phoneNo, subject, details, statusId, filepath, isWhatsappNumber

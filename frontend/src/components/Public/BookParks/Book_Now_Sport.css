@@ -20,6 +20,7 @@
 
 .sport_name_Book h1{
     font-size: 25px;
+    font-weight: 500;
 }
 
 /* here form */
@@ -161,4 +162,5 @@
   .Faclity_adress{
     text-align: center;
     font-size: 25px;
+    font-weight: 500;
   }

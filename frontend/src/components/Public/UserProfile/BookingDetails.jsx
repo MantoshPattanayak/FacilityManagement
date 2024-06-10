@@ -9,6 +9,7 @@ import {
   faClock,
   faUser,
   faRightFromBracket,
+  faEnvelope, faMobileScreenButton
 } from "@fortawesome/free-solid-svg-icons";
 import CommonFooter from "../../../common/CommonFooter";
 import axiosHttpClient from "../../../utils/axios";
@@ -23,6 +24,9 @@ import Bokking_Bill from "../Booking_Bill/Booking_Bill";
 // redux --------------------------------------------------------------------------
 import { useDispatch } from 'react-redux';
 import { Logout } from "../../../utils/authSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const BookingDetails = () => {
   const dispatch = useDispatch(); // Initialize dispatch
   let navigate = useNavigate();
@@ -120,12 +124,23 @@ const BookingDetails = () => {
       let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
       console.log('response of fetch profile api', res.data.public_user);
 
-      setUserName(decryptData(res.data.public_user.userName));
+      setUserName(decryptData(res.data.public_user.firstName) + ' ' + decryptData(res.data.public_user.lastName));
       setEmailId(decryptData(res.data.public_user.emailId));
       setPhoneNo(decryptData(res.data.public_user.phoneNo));
     }
     catch (error) {
       console.error("Error in fetching data:", error);
+      if (error.respone.status == 401) {
+        toast.error('You are logged out. Kindly login first.', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        })
+      }
     }
   }
 
@@ -133,9 +148,28 @@ const BookingDetails = () => {
     fetchProfileDetails();
   }, []);
   //handle for Logout ------------------------------------
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    // logOutUser(e);
     dispatch(Logout());
-    navigate('/')
+    async function logOutAPI() {
+      try {
+        let res = await axiosHttpClient('LOGOUT_API', 'post');
+        console.log(res.data);
+        toast.success('Logged out successfully!!', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    logOutAPI();
   }
   // here Function to encryptDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
@@ -155,14 +189,26 @@ const BookingDetails = () => {
   return (
     <div>
       <PublicHeader />
+      <ToastContainer />
       {/* <div className="booking-dtails-container"> */}
       <div className="booking-dtails-container">
         <aside className="profile-leftside--Body">
           <div className="profile-view--Body">
             <div className="profile-about">
-              <p>{userName}</p>
-              <p>{emailId}</p>
-              <p>{phoneNo}</p>
+              <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faUser} />
+                <p>{userName}</p>
+              </div>
+
+              <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faEnvelope} />
+                <p>{emailId}</p>
+              </div>
+
+              <div className="profile-about-icon" >
+                <FontAwesomeIcon icon={faMobileScreenButton} />
+                <p>{phoneNo}</p>
+              </div>
             </div>
           </div>
           <div>
@@ -188,7 +234,7 @@ const BookingDetails = () => {
               </li>
             </ul>
             {/* Logout Button */}
-            <button className="button-67 " onClick={handleLogout}>
+            <button className="button-67 " onClick={(e) => { handleLogout(e); navigate('/') }}>
               <h1>Logout</h1>
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>
@@ -255,7 +301,7 @@ const BookingDetails = () => {
 
                         <Link
 
-               
+
                           to={{
                             pathname: "/BookParks/Bokking_Bill",
                             search: `?bookingId=${encryptDataId(event.bookingId)}`,

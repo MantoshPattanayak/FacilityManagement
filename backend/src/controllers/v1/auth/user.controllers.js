@@ -1204,7 +1204,7 @@ let privateLogin = async(req,res)=>{
 
 let logout = async (req, res) => {
    try {
-    let userId = req.user?.id || 1; 
+    let userId = req.user?.userId || 1; 
     let sessionId = decrypt(req.session)
      const options = {
          expires: new Date(Date.now() - 1), // Expire the cookie immediately
