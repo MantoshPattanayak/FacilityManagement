@@ -8,7 +8,11 @@ import axiosHttpClient from "../../../utils/axios";
 import { decryptData } from "../../../utils/encryptData";
 import PublicHeader from "../../../common/PublicHeader";
 import { logOutUser } from "../../../utils/utilityFunctions";
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Logout } from "../../../utils/authSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const ProfileHistory = () => {
   const tabList = [
     {
@@ -30,6 +34,7 @@ const ProfileHistory = () => {
   const [userName, setUserName] = useState('');
   const [emailId, setEmailId] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
+  let navigate = useNavigate();
 
   function manageCurrentTab(e, name) {
     e.preventDefault();
@@ -60,7 +65,42 @@ const ProfileHistory = () => {
     }
     catch (error) {
       console.error("Error in fetching data:", error);
+      if (error.respone.status == 401) {
+        toast.error('You are logged out. Kindly login first.', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        })
+      }
     }
+  }
+
+  function handleLogout(e) {
+    // logOutUser(e);
+    dispatch(Logout());
+    async function logOutAPI() {
+      try {
+        let res = await axiosHttpClient('LOGOUT_API', 'post');
+        console.log(res.data);
+        toast.success('Logged out successfully!!', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    logOutAPI();
   }
 
   useEffect(() => {
@@ -107,7 +147,7 @@ const ProfileHistory = () => {
               </li>
             </ul>
             {/* Logout Button */}
-            <button className="button-67 " onClick={(e)=>{logOutUser(e); navigate('/');}}>
+            <button className="button-67 " onClick={(e) => { handleLogout(e); navigate('/') }}>
               <h1>Logout</h1>
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>
