@@ -189,6 +189,7 @@ const GrievanceForm = () => {
                 <div className="form-group">
                     <label htmlFor="subjectInput">Subject *</label>
                     <input type="text" id="subjectInput" placeholder="Enter Subject"
+                    name='subject'
                         onChange={handleChange}
                     />
                 </div>
