@@ -303,7 +303,7 @@ const BookingDetails = () => {
 
 
                           to={{
-                            pathname: "/BookParks/Bokking_Bill",
+                            pathname: "/profile/booking-details/ticket",
                             search: `?bookingId=${encryptDataId(event.bookingId)}`,
                           }}
                           className="eventdetails-eventbutton"
