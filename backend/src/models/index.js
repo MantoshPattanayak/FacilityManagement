@@ -25,7 +25,6 @@ db1.DataTypes = DataTypes;
 db1.QueryTypes = QueryTypes;
 
 db1.amenitiesmaster = require("./amenitiesmaster.models")(sequelize, DataTypes);
-db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
 db1.amenityfacilities = require("./amenityfacilities.models")(
   sequelize,
   DataTypes
@@ -55,6 +54,7 @@ db1.transactiondetails = require("./transactiondetails.models")(
   sequelize,
   DataTypes
 );
+db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
 db1.userresource = require("./userresource.models")(sequelize, DataTypes);
 db1.gendermaster = require("./gendermaster.models")(sequelize, DataTypes);
 db1.file = require("./file.models")(sequelize, DataTypes);
@@ -111,7 +111,9 @@ db1.faq = require('./frequentlyaskquestion.models')(sequelize,DataTypes)
 db1.feedback = require('./feedback.model')(sequelize, DataTypes)
 db1.departmentmasters = require('./departmentmasters.models')(sequelize, DataTypes)
 db1.grievancecategories = require('./grievancecategories.models')(sequelize, DataTypes)
-
+// bank details table 
+db1.bankdetails = require('./bankdetail.models')(sequelize,DataTypes)
+// join operations start
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
@@ -120,9 +122,9 @@ db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 
 db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"})
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
+// join operations end
 
-
-db1.faq.sync({
+db1.bankdetails.sync({
   alter: false,
 });
 

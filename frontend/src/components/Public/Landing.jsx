@@ -1,5 +1,5 @@
 import "./Landing.css";
-import gif from '../../assets/newImg.png';
+import gif from "../../assets/newImg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
@@ -28,7 +28,15 @@ import ad2 from "../../assets/ad2.png";
 import ad3 from "../../assets/ad3.png";
 // import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
-import badminton from "../../assets/explore new activity badminton.png";
+import badminton from "../../assets/badminton_ENA.png";
+import badmintonBg from "../../assets/Explore_New_Activity_background.png";
+import cricket_bg from "../../assets/cricket_bg_ENA.jpg";
+import cricket_1 from "../../assets/cricket_ENA.jpg";
+import football_bg from "../../assets/football_bg_ENA.jpg";
+import football_1 from "../../assets/football_ENA.jpg";
+import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
+import yoga_1 from "../../assets/Yoga__ENA.jpg";
+// import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -102,7 +110,7 @@ const Landing = () => {
   let randomKey = Math.random();
   let navigate = useNavigate();
   //set auto-suggest facilties
-  const [inputFacility, setInputFacility] = useState('');
+  const [inputFacility, setInputFacility] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
@@ -115,10 +123,14 @@ const Landing = () => {
     {
       game: "Tennis",
       parks: ["Kalinga Stadium", "Saheed Nagar Sports Complex"],
+      imgENA: badminton,
+      imgENAbg: badmintonBg,
     },
     {
       game: "Cricket",
       parks: ["Ruchika High School, Unit - 6", "Saheed Nagar Sports Complex"],
+      imgENA: cricket_1,
+      imgENAbg: cricket_bg,
     },
     {
       game: "Football",
@@ -127,12 +139,22 @@ const Landing = () => {
         "Bhubaneswar Footbal Academy",
         "BJB Nagar Field",
       ],
+      imgENA: football_1,
+      imgENAbg: football_bg,
     },
     {
       game: "Yoga",
       parks: ["Buddha Jayanti Park", "Acharya Vihar Colony Park"],
+      imgENA: yoga_1,
+      imgENAbg: yoga_bg,
     },
   ]);
+
+  // const currentImage = yoga_bg;
+  // const currentInnerImage = yoga_1;
+
+  const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
+  const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
 
   const handleNextImage = () => {
     console.log(1);
@@ -152,15 +174,14 @@ const Landing = () => {
   //function to fetch suggestions of facilities on input by user
   async function fetchAutoSuggestData() {
     try {
-      let response = await axiosHttpClient('View_Park_Data', 'post', {
+      let response = await axiosHttpClient("View_Park_Data", "post", {
         givenReq: inputFacility,
-        facilityTypeId: null
+        facilityTypeId: null,
       });
 
-      console.log('auto suggest facility data', response.data.data);
+      console.log("auto suggest facility data", response.data.data);
       setSuggestions(response.data.data);
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
   }
@@ -173,36 +194,43 @@ const Landing = () => {
       let currentData = exploreData[i];
 
       // Use find to check if the game already exists in modifiedData
-      let existingGame = modifiedData.find(data => data.game === currentData.userActivityName);
+      let existingGame = modifiedData.find(
+        (data) => data.game === currentData.userActivityName
+      );
 
       if (existingGame) {
         // If the game exists, push the park information to the parks array
         existingGame.parks.push({
           facilityname: currentData.facilityname,
-          facilityId: currentData.facilityId
+          facilityId: currentData.facilityId,
         });
       } else {
         // If the game does not exist, create a new game entry with park information
         modifiedData.push({
           game: currentData.userActivityName,
-          parks: [{
-            facilityname: currentData.facilityname,
-            facilityId: currentData.facilityId
-          }]
+          parks: [
+            {
+              facilityname: currentData.facilityname,
+              facilityId: currentData.facilityId,
+            },
+          ],
         });
       }
     }
 
-    console.log('modified data', modifiedData);
+    console.log("modified data", modifiedData);
     return modifiedData; // Return the modified data as JSON
   }
+
   async function fetchLandingPageData() {
     try {
       let resLanding = await axiosHttpClient("LandingApi", "get");
       console.log("Here is the Landing Page API data", resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
-      let modifiedData = handleExploreActivitiesData(resLanding.data.exploreActivities);
+      let modifiedData = handleExploreActivitiesData(
+        resLanding.data.exploreActivities
+      );
       setExploreNewActivities(modifiedData);
     } catch (error) {
       console.error("Error fetching the Landing Page API data: ", error);
@@ -360,14 +388,12 @@ const Landing = () => {
 
   //refresh on user input to show suggestions of facilities
   useEffect(() => {
-    if (inputFacility)
-      fetchAutoSuggestData();
-  }, [inputFacility])
+    if (inputFacility) fetchAutoSuggestData();
+  }, [inputFacility]);
 
   //-------------for event Cards---------------------------------------
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
-
 
   // const handleEventClick = (link, event) => {
   //   event.preventDefault();
@@ -418,9 +444,42 @@ const Landing = () => {
 
   // handleGameClick ------------------------------------------------
 
-  const handleGameClick = (index) => {
+  const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
+    // setSelectedActivity(index);
+    // if(selectedActivity !== null){
+    //   if (activity.game === "Cricket") {
+    //     setCurrentImage(cricket_bg);
+    //     setCurrentInnerImage(cricket_1);
+    //   } else if (activity.game === "Football") {
+    //     setCurrentImage(football_bg);
+    //     setCurrentInnerImage(football_1);
+    //   }
+    // }
+    if (activity === "Football") {
+      setCurrentImage(football_bg);
+      setCurrentInnerImage(football_1);
+    } else if (activity === "Cricket") {
+      setCurrentImage(cricket_bg);
+      setCurrentInnerImage(cricket_1);
+    } else if (activity === "Tennis") {
+      setCurrentImage(badmintonBg);
+      setCurrentInnerImage(badminton);
+    } else {
+      setCurrentImage(yoga_bg);
+      setCurrentInnerImage(yoga_1);
+    }
   };
+
+  // const changeImg = (activityname) => {
+  //   if (activityname === "Cricket") {
+  //     setCurrentImage(cricket_bg);
+  //     setCurrentInnerImage(cricket_1);
+  //   } else if (activityname === "Football") {
+  //     setCurrentImage(football_bg);
+  //     setCurrentInnerImage(football_1);
+  //   }
+  // };
 
   //Gallery section
 
@@ -489,24 +548,38 @@ const Landing = () => {
       marginBottom: "1px",
       padding: "100px",
       width: "100vw",
-      height: "100vh",
+      // width: "auto",
+      // height: "100vh",
+      height: "100%",
       position: "relative",
+      backgroundPosition: "center",
     };
 
-    if (width < 1190) {
+    if (width < 600) {
       return {
         ...baseStyle,
-        height: "36vh",
+        // height: "72vh",
+        height: "100vh",
+        width: "auto",
+      };
+    } else if (width < 1190) {
+      return {
+        ...baseStyle,
+        // height: "36vh",
+        // height: "54vh",
+        height: "100%",
       };
     } else if (width < 1200) {
       return {
         ...baseStyle,
-        height: "50vh",
+        // height: "50vh",
+        height: "100%",
       };
     } else if (width < 1600) {
       return {
         ...baseStyle,
-        height: "110vh",
+        // height: "110vh",
+        height: "100%",
       };
     } else {
       return baseStyle;
@@ -514,7 +587,6 @@ const Landing = () => {
   };
 
   const styles = getStyles();
-
 
   return (
     <div className="landingcontainer">
@@ -557,9 +629,9 @@ const Landing = () => {
                       onClick={(e) =>
                         navigate(
                           "/Sub_Park_Details" +
-                          `?facilityId=${encryptDataId(
-                            suggestion.facilityId
-                          )}`
+                            `?facilityId=${encryptDataId(
+                              suggestion.facilityId
+                            )}`
                         )
                       }
                     >
@@ -595,7 +667,7 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(1)}`,
             }}
           >
-            <div className="icon">
+            <div className="iconLogo">
               <img src={park_logo} alt="" />
               <h2>Parks</h2>
             </div>
@@ -607,7 +679,7 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(2)}`,
             }}
           >
-            <div className="icon">
+            <div className="iconLogo">
               <img src={playground_logo} alt="" />
               <h2>Playgrounds</h2>
             </div>
@@ -618,17 +690,18 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(3)}`,
             }}
           >
-            <div className="icon">
+            <div className="iconLogo">
               <img src={mp_ground_logo} alt="" />
-              <h2>Multipurpose Grounds</h2>
+              <h2>Multipurpose</h2>
+              {/* <h2>Grounds</h2> */}
             </div>
           </Link>
 
-          <div className="icon">
+          <div className="iconLogo">
             <img src={greenway} alt="" />
             <h2>Greenways</h2>
           </div>
-          <div className="icon">
+          <div className="iconLogo">
             <img src={Blueway} alt="" />
             <h2>Blueways</h2>
           </div>
@@ -844,12 +917,13 @@ const Landing = () => {
               {notifications.map((notification) => {
                 const createdAtDate = new Date(notification.createdAt);
                 const currentDate = new Date();
-                const diffInDays = Math.round((currentDate - createdAtDate) / (1000 * 3600 * 24));
+                const diffInDays = Math.round(
+                  (currentDate - createdAtDate) / (1000 * 3600 * 24)
+                );
                 return (
                   <p className="notce2para">
-                    {diffInDays <= 100 ? <p className="New_text"> New </p> : ''}
+                    {diffInDays <= 100 ? <p className="New_text"> New </p> : ""}
                     {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
-
                     {notification.publicNotificationsContent} &nbsp; &nbsp;
                   </p>
                 );
@@ -943,7 +1017,12 @@ const Landing = () => {
 
       {/*------------ Explore new activities----------- */}
 
-      <div className="exploreNewAct-Parent-Container">
+      <div
+        className="exploreNewAct-Parent-Container"
+        style={{
+          backgroundImage: `linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${currentImage})`,
+        }}
+      >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
           <h1>Explore New Activities And Book</h1>
@@ -954,30 +1033,52 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${selectedActivity === index ? "selected" : ""
-                  }`}
-                onClick={() => handleGameClick(index)} // Set selected activity on click
+                className={`activity ${
+                  selectedActivity === index ? "selected" : ""
+                }`}
+                onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
               </button>
             ))}
           </div>
           <div className="image-secondDiv">
-            <img className='h-80' src={badminton} alt="" />
+            <img
+              className="h-80"
+              src={currentInnerImage}
+              alt={exploreNewActivities[selectedActivity].game}
+            />
             <div className="exploreNewAct-secondDiv">
-              {exploreNewActivities?.length > 0 && exploreNewActivities?.map((activity, index) => (
-                selectedActivity === index && (
-                  <div className="parkList" key={index}>
-                    {activity.parks.map((park, idx) => (
-                      <div className="parkItem" key={idx}>
-                        <p>{park.facilityname}</p>
-                        <button className="bookButton" onClick={(e) => { navigate('/Sub_Park_Details' + `?facilityId=${encryptDataId(park.facilityId)}`) }}>Book</button>
-                        <FontAwesomeIcon icon={faBookmark} className="bookmarkIcon" />
+              {exploreNewActivities?.length > 0 &&
+                exploreNewActivities?.map(
+                  (activity, index) =>
+                    selectedActivity === index && (
+                      <div className="parkList" key={index}>
+                        {activity.parks.map((park, idx) => (
+                          <div className="parkItem" key={idx}>
+                            <p>{park.facilityname}</p>
+                            <button
+                              className="bookButton"
+                              onClick={(e) => {
+                                navigate(
+                                  "/Sub_Park_Details" +
+                                    `?facilityId=${encryptDataId(
+                                      park.facilityId
+                                    )}`
+                                );
+                              }}
+                            >
+                              Book
+                            </button>
+                            <FontAwesomeIcon
+                              icon={faBookmark}
+                              className="bookmarkIcon"
+                            />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )
-              ))}
+                    )
+                )}
             </div>
           </div>
         </div>
@@ -1043,7 +1144,7 @@ const Landing = () => {
         </div>
       </div>
 
-      <div className="footer"></div>
+      {/* <div className="footer"></div> */}
     </div>
   );
 };

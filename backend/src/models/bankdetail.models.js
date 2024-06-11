@@ -29,6 +29,9 @@ module.exports= (sequelize,DataTypes)=>{
         address:{
             type:DataTypes.STRING(50)
         },
+        statusId:{
+            type:DataTypes.INTEGER
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },

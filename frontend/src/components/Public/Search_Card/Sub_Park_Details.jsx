@@ -24,6 +24,7 @@ import { decryptData } from "../../../utils/encryptData";
 
 import { Link } from "react-router-dom";
 import { encryptData } from "../../../utils/encryptData";
+import { useSelector } from "react-redux";
 
 import {
   GoogleMap,
@@ -33,6 +34,8 @@ import {
 } from "@react-google-maps/api";
 import PublicHeader from "../../../common/PublicHeader";
 import Book_Now from "../BookParks/Book_Now";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
@@ -48,7 +51,7 @@ const Sub_Park_Details = () => {
   const isUserLoggedIn = sessionStorage.getItem("isUserLoggedIn") || 0;
   const [toRoute, setToRoute] = useState();
   const [operatingDays, setOperatingDays] = useState('');
-
+  const [bookmarkId, setBookmarkId] = useState(null);
   //Here is the popup state
 
   const [showPopup, setShowPopup] = useState(false);
@@ -60,16 +63,33 @@ const Sub_Park_Details = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
-    const savedBookmarkStatus = localStorage.getItem(`bookmark_${facilityId}`);
-    if (savedBookmarkStatus !== null) {
-      setIsBookmarked(JSON.parse(savedBookmarkStatus));
-    }
+    // const savedBookmarkStatus = localStorage.getItem(`bookmark_${facilityId}`);
+    // if (savedBookmarkStatus !== null) {
+    //   setIsBookmarked(JSON.parse(savedBookmarkStatus));
+    // }
   }, [facilityId]);
 
   const handleBookmarkClick = () => {
     const newBookmarkStatus = !isBookmarked;
-    setIsBookmarked(newBookmarkStatus);
-    localStorage.setItem(`bookmark_${facilityId}`, JSON.stringify(newBookmarkStatus));
+    handleBookmarkStatus();
+    // localStorage.setItem(`bookmark_${facilityId}`, JSON.stringify(newBookmarkStatus));
+    console.log('newBookmarkStatus', {newBookmarkStatus, isBookmarked});
+    async function handleBookmarkStatus(){
+      try{
+        let res = await axiosHttpClient(
+          newBookmarkStatus == false ? 'REMOVE_BOOKMARK_API' : 'ADD_BOOKMARK_API',
+          'post',
+          newBookmarkStatus == false ? { bookmarkId } : { facilityId }
+        );
+        console.log('response', res.data);
+        setIsBookmarked(newBookmarkStatus);
+        toast.success(res.data.message);
+      }
+      catch(error){
+        console.error(error);
+        toast.error('Bookmarking failed!');
+      }
+    };
   };
 
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
@@ -89,6 +109,7 @@ const Sub_Park_Details = () => {
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
       setOperatingDaysFromRes(res);
+      console.log('response of fetch facility details', res);
 
       function setOperatingDaysFromRes(res) {
         let operatingDaysFromRes = [];
@@ -120,8 +141,33 @@ const Sub_Park_Details = () => {
     }
   }
 
+  async function getUserBookmarks(){
+    if(isUserLoggedIn){
+      try{
+        let res = await axiosHttpClient('VIEW_BOOKMARKS_LIST_API', 'post');
+        console.log('user bookmarks', {res: res.data.data, facilityId});
+        let bookmarkBool = res.data?.data?.some((data) => {
+          if(['Parks', 'Playgrounds', 'Multi Purpose Ground'].includes(data.facilityType)){
+            console.log(data);
+            setBookmarkId(data.bookmarkId);
+            return data.id == facilityId;
+          }
+        });
+        setIsBookmarked(bookmarkBool);
+        console.log('is this facility bookmarked', bookmarkBool);
+      }
+      catch(error){
+        console.error(error);
+      }
+    }
+    else{
+      return;
+    }
+  }
+
   useEffect(() => {
     getSub_park_details();
+    getUserBookmarks();
   }, []);
 
   function encryptDataId(id) {
@@ -156,7 +202,7 @@ const Sub_Park_Details = () => {
   return (
     <div className="Sub_Manu_Conatiner">
       <PublicHeader />
-
+      <ToastContainer />
       <div className={FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1 ? "Header_Img" : FacilitiesData[0]?.facilityTypeId === 2 ? "playground_header_image" : FacilitiesData[0]?.facilityTypeId === 3 ? "MulitGroud" : ""}>
         <h1 className="text-park">
           {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
