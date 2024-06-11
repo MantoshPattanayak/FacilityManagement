@@ -24,8 +24,8 @@ const CommonFooter1 = () => {
           <div className="footer-column1">
             <h1 className="Amam_text">AMA BHOOMI</h1>
             <p className="p_text_ama">
-              Assuring mass access through Bhubaneswar <br></br> open spaces and
-              ownership management initiative.
+              Assuring Mass Access through BHubaneswar <br></br> Open spaces and
+              Ownership Management Initiative.
             </p>
             <div className="Downlad_Appp">
               <h1 className="donwload_name"> Download App</h1>
@@ -58,7 +58,7 @@ const CommonFooter1 = () => {
                 <Link to="/grievance-feedback-form">Grievance</Link>
               </li>
               <li>
-                <a href="#">Feedback</a>
+              <Link to="/grievance-feedback-form">Feedback</Link>
               </li>
             </ul>
             <div className="term_condtion_conatiner">

@@ -3,10 +3,15 @@ import './Grievance.css';
 import CommonFooter from '../../../common/CommonFooter';
 import CommonHeader from '../../../common/CommonHeader';
 import PublicHeader from '../../../common/PublicHeader';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axiosHttpClient from '../../../utils/axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
 
 const Grievance = () => {
     const [selectedForm, setSelectedForm] = useState('Grievance');
-
+    
     const handleFormChange = (event) => {
         setSelectedForm(event.target.value);
     };
@@ -14,6 +19,7 @@ const Grievance = () => {
     return (
         <div>
             <PublicHeader/>
+            <ToastContainer />
             <div className="grievenceForm">
                 <div className="heading">
                     <h2>{selectedForm} Form</h2>
@@ -56,8 +62,44 @@ const GrievanceForm = () => {
     const [isValidMobile, setIsValidMobile] = useState(true);
     const [email, setEmail] = useState('');
     const [isValidEmail, setIsValidEmail] = useState(true);
-
+    const [grievanceCategoryList, setGrievanceCategoryList] = useState([]);
     const characters = 'abc123';
+
+    async function fetchInitialData(){
+        try{
+            let res= await axiosHttpClient('GRIEVANCE_INITIAL_DATA_API', 'get');
+            console.log('grievance feedback initial data fetch response', res.data.data);
+            setGrievanceCategoryList(res.data.data)
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
+
+    async function handleSubmitForm(e) {
+        try{
+            let res =  await axiosHttpClient('USER_SUBMIT_GRIEVANCE_API', 'post', {
+                fullname: user.username,
+                emailId: email,
+                phoneNo: mobileNumber,
+                subject,
+                details,
+                statusId,
+                filepath,
+                isWhatsappNumber,
+                grievanceCategoryId
+            });
+        }
+        catch(error){
+            console.error(error);
+            toast.error(`${selectedForm} form submission failed. Kindly try again!`);
+        }
+    }
+
+    // fetch initial data on page load
+    useEffect(() => {
+        fetchInitialData();
+    }, [])
 
     useEffect(() => {
         setCaptcha(generateString(6));
@@ -217,6 +259,7 @@ const GrievanceForm = () => {
                     <div className="captcha">
                         <div>{captcha}</div>
                         <input type="text" id="captchaInput" name="username" value={user.username} onChange={handleChange} placeholder="Enter Captcha" />
+                        <div><FontAwesomeIcon icon={faRotateRight} /></div>
                     </div>
                 </div>
             </div>
