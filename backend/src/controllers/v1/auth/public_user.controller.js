@@ -28,6 +28,8 @@ const updatepublic_user = async (req, res) => {
       profilePicture,
     } = req.body;
 // console.log("Update Profile", req.body)
+    console.log("profile Update", req.body)
+
     let params = {};
     let roleId =4;
   
