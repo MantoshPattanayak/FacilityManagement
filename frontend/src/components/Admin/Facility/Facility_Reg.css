@@ -320,6 +320,11 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0);
   border: 2px dashed #ccc;
 }
+.button-4.selected {
+  background-color: green;
+  color: white;
+}
+
 
 .Upload_Image_text{
   font-size: 20px;

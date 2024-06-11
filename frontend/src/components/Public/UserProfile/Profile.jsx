@@ -37,7 +37,7 @@ export default function Profile() {
   async function getActivitiesData() {
     try {
       let res = await axiosHttpClient("VIEW_FILTER_OPTIONS_API", "get");
-      console.log("getActivitiesData", res.data.fetchActivityMaster[0]);
+      console.log("getActivitiesData", res);
       setActivityData(res.data.fetchActivityMaster[0]);
     }
     catch (err) {
