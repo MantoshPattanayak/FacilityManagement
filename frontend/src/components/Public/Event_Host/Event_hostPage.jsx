@@ -46,10 +46,11 @@ const Event_hostPage = () => {
         ticketsold: "",
         numberofTicket: "",
         price: "",
-        uploadEventImage: "",
-        additionalFiles: []
-
-
+        uploadEventImage: {
+            data: null,
+            name: ""
+        },
+        additionalFiles: new Array()
     });
 
     // handler for target the Name of Input field -------------------------------------------------
@@ -59,12 +60,18 @@ const Event_hostPage = () => {
         switch (name) {
             case "uploadEventImage":
                 let file = files[0];
-
+                console.log('file name', files);
                 if (parseInt(file.size / 1024) <= 200) {
                     const reader = new FileReader();
 
                     reader.onloadend = () => {
-                        setFormData({ ...formData, [name]: reader.result });
+                        setFormData({ 
+                            ...formData, 
+                            [name]: {
+                                data: reader.result,
+                                name: file.name
+                            } 
+                        });
                     };
 
                     reader.readAsDataURL(file);
@@ -76,7 +83,7 @@ const Event_hostPage = () => {
                 break;
             case "additionalFiles":
                 let filesData = formData.additionalFiles;
-
+                console.log('filesData', filesData);
                 // Check if number of files exceeds the limit
                 if (files.length + formData.additionalFiles.length > 3) {
                     alert("You can only upload a maximum of 3 files.");
@@ -89,7 +96,10 @@ const Event_hostPage = () => {
                     if (parseInt(file.size / 1024) <= 400) { // Checking for 400KB
                         const reader = new FileReader();
                         reader.onloadend = () => {
-                            filesData.push(reader.result);
+                            filesData.push({
+                                data:reader.result,
+                                name: file.name
+                            });
                             // If all files are read, update form data
                             if (filesData.length === files.length) {
                                 setFormData({ ...formData, [name]: filesData });
@@ -110,6 +120,7 @@ const Event_hostPage = () => {
                 setformErrors({ ...formErrors, [name]: '' });
                 break;
         }
+        console.log('form data', formData);
     };
 
 
@@ -148,8 +159,8 @@ const Event_hostPage = () => {
                     ticketsold: formData.ticketsold,
                     numberofTicket: formData.numberofTicket,
                     price: formData.price,
-                    uploadEventImage: formData.uploadEventImage || null,
-                    additionalFiles: formData.additionalFiles || null
+                    uploadEventImage: formData.uploadEventImage.data || null,
+                    additionalFiles: formData.additionalFiles.map((file) => { return file.data }) || null
                 });
                 console.log(res);
                 toast.success('Host Event created successfully.');
@@ -204,7 +215,7 @@ const Event_hostPage = () => {
     // step-1(1nd Page Validation ) -------------------------------------------------------------------
     const validation = (value) => {
         const err = {}
-        const nameRegex = /^[a-zA-Z\- ]+$/;
+        const nameRegex = /^[a-zA-Z0-9,.!?'"()\s]*$/;
         const space_block = /^[^\s][^\n\r]*$/;
         const panCardRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
         const Addres_reges = /^[a-zA-Z0-9.,\-/ ]+$/;
@@ -292,7 +303,7 @@ const Event_hostPage = () => {
     // step-2(2nd Page Validation ) -------------------------------------------------------------------
     const Step_2_Validation = (value) => {
         const err = {}
-        const nameRegex = /^[a-zA-Z\- ]+$/;
+        const nameRegex = /^[a-zA-Z0-9,.!?'"()\s]*$/;
         const space_block = /^[^\s][^\n\r]*$/;
         const price_regex = /^[0-9]+$/;
         if (!value.eventTitle) {
@@ -351,12 +362,10 @@ const Event_hostPage = () => {
             } else if (!space_block.test(value.price)) {
                 err.price = "Do not use spaces at beginning"
             }
-
         }
         if (!value.uploadEventImage) {
             err.uploadEventImage = "Upload Event Image is required"
         }
-
         return err;
     }
 
@@ -611,8 +620,7 @@ const Event_hostPage = () => {
                                         {EventType?.length > 0 && EventType?.map((event, index) => {
                                             return (
                                                 <option key={index} value={event.eventCategoryId}>
-                                                    {event.eventType}
-
+                                                    {event.eventCategoryName}
                                                 </option>
                                             )
 
@@ -723,9 +731,9 @@ const Event_hostPage = () => {
                                         </p>
                                     </form>
 
-                                    <p className="italic text-sm font-bold text-gray-500">
+                                    {/* <p className="italic text-sm font-bold text-gray-500">
                                         Max. image or PDF file size is 200KB.
-                                    </p>
+                                    </p> */}
                                     {formErrors.uploadEventImage && <p className="error text-red-700">{formErrors.uploadEventImage}</p>}
                                     {/* here Upload */}
                                     {formData.uploadEventImage && (
@@ -767,9 +775,9 @@ const Event_hostPage = () => {
                                         </p>
                                     </form>
 
-                                    <p className="italic text-sm font-bold text-gray-500">
+                                    {/* <p className="italic text-sm font-bold text-gray-500">
                                         Max. image or PDF file size is 200KB.
-                                    </p>
+                                    </p> */}
 
                                     {/* here Upload */}
                                     {formData.additionalFiles && formData.additionalFiles.length > 0 && (
@@ -879,7 +887,7 @@ const Event_hostPage = () => {
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Phone Number*</label>
                                         <input type="text" id="input1" className="input_padding" placeholder="Phone Number" name="phoneNo"
-
+                                            maxLength={10}
                                             value={formData.phoneNo}
                                             disabled
                                         />
@@ -1099,9 +1107,9 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1">Upload Event Image</label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Organization/Individual Address"
+                                    <input type="text" id="input1" className="input_padding" placeholder="Event image"
                                         name="uploadeventImage"
-                                        value={formData.uploadEventImage}
+                                        value={formData.uploadEventImage.name}
                                         disabled
 
                                     />
@@ -1109,9 +1117,9 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1">Upload any Additional Files</label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Organization/Individual Address"
+                                    <input type="text" id="input1" className="input_padding" placeholder="Additional files"
                                         name="additionalFiles"
-                                        value={formData.additionalFiles}
+                                        value={[...formData.additionalFiles.map((file) => { return file.name})].toString()}
                                         disabled
 
                                     />
