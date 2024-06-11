@@ -1,5 +1,4 @@
 // to be maintained by backend developers
-
 const api = {
    LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
    PUBLIC_LOGIN_API: '/auth/publicLogin',
@@ -19,12 +18,10 @@ const api = {
    Add_to_Cart: '/booking/addToCart',  // Post
    View_Card_UserId: '/booking/viewCartByUserId', // Get
    Update_Card: '/booking/updateCart', // Put
-
    //  Landing page Api......................................
    LandingApi: '/publicUser/homePage',
    //Admin login
    ADMIN_LOGIN_API: '/auth/privateLogin',    //post = encryptMobile or encryptEmail, encryptPassword
-
    // Park_Booking(Search) Page
    View_Park_Data: '/mapData/viewParkDetails',
    View_By_ParkId: '/mapData/viewParkById',
@@ -75,7 +72,6 @@ const api = {
    ADD_BOOKMARK_API: '/userDetails/bookmarkingAddAction',  //post - facilityId or eventId depending on record type (either parks, or events)
    REMOVE_BOOKMARK_API: '/userDetails/bookmarkingRemoveAction',    //post - bookmarkId
    VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate
-
    //PARK-BOOK API
    PARK_BOOK_PAGE_SUBMIT_API: '/booking/park',  //post 
    PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park-book-initialdata',   //get
@@ -85,7 +81,6 @@ const api = {
    //User profile
    VIEW_BOOKINGS_API: '/userDetails/profile/viewBookings', //post fromDate, toDate, bookingStatus, facilityType, sortingOrder
    FETCH_BOOKINGS_INITIAL_FILTERDATA_API: '/userDetails/profile/initalFilterDataForBooking',   //get
-
    //EVENTS Section
    VIEW_EVENTS_LIST_API: '/eventactivites/viewEventactivities',   // post givenReq
    VIEW_EVENT_BY_ID_API: '/eventactivites/viewEventactivitiesById', // get eventId
