@@ -667,7 +667,7 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(1)}`,
             }}
           >
-            <div className="icon">
+            <div className="iconLogo">
               <img src={park_logo} alt="" />
               <h2>Parks</h2>
             </div>
@@ -679,7 +679,7 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(2)}`,
             }}
           >
-            <div className="icon">
+            <div className="iconLogo">
               <img src={playground_logo} alt="" />
               <h2>Playgrounds</h2>
             </div>
@@ -690,17 +690,18 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(3)}`,
             }}
           >
-            <div className="icon">
+            <div className="iconLogo">
               <img src={mp_ground_logo} alt="" />
-              <h2>Multipurpose Grounds</h2>
+              <h2>Multipurpose</h2>
+              {/* <h2>Grounds</h2> */}
             </div>
           </Link>
 
-          <div className="icon">
+          <div className="iconLogo">
             <img src={greenway} alt="" />
             <h2>Greenways</h2>
           </div>
-          <div className="icon">
+          <div className="iconLogo">
             <img src={Blueway} alt="" />
             <h2>Blueways</h2>
           </div>

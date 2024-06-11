@@ -123,6 +123,7 @@ body {
     flex-direction: column;
     margin-top: 54px;
     margin-bottom: 68px;
+
 }
 
 .Search-Conatiner {
@@ -242,7 +243,7 @@ body {
     height: 130px;
 }
 
-.icon img {
+.iconLogo img {
     width: 100px;
     height: auto;
 
@@ -262,14 +263,18 @@ body {
     align-items: center;
 }
 
-.icon {
+.iconLogo {
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
     align-items: center;
     color: white;
-
+    transform: translateY(-7%);
+    cursor: pointer;
 }
+
+
+
 
 
 /* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/
@@ -1678,6 +1683,9 @@ margin-top: 20px;
 }
 
 
+
+
+
 @media screen and (max-width: 875px) {
 
     .landing-page_contant {
@@ -1898,7 +1906,7 @@ margin-top: 20px;
     .landing-page_contant {
         align-items: flex-end;
         /* margin-left: 2vw; */
-        margin-left: 14%;
+        margin-left: 2%;
     }
 
     .Search-Conatiner {
