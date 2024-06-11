@@ -8,7 +8,7 @@ import {
   faCartShopping,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"; // Import the icon
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart} from "@fortawesome/free-solid-svg-icons";
 import {
   faCreditCard,
   faPlus,
@@ -205,7 +205,7 @@ const Book_Now = () => {
         };
         let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
         console.log("submit and response", res);
-        toast.success("Add to Cart has been done  successfully.", {
+        toast.success("Added to cart successfully.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
@@ -239,7 +239,7 @@ const Book_Now = () => {
       startTime: modifiedFormData.startTime,
       durationInHours: modifiedFormData.durationInHours,
     };
-    if (Object.keys(validationError).length == 0) {
+    if (Object.keys(validationError).length == 0 && modifiedFormData.totalMembers != 0 && modifiedFormData.totalMembers <= 40) {
       try {
         let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
           entityId: modifiedFormData.entityId,
@@ -247,12 +247,13 @@ const Book_Now = () => {
           facilityPreference,
         });
         console.log("submit and response", res);
-        toast.success("Booking details submitted successfully.", {
+        toast.success("Park has been booked successfully.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
             setTimeout(() => {
-              navigate("/");
+              navigate("/profile/booking-details");
+              // navigate("/BookParks/Bokking_Bill?bookingId=${encryptData(bookingId)}");
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
         });
@@ -260,6 +261,8 @@ const Book_Now = () => {
         console.log(error);
         toast.error("Booking details submission failed.");
       }
+    } else if (modifiedFormData.totalMembers > 40) {
+      toast.error("Total members can not exceed more than 40");
     } else {
       toast.error("Please fill the required data.");
     }
@@ -288,7 +291,7 @@ const Book_Now = () => {
       <PublicHeader />
       <div className="booknow-container">
         <div className="park-container">
-          <div className="heading">
+          <div className="heading_BookNow">
             <h1>
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
@@ -360,11 +363,10 @@ const Book_Now = () => {
                 activityPreferenceData.map((activity) => {
                   return (
                     <button
-                      className={`game-btn ${
-                        selectedGames.includes(activity.userActivityId)
+                      className={`game-btn ${selectedGames.includes(activity.userActivityId)
                           ? "selected"
                           : ""
-                      }`}
+                        }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
@@ -475,7 +477,7 @@ const Book_Now = () => {
                 disabled={isDisabled}
               >
                 <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                Proceed to Payment
+                Book Now
               </button>
             </div>
           </div>

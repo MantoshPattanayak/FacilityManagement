@@ -3,7 +3,8 @@
   height: 100%;
   /* width: 100%; */
   width: 100vw;
-  background-color: #7d8893a3;
+  /* background-color: #3ab75726; */
+  /* background-image:  url('../../../assets/BookNow_Background.png'); */
 }
 
 .booknow-container {
@@ -26,21 +27,31 @@
   border-radius: 5px;
   float: left;
   padding-inline: 40px;
-  background-color: #EEEEEE;
+  /* background-color: #EEEEEE; */
   display: flex;
   flex-direction: column;
 }
 
 
-.heading {
+.heading_BookNow {
   margin-top: 10px;
-  font-size: x-large;
-  font-weight: 600;
-  margin-bottom: 0px;
+    width: 100%;
+    font-size: x-large;
+    font-weight: 600;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .address p {
   color: rgb(81, 86, 92);
+}
+
+/* Hide the spin buttons in number inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .input-fields0 {
@@ -180,7 +191,7 @@
   border-radius: 5px;
   padding: 6px; */
   width: 100%;
-  padding-left: 70px;
+  padding-left: 44%;
   /* Adjust the padding to make space for the icon */
   /* padding-right: 30px; */
   /* Adjust the padding to make space for the icon */
