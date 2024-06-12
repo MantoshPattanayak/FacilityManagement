@@ -97,6 +97,8 @@ db1.userActivityPreference = require('./useractivitypreferences.models')(sequeli
 // grievance masters and details
 db1.grievancemasters = require('./grievancemasters.models')(sequelize, DataTypes)
 db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes)
+// ownership details
+db1.ownershipDetails = require('./ownershipdetails.models')(sequelize, DataTypes)
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 

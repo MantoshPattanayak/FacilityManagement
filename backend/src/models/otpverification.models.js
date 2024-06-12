@@ -1,4 +1,3 @@
-const { transaction } = require(".")
 
 module.exports = (sequelize,DataTypes)=>{
     let otpverifcation = sequelize.define('otpverification',{
