@@ -324,6 +324,8 @@ const viewParkById = async (req,res)=>{
                 publicUserId:userId
             }
         })
+        const encodedFacilities = encodeUrls(fetchTheFacilitiesDetailsData[0]);
+
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
            facilitiesData: fetchTheFacilitiesDetailsData[0],
