@@ -63,33 +63,39 @@ const Sub_Park_Details = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
-    // const savedBookmarkStatus = localStorage.getItem(`bookmark_${facilityId}`);
-    // if (savedBookmarkStatus !== null) {
-    //   setIsBookmarked(JSON.parse(savedBookmarkStatus));
-    // }
+
   }, [facilityId]);
 
-  const handleBookmarkClick = () => {
+  async function handleBookmarkStatus(e) {
+    e.preventDefault();
     const newBookmarkStatus = !isBookmarked;
-    handleBookmarkStatus();
-    // localStorage.setItem(`bookmark_${facilityId}`, JSON.stringify(newBookmarkStatus));
-    console.log('newBookmarkStatus', {newBookmarkStatus, isBookmarked});
-    async function handleBookmarkStatus(){
-      try{
-        let res = await axiosHttpClient(
-          newBookmarkStatus == false ? 'REMOVE_BOOKMARK_API' : 'ADD_BOOKMARK_API',
-          'post',
-          newBookmarkStatus == false ? { bookmarkId } : { facilityId }
-        );
-        console.log('response', res.data);
+    console.log('newBookmarkStatus', { currdate: new Date(), newBookmarkStatus, isBookmarked });
+    try {
+      let res = await axiosHttpClient(
+        newBookmarkStatus == false ? 'REMOVE_BOOKMARK_API' : 'ADD_BOOKMARK_API',
+        'post',
+        newBookmarkStatus == false ? { bookmarkId } : { facilityId }
+      );
+      console.log('response', res.data);
+      if (newBookmarkStatus == false) {
+        toast.warning(res.data.message);
         setIsBookmarked(newBookmarkStatus);
-        toast.success(res.data.message);
       }
-      catch(error){
-        console.error(error);
+      else {
+        toast.success(res.data.message);
+        setIsBookmarked(newBookmarkStatus);
+      };
+
+    }
+    catch (error) {
+      console.error(error);
+      if (error.response.status == 401) {
+        toast.error('You are not logged in to bookmark.');
+      }
+      else {
         toast.error('Bookmarking failed!');
       }
-    };
+    }
   };
 
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
@@ -141,13 +147,13 @@ const Sub_Park_Details = () => {
     }
   }
 
-  async function getUserBookmarks(){
-    if(isUserLoggedIn){
-      try{
+  async function getUserBookmarks() {
+    if (isUserLoggedIn) {
+      try {
         let res = await axiosHttpClient('VIEW_BOOKMARKS_LIST_API', 'post');
-        console.log('user bookmarks', {res: res.data.data, facilityId});
+        console.log('user bookmarks', { res: res.data.data, facilityId });
         let bookmarkBool = res.data?.data?.some((data) => {
-          if(['Parks', 'Playgrounds', 'Multi Purpose Ground'].includes(data.facilityType)){
+          if (['Parks', 'Playgrounds', 'Multi Purpose Ground'].includes(data.facilityType)) {
             console.log(data);
             setBookmarkId(data.bookmarkId);
             return data.id == facilityId;
@@ -156,14 +162,18 @@ const Sub_Park_Details = () => {
         setIsBookmarked(bookmarkBool);
         console.log('is this facility bookmarked', bookmarkBool);
       }
-      catch(error){
+      catch (error) {
         console.error(error);
       }
     }
-    else{
+    else {
       return;
     }
   }
+
+  useEffect(() => {
+
+  }, [isBookmarked])
 
   useEffect(() => {
     getSub_park_details();
@@ -232,11 +242,11 @@ const Sub_Park_Details = () => {
           <span className="time_status flex flex-col">
             <div className="flex">
               <h1 className="time_text">
-               <p className="timing-day">Timing :</p>
-               <span className="timing-day-text">
+                <p className="timing-day">Timing :</p>
+                <span className="timing-day-text">
                   {formatTime(
-                  FacilitiesData[0]?.operatingHoursFrom
-                )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+                    FacilitiesData[0]?.operatingHoursFrom
+                  )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
                 </span>
               </h1>
               {/* <div className="open-close-btn">
@@ -251,15 +261,15 @@ const Sub_Park_Details = () => {
               </button>
               </div> */}
 
-              <div className={`bookmark ${isBookmarked ? 'bookmarked' : ''}`} onClick={handleBookmarkClick}>
+              <div className={`bookmark ${isBookmarked ? 'bookmarked' : ''}`} onClick={handleBookmarkStatus}>
                 <FontAwesomeIcon icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular} />
               </div>
             </div>
 
             <div className="day-open-close-status">
               <h1 className="date_text text-[12px]">
-              <p className="timing-day">Day :</p> 
-               <span className="timing-day-text">{operatingDays.toString()}</span>
+                <p className="timing-day">Day :</p>
+                <span className="timing-day-text">{operatingDays.toString()}</span>
               </h1>
 
               <div className="open-close-btn">
@@ -397,7 +407,7 @@ const Sub_Park_Details = () => {
                     alt="Parking"
                   /> */}
                   <div className="service-icon">
-                  <MdHomeRepairService size={80} color="green" />
+                    <MdHomeRepairService size={80} color="green" />
                   </div>
                   <p className="service_name">{item.code}</p>
                 </div>
