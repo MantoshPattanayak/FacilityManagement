@@ -20,6 +20,8 @@ const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares');
 let inventoryMaster = db.inventorymaster
 let inventoryFacilities = db.inventoryfacilities
+let eventCategoryMaster = db.eventCategoryMaster
+let facilityAcitivities = db.facilityactivities
 const { Op } = require('sequelize');
 let user = db.usermaster
 
@@ -58,7 +60,11 @@ const registerFacility = async (req, res) => {
       amenitiesImage,
       servicesImage,
       facilityImage,
-      parkInventory
+      eventCategory,
+      othereventCategory,
+      game,
+      othergame,
+      parkInventory,
     } = req.body;
      console.log("here Req",req.body)
     let createFacilities = await facilities.create({
@@ -79,7 +85,11 @@ const registerFacility = async (req, res) => {
       thu:operatingDays?.thu || 0,
       fri:operatingDays?.fri || 0,
       sat:operatingDays?.sat || 0,
-      additionalDetails:additionalDetails
+      additionalDetails:additionalDetails,
+      otherAmenities:otherAmenities,
+      otherEventCategory:othereventCategory,
+      otherGames:othergame,
+      otherServices:otherServices
     })
 
     if(createFacilities) {
@@ -166,7 +176,7 @@ const registerFacility = async (req, res) => {
 
       if(amenity) {
          
-        let amenities = Object.keys(amenity)
+        let amenities = Object.values(amenity)
           amenities.forEach(async(amenity)=>{
             let createAmenities = await amenityFacility.create( { 
               facilityId:createFacilities.facilityId,
@@ -271,7 +281,7 @@ const registerFacility = async (req, res) => {
       }
   
   if(service) { 
-    let services = Object.keys(service)
+    let services = Object.values(service)
     services.forEach(async(service)=>{
       let createServices = await serviceFacility.create( { 
         facilityId:createFacilities.facilityId,
@@ -373,10 +383,42 @@ const registerFacility = async (req, res) => {
     })
     
   }
+    // // Here add event categories
+    if(eventCategory){
+      let eventCategoryDetails = Object.values(eventCategory);
+      eventCategoryDetails.forEach(async(eventCategory)=>{
+        let createEventCategoryDetails = await eventCategory.create({
+          eventCategoryName:eventCategory,
+          createdBy:userId,
+          updatedBy:updatedBy,
+          createdDt:createdDt,
+          updatedDt:updatedDt,
+          facilityId:createFacilities.facilityId,
+          statusId:statusId
+        })
+      })
+    }
+    // add games 
+    if(game){
+      let gameDetails = Object.values(game);
+      gameDetails.forEach(async(eachGame)=>{
+        let createGameDetails = await facilityAcitivities.create({
+          facilityId:createFacilities.facilityId,
+          activityId:eachGame,
+          facilityTypeId:createFacilities.facilityTypeId,
+          statusId:statusId,
+          createdBy:userId,
+          updatedBy:userId,
+          createdDt:createdDt,
+          updatedDt:updatedDt
+        })
+      })
+    }
+
     // after all of these let add the park inventory details
     // here the park inventory data should look like this : {inventory:{}, inventory:{}}
     if(parkInventory){
-      let parkInventories = Object.keys(parkInventory)
+      let parkInventories = Object.values(parkInventory)
       parkInventories.forEach(async(inventory)=>{
         let createInventory = await inventoryFacilities.create({
           facilityId:createFacilities.facilityId,

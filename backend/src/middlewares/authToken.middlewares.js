@@ -14,7 +14,7 @@ function authenticateToken(req, res, next) {
     const sessionId = req.headers['sid']
     let statusId = 1;
 
-    console.log(authHeader,'authHeaders and tokens',tokens)
+    console.log(authHeader,'authHeaders and tokens',req.headers)
     const token = tokens?.accessToken || authHeader?.replace('Bearer', '').trim();
 
     console.log(token,'token')
