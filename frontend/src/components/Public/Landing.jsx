@@ -244,6 +244,7 @@ const Landing = () => {
   useEffect(() => {
     fetchLandingPageData();
     setUserGeoLocation();
+    document.title = 'AMA BHOOMI';
   }, []);
 
   useEffect(() => {
