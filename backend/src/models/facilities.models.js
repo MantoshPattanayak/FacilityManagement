@@ -80,6 +80,9 @@ const Facility = sequelize.define('facilities',{
     otherAmenities:{
         type:DataTypes.STRING(255)
     },
+    ownershipDetailId:{
+        type:DataTypes.INTEGER
+    },
     createdBy:{
         type:DataTypes.INTEGER
     },
