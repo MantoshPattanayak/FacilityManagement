@@ -90,7 +90,7 @@ db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
 db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
 //eventactivities - event masters
 db1.eventActivities = require('./eventactivities.models')(sequelize, DataTypes)
-
+db1.eventCategoryMaster = require('./eventcategorymasters.models')(sequelize,DataTypes)
 // userActivityPreference
 
 db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
@@ -103,6 +103,8 @@ db1.publicnotifications = require('./publicnotifications.models')(sequelize, Dat
 db1.clicklog = require('./clicklog.models')(sequelize,DataTypes)
 //facility activities
 db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
+// facilityEvents
+db1.facilityEvents = require('./facilityEvents.models')(sequelize, DataTypes)
 // facility tariff
 db1.facilitytariff = require('./facilitytariff.models')(sequelize,DataTypes)
 //frequentlyaskquestion
@@ -124,7 +126,7 @@ db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"}
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
 // join operations end
 
-db1.bankdetails.sync({
+db1.faq.sync({
   alter: false,
 });
 
