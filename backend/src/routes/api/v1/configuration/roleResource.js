@@ -2,19 +2,19 @@ const express = require('express')
 const router = express.Router();
 const api_version = process.env.API_VERSION;
 const roleResource = require('../../../../controllers/'+api_version+'/configuration/roleResource')
+let authenticateToken = require('../.../../../../../middlewares/authToken.middlewares')
 
+router.get('/dataLoad',authenticateToken,roleResource.dataload);
 
-router.get('/dataLoad',roleResource.dataload);
+router.post('/insertRoleResource',authenticateToken,roleResource.insertRoleResource)
 
-router.post('/insertRoleResource',roleResource.insertRoleResource)
+router.get('/viewRoleResource',authenticateToken,roleResource.viewRoleResource)
 
-router.get('/viewRoleResource',roleResource.viewRoleResource)
+router.get('/autoSuggestionRoleResource/:givenReq',authenticateToken,roleResource.autoSuggestionForRoleResourceSearch)
 
-router.get('/autoSuggestionRoleResource/:givenReq',roleResource.autoSuggestionForRoleResourceSearch)
+router.put('/updateRoleResource',authenticateToken,roleResource.updateRoleResource)
 
-router.put('/updateRoleResource',roleResource.updateRoleResource)
-
-router.get('/viewId/:id',roleResource.viewId)
+router.get('/viewId/:id',authenticateToken,roleResource.viewId)
 
 
 

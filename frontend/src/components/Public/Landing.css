@@ -42,6 +42,28 @@ body {
     width: 94%;
 } */
 
+/* Add this CSS */
+.iconPlayApple {
+    position: fixed;
+    top: 40vh;  /* Adjust this value as needed */
+    right: 10px;  /* Adjust this value as needed */
+    z-index: 1000;  /* Ensure it is above other content */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    background-color: white;
+    padding: 10px;
+    border-radius: 16px;
+  }
+  
+
+  .iconPlayApple img {
+    margin: 0 5px;  /* Add some space between icons */
+    width: 40px;  /* Adjust the width of the icons */
+    height: auto;  /* Maintain aspect ratio */
+  }
+
 .adImg {
     height: 20vh;
     padding: 40px;
@@ -1530,7 +1552,7 @@ margin-top: 20px;
         width: 32px;
     }
 
-    .icon h2 {
+    .iconLogo h2 {
         font-size: 12px;
     }
 
@@ -1708,7 +1730,7 @@ margin-top: 20px;
 
     /* {----------Logo sticker------------------------------------------------------------------------} */
 
-    .icon h2 {
+    .iconLogo h2 {
         font-size: 7px;
     }
 
@@ -1927,7 +1949,7 @@ margin-top: 20px;
 
     /* {----------Logo sticker------------------------------------------------------------------------} */
 
-    .icon h2 {
+    .iconLogo h2 {
         font-size: 7px;
     }
 
@@ -2160,11 +2182,11 @@ margin-top: 20px;
 
     /* ----------Logo sticker---------------------------------------- */
 
-    .icon h2 {
+    .iconLogo h2 {
         font-size: 6px;
     }
 
-    .icon img {
+    .iconLogo img {
         height: 54px;
     }
 

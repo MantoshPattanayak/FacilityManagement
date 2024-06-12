@@ -4,13 +4,13 @@ import PublicHeader from "../../../common/PublicHeader";
 import CommonFooter from "../../../common/CommonFooter";
 // here import Icon ------------------------------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 // Import Navigate and Crypto -----------------------------------
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { decryptData } from "../../../utils/encryptData";
+import { decryptData, encryptData } from "../../../utils/encryptData";
 // Toast ------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -26,14 +26,16 @@ const Book_Now_Sport = () => {
         facilityPreference: {
             playersLimit: 1,
             sports: "",
-            startTime: "",
-            endTime: "",
-            bookingDate: "",
+            startTime: new Date().toTimeString().split(" ")[0],
+            endTime: new Date().toTimeString().split(" ")[0],
+            bookingDate: new Date().toISOString().split("T")[0],
         },
     });
     const [FacilitiesData, setFacilitiesData] = useState('');
+    const [sportsList, setSportsList] = useState([]);
     const location = useLocation();
     const navigate = useNavigate();
+    const amount = 10;
 
     // Here Increment ------------------------------------------------
     const handleDecrement = () => {
@@ -71,6 +73,7 @@ const Book_Now_Sport = () => {
                 [name]: value
             }
         }));
+        console.log('formData', formData);
     };
     // here Post the data -------------------------------
     async function HandleAddtoCart() {
@@ -83,7 +86,7 @@ const Book_Now_Sport = () => {
 
             };
             let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
-            toast.success('Add to Cart has been done  successfully.', {
+            toast.success('Added to cart successfully.', {
                 autoClose: 3000, // Toast timer duration in milliseconds
                 onClose: () => {
                     // Navigate to another page after toast timer completes
@@ -94,10 +97,56 @@ const Book_Now_Sport = () => {
             });
         } catch (err) {
             console.error("here Error of Sport Booking", err);
-            toast.error('Add to Cart  failed.Try agin')
+            toast.error('Add to Cart failed.Try agin')
         }
     }
 
+    async function handleSubmitAndProceed() {
+        let modifiedFormData = {
+            ...formData
+        };
+        /**
+         * playersLimit: 1,
+            sports: "",
+            startTime: "",
+            endTime: "",
+            bookingDate: "",
+         */
+        console.log("formData handleSubmitAndProceed", modifiedFormData);
+        const validationError = validation(modifiedFormData);
+        let facilityPreference = {
+            playerLimit: modifiedFormData.facilityPreference.playersLimit,
+            amount: amount * modifiedFormData.facilityPreference.playersLimit,
+            bookingDate: modifiedFormData.facilityPreference.bookingDate,
+            startTime: modifiedFormData.facilityPreference.startTime,
+            endTime: modifiedFormData.facilityPreference.endTime,
+            sports: modifiedFormData.facilityPreference.sports
+        };
+        if (Object.keys(validationError).length == 0) {
+            try {
+                let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
+                    entityId: modifiedFormData.entityId,
+                    entityTypeId: modifiedFormData.entityTypeId,
+                    facilityPreference,
+                });
+                console.log("submit and response", res);
+                toast.success("Playground has been booked successfully.", {
+                    autoClose: 3000, // Toast timer duration in milliseconds
+                    onClose: () => {
+                        // Navigate to another page after toast timer completes
+                        setTimeout(() => {
+                            navigate(`/profile/booking-details/ticket?bookingId=${encryptData(res.data.data.facilityBookingId)}`);
+                        }, 1000); // Wait 1 second after toast timer completes before navigating
+                    },
+                });
+            } catch (error) {
+                console.log(error);
+                toast.error("Booking details submission failed.");
+            }
+        } else {
+            toast.error("Please fill the required data.");
+        }
+    }
     // Here Get the data ofsport details------------------------------------------
     async function getSub_Sport_details(facilityId) {
         console.log("get park details", facilityId);
@@ -119,8 +168,11 @@ const Book_Now_Sport = () => {
     //  here Get types of Sport ----------------------
     async function GetSportType() {
         try {
-            let res = await axiosHttpClient("here Api", "get");
-            console.log("here Response of Get sport type in dropdown", res);
+            let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
+            console.log("here Response of Get sport type in dropdown", res.data.data);
+            setSportsList(res.data.data.filter((sports) => {
+                return sports.facilityTypeId == 2
+            }));
         } catch (err) {
             console.error("here Error of get sport types in dropdown");
         }
@@ -131,7 +183,7 @@ const Book_Now_Sport = () => {
             new URLSearchParams(location.search).get("facilityId")
         );
         console.log("facilityId", facilityId);
-        // GetSportType();
+        GetSportType();
         getSub_Sport_details(facilityId);
     }, []);
 
@@ -139,21 +191,22 @@ const Book_Now_Sport = () => {
     const validation = (value) => {
         const err = {}
 
-        if (!value.sports) {
+        if (!value.facilityPreference.sports) {
             err.sports = "Please Select Sport Name"
         }
-        if (!value.bookingDate) {
+        if (!value.facilityPreference.bookingDate) {
             err.bookingDate = "Please Select Booking Date"
         }
-        if (!value.startTime) {
+        if (!value.facilityPreference.startTime) {
             err.startTime = "Please Select Start Time"
         }
-        if (!value.endTime) {
+        if (!value.facilityPreference.endTime) {
             err.endTime = "Please Select End Time"
         }
-        if (!value.playersLimit) {
+        if (!value.facilityPreference.playersLimit) {
             err.playersLimit = "Please Select players Limit"
         }
+        console.log('error', err);
         return err;
     }
     //  Return (jsx) -------------------------------------------------------------
@@ -166,62 +219,66 @@ const Book_Now_Sport = () => {
                     <div className="sport_name_Book">
                         <h1 className="Faclity_Name"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}</h1>
                         <span>
-                           <p className="Faclity_adress"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
+                            <p className="Faclity_adress"> {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}</p>
                         </span>
-                        
+
                     </div>
                     <div class="bookingFormWrapper">
                         <form class="bookingForm">
-                        <div class="formGroup">
-    <span class="fieldName">Sport<span className="required-asterisk">*</span>:</span>
-    <select class="formSelect"
-        name="sports"
-        value={formData.sports}
-        onChange={handleChangeInput} >
-        <option value="football">Football</option>
-        <option value="basketball">Basketball</option>
-        <option value="tennis">Tennis</option>
-        <option value="swimming">Swimming</option>
-    </select>
-</div>
-<div class="formGroup">
-    <span class="fieldName">Date<span className="required-asterisk">*</span>:</span>
-    <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
-</div>
-<div class="formGroup">
-    <span class="fieldName">Start Time<span className="required-asterisk">*</span>:</span>
-    <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
-</div>
-<div class="formGroup">
-    <span class="fieldName">End Time<span className="required-asterisk">*</span>:</span>
-    <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
-</div>
-<div class="formGroup">
-    <span class="fieldName">No of Player<span className="required-asterisk">*</span></span>
-    <div className="increament_decrement_conatiner">
-        <button
-            type="button"
-            className="decrement-button"
-            onClick={handleDecrement}
-        >
-            <FontAwesomeIcon icon={faMinus} />
-        </button>
-        <input
-            type="text"
-            className="formInput_Add_member"
-            value={formData.facilityPreference.playersLimit}
-            name="playersLimit"
-            onChange={handleChangeInput}
-        />
-        <button
-            type="button"
-            className="increment-button"
-            onClick={handleIncrement}
-        >
-            <FontAwesomeIcon icon={faPlus} />
-        </button>
-    </div>
-</div>
+                            <div class="formGroup">
+                                <span class="fieldName">Sport<span className="required-asterisk">*</span>:</span>
+                                <select class="formSelect"
+                                    name="sports"
+                                    value={formData.facilityPreference.sports}
+                                    onChange={handleChangeInput} >
+                                        <option value="">Select</option>
+                                        {
+                                            sportsList?.length > 0 && sportsList.map((sports) => {
+                                                return(
+                                                    <option value={sports.userActivityId}>{sports.userActivityName}</option>
+                                                )
+                                            })
+                                        }
+                                </select>
+                            </div>
+                            <div class="formGroup">
+                                <span class="fieldName">Date<span className="required-asterisk">*</span>:</span>
+                                <input type="date" class="formInput" name="bookingDate" value={formData.facilityPreference.bookingDate} onChange={handleChangeInput} />
+                            </div>
+                            <div class="formGroup">
+                                <span class="fieldName">Start Time<span className="required-asterisk">*</span>:</span>
+                                <input type="time" class="formInput" name="startTime" value={formData.facilityPreference.startTime} onChange={handleChangeInput} />
+                            </div>
+                            <div class="formGroup">
+                                <span class="fieldName">End Time<span className="required-asterisk">*</span>:</span>
+                                <input type="time" class="formInput" name="endTime" value={formData.facilityPreference.endTime} onChange={handleChangeInput} />
+                            </div>
+                            <div class="formGroup">
+                                <span class="fieldName">No of Player<span className="required-asterisk">*</span></span>
+                                <div className="increament_decrement_conatiner">
+                                    <button
+                                        type="button"
+                                        className="decrement-button"
+                                        onClick={handleDecrement}
+                                    >
+                                        <FontAwesomeIcon icon={faMinus} />
+                                    </button>
+                                    <input
+                                        type="text"
+                                        className="formInput_Add_member"
+                                        value={formData.facilityPreference.playersLimit}
+                                        name="playersLimit"
+                                        onChange={handleChangeInput}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="increment-button"
+                                        onClick={handleIncrement}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} />
+                                    </button>
+                                </div>
+                            </div>
 
                             {/* <div class="formGroup">
                                 <span class="fieldName"   >Date:</span>
@@ -264,7 +321,7 @@ const Book_Now_Sport = () => {
                             </div> */}
                             <div class="formGroup">
                                 <span class="fieldName">Price</span>
-                                <h1 className="price_Sport">INR 00.00/_</h1>
+                                <FontAwesomeIcon icon={faIndianRupeeSign} /><h1 className="price_Sport">&nbsp; {amount * formData.facilityPreference.playersLimit}/-</h1>
                             </div>
                         </form>
                     </div>
@@ -275,14 +332,14 @@ const Book_Now_Sport = () => {
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        <button type="submit" class="Proceed_to_Payment">
+                        <button type="submit" class="Proceed_to_Payment" onClick={handleSubmitAndProceed}>
                             <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                            Proceed to Payment
+                            Book now
                         </button>
                     </div>
                 </div>
             </div>
-     
+
         </div>
     );
 };

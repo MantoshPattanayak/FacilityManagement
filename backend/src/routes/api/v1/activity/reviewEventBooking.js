@@ -5,11 +5,11 @@ const router = express.Router();
 const api_version = process.env.API_VERSION
 const eventsController = require('../../../../controllers/'+api_version+'/activity/reviewEventBooking.controller');
 
+let authenticateToken = require('../../../../middlewares/authToken.middlewares')
+router.post('/viewList',authenticateToken, eventsController.viewList);
 
-router.post('/viewList', eventsController.viewList);
+router.get('/viewId/:eventId', authenticateToken,eventsController.viewId);
 
-router.get('/viewId/:eventId', eventsController.viewId);
-
-router.put('/performAction/:eventId', eventsController.performAction);
+router.put('/performAction/:eventId',authenticateToken, eventsController.performAction);
 
 module.exports = router;

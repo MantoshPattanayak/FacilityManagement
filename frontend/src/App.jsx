@@ -138,7 +138,7 @@ function App() {
                 }
               />
               <Route
-                path="/BookParks/Bokking_Bill"
+                path="/profile/booking-details/ticket"
                 element={
                   <ProtectedRoute>
                     <Bokking_Bill />

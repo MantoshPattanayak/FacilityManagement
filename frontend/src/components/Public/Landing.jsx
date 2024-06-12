@@ -26,6 +26,8 @@ import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
 import ad1 from "../../assets/ad1.png";
 import ad2 from "../../assets/ad2.png";
 import ad3 from "../../assets/ad3.png";
+import googlePlayStore from "../../assets/google-play.svg"
+import appleStore from "../../assets/apple.svg"
 // import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/badminton_ENA.png";
@@ -43,6 +45,8 @@ import {
   faSquareCaretLeft,
   faSquareCaretRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { faGooglePlay } from "@fortawesome/free-brands-svg-icons";
+import { faApple } from "@fortawesome/free-brands-svg-icons";
 import { faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -240,6 +244,7 @@ const Landing = () => {
   useEffect(() => {
     fetchLandingPageData();
     setUserGeoLocation();
+    document.title = 'AMA BHOOMI';
   }, []);
 
   useEffect(() => {
@@ -592,6 +597,10 @@ const Landing = () => {
     <div className="landingcontainer">
       <section className="bg-img" style={styles}>
         <PublicHeader />
+        <div className="iconPlayApple">
+          <img src={googlePlayStore} alt="Google Play Store" />
+          <img src={appleStore} alt="Apple Store" />
+        </div>
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
           <span className="Search-Conatiner">
@@ -629,9 +638,9 @@ const Landing = () => {
                       onClick={(e) =>
                         navigate(
                           "/Sub_Park_Details" +
-                            `?facilityId=${encryptDataId(
-                              suggestion.facilityId
-                            )}`
+                          `?facilityId=${encryptDataId(
+                            suggestion.facilityId
+                          )}`
                         )
                       }
                     >
@@ -1033,9 +1042,8 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${
-                  selectedActivity === index ? "selected" : ""
-                }`}
+                className={`activity ${selectedActivity === index ? "selected" : ""
+                  }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
@@ -1062,9 +1070,9 @@ const Landing = () => {
                               onClick={(e) => {
                                 navigate(
                                   "/Sub_Park_Details" +
-                                    `?facilityId=${encryptDataId(
-                                      park.facilityId
-                                    )}`
+                                  `?facilityId=${encryptDataId(
+                                    park.facilityId
+                                  )}`
                                 );
                               }}
                             >
