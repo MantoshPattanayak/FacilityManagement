@@ -3,8 +3,9 @@ const router = express.Router();
 let api_version = process.env.API_VERSION;
 const registration = require("../../../../controllers/"+api_version+"/mdm/registration.controllers");
 
-router.post("/facilityRegistration", registration.registerFacility);
+let authenticateToken = require('../../../../middlewares/authToken.middlewares')
+router.post("/facilityRegistration",authenticateToken, registration.registerFacility);
 
-router.get("/initialData", registration.initialDataFetch);
+router.get("/initialData", authenticateToken,registration.initialDataFetch);
 
 module.exports = router;
