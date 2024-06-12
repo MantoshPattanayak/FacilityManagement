@@ -22,6 +22,7 @@ let inventoryMaster = db.inventorymaster
 let inventoryFacilities = db.inventoryfacilities
 let eventCategoryMaster = db.eventCategoryMaster
 let facilityAcitivities = db.facilityactivities
+let ownershipDetails = db.ownershipDetails
 const { Op } = require('sequelize');
 let user = db.usermaster
 
@@ -39,7 +40,6 @@ const registerFacility = async (req, res) => {
       }
     })
 
-    let ownership = "BDA"
     let {
       
       facilityType,
@@ -65,9 +65,42 @@ const registerFacility = async (req, res) => {
       game,
       othergame,
       parkInventory,
+      // owner details 
+      firstName,
+      lastName,
+      phoneNo,
+      emailId,
+      ownerPanCardNumber,
+      ownerAddress,
+      isFacilityByBda
     } = req.body;
+
+    let createFacilities;
+    let findOwnerId;
      console.log("here Req",req.body)
-    let createFacilities = await facilities.create({
+     let findIfTheOwnershipDetailsExist = await ownershipDetails.findOne({
+      where:{
+        [Op.and]:[{[Op.or]:[{phoneNo:phoneNo},{emailId:emailId}]},{statusId:statusId}]}
+     })
+     if(findIfTheOwnershipDetailsExist){
+      findOwnerId = findIfTheOwnershipDetailsExist
+     }
+     if(!findIfTheOwnershipDetailsExist){
+      let createOwnershipDetails = await ownershipDetails.create({
+        firstName:firstName,
+        lastName:lastName,
+        phoneNo:phoneNo,
+        emailId:emailId,
+        ownerPanCardNumber:ownerPanCardNumber,
+        ownerAddress:ownerAddress,
+        isFacilityByBda:isFacilityByBda
+      })
+
+      if(createOwnershipDetails){
+        findOwnerId = createOwnershipDetails.ownershipDetailId
+      }
+     }
+     createFacilities = await facilities.create({
       facilityName:facilityName,
       ownership:ownership,
       facilityType:facilityType,
@@ -89,7 +122,8 @@ const registerFacility = async (req, res) => {
       otherAmenities:otherAmenities,
       otherEventCategory:othereventCategory,
       otherGames:othergame,
-      otherServices:otherServices
+      otherServices:otherServices,
+      ownershipDetailId:findOwnerId
     })
 
     if(createFacilities) {
