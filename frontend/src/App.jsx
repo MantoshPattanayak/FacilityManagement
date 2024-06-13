@@ -80,6 +80,9 @@ import Grievance from "./components/Public/FooterPages/Grievance";
 import Bokking_Bill from "./components/Public/Booking_Bill/Booking_Bill";
 // Faclity Reg----------------
 import Facility_Reg from "./components/Admin/Facility/Facility_Reg";
+import AdminHeader from "./common/AdminHeader";
+// import AdminHeader from "./common/AdminHeader";
+import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -90,11 +93,13 @@ function App() {
         <BrowserRouter basename={instance().baseName}>
           <div>
             {/* <AdminHeader /> */}
+
             <Routes>
               {/* HOME */}
 
               <Route path="/" element={<Landing />} />
-              <Route path="/Facility_Reg" element={<Facility_Reg />} />
+              <Route path="/facility-registration" element={<ProtectedRoute><Facility_Reg /></ProtectedRoute>} />
+              <Route path="/facility-viewlist" element={<ProtectedRoute><Facility_ViewList /></ProtectedRoute>} />
               <Route path="/PublicLoader" element={<PublicLoader />} />
               <Route path="/facilities" element={<Main_Body_Park_Details />} />
               <Route path="/Event_hostPage" element={<Event_hostPage />} />
@@ -438,6 +443,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ParkPayment />
+                  </ProtectedRoute>
+                }
+              />
+                          <Route
+                path="/common/AdminHeader"
+                element={
+                  <ProtectedRoute>
+                    <AdminHeader />
                   </ProtectedRoute>
                 }
               />
