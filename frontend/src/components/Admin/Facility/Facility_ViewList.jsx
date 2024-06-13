@@ -5,22 +5,21 @@ import { useEffect, useState } from 'react';
 import { encryptData } from '../../../utils/encryptData';
 import axiosHttpClient from '../../../utils/axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CommonFooter from '../../../common/Common_footer1';
+import './Facility_ViewList.css';
+import { useCallback } from 'react';
 
 export default function Facility_ViewList() {
 
     let navigate = useNavigate();
-    let limit = 10;
-    let page = 1;
-
     const [tableData, setTableData] = useState([]);
     const [searchOptions, setSearchOptions] = useState([]);
     const [givenReq, setGivenReq] = useState();
 
-    async function fetchFacilityList() {
+    // API call to fetch list of registered facilities
+    async function fetchFacilityList(givenReq = null) {
         try {
             let res = await axiosHttpClient('View_Park_Data', 'post', {
-                givenReq: inputFacility,
+                givenReq: givenReq,
                 facilityTypeId: null,
             });
             setTableData(res.data.data);
@@ -31,64 +30,82 @@ export default function Facility_ViewList() {
         }
     }
 
-    useEffect(() => {
-        document.title = 'ADMIN | AMA BHOOMI';
-        fetchFacilityList();
-    }, []);
-
-    useEffect(() => {
-        if(givenReq != null)
-            autoSuggest(givenReq);
-    }, [givenReq]);
-
-
+    // function to encrypt required data
     function encryptDataId(id) {
         let res = encryptData(id);
         return res;
     }
 
+    // function to manage API calls while user search input entry
+    function debounce(fn, delay) {
+        let timeoutId;
+        return function (...args) {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            fn(...args);
+          }, delay);
+        };
+    }
+    
+    //Debounced fetchFacilityList function while searching
+    const debouncedFetchFacilityList = useCallback(debounce(fetchFacilityList, 1000), []);
+
+    // on page load, fetch data and set title
+    useEffect(() => {
+        document.title = 'ADMIN | AMA BHOOMI';
+        fetchFacilityList();
+    }, []);
+
+    // on search input, call fetch data function
+    useEffect(() => {
+        if(givenReq != null)
+            debouncedFetchFacilityList(givenReq);
+    }, [givenReq, debouncedFetchFacilityList]);
+
     return (
         <>
             <AdminHeader />
-            <div className="Main_Conatiner_table">
+            <div className="Main_Conatiner_table_FacilityReg">
                 <div className='table-heading'>
-                    <h2 className="table-heading">List of Users</h2>
+                    <h2 className="table-heading">List of Registered Facilities</h2>
                 </div>
 
                 <div className="search_text_conatiner">
-                    <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button>
-                    <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+                    <button className='search_field_button' onClick={() => navigate('/facility-registration')}>Register new facility</button>
+                    <input type="text" className="search_input_field outline-none" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
                     {/* <SearchDropdown /> */}
                 </div>
 
                 <div className="table_Container">
                     <table >
                         <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Mobile Number</th>
-                                <th scope="col">Email Address</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">View</th>
-                                <th scope="col">Edit</th>
-                            </tr>
+                            {/* <tr> */}
+                            <th scope="col">Sl No.</th>
+                            <th scope="col">Facility Name</th>
+                            <th scope="col">Facility Address</th>
+                            <th scope="col">Location (Latitude, Longitude)</th>
+                            <th scope="col">Ownership</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">View</th>
+                            <th scope="col">Edit</th>
+                            {/* </tr> */}
                         </thead>
                         <tbody >
                             {
-                                tableData?.length > 0 && tableData?.map((data) => {
+                                tableData?.length > 0 && tableData?.map((data, index) => {
                                     return (
-                                        <tr key={data.privateUserId}>
-                                            <td data-label="Name">{data.fullName}</td>
-                                            <td data-label="Number">{data.contactNo}</td>
-                                            <td data-label="Email">{data.emailId}</td>
-                                            <td data-label="Role">{data.roleName}</td>
+                                        <tr key={data.index}>
+                                            <td data-label="Sl No.">{index + 1}</td>
+                                            <td data-label="Facility Name">{data.facilityname}</td>
+                                            <td data-label="Address">{data.address}</td>
+                                            <td data-label="Location">{data.latitude}, {data.longitude}</td>
+                                            <td data-label="Ownership">{data.ownership}</td>
                                             <td data-label="Status">{data.status}</td>
                                             <td data-label="View">
                                                 <Link
                                                     to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=view`
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&action=view`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faEye} />
@@ -98,7 +115,7 @@ export default function Facility_ViewList() {
                                                 <Link
                                                     to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=edit`
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&action=edit`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faPenToSquare} />
@@ -112,7 +129,6 @@ export default function Facility_ViewList() {
                     </table>
                 </div>
             </div>
-            <CommonFooter />
         </>
     )
 }
