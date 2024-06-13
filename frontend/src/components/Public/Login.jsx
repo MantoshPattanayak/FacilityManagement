@@ -79,7 +79,7 @@ const Login = () => {
             sid: res.data.sid
           }));
           toast.success("Login successfully.");
-          sessionStorage.setItem("isUserLoggedIn", 1);
+          // sessionStorage.setItem("isUserLoggedIn", 1);
           redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
         }
         else{
@@ -88,7 +88,7 @@ const Login = () => {
       } catch (err) {
         console.error("Error:", err);
         toast.error("Login failed. Please try again.");
-        sessionStorage.setItem("isUserLoggedIn", 0);
+        // sessionStorage.setItem("isUserLoggedIn", 0);
       }
     } else {
       // Iterate over validation errors and display them

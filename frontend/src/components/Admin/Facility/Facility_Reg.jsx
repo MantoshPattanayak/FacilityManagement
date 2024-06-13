@@ -36,13 +36,13 @@ const Facility_Reg = () => {
             sat: 0,
         },  //here operating days will come in the form of array of data i.e. array of  days
 
-        service: {},  //here services will be given in the form of object
+        service: new Array(),  //here services will be given in the form of object
         otherServices: "", //here others will be given in the form of string
-        amenity: {}, // here amenities will be given in the form of form of object
+        amenity: new Array(), // here amenities will be given in the form of form of object
         otherAmenities: "", // here other amenities will be given in the form of string
-        eventCategory: {},
+        eventCategory: new Array(),
         othereventCategory: "",
-        game: {},
+        game: new Array(),
         othergame: "",
         additionalDetails: "",
         facilityImage: "",
@@ -103,6 +103,7 @@ const Facility_Reg = () => {
         setPostFacilityData({ ...PostFacilityData, [name]: value })
         console.log("PostFacilityData:", PostFacilityData);
     }
+
     // Handle Day ------------------------------
     const handleDayClick = (day, e) => {
         e.preventDefault(); // Ensure e is properly handled
@@ -116,73 +117,74 @@ const Facility_Reg = () => {
         }));
         console.log("Updated operatingDays:", PostFacilityData.operatingDays);
     };
+
     //  Handle serviceId (set here )---------------------------------------------
     const handleServiceClick = (Id) => {
+        console.log('handle service click', Id);
+        console.log('PostFacilityData service 1', PostFacilityData.service);
         setPostFacilityData(prevState => {
             // If the serviceId exists, remove it, else add it
-            const updatedService = { ...prevState.service };
-            if (updatedService[`service${Id}`]) {
-                delete updatedService[`service${Id}`];
+            let updatedService = [...prevState.service];
+            if (updatedService.includes(Id)) {
+                updatedService = updatedService.filter((service) => { return service != Id });
+                // delete updatedService[`service${Id}`];
             } else {
-                updatedService[`service${Id}`] = Id;
+                updatedService.push(Id);
             }
             return { ...prevState, service: updatedService };
         });
+        console.log('PostFacilityData service 2', PostFacilityData.service);
     };
+
     // Handle Amenities Data --------------------------------------------------------------
     const handleAmenitiesClick = (amenityId) => {
         setPostFacilityData(prevState => {
             // If the serviceId exists, remove it, else add it
-            const updatedamenity = { ...prevState.amenity };
-            if (updatedamenity[`amenity${amenityId}`]) {
-                delete updatedamenity[`amenity${amenityId}`];
+            let updatedamenity = [...prevState.amenity];
+            if (updatedamenity.includes(amenityId)) {
+                updatedamenity = updatedamenity.filter((amenity) => amenity != amenityId);
             } else {
-                updatedamenity[`amenity${amenityId}`] = amenityId;
+                updatedamenity.push(amenityId);
             }
             return { ...prevState, amenity: updatedamenity };
         });
     };
+
     // Handle Event--------------------------------------------------------------------------------
     const handleEventClick = (eventCategoryId) => {
         setPostFacilityData(prevState => {
             // If the serviceId exists, remove it, else add it
-            const updatedeventCategory = { ...prevState.eventCategory };
-            if (updatedeventCategory[`eventCategory${eventCategoryId}`]) {
-                delete updatedeventCategory[`eventCategory${eventCategoryId}`];
+            let updatedeventCategory = [ ...prevState.eventCategory ];
+            if (updatedeventCategory.includes(eventCategoryId)) {
+                updatedeventCategory = updatedeventCategory.filter((event) => event != eventCategoryId);
             } else {
-                updatedeventCategory[`eventCategory${eventCategoryId}`] = eventCategoryId;
+                updatedeventCategory.push(eventCategoryId);
             }
             return { ...prevState, eventCategory: updatedeventCategory };
         });
     };
-        // Handle Event--------------------------------------------------------------------------------
-        const handleGameClick = (userActivityId
-            ) => {
-            setPostFacilityData(prevState => {
-                // Ensure the game object exists in the state
-                const updatedgame = { ...prevState.game };
-                
-                // If the game exists, remove it, else add it
-                if (updatedgame[`game${userActivityId
-                }`]) {
-                    delete updatedgame[`game${userActivityId
-                    }`];
-                } else {
-                    updatedgame[`game${userActivityId
-                    }`] = userActivityId
-                    ;
-                }
-        
-                // Log the updated game object for debugging
-                console.log("Updated game:", updatedgame);
-        
-                return { ...prevState, game: updatedgame };
-            });
-        
-            // Log the current state for debugging
-            console.log("PostFacilityData:", PostFacilityData);
-        };
-        
+
+    // Handle Event--------------------------------------------------------------------------------
+    const handleGameClick = (userActivityId) => {
+        setPostFacilityData(prevState => {
+            // Ensure the game object exists in the state
+            let updatedgame = [ ...prevState.game ];
+
+            // If the game exists, remove it, else add it
+            if (updatedgame.includes(userActivityId)) {
+                updatedgame = updatedgame.filter((game) => game != userActivityId)
+            } else {
+                updatedgame.push(userActivityId);
+            }
+            // Log the updated game object for debugging
+            console.log("Updated game:", updatedgame);
+
+            return { ...prevState, game: updatedgame };
+        });
+        // Log the current state for debugging
+        console.log("PostFacilityData:", PostFacilityData);
+    };
+
     //useEffect (Update data)-----------------------------------------------------------------
     useEffect(() => {
         GetFacilityIntailData()
@@ -317,16 +319,13 @@ const Facility_Reg = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleServiceClick(item.serviceId)}
-                                                        className={`button-4 ${PostFacilityData.service[`service${item.serviceId}`] ? 'selected' : ''}`}
+                                                        className={`button-4 ${PostFacilityData.service.includes(item.serviceId) ? 'selected' : ''}`}
                                                     >
                                                         {item.description}
                                                     </button>
                                                 </span>
                                             ))}
                                         </span>
-
-
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -336,22 +335,19 @@ const Facility_Reg = () => {
                                             name="otherServices"
                                             value={PostFacilityData.otherServices}
                                             onChange={handleChange}
-
                                         />
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Amenities*<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <label htmlFor="input1">Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <span className="Operating_day">
                                             {GetAmenitiesData?.length > 0 && GetAmenitiesData?.map((data, index) => (
                                                 <span key={index}>
                                                     <button
                                                         type="button"
                                                         onClick={() => handleAmenitiesClick(data.amenityId)}
-                                                        className={`button-4 ${PostFacilityData.amenity[`amenity${data.amenityId}`] ? 'selected' : ''}`}
-
+                                                        className={`button-4 ${PostFacilityData.amenity.includes(data.amenityId) ? 'selected' : ''}`}
                                                     >
                                                         {data.amenityName}
                                                     </button>
@@ -363,7 +359,7 @@ const Facility_Reg = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Amenities Events<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <label htmlFor="input1">Other Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
                                             name="otherAmenities"
                                             value={PostFacilityData.otherAmenities}
@@ -373,14 +369,14 @@ const Facility_Reg = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Events*<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <label htmlFor="input1">Events Category<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <span className="Operating_day">
                                             {fetchEventCategoryData?.length > 0 && fetchEventCategoryData.map((item, index) => (
                                                 <span key={index}>
                                                     <button
                                                         type="button"
                                                         onClick={() => handleEventClick(item.eventCategoryId)}
-                                                        className={`button-4 ${PostFacilityData.eventCategory[`eventCategory${item.eventCategoryId}`] ? 'selected' : ''}`}
+                                                        className={`button-4 ${PostFacilityData.eventCategory.includes(item.eventCategoryId) ? 'selected' : ''}`}
 
                                                     >{item.eventCategoryName}</button>
                                                 </span>
@@ -391,7 +387,7 @@ const Facility_Reg = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Events<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <label htmlFor="input1">Other Events Category<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
                                             name="othereventCategory"
                                             value={PostFacilityData.othereventCategory}
@@ -405,12 +401,10 @@ const Facility_Reg = () => {
                                         <span className="Operating_day">
                                             {fetchActivityData?.length > 0 && fetchActivityData?.map((item, index) => (
                                                 <span key={index}>
-                                                    <button 
-                                                    type="button"
-                                                    onClick={() => handleGameClick(item.userActivityId
-                                                        )}
-                                                        className={`button-4 ${PostFacilityData.game[`game${item.userActivityId
-                                                        }`] ? 'selected' : ''}`}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleGameClick(item.userActivityId)}
+                                                        className={`button-4 ${PostFacilityData.game.includes(item.userActivityId) ? 'selected' : ''}`}
                                                     >{item.userActivityName}</button>
                                                 </span>
                                             ))}
@@ -421,7 +415,7 @@ const Facility_Reg = () => {
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Other Games<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
-                                        name="othergame"
+                                            name="othergame"
                                             value={PostFacilityData.othergame}
                                             onChange={handleChange}
                                         />
@@ -431,8 +425,8 @@ const Facility_Reg = () => {
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">About the Facility<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="massage" id="input1" className="input_padding" placeholder="About the Facility"
-                                        name="additionalDetails"
-                                           value={PostFacilityData.additionalDetails}
+                                            name="additionalDetails"
+                                            value={PostFacilityData.additionalDetails}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -512,41 +506,24 @@ const Facility_Reg = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Latitude<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Latitude" name="latitude"
-                                            value={PostFacilityData.latitude}
-
-
-                                        />
+                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Latitude" name="latitude" value={PostFacilityData.latitude}/>
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Address<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter address of your facility" name="address"
-                                            value={PostFacilityData.address}
-
-
-
+                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter address of your facility" name="address" value={PostFacilityData.address}
                                         />
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Pin <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" className="input_padding" id="input1" placeholder="Enter Pin  " name="pin"
-                                            value={PostFacilityData.pin}
-
-
-                                        />
+                                        <input type="text" className="input_padding" id="input1" placeholder="Enter Pin  " name="pin" value={PostFacilityData.pin} />
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Area <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Enter Area" name="area"
-                                            value={PostFacilityData.area}
-
-
-                                        />
+                                        <input type="text" id="input2" className="input_padding" placeholder="Enter Area" name="area" value={PostFacilityData.area}/>
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -558,12 +535,7 @@ const Facility_Reg = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Operating To Time<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="time" id="input2" className="input_padding" placeholder="Enter Area"
-                                            name="operatingHoursTo"
-                                            value={PostFacilityData.operatingHoursTo}
-
-
-                                        />
+                                        <input type="time" id="input2" className="input_padding" placeholder="Enter Area" name="operatingHoursTo" value={PostFacilityData.operatingHoursTo}/>
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -578,7 +550,6 @@ const Facility_Reg = () => {
                                             <button type="button" className={`button-4 ${PostFacilityData.operatingDays.fri ? 'selected' : ''}`} >Fri</button>
                                             <button type="button" className={`button-4 ${PostFacilityData.operatingDays.sat ? 'selected' : ''}`}>Sat</button>
                                         </span>
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -587,79 +558,52 @@ const Facility_Reg = () => {
                                         <span className="Operating_day">
                                             {GetServiceData?.length > 0 && GetServiceData?.map((item, index) => (
                                                 <span key={index}>
-                                                    <button className="button-4" role="button" name="service" value={PostFacilityData.service}
-
-                                                    >{item.code}</button>
+                                                    <button className="button-4" role="button" name="service" value={PostFacilityData.service}>{item.code}</button>
                                                 </span>
                                             ))}
                                         </span>
-
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Other Services<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
-                                            name="otherServices"
-                                            value={PostFacilityData.otherServices}
-
-
-                                        />
-
+                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have" name="otherServices" value={PostFacilityData.otherServices}/>
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Amenities*<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <label htmlFor="input1">Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <span className="Operating_day">
                                             {GetAmenitiesData?.length > 0 && GetAmenitiesData?.map((data, index) => (
                                                 <span key={index}>
-                                                    <button class="button-4" role="button" name="amenity" value={PostFacilityData.amenity}
-
-                                                    >{data.amenityName}</button>
+                                                    <button class="button-4" role="button" name="amenity" value={PostFacilityData.amenity}>{data.amenityName}</button>
                                                 </span>
                                             ))}
                                         </span>
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Amenities Events<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
-                                            name="otherAmenities"
-                                            value={PostFacilityData.otherAmenities}
-
-
-                                        />
+                                        <label htmlFor="input1">Other Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have" name="otherAmenities"value={PostFacilityData.otherAmenities} />
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Events*<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <label htmlFor="input1">Events<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <span className="Operating_day">
                                             {fetchEventCategoryData?.length > 0 && fetchEventCategoryData.map((item, index) => (
                                                 <span key={index}>
-                                                    <button class="button-4" role="button" name="eventCategoryName"
-
-
-                                                    >{item.eventCategoryName}</button>
+                                                    <button class="button-4" role="button" name="eventCategoryName">{item.eventCategoryName}</button>
                                                 </span>
                                             ))}
                                         </span>
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Other Events<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
-                                            name="eventCategoryName"
-
-
-                                        />
-
+                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have" name="eventCategoryName"/>
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -668,35 +612,22 @@ const Facility_Reg = () => {
                                         <span className="Operating_day">
                                             {fetchActivityData?.length > 0 && fetchActivityData?.map((item, index) => (
                                                 <span key={index}>
-                                                    <button className="button-4" role="button"
-
-                                                    >{item.userActivityName}</button>
+                                                    <button className="button-4" role="button">{item.userActivityName}</button>
                                                 </span>
                                             ))}
                                         </span>
-
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Other Games<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
-
-
-
-                                        />
-
+                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"/>
                                     </div>
                                 </div>
-
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">About the Facility<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="About the Facility"
-
-
-
-                                        />
+                                        <input type="massage" id="input1" className="input_padding" placeholder="About the Facility"/>
                                     </div>
                                 </div>
                                 <div className="container">
@@ -730,8 +661,6 @@ const Facility_Reg = () => {
                     </form>
                 )}
             </div>
-
-
         </div>
     )
 }
