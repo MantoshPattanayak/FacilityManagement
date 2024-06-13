@@ -1,3 +1,7 @@
+/*
+    WARNING: ------ THIS CSS IS COMMON FOR PUBLIC LOGIN, USER SIGNUP and ADMIN LOGIN ----------------------------------------
+*/
+
 /* Common styles for all containers */
 .signup-container, .profile-setup-container {
     box-sizing: border-box;
