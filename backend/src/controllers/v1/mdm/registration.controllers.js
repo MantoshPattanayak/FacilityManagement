@@ -25,6 +25,7 @@ let facilityAcitivities = db.facilityactivities
 let ownershipDetails = db.ownershipDetails
 const { Op } = require('sequelize');
 let user = db.usermaster
+let imageUpload = require('../../../utils/imageUpload')
 
 // Admin facility registration
 
@@ -130,88 +131,50 @@ const registerFacility = async (req, res) => {
 
       
       if (facilityImage) {
+        // facility image format should be facilityImage ={facilityImageOne:"hkjhfkdfk", facilityArrayOfImages:[fjdjfljlkfdj,jldjlkfjdlj]}
           let entityType = 'facilities'
-
-          const errors = [];
-          let facilityImages = Object.values(facilityImage) 
-
-          for (let i = 0; i < facilityImages.length; i++) {
-            let facilityFile = facilityImages[i];
-            let uploadfacilityFilePath = null;
-            let uploadfacilityFilePath2 = null;
-            const uploadDir = process.env.UPLOAD_DIR;
-            const base64UploadFacilityFile = facilityFile ? facilityFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-            const mimeMatch = facilityFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-            const mime = mimeMatch ? mimeMatch[1] : null;
-
-            if ([
-              "image/jpeg",
-              "image/png",
-              "application/pdf",
-              "application/msword",
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            ].includes(mime)) {
-              // convert base 64 to buffer for image or document or set to null if not present
-              const uploadFacilityFileBuffer = facilityFile ? Buffer.from(base64UploadFacilityFile, "base64") : null;
-              if (uploadFacilityFileBuffer) {
-                const facilityFileDir = path.join(uploadDir, "facilityImages");
-
-                // ensure the event image directory exists
-                if (!fs.existsSync(facilityFileDir)) {
-                  fs.mkdirSync(facilityFileDir, { recursive: true });
-                }
-                const fileExtension = mime ? mime.split("/")[1] : "txt";
-                uploadfacilityFilePath = `${uploadDir}/facilityFileDir/${createFacilities.facilityId}${createFacilities.facilityName}.${fileExtension}`;
-                fs.writeFileSync(uploadfacilityFilePath, uploadFacilityFileBuffer);
-                uploadfacilityFilePath2 = `/facilityFileDir/${createFacilities.facilityId}${createFacilities.facilityName}.${fileExtension}`;
-
-                let fileName = `${createFacilities.facilityId}${createFacilities.facilityName}.${fileExtension}`;
-                let fileType = mime ? mime.split("/")[0] : 'unknown';
-
-                // insert to file table and file attachment table
-                let createFile = await file.create({
-                  fileName: fileName,
-                  fileType: fileType,
-                  url: uploadfacilityFilePath2,
-                  statusId: 1,
-                  createdDt: now(),
-                  updatedDt: now()
-                });
-
-                if (!createFile) {
-                  errors.push(`Failed to create file  for facility file at index ${i}`);
-                } else {
-                  // Insert into file attachment table
-                  let createFileAttachment = await fileAttachment.create({
-                    entityId: createFacilities.facilityId,
-                    entityType: entityType,
-                    fileId: createFile.fileId,
-                    statusId: 1,
-                    filePurpose: "facilityImage"
-                  });
-
-                  if (!createFileAttachment) {
-                    errors.push(`Failed to create file attachment for facility file at index ${i}`);
-                  }
-                }
-              }
-            } else {
-              errors.push(`Invalid File type for facility file at index ${i}`);
-            }
+          let serverError = 'something went wrong'
+          let cardFacilityImage = facilityImage.facilityImageOne
+          let arrayFacilityImage = facilityImage.facilityImageList
+          let insertionData = {
+           "id":createFacilities.facilityId,
+           "name":createFacilities.facilityname
           }
 
-          if (errors.length > 0) {
-            // Handle errors here, you can log them or do any other necessary action.
-            console.error("Errors occurred while processing additional files:", errors);
-            return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
+        if(cardFacilityImage){
+          let errors = [];
+          let subDir = "facilityImages"
+          let filePurpose = "singleFacilityImage"
+          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,errors)
+          if(errors.length>0){
+            if(errors.some(error => error.includes("something went wrong"))){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+            }
+            return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
           }
         }
+        if(arrayFacilityImage){
+          const errors = [];
+          let subDir = "facilityImageList"
+          let filePurpose = "multipleFacilityImage"
+          for (let i = 0; i < arrayFacilityImage.length; i++) {
+            let eachFacilityImage = arrayFacilityImage[i]
+            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,errors)
+          }
+          if(errors.length>0){
+            if(errors.some(error => error.includes("something went wrong"))){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+            }
+            return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+          }
 
+        }
+      }
+          
 
       if(amenity) {
          
-        let amenities = Object.values(amenity)
-          amenities.forEach(async(amenity)=>{
+        amenity.forEach(async(amenity)=>{
             let createAmenities = await amenityFacility.create( { 
               facilityId:createFacilities.facilityId,
               amenityId:amenity,
@@ -223,100 +186,19 @@ const registerFacility = async (req, res) => {
 
             }
             )
-
-            let findTheAmenityName = await amenityMaster.findOne({
-              where:{
-                amenityId:amenity
-              }
-            })
-
-            // upload amenities Images 
-            // if (amenitiesImage) {
-            //   let entityType = 'amenities'
-            //   const errors = [];
-            //   let amenityImages = Object.values(amenitiesImage) 
-          
-            //   for (let i = 0; i < amenityImages.length; i++) {
-            //     let amenityFile = amenityImages[i];
-            //     let uploadamenityFilePath = null;
-            //     let uploadamenityFilePath2 = null;
-            //     const uploadDir = process.env.UPLOAD_DIR;
-            //     const base64UploadamenityFile = amenityFile ? amenityFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-            //     const mimeMatch = amenityFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-            //     const mime = mimeMatch ? mimeMatch[1] : null;
-          
-            //     if ([
-            //       "image/jpeg",
-            //       "image/png",
-            //       "application/pdf",
-            //       "application/msword",
-            //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            //     ].includes(mime)) {
-            //       // convert base 64 to buffer for image or document or set to null if not present
-            //       const uploadAmenityFileBuffer = amenityFile ? Buffer.from(base64UploadamenityFile, "base64") : null;
-            //       if (uploadAmenityFileBuffer) {
-            //         const amenityFileDir = path.join(uploadDir, "amenityImages");
-          
-            //         // ensure the event image directory exists
-            //         if (!fs.existsSync(amenityFileDir)) {
-            //           fs.mkdirSync(amenityFileDir, { recursive: true });
-            //         }
-            //         const fileExtension = mime ? mime.split("/")[1] : "txt";
-            //         uploadamenityFilePath = `${uploadDir}/amenityFileDir/${createAmenities.amenityFacilityId}${findTheAmenityName.amenityName}.${fileExtension}`;
-
-            //         fs.writeFileSync(uploadamenityFilePath, uploadAmenityFileBuffer);
-
-            //         uploadamenityFilePath2 = `/amenityFileDir/${createAmenities.facilityId}${findTheAmenityName.amenityName}.${fileExtension}`;
-          
-            //         let fileName = `${createAmenities.amenityFacilityId}${findTheAmenityName.facilityName}.${fileExtension}`;
-            //         let fileType = mime ? mime.split("/")[0] : 'unknown';
-          
-            //         // insert to file table and file attachment table
-            //         let createFile = await file.create({
-            //           fileName: fileName,
-            //           fileType: fileType,
-            //           url: uploadamenityFilePath2,
-            //           statusId: 1,
-            //           createdDt: now(),
-            //           updatedDt: now()
-            //         });
-          
-            //         if (!createFile) {
-            //           errors.push(`Failed to create file  for facility file at index ${i}`);
-            //         } else {
-            //           // Insert into file attachment table
-            //           let createFileAttachment = await fileAttachment.create({
-            //             entityId: createAmenities.amenityFacilityId,
-            //             entityType: entityType,
-            //             fileId: createFile.fileId,
-            //             statusId: 1,
-            //             filePurpose: "amenityImage"
-            //           });
-          
-            //           if (!createFileAttachment) {
-            //             errors.push(`Failed to create file attachment for facility file at index ${i}`);
-            //           }
-            //         }
-            //       }
-            //     } else {
-            //       errors.push(`Invalid File type for facility file at index ${i}`);
-            //     }
+            // let findTheAmenityName = await amenityMaster.findOne({
+            //   where:{
+            //     amenityId:amenity
             //   }
-          
-            //   if (errors.length > 0) {
-            //     // Handle errors here, you can log them or do any other necessary action.
-            //     console.error("Errors occurred while processing additional files:", errors);
-            //     return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
-            //   }
-            // }
+            // })
+
           })
           
       
       }
   
   if(service) { 
-    let services = Object.values(service)
-    services.forEach(async(service)=>{
+    service.forEach(async(service)=>{
       let createServices = await serviceFacility.create( { 
         facilityId:createFacilities.facilityId,
         serviceId:service,
@@ -336,93 +218,15 @@ const registerFacility = async (req, res) => {
         }
       })
 
-      // if (servicesImage) {
-      //   let entityType = 'services'
-      //   const errors = [];
-      //   let serviceImages = Object.values(servicesImage) 
-    
-      //   for (let i = 0; i < serviceImages.length; i++) {
-      //     let serviceFile = serviceImages[i];
-      //     let uploadserviceFilePath = null;
-      //     let uploadserviceFilePath2 = null;
-      //     const uploadDir = process.env.UPLOAD_DIR;
-      //     const base64UploadServiceFile = serviceFile ? serviceFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-      //     const mimeMatch = serviceFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-      //     const mime = mimeMatch ? mimeMatch[1] : null;
-    
-      //     if ([
-      //       "image/jpeg",
-      //       "image/png",
-      //       "application/pdf",
-      //       "application/msword",
-      //       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      //     ].includes(mime)) {
-      //       // convert base 64 to buffer for image or document or set to null if not present
-      //       const uploadServiceFileBuffer = serviceFile ? Buffer.from(base64UploadServiceFile, "base64") : null;
-      //       if (uploadServiceFileBuffer) {
-      //         const serviceFileDir = path.join(uploadDir, "serviceImages");
-    
-      //         // ensure the event image directory exists
-      //         if (!fs.existsSync(serviceFileDir)) {
-      //           fs.mkdirSync(serviceFileDir, { recursive: true });
-      //         }
-      //         const fileExtension = mime ? mime.split("/")[1] : "txt";
-      //         uploadserviceFilePath = `${uploadDir}/serviceFileDir/${createServices.serviceFacilityId}${findTheServiceName.code}.${fileExtension}`;
-
-      //         fs.writeFileSync(uploadserviceFilePath, uploadServiceFileBuffer);
-
-      //         uploadserviceFilePath2 = `/amenityFileDir/${createServices.serviceFacilityId}${findTheServiceName.code}.${fileExtension}`;
-    
-      //         let fileName = `${createAmenities.amenityFacilityId}${findTheAmenityName.facilityName}.${fileExtension}`;
-      //         let fileType = mime ? mime.split("/")[0] : 'unknown';
-    
-      //         // insert to file table and file attachment table
-      //         let createFile = await file.create({
-      //           fileName: fileName,
-      //           fileType: fileType,
-      //           url: uploadserviceFilePath2,
-      //           statusId: 1,
-      //           createdDt: now(),
-      //           updatedDt: now()
-      //         });
-    
-      //         if (!createFile) {
-      //           errors.push(`Failed to create file  for facility file at index ${i}`);
-      //         } else {
-      //           // Insert into file attachment table
-      //           let createFileAttachment = await fileAttachment.create({
-      //             entityId: createServices.serviceFacilityId,
-      //             entityType: entityType,
-      //             fileId: createFile.fileId,
-      //             statusId: 1,
-      //             filePurpose: "serviceImage"
-      //           });
-    
-      //           if (!createFileAttachment) {
-      //             errors.push(`Failed to create file attachment for facility file at index ${i}`);
-      //           }
-      //         }
-      //       }
-      //     } else {
-      //       errors.push(`Invalid File type for facility file at index ${i}`);
-      //     }
-      //   }
-    
-      //   if (errors.length > 0) {
-      //     // Handle errors here, you can log them or do any other necessary action.
-      //     console.error("Errors occurred while processing additional files:", errors);
-      //     return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
-      //   }
-      // }
+  
     })
     
   }
     // // Here add event categories
     if(eventCategory){
-      let eventCategoryDetails = Object.values(eventCategory);
-      eventCategoryDetails.forEach(async(eventCategory)=>{
+      eventCategory.forEach(async(eventData)=>{
         let createEventCategoryDetails = await eventCategory.create({
-          eventCategoryName:eventCategory,
+          eventCategoryName:eventData,
           createdBy:userId,
           updatedBy:updatedBy,
           createdDt:createdDt,
@@ -434,8 +238,7 @@ const registerFacility = async (req, res) => {
     }
     // add games 
     if(game){
-      let gameDetails = Object.values(game);
-      gameDetails.forEach(async(eachGame)=>{
+      game.forEach(async(eachGame)=>{
         let createGameDetails = await facilityAcitivities.create({
           facilityId:createFacilities.facilityId,
           activityId:eachGame,
@@ -452,8 +255,7 @@ const registerFacility = async (req, res) => {
     // after all of these let add the park inventory details
     // here the park inventory data should look like this : {inventory:{}, inventory:{}}
     if(parkInventory){
-      let parkInventories = Object.values(parkInventory)
-      parkInventories.forEach(async(inventory)=>{
+      parkInventory.forEach(async(inventory)=>{
         let createInventory = await inventoryFacilities.create({
           facilityId:createFacilities.facilityId,
           equipmentId:inventory.equipmentId,
@@ -479,7 +281,8 @@ const registerFacility = async (req, res) => {
     })
   }
 
-  } catch (error) {
+  
+ } catch (error) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });
