@@ -695,6 +695,7 @@ let addToCart = async (req,res)=>{
 let viewCartByUserId = async(req,res)=>{
     try {
         const userId = req.user?.userId || 1
+    
         let findCartIdByUserId = await cart.findOne({
             where:{
             [Op.and]:[{userId: userId},{statusId:1}]
