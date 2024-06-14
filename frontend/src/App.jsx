@@ -383,7 +383,7 @@ function App() {
                 }
               />
               <Route
-                path="/UAC/Users/UserResourceMappingList"
+                path="/UAC/UserResource/View"
                 element={
                   <ProtectedRoute>
                     <UserResourceMappingList />
