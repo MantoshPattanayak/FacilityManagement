@@ -26,5 +26,7 @@ router.post('/bookmarkingAddAction',authenticateToken, userDetails.bookmarkingAd
 router.post('/bookmarkingRemoveAction', authenticateToken,userDetails.bookmarkingRemoveAction);
 
 router.post('/viewBookmarks',authenticateToken, userDetails.viewBookmarksListForUser);
+// verifyOTPHandlerWithGenerateTokenForAdmin
+router.post('/verifyOTPHandlerWithGenerateTokenForAdmin', userDetails.verifyOTPHandlerWithGenerateTokenForAdmin);
 
 module.exports = router

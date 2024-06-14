@@ -326,7 +326,133 @@ let createUser = async (req, res) => {
       .json({ message: err.message });
   }
 };
+let verifyOTPHandlerWithGenerateTokenForAdmin = async (req,res)=>{
+  try {
+      // Call the API to verify OTP
+      // const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
 
+      // Check if OTP verification was successful
+      console.log(1,req.body)
+      let statusId = 1;
+      let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
+
+      let userAgent =  req.headers['user-agent'];
+
+      console.log('userAgent', userAgent)
+      let deviceInfo = parseUserAgent(userAgent)
+      let lastLoginTime = new Date();
+
+
+      if (mobileNo && otp) {
+        // check if the otp is valid or not
+        let isOtpValid = await otpCheck.findOne({
+          where:{
+              expiryTime:{[Op.gte]:new Date()},
+              code:otp,
+              mobileNo:mobileNo
+          }
+        })
+        if(isOtpValid){
+            let updateTheVerifiedValue = await otpCheck.update({verified:1}
+              ,{
+                where:{
+                  id:isOtpValid.id
+                }
+              }
+            )
+            console.log(updateTheVerifiedValue,'update the verified value')
+             // Check if the user exists in the database
+             let isUserExist = await user.findOne({
+              where: {
+                  [Op.and]: [
+                      { phoneNo: mobileNo },
+                      { statusId: statusId },
+                      { roleId: { [Op.ne]: 4 } } // roleId should not be equal to 4
+                  ]
+              }
+          });
+            // console.log(isUserExist,'check user')
+          // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+          if(!isUserExist){
+
+            return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page",decideSignUpOrLogin:0});  
+
+          }
+          
+          console.log('2')
+          let tokenGenerationAndSessionStatus = await tokenAndSessionCreation(isUserExist,lastLoginTime,deviceInfo);
+
+          console.log('all the data', tokenGenerationAndSessionStatus)
+
+          if(tokenGenerationAndSessionStatus?.error){
+
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+              message:tokenAndSessionCreation.error
+            })
+
+          }
+
+          console.log('here upto it is coming')
+          let {accessToken, refreshToken, options,sessionId} = tokenGenerationAndSessionStatus
+                  //menu items list fetch
+        //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
+        //     inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+        //     where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
+        //     order by rm.orderIn`
+
+        //     let menuListItems = await sequelize.query(menuListItemQuery,{
+        //       replacements:{
+        //         userId:isUserExist.userId
+        //       },
+        //       type: QueryTypes.SELECT
+        //     })
+ 
+
+        // let dataJSON = new Array();
+        // //create parent data json without child data 
+        // for (let i = 0; i < menuListItems.length; i++) {
+        //     if (menuListItems[i].parentResourceId === null) {
+        //         dataJSON.push({
+        //             id: menuListItems[i].resourceId,
+        //             name: menuListItems[i].name,
+        //             orderIn: menuListItems[i].orderIn,
+        //             path: menuListItems[i].path,
+        //             children: new Array()
+        //         })
+        //     }
+        // }
+        
+        // Set the access token in an HTTP-only cookie named 'accessToken'
+        res.cookie('accessToken', accessToken,options);
+
+        // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
+        res.cookie('refreshToken', refreshToken, options)
+
+        // bearer is actually set in the first to tell that  this token is used for the authentication purposes
+
+        return res.status(statusCode.SUCCESS.code)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json({ message: "please render the login page", username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken, decideSignUpOrLogin:1,sid:sessionId });
+
+        }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:"Invalid Otp"
+          })
+        }
+       
+          // Return the generated tokens
+      } else {
+          // OTP verification failed
+          return res.status(statusCode.BAD_REQUEST.code).json({message:'Please provide the mobileNo and otp'});   
+        }
+  } catch (err) {
+   
+      return res.status(statusCode.BAD_REQUEST.code).json({message:err.message}); 
+ 
+   
+  }
+}
 let updateUserData = async (req, res) => {
   try {
     let {
@@ -1016,4 +1142,5 @@ module.exports = {
   bookmarkingAddAction,
   bookmarkingRemoveAction,
   viewBookmarksListForUser,
+  verifyOTPHandlerWithGenerateTokenForAdmin
 };
