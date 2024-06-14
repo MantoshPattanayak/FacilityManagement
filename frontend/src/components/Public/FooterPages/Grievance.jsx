@@ -1,336 +1,556 @@
-import React, { useRef, useState, useEffect } from 'react';
-import './Grievance.css';
-import CommonFooter from '../../../common/CommonFooter';
-import CommonHeader from '../../../common/CommonHeader';
-import PublicHeader from '../../../common/PublicHeader';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import axiosHttpClient from '../../../utils/axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
-
+import React, { useRef, useState, useEffect } from "react";
+import "./Grievance.css";
+import CommonFooter from "../../../common/CommonFooter";
+import CommonHeader from "../../../common/CommonHeader";
+import PublicHeader from "../../../common/PublicHeader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axiosHttpClient from "../../../utils/axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 const Grievance = () => {
-    const [selectedForm, setSelectedForm] = useState('Grievance');
+  const [selectedForm, setSelectedForm] = useState("Grievance");
 
-    const handleFormChange = (event) => {
-        setSelectedForm(event.target.value);
-    };
+  const handleFormChange = (event) => {
+    setSelectedForm(event.target.value);
+  };
 
-    return (
-        <div>
-            <PublicHeader />
-            <ToastContainer />
-            <div className="grievenceForm">
-                <div className="heading">
-                    <h2>{selectedForm} Form</h2>
-                </div>
-                <p>If you want to lodge a {selectedForm.toLowerCase()}, kindly fill the following {selectedForm.toLowerCase()} registration form!</p>
-
-                <div className="radiobutton">
-                    <div className="insideRadioButton">
-                        <input
-                            type="radio"
-                            id="grievance"
-                            value="Grievance"
-                            checked={selectedForm === 'Grievance'}
-                            onChange={handleFormChange}
-                        />
-                        <label htmlFor="grievance">Grievance</label>
-                    </div>
-                    <div className="insideRadioButton">
-                        <input
-                            type="radio"
-                            id="feedback"
-                            value="Feedback"
-                            checked={selectedForm === 'Feedback'}
-                            onChange={handleFormChange}
-                        />
-                        <label htmlFor="feedback">Feedback</label>
-                    </div>
-                </div>
-
-                {selectedForm === 'Grievance' ? <GrievanceForm /> : <FeedbackForm />}
-            </div>
+  return (
+    <div>
+      <PublicHeader />
+      <ToastContainer />
+      <div className="grievenceForm">
+        <div className="heading">
+          <h2>{selectedForm} Form</h2>
         </div>
-    );
+        <p>
+          If you want to lodge a {selectedForm.toLowerCase()}, kindly fill the
+          following {selectedForm.toLowerCase()} registration form!
+        </p>
+
+        <div className="radiobutton">
+          <div className="insideRadioButton">
+            <input
+              type="radio"
+              id="grievance"
+              value="Grievance"
+              checked={selectedForm === "Grievance"}
+              onChange={handleFormChange}
+            />
+            <label htmlFor="grievance">Grievance</label>
+          </div>
+          <div className="insideRadioButton">
+            <input
+              type="radio"
+              id="feedback"
+              value="Feedback"
+              checked={selectedForm === "Feedback"}
+              onChange={handleFormChange}
+            />
+            <label htmlFor="feedback">Feedback</label>
+          </div>
+        </div>
+
+        {selectedForm === "Grievance" ? <GrievanceForm /> : <FeedbackForm />}
+      </div>
+    </div>
+  );
 };
 
 const GrievanceForm = () => {
-    const [user, setUser] = useState({
-        fullname: "",
-        emailId: "",
-        phoneNo: "",
-        subject: "",
-        details: "",
-        statusId: "",
-        filepath: "",
-        isWhatsappNumber: "",
-        grievanceCategoryId: ""
-    });
-    const [captcha, setCaptcha] = useState('');
-    const [grievanceCategoryList, setGrievanceCategoryList] = useState([]);
+  const [user, setUser] = useState({
+    fullname: "",
+    emailId: "",
+    phoneNo: "",
+    subject: "",
+    details: "",
+    statusId: "",
+    filepath: "",
+    category: "",
+    isWhatsappNumber: false,
+    grievanceCategoryId: "",
+  });
+  const [grievanceCategoryList, setGrievanceCategoryList] = useState([]);
+  const [isValidMobile, setIsValidMobile] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidName, setIsValidName] = useState(true);
+  const [isValidGrievance, setIsValidGrievance] = useState(true);
+  const [isValidSubject, setIsValidSubject] = useState(true);
+  const [isValidFile, setIsValidFile] = useState(true);
+  const [file, setFile] = useState(null);
+  const [captcha, setCaptcha] = useState("");
+  const [isValidGrievanceCategory, setIsValidGrievanceCategory] =
+    useState(true);
+  const [isValidCaptcha, setIsValidCaptcha] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const characters = 'abc123';
+  const characters = "abc123";
 
-    async function fetchInitialData() {
-        try {
-            let res = await axiosHttpClient('GRIEVANCE_INITIAL_DATA_API', 'get');
-            console.log('grievance feedback initial data fetch response', res.data.data);
-            setGrievanceCategoryList(res.data.data)
-        }
-        catch (error) {
-            console.error(error);
-        }
+  useEffect(() => {
+    fetchInitialData();
+    setCaptcha(generateString(6));
+  }, []);
+
+  const fetchInitialData = async () => {
+    try {
+      let res = await axiosHttpClient("GRIEVANCE_INITIAL_DATA_API", "get");
+      console.log("grievance initial data fetch response", res.data.data);
+      setGrievanceCategoryList(res.data.data);
+    } catch (error) {
+      console.error(error);
     }
-    // hamdle Submit from of Grivance -----------------------------------------------------
-    async function handleSubmitForm(e) {
-        try {
-            let res = await axiosHttpClient('USER_SUBMIT_GRIEVANCE_API', 'post', {
-                fullname: user.fullname,
-                emailId: user.emailId,
-                phoneNo: user.phoneNo,
-                subject: user.subject,
-                details: user.details,
-                statusId: user.statusId,
-                filepath: user.filepath,
-                isWhatsappNumber: user.isWhatsappNumber,
-                grievanceCategoryId: user.grievanceCategoryId
-            });
-            console.log("here Grivance Response", res)
-        }
-        catch (error) {
-            console.error(error);
-            toast.error(`${selectedForm} form submission failed. Kindly try again!`);
-        }
+  };
+
+  // console.log("grievance categorylist 999", grievanceCategoryList);
+
+  const handleSubmitForm = async () => {
+    try {
+      let res = await axiosHttpClient(
+        "USER_SUBMIT_GRIEVANCE_API",
+        "post",
+        user
+      );
+      console.log("here Grievance Response", res);
+      toast.success("Form submitted successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Form submission failed. Kindly try again!");
     }
-    // handle Change ---------------------------------------------
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUser(prevUser => ({
-            ...prevUser,
-            [name]: value
-        }));
-    };
-    // fetch initial data on page load
-    useEffect(() => {
-        fetchInitialData();
-        setCaptcha(generateString(6));
-    }, [])
+  };
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    // setUser((prevUser) => ({
+    //   ...prevUser,
+    //   [name]: type === "checkbox" ? checked : value,
+    // }));
+    setUser({ ...user, [name]: value });
+    console.log("formData", user);
+  };
 
-    const generateString = (length) => {
-        let result = '';
-        const charactersLength = characters.length;
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    };
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        filepath: selectedFile.name,
+      }));
+      setFile(selectedFile);
+      setIsValidFile(true);
+    } else {
+      setIsValidFile(false);
+    }
+  };
 
+  const handleCaptchaRefresh = () => {
+    setCaptcha(generateString(6));
+    setUser((prevUser) => ({
+      ...prevUser,
+      captchaInput: "",
+    }));
+    setIsValidCaptcha(true);
+  };
 
+  const generateString = (length) => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
 
+  const handleButtonClick = () => {
+    document.getElementById("fileInput").click();
+  };
 
+  useEffect(() => {
+    if (isSubmitted) {
+      validateFeedback();
+    }
+  }, [user.phoneNo, user.emailId, user.filepath, user.captchaInput]);
 
+  const validateFeedback = () => {
+    const isValidMobileTemp = /^\d{10}$/.test(user.phoneNo);
+    const isValidEmailTemp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.emailId);
+    const isValidNameTemp = user.fullname.trim() !== "";
+    const isValidSubjectTemp = user.subject.trim() !== "";
+    const isValidGrievanceTemp = user.details.trim() !== "";
+    const isValidFileTemp = file !== null;
+    const isValidCaptchaTemp = user.captchaInput === captcha;
+    const isValidGrievanceCategory = user.grievanceCategoryId !== "";
 
-
-
-
-    const handleButtonClick = () => {
-        document.getElementById('fileInput').click();
-    };
-
-
+    setIsValidMobile(isValidMobileTemp);
+    setIsValidEmail(isValidEmailTemp);
+    setIsValidName(isValidNameTemp);
+    setIsValidSubject(isValidSubjectTemp);
+    setIsValidGrievance(isValidGrievanceTemp);
+    setIsValidFile(isValidFileTemp);
+    setIsValidCaptcha(isValidCaptchaTemp);
+    setIsValidGrievanceCategory(isValidGrievanceCategory);
 
     return (
-        <div className="grievanceContainer">
-            <div className="row">
-                <div className="form-group">
-                    <label htmlFor="nameInput">Name *</label>
-                    <input type="text" id="nameInput" placeholder="Enter Name"
-                        name='fullname'
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <div className="levelCheckBox">
-                        <label htmlFor="mobileInput">Mobile *</label>
-                        <div className="checkboxLev">
-                            <input type="checkbox" id="checkBox1"
-                                name='isWhatsappNumber'
-                                onChange={handleChange} />
-                            <label htmlFor="checkBox1">Is WhatsApp Number?</label>
-                        </div>
-                    </div>
-                    <input
-                        type="text"
-                        id="mobileInput"
-                        placeholder="Enter mobile Number"
-                        name='phoneNo'
-                        onChange={handleChange}
-
-                    />
-
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="form-group">
-                    <label htmlFor="emailInput">Email</label>
-                    <input
-                        type="text"
-                        id="emailInput"
-                        placeholder="Enter Email"
-                        name='emailId'
-                        onChange={handleChange}
-
-                    />
-                    {/* {!isValidEmail && <p className="error-message">Please enter a valid email address.</p>} */}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="subjectInput">Subject *</label>
-                    <input type="text" id="subjectInput" placeholder="Enter Subject"
-                    name='subject'
-                        onChange={handleChange}
-                    />
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="form-group2">
-                    <label htmlFor="grievanceInput">Grievance *</label>
-                    <input type="text" id="grievanceInput" placeholder="Enter Grievance"
-                        onChange={handleChange}
-                    />
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="form-group">
-                    <label htmlFor="photoInput">Photo *</label>
-                    <div className="inputButton">
-                        <input
-                            type="text"
-                            id="photoInput"
-                            placeholder="No photo uploaded"
-                            onChange={handleChange}
-                        />
-                        <button type="button" onClick={handleButtonClick}>
-                            Upload
-                        </button>
-                        <input
-                            type="file"
-                            id="fileInput"
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            onChange={handleChange}
-
-                        />
-                    </div>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="captchaInput">Captcha *</label>
-                    <div className="captcha">
-                        <div>{captcha}</div>
-                        <input type="text" id="captchaInput" name="username" value={user.username} onChange={handleChange} placeholder="Enter Captcha" />
-                        <div><FontAwesomeIcon icon={faRotateRight} /></div>
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <button type="button" className='submitbutton'>Submit</button>
-            </div>
-        </div>
+      isValidMobileTemp &&
+      isValidEmailTemp &&
+      isValidNameTemp &&
+      isValidSubjectTemp &&
+      isValidGrievanceTemp &&
+      isValidFileTemp &&
+      isValidCaptchaTemp &&
+      isValidGrievanceCategory
     );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateFeedback()) {
+      handleSubmitForm();
+      console.log("Form submitted successfully");
+    }
+    setIsSubmitted(true);
+  };
+
+  return (
+    <div className="grievanceContainer">
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="nameInput">Name *</label>
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter Name"
+            name="fullname"
+            onChange={handleChange}
+            value={user.fullname}
+          />
+          {!isValidName && (
+            <p className="error-message">Please enter your full name.</p>
+          )}
+        </div>
+        <div className="form-group">
+          <div className="levelCheckBox">
+            <label htmlFor="mobileInput">Mobile *</label>
+            <div className="checkboxLev">
+              <input
+                type="checkbox"
+                id="checkBox1"
+                name="isWhatsappNumber"
+                onChange={handleChange}
+                checked={user.isWhatsappNumber}
+              />
+              <label htmlFor="checkBox1">Is WhatsApp Number?</label>
+            </div>
+          </div>
+          <input
+            type="text"
+            id="mobileInput"
+            placeholder="Enter mobile Number"
+            name="phoneNo"
+            onChange={handleChange}
+            value={user.phoneNo}
+          />
+          {!isValidMobile && (
+            <p className="error-message">Please enter a valid mobile number.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="grievanceCategory">Grievance Category *</label>
+          <select
+            id="grievanceCategory"
+            name="grievanceCategoryId"
+            onChange={handleChange}
+            value={user.grievanceCategoryId}
+          >
+            <option value="" disabled hidden>
+              Select Grievance Category
+            </option>
+            {grievanceCategoryList.map((category) => (
+              <option
+                key={category.grievanceCategoryId}
+                value={category.grievanceCategoryId}
+              >
+                {category.grievanceCategoryName}
+              </option>
+            ))}
+          </select>
+          {!isValidGrievanceCategory && (
+            <p className="error-message">Please select a grievance category.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="emailInput">Email</label>
+          <input
+            type="text"
+            id="emailInput"
+            placeholder="Enter Email"
+            name="emailId"
+            onChange={handleChange}
+            value={user.emailId}
+          />
+          {!isValidEmail && (
+            <p className="error-message">Please enter a valid email address.</p>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="subjectInput">Subject *</label>
+          <input
+            type="text"
+            id="subjectInput"
+            placeholder="Enter Subject"
+            name="subject"
+            onChange={handleChange}
+            value={user.subject}
+          />
+          {!isValidSubject && (
+            <p className="error-message">Please enter the subject.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="form-group2">
+          <label htmlFor="grievanceInput">Grievance *</label>
+          <input
+            type="text"
+            id="grievanceInput"
+            placeholder="Enter Grievance"
+            name="details"
+            onChange={handleChange}
+            value={user.details}
+          />
+          {!isValidGrievance && (
+            <p className="error-message">Please write the grievance details.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="photoInput">Photo *</label>
+          <div className="inputButton">
+            <input
+              type="text"
+              id="photoInput"
+              placeholder="No photo uploaded"
+              name="filepath"
+              readOnly
+              value={user.filepath}
+            />
+            <button type="button" onClick={handleButtonClick}>
+              Upload
+            </button>
+            <input
+              type="file"
+              id="fileInput"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+          </div>
+          {!isValidFile && (
+            <p className="error-message">Please upload a photo.</p>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="captchaInput">Captcha *</label>
+          <div className="captcha">
+            <div>{captcha}</div>
+            <input
+              type="text"
+              id="captchaInput"
+              name="captchaInput"
+              onChange={handleChange}
+              value={user.captchaInput}
+              placeholder="Enter Captcha"
+            />
+            <div onClick={handleCaptchaRefresh} style={{ cursor: "pointer" }}>
+              <FontAwesomeIcon icon={faRotateRight} />
+            </div>
+          </div>
+          {!isValidCaptcha && (
+            <p className="error-message">Captcha is not verified.</p>
+          )}
+        </div>
+      </div>
+      <div className="row">
+        <button type="button" onClick={handleSubmit} className="submitbutton">
+          Submit
+        </button>
+      </div>
+    </div>
+  );
 };
 
-
 const FeedbackForm = () => {
-    const [mobileNumber, setMobileNumber] = useState('');
-    const [isValidMobile, setIsValidMobile] = useState(true);
-    const [email, setEmail] = useState('');
-    const [isValidEmail, setIsValidEmail] = useState(true);
+  const [user, setUser] = useState({
+    fullname: "",
+    emailId: "",
+    phoneNo: "",
+    subject: "",
+    statusId: "",
+    feedback: "",
+    isWhatsappNumber: false,
+  });
+  const [feedbackCategoryList, setFeedbackCategoryList] = useState([]);
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [isValidMobile, setIsValidMobile] = useState(true);
+  const [email, setEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const handleMobileChange = (event) => {
-        const { value } = event.target;
-        setMobileNumber(value);
-    };
+  useEffect(() => {
+    setIsSubmitted(false); // Reset isSubmitted state on component mount
+  }, []);
 
-    const validateMobileNumber = () => {
-        const mobileNumberPattern = /^\d{10}$/;
-        const isValid = mobileNumberPattern.test(mobileNumber);
-        setIsValidMobile(isValid);
-    };
+  const handleSubmitForm = async () => {
+    try {
+      console.log("Submitting the following user data:", user);
+      let res = await axiosHttpClient("USER_SUBMIT_FEEDBACK_API", "post", user);
+      console.log("here Feedback Response", res);
+      toast.success("Form submitted successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Form submission failed. Kindly try again!");
+    }
+  };
 
-    const handleEmailChange = (event) => {
-        const { value } = event.target;
-        setEmail(value);
-    };
+  const handleInputChange = (event, field) => {
+    const { value, type, checked } = event.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [field]: type === "checkbox" ? checked : value,
+    }));
+    console.log(user); // This will log the updated user state
+  };
 
-    const validateEmail = () => {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const isValid = emailPattern.test(email);
-        setIsValidEmail(isValid);
-    };
+  useEffect(() => {
+    if (isSubmitted) {
+      validateFeedback(); // Trigger validation after state update
+    }
+  }, [mobileNumber, email, isSubmitted]);
 
-    return (
-        <div className="grievanceContainer">
-            <div className="row">
-                <div className="form-group">
-                    <label htmlFor="nameInput">Name *</label>
-                    <input type="text" id="nameInput" placeholder="Enter Name" />
-                </div>
-                <div className="form-group">
-                    <div className="levelCheckBox">
-                        <label htmlFor="mobileInput">Mobile *</label>
-                        <div className="checkboxLev">
-                            <input type="checkbox" id="checkBox1" />
-                            <label htmlFor="checkBox1">Is WhatsApp Number?</label>
-                        </div>
-                    </div>
-                    <input
-                        type="text"
-                        id="mobileInput"
-                        placeholder="Enter mobile Number"
-                        value={mobileNumber}
-                        onChange={handleMobileChange}
-                        onBlur={validateMobileNumber}
-                        className={!isValidMobile ? 'invalid-input' : ''}
-                    />
-                    {!isValidMobile && <p className="error-message">Please enter a valid mobile number.</p>}
-                </div>
-            </div>
+  const validateFeedback = () => {
+    const mobileValid = /^\d{10}$/.test(mobileNumber);
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setIsValidMobile(mobileValid);
+    setIsValidEmail(emailValid);
+    return mobileValid && emailValid;
+  };
 
-            <div className="row">
-                <div className="form-group">
-                    <label htmlFor="emailInput">Email</label>
-                    <input
-                        type="text"
-                        id="emailInput"
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        onBlur={validateEmail}
-                        className={!isValidEmail ? 'invalid-input' : ''}
-                    />
-                    {!isValidEmail && <p className="error-message">Please enter a valid email address.</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="subjectInput">Subject *</label>
-                    <input type="text" id="subjectInput" placeholder="Enter Subject" />
-                </div>
-            </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+    if (validateFeedback()) {
+      handleSubmitForm();
+      console.log("Form submitted successfully");
+    }
+  };
 
-            <div className="row">
-                <div className="form-group2">
-                    <label htmlFor="feedbackInput">Feedback *</label>
-                    <input type="text" id="feedbackInput" placeholder="Enter Feedback" />
-                </div>
-            </div>
-            <div className="row">
-                <button type="button" className='submitbutton'>Submit</button>
-            </div>
+  return (
+    <div className="grievanceContainer">
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="nameInput">Name *</label>
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter Name"
+            value={user.fullname}
+            onChange={(event) => handleInputChange(event, "fullname")}
+          />
         </div>
-    );
+        <div className="form-group">
+          <div className="levelCheckBox">
+            <label htmlFor="mobileInput">Mobile *</label>
+            <div className="checkboxLev">
+              <input
+                type="checkbox"
+                id="checkBox1"
+                checked={user.isWhatsappNumber}
+                onChange={(event) =>
+                  handleInputChange(event, "isWhatsappNumber")
+                }
+              />
+              <label htmlFor="checkBox1">Is WhatsApp Number?</label>
+            </div>
+          </div>
+          <input
+            type="text"
+            id="mobileInput"
+            placeholder="Enter mobile Number"
+            value={mobileNumber}
+            onChange={(event) => {
+              handleInputChange(event, "phoneNo");
+              setMobileNumber(event.target.value);
+            }}
+            // onBlur={validateFeedback}
+            // className={!isValidMobile && isSubmitted ? "invalid-input" : ""}
+          />
+          {!isValidMobile && (
+            <p className="error-message">Please enter a valid mobile number.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="form-group">
+          <label htmlFor="emailInput">Email</label>
+          <input
+            type="text"
+            id="emailInput"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(event) => {
+              handleInputChange(event, "emailId");
+              setEmail(event.target.value);
+            }}
+            onBlur={validateFeedback}
+            // className={!isValidEmail && isSubmitted ? "invalid-input" : ""}
+          />
+          {!isValidEmail && (
+            <p className="error-message">Please enter a valid email address.</p>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="subjectInput">Subject *</label>
+          <input
+            type="text"
+            id="subjectInput"
+            placeholder="Enter Subject"
+            value={user.subject}
+            onChange={(event) => handleInputChange(event, "subject")}
+          />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="form-group2">
+          <label htmlFor="feedbackInput">Feedback *</label>
+          <input
+            type="text"
+            id="feedbackInput"
+            placeholder="Enter Feedback"
+            value={user.feedback}
+            onChange={(event) => handleInputChange(event, "feedback")}
+          />
+        </div>
+      </div>
+      <div className="row">
+        <button type="button" onClick={handleSubmit} className="submitbutton">
+          Submit
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Grievance;
