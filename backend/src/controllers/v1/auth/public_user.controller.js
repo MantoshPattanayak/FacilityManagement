@@ -16,41 +16,31 @@ const updatepublic_user = async (req, res) => {
     let userId = req.user.userId;
     console.log(userId,'userId',req.user.userId)
     let {
-<<<<<<< HEAD
-      userId,
       encryptTitle:title,
       encryptFirstName:firstName,
       encryptMiddleName:middleName,
       encryptLastName:lastName,
-      encryptUserName:userName,
+      encryptUserName: userName,
       //password,
       encryptPhoneNo:phoneNo,
       encryptAltPhoneNo:altPhoneNo,
-      encryptEmail:emailId,
-      //profilePicture,
-      encryptActivity:activities
-=======
-      title,
-      firstName,
-      middleName,
-      lastName,
-      userName,
-      password,
-      phoneNo,
-      altPhoneNo,
-      emailId,
       profilePicture,
->>>>>>> 432dc18fa8f80874363df575f6c5d36f154c32b0
+      encryptEmailId:emailId,
+      encryptActivities:activities,
+      encryptLanguagePreference:languagePreference, //need to change 
+      encryptPrefredLocation : preferedLocation //need to change
+      
     } = req.body;
 // console.log("Update Profile", req.body)
     let params = {};
     let roleId =4;
-  
+    
  
     let findPublicuserWithTheGivenId = await user.findOne({
       where: {
         userId: userId,
       },
+      
     });
     console.log('2323')
     if (findPublicuserWithTheGivenId.title != title && title) {
@@ -107,64 +97,6 @@ const updatepublic_user = async (req, res) => {
         }
       params.emailId = emailId;
     }
-<<<<<<< HEAD
-
-    try {
-      let [updatepublicUserCount, updatepublicUserData] =
-        await user.update(params, {
-          where: { userId: userId },
-        });
-    
-      if (activities) {
-        let fetchUserActivities = await useractivitypreferencesModels.findAll({
-          where: {
-            userId: userId,
-          },
-        });
-    
-        let fetchActivities = fetchUserActivities.map((data) => {
-          return data.userActivityId;
-        });
-    
-        for (let activity of activities) {
-          if (!fetchActivities.includes(activity)) {
-            await useractivitypreferencesModels.create(
-              {
-                userId: userId,
-                userActivityId: activity,
-              },
-              { transaction: t }
-            );
-          }
-        }
-    
-        // Update status to 2 for removed activities
-        for (let fetchActivity of fetchActivities) {
-          if (!activities.includes(fetchActivity)) {
-            await useractivitypreferencesModels.update(
-              { status: 2 },
-              { where: { userId: userId, userActivityId: fetchActivity }, transaction: t }
-            );
-          }
-          
-          await transaction.commit();
-
-          res.status(statusCode.SUCCESS.code).json({
-              message: 'User profile updated',
-          })
-        }
-      }
-    } catch (error) {
-      if (transaction) await transaction.rollback();
-
-      console.error('Error User profile not updated:', error);
-      res.status(statusCode.BAD_REQUEST.code).json({
-          message: 'user profile not updated!',
-          data: []
-      })
-    }
-     if (updatepublicUserCount >= 0) {
-=======
     let [updatepublicUserCount, updatepublicUserData] =
       await user.update(params, {
         where: {
@@ -173,8 +105,115 @@ const updatepublic_user = async (req, res) => {
       });
 
       console.log('update public user count', updatepublicUserCount)
+      try {
+        let [updatepublicUserCount, updatepublicUserData] =
+          await user.update(params, {
+            where: { userId: userId },
+          });
+      
+        if (activities) {
+          let fetchUserActivities = await useractivitypreferencesModels.findAll({
+            where: {
+              userId: userId,
+            },
+          });
+      
+          let fetchActivities = fetchUserActivities.map((data) => {
+            return data.userActivityId;
+          });
+      
+          for (let activity of activities) {
+            if (!fetchActivities.includes(activity)) {
+              await useractivitypreferencesModels.update(
+                {
+                  userId: userId,
+                  userActivityId: activity,
+                },
+                { transaction: t }
+              );
+            }
+          }
+      
+          // Update status to 2 for removed activities
+          for (let fetchActivity of fetchActivities) {
+            if (!activities.includes(fetchActivity)) {
+              await useractivitypreferencesModels.update(
+                { status: 2 },
+                { where: { userId: userId, userActivityId: fetchActivity }, transaction: t }
+              );
+            }
+            
+            await transaction.commit();
+  
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'User profile updated',
+            })
+          }
+        }
+      } catch (error) {
+        if (transaction) await transaction.rollback();
+  
+        console.error('Error User profile not updated:', error);
+        res.status(statusCode.BAD_REQUEST.code).json({
+            message: 'user profile not updated!',
+            data: []
+        })
+      }
+      if(profilePicture){
+        let profilePicturePath = null;
+        let profilePicturePath2 = null;
+
+        let uploadDir = process.env.UPLOAD_DIR;
+        let base64UploadprofilePicture = profilePicture ? profilePicture.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, ""): null;
+        let mimeMatch = userImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
+        let mime = mimeMatch ? mimeMatch[1]: null;
+        if([
+          "image/jpeg",
+          "image/png",
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ].includes(mime)){
+          // convert base 64 to buffer 
+          let uploadImageBuffer = userImage ? Buffer.from(base64UploadprofilePicture,'base64') : null;
+          if(uploadImageBuffer){
+            const profilePictureDir = path.join(uploadDir,"profilePictureDir");
+            if(!fs.existsSync(profilePictureDir)){
+              fs.mkdirSync(profilePictureDir,{recursive:true})
+            }
+            let fileExtension = mime ? mime.split("/")[1] : "txt";
+            profilePicturePath = `${uploadDir}/profilePictureDir/${newUser.userId}.${fileExtension}`
+            fs.writeFileSync(profilePicturePath, uploadImageBuffer);
+            profilePicturePath2= `/userImageDir/${userName}.${fileExtension}`
+            let fileName = `${newUser.userName}${newUser.userId}.${fileExtension}`
+            let fileType = mime ? mime.split("/")[0]:'unknown'
+            // insert to file table and file attachment table
+            let updateFile = await file.update({
+              fileName:fileName,
+              fileType:fileType,
+              url:profilePicturePath2,
+              statusId:1,
+              createdDt:now(),
+              updatedDt:now()
+            })
+  
+            if(!updateFile){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
+            }
+            let updateFileAttachment = await fileAttachment.update({
+              entityId: newUser.userId,
+              entityType:'usermaster',
+              fileId:createFile.fileId,
+              statusId:1,
+              filePurpose:"Profile Picture"
+            })
+          }
+        }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({message:"Invalid File type for the event image"})
+        }
+      }
     if (updatepublicUserCount >= 1) {
->>>>>>> 432dc18fa8f80874363df575f6c5d36f154c32b0
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
       });
@@ -190,6 +229,7 @@ const updatepublic_user = async (req, res) => {
     });
   }
 };
+
 
 //findAll
 // const viewpublic_user = async (req, res) => {
