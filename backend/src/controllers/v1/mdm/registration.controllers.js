@@ -291,7 +291,6 @@ const registerFacility = async (req, res) => {
 
 
 // initial Data fetch 
-
 const initialDataFetch = async (req,res)=>{
     try {
       let statusId = 1
