@@ -68,10 +68,25 @@ const Facility = sequelize.define('facilities',{
     additionalDetails:{
         type:DataTypes.STRING(255)
     },
+    otherGames:{
+        type:DataTypes.STRING(255)
+    },
+    otherEventCategories:{
+        type:DataTypes.STRING(255)
+    },
+    otherServices:{
+        type:DataTypes.STRING(255)
+    },
+    otherAmenities:{
+        type:DataTypes.STRING(255)
+    },
+    ownershipDetailId:{
+        type:DataTypes.INTEGER
+    },
     createdBy:{
         type:DataTypes.INTEGER
     },
-    createdOn: {
+    createdDt: {
         type: DataTypes.DATE, // Define the column as DATE type
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
@@ -79,15 +94,10 @@ const Facility = sequelize.define('facilities',{
     updatedBy:{
         type:DataTypes.INTEGER
     },
-    updatedOn: {
+    updatedDt: {
         type: DataTypes.DATE // Define the column as DATE type
     },
-    deletedBy:{
-        type:DataTypes.INTEGER
-    },
-    deletedOn: {
-        type: DataTypes.DATE // Define the column as DATE type
-    }
+  
 
 }
 ,

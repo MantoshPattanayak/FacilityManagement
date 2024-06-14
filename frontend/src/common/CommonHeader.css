@@ -1,4 +1,4 @@
-.header {
+.header-admin {
     position: fixed;
     top: 0;
     left: 0;
@@ -71,7 +71,6 @@
     align-items: center;
     justify-content: center;
 }
-
-
-
-
+.icon-menu{
+    color: red;
+}

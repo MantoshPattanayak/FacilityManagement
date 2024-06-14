@@ -8,7 +8,7 @@ import {
   faCartShopping,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"; // Import the icon
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart} from "@fortawesome/free-solid-svg-icons";
 import {
   faCreditCard,
   faPlus,
@@ -66,12 +66,7 @@ const Book_Now = () => {
     console.log("facilityId", facilityId);
 
     try {
-      let res = await axiosHttpClient(
-        "View_By_ParkId",
-        "get",
-        '',
-        facilityId
-      );
+      let res = await axiosHttpClient("View_By_ParkId", "get", "", facilityId);
 
       console.log("response of facility fetch api", res);
       setFacilitiesData(res.data.facilitiesData);
@@ -125,7 +120,6 @@ const Book_Now = () => {
     console.log("selectedGames", selectedGames);
   };
 
-
   const handleChangeInput = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -152,7 +146,7 @@ const Book_Now = () => {
     }
 
     // setamount(formData)
-    console.log("qwertyuiop", formData.amount)
+    console.log("qwertyuiop", formData.amount);
     setAmount1(formData.amount);
 
     setIsDisabled(updatedFormData.totalMembers > 40);
@@ -200,7 +194,7 @@ const Book_Now = () => {
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
           duration: modifiedFormData.durationInHours,
-          price: amount1 * modifiedFormData.adults
+          price: amount1 * modifiedFormData.adults,
         };
 
         // Prepare request body
@@ -211,7 +205,7 @@ const Book_Now = () => {
         };
         let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
         console.log("submit and response", res);
-        toast.success("Add to Cart has been done  successfully.", {
+        toast.success("Added to cart successfully.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
@@ -245,7 +239,7 @@ const Book_Now = () => {
       startTime: modifiedFormData.startTime,
       durationInHours: modifiedFormData.durationInHours,
     };
-    if (Object.keys(validationError).length == 0) {
+    if (Object.keys(validationError).length == 0 && modifiedFormData.totalMembers != 0 && modifiedFormData.totalMembers <= 40) {
       try {
         let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
           entityId: modifiedFormData.entityId,
@@ -253,12 +247,13 @@ const Book_Now = () => {
           facilityPreference,
         });
         console.log("submit and response", res);
-        toast.success("Booking details submitted successfully.", {
+        toast.success("Park has been booked successfully.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
             setTimeout(() => {
-              navigate("/");
+              navigate("/profile/booking-details");
+              // navigate("/BookParks/Bokking_Bill?bookingId=${encryptData(bookingId)}");
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
         });
@@ -266,6 +261,8 @@ const Book_Now = () => {
         console.log(error);
         toast.error("Booking details submission failed.");
       }
+    } else if (modifiedFormData.totalMembers > 40) {
+      toast.error("Total members can not exceed more than 40");
     } else {
       toast.error("Please fill the required data.");
     }
@@ -294,11 +291,13 @@ const Book_Now = () => {
       <PublicHeader />
       <div className="booknow-container">
         <div className="park-container">
-          <div className="heading">
+          <div className="heading_BookNow">
             <h1>
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <Link to={`/Sub_Park_Details?facilityId=${encryptData(facilityId)}`}>
+            <Link
+              to={`/Sub_Park_Details?facilityId=${encryptData(facilityId)}`}
+            >
               <FontAwesomeIcon icon={faXmark} />
             </Link>
           </div>
@@ -365,8 +364,8 @@ const Book_Now = () => {
                   return (
                     <button
                       className={`game-btn ${selectedGames.includes(activity.userActivityId)
-                        ? "selected"
-                        : ""
+                          ? "selected"
+                          : ""
                         }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
@@ -384,7 +383,8 @@ const Book_Now = () => {
               value={formData.otherActivities}
               id="otherActivities"
               className="input-field-otheractivities"
-              onChange={handleChangeInput} gh
+              onChange={handleChangeInput}
+              gh
             />
           </div>
           <br />
@@ -412,19 +412,29 @@ const Book_Now = () => {
             />
           </div>
           <div className="duration">
-            <label htmlFor=""> Duration (in hours) :</label>
+            <label htmlFor="duration"> Duration (in hours) :</label>
             <div className="bookDuration">
-              <FontAwesomeIcon onClick={handleDecrease} icon={faMinus} />
-              <input
-                type="number"
-                name="durationInHours"
-                value={formData.durationInHours}
-                id="duration"
-                className="input-field-date-duration"
-                onChange={handleChangeInput}
-                min="0"
-              />
-              <FontAwesomeIcon onClick={handleIncrease} icon={faPlus} />
+              <div className="input-container">
+                <FontAwesomeIcon
+                  onClick={handleDecrease}
+                  icon={faMinus}
+                  className="icon minus"
+                />
+                <input
+                  type="number"
+                  name="durationInHours"
+                  value={formData.durationInHours}
+                  id="duration"
+                  className="input-field-date-duration"
+                  onChange={handleChangeInput}
+                  min="0"
+                />
+                <FontAwesomeIcon
+                  onClick={handleIncrease}
+                  icon={faPlus}
+                  className="icon plus"
+                />
+              </div>
             </div>
           </div>
           {/* <div className="priceBook">
@@ -451,7 +461,11 @@ const Book_Now = () => {
           <div className="Add_to_card_main_conatiner">
             <div className="button_Book_Now">
               {/* <a href=''> */}
-              <button className="AddToCartButton" onClick={handleAddtoCart} disabled={isDisabled}>
+              <button
+                className="AddToCartButton"
+                onClick={handleAddtoCart}
+                disabled={isDisabled}
+              >
                 <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                 Add to Cart
               </button>
@@ -463,7 +477,7 @@ const Book_Now = () => {
                 disabled={isDisabled}
               >
                 <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                Proceed to Payment
+                Book Now
               </button>
             </div>
           </div>

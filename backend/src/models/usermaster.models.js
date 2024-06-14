@@ -51,6 +51,9 @@ const usermaster = sequelize.define('usermaster', {
   verifyEmail:{
     type:DataTypes.INTEGER
   },
+  location:{
+    type:DataTypes.STRING(255)
+  },
   remarks:{
     type: DataTypes.STRING(255)
   },
@@ -69,6 +72,9 @@ const usermaster = sequelize.define('usermaster', {
   genderId:{
     type:DataTypes.INTEGER
   },
+  isEntity:{
+    type:DataTypes.INTEGER
+},
   createdBy:{
     type:DataTypes.INTEGER
   },

@@ -184,3 +184,85 @@
     font-weight: 600;
     color: #201f1f;
   }
+
+
+
+  .share-popup {
+    display: flex;
+    gap: 20px;
+ 
+    padding: 10px;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
+    margin: 0px auto;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.social-media-icon_fa{
+  font-size: 40px;
+  color: #0866ff;
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+ 
+
+}
+.social-media-icon_fa_what:hover{
+  transform: scale(1.2);
+  color: #005df3;
+}
+.social-media-icon_what{
+  font-size: 40px;
+  color: #26c943;
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+.social-media-icon_what:hover{
+  transform: scale(1.2);
+  color: #00f32d;
+}
+.social-media-icon_insta{
+  font-size: 40px;
+  color: #de3362;
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+.social-media-icon_insta:hover{
+  transform: scale(1.2);
+  color: #de1349;
+}
+.social-media-icon_email {
+  font-size: 40px;
+  color: #000; /* Default color */
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.social-media-icon_email:hover {
+  color: #e5350d; /* Color on hover */
+  transform: scale(1.2); /* Slightly enlarge the icon on hover */
+}
+.social-media-icon_twitter{
+  color: #007bff;
+  font-size: 40px;
+
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.social-media-icon_twitter:hover {
+    color: #007bff;
+    transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

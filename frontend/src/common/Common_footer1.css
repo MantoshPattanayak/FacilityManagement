@@ -4,6 +4,105 @@
   color: #fff;
   padding: 2rem 0;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 420px) {
+  .common-footer {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-column1,
+  .footer-column2 {
+    margin: 0;
+    padding: 1rem 0;
+    border-right: none;
+  }
+
+  .footer-column2 {
+    padding-top: 20px;
+  }
+
+  .footer-column2 ul,
+  .term_condtion_conatiner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .Ul_contact_partner {
+    flex-direction: column;
+    border-bottom: none;
+  }
+
+  .Ul_contact_partner li {
+    border-right: none;
+    padding-right: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .social-icons {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .download_image {
+    height: 5vh;
+  }
+
+  .footer-bottom {
+    position: relative;
+    padding: 10px;
+  }
+
+  .Amam_text {
+    font-size: 24px;
+  }
+
+  .p_text_ama {
+    font-size: 14px;
+  }
+
+  .donwload_name,
+  .socail_media_text {
+    font-size: 16px;
+  }
+
+  .social-icon {
+    font-size: 30px;
+    padding: 10px;
+  }
+
+  .Input_text_send_mail {
+    width: 70%;
+  }
+
+  .paper-plane-icon {
+    margin-left: -30px;
+    font-size: 20px;
+  }
+
+  .term_condtion_conatiner p {
+    font-size: 11px;
+  }
+
+  .footer-bottom p {
+    font-size: 12px;
+  }
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .header_footer {
@@ -14,7 +113,6 @@
   background-color: rgb(155, 153, 153);
   display: flex;
   justify-content: center;
-
 }
 
 .Ama_name {
@@ -41,26 +139,12 @@
   font-size: 20px;
   color: black;
   font-weight: 600;
-}
-
-.donwload_name {
-  font-size: 20px;
-  color: black;
-  font-weight: 600;
   margin-right: 10px;
 }
 
 .Downlad_Appp {
-
   align-items: center;
   margin-bottom: 20px;
-}
-
-.donwload_name {
-  font-size: 20px;
-  color: black;
-  font-weight: 600;
-
 }
 
 .input-container {
@@ -74,7 +158,6 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 50%;
-
 }
 
 .Input_text_send_mail::placeholder {
@@ -87,21 +170,22 @@
   cursor: pointer;
   font-size: 30px;
 }
+
 .App_download {
   display: flex;
   padding-top: 40px;
-
 }
+
 .download_image {
   height: 7vh;
-
 }
+
 .footer-content {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-
 }
+
 .footer-column2 {
   flex: 1;
   margin: 0 1rem;
@@ -125,11 +209,11 @@
   font-size: 15px;
   font-weight: 500;
 }
+
 .Ul_contact_partner {
   display: flex;
   justify-content: space-evenly;
   border-bottom: 0.5px dotted rgb(252, 252, 252);
-
 }
 
 .Socail_media {
@@ -141,7 +225,6 @@
   color: black;
   font-weight: 600;
   border-bottom: 1px solid white;
-
 }
 
 .social-icons {
@@ -169,8 +252,6 @@
   transform: scale(0.9);
   box-shadow: none;
 }
-
-
 
 .whatsapp-icon {
   color: #25D366;
@@ -202,16 +283,10 @@
   color: black;
 }
 
-
-
-
-
 .footer-column1 {
   flex: 2;
   margin: 0 1rem;
   border-right: 1px dotted white;
-
-
 }
 
 .footer-column ul {
@@ -230,7 +305,6 @@
 
 .footer-bottom {
   position: absolute;
-
   left: 0;
   width: 100%;
   background-color: rgb(162, 162, 162);
@@ -239,8 +313,7 @@
   padding: 20px;
 }
 
-.footer-bottom P {
+.footer-bottom p {
   color: black;
   font-size: 15px;
 }
-

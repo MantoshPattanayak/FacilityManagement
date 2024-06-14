@@ -1,0 +1,228 @@
+/* css of table */
+
+.Main_Conatiner_table_FacilityReg {
+    margin-top: 120px;
+}
+
+.Main_Conatiner_table_FacilityReg > .table_Container {
+    overflow-y: auto;
+    max-height: 450px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.Main_Conatiner_table_FacilityReg .create-role-btn {
+    background-color: #fdfdfd;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: rgb(12, 12, 12);
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.Main_Conatiner_table_FacilityReg .create-role-btn:hover {
+    background-color: #00B562;
+    transition: 0.5s;
+}
+
+.Main_Conatiner_table_FacilityReg .search_text_conatiner {
+    display: flex;
+    justify-content: space-between;
+    /* padding: 10px; */
+    padding-left: 120px;
+    padding-right: 120px;
+    align-items: center;
+}
+
+.Main_Conatiner_table_FacilityReg .search_field_button {
+    border: 1px solid #00000033;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 10px 15px;
+}
+
+.Main_Conatiner_table_FacilityReg .search_input_field {
+    padding: 5px;
+    width: 30vh;
+    border: 1px solid;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+/* Style the input field border when it's focused */
+.Main_Conatiner_table_FacilityReg .search_input_field:focus {
+    border-color: #3a3b3a;
+}
+
+
+.Main_Conatiner_table_FacilityReg .table-heading {
+    /* padding-left: 10px; */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    /* Converted from 20px to 2.5vw */
+}
+
+.Main_Conatiner_table_FacilityReg .table-heading h2 {
+    /* margin-bottom: 1.5vw; */
+    /* Converted from 10px to 1.5vw */
+    min-width: 85vw;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 5vh;
+    display: flex;
+    align-items: flex-start;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+
+.Main_Conatiner_table_FacilityReg > table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    /* margin: 10px; */
+    /* padding-left: 20px; */
+    /* width: max-content; */
+    /* table-layout: fixed; */
+}
+
+.Main_Conatiner_table_FacilityReg table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+}
+
+.Main_Conatiner_table_FacilityReg table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+}
+
+.Main_Conatiner_table_FacilityReg table th,
+.Main_Conatiner_table_FacilityReg table td {
+    padding: .625em;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.Main_Conatiner_table_FacilityReg table th {
+    font-size: .80em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    background-color: #3e82ff;
+    color: #f8f8f8;
+
+}
+
+.Main_Conatiner_table_FacilityReg tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+    /* Specify the background color for odd rows */
+}
+
+.Main_Conatiner_table_FacilityReg tbody tr:nth-child(even) {
+    background-color: #f0f0f0;
+    /* Specify the background color for even rows */
+}
+
+
+
+
+
+@media screen and (max-width: 892px) {
+    .Main_Conatiner_table_FacilityReg table {
+        border: 0;
+    }
+
+    .Main_Conatiner_table_FacilityReg .search_text_conatiner {
+        display: flex;
+        justify-content: flex-end;
+        padding: 5px;
+    }
+
+    .Main_Conatiner_table_FacilityReg .table-heading {
+        margin-top: 5vw;
+    }
+
+    .table-heading h2 {
+        min-width: 91vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+
+
+    .Main_Conatiner_table_FacilityReg table caption {
+        font-size: 1.3em;
+    }
+
+    .Main_Conatiner_table_FacilityReg table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .Main_Conatiner_table_FacilityReg table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    .Main_Conatiner_table_FacilityReg table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    .Main_Conatiner_table_FacilityReg table td::before {
+        /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .Main_Conatiner_table_FacilityReg table td:last-child {
+        border-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .Main_Conatiner_table_FacilityReg .table-heading {
+        margin-top: 7vw;
+    }
+
+    .Main_Conatiner_table_FacilityReg .table-heading h2 {
+        min-width: 90vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .Main_Conatiner_table_FacilityReg .table-heading {
+        margin-top: 10vw;
+    }
+
+    .Main_Conatiner_table_FacilityReg .table-heading h2 {
+        min-width: 91vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+}

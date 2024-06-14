@@ -496,7 +496,8 @@ let addToCart = async (req,res)=>{
             isUserExist = await cart.create({
                 userId:userId,
                 createdDt:createdDt,
-                updatedDt:updatedDt
+                updatedDt:updatedDt,
+                statusId:statusId
             })
         }
         // then check entity wise where the user wants to add the data
@@ -694,11 +695,13 @@ let addToCart = async (req,res)=>{
 let viewCartByUserId = async(req,res)=>{
     try {
         const userId = req.user?.userId || 1
+    
         let findCartIdByUserId = await cart.findOne({
             where:{
             [Op.and]:[{userId: userId},{statusId:1}]
             }
         })
+        console.log('findCartIdByUserId', findCartIdByUserId);
         if(findCartIdByUserId){
             console.log(findCartIdByUserId.cartId,'cartId')
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 

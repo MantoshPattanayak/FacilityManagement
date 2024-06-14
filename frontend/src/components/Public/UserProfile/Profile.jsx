@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from 'react-redux';
 import { Logout } from "../../../utils/authSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Profile() {
   const dispatch = useDispatch(); // Initialize dispatch
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ export default function Profile() {
   async function getActivitiesData() {
     try {
       let res = await axiosHttpClient("VIEW_FILTER_OPTIONS_API", "get");
-      console.log("getActivitiesData", res.data.fetchActivityMaster[0]);
+      console.log("getActivitiesData", res);
       setActivityData(res.data.fetchActivityMaster[0]);
     }
     catch (err) {
@@ -189,9 +191,28 @@ export default function Profile() {
     setPhotoUrl(null);
   };
   //handle for Logout ------------------------------------
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    // logOutUser(e);
     dispatch(Logout());
-    navigate('/')
+    async function logOutAPI() {
+      try {
+        let res = await axiosHttpClient('LOGOUT_API', 'post');
+        console.log(res.data);
+        toast.success('Logged out successfully!!', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    logOutAPI();
   }
 
   // get profile data from api
@@ -221,6 +242,17 @@ export default function Profile() {
     }
     catch (error) {
       console.error(error);
+      if (error.respone.status == 401) {
+        toast.error('You are logged out. Kindly login first.', {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        })
+      }
     }
   }
 
@@ -318,7 +350,7 @@ export default function Profile() {
 
               </ul>
               {/* Logout Button */}
-              <button className="button-67 " onClick={handleLogout}>
+              <button className="button-67 " onClick={(e) => { handleLogout(e); navigate('/') }}>
                 <h1>Logout</h1>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>

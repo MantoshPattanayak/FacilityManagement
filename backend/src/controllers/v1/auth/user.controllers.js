@@ -60,7 +60,7 @@ const sendEmail = require('../../../utils/generateEmail')
 
 let generateToken = require('../../../utils/generateToken');
 
-
+// this will work for both user and admin for generate otp handler
 
 let generateOTPHandler = async (req,res)=> {
   try {
@@ -301,6 +301,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
    
   }
 }
+
 
 let sendEmailToUser = async(req,res)=>{
   try {

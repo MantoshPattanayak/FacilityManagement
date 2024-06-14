@@ -42,6 +42,28 @@ body {
     width: 94%;
 } */
 
+/* Add this CSS */
+.iconPlayApple {
+    position: fixed;
+    top: 40vh;  /* Adjust this value as needed */
+    right: 10px;  /* Adjust this value as needed */
+    z-index: 1000;  /* Ensure it is above other content */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    background-color: white;
+    padding: 10px;
+    border-radius: 16px;
+  }
+  
+
+  .iconPlayApple img {
+    margin: 0 5px;  /* Add some space between icons */
+    width: 40px;  /* Adjust the width of the icons */
+    height: auto;  /* Maintain aspect ratio */
+  }
+
 .adImg {
     height: 20vh;
     padding: 40px;
@@ -96,10 +118,18 @@ body {
 } */
 
 .abBgButton {
-    display: flex;
+    /* display: flex;
     width: 100%;
     justify-content: end;
     gap: 0.5vw;
+    margin-top: 5vh; */
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    align-items: flex-end;
+    gap: 0.5vw;
+    margin-top: 5vh;
+    padding-right: 2vw;
 }
 
 .abBgButton svg {
@@ -115,6 +145,7 @@ body {
     flex-direction: column;
     margin-top: 54px;
     margin-bottom: 68px;
+
 }
 
 .Search-Conatiner {
@@ -234,7 +265,7 @@ body {
     height: 130px;
 }
 
-.icon img {
+.iconLogo img {
     width: 100px;
     height: auto;
 
@@ -254,14 +285,18 @@ body {
     align-items: center;
 }
 
-.icon {
+.iconLogo {
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
     align-items: center;
     color: white;
-
+    transform: translateY(-7%);
+    cursor: pointer;
 }
+
+
+
 
 
 /* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/
@@ -626,7 +661,8 @@ padding-bottom: 20px;
 
     flex-shrink: 0;
     width: 20vw;
-    height: 42vh;
+    /* height: 42vh; */
+    height: 98%;
     background: rgba(224, 248, 229, 1);
     margin: 10px;
     display: flex;
@@ -738,6 +774,15 @@ padding-bottom: 20px;
 /* // --------------Explore new Activities------------------------------------------------------------- */
 
 
+
+.exploreNewAct-Parent-Container {
+    width: 100%;
+    height: 70vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
 .exploreNewAct-outer {
     width: 100%;
     display: flex;
@@ -778,6 +823,7 @@ padding-bottom: 20px;
     /* border: 1px solid #ccc; */
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
 
@@ -792,7 +838,7 @@ padding-bottom: 20px;
     border-radius: 8px;
 }
 
-.exploreNewAct-Parent-Container {
+/* .exploreNewAct-Parent-Container {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../assets/Explore_New_Activity_background.png");
     width: 100%;
     height: 70vh;
@@ -800,7 +846,7 @@ padding-bottom: 20px;
     background-repeat: no-repeat;
 
     position: relative;
-}
+} */
 
 .exploreNewAct-Parent-Container img {
     width: 100%;
@@ -1310,28 +1356,43 @@ margin-top: 20px;
 
 /* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
 
+@media screen and (min-width: 1401px) {
+    .image-secondDiv img {
+        height: 100%;
+    }
+}
+
 @media screen and (max-width: 1400px) {
+
+    .Search-Conatiner {
+        height: auto;
+        gap: 2vh;
+    }
 
     /*---- event card section----*/
     .carousel-slide2 {
-        height: 17vh;
+        /* height: 39vh; */
+        height: 96%;
     }
 
     .exploreNewAct-Parent-Container {
-        height: 70vh;
+        height: 55vh;
     }
 
     .advertisement-Image {
         height: 50vh;
     }
+
     .galleryOuter {
         gap: 0vh;
         margin-block: 4vh;
     }
-    .avatisement-Content2{
+
+    .avatisement-Content2 {
         height: auto;
     }
-    .advertisement-Scroll2{
+
+    .advertisement-Scroll2 {
         margin-bottom: 6vh;
     }
 
@@ -1339,6 +1400,11 @@ margin-top: 20px;
 
 
 @media screen and (max-width: 1200px) {
+
+    .Search-Conatiner {
+        height: auto;
+        gap: 2vh;
+    }
 
 
     .bg-img {
@@ -1426,6 +1492,7 @@ margin-top: 20px;
         width: 94%;
         margin-top: 16px;
         margin-bottom: 28px;
+        align-items: flex-start;
     }
 
 
@@ -1459,7 +1526,9 @@ margin-top: 20px;
     }
 
     .Search-Conatiner {
-        height: 350px;
+        /* height: 350px; */
+        height: auto;
+        gap: 2vh;
     }
 
     /*---- suggestion section----*/
@@ -1483,7 +1552,7 @@ margin-top: 20px;
         width: 32px;
     }
 
-    .icon h2 {
+    .iconLogo h2 {
         font-size: 12px;
     }
 
@@ -1601,19 +1670,20 @@ margin-top: 20px;
     .carousel-slide2 {
         /* width: 26vw;
         height: auto; */
-        width: 20vw;
-        height: 17vh;
+        width: 26vw;
+        /* height: 43vh; */
+        height: 94%;
         padding-top: 9px;
     }
 
 
-     /* ---------Current events ------ */
+    /* ---------Current events ------ */
 
-     .carousel-slide2 {
+    /* .carousel-slide2 {
         width: 26vw;
         height: 22vh;
         padding-top: 9px;
-    }
+    } */
 
     .Yoga_image2 {
         width: 25vw;
@@ -1624,39 +1694,262 @@ margin-top: 20px;
     /* {------------ Explore new activities-----------} */
 
 
-.exploreNewAct-outer {
-    padding-left: 12vw;
-    gap: 6vw;
+    .exploreNewAct-outer {
+        padding-left: 12vw;
+        gap: 6vw;
+    }
+
+    .exploreNewAct-secondDiv {
+        width: 94%;
+    }
 }
-.exploreNewAct-secondDiv{
-    width: 94%;
-}
-}
 
 
 
 
 
-/* ---------------Gallery section --------------------------------*/
-
-
-@media screen and (max-width: 575px) {
+@media screen and (max-width: 875px) {
 
     .landing-page_contant {
-        align-items: center;
+        align-items: flex-start;
+        margin-left: -12vw;
     }
 
     .Search-Conatiner {
-        height: 36vh;
+        /* height: 36vh; */
+        height: 42vh;
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
     }
 
-    
+    .suggestions {
+        top: 53vh;
+        width: auto;
+    }
+
     /* {----------Logo sticker------------------------------------------------------------------------} */
 
-    .icon h2 {
+    .iconLogo h2 {
+        font-size: 7px;
+    }
+
+    .logo-section {
+        height: 11vh;
+    }
+
+    /* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
+    .map-parentContainer {
+        flex-direction: column;
+    }
+
+    .map-bar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .map-container2 {
+        width: 88%;
+    }
+
+    .mapSearchButton input {
+        width: 308px;
+    }
+
+
+    /* --------- Facilities ner me */
+
+    .nearByFacilities-heading {
+        display: flex;
+        flex-direction: row;
+        width: 288px;
+    }
+
+    .nearByFacilities-heading h1 {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .nearByFacilities {
+        width: 88%;
+    }
+
+    .facililiy-list-map {
+        height: 180px;
+        overflow-y: auto;
+    }
+
+    .nearByFacilities {
+        height: 246px;
+    }
+
+    /*------------ Current events-------------------------------- */
+    .EventContainerTitle h1 {
+        font-size: 18px;
+    }
+
+    .carousel-slide2 {
+        width: 44vw;
+        height: auto;
+        padding-top: 12px;
+    }
+
+    .Name_yoga2 {
+        font-size: 12px;
+        font-weight: 600;
+        width: 40vw;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .Yoga_image2 {
+        width: 38vw;
+    }
+
+    .carousel-slide-text {
+        width: 44vw;
+    }
+
+    .Yoga_date_time2 {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .carousel-slide-location {
+        width: 37vw;
+    }
+
+    .carousel-slide-location h1 {
+        width: 32vw;
+    }
+
+
+    /* Explore new Activities */
+
+    .activity {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 7px;
+        padding: 5px;
+        font-size: 8px;
+        border-radius: 8vw;
+        justify-content: center;
+        width: 91px;
+        background-color: hsl(0, 0%, 52%, 0.5);
+        color: white;
+    }
+
+    .exploreNewAct-outer {
+        padding-left: 22px;
+        gap: 24px;
+    }
+
+    .parkItem button {
+        font-size: 9px;
+        height: 16px;
+        width: 50px;
+        background-color: white;
+        border-radius: 4px;
+        color: black;
+    }
+
+    .parkList p {
+        margin: 5px 0;
+        font-size: 10px;
+        width: 160px;
+        color: rgba(255, 255, 255, 0.818);
+    }
+
+    .whiteHeader {
+        width: 4px;
+        height: 26px;
+    }
+
+    .exploreNewAct-Header h1 {
+        font-size: 18px;
+    }
+
+    .carousel-image-container {
+        margin: 0 0px;
+    }
+
+    .galleryTitle h1 {
+        font-size: 18px;
+    }
+
+    .greenHeader {
+        width: 4px;
+        height: 26px;
+    }
+
+    .parkList {
+        height: auto;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+
+    /*------------- Gallery------- */
+
+
+    .galleryOuter {
+        margin-block: 4vh;
+    }
+
+    /* -----Advtisement-------- */
+
+
+    .avatisement-Border {
+        margin-top: 0vh;
+    }
+
+
+    /*auto-suggest section css*/
+    .autosuggest {
+        width: 100%;
+        max-width: none;
+    }
+
+    .suggestions li {
+        padding: 6px;
+        font-size: 14px;
+    }
+}
+
+
+@media screen and (max-width: 575px) {
+
+    .landingcontainer {
+        overflow-x: auto;
+    }
+
+    .landing-page_contant {
+        align-items: flex-end;
+        /* margin-left: 2vw; */
+        margin-left: 2%;
+    }
+
+    .Search-Conatiner {
+        /* height: 42vh; */
+        /* height: 60vh; */
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        height: auto;
+        gap: 2vh;
+    }
+
+    .suggestions {
+        width: auto;
+        top: 58vh;
+    }
+
+
+    /* {----------Logo sticker------------------------------------------------------------------------} */
+
+    .iconLogo h2 {
         font-size: 7px;
     }
 
@@ -1848,17 +2141,24 @@ margin-top: 20px;
 
 @media screen and (max-width: 430px) {
 
-    .Search-Conatiner {
-     height: 25vh;   
-     padding: 13px;
+    .landingcontainer {
+        overflow-x: auto;
     }
 
-    .bg-img{
+    .Search-Conatiner {
+        height: auto;
+        gap: 2vh;
+        padding: 13px;
+    }
+
+    .bg-img {
         height: 40vh;
     }
-    .abBgButton{
+
+    /* .abBgButton {
         margin-left: 67vw;
-    }
+    } */
+
     .landing-page_contant {
         margin-top: 0px;
     }
@@ -1882,11 +2182,11 @@ margin-top: 20px;
 
     /* ----------Logo sticker---------------------------------------- */
 
-    .icon h2 {
+    .iconLogo h2 {
         font-size: 6px;
     }
 
-    .icon img {
+    .iconLogo img {
         height: 54px;
     }
 
@@ -1944,11 +2244,35 @@ margin-top: 20px;
     }
 }
 
-@media screen and (max-width: 360px) {
+@media screen and (max-width: 400px) {
     .suggestions {
-        top: 317px;
+        /* top: 317px; */
+        top: 56vh;
         width: 75%;
     }
+
+    .Search-Conatiner {
+        height: 42vh;
+    }
+
+    /* Landing page */
+    .landingcontainer {
+        width: 122vw;
+    }
+
+    .landing-page_contant {
+        align-items: flex-start;
+        margin-left: -13%;
+    }
+
+    .bg-img {
+        width: 122vw;
+    }
+
+    .logo-section {
+        width: 122vw;
+    }
+
 }
 
 .avatisement-Image {
@@ -1962,14 +2286,14 @@ margin-top: 20px;
 }
 
 /* notice (New) */
-.New_text{
+.New_text {
     background: #121FCF;
     background: linear-gradient(to right, #121FCF 16%, #CF1512 0%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 900;
-     margin-top: -10px;
-     transform: rotate(-4deg);
-     font-size: 15px;
- 
+    margin-top: -10px;
+    transform: rotate(-4deg);
+    font-size: 15px;
+
 }

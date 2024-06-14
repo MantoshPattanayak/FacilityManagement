@@ -25,7 +25,6 @@ db1.DataTypes = DataTypes;
 db1.QueryTypes = QueryTypes;
 
 db1.amenitiesmaster = require("./amenitiesmaster.models")(sequelize, DataTypes);
-db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
 db1.amenityfacilities = require("./amenityfacilities.models")(
   sequelize,
   DataTypes
@@ -55,6 +54,7 @@ db1.transactiondetails = require("./transactiondetails.models")(
   sequelize,
   DataTypes
 );
+db1.usermaster = require("./usermaster.models")(sequelize, DataTypes);
 db1.userresource = require("./userresource.models")(sequelize, DataTypes);
 db1.gendermaster = require("./gendermaster.models")(sequelize, DataTypes);
 db1.file = require("./file.models")(sequelize, DataTypes);
@@ -90,19 +90,23 @@ db1.cartItem = require('./cartitems.models')(sequelize,DataTypes)
 db1.eventBookings = require('./eventbookings.models')(sequelize,DataTypes)
 //eventactivities - event masters
 db1.eventActivities = require('./eventactivities.models')(sequelize, DataTypes)
-
+db1.eventCategoryMaster = require('./eventcategorymasters.models')(sequelize,DataTypes)
 // userActivityPreference
 
 db1.userActivityPreference = require('./useractivitypreferences.models')(sequelize,DataTypes)
 // grievance masters and details
 db1.grievancemasters = require('./grievancemasters.models')(sequelize, DataTypes)
 db1.grievanceDetails = require('./grievancedetails.models')(sequelize, DataTypes)
+// ownership details
+db1.ownershipDetails = require('./ownershipdetails.models')(sequelize, DataTypes)
 // notification table
 db1.publicnotifications = require('./publicnotifications.models')(sequelize, DataTypes)
 
 db1.clicklog = require('./clicklog.models')(sequelize,DataTypes)
 //facility activities
 db1.facilityactivities = require('./facilityactivities.models')(sequelize, DataTypes)
+// facilityEvents
+db1.facilityEvents = require('./facilityEvents.models')(sequelize, DataTypes)
 // facility tariff
 db1.facilitytariff = require('./facilitytariff.models')(sequelize,DataTypes)
 //frequentlyaskquestion
@@ -114,7 +118,9 @@ db1.promotions = require('./promotion.model')(sequelize, DataTypes)
 
 db1.departmentmasters = require('./departmentmasters.models')(sequelize, DataTypes)
 db1.grievancecategories = require('./grievancecategories.models')(sequelize, DataTypes)
-
+// bank details table 
+db1.bankdetails = require('./bankdetail.models')(sequelize,DataTypes)
+// join operations start
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
@@ -123,7 +129,7 @@ db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 
 db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"})
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
-
+// join operations end
 
 db1.faq.sync({
   alter: false,

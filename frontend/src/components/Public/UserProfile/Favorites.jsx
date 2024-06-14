@@ -11,7 +11,7 @@ import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons
 import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { decryptData, encryptData } from "../../../utils/encryptData";
-import { formatDate, logOutUser } from '../../../utils/utilityFunctions';
+import { formatDate, logOutUser, truncateName } from '../../../utils/utilityFunctions';
 // redux --------------------------------------------------------------------------
 import { useDispatch } from 'react-redux';
 import { Logout } from "../../../utils/authSlice";
@@ -39,7 +39,7 @@ const Favorites = () => {
     ];
     const [tab, setTab] = useState(tabList);
     const [bookmarkDetails, setBookmarkDetails] = useState([]);
-    const [refresh, setRefresh]  = useState(false);
+    const [refresh, setRefresh] = useState(false);
     useEffect(() => {
     }, [tab]);
 
@@ -96,13 +96,24 @@ const Favorites = () => {
         }
         catch (error) {
             console.error("Error in fetching data:", error);
+            if (error.respone.status == 401) {
+                toast.error('You are logged out. Kindly login first.', {
+                    autoClose: 3000, // Toast timer duration in milliseconds
+                    onClose: () => {
+                        // Navigate to another page after toast timer completes
+                        setTimeout(() => {
+                            navigate("/");
+                        }, 1000); // Wait 1 second after toast timer completes before navigating
+                    },
+                })
+            }
         }
     }
 
     async function fetchBookmarkList() {
         try {
             let res = await axiosHttpClient('VIEW_BOOKMARKS_LIST_API', 'post');
-            console.log('response bookmark list', res.data.data);
+            console.log('response bookmark list', res.data.data.sort((a, b) => {return a.id - b.id}));
             setBookmarkDetails(res.data.data);
         }
         catch (error) {
@@ -173,15 +184,35 @@ const Favorites = () => {
 
     //refresh componenet on 
     useEffect(() => {
-        if(refresh){
+        if (refresh) {
             fetchBookmarkList();
         }
     }, [refresh])
 
     //handle for Logout ------------------------------------
-    const handleLogout = () => {
+    const handleLogout = (e) => {
+        // logOutUser(e);
+        e.preventDefault();
         dispatch(Logout());
-        navigate('/')
+        async function logOutAPI() {
+            try {
+                let res = await axiosHttpClient('LOGOUT_API', 'post');
+                console.log(res.data);
+                toast.success('Logged out successfully!!', {
+                    autoClose: 3000, // Toast timer duration in milliseconds
+                    onClose: () => {
+                        // Navigate to another page after toast timer completes
+                        setTimeout(() => {
+                            navigate("/");
+                        }, 1000); // Wait 1 second after toast timer completes before navigating
+                    },
+                });
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
+        logOutAPI();
     }
 
     return (
@@ -258,8 +289,8 @@ const Favorites = () => {
                                                     {/* Bookmark icon */}
                                                     <div className='bookmark-icon' onClick={(e) => handleConfirmAction(e, bookmark.bookmarkId)}><FontAwesomeIcon icon={faBookmarkSolid} /></div>
 
-                                                    <div className='eventdetails-details-eventname'>{bookmark.name}</div>
-                                                    <div className='eventdetails-details-eventAddress'>{bookmark.address}</div>
+                                                    <div className='eventdetails-details-eventname' title={bookmark.name}>{truncateName(bookmark.name, 25)}</div>
+                                                    <div className='eventdetails-details-eventAddress' title={bookmark.address}>{truncateName(bookmark.address, 25)}</div>
                                                     <div className='flex justify-between eventdetails-details-eventTime'>
                                                         <div>Bookmarked on {formatDate(bookmark.bookmarkDate)}</div>
                                                     </div>
