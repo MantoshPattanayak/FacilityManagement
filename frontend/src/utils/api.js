@@ -7,6 +7,7 @@ const api = {
    FORGOT_PASSWORD_API: '/auth/forgotPassword', //put  mobileNo password
    PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
    PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
+   PRIVATE_LOGIN_VERIFY_OTP_API: '/userDetails/verifyOTPHandlerWithGenerateTokenForAdmin',   //post  encryptMobile  encryptOtp
    MAP_DISPLAY_DATA: '/mapData/displayMapData',
    MAP_SEARCH: '/mapData/searchParkFacilities',
    PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post

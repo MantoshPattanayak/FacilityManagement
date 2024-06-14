@@ -18,6 +18,7 @@ const createGrievance = async (req, res) => {
     details,
     statusId,
     filepath,
+    grievanceCatagoryId,
     isWhatsappNumber
   } = req.body;
     createGrievance = await grievance.create({
@@ -27,6 +28,7 @@ const createGrievance = async (req, res) => {
       subject : subject,
       details : details,
       statusId : statusId,
+      grievanceCatagoryId:grievanceCatagoryId,
       isWhatsappNumber : isWhatsappNumber
   });
   if(filepath)

@@ -61,7 +61,7 @@ const AdminLogin = () => {
 
     if (Object.keys(errors).length === 0) {
       try {
-        const res = await axiosHttpClient("PUBLIC_SIGNUP_VERIFY_OTP_API", "post", {
+        const res = await axiosHttpClient("PRIVATE_LOGIN_VERIFY_OTP_API", "post", {
           encryptMobile: encryptData(LogingDataPost.Mobile),
           encryptOtp: encryptData(LogingDataPost.otp)
         });
@@ -77,12 +77,11 @@ const AdminLogin = () => {
           toast.success("Login successfully.");
         }
         else{
-          toast.error('User does not exist. Kindly signup first!');
+          toast.error('User does not exist. Request admin for access.');
         }
       } catch (err) {
         console.error("Error:", err);
         toast.error("Login failed. Please try again.");
-        sessionStorage.setItem("isUserLoggedIn", 0);
       }
     } else {
       // Iterate over validation errors and display them

@@ -9,8 +9,15 @@ const facilityTypeMaster = db.facilitytype;
 const statusCodeMaster = db.statusmaster;
 const bookmarks = db.bookmarks;
 const hosteventdetails = db.hosteventdetails;
-const mailToken= require('../../../middlewares/mailToken.middlewares')
+const mailToken = require('../../../middlewares/mailToken.middlewares')
 const sendEmail = require('../../../utils/generateEmail')
+let otpCheck = db.otpDetails
+const { Op } = require("sequelize");
+let generateToken = require('../../../utils/generateToken');
+let authSessions = db.authsessions
+let deviceLogin = db.device
+let QueryTypes = db.QueryTypes
+let userActivityPreference = db.userActivityPreference
 
 let autoSuggestionForUserSearch = async (req, res) => {
   try {
@@ -203,9 +210,9 @@ let createUser = async (req, res) => {
     let roleId = await decrypt(encryptRole);
     let statusId = await decrypt(encryptStatus);
     let genderId = await decrypt(encryptGenderId);
-         
-    if(roleId==4){
-      return res.status(statusCode.BAD_REQUEST.code).json({message:'Please provide the role id of the BDA staff'})
+
+    if (roleId == 4) {
+      return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Please provide the role id of the BDA staff' })
     }
     // const encryptTitle = await encrypt(title);
     // const encryptfullName = await encrypt(fullName);
@@ -249,7 +256,7 @@ let createUser = async (req, res) => {
       return res
         .status(statusCode.CONFLICT.code)
         .json({ message: "User already exist same user_name" });
-     } 
+    }
     //  else if (existingAlternateUserMobile) {
     //   return res
     //     .status(statusCode.CONFLICT.code)
@@ -280,15 +287,15 @@ let createUser = async (req, res) => {
       });
 
       console.log(newUser);
-     
+
       let firstField = decrypt(encryptemailId);
       let secondField = decrypt(encryptMobileNumber)
-      let Token = await mailToken({firstField,secondField})
-      let verifyUrl = process.env.VERIFY_URL+`?token=${Token}`
-  
-   
+      let Token = await mailToken({ firstField, secondField })
+      let verifyUrl = process.env.VERIFY_URL + `?token=${Token}`
 
-        message = `Please verify your emailId.<br><br>
+
+
+      message = `Please verify your emailId.<br><br>
         This is your emailId <b>${firstField}</b><br>
         This is your password <b>${sentPassword}</b><br>
         Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
@@ -301,24 +308,24 @@ let createUser = async (req, res) => {
          font-size: 16px;">Verify Email</button> </a>
          </br></br>
          This link is valid for 10 mins only  `;
-     
-     
-        try {
-            await sendEmail({
-              email:`${firstField}`,
-              subject:"please verify the email for your amabhoomi user creation",
-              html:`<p>${message}</p>`
-            }
-            )
-  
-            return res
-            .status(statusCode.SUCCESS.code)
-            .json({ message: "User created successfully  and mail is sent and please verify the mail " });       
-           }
-            catch (err) {
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:"user created but mail not sent"})
+
+
+      try {
+        await sendEmail({
+          email: `${firstField}`,
+          subject: "please verify the email for your amabhoomi user creation",
+          html: `<p>${message}</p>`
         }
-   
+        )
+
+        return res
+          .status(statusCode.SUCCESS.code)
+          .json({ message: "User created successfully  and mail is sent and please verify the mail " });
+      }
+      catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: "user created but mail not sent" })
+      }
+
     }
   } catch (err) {
     return res
@@ -326,104 +333,345 @@ let createUser = async (req, res) => {
       .json({ message: err.message });
   }
 };
-let verifyOTPHandlerWithGenerateTokenForAdmin = async (req,res)=>{
+
+//token generation
+let tokenAndSessionCreation = async (isUserExist, lastLoginTime, deviceInfo) => {
   try {
-      // Call the API to verify OTP
-      // const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
+    let userName = decrypt(isUserExist.userName)
+    let emailId
+    let sessionId;
+    if (isUserExist.emailId != null) {
+      emailId = decrypt(isUserExist.emailId)
 
-      // Check if OTP verification was successful
-      console.log(1,req.body)
-      let statusId = 1;
-      let {encryptMobile:mobileNo,encryptOtp:otp}=req.body
+    }
 
-      let userAgent =  req.headers['user-agent'];
+    let userId = isUserExist.userId
+    let mobileNo = decrypt(isUserExist.phoneNo)
+    console.log(isUserExist.userId, userName, emailId, mobileNo)
 
-      console.log('userAgent', userAgent)
-      let deviceInfo = parseUserAgent(userAgent)
-      let lastLoginTime = new Date();
+    console.log(userId, userName, emailId, mobileNo, 'mobileNo')
 
+    let accessAndRefreshToken = await generateToken(userId, userName, emailId, mobileNo)
 
-      if (mobileNo && otp) {
-        // check if the otp is valid or not
-        let isOtpValid = await otpCheck.findOne({
-          where:{
-              expiryTime:{[Op.gte]:new Date()},
-              code:otp,
-              mobileNo:mobileNo
+    console.log(accessAndRefreshToken, "accessAndRefreshToken")
+    if (accessAndRefreshToken?.error) {
+      return {
+        error: accessAndRefreshToken.error
+      }
+    }
+    let { accessToken, refreshToken } = accessAndRefreshToken;
+
+    console.log(accessToken, refreshToken, 'accessToken and refresh token')
+    const options = {
+      httpOnly: true,
+      secure: true
+    };
+
+    let updateLastLoginTime = await user.update({ lastLogin: lastLoginTime }, {
+      where: {
+        userId: isUserExist.userId
+      }
+    })
+    // check for active session
+
+    let checkForActiveSession = await authSessions.findOne({
+      where: {
+        [Op.and]: [{ userId: isUserExist.userId },
+        { active: 1 }]
+      }
+    })
+    // if active
+    if (checkForActiveSession) {
+
+      let updateTheSessionToInactive = await authSessions.update({ active: 2 }, {
+        where: {
+          sessionId: checkForActiveSession.sessionId
+        }
+      })
+      console.log('update the session To inactive', updateTheSessionToInactive)
+      // after inactive
+      if (updateTheSessionToInactive.length > 0) {
+        // check if it is present in the device table or not
+        let checkDeviceForParticularSession = await deviceLogin.findOne({
+          where: {
+            sessionId: checkForActiveSession.sessionId
           }
         })
-        if(isOtpValid){
-            let updateTheVerifiedValue = await otpCheck.update({verified:1}
-              ,{
-                where:{
-                  id:isOtpValid.id
-                }
-              }
-            )
-            console.log(updateTheVerifiedValue,'update the verified value')
-             // Check if the user exists in the database
-             let isUserExist = await user.findOne({
+        if (checkDeviceForParticularSession) {
+          if (checkDeviceForParticularSession.deviceName == deviceInfo.deviceName && checkDeviceForParticularSession.deviceType == deviceInfo.deviceType) {
+            // insert to session table first 
+            let insertToAuthSession = await authSessions.create({
+              lastActivity: new Date(),
+              active: 1,
+              deviceId: checkDeviceForParticularSession.deviceId,
+              userId: isUserExist.userId
+            })
+            // then update the session id in the device table
+            let updateTheDeviceTable = await deviceLogin.update({
+              sessionId: insertToAuthSession.sessionId
+            }, {
               where: {
-                  [Op.and]: [
-                      { phoneNo: mobileNo },
-                      { statusId: statusId },
-                      { roleId: { [Op.ne]: 4 } } // roleId should not be equal to 4
-                  ]
+                deviceId: checkDeviceForParticularSession.deviceId
               }
-          });
-            // console.log(isUserExist,'check user')
-          // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
-          if(!isUserExist){
-
-            return res.status(statusCode.SUCCESS.code).json({message:"please render the sign up page",decideSignUpOrLogin:0});  
-
+            })
+            sessionId = insertToAuthSession.sessionId
           }
-          
-          console.log('2')
-          let tokenGenerationAndSessionStatus = await tokenAndSessionCreation(isUserExist,lastLoginTime,deviceInfo);
+          else {
+            // insert to device table 
+            let insertToDeviceTable = await deviceLogin.create({
+              deviceType: deviceInfo.deviceType,
+              deviceName: deviceInfo.deviceName,
 
-          console.log('all the data', tokenGenerationAndSessionStatus)
-
-          if(tokenGenerationAndSessionStatus?.error){
-
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-              message:tokenAndSessionCreation.error
             })
 
+            // Insert to session table
+            let insertToAuthSession = await authSessions.create({
+              lastActivity: new Date(),
+              active: 1,
+              deviceId: insertToDeviceTable.deviceId,
+              userId: isUserExist.userId
+            })
+            // update the session id in the device table
+            let updateSessionIdInDeviceTable = await deviceLogin.update({
+              sessionId: insertToAuthSession.sessionId
+            }, {
+              where: {
+                deviceId: insertToDeviceTable.deviceId
+              }
+            })
+
+            sessionId = insertToAuthSession.sessionId
           }
+          console.log('session id ', sessionId)
+        }
+        else {
+          console.log('session id2 ', sessionId)
 
-          console.log('here upto it is coming')
-          let {accessToken, refreshToken, options,sessionId} = tokenGenerationAndSessionStatus
-                  //menu items list fetch
-        //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
-        //     inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-        //     where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
-        //     order by rm.orderIn`
+          // insert to device table 
+          let insertToDeviceTable = await deviceLogin.create({
+            deviceType: deviceInfo.deviceType,
+            deviceName: deviceInfo.deviceName,
 
-        //     let menuListItems = await sequelize.query(menuListItemQuery,{
-        //       replacements:{
-        //         userId:isUserExist.userId
-        //       },
-        //       type: QueryTypes.SELECT
-        //     })
- 
+          })
 
-        // let dataJSON = new Array();
-        // //create parent data json without child data 
-        // for (let i = 0; i < menuListItems.length; i++) {
-        //     if (menuListItems[i].parentResourceId === null) {
-        //         dataJSON.push({
-        //             id: menuListItems[i].resourceId,
-        //             name: menuListItems[i].name,
-        //             orderIn: menuListItems[i].orderIn,
-        //             path: menuListItems[i].path,
-        //             children: new Array()
-        //         })
-        //     }
-        // }
-        
+          // Insert to session table
+          let insertToAuthSession = await authSessions.create({
+            lastActivity: new Date(),
+            active: 1,
+            deviceId: insertToDeviceTable.deviceId,
+            userId: isUserExist.userId
+          })
+          // update the session id in the device table
+          let updateSessionIdInDeviceTable = await deviceLogin.update({
+            sessionId: insertToAuthSession.sessionId
+          }, {
+            where: {
+              deviceId: insertToDeviceTable.deviceId
+            }
+          })
+          sessionId = insertToAuthSession.sessionId
+
+        }
+        console.log('session 3', sessionId)
+      }
+      else {
+        console.log('session 4', sessionId)
+
+        return {
+          error: 'Something Went Wrong'
+        }
+
+      }
+
+
+    }
+    else {
+      // insert to device table 
+      let insertToDeviceTable = await deviceLogin.create({
+        deviceType: deviceInfo.deviceType,
+        deviceName: deviceInfo.deviceName,
+
+      })
+
+      // Insert to session table
+      let insertToAuthSession = await authSessions.create({
+        lastActivity: new Date(),
+        active: 1,
+        deviceId: insertToDeviceTable.deviceId,
+        userId: isUserExist.userId
+      })
+      // update the session id in the device table
+      let updateSessionIdInDeviceTable = await deviceLogin.update({
+        sessionId: insertToAuthSession.sessionId
+      }, {
+        where: {
+          deviceId: insertToDeviceTable.deviceId
+        }
+      })
+      sessionId = insertToAuthSession.sessionId
+    }
+    console.log('session id5', encrypt(sessionId), sessionId)
+    return {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      sessionId: encrypt(sessionId),
+      options: options
+    }
+
+  } catch (err) {
+    return {
+      error: 'Something Went Wrong'
+    }
+  }
+}
+
+function parseUserAgent(userAgent) {
+  let deviceType = 'Unknown';
+  let deviceName = 'Unknown Device';
+
+  // Check if the User-Agent string contains patterns indicative of specific device types
+  if (userAgent.includes('Windows')) {
+      deviceType = 'Desktop';
+      deviceName = 'Windows PC';
+  } else if (userAgent.includes('Macintosh')) {
+      deviceType = 'Desktop';
+      deviceName = 'Mac';
+  } else if (userAgent.includes('Linux')) {
+      deviceType = 'Desktop';
+      deviceName = 'Linux PC';
+  } else if (userAgent.includes('Android')) {
+      deviceType = 'Mobile';
+      deviceName = 'Android Device';
+  } else if (userAgent.includes('iPhone') || userAgent.includes('iPad') || userAgent.includes('iPod')) {
+      deviceType = 'Mobile';
+      deviceName = 'iOS Device';
+  }
+    else if(userAgent.includes('Postman')){
+      deviceType = 'PC'
+      deviceName = 'Postman'
+      
+    }
+
+  return { deviceType, deviceName };
+}
+
+let verifyOTPHandlerWithGenerateTokenForAdmin = async (req, res) => {
+  try {
+    // Call the API to verify OTP
+    // const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
+
+    // Check if OTP verification was successful
+    console.log(1, req.body)
+    let statusId = 1;
+    let { encryptMobile: mobileNo, encryptOtp: otp } = req.body
+
+    let userAgent = req.headers['user-agent'];
+
+    console.log('userAgent', userAgent)
+    let deviceInfo = parseUserAgent(userAgent)
+    let lastLoginTime = new Date();
+
+
+    if (mobileNo && otp) {
+      // check if the otp is valid or not
+      let isOtpValid = await otpCheck.findOne({
+        where: {
+          expiryTime: { [Op.gte]: new Date() },
+          code: otp,
+          mobileNo: mobileNo
+        }
+      })
+      if (isOtpValid) {
+        let updateTheVerifiedValue = await otpCheck.update({ verified: 1 }
+          , {
+            where: {
+              id: isOtpValid.id
+            }
+          }
+        )
+        console.log(updateTheVerifiedValue, 'update the verified value')
+        // Check if the user exists in the database
+        let isUserExist = await user.findOne({
+          where: {
+            [Op.and]: [
+              { phoneNo: mobileNo },
+              { statusId: statusId },
+              { roleId: { [Op.ne]: 4 } } // roleId should not be equal to 4
+            ]
+          }
+        });
+        // console.log(isUserExist,'check user')
+        // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
+        if (!isUserExist) {
+
+          return res.status(statusCode.SUCCESS.code).json({ message: "please render the sign up page", decideSignUpOrLogin: 0 });
+
+        }
+
+        console.log('2', isUserExist)
+        let tokenGenerationAndSessionStatus = await tokenAndSessionCreation(isUserExist, lastLoginTime, deviceInfo);
+
+        console.log('all the data', tokenGenerationAndSessionStatus)
+
+        if (tokenGenerationAndSessionStatus?.error) {
+
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: tokenAndSessionCreation.error
+          })
+
+        }
+
+        console.log('here upto it is coming')
+        let { accessToken, refreshToken, options, sessionId } = tokenGenerationAndSessionStatus
+        //menu items list fetch
+        let menuListItemQuery = 
+        `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path 
+          from amabhoomi.usermasters pu 
+          inner join amabhoomi.roleresources rr on rr.roleId = pu.roleId
+          inner join amabhoomi.resourcemasters rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+          where pu.userId = :userId and rr.statusId =1 and rm.statusId =1 
+          order by rm.orderIn`;
+
+        let menuListItems = await sequelize.query(menuListItemQuery, {
+          replacements: {
+            userId: isUserExist.userId
+          },
+          type: QueryTypes.SELECT
+        })
+
+        console.log('menuListItems', menuListItems);
+
+        let dataJSON = new Array();
+        //create parent data json without child data 
+        for (let i = 0; i < menuListItems.length; i++) {
+          if (menuListItems[i].parentResourceId == null) {
+            dataJSON.push({
+              id: menuListItems[i].resourceId,
+              name: menuListItems[i].name,
+              orderIn: menuListItems[i].orderIn,
+              path: menuListItems[i].path,
+              children: new Array()
+            })
+          }
+        }
+        console.log('data json ---', dataJSON);
+        //push sub menu items data
+        for(let i = 0; i < menuListItems.length; i++){
+          if(menuListItems[i].parentResourceId !== null){
+            let parent = dataJSON.find(item => item.id == menuListItems[i].parentResourceId);
+            console.log('parent', parent);
+            parent.children.push({
+              id: menuListItems[i].resourceId,
+              name: menuListItems[i].name,
+              orderIn: menuListItems[i].orderIn,
+              path: menuListItems[i].path,
+            })
+          }
+        }
+
+        console.log('resources', dataJSON);
         // Set the access token in an HTTP-only cookie named 'accessToken'
-        res.cookie('accessToken', accessToken,options);
+        res.cookie('accessToken', accessToken, options);
 
         // Set the refresh token in a separate HTTP-only cookie named 'refreshToken'
         res.cookie('refreshToken', refreshToken, options)
@@ -431,26 +679,26 @@ let verifyOTPHandlerWithGenerateTokenForAdmin = async (req,res)=>{
         // bearer is actually set in the first to tell that  this token is used for the authentication purposes
 
         return res.status(statusCode.SUCCESS.code)
-        .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: "please render the login page", username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken, decideSignUpOrLogin:1,sid:sessionId });
+          .header('Authorization', `Bearer ${accessToken}`)
+          .json({ message: "please render the login page", username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken: refreshToken, decideSignUpOrLogin: 1, sid: sessionId, authorizedResource: dataJSON });
 
-        }
-        else{
-          return res.status(statusCode.BAD_REQUEST.code).json({
-            message:"Invalid Otp"
-          })
-        }
-       
-          // Return the generated tokens
-      } else {
-          // OTP verification failed
-          return res.status(statusCode.BAD_REQUEST.code).json({message:'Please provide the mobileNo and otp'});   
-        }
+      }
+      else {
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message: "Invalid Otp"
+        })
+      }
+
+      // Return the generated tokens
+    } else {
+      // OTP verification failed
+      return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Please provide the mobileNo and otp' });
+    }
   } catch (err) {
-   
-      return res.status(statusCode.BAD_REQUEST.code).json({message:err.message}); 
- 
-   
+
+    return res.status(statusCode.BAD_REQUEST.code).json({ message: err.message });
+
+
   }
 }
 let updateUserData = async (req, res) => {
@@ -467,12 +715,12 @@ let updateUserData = async (req, res) => {
       genderId,
     } = req.body; //await decrypt(req.body);
 
-  
+
     let updatedValueObject = {};
 
     userId = decrypt(userId)
 
-    console.log('req body', req.body,userId)
+    console.log('req body', req.body, userId)
     const getUser = await user.findOne({
       where: {
         userId: userId,
@@ -499,9 +747,9 @@ let updateUserData = async (req, res) => {
         updatedValueObject.userName = userName;
       }
 
-      console.log('decrypted mobileno',mobileNo )
+      console.log('decrypted mobileno', mobileNo)
       if (getUser.phoneNo != mobileNo && mobileNo) {
-        console.log(decrypt(getUser.phoneNo),decrypt(mobileNo))
+        console.log(decrypt(getUser.phoneNo), decrypt(mobileNo))
         let checkIsMobileAlreadyPresent = await user.findOne({
           where: {
             phoneNo: mobileNo,
@@ -587,7 +835,7 @@ let updateUserData = async (req, res) => {
 let getUserById = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log('userID',userId)
+    console.log('userID', userId)
     let specificUser = await sequelize.query(
       `select title,fullName,emailId,userName,phoneNo,roleId,statusId,genderId from amabhoomi.usermasters where userId= ?`,
       {
@@ -874,7 +1122,7 @@ let bookmarkingAddAction = async (req, res) => {
     let facilityId = req.body.facilityId || null;
     let eventId = req.body.eventId || null;
 
-    console.log({facilityId, eventId, userId});
+    console.log({ facilityId, eventId, userId });
     if (facilityId) {
       const existingUserBookmark = await bookmarks.findOne({
         where: {
@@ -885,24 +1133,24 @@ let bookmarkingAddAction = async (req, res) => {
       console.log(1)
       console.log('existing facility bookmark', existingUserBookmark?.bookmarkId);
       console.log(2)
-      if(existingUserBookmark?.bookmarkId){
+      if (existingUserBookmark?.bookmarkId) {
         const [bookmarkUpdate] = await bookmarks.update(
           { statusId: 1 },
           { where: { bookmarkId: existingUserBookmark.bookmarkId } }
         );
 
-        if(bookmarkUpdate > 0) {
+        if (bookmarkUpdate > 0) {
           res.status(statusCode.SUCCESS.code).json({
             message: 'Bookmark added successfully!'
           });
         }
-        else{
+        else {
           res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: 'Bookmarking failed! Please try again.'
           });
         }
       }
-      else{
+      else {
         const newUserBookmark = await bookmarks.create({
           publicUserId: userId,
           facilityId: facilityId,
@@ -910,7 +1158,7 @@ let bookmarkingAddAction = async (req, res) => {
           createdDt: new Date(),
           createdBy: userId,
         });
-  
+
         console.log("newUserBookmark", newUserBookmark);
         res.status(statusCode.SUCCESS.code).json({
           message: "New bookmark added!",
@@ -927,24 +1175,24 @@ let bookmarkingAddAction = async (req, res) => {
 
       console.log('existing event bookmark', existingUserBookmark.bookmarkId);
 
-      if(existingUserBookmark.bookmarkId){
+      if (existingUserBookmark.bookmarkId) {
         const [bookmarkUpdate] = await bookmarks.update(
           { statusId: 1 },
           { where: { bookmarkId: existingUserBookmark.bookmarkId } }
         );
 
-        if(bookmarkUpdate > 0) {
+        if (bookmarkUpdate > 0) {
           res.status(statusCode.SUCCESS.code).json({
             message: 'Bookmark added successfully!'
           });
         }
-        else{
+        else {
           res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: 'Bookmarking failed! Please try again.'
           });
         }
       }
-      else{
+      else {
         const newUserBookmark = await bookmarks.create({
           publicUserId: userId,
           eventId: eventId,
@@ -952,7 +1200,7 @@ let bookmarkingAddAction = async (req, res) => {
           createdDt: new Date(),
           createdBy: userId,
         });
-  
+
         console.log("newUserBookmark", newUserBookmark);
         res.status(statusCode.SUCCESS.code).json({
           message: "New bookmark added!",
@@ -1048,7 +1296,7 @@ let viewBookmarksListForUser = async (req, res) => {
         type: Sequelize.QueryTypes.SELECT,
       }
     );
-    
+
     let searchEventResult = await sequelize.query(
       fetchBookmarkListForEventsQuery,
       {
@@ -1060,11 +1308,11 @@ let viewBookmarksListForUser = async (req, res) => {
     res.status(statusCode.SUCCESS.code).json({
       message: 'Bookmark list',
       data: [...searchQueryResult.map((facility) => {
-        if(facility.url)
+        if (facility.url)
           facility.url = encodeURIComponent(facility.url);
         return facility;
       }), ...searchEventResult.map((event) => {
-        if(event.url)
+        if (event.url)
           event.url = encodeURIComponent(event.url);
         return event;
       })]
