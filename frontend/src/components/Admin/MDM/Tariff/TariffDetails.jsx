@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './TariffDetails.css'; // Importing CSS file
 import AdminHeader from '../../../../common/AdminHeader';
+// Font Awesome icon --------------------------------
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash , faPenToSquare , faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const TariffDetails = () => {
   const initialRows = [
@@ -10,7 +13,6 @@ const TariffDetails = () => {
     { time: '2:00am-4:00pm', sunday: 30, monday: 30, tuesday: 30, wednesday: 30, thursday: 30, friday: 30, saturday: 30 },
     { time: '1:00am-7:00pm', sunday: 30, monday: 30, tuesday: 30, wednesday: 30, thursday: 30, friday: 30, saturday: 30 },
     { time: '8:00am-1:00pm', sunday: 30, monday: 30, tuesday: 30, wednesday: 30, thursday: 30, friday: 30, saturday: 30 },
-
   ];
 
   const [rows, setRows] = useState(initialRows);
@@ -40,7 +42,7 @@ const TariffDetails = () => {
         {/* input fields of form................ */}
         <div className="form">
           <div className="dropdown-container">
-            <select className="dropdown" >
+            <select className="dropdown">
               <option value="" disabled>Select an option</option>
               <option value="option1">Jaydev Vatika</option>
               <option value="option2">Option 2</option>
@@ -52,7 +54,7 @@ const TariffDetails = () => {
           </div>
 
           <div className="dropdown-container">
-            <select className="dropdown" >
+            <select className="dropdown">
               <option value="" disabled>Select an option</option>
               <option value="option1">Park</option>
               <option value="option2">Option 2</option>
@@ -66,15 +68,19 @@ const TariffDetails = () => {
 
         <div className="text-tariff">
           <div className="heading-text">
-            <p className='palce-name-text'>Jaydev Vihar</p>
+            <p className='place-name-text'>Jaydev Vihar</p>
             <p>Address:-NH-16 Byp road, Khandagiri, Bhubaneswar , Odisha</p>
           </div>
         </div>
 
         <div className="table-container">
           <div className="table-buttons">
-            <button onClick={handleAddRow}>Add Row</button>
-            <button>Edit</button>
+            <button className='add-icon' onClick={handleAddRow}>
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+            <button className='edit-icon'>
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </button>
           </div>
           <table>
             <thead>
@@ -87,6 +93,7 @@ const TariffDetails = () => {
                 <th>Thursday</th>
                 <th>Friday</th>
                 <th>Saturday</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -109,7 +116,9 @@ const TariffDetails = () => {
                     </td>
                   ))}
                   <td>
-                    <button onClick={() => handleDeleteRow(index)}>Delete</button>
+                    <button className='delete-icon' onClick={() => handleDeleteRow(index)}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -118,7 +127,7 @@ const TariffDetails = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default TariffDetails;

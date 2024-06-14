@@ -15,7 +15,8 @@
     align-items: center;
     justify-content: space-evenly;
 }
-.text-tariff{
+
+.text-tariff {
     color: black;
     font-size: larger;
     font-weight: 500;
@@ -24,7 +25,8 @@
     width: 40vw;
     padding: 5px;
 }
-.palce-name-text{
+
+.place-name-text {
     font-size: 30px;
 }
 
@@ -58,8 +60,6 @@
     color: #333;
 }
 
-
-
 .table-container {
     margin: 20px 10%;
 }
@@ -71,6 +71,7 @@
 }
 
 .table-buttons button {
+    position: relative;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -118,3 +119,50 @@ table td input {
     font-size: 17px;
     color: #333;
 }
+
+.delete-icon {
+    color: red;
+}
+
+.add-icon:hover::after
+ {
+    content: 'Add row';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+.edit-icon:hover::after{
+    content: 'Edit row';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.add-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.edit-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
