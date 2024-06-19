@@ -10,7 +10,6 @@ import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 import SuccessPopup from '../SuccessPopup';
 import axiosHttpClient from '../../../utils/axios';
 import { decryptData, encryptData } from '../../../utils/encryptData';
-
 const ForgotPassword = () => {
     const [forgotPassword, setForgotPassword] = useState(true);
     const [otp, setOTP] = useState(false);

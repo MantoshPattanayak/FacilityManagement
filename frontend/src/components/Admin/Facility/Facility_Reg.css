@@ -245,8 +245,9 @@
 /*Button selected */
 .Operating_day{
     display: flex;
-    padding: 10px;
+
     gap: 10px;
+
 }
 
 

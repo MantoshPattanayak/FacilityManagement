@@ -1,20 +1,26 @@
-
 // import css
-import "./Facility_Reg.css"
+import "./Facility_Reg.css";
 // Facility Reg funcation -----------------------------
 import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
-import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import verfiy_img from "../../../assets/verify_img.png"
+// Toast ------------------------------------------
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 const Facility_Reg = () => {
     // useSate for page -----------------------------------------------
     const [currentStep, setCurrentStep] = useState(1);
     // Facility Data --------------------------
-    const [GetServiceData, setGetServiceData] = useState([])
-    const [GetAmenitiesData, setGetAmenitiesData] = useState([])
-    const [FacilityTypeData, setFacilityTypeData] = useState([])
-    const [fetchEventCategoryData, setfetchEventCategoryData] = useState([])
-    const [fetchActivityData, setfetchActivityData] = useState([])
+    const [GetServiceData, setGetServiceData] = useState([]);
+    const [GetAmenitiesData, setGetAmenitiesData] = useState([]);
+    const [FacilityTypeData, setFacilityTypeData] = useState([]);
+    const [fetchEventCategoryData, setfetchEventCategoryData] = useState([]);
+    const [fetchActivityData, setfetchActivityData] = useState([]);
+    const [disabledFields, setDisabledFields] = useState(false);
+    // here set the error -------------------------------------------
+    const [formErrors, setformErrors] = useState({});
     // here Facility Post data ----------------------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
         facilityType: "",
@@ -34,9 +40,9 @@ const Facility_Reg = () => {
             thu: 0,
             fri: 0,
             sat: 0,
-        },  //here operating days will come in the form of array of data i.e. array of  days
+        }, //here operating days will come in the form of array of data i.e. array of  days
 
-        service: new Array(),  //here services will be given in the form of object
+        service: new Array(), //here services will be given in the form of object
         otherServices: "", //here others will be given in the form of string
         amenity: new Array(), // here amenities will be given in the form of form of object
         otherAmenities: "", // here other amenities will be given in the form of string
@@ -45,134 +51,297 @@ const Facility_Reg = () => {
         game: new Array(),
         othergame: "",
         additionalDetails: "",
-        facilityImage: "",
-        parkInventory: ""
-    })
+        facilityImage: {
+            facilityImageOne: "",
+            facilityArrayOfImages: [],
+        },
+        parkInventory: "",
+        // Post owner data ........
+        facilityisownedbBDA: "",
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        emailAdress: "",
+        ownerPanCard: "",
+        ownersAddress: ""
+    });
     // here call the api for get the initial data -----------------------------------------
     async function GetFacilityIntailData() {
         try {
-            let res = await axiosHttpClient('Get_Facility_Intail_Data', 'get')
-            setGetServiceData(res.data.fetchServices)
-            setGetAmenitiesData(res.data.fetchAmenities)
-            setFacilityTypeData(res.data.facilityType)
-            setfetchEventCategoryData(res.data.fetchEventCategory)
-            setfetchActivityData(res.data.fetchActivity)
-            console.log(" Facility Intial Data", res)
+            let res = await axiosHttpClient("Get_Facility_Intail_Data", "get");
+            setGetServiceData(res.data.fetchServices);
+            setGetAmenitiesData(res.data.fetchAmenities);
+            setFacilityTypeData(res.data.facilityType);
+            setfetchEventCategoryData(res.data.fetchEventCategory);
+            setfetchActivityData(res.data.fetchActivity);
+            console.log(" Facility Intial Data", res);
         } catch (err) {
-            console.log("here error of Facility intail data ", err)
+            console.log("here error of Facility intail data ", err);
         }
     }
     // here Post the data ------------------------------
     async function HandleSubmitFacility(e) {
         e.preventDefault();
-
-        try {
-            let res = await axiosHttpClient('Facility_Reg_Api', 'post', {
-                facilityType: PostFacilityData.facilityType || null,
-                facilityName: PostFacilityData.facilityName || null,
-                longitude: PostFacilityData.longitude || null,
-                latitude: PostFacilityData.latitude || null,
-                address: PostFacilityData.address || null,
-                pin: PostFacilityData.pin || null,
-                area: PostFacilityData.area || null,
-                operatingHoursFrom: PostFacilityData.operatingHoursFrom || null,
-                operatingHoursTo: PostFacilityData.operatingHoursTo || null,
-                operatingDays: PostFacilityData.operatingDays || null,
-                service: PostFacilityData.service || {},
-                otherServices: PostFacilityData.otherServices || null,
-                amenity: PostFacilityData.amenity || {},
-                eventCategory: PostFacilityData.eventCategory || {},
-                othereventCategory: PostFacilityData.othereventCategory || null,
-                game: PostFacilityData.game || {},
-                othergame: PostFacilityData.othergame || null,
-                otherAmenities: PostFacilityData.otherAmenities || null,
-                additionalDetails: PostFacilityData.additionalDetails || null,
-                facilityImage: PostFacilityData.facilityImage || null,
-                parkInventory: PostFacilityData.parkInventory || null
-            })
-            console.log("here Response of Post the data of Facility", res)
-        }
-        catch (err) {
-            console.log("here error of Facility Post Data", err)
+        const validationErrors = Validation(PostFacilityData);
+        const validationErrors1 = Validation2(PostFacilityData)
+        setformErrors({ ...validationErrors, ...validationErrors1 });
+        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0) {
+            try {
+                let res = await axiosHttpClient("Facility_Reg_Api", "post", {
+                    facilityType: PostFacilityData.facilityType || null,
+                    facilityName: PostFacilityData.facilityName || null,
+                    longitude: PostFacilityData.longitude || null,
+                    latitude: PostFacilityData.latitude || null,
+                    address: PostFacilityData.address || null,
+                    pin: PostFacilityData.pin || null,
+                    area: PostFacilityData.area || null,
+                    operatingHoursFrom: PostFacilityData.operatingHoursFrom || null,
+                    operatingHoursTo: PostFacilityData.operatingHoursTo || null,
+                    operatingDays: PostFacilityData.operatingDays || null,
+                    service: PostFacilityData.service || {},
+                    otherServices: PostFacilityData.otherServices || null,
+                    amenity: PostFacilityData.amenity || {},
+                    eventCategory: PostFacilityData.eventCategory || {},
+                    othereventCategory: PostFacilityData.othereventCategory || null,
+                    game: PostFacilityData.game || {},
+                    othergame: PostFacilityData.othergame || null,
+                    otherAmenities: PostFacilityData.otherAmenities || null,
+                    additionalDetails: PostFacilityData.additionalDetails || null,
+                    facilityImage: PostFacilityData.facilityImage || null,
+                    parkInventory: PostFacilityData.parkInventory || null,
+                    // Owner Data ---------------------------------------------------------------
+                    facilityisownedbBDA: PostFacilityData.facilityisownedbBDA || null,
+                    firstName: PostFacilityData.firstName || null,
+                    lastName: PostFacilityData.lastName || null,
+                    phoneNumber: PostFacilityData.phoneNumber || null,
+                    emailAdress: PostFacilityData.emailAdress || null,
+                    ownerPanCard: PostFacilityData.ownerPanCard || null,
+                    ownersAddress: PostFacilityData.ownersAddress || null
+                });
+                console.log("here Response of Post the data of Facility", res);
+            } catch (err) {
+                console.log("here error of Facility Post Data", err);
+                setformErrors('')
+            }
+        } else {
+            setformErrors(validationErrors)
+            setformErrors(validationErrors1)
         }
     }
+
     // handle Post Data-------------------------
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value, files } = e.target;
-        setPostFacilityData({ ...PostFacilityData, [name]: value })
-        console.log("PostFacilityData:", PostFacilityData);
-    }
+    
+        if (name === "facilityImageOne" || name === "facilityArrayOfImages") {
+            handleImageUpload(name, files);
+        } else if (name === "facilityisownedbBDA") {
+            const isOwnerByBDA = value === "Yes";
+    
+            setPostFacilityData({ ...PostFacilityData, [name]: value });
+    
+            // Set disabled state for specific fields
+            setDisabledFields(isOwnerByBDA);
+    
+            if (isOwnerByBDA) {
+                // Reset input fields if user selects "Yes"
+                setPostFacilityData(prevData => ({
+                    ...prevData,
+                    firstName: "",
+                    lastName: "",
+                    phoneNumber: "",
+                    emailAdress: "",
+                    ownerPanCard: "",
+                    ownersAddress: ""
+                }));
+                setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+            }
+        } else {
+            // Handle other input changes
+            setPostFacilityData({ ...PostFacilityData, [name]: value });
+        }
+    
+        // Run validation on input change
+        const validationErrors = Validation({ ...PostFacilityData, [name]: value });
+        setformErrors(validationErrors);
+    };
+    
+    // here Handle for Upload Mulitple and single Image ----------------------------------------
+    const handleImageUpload = (name, files) => {
+        if (files && files.length > 0) {
+            if (name === "facilityImageOne") {
+                const currentImagesCount1 = PostFacilityData.facilityImage.facilityImageOne.length;
+                if (currentImagesCount1 + files.length > 1) {
+                    alert("You can only upload Only  1 images for Facility Image.");
+                    document.getElementById("myForm").reset();
+                    return;
+                }
+                let file = files[0];
+                if (parseInt(file.size / 1024) <= 200) { // File size check for single image
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setPostFacilityData(prevState => ({
+                            ...prevState,
+                            facilityImage: {
+                                ...prevState.facilityImage,
+                                facilityImageOne: reader.result
+                            }
+                        }));
+                        displayFileName("facilityImageOne", [file.name]);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Kindly choose an image with size less than 200 KB.");
+                    document.getElementById("myForm").reset();
+                }
+            } else if (name === "facilityArrayOfImages") {
+                const validFiles = [];
+                let totalSize = 0;
+                const currentImagesCount = PostFacilityData.facilityImage.facilityArrayOfImages.length;
+
+                if (currentImagesCount + files.length > 5) {
+                    alert("You can only upload up to 5 images for Additional Facility Images.");
+                    document.getElementById("myForm").reset();
+                    return;
+                }
+
+                for (let i = 0; i < files.length; i++) {
+                    let file = files[i];
+                    if (parseInt(file.size / 1024) <= 200) { // File size check for multiple images
+                        validFiles.push(file);
+                        totalSize += parseInt(file.size / 1024);
+                    } else {
+                        alert("Each image should be less than 200 KB.");
+                        document.getElementById("myForm").reset();
+                        return;
+                    }
+                }
+
+                if (totalSize <= 1000) { // Adjusted total size limit for up to 5 images
+                    const fileNames = validFiles.map(file => file.name);
+                    validFiles.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            setPostFacilityData(prevState => ({
+                                ...prevState,
+                                facilityImage: {
+                                    ...prevState.facilityImage,
+                                    facilityArrayOfImages: [
+                                        ...prevState.facilityImage.facilityArrayOfImages,
+                                        reader.result
+                                    ]
+                                }
+                            }));
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                    displayFileName("facilityArrayOfImages", fileNames);
+                } else {
+                    alert("Total size of images should not exceed 1000 KB for up to 5 images.");
+                    document.getElementById("myForm").reset();
+                    setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+                }
+            }
+        }
+    };
+    // here for Display the Name of Image (MulitImage also)
+    const displayFileName = (inputName, fileNames) => {
+        const container = document.getElementById(inputName === "facilityImageOne" ? "facilityImageOneContainer" : "facilityArrayOfImagesContainer").querySelector(".image-preview");
+        fileNames.forEach(fileName => {
+            const fileLabel = document.createElement("p");
+            fileLabel.textContent = fileName;
+            container.appendChild(fileLabel);
+        });
+    };
 
     // Handle Day ------------------------------
     const handleDayClick = (day, e) => {
         e.preventDefault(); // Ensure e is properly handled
 
-        setPostFacilityData(prevState => ({
-            ...prevState,
-            operatingDays: {
+        setPostFacilityData((prevState) => {
+            const updatedOperatingDays = {
                 ...prevState.operatingDays,
-                [day]: prevState.operatingDays[day] ? 0 : 1 // Toggle the value between 0 and 1
-            }
-        }));
-        console.log("Updated operatingDays:", PostFacilityData.operatingDays);
+                [day]: prevState.operatingDays[day] ? 0 : 1, // Toggle the value between 0 and 1
+            };
+            const updatedPostFacilityData = {
+                ...prevState,
+                operatingDays: updatedOperatingDays,
+            };
+            return updatedPostFacilityData;
+        });
+        // Clear specific error for operatingDays and update validation
+        setformErrors(prevErrors => {
+            const { operatingDays, ...otherErrors } = prevErrors;
+            const validationErrors = Validation2({ ...PostFacilityData, operatingDays });
+            return { ...otherErrors, ...validationErrors };
+        });
+        console.log("PostFacilityData:", PostFacilityData);
     };
-
     //  Handle serviceId (set here )---------------------------------------------
     const handleServiceClick = (Id) => {
-        console.log('handle service click', Id);
-        console.log('PostFacilityData service 1', PostFacilityData.service);
-        setPostFacilityData(prevState => {
+        console.log("handle service click", Id);
+        console.log("PostFacilityData service 1", PostFacilityData.service);
+
+        setPostFacilityData((prevState) => {
             // If the serviceId exists, remove it, else add it
             let updatedService = [...prevState.service];
             if (updatedService.includes(Id)) {
-                updatedService = updatedService.filter((service) => { return service != Id });
-                // delete updatedService[`service${Id}`];
+                updatedService = updatedService.filter((service) => {
+                    return service !== Id;
+                });
             } else {
                 updatedService.push(Id);
             }
             return { ...prevState, service: updatedService };
+
         });
-        console.log('PostFacilityData service 2', PostFacilityData.service);
+        setformErrors((prevErrors) => ({ ...prevErrors, service: '' }));
+        console.log("PostFacilityData service 2", PostFacilityData.service);
     };
 
     // Handle Amenities Data --------------------------------------------------------------
     const handleAmenitiesClick = (amenityId) => {
-        setPostFacilityData(prevState => {
+        setPostFacilityData((prevState) => {
             // If the serviceId exists, remove it, else add it
             let updatedamenity = [...prevState.amenity];
             if (updatedamenity.includes(amenityId)) {
-                updatedamenity = updatedamenity.filter((amenity) => amenity != amenityId);
+                updatedamenity = updatedamenity.filter(
+                    (amenity) => amenity != amenityId
+                );
             } else {
                 updatedamenity.push(amenityId);
             }
             return { ...prevState, amenity: updatedamenity };
         });
+        setformErrors((prevErrors) => ({ ...prevErrors, amenity: '' }));
     };
 
     // Handle Event--------------------------------------------------------------------------------
     const handleEventClick = (eventCategoryId) => {
-        setPostFacilityData(prevState => {
+        setPostFacilityData((prevState) => {
             // If the serviceId exists, remove it, else add it
-            let updatedeventCategory = [ ...prevState.eventCategory ];
+            let updatedeventCategory = [...prevState.eventCategory];
             if (updatedeventCategory.includes(eventCategoryId)) {
-                updatedeventCategory = updatedeventCategory.filter((event) => event != eventCategoryId);
+                updatedeventCategory = updatedeventCategory.filter(
+                    (event) => event != eventCategoryId
+                );
             } else {
                 updatedeventCategory.push(eventCategoryId);
             }
             return { ...prevState, eventCategory: updatedeventCategory };
         });
+        setformErrors((prevErrors) => ({ ...prevErrors, eventCategory: '' }));
     };
-
     // Handle Event--------------------------------------------------------------------------------
     const handleGameClick = (userActivityId) => {
-        setPostFacilityData(prevState => {
+        setPostFacilityData((prevState) => {
             // Ensure the game object exists in the state
-            let updatedgame = [ ...prevState.game ];
+            let updatedgame = [...prevState.game];
 
             // If the game exists, remove it, else add it
             if (updatedgame.includes(userActivityId)) {
-                updatedgame = updatedgame.filter((game) => game != userActivityId)
+                updatedgame = updatedgame.filter((game) => game != userActivityId);
             } else {
                 updatedgame.push(userActivityId);
             }
@@ -183,20 +352,235 @@ const Facility_Reg = () => {
         });
         // Log the current state for debugging
         console.log("PostFacilityData:", PostFacilityData);
+        setformErrors((prevErrors) => ({ ...prevErrors, game: '' }));
     };
-
-    //useEffect (Update data)-----------------------------------------------------------------
-    useEffect(() => {
-        GetFacilityIntailData()
-    }, [])
     // here Prev and next page ---------------------------------------------------------------------
-    const nextStep = () => {
-        setCurrentStep(currentStep + 1);
+    const nextStep = (e) => {
+        e.preventDefault()
+        // Perform validation before moving to the next step
+        const validationErrors = Validation(PostFacilityData);
+        setformErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+            // If there are no validation errors, move to the next step
+            setCurrentStep(currentStep + 1);
+            toast.success('Successfully moved to the next step!');
+        } else {
+            // If there are validation errors, display them and prevent moving to the next step
+            console.log('Validation errors:', validationErrors);
+            toast.error('Please fill out all required fields.');
+        }
     };
-    // Prev (Button) --------------------------------------------------------------------------------
+    // 2nd from next step----------------------------------------------------------------------------
+    const nextStep2 = (e) => {
+        e.preventDefault()
+        const validationErrors1 = Validation2(PostFacilityData);
+        setformErrors(validationErrors1);
+        if (Object.keys(validationErrors1).length === 0) {
+            // If there are no validation errors, move to the next step
+            setCurrentStep(currentStep + 1);
+            toast.success('Successfully moved to the next step!');
+        } else {
+            // If there are validation errors, display them and prevent moving to the next step
+            console.log('Validation errors:', validationErrors1);
+            toast.error('Please fill out all required fields.');
+        }
+    };
     const prevStep = () => {
         setCurrentStep(currentStep - 1);
     };
+    //useEffect (Update data)-----------------------------------------------------------------
+    useEffect(() => {
+        GetFacilityIntailData();
+    }, [formErrors]);
+    // Validation -----------------------------------------------------
+    const Validation = (value) => {
+        const space_block = /^[^\s][^\n\r]*$/;
+        const Name_Regex = /^[a-zA-Z ]+$/;
+        const Longtitude_regex = /^(?:(?:\d|[1-8]\d|90)\.\d+|(?:9[0-7]|[1-8]\d|\d)(?:\.\d+)?)$/;
+        const latitude_regex = /^[-+]?(?:[0-8]?\d(?:\.\d+)?|90(?:\.0+)?)$/;
+        const PinCode_Regex = /^\d{6}$/;
+        const Regex_Other = /^[a-zA-Z,-]+$/;
+        const err = {};
+        if (!value.facilityType) {
+            err.facilityType = "Please Select the Facility Type";
+        }
+        if (!value.facilityName) {
+            err.facilityName = "Please Enter the Facility Name";
+        } else if (!space_block.test(value.facilityName)) {
+            err.facilityName = 'Do not use spaces at beginning';
+        } else if (!Name_Regex.test(value.facilityName)) {
+            err.facilityName = "Please Enter a valid facility name "
+        }
+        if (!value.longitude) {
+            err.longitude = "Please Enter the longitude";
+        } else if (!space_block.test(value.longitude)) {
+            err.longitude = "Do not use spaces at beginning"
+        }
+        else if (!Longtitude_regex.test(value.longitude)) {
+            err.longitude = "Please Enter a vaild longitude"
+        }
+
+        if (!value.latitude) {
+            err.latitude = "Please Enter the latitude";
+        } else if (!latitude_regex.test(value.latitude)) {
+            err.latitude = "Please Enter a vaild latitude"
+        } else if (!space_block.test(value.latitude)) {
+            err.latitude = 'Do not use spaces at beginning'
+        }
+        if (!value.address) {
+            err.address = "Please Enter the address";
+        } else if (!Name_Regex.test(value.address)) {
+            err.address = 'Please Enter a vaild Address'
+        } else if (!space_block.test(value.address)) {
+            err.address = 'Do not use spaces at beginning'
+        }
+        if (!value.pin) {
+            err.pin = "Please Enter the Pincode";
+        } else if (!space_block.test(value.pin)) {
+            err.pin = "Do not use spaces at beginning"
+        } else if (!PinCode_Regex.test(value.pin)) {
+            err.pin = 'Please Enter a vaild Pincode'
+        }
+        if (!value.area) {
+            err.area = "Please Enter the Area";
+        } else if (!space_block.test(value.area)) {
+            err.area = 'Do not use spaces at beginning'
+        } else if (!Name_Regex.test(value.area)) {
+            err.area = 'Please Enter a vaild Area'
+        }
+        if (!value.operatingHoursFrom) {
+            err.operatingHoursFrom = "Please Select the Operating Hours From";
+        }
+        if (!value.operatingHoursTo) {
+            err.operatingHoursTo = "Please Select the Operating Hours To";
+        }
+        // here check start hours should less then or equal to opetingHourTo
+        if ((value.operatingHoursFrom) > (value.operatingHoursTo)) {
+            err.operatingHoursFrom = "Start operating Hours From should be less than or equal to End Event Date";
+            err.operatingHoursTo = "End operating Hours To should be greater than or equal to Start Event Date";
+        }
+        const isAnyDaySelected = Object.values(value.operatingDays).some((day) => day === 1);
+        if (!isAnyDaySelected) {
+            err.operatingDays = "Please Select the Operating Days";
+        }
+        if (value.service.length === 0) {
+            err.service = "Please Select the Services"
+        }
+        if (value.otherServices) {
+            if (!Regex_Other.test(value.otherServices)) {
+                err.otherServices = "Please Enter a vaild Other services"
+            }
+            if (!space_block.test(value.otherServices)) {
+                err.otherServices = 'Do not use spaces at beginning'
+            }
+        }
+        if (value.amenity.length === 0) {
+            err.amenity = 'Please Select the amenity'
+        }
+        if (value.otherAmenities) {
+            if (!Regex_Other.test(value.otherAmenities)) {
+                err.otherAmenities = "Please Enter a Vaild Other Amenities"
+            }
+            if (!space_block.test(value.otherAmenities)) {
+                err.otherAmenities = "Do not use spaces at beginning"
+            }
+        }
+        if (value.eventCategory.length === 0) {
+            err.eventCategory = "Please Select the Event Category"
+        }
+        if (value.othereventCategory) {
+            if (!Regex_Other.test(value.othereventCategory)) {
+                err.othereventCategory = "Please Enter a vaild Other Event Category"
+            }
+            if (!space_block.test(value.othereventCategory)) {
+                err.othereventCategory = "Do not use spaces at beginning"
+            }
+        }
+        if (value.game.length === 0) {
+            err.game = "Please Select the Game"
+        }
+        if (value.othergame) {
+            if (!Regex_Other.test(value.othergame)) {
+                err.othergame = "Please Enter a vaild Other Game"
+            }
+            if (!space_block.test(value.othergame)) {
+                err.othergame = "Do not use spaces at beginning"
+            }
+        }
+        if (!value.additionalDetails) {
+            err.additionalDetails = "Please Enter the Additional Details"
+        }
+        if (!Name_Regex.test(value.additionalDetails)) {
+            err.additionalDetails = "Please Enter a vaild Additional Details"
+        }
+        if (!space_block.test(value.additionalDetails)) {
+            err.additionalDetails = "Do not use spaces at beginning"
+        }
+        if (!value.facilityImage.facilityImageOne) {
+            err.facilityImageOne = "Please Upload the Facility Image"
+        }
+        return err;
+    }
+
+    const Validation2 = (val) => {
+        const error = {};
+        const panCardRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+        const PHONE_NUMBER = /^[1-9]\d{9}$/;
+        const Name_Regex = /^[a-zA-Z ]+$/;
+        const space_block = /^[^\s][^\n\r]*$/;
+        const EMAIL_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if (!val.facilityisownedbBDA) {
+            error.facilityisownedbBDA = "Please Select if the Facility is Owned by BDA or Not";
+        }
+        if (val.facilityisownedbBDA === 'No') {
+            if (!val.firstName) {
+                error.firstName = "Please Enter the First Name";
+            } else if (!Name_Regex.test(val.firstName)) {
+                error.firstName = "Please Enter a valid First Name";
+            } else if (!space_block.test(val.firstName)) {
+                error.firstName = "Do not use spaces at the beginning";
+            }
+            if (!val.lastName) {
+                error.lastName = "Please Enter the Last Name";
+            } else if (!Name_Regex.test(val.lastName)) {
+                error.lastName = "Please Enter a valid Last Name";
+            } else if (!space_block.test(val.lastName)) {
+                error.lastName = "Do not use spaces at the beginning";
+            }
+            if (!val.phoneNumber) {
+                error.phoneNumber = "Please Enter the Phone Number";
+            } else if (!PHONE_NUMBER.test(val.phoneNumber)) {
+                error.phoneNumber = "Please Enter a vaild Phone Number"
+            } else if (!space_block.test(val.phoneNumber)) {
+                error.phoneNumber = "Do not use spaces at beginning"
+            }
+            if (!val.emailAdress) {
+                error.emailAdress = "Please Enter the Email Address";
+            } else if (!EMAIL_regex.test(val.emailAdress)) {
+                error.emailAdress = "Please Enter a valid Email Address"
+            } else if (!space_block.test(val.emailAdress)) {
+                error.emailAdress = "Do not use spaces at beginning"
+            }
+            if (!val.ownerPanCard) {
+                error.ownerPanCard = "Please Enter the Owner’s PAN Card Number";
+            } else if (!panCardRegex.test(val.ownerPanCard)) {
+                error.ownerPanCard = "Please Enter a vaild Pan Card Number"
+            } else if (!space_block.test(val.ownerPanCard)) {
+                error.ownerPanCard = "Do not use spaces at beginning"
+            }
+
+            if (!val.ownersAddress) {
+                error.ownersAddress = "Please Enter the Owner’s Address";
+            } else if (!Name_Regex.test(val.ownersAddress)) {
+                error.ownersAddress = "Please Enter a vaild Owner Address"
+            } else if (!space_block.test(val.ownersAddress)) {
+                error.ownersAddress = "Do not use spaces at beginning"
+            }
+        }
+
+        return error;
+    };
+
 
     return (
         <div>
@@ -212,448 +596,668 @@ const Facility_Reg = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Facility Type <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <select id="input2" className="input_padding" name="facilityType"
+                                        <label htmlFor="input1">
+                                            Facility Type{" "}
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <select
+                                            id="input2"
+                                            className="input_padding"
+                                            name="facilityType"
                                             value={PostFacilityData.facilityType}
                                             onChange={handleChange}
                                         >
-                                            <option value="" disabled selected hidden>Select Facility Type</option>
-                                            {FacilityTypeData?.length > 0 && FacilityTypeData?.map((name, index) => {
-                                                return (
-                                                    <option key={index} value={name.facilitytypeId}>
-                                                        {name.code}
-                                                    </option>
-                                                )
-                                            })}
+                                            <option value="" disabled selected hidden>
+                                                Select Facility Type
+                                            </option>
+                                            {FacilityTypeData?.length > 0 &&
+                                                FacilityTypeData?.map((name, index) => {
+                                                    return (
+                                                        <option key={index} value={name.facilitytypeId}>
+                                                            {name.code}
+                                                        </option>
+                                                    );
+                                                })}
                                         </select>
+                                        {formErrors.facilityType && <p className="error text-red-700">{formErrors.facilityType}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Facility Name <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Facility Name" name="facilityName"
+                                        <label htmlFor="input2">
+                                            Facility Name{" "}
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="input2"
+                                            className="input_padding"
+                                            placeholder=" Please Enter the Facility Name"
+                                            name="facilityName"
                                             value={PostFacilityData.facilityName}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.facilityName && <p className="error text-red-700">{formErrors.facilityName}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Longitude <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" className="input_padding" id="input1" name="longitude" placeholder="Please enter the Longitude "
+                                        <label htmlFor="input1">
+                                            Longitude{" "}
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input_padding"
+                                            id="input1"
+                                            name="longitude"
+                                            placeholder="Please enter the Longitude "
                                             value={PostFacilityData.longitude}
                                             onChange={handleChange}
-
                                         />
+                                        {formErrors.longitude && <p className="error text-red-700">{formErrors.longitude}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Latitude<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Latitude" name="latitude"
+                                        <label htmlFor="input2">
+                                            Latitude
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="input2"
+                                            className="input_padding"
+                                            placeholder=" Please Enter the Latitude"
+                                            name="latitude"
                                             value={PostFacilityData.latitude}
                                             onChange={handleChange}
-
                                         />
+                                        {formErrors.latitude && <p className="error text-red-700">{formErrors.latitude}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Address<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter address of your facility" name="address"
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Address
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="Enter address of your facility"
+                                            name="address"
                                             value={PostFacilityData.address}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.address && <p className="error text-red-700">{formErrors.address}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Pin <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" className="input_padding" id="input1" placeholder="Enter Pin  " name="pin"
+                                        <label htmlFor="input1">
+                                            Pin{" "}
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input_padding"
+                                            id="input1"
+                                            placeholder="Enter Pin  "
+                                            name="pin"
                                             value={PostFacilityData.pin}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.pin && <p className="error text-red-700">{formErrors.pin}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Area <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Enter Area" name="area"
+                                        <label htmlFor="input2">
+                                            Area{" "}
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="input2"
+                                            className="input_padding"
+                                            placeholder="Enter Area"
+                                            name="area"
                                             value={PostFacilityData.area}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.area && <p className="error text-red-700">{formErrors.area}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Operating From Time <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="time" className="input_padding" placeholder="Enter Pin  "
+                                        <label htmlFor="input1">
+                                            Operating From Time{" "}
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="time"
+                                            className=" p-5"
+                                            placeholder="Enter Pin  "
                                             name="operatingHoursFrom"
                                             value={PostFacilityData.operatingHoursFrom}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.operatingHoursFrom && <p className="error text-red-700">{formErrors.operatingHoursFrom}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Operating To Time<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="time" id="input2" className="input_padding" placeholder="Enter Area"
+                                        <label htmlFor="input2">
+                                            Operating To Time
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="time"
+                                            id="input2"
+                                            className="input_padding p-5"
+                                            placeholder="Enter Area"
                                             name="operatingHoursTo"
                                             value={PostFacilityData.operatingHoursTo}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.operatingHoursTo && <p className="error text-red-700">{formErrors.operatingHoursTo}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Operating Days<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <span className="Operating_day" name="operatingDays" >
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.sun ? 'selected' : ''}`} onClick={(e) => handleDayClick('sun', e)}>Sun</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.mon ? 'selected' : ''}`} onClick={(e) => handleDayClick('mon', e)}>Mon</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.tue ? 'selected' : ''}`} onClick={(e) => handleDayClick('tue', e)}>Tue</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.wed ? 'selected' : ''}`} onClick={(e) => handleDayClick('wed', e)}>Wed</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.thu ? 'selected' : ''}`} onClick={(e) => handleDayClick('thu', e)}>Thu</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.fri ? 'selected' : ''}`} onClick={(e) => handleDayClick('fri', e)}>Fri</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.sat ? 'selected' : ''}`} onClick={(e) => handleDayClick('sat', e)}>Sat</button>
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Operating Days
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <span className="Operating_day" name="operatingDays">
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.sun ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("sun", e)}
+                                            >
+                                                Sun
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.mon ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("mon", e)}
+                                            >
+                                                Mon
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.tue ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("tue", e)}
+                                            >
+                                                Tue
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.wed ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("wed", e)}
+                                            >
+                                                Wed
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.thu ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("thu", e)}
+                                            >
+                                                Thu
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.fri ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("fri", e)}
+                                            >
+                                                Fri
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`button-4 ${PostFacilityData.operatingDays.sat ? "selected" : ""
+                                                    }`}
+                                                onClick={(e) => handleDayClick("sat", e)}
+                                            >
+                                                Sat
+                                            </button>
+
                                         </span>
+
+                                        {formErrors.operatingDays && <p className="error text-red-700">{formErrors.operatingDays}</p>}
+
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Services<span className="text-red-600 font-bold text-xl">*</span></label>
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Services
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
                                         <span className="Operating_day">
-                                            {GetServiceData?.length > 0 && GetServiceData.map((item, index) => (
-                                                <span key={index}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleServiceClick(item.serviceId)}
-                                                        className={`button-4 ${PostFacilityData.service.includes(item.serviceId) ? 'selected' : ''}`}
-                                                    >
-                                                        {item.description}
-                                                    </button>
-                                                </span>
-                                            ))}
+                                            {GetServiceData?.length > 0 &&
+                                                GetServiceData.map((item, index) => (
+                                                    <span key={index}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleServiceClick(item.serviceId)}
+                                                            className={`button-4 ${PostFacilityData.service.includes(
+                                                                item.serviceId
+                                                            )
+                                                                ? "selected"
+                                                                : ""
+                                                                }`}
+                                                        >
+                                                            {item.description}
+                                                        </button>
+                                                    </span>
+                                                ))}
                                         </span>
+                                        {formErrors.service && <p className="error text-red-700">{formErrors.service}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Services<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Other Services
+
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="Enter some other amenities if you have"
                                             name="otherServices"
                                             value={PostFacilityData.otherServices}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.otherServices && <p className="error text-red-700">{formErrors.otherServices}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Amenities
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
                                         <span className="Operating_day">
-                                            {GetAmenitiesData?.length > 0 && GetAmenitiesData?.map((data, index) => (
-                                                <span key={index}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleAmenitiesClick(data.amenityId)}
-                                                        className={`button-4 ${PostFacilityData.amenity.includes(data.amenityId) ? 'selected' : ''}`}
-                                                    >
-                                                        {data.amenityName}
-                                                    </button>
-                                                </span>
-                                            ))}
+                                            {GetAmenitiesData?.length > 0 &&
+                                                GetAmenitiesData?.map((data, index) => (
+                                                    <span key={index}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                handleAmenitiesClick(data.amenityId)
+                                                            }
+                                                            className={`button-4 ${PostFacilityData.amenity.includes(
+                                                                data.amenityId
+                                                            )
+                                                                ? "selected"
+                                                                : ""
+                                                                }`}
+                                                        >
+                                                            {data.amenityName}
+                                                        </button>
+                                                    </span>
+                                                ))}
                                         </span>
-
+                                        {formErrors.amenity && <p className="error text-red-700">{formErrors.amenity}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Other Amenities
+
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="Enter some other amenities if you have"
                                             name="otherAmenities"
                                             value={PostFacilityData.otherAmenities}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.otherAmenities && <p className="error text-red-700">{formErrors.otherAmenities}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Events Category<span className="text-red-600 font-bold text-xl">*</span></label>
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Events Category
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
                                         <span className="Operating_day">
-                                            {fetchEventCategoryData?.length > 0 && fetchEventCategoryData.map((item, index) => (
-                                                <span key={index}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleEventClick(item.eventCategoryId)}
-                                                        className={`button-4 ${PostFacilityData.eventCategory.includes(item.eventCategoryId) ? 'selected' : ''}`}
-
-                                                    >{item.eventCategoryName}</button>
-                                                </span>
-                                            ))}
+                                            {fetchEventCategoryData?.length > 0 &&
+                                                fetchEventCategoryData.map((item, index) => (
+                                                    <span key={index}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                handleEventClick(item.eventCategoryId)
+                                                            }
+                                                            className={`button-4 ${PostFacilityData.eventCategory.includes(
+                                                                item.eventCategoryId
+                                                            )
+                                                                ? "selected"
+                                                                : ""
+                                                                }`}
+                                                        >
+                                                            {item.eventCategoryName}
+                                                        </button>
+                                                    </span>
+                                                ))}
                                         </span>
-
+                                        {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Events Category<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Other Events Category
+
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="Enter some other amenities if you have"
                                             name="othereventCategory"
                                             value={PostFacilityData.othereventCategory}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.othereventCategory && <p className="error text-red-700">{formErrors.othereventCategory}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Game<span className="text-red-600 font-bold text-xl">*</span></label>
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Game
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
                                         <span className="Operating_day">
-                                            {fetchActivityData?.length > 0 && fetchActivityData?.map((item, index) => (
-                                                <span key={index}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleGameClick(item.userActivityId)}
-                                                        className={`button-4 ${PostFacilityData.game.includes(item.userActivityId) ? 'selected' : ''}`}
-                                                    >{item.userActivityName}</button>
-                                                </span>
-                                            ))}
+                                            {fetchActivityData?.length > 0 &&
+                                                fetchActivityData?.map((item, index) => (
+                                                    <span key={index}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                handleGameClick(item.userActivityId)
+                                                            }
+                                                            className={`button-4 ${PostFacilityData.game.includes(
+                                                                item.userActivityId
+                                                            )
+                                                                ? "selected"
+                                                                : ""
+                                                                }`}
+                                                        >
+                                                            {item.userActivityName}
+                                                        </button>
+                                                    </span>
+                                                ))}
                                         </span>
+                                        {formErrors.game && <p className="error text-red-700">{formErrors.game}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Games<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Other Games
+
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="Enter some other amenities if you have"
                                             name="othergame"
                                             value={PostFacilityData.othergame}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.othergame && <p className="error text-red-700">{formErrors.othergame}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">About the Facility<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="About the Facility"
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            About the Facility
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="About the Facility"
                                             name="additionalDetails"
                                             value={PostFacilityData.additionalDetails}
                                             onChange={handleChange}
                                         />
+                                        {formErrors.additionalDetails && <p className="error text-red-700">{formErrors.additionalDetails}</p>}
                                     </div>
                                 </div>
-                                <div className="container">
-                                    <h2 className="Upload_Image_text">Upload Facility Image<span className="text-red-600 font-bold text-xl">*</span></h2>
-                                    <div className="upload-btn-wrapper">
-                                        <span className=""> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
-                                        {/* <input type="file" name="myfile" accept="image/*"> </input> */}
-                                        <input type="file" accept="image/*"></input>
-                                    </div>
-                                    <div className="image-preview" id="imagePreview"></div>
-                                </div>
-                                <div>
-                                    <div className="container">
-                                        <h2 className="Upload_Image_text">Upload Another Facility Image</h2>
+                                <form id="myForm" className="m-0">
+                                    <div className="container" id="facilityImageOneContainer">
+                                        <h2 className="Upload_Image_text">Upload Facility Image<span className="text-red-600 font-bold text-xl">*</span></h2>
                                         <div className="upload-btn-wrapper">
-                                            <span className=""> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
-                                            {/* <input type="file" name="myfile" accept="image/*"> </input> */}
-                                            <input type="file" accept="image/*"></input>
+                                            <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
+                                            <input
+                                                className="form-input"
+                                                id="facilityImageOne"
+                                                name="facilityImageOne"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleChange}
+                                            />
+                                            <p className="italic text-sm font-bold text-gray-500">
+                                                Max.image file should be less than or eqaul  200 KB.
+                                            </p>
+                                        </div>
+                                        {formErrors.facilityImageOne && <p className="error text-red-700 font-bold text-lg">{formErrors.facilityImageOne}</p>}
+                                        <div className="image-preview" id="imagePreview"></div>
+                                    </div>
+
+                                    <div className="container" id="facilityArrayOfImagesContainer">
+                                        <h2 className="Upload_Image_text">Upload Additional Facility Images</h2>
+                                        <div className="upload-btn-wrapper">
+                                            <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
+                                            <input
+                                                className="form-input"
+                                                id="facilityArrayOfImages"
+                                                name="facilityArrayOfImages"
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                onChange={handleChange}
+                                            />
+                                            <p className="italic text-sm font-bold text-gray-500">
+                                                Max. Each image should be less than 200 KB.
+                                            </p>
+                                            <p className="text-red-500 font-medium">You can only upload up to 5  image for   Additional Facility Images .</p>
                                         </div>
                                         <div className="image-preview" id="imagePreview"></div>
                                     </div>
-                                </div>
+                                </form>
+
+
+
                                 {/* Two more similar rows for Heading 1 */}
                             </div>
                             <div className="buttons-container">
-                                <button type="submit" className="next_button" onClick={nextStep}>Next</button>
+                                <button
+                                    type="submit"
+                                    className="next_button"
+                                    onClick={nextStep}
+                                >
+                                    Next
+                                </button>
                             </div>
                         </div>
-
                     </form>
                 )}
                 {/*------------------------------------------------------- 2nd Step from ----------------------------------------------------------- */}
                 {currentStep === 2 && (
-                    <form onSubmit={nextStep}>
+                    <form onSubmit={nextStep2}>
+                        <div className="HostEvent_container">
+                            <div className="HostEvent_Heading">
+                                <h1 className="verify_name_text">Step-2 (Event Details)</h1>
+                                <div className="HeadingTitle9">
+                                    <div></div>
+                                    <h2>Ownership Details</h2>
+                                </div>
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input2">Facility is owned by BDA ? <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <select id="input2"
+                                            name="facilityisownedbBDA"
+                                            className="input_padding"
+                                            value={PostFacilityData.facilityisownedbBDA}
+                                            onChange={handleChange}
 
-                        <h1> From2</h1>
-                        <div className="buttons-container">
-                            <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
-                            <button type="submit" className="next_button">Next</button>
+                                        >
+                                            <option value="" disabled selected hidden>If yes, ownership details are not required</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                        {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
+                                    </div>
+
+                                </div>
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input1">
+                                            First Name{" "}
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input_padding"
+                                            id="input1"
+                                            placeholder="Enter Pin  "
+                                            name="firstName"
+                                            value={PostFacilityData.firstName}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                         {formErrors.firstName && <p className="error text-red-700">{formErrors.firstName}</p>}
+                                    </div>
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input2">
+                                            Last Name{" "}
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="input2"
+                                            className="input_padding"
+                                            placeholder="Enter Area"
+                                            name="lastName"
+                                            value={PostFacilityData.lastName}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                         {formErrors.lastName && <p className="error text-red-700">{formErrors.lastName}</p>}
+                                    </div>
+                                </div>
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input1">
+                                            Phone Number{" "}
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input_padding"
+                                            id="input1"
+                                            placeholder="Enter Pin  "
+                                            name="phoneNumber"
+                                            value={PostFacilityData.phoneNumber}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                        {formErrors.phoneNumber && <p className="error text-red-700">{formErrors.phoneNumber}</p>}
+                                    </div>
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input2">
+                                            Email Adress{" "}
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="input2"
+                                            className="input_padding"
+                                            placeholder="Enter Area"
+                                            name="emailAdress"
+                                            value={PostFacilityData.emailAdress}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                        {formErrors.emailAdress && <p className="error text-red-700">{formErrors.emailAdress}</p>}
+                                    </div>
+                                </div>
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input1">
+                                            Owner’s PAN card number{" "}
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input_padding"
+                                            id="input1"
+                                            placeholder="Enter Pin  "
+                                            name="ownerPanCard"
+                                            value={PostFacilityData.ownerPanCard}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                        {formErrors.ownerPanCard && <p className="error text-red-700">{formErrors.ownerPanCard}</p>}
+                                    </div>
+
+                                </div>
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group" id="AddressBox">
+                                        <label htmlFor="input1">
+                                            Owner’s Address
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="massage"
+                                            id="input1"
+                                            className="input_padding"
+                                            placeholder="Enter address of your facility"
+                                            name="ownersAddress"
+                                            value={PostFacilityData.ownersAddress}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                           {formErrors.ownersAddress && <p className="error text-red-700">{formErrors.ownersAddress}</p>}
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div className="buttons-container">
+                                <button type="button" className="prev_button" onClick={prevStep}>
+                                    Previous
+                                </button>
+                                <button type="submit" className="next_button"
+
+                                >
+                                    Next
+                                </button>
+                            </div>
+
                         </div>
+
+
+
                     </form>
                 )}
                 {/*           ----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
                 {currentStep === 3 && (
                     <form onSubmit={HandleSubmitFacility}>
-                        <div className="HostEvent_container">
-                            <div className="HostEvent_Heading">
-                                <h1 className="verify_name_text">Step-1 (Facility details)</h1>
-                                <div className="HeadingTitle9">
-                                    <div></div>
-                                    <h2>Facility details</h2>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Facility Type <span className="text-red-600 font-bold text-xl">*</span></label>
-
-                                        <input type="text" name="facilityType" value={PostFacilityData.facilityType}></input>
-                                    </div>
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Facility Name <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Facility Name" name="facilityName"
-                                            value={PostFacilityData.facilityName}
-
-                                        />
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Longitude <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" className="input_padding" id="input1" name="longitude" placeholder="Please enter the Longitude "
-                                            value={PostFacilityData.longitude}
-
-
-                                        />
-                                    </div>
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Latitude<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder=" Please Enter the Latitude" name="latitude" value={PostFacilityData.latitude}/>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Address<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter address of your facility" name="address" value={PostFacilityData.address}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Pin <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" className="input_padding" id="input1" placeholder="Enter Pin  " name="pin" value={PostFacilityData.pin} />
-                                    </div>
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Area <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input2" className="input_padding" placeholder="Enter Area" name="area" value={PostFacilityData.area}/>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Operating From Time <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="time" className="input_padding" id="input1" placeholder="Enter Pin  " name="operatingHoursFrom"
-                                            value={PostFacilityData.operatingHoursFrom}
-                                        />
-                                    </div>
-                                    <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Operating To Time<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="time" id="input2" className="input_padding" placeholder="Enter Area" name="operatingHoursTo" value={PostFacilityData.operatingHoursTo}/>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Operating Days<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <span className="Operating_day" name="operatingDays" >
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.sun ? 'selected' : ''}`} >Sun</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.mon ? 'selected' : ''}`} >Mon</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.tue ? 'selected' : ''}`} >Tue</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.wed ? 'selected' : ''}`} >Wed</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.thu ? 'selected' : ''}`} >Thu</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.fri ? 'selected' : ''}`} >Fri</button>
-                                            <button type="button" className={`button-4 ${PostFacilityData.operatingDays.sat ? 'selected' : ''}`}>Sat</button>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Services<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <span className="Operating_day">
-                                            {GetServiceData?.length > 0 && GetServiceData?.map((item, index) => (
-                                                <span key={index}>
-                                                    <button className="button-4" role="button" name="service" value={PostFacilityData.service}>{item.code}</button>
-                                                </span>
-                                            ))}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Services<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have" name="otherServices" value={PostFacilityData.otherServices}/>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <span className="Operating_day">
-                                            {GetAmenitiesData?.length > 0 && GetAmenitiesData?.map((data, index) => (
-                                                <span key={index}>
-                                                    <button class="button-4" role="button" name="amenity" value={PostFacilityData.amenity}>{data.amenityName}</button>
-                                                </span>
-                                            ))}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Amenities<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have" name="otherAmenities"value={PostFacilityData.otherAmenities} />
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Events<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <span className="Operating_day">
-                                            {fetchEventCategoryData?.length > 0 && fetchEventCategoryData.map((item, index) => (
-                                                <span key={index}>
-                                                    <button class="button-4" role="button" name="eventCategoryName">{item.eventCategoryName}</button>
-                                                </span>
-                                            ))}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Events<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have" name="eventCategoryName"/>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Game<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <span className="Operating_day">
-                                            {fetchActivityData?.length > 0 && fetchActivityData?.map((item, index) => (
-                                                <span key={index}>
-                                                    <button className="button-4" role="button">{item.userActivityName}</button>
-                                                </span>
-                                            ))}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Other Games<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="Enter some other amenities if you have"/>
-                                    </div>
-                                </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">About the Facility<span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="massage" id="input1" className="input_padding" placeholder="About the Facility"/>
-                                    </div>
-                                </div>
-                                <div className="container">
-                                    <h2 className="Upload_Image_text">Upload Facility Image<span className="text-red-600 font-bold text-xl">*</span></h2>
-                                    <div className="upload-btn-wrapper">
-                                        <span className=""> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
-                                        {/* <input type="file" name="myfile" accept="image/*"> </input> */}
-                                        <input type="file" accept="image/*"></input>
-                                    </div>
-                                    <div className="image-preview" id="imagePreview"></div>
-                                </div>
-                                <div>
-                                    <div className="container">
-                                        <h2 className="Upload_Image_text">Upload Another Facility Image</h2>
-                                        <div className0="upload-btn-wrapper">
-                                            <span className=""> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
-                                            {/* <input type="file" name="myfile" accept="image/*"> </input> */}
-                                            <input type="file" accept="image/*"></input>
-                                        </div>
-                                        <div className="image-preview" id="imagePreview"></div>
-                                    </div>
-                                </div>
-                                {/* Two more similar rows for Heading 1 */}
-                            </div>
-                        </div>
-                        {/* ----------------------------------------2nd from ------------------------------------------------ */}
+                        <h1>hello Ji from 4</h1>
                         <div className="buttons-container">
                             <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
                             <button type="submit" className="next_button">Submit</button>
@@ -661,7 +1265,8 @@ const Facility_Reg = () => {
                     </form>
                 )}
             </div>
+            <ToastContainer />
         </div>
-    )
-}
+    );
+};
 export default Facility_Reg;
