@@ -94,7 +94,7 @@ export default function PublicHeader() {
 
   return (
     <header className="header" id="header-public">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="header-content">
         <div className="logo-ama-boomi">
           <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
