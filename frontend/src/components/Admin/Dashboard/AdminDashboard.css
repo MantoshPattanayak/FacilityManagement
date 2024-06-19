@@ -7,42 +7,196 @@
     margin-left: 7%;
 
 }
-.heading h2{
+.heading-dashboard {
     font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
-.activity-name p{
-    margin-top: 15px;
-    font-size: 19px;
-    color: rgb(49, 49, 49);
-    font-weight: 500;
+.download-icon{
+    font-size: 18px;
+    margin-right: 5px;
 }
-.activity-container{
-    height: 40%;
-    margin-top: 7%;
+
+.graph_and_data{
+    width: 100vw;
+    display: flex;
+    margin-top: 10px;
+    /* align-items: center;
+    justify-content: center; */
+}
+.data{
+    width: 46vw;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 100px;
 
 }
-.popular-activity{
-    width: 30vw;
+
+.graph{
+    width: 50px;
+    margin-right: 20px;
 }
-.popular-activity p{
-    font-size:larger;
-    font-weight: 500;
-}
-.activities{
-    width: 30vw;
-    border: 1.2px solid rgb(62, 62, 62);
-    border-radius: 3px;
-  
- 
-}
-.activities-btn{
-    background-color: #04AA6D; /* Green */
-    border: 10px solid white;
-    color: white;
-    padding: 3px 15px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+.dropdown-dashboard {
+    width: 50%;
+    padding: 10px;
     font-size: 16px;
-    border-radius: 15px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    float: right;
+    margin-bottom: 50px;
 }
+
+/* css uiverse............ */
+.card-dashboard {
+    width: 201px;
+    height: 190px;
+    background-color: #E0F8E5;
+
+    color: black;
+    position: relative;
+    border-radius: 2.5em;
+    padding: 2em;
+    transition: transform 0.4s ease;
+  }
+  
+  .card-dashboard .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5em;
+    height: 100%;
+    transition: transform 0.4s ease;
+  }
+  
+  .card-dashboard .card-top, .card .card-bottom {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .card-dashboard .card-top p, .card .card-top .card-title, .card .card-bottom p, .card .card-bottom .card-title {
+    margin: 0;
+  }
+  
+  .card-dashboard .card-title {
+    font-weight: bold;
+  }
+  
+  .card-dashboard .card-top p, .card .card-bottom p {
+    font-weight: 600;
+  }
+  
+  .card-dashboard .card-bottom {
+    align-items: flex-end;
+  }
+  
+  .card-dashboard .card-image {
+    font-size: 35px;
+    font-weight: 600;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+  .card-image h1{
+    font-size: larger;
+  }
+  
+  .card-dashboard .card-image svg {
+    width: 4em;
+    height: 4em;
+    transition: transform 0.4s ease;
+  }
+  
+  .card-dashboard:hover {
+    cursor: pointer;
+    transform: scale(0.97);
+  }
+  
+  .card-dashboard:hover .card-content {
+    transform: scale(0.96);
+  }
+  
+  .card-dashboard:hover .card-image svg {
+    transform: scale(1.05);
+  }
+  
+  .card-dashboard:active {
+    transform: scale(0.9);
+  }
+
+  .curve-img{
+    margin-bottom: 10px;
+  }
+
+
+
+
+/* Activity container................ */
+
+.activity-container{
+    width: 100vw;
+    margin-top: 7%;
+    display: flex;
+    margin-bottom: 20px;
+
+}
+
+.popular-activity{
+    width: 35vw;
+    border: 1px solid rgb(236, 235, 235);
+    border-radius: 10px;
+    padding: 10px;
+}
+.popular-activity-text{
+    font-size: 25px;
+    color: gray;
+}
+.games{
+    align-items:end;
+}
+.games p{
+    font-size: larger;
+    font-weight: 500;
+    color: black;
+}
+.games span{
+    float: right;
+    display: flex;
+    align-items: center;
+}
+
+.popular-facility{
+    width: 35vw;
+    margin-left:15%;
+    border: 1px solid rgb(236, 235, 235);
+    border-radius: 10px;
+    padding: 10px;
+}
+.up{
+    color: green;
+    font-size: 25px;
+    margin: 5px;
+}
+.down{
+    color: red;
+    font-size: 25px;
+    margin: 5px;
+}
+.vew-leaderboard{
+    color: blue;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
