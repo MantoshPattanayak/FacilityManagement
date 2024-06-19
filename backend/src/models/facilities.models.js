@@ -39,10 +39,10 @@ const Facility = sequelize.define('facilities',{
         type:DataTypes.STRING(255)
     },
     operatingHoursFrom:{
-        type:DataTypes.DATE
+        type:DataTypes.TIME
     },
     operatingHoursTo:{
-        type:DataTypes.DATE
+        type:DataTypes.TIME
     },
     sun:{
         type:DataTypes.INTEGER
@@ -81,6 +81,9 @@ const Facility = sequelize.define('facilities',{
         type:DataTypes.STRING(255)
     },
     ownershipDetailId:{
+        type:DataTypes.INTEGER
+    },
+    pin:{
         type:DataTypes.INTEGER
     },
     createdBy:{

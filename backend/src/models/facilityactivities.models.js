@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: null
         },
-        createdOn: {
+        createdDt: {
             type: DataTypes.DATE,
             defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
         },
-        updatedOn: {
+        updatedDt: {
             type: DataTypes.DATE,
             defaultValue: null
         },
