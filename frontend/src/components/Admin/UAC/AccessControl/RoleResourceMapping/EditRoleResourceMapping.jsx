@@ -1,12 +1,18 @@
 import React from "react";
 import "./EditRoleResourceMapping.css";
+import PublicHeader from "../../../../../common/AdminHeader";
+import CommonFooter1 from "../../../../../common/Common_footer1";
 
 const EditRoleResourceMapping = () => {
   return (
-    <div>
-      <div className="form-heading">
-        <div className="heading">
-          <h2>Edit Resources</h2>
+    <div className="parentEditRoleResMap">
+      <PublicHeader />
+      <div className="EditRoleResMap-form-heading2">
+        <div className="editRoleResMapHead">
+          <div className="editRoleResMapHeadIn">
+            <div className="greenBar"></div>
+            <h2>Edit Role Resource Mapping</h2>
+          </div>
         </div>
         <div className="form-grid">
           <div className="form-row">
@@ -19,15 +25,18 @@ const EditRoleResourceMapping = () => {
               <input type="text" id="input2" placeholder="Description" />
             </div>
 
-            <div className="form-group checkBox">
-              <input type="checkbox" className="checkbox" />
-              <label htmlFor="checkbox3" className="checkboxLabel">
-                Checkbox 3
-              </label>
+            <div className="form-group">
+              <label htmlFor="input2">Status</label>
+              <select id="input2" className="selectInput">
+                <option value="" disabled selected>
+                  Select Status
+                </option>
+                <option value="Role1">Active</option>
+                <option value="Role2">Inactive</option>
+              </select>
             </div>
           </div>
           {/* End of form-row */}
-
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="input2">Parent Resource Name</label>
@@ -40,18 +49,8 @@ const EditRoleResourceMapping = () => {
               </select>
             </div>
           </div>
-
           {/* End of form-row */}
           <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="input2">Path</label>
-              <input type="text" id="input2" placeholder="URL" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="input2">Show in Order</label>
-              <input type="text" id="input2" placeholder="Total" />
-            </div>
-
             <div className="form-group">
               <label htmlFor="input2">Status</label>
               <select id="input2" className="selectInput">
@@ -62,6 +61,10 @@ const EditRoleResourceMapping = () => {
                 <option value="Role2">Inactive</option>
               </select>
             </div>
+          </div>
+          <div class="buttonContainer">
+            <button class="customButton">Back</button>
+            <button class="customButton">Update</button>
           </div>
         </div>
       </div>

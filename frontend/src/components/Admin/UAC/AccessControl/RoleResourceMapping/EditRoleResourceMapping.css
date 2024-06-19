@@ -1,10 +1,55 @@
+.EditRoleResMap-form-heading2 {
+    margin-top: 15vh;
+    margin-inline: 2vw;
+}
 
+.greenBar {
+    width: 1vw;
+    height: 8vh;
+    background-color: green;
+}
+
+.editRoleResMapHeadIn {
+    display: flex;
+    gap: 1vw;
+    align-items: center;
+    font-weight: bold;
+}
+
+.editRoleResMapHead {
+    max-width: 100%;
+    width: 94vw;
+    display: flex;
+    justify-content: flex-start;
+    background: rgb(196, 239, 196);
+    height: 8vh;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5vh;
+}
 
 .form-row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: self-end;
+}
+
+.form-row .form-group {
+    width: 92vw;
+    margin-top: 1vh;
+}
+
+.form-row .form-group input {
+    width: 92vw;
+}
+
+.form-row .form-group .selectInput {
+    width: 92vw;
+}
+
+.form-row .form-group .selectInput select {
+    width: 92vw;
 }
 
 .checkBox {
@@ -21,6 +66,37 @@
     background-color: ghostwhite;
 }
 
+.buttonContainer {
+    display: flex;
+    width: 94vw;
+    justify-content: space-between;
+    margin: 0 auto;
+    height: 6vh;
+    /* Center the container */
+}
+
+.customButton {
+    margin: 0 5px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.customButton:hover {
+    background-color: #45a049;
+    /* Example hover effect */
+}
+
+
+
 @media screen and (max-width: 760px) {
     .form-row {
         flex-direction: column;
@@ -33,7 +109,7 @@
 
     }
 
-    .selectInput{
+    .selectInput {
         width: 100%;
     }
 }
