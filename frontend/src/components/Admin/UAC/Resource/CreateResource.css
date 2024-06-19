@@ -16,8 +16,8 @@
   cursor: pointer;
 }
 
-.form {
-  width: 70vw;
+.CreateResParent .form {
+  width: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -69,7 +69,8 @@
 }
 
 .checkbox-input {
-  margin: 0 5px 0 0; /* Adjust margin around the checkbox */
+  margin: 0 5px 0 0;
+  /* Adjust margin around the checkbox */
 }
 
 .buttons {
@@ -94,7 +95,7 @@
 }
 
 .submit-btn {
-  background-color:  #00B562;
+  background-color: #00B562;
   color: white;
 }
 
@@ -102,20 +103,20 @@
 
 @media only screen and (max-width: 600px) {
   .form {
-      width: 100%;
+    width: 100%;
   }
 
   .fields {
-      width: 100%;
+    width: 100%;
   }
 
   .buttons {
-      flex-direction: column;
-      gap: 10px;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .reset-btn,
   .submit-btn {
-      width: 100%;
+    width: 100%;
   }
 }
