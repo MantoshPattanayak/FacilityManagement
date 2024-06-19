@@ -129,7 +129,13 @@ db1.facilityactivities.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 
 db1.useractivitymasters.hasMany(db1.facilityactivities,{foreignKey:"activityId"})
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId"})
+
+db1.facilities.hasMany(db1.facilitytariff,{foreignKey:"facilityId"})
+db1.facilitytariff.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 // join operations end
+
+
+
 
 db1.faq.sync({
   alter: false,
