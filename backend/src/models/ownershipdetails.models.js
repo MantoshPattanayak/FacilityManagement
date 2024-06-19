@@ -27,6 +27,9 @@ module.exports = (sequelize,DataTypes)=>{
         statusId:{
             type:DataTypes.INTEGER
         },
+        isFacilityByBda:{
+            type:DataTypes.INTEGER
+        },
         remarks:{
             type:DataTypes.STRING
         },
