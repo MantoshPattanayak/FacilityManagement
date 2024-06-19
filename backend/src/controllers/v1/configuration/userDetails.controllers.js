@@ -90,7 +90,7 @@ let viewList = async (req, res) => {
     let offset = (page - 1) * limit;
     let params = [];
     let getAllUsersQuery = `SELECT COUNT(*) OVER() AS totalCount,
-        pu.userId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.phoneNo, 
+        pu.userId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.phoneNo, pu.statusId,
         rm.roleName
         FROM amabhoomi.rolemasters rm
         LEFT JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId`;
@@ -138,12 +138,12 @@ let viewList = async (req, res) => {
 
       filteredUsers = decryptedUsers.filter(
         (userData) =>
-          userData.title.toLowerCase().includes(givenReq) ||
-          userData.fullName.toLowerCase().includes(givenReq) ||
-          userData.emailId.toLowerCase().includes(givenReq) ||
-          userData.userName.toLowerCase().includes(givenReq) ||
-          userData.phoneNo.toLowerCase().includes(givenReq) ||
-          userData.roleName.toLowerCase().includes(givenReq)
+          userData.title?.toLowerCase().includes(givenReq) ||
+          userData.fullName?.toLowerCase().includes(givenReq) ||
+          userData.emailId?.toLowerCase().includes(givenReq) ||
+          userData.userName?.toLowerCase().includes(givenReq) ||
+          userData.phoneNo?.toLowerCase().includes(givenReq) ||
+          userData.roleName?.toLowerCase().includes(givenReq)
         // ||
         // userData.statusCode.toLowerCase().includes(givenReq)
       );
