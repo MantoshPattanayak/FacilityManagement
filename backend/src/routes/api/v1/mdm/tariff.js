@@ -6,7 +6,7 @@ const tariffData = require("../../../../controllers/"+api_version+"/mdm/tariff.c
 let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 router.post("/createTariff",authenticateToken, tariffData.createTariff);
 
-router.get("/getTariffById", authenticateToken,tariffData.getTariffById);
+router.get("/getTariffById/:tariffId", authenticateToken,tariffData.getTariffById);
 
 router.put("/updateTariff", authenticateToken,tariffData.updateTariff);
 

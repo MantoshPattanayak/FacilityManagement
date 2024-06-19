@@ -13,6 +13,7 @@ const {
   requestLogger,
   errorLogger,
 } = require("./middlewares/logger.middlewares");
+const statusCode = require("./utils/statusCode");
 
 // const authRoutes= require('./routes/api/'+api_version+'/auth/user')
 
@@ -71,6 +72,7 @@ const grievance = require('./routes/api/' + api_version + '/activity/grievance')
 
 const facilityRegistration = require('./routes/api/'+ api_version + '/mdm/registration')
 
+const tariffRoute = require(`./routes/api/`+api_version+`/mdm/tariff`)
 
 console.log(port, "port");
 
@@ -132,11 +134,21 @@ app.use('/grievance', grievance);
 app.use('/adminFacility',facilityRegistration)
 //promotion
 app.use("/promotion", promotionRoute)
+
+// tariff
+app.use("/tariffData",tariffRoute)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
 app.use("/static", express.static(uploadDir));
 
+app.use((err,req,res,next)=>{
+  if(err){
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:"something went wrong"
+    })
+  }
+})
 module.exports = {
   app,
 };
