@@ -5,7 +5,9 @@ const initialState = {
     accessToken: sessionStorage.getItem('accessToken') || null,
     refreshToken: localStorage.getItem('refreshToken') || null,
     user: null,
-    sid: null
+    sid: null,
+    accessRoutes: null,
+    roleId: null
 }
 // Create Slice for store the data --------------------------------------------------
 const authSlice = createSlice({
@@ -46,20 +48,25 @@ const authSlice = createSlice({
         },
         adminLogin(state, action) {
             console.log("loginSuccess reducer called"); // Check if the reducer is being called
-            const { accessToken, refreshToken, user, sid } = action.payload;
+            const { accessToken, refreshToken, user, sid, accessRoutes, roleId } = action.payload;
             console.log("accessToken:", accessToken);   // Check if accessToken is correct
             console.log("refreshToken:", refreshToken);  // Check if refreshToken is correct
             console.log("here user", user);
+            console.log('access routes', accessRoutes);
             state.isAdminLoggedIn = true;
             state.accessToken = accessToken;
             state.refreshToken = refreshToken;
             state.user = user;
             state.sid = sid;
+            state.accessRoutes = accessRoutes;
+            state.roleId = roleId;
             // Storing tokens in session and local storage
             sessionStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             sessionStorage.setItem("isAdminLoggedIn", 1);
             sessionStorage.setItem('session-id', sid);
+            sessionStorage.setItem("userInfo", roleId);
+            sessionStorage.setItem('accessRoutes', JSON.stringify(accessRoutes));
         }
     }
 });

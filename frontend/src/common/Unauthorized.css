@@ -1,0 +1,36 @@
+.unauthorized-container {
+    width: 65vw;
+    margin: 75px auto 75px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.unauthorized-container .headingStyle {
+    color: red;
+    font-size: 50px;
+    margin: auto;
+    text-align: center;
+}
+
+.unauthorized-container .link {
+    display: flex;
+}
+
+@media screen and (max-width: 780px) {
+    .unauthorized-container {
+        width: 60vw;
+        margin: 70px auto;
+        padding: 0 20px;
+    }
+
+    .unauthorized-container .headingStyle {
+        color: red;
+        font-size: 40px;
+        margin: auto;
+        text-align: center;
+    }
+}

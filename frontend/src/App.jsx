@@ -116,62 +116,48 @@ function App() {
               <Route
                 path="/BookParks/Book_Now_Sport"
                 element={
-                  <ProtectedRoute>
-                    <Book_Now_Sport />
-                  </ProtectedRoute>
+                  <Book_Now_Sport />
                 }
               />
               {/* Public (sport)  */}
               <Route
                 path="/BookParks/Book_Now"
                 element={
-                  <ProtectedRoute>
-                    <Book_Now />
-                  </ProtectedRoute>
+                  <Book_Now />
                 }
               />
               {/* Public (Add to Crad)  */}
               <Route
                 path="/BookParks/Add_Card"
                 element={
-                  <ProtectedRoute>
-                    <Add_Card />
-                  </ProtectedRoute>
+                  <Add_Card />
                 }
               />
               <Route
                 path="/profile/booking-details/ticket"
                 element={
-                  <ProtectedRoute>
-                    <Bokking_Bill />
-                  </ProtectedRoute>
+                  <Bokking_Bill />
                 }
               />
               {/* Public (Book Details)  */}
               <Route
                 path="/profile/booking-details"
                 element={
-                  <ProtectedRoute>
-                    <BookingDetails />
-                  </ProtectedRoute>
+                  <BookingDetails />
                 }
               />
               {/* Public (Favorites)  */}
               <Route
                 path="/UserProfile/Favorites"
                 element={
-                  <ProtectedRoute>
-                    <Favorites />
-                  </ProtectedRoute>
+                  <Favorites />
                 }
               />
               {/* Public (ProfileHistory)  */}
               <Route
                 path="/UserProfile/ProfileHistory"
                 element={
-                  <ProtectedRoute>
-                    <ProfileHistory />
-                  </ProtectedRoute>
+                  <ProfileHistory />
                 }
               />
 
@@ -179,9 +165,7 @@ function App() {
               <Route
                 path="/Profile"
                 element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
+                  <Profile />
                 }
               />
 
@@ -241,7 +225,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* Activity - Grievance */}
+              {/* Activity - Grievance START */}
               <Route
                 path="/activity/grievance"
                 element={
@@ -274,7 +258,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* Activity - Grievance */}
+              {/* Activity - Grievance END */}
               {/* ADMIN SECTION - UAC*/}
               <Route
                 path="/UAC/Resource/ListOfResources"

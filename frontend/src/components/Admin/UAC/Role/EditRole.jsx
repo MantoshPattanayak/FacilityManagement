@@ -14,7 +14,7 @@ import { dataLength } from '../../../../utils/regexExpAndDataLength';
 const EditRole = () => {
 
   // here post and get the data----------------------
-  const [roleData, setRoleData] = useState({ roleName: '', roleCode: '', roleCodeStatus: '' });
+  const [roleData, setRoleData] = useState({ roleId:'', roleName: '', roleCode: '', roleCodeStatus: '' });
   // here set error (show ) using useState--------------------
   const [Showerror, setShowerror] = useState([])
   const [IsSubmit, setIsSubmit] = useState(false)
@@ -33,6 +33,12 @@ const EditRole = () => {
       let res = await axiosHttpClient('ROLE_VIEW_BY_ID_API', 'get', {}, roleId);
       console.log("here Update data get", res);
       setRoleData(res.data.data);
+      setRoleData({
+        roleId: res.data.data.roleId,
+        roleName: res.data.data.roleName,
+        roleCode: res.data.data.roleCode,
+        roleCodeStatus: res.data.data.statusId
+      })
     }
     catch (err) {
       console.log("here Error", err);
@@ -41,9 +47,36 @@ const EditRole = () => {
   //  here Post (Update data) -------------------------
   function handleChange(e) {
     e.preventDefault();
+    setErrors({});
     let { name, value } = e.target;
     setRoleData({ ...roleData, [name]: value });
     console.log('roleData', roleData);
+    return;
+  }
+
+  //function to seek confirmation
+  function handleConfirmation(e) {
+    e.preventDefault();
+    toast.warn(
+      <div>
+        <p>Are you sure you want to proceed?</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <button onClick={() => handleSumbit(e)} className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
+          <button onClick={() => {
+            toast.dismiss();
+            toast.error('Action cancelled!', {
+              // position: toast.POSITION.TOP_CENTER,
+              // autoClose: 3000,
+            });
+          }} className='bg-red-400 text-white p-2 border rounded-md'>No</button>
+        </div>
+      </div>,
+      {
+        position: "top-center",
+        autoClose: false, // Disable auto close
+        closeOnClick: false, // Disable close on click
+      }
+    );
     return;
   }
 
@@ -52,14 +85,23 @@ const EditRole = () => {
     e.preventDefault();
     const errors = validate(roleData);
     setErrors(errors);
+    toast.dismiss();
     if (Object.keys(errors).length === 0) {
       try {
         let res = await axiosHttpClient('ROLE_UPDATE_API', 'put', roleData);
         console.log(res);
-        toast.success('User details updated successfully.');
+        toast.success('Role updated successfully.', {
+          autoClose: 2000,
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate('/UAC/Role/ListOfRoles');
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
       } catch (err) {
         console.error(err);
-        toast.error('User details updation failed. Please try again.');
+        toast.error('Role updation failed. Please try again.');
       }
     } else {
       // Here iterate through all input fields errors and display them
@@ -75,7 +117,7 @@ const EditRole = () => {
     const errors = {};
     const Role_Name_regex = /^[a-zA-Z0-9]+(?:\s[a-zA-Z0-9]+)*$/;
 
-    const Role_Code_regex = /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/;
+    const Role_Code_regex = /^[A-Z_]+$/;
 
     if (!value.roleName) {
       errors.roleName = "Role Name is Required!";
@@ -113,27 +155,32 @@ const EditRole = () => {
         </div>
         {/* Input fields */}
         <div>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4">
             <div className="form-group">
               <label htmlFor="input2">Role name<span className='text-red-500'>*</span></label>
               <input type="text" name='roleName' value={roleData.roleName} placeholder="Enter role name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? 1 : 0} />
               {errors.roleName && <p className='error-message'>{errors.roleName}</p>}
             </div>
             <div className="form-group">
-              <label htmlFor="input3">Role code<span className='text-red-500'>*</span></label>
+              <label htmlFor="input3">Role code <i>(In uppercase without space)</i><span className='text-red-500'>*</span></label>
               <input type="text" name='roleCode' value={roleData.roleCode} placeholder="Enter role code" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? 1 : 0} />
               {errors.roleCode && <p className='error-message'>{errors.roleCode}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="input3">Role Status<span className='text-red-500'>*</span></label>
-              <input type="text" name='roleCodeStatus' value={roleData.roleCode} placeholder="Enter role code" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? 1 : 0} />
+              <select name='roleCodeStatus' value={roleData.roleCodeStatus} onChange={handleChange} disabled={action == 'view' ? 1 : 0}>
+                <option value=''>Select</option>
+                <option value='1'>Active</option>
+                <option value='2'>Inactive</option>
+              </select>
+              {/* <input type="text" name='roleCodeStatus' value={roleData.roleCode} placeholder="Enter role code" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? 1 : 0} /> */}
               {errors.roleCode && <p className='error-message'>{errors.roleCode}</p>}
             </div>
           </div>
           {
             action == 'edit' && (
               <div className="buttons-container">
-                <button type='button' className="approve-button" onClick={handleSumbit}>Update</button>
+                <button type='button' className="approve-button" onClick={handleConfirmation}>Update</button>
                 {/* <button type='button' className="cancel-button" onClick={(e) => setRoleData({ roleName: "", roleCode: "" })}>Cancel</button> */}
               </div>
             )
