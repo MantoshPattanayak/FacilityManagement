@@ -12,35 +12,48 @@ const RoleResourceMappingList = () => {
 
   async function fetchRoleResourceMappingListData() {
     try {
-      let res = await axiosHttpClient('ROLE_RESOURCE_VIEW_API', 'get');
+      let res = await axiosHttpClient("ROLE_RESOURCE_VIEW_API", "get");
 
-      console.log('response', res.data);
-    }
-    catch(error) {
+      console.log("response", res.data);
+    } catch (error) {
       console.error(error);
     }
   }
 
   useEffect(() => {
     fetchRoleResourceMappingListData();
-  }, [])
+  }, []);
 
   return (
     <>
       <AdminHeader />
       <div className="Main_Conatiner_table">
-        <div className='table-heading'>
-          <h2 className="table-heading">List of Role-Resource</h2>
+        <div className="editRoleResMapHead">
+          <div className="editRoleResMapHeadIn">
+            <div className="greenBar"></div>
+            <h2>Role Resource Mapping List</h2>
+          </div>
         </div>
 
         <div className="search_text_conatiner">
-          <button className='search_field_button' onClick={() => navigate('/UAC/RoleResource/Create')}>Create new role-resource mapping</button>
-          <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+          <button
+            className="search_field_button"
+            onClick={() => navigate("/UAC/RoleResource/Create")}
+          >
+            Create new role-resource mapping
+          </button>
+          <input
+            type="text"
+            className="search_input_field"
+            value={givenReq}
+            placeholder="Search..."
+            onChange={(e) => setGivenReq(e.target.value)}
+          />
           {/* <SearchDropdown /> */}
         </div>
 
         <div className="table_Container">
-          <table >
+          <table>
             <thead>
               <tr>
                 <th scope="col">Role Name</th>
@@ -51,9 +64,9 @@ const RoleResourceMappingList = () => {
                 <th scope="col">Edit</th>
               </tr>
             </thead>
-            <tbody >
-              {
-                tableData?.length > 0 && tableData?.map((data) => {
+            <tbody>
+              {tableData?.length > 0 &&
+                tableData?.map((data) => {
                   return (
                     <tr key={data.id}>
                       <td data-label="Name">{data.userName}</td>
@@ -63,8 +76,10 @@ const RoleResourceMappingList = () => {
                       <td data-label="View">
                         <Link
                           to={{
-                            pathname: '/UAC/RoleResource/Edit',
-                            search: `?roleResourceId=${encryptDataId(data.id)}&action=view`
+                            pathname: "/UAC/RoleResource/Edit",
+                            search: `?roleResourceId=${encryptDataId(
+                              data.id
+                            )}&action=view`,
                           }}
                         >
                           <FontAwesomeIcon icon={faEye} />
@@ -73,17 +88,18 @@ const RoleResourceMappingList = () => {
                       <td data-label="Edit">
                         <Link
                           to={{
-                            pathname: '/UAC/RoleResource/Edit',
-                            search: `?roleResourceId=${encryptDataId(data.id)}&action=edit`
+                            pathname: "/UAC/RoleResource/Edit",
+                            search: `?roleResourceId=${encryptDataId(
+                              data.id
+                            )}&action=edit`,
                           }}
                         >
                           <FontAwesomeIcon icon={faPenToSquare} />
                         </Link>
                       </td>
                     </tr>
-                  )
-                })
-              }
+                  );
+                })}
             </tbody>
           </table>
         </div>
