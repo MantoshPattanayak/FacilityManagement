@@ -3,7 +3,7 @@ const api = {
    LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
    PUBLIC_LOGIN_API: '/auth/publicLogin',
    PUBLIC_SIGNUP_API: '/auth/signUp',
-   LOGOUT_API: '/logout',  //post
+   LOGOUT_API: '/auth/logout',  //post
    FORGOT_PASSWORD_API: '/auth/forgotPassword', //put  mobileNo password
    PUBLIC_SIGNUP_GENERATE_OTP_API: '/auth/generateOTP',    // post - encryptMobile
    PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp

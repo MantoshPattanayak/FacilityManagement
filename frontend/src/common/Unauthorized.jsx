@@ -1,27 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './Unauthorized.css';
 
 const UnauthorizedPage = () => {
-  const containerStyle = {
-    textAlign: 'center',
-    backgroundColor: '#f0f0f0',
-    boxShadow: '0 0 300px rgba(0, 0, 0, 0.1)',
-    display: 'flex',
-    flexDirection: 'column',
-    marginLeft: '50%',
-    width: '100%'
-  };
 
-  const headingStyle = {
-    color: 'red',
-    fontSize: '54px',
-    marginBottom: '20px',
-    textAlign:'center'
-  };
-
+  useEffect(() => {
+    document.title = 'Unauthorized access!'
+  }, [])
   return (
-    <div style={containerStyle}>
-      <h1 style={headingStyle}>You are not authorized to access this page.</h1>
-      <p style={{ color: '#666' }}>Click to go back to <a href='/'><p className='underline text-blue-500'>Home</p></a>.</p>
+    <div className="unauthorized-container">
+      <h1 className="headingStyle">You are not authorized to access this page.</h1>
+      <p className="link">Click to go back to &nbsp; <Link to='/admin-login'><p className='underline text-blue-500'>Home</p></Link></p>
     </div>
   );
 };

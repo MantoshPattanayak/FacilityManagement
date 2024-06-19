@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptData } from '../../../../utils/encryptData';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 const ListOfRoles = () => {
   let navigate = useNavigate();
   const [roleListData, setRoleListData] = useState([]);
@@ -38,6 +40,17 @@ const ListOfRoles = () => {
       setRoleListData(res.data.Role); // Update role list data
     } catch (error) {
       console.log(error);
+      if(error.response.status == 401){ // if user session ended, then show message and navigate to login page
+        toast.error("Your session ended. Kindly login again!", {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate('/admin-login');
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      }
     }
   }
 
@@ -70,6 +83,7 @@ const ListOfRoles = () => {
   return (
     <div className="ListOfRoles">
       <AdminHeader />
+      <ToastContainer />
       <div className='Main_Conatiner_table'>
         <div className='table-heading'>
           <h2 className="table-heading">View Roles</h2>
@@ -83,6 +97,7 @@ const ListOfRoles = () => {
             id="myInput"
             value={givenReq}
             onChange={handleSearchQuery}
+            autoComplete='off'
           />
         </div>
         <div className="table_Container">
@@ -91,6 +106,7 @@ const ListOfRoles = () => {
               <tr>
                 <th scope="col">Role Name</th>
                 <th scope="col">Role Code</th>
+                <th scope="col">Role Status</th>
                 <th scope="col">View</th>
                 <th scope="col">Edit </th>
               </tr>
@@ -101,6 +117,7 @@ const ListOfRoles = () => {
                   return (<tr key={index}>
                     <td>{item.roleName}</td>
                     <td>{item.roleCode}</td>
+                    <td>{item.statusId == 1 ? 'Active' : 'Inactive'}</td>
                     <td>
                       <Link
                         to={{

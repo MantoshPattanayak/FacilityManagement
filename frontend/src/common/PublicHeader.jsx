@@ -9,7 +9,7 @@ import axiosHttpClient from "../utils/axios";
 // Import Redux Part ---------------------------------
 import { useDispatch, useSelector } from "react-redux";  // selector use for Read the data -----------------
 import { setLanguage, setLanguageContent } from "../utils/languageSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -17,11 +17,11 @@ import { ToastContainer, toast } from "react-toastify";
 export default function PublicHeader() {
   const [showMediaIcon, setShowMediaIcon] = useState(false);
   const [GetCardCount, setGetCardCount] = useState([]);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState();
-  const [refreshOnLogOut, setRefreshOnLogOut] = useState(Date.now());
-
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(useSelector((state => state.auth.isUserLoggedIn)));
+  const [refreshOnLogOut, setRefreshOnLogOut] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const language = useSelector((state) => state.language.language);
   const languageContent = useSelector((state) => state.language.languageContent);
   const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
@@ -63,20 +63,26 @@ export default function PublicHeader() {
     GetTotalNumberofCart();
   }, []);
 
+  useEffect(() => {
+    if(refreshOnLogOut)
+      setIsUserLoggedIn(0);
+  }, [refreshOnLogOut])
+
 
   function handleLogout(e) {
     // logOutUser(e);
-    dispatch(Logout());
     async function logOutAPI() {
       try {
         let res = await axiosHttpClient('LOGOUT_API', 'post');
         console.log(res.data);
+        dispatch(Logout());
+        setRefreshOnLogOut(!refreshOnLogOut);
         toast.success('Logged out successfully!!', {
-          autoClose: 3000, // Toast timer duration in milliseconds
+          autoClose: 2000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
             setTimeout(() => {
-              navigate("/");
+              navigate('/')
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
         });
@@ -150,7 +156,7 @@ export default function PublicHeader() {
             )}
             {isUserLoggedIn == 1 && (
               <li>
-                <Link onClick={handleLogout} to={'/'}><FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;</Link>
+                <Link onClick={handleLogout}><FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;</Link>
               </li>
             )}
           </ul>

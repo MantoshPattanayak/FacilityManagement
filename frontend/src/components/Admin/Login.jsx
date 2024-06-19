@@ -66,13 +66,16 @@ const AdminLogin = () => {
           encryptOtp: encryptData(LogingDataPost.otp)
         });
         console.log("user Login Response", res);
+
         // Dispatch login success action with tokens and user data -------------------
         if(res.data.decideSignUpOrLogin == 1){
           dispatch(adminLogin({
             accessToken: res.data.accessToken,
             refreshToken: res.data.refreshToken,
             user: res.data.user,
-            sid: res.data.sid
+            sid: res.data.sid,
+            accessRoutes: res.data.authorizedResource,
+            roleId: res.data.role
           }));
           toast.success("Login successfully.");
         }
