@@ -1,12 +1,12 @@
 /* ListOfRoles.css */
 
 /* General styles */
-.roles {
+.ListOfRoles .roles {
   display: flex;
   font-size: large;
 }
 
-.search_text_conatiner {
+.ListOfRoles .search_text_conatiner {
   margin-top: 15px;
   width: 100%;
   display: flex;
@@ -14,7 +14,7 @@
   align-items: center;
 }
 
-.search_input_field {
+.ListOfRoles .search_input_field {
   border: 1px solid black;
   width: 30%;
   border-radius: 15px;
@@ -22,7 +22,7 @@
   margin-right: 10px;
 }
 
-.create-role-btn {
+.ListOfRoles .create-role-btn {
   background-color: #fdfdfd;
   border: 1px solid black;
   border-radius: 10px;
@@ -34,38 +34,46 @@
   font-size: 16px;
 }
 
-.create-role-btn:hover {
+.ListOfRoles .create-role-btn:hover {
   background-color: #c6c6c6;
   transition: 0.5s;
 }
 
 /* Table styles */
-.Main_Conatiner_table {
-  width: 70vw; /* Content width excluding AdminHeader and Footer */
-  margin: 0 auto;
+.ListOfRoles .Main_Conatiner_table {
+  width: 70vw;
+  margin: 75px auto 75px auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
-  padding: 0 20px; /* Added padding for better spacing */
-  box-sizing: border-box; /* Include padding in width calculation */
-     
+  /* min-height: 100vh; */
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-.table_Container {
+.ListOfRoles .table-heading {
+  /* padding-left: 10px; */
+  /* margin-left: 10vw; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.ListOfRoles .table_Container {
   overflow-y: auto;
   max-height: 700px;
   width: 100%; /* Ensure table container takes full width */
 }
 
-.search_text_conatiner {
+.ListOfRoles .search_text_conatiner {
   display: flex;
   justify-content: space-between;
   padding: 12px;
 }
 
-.search_input_field {
+.ListOfRoles .search_input_field {
   padding: 5px;
   width: 30vh;
   border: 1px solid #3a3b3a;
@@ -74,21 +82,21 @@
 }
 
 /* Style the input field border when it's focused */
-.search_input_field:focus {
+.ListOfRoles .search_input_field:focus {
   border-color: #363736;
 }
 
 /* Style the placeholder text */
-.search_input_field::placeholder {
+.ListOfRoles .search_input_field::placeholder {
   color: #999;
   font-style: italic;
 }
 
-.search_input_field:focus {
+.ListOfRoles .search_input_field:focus {
   width: 35vh;
 }
 
-table {
+.ListOfRoles table {
   border: 1px solid #ccc;
   border-collapse: collapse;
   margin: 0;
@@ -97,24 +105,24 @@ table {
   table-layout: fixed;
 }
 
-table caption {
+.ListOfRoles table caption {
   font-size: 1.5em;
   margin: .5em 0 .75em;
 }
 
-table tr {
+.ListOfRoles table tr {
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   padding: .35em;
 }
 
-table th,
-table td {
+.ListOfRoles table th,
+.ListOfRoles table td {
   padding: .625em;
   text-align: center;
 }
 
-table th {
+.ListOfRoles table th {
   font-size: .85em;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -124,23 +132,23 @@ table th {
   color: #f8f8f8;
 }
 
-tbody tr:nth-child(odd) {
+.ListOfRoles tbody tr:nth-child(odd) {
   background-color: #ffffff;
 }
 
-tbody tr:nth-child(even) {
+.ListOfRoles tbody tr:nth-child(even) {
   background-color: #f0f0f0;
 }
 
 /* Pagination styles */
-.pagination {
+.ListOfRoles .pagination {
   margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.pagination button {
+.ListOfRoles .pagination button {
   padding: 8px 16px;
   margin: 0 5px;
   border: 1px solid #ddd;
@@ -151,16 +159,16 @@ tbody tr:nth-child(even) {
   transition: background-color 0.3s ease;
 }
 
-.pagination button:hover {
+.ListOfRoles .pagination button:hover {
   background-color: #ddd;
 }
 
-.pagination button:disabled {
+.ListOfRoles .pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.pagination button.active {
+.ListOfRoles .pagination button.active {
   background-color: #00b562;
   color: white;
   border: 1px solid #00b562;
@@ -168,59 +176,59 @@ tbody tr:nth-child(even) {
 
 /* Media queries */
 @media screen and (max-width: 768px) {
-  .roles {
+  .ListOfRoles .roles {
     flex-direction: column;
     align-items: center;
   }
 
-  .search_text_conatiner {
+  .ListOfRoles .search_text_conatiner {
     flex-direction: column;
     align-items: center;
   }
 
-  .search_input_field {
+  .ListOfRoles .search_input_field {
     width: 100%;
     margin-right: 0;
     margin-bottom: 10px;
   }
 
-  .create-role-btn {
+  .ListOfRoles .create-role-btn {
     width: 100%;
     margin-right: 0;
     margin-bottom: 10px;
   }
 
-  .Main_Conatiner_table {
+  .ListOfRoles .Main_Conatiner_table {
     width: 90%;
     padding: 0 10px; /* Adjusted padding for smaller screens */
   }
 
-  .table_Container {
+  .ListOfRoles .table_Container {
     overflow-x: auto; /* Added horizontal scroll for small screens */
     max-width: 100%;
   }
 
-  .pagination {
+  .ListOfRoles .pagination {
     flex-direction: column;
     align-items: center;
   }
 
-  .pagination button {
+  .ListOfRoles .pagination button {
     margin: 5px;
   }
 }
 
 @media screen and (max-width: 576px) {
-  .search_input_field {
+  .ListOfRoles .search_input_field {
     width: 100%;
   }
 
-  table th,
-  table td {
+  .ListOfRoles table th,
+  .ListOfRoles table td {
     padding: .5em;
   }
 
-  table caption {
+  .ListOfRoles table caption {
     font-size: 1.3em;
   }
 }
