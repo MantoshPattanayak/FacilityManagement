@@ -150,7 +150,7 @@ const registerFacility = async (req, res) => {
           let entityType = 'facilities'
           let serverError = 'something went wrong'
           let cardFacilityImage = facilityImage.facilityImageOne
-          let arrayFacilityImage = facilityImage.facilityImageList
+          let arrayFacilityImage = facilityImage.facilityArrayOfImages
           let insertionData = {
            id:createFacilities.facilityId,
            name:createFacilities.facilityname
