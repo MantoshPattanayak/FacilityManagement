@@ -78,14 +78,14 @@ const CreateRole = () => {
         </div>
         {/* Input fields */}
         <div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-y-5">
             <div className="form-group">
               <label htmlFor="input2">Role name<span className='text-red-500'>*</span></label>
               <input type="text" name='roleName' value={postRoleData.roleName} placeholder="Enter role name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} />
               {errors.roleName && <p className='error-message'>{errors.roleName}</p>}
             </div>
             <div className="form-group">
-              <label htmlFor="input3">Role code<span className='text-red-500'>*</span></label>
+              <label htmlFor="input3">Role code <i>(In uppercase without space)</i><span className='text-red-500'>*</span></label>
               <input type="text" name='roleCode' value={postRoleData.roleCode} placeholder="Enter role code" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} />
               {errors.roleCode && <p className='error-message'>{errors.roleCode}</p>}
             </div>

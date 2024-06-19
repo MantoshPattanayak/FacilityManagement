@@ -46,6 +46,7 @@ const createRole = async (req, res) => {
       createRole = await role.create({
         roleCode: roleCode,
         roleName: roleName,
+        statusId: 1
       });
       if (createRole) {
         console.log("ja", createRole);
@@ -72,7 +73,7 @@ const createRole = async (req, res) => {
 //Update
 const updateRole = async (req, res) => {
   try {
-    const { roleId, roleCode, roleName, status, remark } = req.body;
+    const { roleId, roleCode, roleName, roleCodeStatus, remark } = req.body;
     if (!roleId && !roleCode && !roleName) {
       return res.status(statusCode.BAD_REQUEST.code).json({
         message: "Content can not be empty!",
@@ -84,6 +85,7 @@ const updateRole = async (req, res) => {
       {
         roleCode: roleCode,
         roleName: roleName,
+        statusId: roleCodeStatus
       },
       {
         where: { roleId: roleId },
@@ -121,9 +123,8 @@ const viewRole = async (req, res) => {
     if (givenReq) {
       showAllRoles = showAllRoles.filter(
         (roleData) =>
-          roleData.roleId.includes(givenReq) ||
-          roleData.roleCode.includes(givenReq) ||
-          roleData.roleName.includes(givenReq)
+          roleData.roleCode?.toLowerCase().includes(givenReq) ||
+          roleData.roleName?.toLowerCase().includes(givenReq)
       );
     }
     let paginatedShowAllRoles = showAllRoles.slice(offset, limit + offset);

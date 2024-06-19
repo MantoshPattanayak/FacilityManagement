@@ -26,7 +26,7 @@ let ownershipDetails = db.ownershipDetails
 const { Op } = require('sequelize');
 let user = db.usermaster
 let imageUpload = require('../../../utils/imageUpload')
-
+let facilityEvent = db.facilityEvents
 // Admin facility registration
 
 const registerFacility = async (req, res) => {
@@ -34,7 +34,8 @@ const registerFacility = async (req, res) => {
      console.log("check Api", "1")
     let userId = req.user?.userId || 1;
     let statusId = 1;
-
+    let createdDt = new Date();
+    let updatedDt = new Date();
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
@@ -49,6 +50,7 @@ const registerFacility = async (req, res) => {
       latitude,
       address,
       pin,
+      ownership,
       area,
       operatingHoursFrom,
       operatingHoursTo,
@@ -84,31 +86,40 @@ const registerFacility = async (req, res) => {
         [Op.and]:[{[Op.or]:[{phoneNo:phoneNo},{emailId:emailId}]},{statusId:statusId}]}
      })
      if(findIfTheOwnershipDetailsExist){
-      findOwnerId = findIfTheOwnershipDetailsExist
+      console.log('if owners detail exist', 89)
+      findOwnerId = findIfTheOwnershipDetailsExist.ownershipDetailId
      }
      if(!findIfTheOwnershipDetailsExist){
+      console.log('if owners detail doesnot exist', 93)
       let createOwnershipDetails = await ownershipDetails.create({
         firstName:firstName,
         lastName:lastName,
         phoneNo:phoneNo,
         emailId:emailId,
+        statusId:statusId,
         ownerPanCardNumber:ownerPanCardNumber,
         ownerAddress:ownerAddress,
-        isFacilityByBda:isFacilityByBda
+        isFacilityByBda:isFacilityByBda, 
+        createdDt:createdDt,
+        updatedDt:updatedDt,
+        createdBy:userId,
+        updatedBy:userId
       })
 
       if(createOwnershipDetails){
         findOwnerId = createOwnershipDetails.ownershipDetailId
       }
      }
+     console.log('hello create facility 104')
      createFacilities = await facilities.create({
-      facilityName:facilityName,
+      facilityname:facilityName,
       ownership:ownership,
-      facilityType:facilityType,
+      facilityTypeId:facilityType,
       longitude:longitude,
       latitude:latitude,
       address:address,
       pin:pin,
+      statusId:statusId,
       operatingHoursFrom:operatingHoursFrom,
       operatingHoursTo:operatingHoursTo,
       areaAcres:area,
@@ -124,7 +135,11 @@ const registerFacility = async (req, res) => {
       otherEventCategory:othereventCategory,
       otherGames:othergame,
       otherServices:otherServices,
-      ownershipDetailId:findOwnerId
+      ownershipDetailId:findOwnerId,
+      createdDt:createdDt,
+      updatedDt:updatedDt,
+      createdBy:userId,
+      updatedBy:userId
     })
 
     if(createFacilities) {
@@ -135,17 +150,19 @@ const registerFacility = async (req, res) => {
           let entityType = 'facilities'
           let serverError = 'something went wrong'
           let cardFacilityImage = facilityImage.facilityImageOne
-          let arrayFacilityImage = facilityImage.facilityImageList
+          let arrayFacilityImage = facilityImage.facilityArrayOfImages
           let insertionData = {
-           "id":createFacilities.facilityId,
-           "name":createFacilities.facilityname
+           id:createFacilities.facilityId,
+           name:createFacilities.facilityname
           }
 
         if(cardFacilityImage){
           let errors = [];
           let subDir = "facilityImages"
           let filePurpose = "singleFacilityImage"
-          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,errors)
+          console.log('163 line facility image')
+          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+          console.log( uploadSingleFacilityImage,'165 line facility image')
           if(errors.length>0){
             if(errors.some(error => error.includes("something went wrong"))){
               return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
@@ -159,7 +176,7 @@ const registerFacility = async (req, res) => {
           let filePurpose = "multipleFacilityImage"
           for (let i = 0; i < arrayFacilityImage.length; i++) {
             let eachFacilityImage = arrayFacilityImage[i]
-            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,errors)
+            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
           }
           if(errors.length>0){
             if(errors.some(error => error.includes("something went wrong"))){
@@ -212,11 +229,7 @@ const registerFacility = async (req, res) => {
       }
 
       )
-      let findTheServiceName = await serviceMaster.findOne({
-        where:{
-          serviceId:service
-        }
-      })
+     
 
   
     })
@@ -224,11 +237,12 @@ const registerFacility = async (req, res) => {
   }
     // // Here add event categories
     if(eventCategory){
+      console.log(eventCategory, 'eventData')
       eventCategory.forEach(async(eventData)=>{
-        let createEventCategoryDetails = await eventCategory.create({
-          eventCategoryName:eventData,
+        let createEventCategoryDetails = await facilityEvent.create({
+          eventCategoryId:eventData,
           createdBy:userId,
-          updatedBy:updatedBy,
+          updatedBy:userId,
           createdDt:createdDt,
           updatedDt:updatedDt,
           facilityId:createFacilities.facilityId,

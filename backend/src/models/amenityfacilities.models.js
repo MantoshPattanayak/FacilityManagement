@@ -22,7 +22,7 @@ const FacilityAmenity = sequelize.define('facilityamenities',{
     createdBy:{
         type:DataTypes.INTEGER
     },
-    createdOn: {
+    createdDt: {
         type: DataTypes.DATE, // Define the column as DATE type
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
@@ -30,7 +30,7 @@ const FacilityAmenity = sequelize.define('facilityamenities',{
     updatedBy:{
         type:DataTypes.INTEGER
     },
-    updatedOn: {
+    updatedDt: {
         type: DataTypes.DATE // Define the column as DATE type
     },
     deletedBy:{

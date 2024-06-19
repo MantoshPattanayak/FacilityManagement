@@ -66,15 +66,32 @@ const AdminLogin = () => {
           encryptOtp: encryptData(LogingDataPost.otp)
         });
         console.log("user Login Response", res);
+
         // Dispatch login success action with tokens and user data -------------------
         if(res.data.decideSignUpOrLogin == 1){
           dispatch(adminLogin({
             accessToken: res.data.accessToken,
             refreshToken: res.data.refreshToken,
             user: res.data.user,
-            sid: res.data.sid
+            sid: res.data.sid,
+            accessRoutes: res.data.authorizedResource,
+            roleId: res.data.role
           }));
-          toast.success("Login successfully.");
+
+          //find and set homepage route for admin user
+          let homeRoute = res.data.authorizedResource.filter((route) => { return route.name == 'Dashboard' })[0].children[0].path;
+          if(!homeRoute){
+            toast.error('User access not provided!');
+            return;
+          }
+
+          // pop-up to show successful login
+          toast.success("Login successfully.", {
+            autoClose: 2000,
+            onClose: () => {
+              navigate(homeRoute);
+            }
+          });
         }
         else{
           toast.error('User does not exist. Request admin for access.');

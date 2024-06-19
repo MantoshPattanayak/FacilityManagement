@@ -5,8 +5,8 @@ module.exports = (sequelize,DataTypes)=>{
             autoIncrement:true,
             primaryKey:true
         },
-        facilityEventCategoryName:{
-            type:DataTypes.STRING(255),
+        eventCategoryId:{
+            type:DataTypes.INTEGER,
     
         },
         facilityId:{

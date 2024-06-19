@@ -1,7 +1,18 @@
-
-.container{
-    margin-left: 15%;
+.CreateResParent .container {
+    /* margin-left: 15%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
 }
-.container-size{
-width: 70vw;
+
+.container-size {
+    width: 70vw;
+}
+
+.CreateResParent .container .header-role {
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+    height: auto;
+    padding-block: 2vh;
+    margin-top: 0%;
 }
