@@ -198,7 +198,7 @@ let createUser = async (req, res) => {
       encryptRole,
       encryptStatus,
       encryptEmailId: encryptemailId,
-      encryptGenderId,
+      encryptGenderId
     } = req.body;
 
     // console.log(title, fullName, userName, mobileNumber, alternateMobileNo, emailId, roleId, statusId, genderId, 'input')
@@ -208,7 +208,11 @@ let createUser = async (req, res) => {
     let sentPassword = password;
     let roleId = await decrypt(encryptRole);
     let statusId = await decrypt(encryptStatus);
-    let genderId = await decrypt(encryptGenderId);
+    let genderId;
+    if(encryptGenderId){
+      genderId = encryptGenderId;
+    }
+     
 
     if (roleId == 4) {
       return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Please provide the role id of the BDA staff' })
@@ -227,7 +231,7 @@ let createUser = async (req, res) => {
       encryptMobileNumber,
     );
     let encryptUserName = encryptemailId;
-    
+
     const createdBy = req.user?.userId || 1;
     const updatedBy = req.user?.userId || 1;
     console.log("1");
