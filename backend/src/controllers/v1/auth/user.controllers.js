@@ -733,12 +733,11 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
     }
   
     let userId = isUserExist.userId
-    let mobileNo = decrypt(isUserExist.phoneNo)
-    console.log(isUserExist.userId,userName,emailId,mobileNo)
+    console.log(isUserExist.userId,userName,emailId,roleId)
 
-    console.log(userId,userName,emailId,mobileNo,'mobileNo')
+    console.log(userId,userName,emailId,roleId,'roleId')
 
-    let accessAndRefreshToken = await generateToken(userId,userName,emailId,mobileNo)
+    let accessAndRefreshToken = await generateToken(userId,userName,emailId,roleId)
 
     console.log(accessAndRefreshToken, "accessAndRefreshToken")
     if(accessAndRefreshToken?.error){
