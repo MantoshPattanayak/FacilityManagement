@@ -64,7 +64,7 @@
 .form-group {
     display: flex;
     flex-direction: column;
-    line-height: 1.5  ;
+    line-height: 1.5;
 }
 
 .form-heading label {
@@ -81,10 +81,12 @@
     border: 0.0833vw solid #ccc;
     border-radius: 0.417vw;
     background-color: ghostwhite;
-   
+
 }
 
-.form-heading input[type="text"], input[type='date'], select {
+.form-heading input[type="text"],
+input[type='date'],
+select {
     /* width: 24vw; */
     /* Converted from 100px to 8.33vw */
     padding: 0.625vw;
@@ -120,7 +122,8 @@
     background-color: ghostwhite;
 }
 
-.form-heading input[type="text"]:disabled,  .form-heading textarea:disabled {
+.form-heading input[type="text"]:disabled,
+.form-heading textarea:disabled {
     background-color: rgb(241, 241, 241);
 }
 
@@ -134,7 +137,7 @@
     background-color: ghostwhite;
 }
 
-.form-container > .buttons-container {
+.form-container>.buttons-container {
     display: flex;
     justify-content: flex-start;
     margin-top: 2vh;
@@ -181,7 +184,7 @@
     width: 100%;
 }
 
-.error-message{
+.error-message {
     color: red;
     font-size: 14px;
 }
