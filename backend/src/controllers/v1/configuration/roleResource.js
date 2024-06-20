@@ -109,10 +109,10 @@ const insertRoleResource = async (req, res) => {
         let date = new Date();
         // Check for duplicates in all resources using raw query with join
         const duplicateCheckQuery = `
-        SELECT rr.roleId, rr.resourceId
+        SELECT rr.roleId, rr.resourceId, rm.name
         FROM roleresources rr
         INNER JOIN resourcemasters rm ON rr.resourceId = rm.resourceId
-        WHERE rr.roleId = :roleId AND rr.resourceId IN (:resourceList)
+        WHERE rr.roleId = :roleId AND rr.resourceId IN (:resourceList) AND rr.statusId = 1
         `;
 
         const duplicateCheckResult = await sequelize.query(duplicateCheckQuery, {
