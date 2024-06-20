@@ -63,6 +63,7 @@ const Facility_Reg = () => {
         phoneNumber: "",
         emailAdress: "",
         ownerPanCard: "",
+        ownership:"",
         ownersAddress: ""
     });
     // here call the api for get the initial data -----------------------------------------
@@ -116,6 +117,7 @@ const Facility_Reg = () => {
                     phoneNumber: PostFacilityData.phoneNumber || null,
                     emailAdress: PostFacilityData.emailAdress || null,
                     ownerPanCard: PostFacilityData.ownerPanCard || null,
+                    ownership:PostFacilityData.ownership || null,
                     ownersAddress: PostFacilityData.ownersAddress || null
                 });
                 console.log("here Response of Post the data of Facility", res);
@@ -575,6 +577,13 @@ const Facility_Reg = () => {
                 error.ownersAddress = "Please Enter a vaild Owner Address"
             } else if (!space_block.test(val.ownersAddress)) {
                 error.ownersAddress = "Do not use spaces at beginning"
+            }
+            if(!val.ownership){
+                error.ownership="Please Enter the Ownership"
+            }else if(!Name_Regex.test(val.ownership)){
+                error.ownership="Please Enter a vaild ownership"
+            }else if(!space_block.test(val.ownership)){
+                error.ownership="Do not use spaces at beginning"
             }
         }
 
@@ -1212,6 +1221,24 @@ const Facility_Reg = () => {
                                         />
                                         {formErrors.ownerPanCard && <p className="error text-red-700">{formErrors.ownerPanCard}</p>}
                                     </div>
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input1">
+                                            ownership{" "}
+                                            {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="input_padding"
+                                            id="input1"
+                                            placeholder="Enter Pin  "
+                                            name="ownership"
+                                            value={PostFacilityData.ownership}
+                                            onChange={handleChange}
+                                            disabled={disabledFields}
+                                        />
+                                        {formErrors.ownership && <p className="error text-red-700">{formErrors.ownership}</p>}
+                                    </div>
+
 
                                 </div>
                                 <div className="HostEvent_Row">
