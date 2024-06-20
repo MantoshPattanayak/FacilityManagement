@@ -22,12 +22,10 @@ let dataload = async (req, res) => {
 
             //menu items list fetch
             let menuListItemQuery =
-                `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path 
-            from amabhoomi.rolemasters pu 
-            inner join amabhoomi.roleresources rr on rr.roleId = pu.roleId
-            inner join amabhoomi.resourcemasters rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-            where rr.statusId =1 and rm.statusId =1 
-            order by rm.orderIn`;
+                `select r.resourceId, r.name, r.parentResourceId, r.orderIn, r.path
+                from amabhoomi.resourcemasters r
+                where r.statusId = 1
+                order by r.orderIn`;
 
             let menuListItems = await sequelize.query(menuListItemQuery, {
                 type: QueryTypes.SELECT
