@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
@@ -37,9 +36,9 @@ const ProtectedRoute = ({ children }) => {
         }
     });
 
-    if (!isAuthorized) {
-        return <Navigate to="/unauthorized" state={{ from: location }} replace />
-    }
+    // if (!isAuthorized) {
+    //     return <Navigate to="/unauthorized" state={{ from: location }} replace />
+    // }
     return children
 };
 
