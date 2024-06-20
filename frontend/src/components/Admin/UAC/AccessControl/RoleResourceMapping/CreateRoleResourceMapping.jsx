@@ -3,12 +3,15 @@ import "./CreateRoleResourceMapping.css";
 import axiosHttpClient from "../../../../../utils/axios";
 import CommonFooter1 from "../../../../../common/Common_footer1";
 import PublicHeader from "../../../../../common/AdminHeader";
-import { toast } from "react-toastify"; // Assuming toast is being used for notifications
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CreateRoleResourceMapping = () => {
   const [createRoleResource, setCreateRoleResource] = useState([]);
   const [checkedItems, setCheckedItems] = useState({});
   const [selectedRole, setSelectedRole] = useState("");
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchInitialData();
@@ -40,24 +43,75 @@ const CreateRoleResourceMapping = () => {
     const selectedResources = Object.keys(checkedItems).filter(
       (key) => checkedItems[key]
     );
-    const user = {
-      roleId: selectedRole,
-      resources: selectedResources,
+
+    if (selectedResources.length === 0) {
+      toast.error("Please select at least one resource.");
+      console.log("Please select at least one resource.");
+      return;
+    }
+
+    const formData = {
+      role: selectedRole,
+      statusId: 1,
+      resourceList: selectedResources.map((resource) => {
+        return resource.split("-")[1];
+      }),
     };
 
+    console.log("Form Data:", formData);
+
+    // try {
+    //   let res = await axiosHttpClient(
+    //     "ROLE_RESOURCE_CREATE_API",
+    //     "post",
+    //     formData
+    //   );
+    //   console.log("here is the Response 1919", res);
+    //   toast.success("Form submitted successfully!");
+    // } catch (error) {
+    //   console.error("Error Response 9900:", error.response);
+    //   toast.error("Form submission failed. Kindly try again!");
+    // }
     try {
-      let res = await axiosHttpClient("ROLE_RESOURCE_CREATE_API", "post", user);
-      console.log("here Grievance Response", res);
-      toast.success("Form submitted successfully!");
+      let res = await axiosHttpClient(
+        "ROLE_RESOURCE_CREATE_API",
+        "post",
+        formData
+      );
+      console.log("here is the Response 1919", res);
+      // toast.success("Form submitted successfully!");
+      if (res.status === 200) {
+        // Ensure success status code is checked
+        toast.success("Form submitted successfully!", {
+          onClose: () => {
+            setFormSubmitted(true); // Update the form submission status
+          },
+          autoClose: 3000, // Adjust the autoClose duration if needed
+        });
+      }
     } catch (error) {
-      console.error(error);
-      toast.error("Form submission failed. Kindly try again!");
+      if (error.response && error.response.status === 409) {
+        console.error("Conflict Error Response:", error.response.data);
+        toast.error(
+          `Some resources are already mapped with the role, i.e., ${error.response.data.data.toString()}. Please check and try again.`
+        );
+      } else {
+        console.error("Error Response :", error.response || error);
+        toast.error("Form submission failed. Kindly try again!");
+      }
     }
   };
+
+  useEffect(() => {
+    if (formSubmitted) {
+      navigate("/UAC/RoleResource/View");
+    }
+  }, [formSubmitted, navigate]);
 
   return (
     <div className="parentCreateRoleResMap">
       <PublicHeader />
+      <ToastContainer />
       <div className="container-parent">
         <div className="headingHeader">
           <div className="heading">
@@ -127,7 +181,6 @@ const CreateRoleResourceMapping = () => {
           </button>
         </div>
       </div>
-      <CommonFooter1 />
     </div>
   );
 };
