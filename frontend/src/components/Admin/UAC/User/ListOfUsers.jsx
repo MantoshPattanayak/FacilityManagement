@@ -121,7 +121,7 @@ export default function ListOfUsers() {
                                                 <Link
                                                     to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=edit`
+                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.userId))}&action=edit`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faPenToSquare} />
