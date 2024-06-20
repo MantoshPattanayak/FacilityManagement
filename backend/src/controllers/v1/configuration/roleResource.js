@@ -22,12 +22,10 @@ let dataload = async (req, res) => {
 
             //menu items list fetch
             let menuListItemQuery =
-                `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path 
-            from amabhoomi.rolemasters pu 
-            inner join amabhoomi.roleresources rr on rr.roleId = pu.roleId
-            inner join amabhoomi.resourcemasters rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-            where rr.statusId =1 and rm.statusId =1 
-            order by rm.orderIn`;
+                `select r.resourceId, r.name, r.parentResourceId, r.orderIn, r.path
+                from amabhoomi.resourcemasters r
+                where r.statusId = 1
+                order by r.orderIn`;
 
             let menuListItems = await sequelize.query(menuListItemQuery, {
                 type: QueryTypes.SELECT
@@ -111,10 +109,10 @@ const insertRoleResource = async (req, res) => {
         let date = new Date();
         // Check for duplicates in all resources using raw query with join
         const duplicateCheckQuery = `
-        SELECT rr.roleId, rr.resourceId
+        SELECT rr.roleId, rr.resourceId, rm.name
         FROM roleresources rr
         INNER JOIN resourcemasters rm ON rr.resourceId = rm.resourceId
-        WHERE rr.roleId = :roleId AND rr.resourceId IN (:resourceList)
+        WHERE rr.roleId = :roleId AND rr.resourceId IN (:resourceList) AND rr.statusId = 1
         `;
 
         const duplicateCheckResult = await sequelize.query(duplicateCheckQuery, {
