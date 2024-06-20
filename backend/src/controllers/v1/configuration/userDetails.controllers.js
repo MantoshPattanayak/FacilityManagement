@@ -93,7 +93,7 @@ let viewList = async (req, res) => {
         pu.userId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.phoneNo, pu.statusId,
         rm.roleName
         FROM amabhoomi.rolemasters rm
-        LEFT JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId`;
+        Inner JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId`;
     // , sm.statusCode
     // INNER JOIN statusmasters sm ON sm.statusId = rm.statusId
 
@@ -210,7 +210,9 @@ let createUser = async (req, res) => {
     let statusId = await decrypt(encryptStatus);
     let genderId;
     if(encryptGenderId){
-      genderId = encryptGenderId;
+      console.log('2323223')
+      genderId =await decrypt(encryptGenderId) ;
+      console.log('gender Id after decryption',genderId)
     }
      
 
@@ -269,10 +271,13 @@ let createUser = async (req, res) => {
     //     });
     // } 
     else {
-      console.log("req.body", req.body);
+      console.log('343')
       const hashedPassword = await bcrypt.hash(password, 10); // Use 10 rounds for hashing
 
-      console.log(hashedPassword);
+      console.log(hashedPassword,'new user 277');
+
+      console.log("req.body", encryptTitle, encryptfullName, encryptemailId, encryptUserName, hashedPassword, pwdFlag, roleId, statusId, genderId );
+
       const newUser = await user.create({
         title: encryptTitle,
         fullName: encryptfullName,
@@ -290,45 +295,45 @@ let createUser = async (req, res) => {
         updatedBy: updatedBy,
       });
 
-      console.log(newUser);
+      console.log("12",newUser);
 
-      let firstField = decrypt(encryptemailId);
-      let secondField = decrypt(encryptMobileNumber)
-      let Token = await mailToken({ firstField, secondField })
-      let verifyUrl = process.env.VERIFY_URL + `?token=${Token}`
-
-
-
-      message = `Please verify your emailId.<br><br>
-        This is your emailId <b>${firstField}</b><br>
-        This is your password <b>${sentPassword}</b><br>
-        Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
-        <button style=" background-color: #4CAF50; border: none;
-         color: white;
-         padding: 15px 32px;
-         text-align: center;
-         text-decoration: none;
-         display: inline-block;
-         font-size: 16px;">Verify Email</button> </a>
-         </br></br>
-         This link is valid for 10 mins only  `;
+      // let firstField = decrypt(encryptemailId);
+      // let secondField = decrypt(encryptMobileNumber)
+      // let Token = await mailToken({ firstField, secondField })
+      // let verifyUrl = process.env.VERIFY_URL + `?token=${Token}`
 
 
-      try {
-        await sendEmail({
-          email: `${firstField}`,
-          subject: "please verify the email for your amabhoomi user creation",
-          html: `<p>${message}</p>`
-        }
-        )
+
+      // message = `Please verify your emailId.<br><br>
+      //   This is your emailId <b>${firstField}</b><br>
+      //   This is your password <b>${sentPassword}</b><br>
+      //   Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
+      //   <button style=" background-color: #4CAF50; border: none;
+      //    color: white;
+      //    padding: 15px 32px;
+      //    text-align: center;
+      //    text-decoration: none;
+      //    display: inline-block;
+      //    font-size: 16px;">Verify Email</button> </a>
+      //    </br></br>
+      //    This link is valid for 10 mins only  `;
+
+
+      // try {
+      //   await sendEmail({
+      //     email: `${firstField}`,
+      //     subject: "please verify the email for your amabhoomi user creation",
+      //     html: `<p>${message}</p>`
+      //   }
+      //   )
 
         return res
           .status(statusCode.SUCCESS.code)
           .json({ message: "User created successfully  and mail is sent and please verify the mail " });
-      }
-      catch (err) {
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: "user created but mail not sent" })
-      }
+      // }
+      // catch (err) {
+      //   return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: "user created but mail not sent" })
+      // }
 
     }
   } catch (err) {
@@ -565,7 +570,7 @@ let verifyOTPHandlerWithGenerateTokenForAdmin = async (req, res) => {
     // const response = await verifyOTP(mobileNo, otp); // Replace with your OTP verification API call
 
     // Check if OTP verification was successful
-    console.log(1, req.body)
+    console.log("admin ",req.body)
     let statusId = 1;
     let { encryptMobile: mobileNo, encryptOtp: otp } = req.body
 
@@ -577,6 +582,7 @@ let verifyOTPHandlerWithGenerateTokenForAdmin = async (req, res) => {
 
 
     if (mobileNo && otp) {
+      console.log('23232')
       // check if the otp is valid or not
       let isOtpValid = await otpCheck.findOne({
         where: {
