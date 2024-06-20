@@ -42,5 +42,6 @@ router.post('/verifyEmail',authController.verifyEmail)
 router.put('/forgotPassword',authController.forgotPassword)
 router.post('/privateLogin',authController.privateLogin)
 router.post('/logout',authenticateToken, authController.logout)
+router.post('/admin-dashboard', authenticateToken, authController.adminDashboard)
 
 module.exports = router
