@@ -197,7 +197,6 @@ let createUser = async (req, res) => {
       encryptMobileNo: encryptMobileNumber,
       encryptRole,
       encryptStatus,
-      encryptUsername: encryptUserName,
       encryptEmailId: encryptemailId,
       encryptGenderId,
     } = req.body;
@@ -227,7 +226,8 @@ let createUser = async (req, res) => {
       encryptfullName,
       encryptMobileNumber,
     );
-
+    let encryptUserName = encryptemailId;
+    
     const createdBy = req.user?.userId || 1;
     const updatedBy = req.user?.userId || 1;
     console.log("1");
