@@ -13,14 +13,16 @@ const fileAttachment = db.fileattachment;
 const sendEmail = require('../../../utils/generateEmail')
 const mailToken= require('../../../middlewares/mailToken.middlewares');
 let imageUpload = require('../../../utils/imageUpload')
-
+const {Op} = require('sequelize')
 let user = db.usermaster
+let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 const createHosteventdetails = async (req, res) => {
   try {
 
     let userId = req.user?.userId || 1;
     let createdDt = new Date();
     let updatedDt = new Date();
+    let statusId = 1;
 
 
     findTheRoleFromTheUserId = await user.findOne({
@@ -28,7 +30,6 @@ const createHosteventdetails = async (req, res) => {
         [Op.and]:[{userId:userId},{statusId:statusId}]
       }
     })
-    let statusId = 1;
 
     let createHosteventdetails;
     let createBankDetails;
