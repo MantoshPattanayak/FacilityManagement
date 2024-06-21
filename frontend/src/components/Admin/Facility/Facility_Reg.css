@@ -401,6 +401,7 @@
 
 .Inventory_table {
   width: 100%;
+  
 
 }
 
@@ -446,3 +447,34 @@ text-transform: capitalize;
   background-color: #F6F7F9;
   padding: 9px;
 }
+.error{
+ font-weight: 600;
+}
+
+/* Add and Remove icon */
+
+.Inventory_add_button{
+  background-color:#007bff;
+  color: white;
+  padding: 8px;
+  display: flex;
+  float: right;
+  border-radius: 8px;
+  
+}
+.Add_icon{
+  padding: 4px;
+}
+.Add_row_Button{
+ padding-bottom: 25px;
+}
+
+.Remove_icon{
+  font-size: 32px;
+  color: rgb(239, 59, 59);
+}
+.Remove_icon:hover{
+  font-size: 33px;
+  color: rgb(199, 0, 0);
+}
+

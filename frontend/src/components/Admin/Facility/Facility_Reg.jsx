@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import verfiy_img from "../../../assets/verify_img.png"
 //Toast ----------------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,8 +54,8 @@ const Facility_Reg = () => {
         othergame: "",
         additionalDetails: "",
         facilityImage: {  // Facility Image Upload -----------------------
-           facilityImageOne: "",
-           facilityArrayOfImages: [],
+            facilityImageOne: "",
+            facilityArrayOfImages: [],
         },
         parkInventory: [],
         // Post owner data ------------------------------------------------
@@ -67,8 +68,8 @@ const Facility_Reg = () => {
         ownership: "",
         ownersAddress: "",
         fileNames: {  // New state to store file names ----------------------
-          facilityImageOne: "",
-          facilityArrayOfImages: []
+            facilityImageOne: "",
+            facilityArrayOfImages: []
         }
     });
     // here call the api for get the initial data ---------------------------
@@ -91,9 +92,12 @@ const Facility_Reg = () => {
         e.preventDefault();
         const validationErrors = Validation(PostFacilityData);
         const validationErrors1 = Validation2(PostFacilityData)
+        const validationErrors2 = Validationinvantory(PostFacilityData)
+        console.log("Handle Submit invatory error", validationErrors2)
         setformErrors({ ...validationErrors, ...validationErrors1 });
-        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0) {
+        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0 && Object.keys(validationErrors2).length === 0) {
             try {
+                let facilityisownedbBDAValue = PostFacilityData.facilityisownedbBDA === "Yes" ? 1 : 0;
                 let res = await axiosHttpClient("Facility_Reg_Api", "post", {
                     facilityType: PostFacilityData.facilityType || null,
                     facilityName: PostFacilityData.facilityName || null,
@@ -117,7 +121,7 @@ const Facility_Reg = () => {
                     facilityImage: PostFacilityData.facilityImage || null,
                     parkInventory: PostFacilityData.parkInventory || null,
                     // Owner Data ---------------------------------------------------------------
-                    facilityisownedbBDA: PostFacilityData.facilityisownedbBDA || null,
+                    facilityisownedbBDA: facilityisownedbBDAValue,
                     firstName: PostFacilityData.firstName || null,
                     lastName: PostFacilityData.lastName || null,
                     phoneNumber: PostFacilityData.phoneNumber || null,
@@ -134,6 +138,8 @@ const Facility_Reg = () => {
         } else {
             setformErrors(validationErrors)
             setformErrors(validationErrors1)
+            setformErrors(validationErrors2)
+
         }
     }
     // handle Post Data------------------------------------------------------
@@ -264,7 +270,7 @@ const Facility_Reg = () => {
             // const fileLabel = document.createElement("p");
             fileLabel.textContent = fileName;
             container.appendChild(fileLabel);
-            console.log("here file Names", fileName, fileLabel)
+
         });
     };
     // Handle Day -----------------------------------------------------------
@@ -349,19 +355,31 @@ const Facility_Reg = () => {
             ...prevState,
             parkInventory: [...prevState.parkInventory, { equipmentId: "", count: "" }]
         }));
+        toast.success("Row added successfully!");
     };
     // Handle Remove (Row in table)---------------------------------------------
     const handleRemoveRow = (index, e) => {
-        e.preventDefault()
+        e.preventDefault();
+
+        // Remove the row from parkInventory
         setPostFacilityData(prevState => ({
             ...prevState,
-            parkInventory: prevState.parkInventory.filter((_, i) => i !== index)  // index=  is excluded from the new array.means index
-            // here i is current index\
-            // _ current element, which is not used here.✈
+            parkInventory: prevState.parkInventory.filter((_, i) => i !== index)
         }));
 
-        console.log("here index", index)
+        // Remove errors associated with the removed row from formErrors
+        const updatedErrors = { ...formErrors };
+
+        // Delete errors for equipmentId and count at the specific index
+        delete updatedErrors[`equipmentId${index}`];
+        delete updatedErrors[`count${index}`];
+
+        // Update formErrors state with the updatedErrors
+        setformErrors(updatedErrors);
+        toast.warning("Row removed successfully!");
+        console.log("Removed row at index", index);
     };
+
     //handleChnage of handleEquipmentChange
     const handleEquipmentChange = (index, field, value) => {
         const newParkInventory = PostFacilityData.parkInventory.map((item, i) => {
@@ -399,8 +417,11 @@ const Facility_Reg = () => {
         e.preventDefault()
         // Perform validation before moving to the next step
         const validationErrors = Validation(PostFacilityData);
+        const validationErrors2 = Validationinvantory(PostFacilityData)
+        console.log("here error of Invantory".validationErrors2)
         setformErrors(validationErrors);
-        if (Object.keys(validationErrors).length === 0) {
+        setformErrors(validationErrors2);
+        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors2).length === 0) {
             // If there are no validation errors, move to the next step
             setCurrentStep(currentStep + 1);
             toast.success('Successfully moved to the next step!');
@@ -623,8 +644,26 @@ const Facility_Reg = () => {
         }
         return error;
     };
+    // Vaildation of Invantory ---------------------------------------------------
+    const Validationinvantory = (data) => {
+        let errors = {};
+        const equipmentIds = new Set();
+        data.parkInventory.forEach((item, index) => {
+            if (!item.equipmentId) {
+                errors[`equipmentId${index}`] = "Equipment is required.";
+            } else if (equipmentIds.has(item.equipmentId)) {
+                errors[`equipmentId${index}`] = "Each equipment must be unique.";
+            } else {
+                equipmentIds.add(item.equipmentId);
+            }
+            if (!item.count || isNaN(item.count)) {
+                errors[`count${index}`] = "Please enter a valid number.";
+            }
+        });
+        return errors;
+    };
     //useEffect (Update data)-------------------------------------------------------
-       useEffect(() => {
+    useEffect(() => {
         GetFacilityInitailData();
     }, [formErrors]);
     return (
@@ -659,7 +698,7 @@ const Facility_Reg = () => {
                                                 FacilityTypeData?.map((name, index) => {
                                                     return (
                                                         <option key={index} value={name.facilitytypeId}>
-                                                            {name.code}
+                                                            {name.description}
                                                         </option>
                                                     );
                                                 })}
@@ -1133,7 +1172,11 @@ const Facility_Reg = () => {
                                 <div className="Pakr_inventory_form_main_Conatiner">
                                     <h1 className="Park_Inventory_text">Park Inventory</h1>
                                     <div className="Table_Inventory">
+                                        <div className="Add_row_Button">
+                                            <button className="Inventory_add_button" onClick={handleAddRow}>  Add Row <FontAwesomeIcon icon={faPlus} className="Add_icon" /> </button>
+                                        </div>
                                         <table className="Inventory_table">
+
                                             <thead className="Inventory_thead">
                                                 <tr className="Inventory_tr">
                                                     <th className="Inventory_th">Items/Equipment</th>
@@ -1157,6 +1200,9 @@ const Facility_Reg = () => {
                                                                     </option>
                                                                 ))}
                                                             </select>
+                                                            {formErrors[`equipmentId${index}`] && (
+                                                                <span className="error">{formErrors[`equipmentId${index}`]}</span>
+                                                            )}
                                                         </td>
                                                         <td className="Inventory_td">
                                                             <input
@@ -1165,20 +1211,24 @@ const Facility_Reg = () => {
                                                                 value={item.count}
                                                                 onChange={(e) => handleEquipmentChange(index, 'count', e.target.value)}
                                                             />
+                                                            {formErrors[`count${index}`] && (
+                                                                <span className="error">{formErrors[`count${index}`]}</span>
+                                                            )}
                                                         </td>
                                                         <td className="Inventory_td">
                                                             <button
                                                                 className="Inventory_button"
                                                                 onClick={(e) => handleRemoveRow(index, e)}
                                                             >
-                                                                Remove
+                                                                <FontAwesomeIcon icon={faMinus} className="Remove_icon" />
                                                             </button>
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
-                                        <button className="Inventory_add_button" onClick={handleAddRow}>Add Row</button>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -1214,7 +1264,7 @@ const Facility_Reg = () => {
                                             onChange={handleChange}
                                         >
                                             <option value="" disabled selected hidden>If yes, ownership details are not required</option>
-                                            <option value="Yes">Yes</option>
+                                            <option value="Yes" >Yes</option>
                                             <option value="No">No</option>
                                         </select>
                                         {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
