@@ -1,13 +1,13 @@
 // import css---------------------------------------------------------
 import "./Facility_Reg.css";
-// Facility Reg funcation --------------------------------------------
+// Facility Reg funcation ---------------------------------------------
 import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import verfiy_img from "../../../assets/verify_img.png"
-//Toast ----------------------------------------------------------------
+//Toast -----------------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 const Facility_Reg = () => {
@@ -24,6 +24,7 @@ const Facility_Reg = () => {
     const [disabledFields, setDisabledFields] = useState(false);
     // here set the error ---------------------------------------------------
     const [formErrors, setformErrors] = useState({});
+    const [isPlayGround, setIsPlayGround] = useState(false);
     // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
         facilityType: "",
@@ -148,9 +149,7 @@ const Facility_Reg = () => {
         const { name, value, files } = e.target;
         if (name === "facilityImageOne" || name === "facilityArrayOfImages") {
             handleImageUpload(name, files);
-
         } else if (name === "facilityisownedbBDA") {
-
             const isOwnerByBDA = value === "Yes";
             setPostFacilityData({ ...PostFacilityData, [name]: value });
             // Set disabled state for specific fields
@@ -169,10 +168,12 @@ const Facility_Reg = () => {
                 toast.info("No fields are required !");
                 setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
             }
-
-        } else {
+        } else if(name==="facilityType") {
             // Handle other input changes
             setPostFacilityData({ ...PostFacilityData, [name]: value });
+            setIsPlayGround(Number(value) === 2); // Check true and False
+        }else{
+             setPostFacilityData({ ...PostFacilityData, [name]: value });
         }
         // Run validation on input change
         const validationErrors = Validation({ ...PostFacilityData, [name]: value });
@@ -379,7 +380,6 @@ const Facility_Reg = () => {
         toast.warning("Row removed successfully!");
         console.log("Removed row at index", index);
     };
-
     //handleChnage of handleEquipmentChange
     const handleEquipmentChange = (index, field, value) => {
         const newParkInventory = PostFacilityData.parkInventory.map((item, i) => {
@@ -446,7 +446,7 @@ const Facility_Reg = () => {
             toast.error('Please fill out all required fields.');
         }
     };
-    // Prev Button -------------------------xxx------------------------------------
+    // Prev Button ----------------------------------------------------------------
     const prevStep = (e) => {
         e.preventDefault()
         setCurrentStep(currentStep - 1);
@@ -460,6 +460,7 @@ const Facility_Reg = () => {
         const latitude_regex = /^[-+]?(?:[0-8]?\d(?:\.\d+)?|90(?:\.0+)?)$/;
         const PinCode_Regex = /^\d{6}$/;
         const Regex_Other = /^[a-zA-Z,-]+$/;
+        const Area_Acre=/^\d+(\.\d+)?$/;
         const err = {};
         if (!value.facilityType) {
             err.facilityType = "Please Select the Facility Type";
@@ -504,7 +505,7 @@ const Facility_Reg = () => {
             err.area = "Please Enter the Area";
         } else if (!space_block.test(value.area)) {
             err.area = 'Do not use spaces at beginning'
-        } else if (!Name_Regex.test(value.area)) {
+        } else if (!Area_Acre.test(value.area)) {
             err.area = 'Please Enter a vaild Area'
         }
         if (!value.operatingHoursFrom) {
@@ -555,7 +556,7 @@ const Facility_Reg = () => {
                 err.othereventCategory = "Do not use spaces at beginning"
             }
         }
-        if (value.game.length === 0) {
+        if (value.facilityType === "2" && value.game.length === 0) {
             err.game = "Please Select the Game"
         }
         if (value.othergame) {
@@ -647,6 +648,7 @@ const Facility_Reg = () => {
     // Vaildation of Invantory ---------------------------------------------------
     const Validationinvantory = (data) => {
         let errors = {};
+        const Number_item_regex= /^(?:[1-9][0-9]?|100)$/;
         const equipmentIds = new Set();
         data.parkInventory.forEach((item, index) => {
             if (!item.equipmentId) {
@@ -656,9 +658,12 @@ const Facility_Reg = () => {
             } else {
                 equipmentIds.add(item.equipmentId);
             }
-            if (!item.count || isNaN(item.count)) {
-                errors[`count${index}`] = "Please enter a valid number.";
+            if(!item.count){
+                errors[`count${index}`]="Please Enter a Number of item/Equipment"
+            }else if (!Number_item_regex.test(item.count)){
+                errors[`count${index}`]="Please enter a valid number between 1 and 100."
             }
+           
         });
         return errors;
     };
@@ -666,6 +671,7 @@ const Facility_Reg = () => {
     useEffect(() => {
         GetFacilityInitailData();
     }, [formErrors]);
+    
     return (
         <div>
             <div className="all_From_conatiner">
@@ -777,14 +783,14 @@ const Facility_Reg = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">
-                                            Pin{" "}
+                                        Pincode{" "}
                                             <span className="text-red-600 font-bold text-xl">*</span>
                                         </label>
                                         <input
                                             type="text"
                                             className="input_padding"
                                             id="input1"
-                                            placeholder="Enter Pin  "
+                                            placeholder="Enter Pincode "
                                             name="pin"
                                             value={PostFacilityData.pin}
                                             onChange={handleChange}
@@ -793,7 +799,7 @@ const Facility_Reg = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">
-                                            Area{" "}
+                                            Area Acre{" "}
                                             <span className="text-red-600 font-bold text-xl">*</span>
                                         </label>
                                         <input
@@ -1052,6 +1058,7 @@ const Facility_Reg = () => {
                                         {formErrors.othereventCategory && <p className="error text-red-700">{formErrors.othereventCategory}</p>}
                                     </div>
                                 </div>
+                                 {isPlayGround && (
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
@@ -1082,6 +1089,8 @@ const Facility_Reg = () => {
                                         {formErrors.game && <p className="error text-red-700">{formErrors.game}</p>}
                                     </div>
                                 </div>
+                                 )}
+                                  {isPlayGround && (
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
@@ -1099,6 +1108,7 @@ const Facility_Reg = () => {
                                         {formErrors.othergame && <p className="error text-red-700">{formErrors.othergame}</p>}
                                     </div>
                                 </div>
+                                  )}
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
