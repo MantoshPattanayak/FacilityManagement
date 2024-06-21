@@ -97,6 +97,8 @@ const api = {
    //grievance-feedback for admin
    ADMIN_VIEW_GRIEVANCE_LIST_API: '/grievance/viewgrievancelist',    //post   page_size, page_number, givenReq
    ADMIN_ACTION_GRIEVANCE_API: '/grievance/action-grievance',
+   // admin-dashboard
+   ADMIN_DASHBOARD_FETCH_API: '/auth/admin-dashboard',   //post    facilityId
 }
 
 export default api;

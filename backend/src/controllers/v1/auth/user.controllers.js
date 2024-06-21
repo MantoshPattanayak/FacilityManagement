@@ -1226,7 +1226,166 @@ let logout = async (req, res) => {
    }
 }
 
+let adminDashboard = async (req, res) => {
+  try {
+    let { facilityId } = req.body;
+    console.log("first");
+    // define all queries
+    // query to fetch number of active users in application
+    let activeUsersQuery = `
+      select u.userId, r.roleId, r.roleCode
+      from amabhoomi.usermasters u
+      inner join amabhoomi.rolemasters r on u.roleId = r.roleId and u.statusId = 1
+    `;
 
+    // query to fetch count of facility type wise
+    let facilitiesQuery = `
+      select
+        f.facilityTypeId, f2.code as facilityType, count(f.facilityTypeId) as facilitycount
+      from amabhoomi.facilities f
+      inner join amabhoomi.facilitytypes f2 on f.facilityTypeId = f2.facilitytypeId
+      group by f.facilityTypeId
+    `;
+
+    // query to fetch bookings count facility wise
+    let bookingFacilityQuery = `
+      select
+        f.facilityId, f3.facilityname, f2.code as facilityType, count(f.facilityId) as bookingscount
+      from amabhoomi.facilitybookings f
+      inner join amabhoomi.facilities f3 on f3.facilityId = f.facilityId
+      inner join amabhoomi.facilitytypes f2 on f.facilityTypeId = f2.facilitytypeId
+      group by f.facilityId, f2.code
+      order by bookingscount desc
+    `;
+
+    // query to fetch event bookings count event wise and facility wise
+    let bookingEventQuery = `
+      select
+        e.eventId, e2.eventName, f.facilityname, count(e2.eventName) as bookingcount
+      from amabhoomi.eventbookings e
+      inner join amabhoomi.eventactivities e2 on e.eventId = e2.eventId
+      inner join amabhoomi.facilities f on e2.facilityId = f.facilityId
+      group by e.eventId, e2.eventName, f.facilityname
+      order by bookingcount desc
+    `;
+
+    let popularActivitiesQuery = `
+      select
+        u.userActivityId, u2.userActivityName, count(u.userActivityId) as activityCount
+      from amabhoomi.userbookingactivities u
+      inner join amabhoomi.useractivitymasters u2 on u.userActivityId = u2.userActivityId
+      group by u.userActivityId, u2.userActivityName
+      order by activityCount desc
+    `;
+
+    // execute queries
+    let activeUsersQueryResult = await sequelize.query(activeUsersQuery, {
+      type: QueryTypes.SELECT
+    });
+
+    let facilitiesQueryResult = await sequelize.query(facilitiesQuery, {
+      type:QueryTypes.SELECT
+    });
+
+    let bookingFacilityQueryResult = await sequelize.query(bookingFacilityQuery, {
+      type: QueryTypes.SELECT
+    });
+
+    let bookingEventQueryResult = await sequelize.query(bookingEventQuery, {
+      type: QueryTypes.SELECT
+    });
+
+    let popularActivitiesQueryResult = await sequelize.query(popularActivitiesQuery, {
+      type: QueryTypes.SELECT
+    });
+
+    let facilityBookingsQueryResult = ``;
+
+    // facilityId selected, then provide overall booking count monthwise for that facility
+    if (facilityId) {
+      let facilityBookingsQuery = `
+        WITH months AS (
+          SELECT DATE_FORMAT(DATE_ADD(CONCAT(YEAR(NOW()), '-01-01'), INTERVAL n.n MONTH), '%Y-%m') AS bookingMonth
+          FROM (
+            SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+            UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7
+            UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11
+          ) AS n
+        )
+        SELECT
+          :facilityId AS facilityId,
+          f3.facilityname,
+          m.bookingMonth,
+          DATE_FORMAT(CONCAT(m.bookingMonth, '-01'), '%M %Y') AS bookingMonthName,
+          COALESCE(COUNT(f.facilityId), 0) AS bookingCount
+        FROM
+          months m
+        LEFT JOIN
+          amabhoomi.facilitybookings f ON DATE_FORMAT(f.bookingDate, '%Y-%m') = m.bookingMonth AND f.facilityId = :facilityId
+        LEFT JOIN
+          amabhoomi.facilities f3 ON f3.facilityId = :facilityId
+        LEFT JOIN
+          amabhoomi.facilitytypes f2 ON f2.facilitytypeId = f.facilityTypeId
+        GROUP BY
+          m.bookingMonth,
+          f3.facilityname
+        ORDER BY
+          m.bookingMonth
+      `;
+
+      facilityBookingsQueryResult = await sequelize.query(facilityBookingsQuery, {
+        replacements: {
+          facilityId: facilityId
+        },
+        type: QueryTypes.SELECT
+      });
+    }
+    else {  // if no facility selected, then show booking count of overall facilities month wise
+      let facilityBookingsQuery = `
+        WITH months AS (
+          SELECT DATE_FORMAT(DATE_ADD(CONCAT(YEAR(NOW()), '-01-01'), INTERVAL n.n MONTH), '%Y-%m') AS bookingMonth
+          FROM (
+            SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+            UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7
+            UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11
+          ) AS n
+        )
+
+        SELECT
+          @rownum := @rownum + 1 AS serialNumber,
+          DATE_FORMAT(CONCAT(m.bookingMonth, '-01'), '%M %Y') AS bookingMonthName,
+          COALESCE(COUNT(f.facilityId), 0) AS bookingCount
+        FROM
+          (SELECT @rownum := 0) r, months m
+        LEFT JOIN
+          amabhoomi.facilitybookings f ON DATE_FORMAT(f.bookingDate, '%Y-%m') = m.bookingMonth
+        LEFT JOIN
+          amabhoomi.facilitytypes f2 ON f2.facilitytypeId = f.facilityTypeId
+        GROUP BY
+          m.bookingMonth
+        ORDER BY
+          m.bookingMonth
+      `;
+
+      facilityBookingsQueryResult = await sequelize.query(facilityBookingsQuery, {
+          type: QueryTypes.SELECT
+      });
+    }
+
+    res.status(statusCode.SUCCESS.code).json({
+      message: 'Dashboard information',
+      activeUserCount: activeUsersQueryResult.length,
+      facilitiesCount: facilitiesQueryResult,
+      popularFacilities: bookingFacilityQueryResult,
+      popularActivities: popularActivitiesQueryResult,
+      bookingEventData: bookingEventQueryResult,
+      specificFacilityBookingData: facilityBookingsQueryResult
+    })
+  }
+  catch(error) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message: error.message});
+  }
+}
 
 
 
@@ -1239,7 +1398,7 @@ module.exports = {
  verifyOTPHandlerWithGenerateToken,
  verifyEmail,
  sendEmailToUser,
- forgotPassword
-
+ forgotPassword,
+ adminDashboard
 }
 

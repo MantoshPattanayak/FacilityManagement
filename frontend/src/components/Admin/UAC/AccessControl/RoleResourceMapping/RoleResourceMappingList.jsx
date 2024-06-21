@@ -1,20 +1,24 @@
 import "../../../../../common/CommonTable.css";
+import "./RoleResourceMappingList.css";
 import AdminHeader from "../../../../../common/AdminHeader";
 import Footer from "../../../../../common/Footer";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axiosHttpClient from "../../../../../utils/axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+// import { encryptData } from "../../../../../utils/encrypt"; // Assuming you have a utility function to encrypt the ID
+import { encryptData } from "../../../../../utils/encryptData";
 
 const RoleResourceMappingList = () => {
   const [tableData, setTableData] = useState([]);
-  const [givenReq, setGivenReq] = useState();
+  const [givenReq, setGivenReq] = useState("");
   const navigate = useNavigate();
 
   async function fetchRoleResourceMappingListData() {
     try {
       let res = await axiosHttpClient("ROLE_RESOURCE_VIEW_API", "get");
-
-      console.log("response", res.data);
+      setTableData(res.data.data); // Assuming res.data.data contains the array of objects
     } catch (error) {
       console.error(error);
     }
@@ -28,10 +32,10 @@ const RoleResourceMappingList = () => {
     <>
       <AdminHeader />
       <div className="Main_Conatiner_table">
-        <div className="editRoleResMapHead">
-          <div className="editRoleResMapHeadIn">
+        <div className="headingHeader">
+          <div className="heading">
             <div className="greenBar"></div>
-            <h2>Role Resource Mapping List</h2>
+            <h1 className="heading-title">Role Resource Mapping List</h1>
           </div>
         </div>
 
@@ -49,7 +53,6 @@ const RoleResourceMappingList = () => {
             placeholder="Search..."
             onChange={(e) => setGivenReq(e.target.value)}
           />
-          {/* <SearchDropdown /> */}
         </div>
 
         <div className="table_Container">
@@ -66,19 +69,21 @@ const RoleResourceMappingList = () => {
             </thead>
             <tbody>
               {tableData?.length > 0 &&
-                tableData?.map((data) => {
+                tableData.map((data) => {
                   return (
-                    <tr key={data.id}>
-                      <td data-label="Name">{data.userName}</td>
-                      <td data-label="Number">{data.resourceName}</td>
-                      <td data-label="Email">{data.parentResourceName}</td>
+                    <tr key={data.roleResourceId}>
+                      <td data-label="Role Name">{data.role}</td>
+                      <td data-label="Resource Name">{data.resourceName}</td>
+                      <td data-label="Parent Resource Name">
+                        {data.parentResourceName}
+                      </td>
                       <td data-label="Status">{data.status}</td>
                       <td data-label="View">
                         <Link
                           to={{
                             pathname: "/UAC/RoleResource/Edit",
-                            search: `?roleResourceId=${encryptDataId(
-                              data.id
+                            search: `?roleResourceId=${encryptData(
+                              data.roleResourceId
                             )}&action=view`,
                           }}
                         >
@@ -89,8 +94,8 @@ const RoleResourceMappingList = () => {
                         <Link
                           to={{
                             pathname: "/UAC/RoleResource/Edit",
-                            search: `?roleResourceId=${encryptDataId(
-                              data.id
+                            search: `?roleResourceId=${encryptData(
+                              data.roleResourceId
                             )}&action=edit`,
                           }}
                         >
@@ -104,8 +109,9 @@ const RoleResourceMappingList = () => {
           </table>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
+
 export default RoleResourceMappingList;

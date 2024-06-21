@@ -1,27 +1,29 @@
-// import css
+// import css---------------------------------------------------------
 import "./Facility_Reg.css";
-// Facility Reg funcation -----------------------------
+// Facility Reg funcation --------------------------------------------
 import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import verfiy_img from "../../../assets/verify_img.png"
-// Toast ------------------------------------------
+//Toast ----------------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 const Facility_Reg = () => {
-    // useSate for page -----------------------------------------------
+    // useSate for page -------------------------------------------------
     const [currentStep, setCurrentStep] = useState(1);
-    // Facility Data --------------------------
+    // Facility Data get from Getintial Fun ------------------------------
     const [GetServiceData, setGetServiceData] = useState([]);
     const [GetAmenitiesData, setGetAmenitiesData] = useState([]);
     const [FacilityTypeData, setFacilityTypeData] = useState([]);
     const [fetchEventCategoryData, setfetchEventCategoryData] = useState([]);
     const [fetchActivityData, setfetchActivityData] = useState([]);
+    const [Invantory, setInvantory] = useState([])
+    // here disabled use for Remove and dispable the placeholder of Onwer details -
     const [disabledFields, setDisabledFields] = useState(false);
-    // here set the error -------------------------------------------
+    // here set the error ---------------------------------------------------
     const [formErrors, setformErrors] = useState({});
-    // here Facility Post data ----------------------------------------------------------
+    // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
         facilityType: "",
         facilityName: "",
@@ -41,7 +43,6 @@ const Facility_Reg = () => {
             fri: 0,
             sat: 0,
         }, //here operating days will come in the form of array of data i.e. array of  days
-
         service: new Array(), //here services will be given in the form of object
         otherServices: "", //here others will be given in the form of string
         amenity: new Array(), // here amenities will be given in the form of form of object
@@ -51,23 +52,27 @@ const Facility_Reg = () => {
         game: new Array(),
         othergame: "",
         additionalDetails: "",
-        facilityImage: {
-            facilityImageOne: "",
-            facilityArrayOfImages: [],
+        facilityImage: {  // Facility Image Upload -----------------------
+           facilityImageOne: "",
+           facilityArrayOfImages: [],
         },
-        parkInventory: "",
-        // Post owner data ........
+        parkInventory: [],
+        // Post owner data ------------------------------------------------
         facilityisownedbBDA: "",
         firstName: "",
         lastName: "",
         phoneNumber: "",
         emailAdress: "",
         ownerPanCard: "",
-        ownership:"",
-        ownersAddress: ""
+        ownership: "",
+        ownersAddress: "",
+        fileNames: {  // New state to store file names ----------------------
+          facilityImageOne: "",
+          facilityArrayOfImages: []
+        }
     });
-    // here call the api for get the initial data -----------------------------------------
-    async function GetFacilityIntailData() {
+    // here call the api for get the initial data ---------------------------
+    async function GetFacilityInitailData() {
         try {
             let res = await axiosHttpClient("Get_Facility_Intail_Data", "get");
             setGetServiceData(res.data.fetchServices);
@@ -75,12 +80,13 @@ const Facility_Reg = () => {
             setFacilityTypeData(res.data.facilityType);
             setfetchEventCategoryData(res.data.fetchEventCategory);
             setfetchActivityData(res.data.fetchActivity);
+            setInvantory(res.data.fetchInventory)
             console.log(" Facility Intial Data", res);
         } catch (err) {
             console.log("here error of Facility intail data ", err);
         }
     }
-    // here Post the data ------------------------------
+    // here Post the data ---------------------------------------------------
     async function HandleSubmitFacility(e) {
         e.preventDefault();
         const validationErrors = Validation(PostFacilityData);
@@ -117,7 +123,7 @@ const Facility_Reg = () => {
                     phoneNumber: PostFacilityData.phoneNumber || null,
                     emailAdress: PostFacilityData.emailAdress || null,
                     ownerPanCard: PostFacilityData.ownerPanCard || null,
-                    ownership:PostFacilityData.ownership || null,
+                    ownership: PostFacilityData.ownership || null,
                     ownersAddress: PostFacilityData.ownersAddress || null
                 });
                 console.log("here Response of Post the data of Facility", res);
@@ -130,22 +136,19 @@ const Facility_Reg = () => {
             setformErrors(validationErrors1)
         }
     }
-
-    // handle Post Data-------------------------
+    // handle Post Data------------------------------------------------------
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value, files } = e.target;
-    
         if (name === "facilityImageOne" || name === "facilityArrayOfImages") {
             handleImageUpload(name, files);
+
         } else if (name === "facilityisownedbBDA") {
+
             const isOwnerByBDA = value === "Yes";
-    
             setPostFacilityData({ ...PostFacilityData, [name]: value });
-    
             // Set disabled state for specific fields
             setDisabledFields(isOwnerByBDA);
-    
             if (isOwnerByBDA) {
                 // Reset input fields if user selects "Yes"
                 setPostFacilityData(prevData => ({
@@ -157,25 +160,25 @@ const Facility_Reg = () => {
                     ownerPanCard: "",
                     ownersAddress: ""
                 }));
+                toast.info("No fields are required !");
                 setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
             }
+
         } else {
             // Handle other input changes
             setPostFacilityData({ ...PostFacilityData, [name]: value });
         }
-    
         // Run validation on input change
         const validationErrors = Validation({ ...PostFacilityData, [name]: value });
         setformErrors(validationErrors);
     };
-    
-    // here Handle for Upload Mulitple and single Image ----------------------------------------
+    // here Handle for Upload Mulitple and single Image ---------------------
     const handleImageUpload = (name, files) => {
         if (files && files.length > 0) {
             if (name === "facilityImageOne") {
                 const currentImagesCount1 = PostFacilityData.facilityImage.facilityImageOne.length;
                 if (currentImagesCount1 + files.length > 1) {
-                    alert("You can only upload Only  1 images for Facility Image.");
+                    toast.warning('You can upload only one image for Facility Image.');
                     document.getElementById("myForm").reset();
                     return;
                 }
@@ -188,40 +191,42 @@ const Facility_Reg = () => {
                             facilityImage: {
                                 ...prevState.facilityImage,
                                 facilityImageOne: reader.result
+                            },
+                            fileNames: {
+                                ...prevState.fileNames,
+                                facilityImageOne: file.name
                             }
                         }));
                         displayFileName("facilityImageOne", [file.name]);
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    alert("Kindly choose an image with size less than 200 KB.");
+                    toast.warning('Kindly choose an image with size less than 200 KB.');
+
                     document.getElementById("myForm").reset();
                 }
-            } else if (name === "facilityArrayOfImages") {
+            } else if (name === "facilityArrayOfImages") {     // Mulitple Image Upload 
                 const validFiles = [];
                 let totalSize = 0;
                 const currentImagesCount = PostFacilityData.facilityImage.facilityArrayOfImages.length;
-
-                if (currentImagesCount + files.length > 5) {
-                    alert("You can only upload up to 5 images for Additional Facility Images.");
+                if (currentImagesCount + files.length > 5) {    // max 5 image user can Upload 
+                    toast.warning("You can only upload up to 5 images for Additional Facility Images.");
                     document.getElementById("myForm").reset();
                     return;
                 }
-
                 for (let i = 0; i < files.length; i++) {
                     let file = files[i];
                     if (parseInt(file.size / 1024) <= 200) { // File size check for multiple images
                         validFiles.push(file);
                         totalSize += parseInt(file.size / 1024);
                     } else {
-                        alert("Each image should be less than 200 KB.");
+                        toast.warning("Each image should be less than 200 KB.");
                         document.getElementById("myForm").reset();
                         return;
                     }
                 }
-
                 if (totalSize <= 1000) { // Adjusted total size limit for up to 5 images
-                    const fileNames = validFiles.map(file => file.name);
+                    const newFileNames = validFiles.map(file => file.name);
                     validFiles.forEach(file => {
                         const reader = new FileReader();
                         reader.onloadend = () => {
@@ -233,14 +238,19 @@ const Facility_Reg = () => {
                                         ...prevState.facilityImage.facilityArrayOfImages,
                                         reader.result
                                     ]
+                                },
+                                fileNames: {
+                                    ...prevState.fileNames,
+                                    facilityArrayOfImages: [...prevState.fileNames.facilityArrayOfImages, ...newFileNames]
                                 }
                             }));
                         };
                         reader.readAsDataURL(file);
                     });
-                    displayFileName("facilityArrayOfImages", fileNames);
+                    displayFileName("facilityArrayOfImages", newFileNames);
+
                 } else {
-                    alert("Total size of images should not exceed 1000 KB for up to 5 images.");
+                    toast.warning("Total size of images should not exceed 1000 KB for up to 5 images.");
                     document.getElementById("myForm").reset();
                     setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
                 }
@@ -251,16 +261,15 @@ const Facility_Reg = () => {
     const displayFileName = (inputName, fileNames) => {
         const container = document.getElementById(inputName === "facilityImageOne" ? "facilityImageOneContainer" : "facilityArrayOfImagesContainer").querySelector(".image-preview");
         fileNames.forEach(fileName => {
-            const fileLabel = document.createElement("p");
+            // const fileLabel = document.createElement("p");
             fileLabel.textContent = fileName;
             container.appendChild(fileLabel);
+            console.log("here file Names", fileName, fileLabel)
         });
     };
-
-    // Handle Day ------------------------------
+    // Handle Day -----------------------------------------------------------
     const handleDayClick = (day, e) => {
         e.preventDefault(); // Ensure e is properly handled
-
         setPostFacilityData((prevState) => {
             const updatedOperatingDays = {
                 ...prevState.operatingDays,
@@ -280,7 +289,7 @@ const Facility_Reg = () => {
         });
         console.log("PostFacilityData:", PostFacilityData);
     };
-    //  Handle serviceId (set here )---------------------------------------------
+    //  Handle serviceId (set here )-------------------------------------------
     const handleServiceClick = (Id) => {
         console.log("handle service click", Id);
         console.log("PostFacilityData service 1", PostFacilityData.service);
@@ -301,8 +310,7 @@ const Facility_Reg = () => {
         setformErrors((prevErrors) => ({ ...prevErrors, service: '' }));
         console.log("PostFacilityData service 2", PostFacilityData.service);
     };
-
-    // Handle Amenities Data --------------------------------------------------------------
+    // Handle Amenities Data --------------------------------------------------
     const handleAmenitiesClick = (amenityId) => {
         setPostFacilityData((prevState) => {
             // If the serviceId exists, remove it, else add it
@@ -318,8 +326,7 @@ const Facility_Reg = () => {
         });
         setformErrors((prevErrors) => ({ ...prevErrors, amenity: '' }));
     };
-
-    // Handle Event--------------------------------------------------------------------------------
+    // Handle Event------------------------------------------------------------
     const handleEventClick = (eventCategoryId) => {
         setPostFacilityData((prevState) => {
             // If the serviceId exists, remove it, else add it
@@ -335,12 +342,44 @@ const Facility_Reg = () => {
         });
         setformErrors((prevErrors) => ({ ...prevErrors, eventCategory: '' }));
     };
-    // Handle Event--------------------------------------------------------------------------------
+    // Handle Add row of table -------------------------------------------------
+    const handleAddRow = (e) => {
+        e.preventDefault()
+        setPostFacilityData(prevState => ({
+            ...prevState,
+            parkInventory: [...prevState.parkInventory, { equipmentId: "", count: "" }]
+        }));
+    };
+    // Handle Remove (Row in table)---------------------------------------------
+    const handleRemoveRow = (index, e) => {
+        e.preventDefault()
+        setPostFacilityData(prevState => ({
+            ...prevState,
+            parkInventory: prevState.parkInventory.filter((_, i) => i !== index)  // index=  is excluded from the new array.means index
+            // here i is current index\
+            // _ current element, which is not used here.✈
+        }));
+
+        console.log("here index", index)
+    };
+    //handleChnage of handleEquipmentChange
+    const handleEquipmentChange = (index, field, value) => {
+        const newParkInventory = PostFacilityData.parkInventory.map((item, i) => {
+            if (i === index) {
+                return { ...item, [field]: value };
+            }
+            return item;
+        });
+        setPostFacilityData(prevState => ({
+            ...prevState,
+            parkInventory: newParkInventory
+        }));
+    };
+    // Handle Game---------------------------------------------------------------
     const handleGameClick = (userActivityId) => {
         setPostFacilityData((prevState) => {
             // Ensure the game object exists in the state
             let updatedgame = [...prevState.game];
-
             // If the game exists, remove it, else add it
             if (updatedgame.includes(userActivityId)) {
                 updatedgame = updatedgame.filter((game) => game != userActivityId);
@@ -349,14 +388,13 @@ const Facility_Reg = () => {
             }
             // Log the updated game object for debugging
             console.log("Updated game:", updatedgame);
-
             return { ...prevState, game: updatedgame };
         });
         // Log the current state for debugging
         console.log("PostFacilityData:", PostFacilityData);
         setformErrors((prevErrors) => ({ ...prevErrors, game: '' }));
     };
-    // here Prev and next page ---------------------------------------------------------------------
+    // here Prev and next page ---------------------------------------------------
     const nextStep = (e) => {
         e.preventDefault()
         // Perform validation before moving to the next step
@@ -372,7 +410,7 @@ const Facility_Reg = () => {
             toast.error('Please fill out all required fields.');
         }
     };
-    // 2nd from next step----------------------------------------------------------------------------
+    // 2nd from next step---------------------------------------------------------
     const nextStep2 = (e) => {
         e.preventDefault()
         const validationErrors1 = Validation2(PostFacilityData);
@@ -387,14 +425,13 @@ const Facility_Reg = () => {
             toast.error('Please fill out all required fields.');
         }
     };
-    const prevStep = () => {
+    // Prev Button -------------------------xxx------------------------------------
+    const prevStep = (e) => {
+        e.preventDefault()
         setCurrentStep(currentStep - 1);
+        toast.success('Successfully moved to the Previous Step!');
     };
-    //useEffect (Update data)-----------------------------------------------------------------
-    useEffect(() => {
-        GetFacilityIntailData();
-    }, [formErrors]);
-    // Validation -----------------------------------------------------
+    // Validation of 1st form ------------------------------------------------------
     const Validation = (value) => {
         const space_block = /^[^\s][^\n\r]*$/;
         const Name_Regex = /^[a-zA-Z ]+$/;
@@ -421,7 +458,6 @@ const Facility_Reg = () => {
         else if (!Longtitude_regex.test(value.longitude)) {
             err.longitude = "Please Enter a vaild longitude"
         }
-
         if (!value.latitude) {
             err.latitude = "Please Enter the latitude";
         } else if (!latitude_regex.test(value.latitude)) {
@@ -523,7 +559,7 @@ const Facility_Reg = () => {
         }
         return err;
     }
-
+    // Vaildation of 2nd form ------------------------------------------------------
     const Validation2 = (val) => {
         const error = {};
         const panCardRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
@@ -570,7 +606,6 @@ const Facility_Reg = () => {
             } else if (!space_block.test(val.ownerPanCard)) {
                 error.ownerPanCard = "Do not use spaces at beginning"
             }
-
             if (!val.ownersAddress) {
                 error.ownersAddress = "Please Enter the Owner’s Address";
             } else if (!Name_Regex.test(val.ownersAddress)) {
@@ -578,19 +613,20 @@ const Facility_Reg = () => {
             } else if (!space_block.test(val.ownersAddress)) {
                 error.ownersAddress = "Do not use spaces at beginning"
             }
-            if(!val.ownership){
-                error.ownership="Please Enter the Ownership"
-            }else if(!Name_Regex.test(val.ownership)){
-                error.ownership="Please Enter a vaild ownership"
-            }else if(!space_block.test(val.ownership)){
-                error.ownership="Do not use spaces at beginning"
+            if (!val.ownership) {
+                error.ownership = "Please Enter the Ownership"
+            } else if (!Name_Regex.test(val.ownership)) {
+                error.ownership = "Please Enter a vaild ownership"
+            } else if (!space_block.test(val.ownership)) {
+                error.ownership = "Do not use spaces at beginning"
             }
         }
-
         return error;
     };
-
-
+    //useEffect (Update data)-------------------------------------------------------
+       useEffect(() => {
+        GetFacilityInitailData();
+    }, [formErrors]);
     return (
         <div>
             <div className="all_From_conatiner">
@@ -964,7 +1000,6 @@ const Facility_Reg = () => {
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Other Events Category
-
                                         </label>
                                         <input
                                             type="massage"
@@ -1012,7 +1047,6 @@ const Facility_Reg = () => {
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Other Games
-
                                         </label>
                                         <input
                                             type="massage"
@@ -1062,9 +1096,12 @@ const Facility_Reg = () => {
                                             </p>
                                         </div>
                                         {formErrors.facilityImageOne && <p className="error text-red-700 font-bold text-lg">{formErrors.facilityImageOne}</p>}
-                                        <div className="image-preview" id="imagePreview"></div>
+                                        {PostFacilityData.fileNames.facilityImageOne && (
+                                            <div className="image-preview" id="imagePreview">
+                                                <p>{PostFacilityData.fileNames.facilityImageOne}</p>
+                                            </div>
+                                        )}
                                     </div>
-
                                     <div className="container" id="facilityArrayOfImagesContainer">
                                         <h2 className="Upload_Image_text">Upload Additional Facility Images</h2>
                                         <div className="upload-btn-wrapper">
@@ -1083,13 +1120,67 @@ const Facility_Reg = () => {
                                             </p>
                                             <p className="text-red-500 font-medium">You can only upload up to 5  image for   Additional Facility Images .</p>
                                         </div>
-                                        <div className="image-preview" id="imagePreview"></div>
+                                        {PostFacilityData.fileNames.facilityArrayOfImages.length > 0 && (
+                                            <div className="image-preview" id="imagePreview">
+                                                {PostFacilityData.fileNames.facilityArrayOfImages.map((fileName, index) => (
+                                                    <p key={index}>{fileName}</p>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </form>
-
-
-
-                                {/* Two more similar rows for Heading 1 */}
+                                {/* Add Park inventory */}
+                                <div className="Pakr_inventory_form_main_Conatiner">
+                                    <h1 className="Park_Inventory_text">Park Inventory</h1>
+                                    <div className="Table_Inventory">
+                                        <table className="Inventory_table">
+                                            <thead className="Inventory_thead">
+                                                <tr className="Inventory_tr">
+                                                    <th className="Inventory_th">Items/Equipment</th>
+                                                    <th className="Inventory_th">Number</th>
+                                                    <th className="Inventory_th">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="Inventory_tbody">
+                                                {PostFacilityData.parkInventory.map((item, index) => (
+                                                    <tr className="Inventory_tr" key={index}>
+                                                        <td className="Inventory_td">
+                                                            <select
+                                                                className="Inventory_select"
+                                                                value={item.equipmentId}
+                                                                onChange={(e) => handleEquipmentChange(index, 'equipmentId', e.target.value)}
+                                                            >
+                                                                <option value="">Select Equipment</option>
+                                                                {Invantory.length > 0 && Invantory.map((item, index) => (
+                                                                    <option key={index} value={item.equipmentId}>
+                                                                        {item.description}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </td>
+                                                        <td className="Inventory_td">
+                                                            <input
+                                                                type="number"
+                                                                className="Inventory_input"
+                                                                value={item.count}
+                                                                onChange={(e) => handleEquipmentChange(index, 'count', e.target.value)}
+                                                            />
+                                                        </td>
+                                                        <td className="Inventory_td">
+                                                            <button
+                                                                className="Inventory_button"
+                                                                onClick={(e) => handleRemoveRow(index, e)}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        <button className="Inventory_add_button" onClick={handleAddRow}>Add Row</button>
+                                    </div>
+                                </div>
                             </div>
                             <div className="buttons-container">
                                 <button
@@ -1121,7 +1212,6 @@ const Facility_Reg = () => {
                                             className="input_padding"
                                             value={PostFacilityData.facilityisownedbBDA}
                                             onChange={handleChange}
-
                                         >
                                             <option value="" disabled selected hidden>If yes, ownership details are not required</option>
                                             <option value="Yes">Yes</option>
@@ -1129,7 +1219,6 @@ const Facility_Reg = () => {
                                         </select>
                                         {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
                                     </div>
-
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
@@ -1141,13 +1230,13 @@ const Facility_Reg = () => {
                                             type="text"
                                             className="input_padding"
                                             id="input1"
-                                            placeholder="Enter Pin  "
+                                            placeholder="Enter First Name  "
                                             name="firstName"
                                             value={PostFacilityData.firstName}
                                             onChange={handleChange}
                                             disabled={disabledFields}
                                         />
-                                         {formErrors.firstName && <p className="error text-red-700">{formErrors.firstName}</p>}
+                                        {formErrors.firstName && <p className="error text-red-700">{formErrors.firstName}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">
@@ -1158,13 +1247,13 @@ const Facility_Reg = () => {
                                             type="text"
                                             id="input2"
                                             className="input_padding"
-                                            placeholder="Enter Area"
+                                            placeholder="Enter Last Name"
                                             name="lastName"
                                             value={PostFacilityData.lastName}
                                             onChange={handleChange}
                                             disabled={disabledFields}
                                         />
-                                         {formErrors.lastName && <p className="error text-red-700">{formErrors.lastName}</p>}
+                                        {formErrors.lastName && <p className="error text-red-700">{formErrors.lastName}</p>}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -1177,7 +1266,7 @@ const Facility_Reg = () => {
                                             type="text"
                                             className="input_padding"
                                             id="input1"
-                                            placeholder="Enter Pin  "
+                                            placeholder="Enter Phone Number"
                                             name="phoneNumber"
                                             value={PostFacilityData.phoneNumber}
                                             onChange={handleChange}
@@ -1194,7 +1283,7 @@ const Facility_Reg = () => {
                                             type="text"
                                             id="input2"
                                             className="input_padding"
-                                            placeholder="Enter Area"
+                                            placeholder="Enter Email Adress"
                                             name="emailAdress"
                                             value={PostFacilityData.emailAdress}
                                             onChange={handleChange}
@@ -1213,7 +1302,7 @@ const Facility_Reg = () => {
                                             type="text"
                                             className="input_padding"
                                             id="input1"
-                                            placeholder="Enter Pin  "
+                                            placeholder="Enter Owner’s PAN card number "
                                             name="ownerPanCard"
                                             value={PostFacilityData.ownerPanCard}
                                             onChange={handleChange}
@@ -1223,14 +1312,14 @@ const Facility_Reg = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">
-                                            ownership{" "}
+                                            Ownership{" "}
                                             {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
                                         </label>
                                         <input
                                             type="text"
                                             className="input_padding"
                                             id="input1"
-                                            placeholder="Enter Pin  "
+                                            placeholder="Enter  Ownership  "
                                             name="ownership"
                                             value={PostFacilityData.ownership}
                                             onChange={handleChange}
@@ -1238,8 +1327,6 @@ const Facility_Reg = () => {
                                         />
                                         {formErrors.ownership && <p className="error text-red-700">{formErrors.ownership}</p>}
                                     </div>
-
-
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
@@ -1257,31 +1344,23 @@ const Facility_Reg = () => {
                                             onChange={handleChange}
                                             disabled={disabledFields}
                                         />
-                                           {formErrors.ownersAddress && <p className="error text-red-700">{formErrors.ownersAddress}</p>}
+                                        {formErrors.ownersAddress && <p className="error text-red-700">{formErrors.ownersAddress}</p>}
                                     </div>
                                 </div>
                             </div>
-
-
-
                             <div className="buttons-container">
-                                <button type="button" className="prev_button" onClick={prevStep}>
+                                <button type="button" className="prev_button" onClick={(e) => prevStep(e)}>
                                     Previous
                                 </button>
                                 <button type="submit" className="next_button"
-
                                 >
                                     Next
                                 </button>
                             </div>
-
                         </div>
-
-
-
                     </form>
                 )}
-                {/*           ----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
+                {/*----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
                 {currentStep === 3 && (
                     <form onSubmit={HandleSubmitFacility}>
                         <h1>hello Ji from 4</h1>

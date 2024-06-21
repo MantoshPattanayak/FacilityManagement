@@ -76,6 +76,14 @@
     margin-top: 1vh;
 }
 
+.submit-container button {
+    cursor: pointer;
+    padding: 8px;
+    background-color: green;
+    color: white;
+    border-radius: 8px;
+}
+
 
 
 /* Add a scrollbar to the right side of the left container */
