@@ -4,7 +4,7 @@ const file = db.file;
 const fileAttachment = db.fileattachment
 const path = require('path')
 let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,userId,errors)=>{
-    // sub dir = "facility Images"
+    // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
         let createdDt = new Date();

@@ -204,6 +204,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
               mobileNo:mobileNo
           }
         })
+        console.log('207 line', isOtpValid)
         if(isOtpValid){
             let updateTheVerifiedValue = await otpCheck.update({verified:1}
               ,{
@@ -219,7 +220,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
                [Op.and]:[{ phoneNo:mobileNo},{statusId:statusId},{roleId:roleId}]
               }
             })
-            // console.log(isUserExist,'check user')
+            console.log(isUserExist,'check user 223 line')
           // If the user does not exist then we have to send a message to the frontend so that the sign up page will get render
           if(!isUserExist){
 
@@ -727,13 +728,15 @@ let tokenAndSessionCreation = async(isUserExist,lastLoginTime,deviceInfo)=>{
     let userName =  decrypt(isUserExist.userName)
     let emailId
     let sessionId;
+    
     if(isUserExist.emailId!=null){
       emailId =  decrypt(isUserExist.emailId)
 
     }
   
     let userId = isUserExist.userId
-    console.log(isUserExist.userId,userName,emailId,roleId)
+    let roleId = isUserExist.roleId
+    console.log(isUserExist.userId,userName,emailId)
 
     console.log(userId,userName,emailId,roleId,'roleId')
 

@@ -60,8 +60,6 @@ const registerFacility = async (req, res) => {
       amenity, // here amenities will be given in the form of form of object 
       otherAmenities, // here other amenities will be given in the form of string
       additionalDetails,
-      amenitiesImage,
-      servicesImage,
       facilityImage,
       eventCategory,
       othereventCategory,
@@ -71,19 +69,48 @@ const registerFacility = async (req, res) => {
       // owner details 
       firstName,
       lastName,
-      phoneNo,
-      emailId,
-      ownerPanCardNumber,
-      ownerAddress,
-      isFacilityByBda
+   facilityisownedbBDA,
+      phoneNumber,
+      emailAdress,
+      ownerPanCard,
+      ownersAddress,
     } = req.body;
 
     let createFacilities;
     let findOwnerId;
-     console.log("here Req",req.body)
+     console.log("here Req", 
+      facilityType,
+      facilityName,
+      longitude,
+      latitude,
+      address,
+      pin,
+      ownership,
+      area,  //allow area value to be in decimal
+      operatingHoursFrom,
+      operatingHoursTo,
+      operatingDays,  //here operating days will come in the form of array of data i.e. array of  days
+      service,  //here services will be given in the form of object 
+      otherServices, //here others will be given in the form of string 
+      amenity, // here amenities will be given in the form of form of object 
+      otherAmenities, // here other amenities will be given in the form of string
+      additionalDetails,
+      eventCategory,
+      othereventCategory,
+      game,
+      othergame,
+      parkInventory,
+      // owner details 
+      firstName,
+      lastName,
+      ownerPanCard,
+      ownersAddress,
+      lastName,
+      facilityisownedbBDA)
+
      let findIfTheOwnershipDetailsExist = await ownershipDetails.findOne({
       where:{
-        [Op.and]:[{[Op.or]:[{phoneNo:phoneNo},{emailId:emailId}]},{statusId:statusId}]}
+        [Op.and]:[{[Op.or]:[{phoneNo:phoneNumber},{emailId:emailAdress}]},{statusId:statusId}]}
      })
      if(findIfTheOwnershipDetailsExist){
       console.log('if owners detail exist', 89)
@@ -94,12 +121,12 @@ const registerFacility = async (req, res) => {
       let createOwnershipDetails = await ownershipDetails.create({
         firstName:firstName,
         lastName:lastName,
-        phoneNo:phoneNo,
-        emailId:emailId,
+        phoneNo:phoneNumber,
+        emailId:emailAdress,
         statusId:statusId,
-        ownerPanCardNumber:ownerPanCardNumber,
-        ownerAddress:ownerAddress,
-        isFacilityByBda:isFacilityByBda, 
+        ownerPanCardNumber:ownerPanCard,
+        ownerAddress:ownersAddress,
+        isFacilityByBda:facilityisownedbBDA, 
         createdDt:createdDt,
         updatedDt:updatedDt,
         createdBy:userId,
@@ -170,7 +197,7 @@ const registerFacility = async (req, res) => {
             return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
           }
         }
-        if(arrayFacilityImage){
+        if(arrayFacilityImage.length>0){
           const errors = [];
           let subDir = "facilityImageList"
           let filePurpose = "multipleFacilityImage"
