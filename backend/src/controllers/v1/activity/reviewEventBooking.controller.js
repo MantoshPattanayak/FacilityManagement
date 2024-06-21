@@ -12,18 +12,19 @@ const hosteventdetails = db.hosteventdetails;
 let viewList = async (req, res) => {
     try {
         console.log('entry viewList');
-        let givenReq = req.body.givenReq ? req.body.givenReq : null; // Convert givenReq to lowercase
+        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null; // Convert givenReq to lowercase
         let limit = req.body.page_size ? req.body.page_size : 500;
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
         let statusInput = req.body.statusCode ? req.body.statusCode : null;
 
         let fetchEventListQuery = `
-        select e.eventId, e.eventName as eventTitle, f.address, e.createdOn, s.statusCode from 
+        select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address, f2.code as facilityType, e.createdDt as requestDate, s.statusCode as requestStatus from 
         amabhoomi.eventactivities e
-        inner join amabhoomi.hosteventdetails h on e.eventId = h.eventId
-        inner join amabhoomi.facilities f on f.facilityId = e.facilityMasterId
-        inner join amabhoomi.statusmasters s on s.statusId = e.status
+        left join amabhoomi.hosteventdetails h on e.eventId = h.eventId
+        inner join amabhoomi.facilities f on f.facilityId = e.facilityId
+        inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityId
+        left join amabhoomi.statusmasters s on s.statusId = e.statusId and s.parentStatusCode = 'HOSTING_STATUS'
         where s.statusCode = :statusInput`;
 
         let viewEventListData = await sequelize.query(fetchEventListQuery, {
@@ -35,9 +36,11 @@ let viewList = async (req, res) => {
 
         if (givenReq) {
             matchedData = viewEventListData.filter((allData) =>
-                allData.activityName.includes(givenReq) ||
-                allData.address.includes(givenReq) ||
-                allData.statusCode.includes(givenReq)
+                allData.eventName?.toLowerCase().includes(givenReq) ||
+                allData.facilityname?.toLowerCase().includes(givenReq) ||
+                allData.address?.toLowerCase().includes(givenReq) ||
+                allData.facilityType?.toLowerCase().includes(givenReq) ||
+                allData.requestStatus?.toLowerCase().includes(givenReq)
             )
         }
 
@@ -58,13 +61,13 @@ let viewId = async (req, res) => {
     try {
         let eventId = req.params.eventId;
 
-        let fetchEventListQuery = `select e.eventId, e.eventName as eventTitle, e.eventCategory, e.locationName, e.eventStartTime, e.eventEndTime,
-        e.ticketSalesEnabled, e.ticketPrice, e.descriptionOfEvent, e.eventImagePath, e.additionalFilesPath, e.additionalDetails,
+        let fetchEventListQuery = `select e.eventId, e.eventName as eventTitle, e.locationName, e.eventStartTime, e.eventEndTime,
+        e.ticketSalesEnabled, e.ticketPrice, e.descriptionOfEvent, e.eventImagePath, e.additionalFilePath, e.additionalDetails,
         h.organisationName,h.organisationAddress, h.pancardNumber, h.firstName, h.lastName, h.phoneNo, h.emailId
         from amabhoomi.eventactivities e
         inner join amabhoomi.hosteventdetails h on e.eventId = h.eventId
-        inner join amabhoomi.facilities f on f.facilityId = e.facilityMasterId
-        inner join amabhoomi.statusmasters s on s.statusId = e.status
+        inner join amabhoomi.facilities f on f.facilityId = e.facilityId 
+        inner join amabhoomi.statusmasters s on s.statusId = e.statusId 
         where e.eventId = :eventId`;
 
         let viewEventData = await sequelize.query(fetchEventListQuery, {
