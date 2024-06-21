@@ -30,10 +30,20 @@ let dataload = async (req, res) => {
        order by um.userId`);
 
         if (userDataLoad.length > 0) {
-            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm.name as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2.name as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.statusId = 1 order by parentOrder, childOrder`,
-            {type: Sequelize.QueryTypes.SELECT});
+            //menu items list fetch
+            let menuListItemQuery =
+                `select r.resourceId, r.name, r.parentResourceId, r.orderIn, r.path
+                from amabhoomi.resourcemasters r
+                where r.statusId = 1
+                order by r.orderIn`;
 
-            if (resourceData.length > 0) {
+            let menuListItems = await sequelize.query(menuListItemQuery, {
+                type: QueryTypes.SELECT
+            });
+
+            console.log('menuListItems', menuListItems);
+
+            if (menuListItems.length > 0) {
 
                 // let encryptUserDataLoad = userDataLoad.map(async(userData)=>({
                 //     ...userData,
@@ -49,11 +59,42 @@ let dataload = async (req, res) => {
                 //     parent:await encrypt(resource.parent),
                 //     child: await encrypt(resource.child)
                 // }))
+
+                let dataJSON = new Array();
+                //create parent data json without child data 
+                for (let i = 0; i < menuListItems.length; i++) {
+                    if (menuListItems[i].parentResourceId == null) {
+                        dataJSON.push({
+                            id: menuListItems[i].resourceId,
+                            name: menuListItems[i].name,
+                            orderIn: menuListItems[i].orderIn,
+                            path: menuListItems[i].path,
+                            children: new Array()
+                        })
+                    }
+                }
+                console.log('data json ---', dataJSON);
+
+                //push sub menu items data
+                for (let i = 0; i < menuListItems.length; i++) {
+                    if (menuListItems[i].parentResourceId !== null) {
+                        let parent = dataJSON.find(item => item.id == menuListItems[i].parentResourceId);
+                        console.log('parent', parent);
+                        parent.children.push({
+                            id: menuListItems[i].resourceId,
+                            name: menuListItems[i].name,
+                            orderIn: menuListItems[i].orderIn,
+                            path: menuListItems[i].path,
+                        })
+                    }
+                }
+                console.log('resources', dataJSON);
+
                 res.status(statusCode.SUCCESS.code).json({
                     message1: 'user data',
-                    userData: userDataLoad,
+                    userData: userDataLoad[0],
                     message2: 'resource data',
-                    resourceData: resourceData
+                    resourceData: dataJSON
                 });
             } else {
                 res.status(statusCode.NOTFOUND.code).json({ message2: 'resource data not found' });

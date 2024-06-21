@@ -93,7 +93,7 @@ let viewList = async (req, res) => {
         pu.userId, pu.title, pu.fullName, pu.emailId, pu.userName, pu.phoneNo, pu.statusId,
         rm.roleName
         FROM amabhoomi.rolemasters rm
-        Inner JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId`;
+        Inner JOIN amabhoomi.usermasters pu ON pu.roleId = rm.roleId order by pu.userId desc`;
     // , sm.statusCode
     // INNER JOIN statusmasters sm ON sm.statusId = rm.statusId
 

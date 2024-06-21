@@ -96,7 +96,8 @@ const api = {
    USER_SUBMIT_FEEDBACK_API: '/grievance/createFeedback',      //post   name, mobile, email, subject, feedback, isWhatsappNumber
    //grievance-feedback for admin
    ADMIN_VIEW_GRIEVANCE_LIST_API: '/grievance/viewgrievancelist',    //post   page_size, page_number, givenReq
-   ADMIN_ACTION_GRIEVANCE_API: '/grievance/action-grievance',
+   ADMIN_ACTION_GRIEVANCE_API: '/grievance/action-grievance',  //post grievanceMasterId, response, filepath
+   ADMIN_VIEW_GRIEVANCE_BY_ID_API: '/grievance/viewgrievance', //get params - grievanceId
    // admin-dashboard
    ADMIN_DASHBOARD_FETCH_API: '/auth/admin-dashboard',   //post    facilityId
 }

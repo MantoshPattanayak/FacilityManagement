@@ -128,6 +128,7 @@ let viewGrievanceList = async (req, res) => {
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
         let givenReq = req.body.givenReq ? req.body.givenReq?.toLowerCase() : null;
+        let userId = req.user.userId;
 
         let fetchGrievanceQuery = await grievanceMasters.findAll({});
         let statusMasterData = await statusMasters.findAll({});
@@ -298,10 +299,10 @@ let actionTaken = async (req, res) => {
                                 }
                                 let createFileAttachment = await fileAttachment.create({
                                     entityId: grievanceMasterId,
-                                    entityType: entityType,
+                                    entityType: "grievance",
                                     fileId: createFile.fileId,
                                     statusId: 1,
-                                    filePurpose: "Image"
+                                    filePurpose: "grievance image"
                                 })
                             }
                         }
