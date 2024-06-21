@@ -1,17 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
-    let DepartmentMasters = sequelize.define('departmentmasters', {
-        departmentMasterId: {
+    let UserDepartment = sequelize.define('userdepartments', {
+        userdepartmentsId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
         },
-        name: {
-            type: DataTypes.STRING(30),
+        userId: {
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
-        description: {
-            type: DataTypes.STRING(255),
+        departmentMasterId: {
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
         createdBy: {
@@ -30,25 +30,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: true,
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
-        statusid: {
+        statusId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        remarks: {
-            type: DataTypes.STRING(255),
             allowNull: true,
         },
     },
         {
             timestamps: false
         })
-    return DepartmentMasters
+    return UserDepartment
 }
