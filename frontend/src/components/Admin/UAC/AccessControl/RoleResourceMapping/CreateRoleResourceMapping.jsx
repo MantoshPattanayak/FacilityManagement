@@ -60,18 +60,6 @@ const CreateRoleResourceMapping = () => {
 
     console.log("Form Data:", formData);
 
-    // try {
-    //   let res = await axiosHttpClient(
-    //     "ROLE_RESOURCE_CREATE_API",
-    //     "post",
-    //     formData
-    //   );
-    //   console.log("here is the Response 1919", res);
-    //   toast.success("Form submitted successfully!");
-    // } catch (error) {
-    //   console.error("Error Response 9900:", error.response);
-    //   toast.error("Form submission failed. Kindly try again!");
-    // }
     try {
       let res = await axiosHttpClient(
         "ROLE_RESOURCE_CREATE_API",

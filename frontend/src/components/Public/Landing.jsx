@@ -26,8 +26,8 @@ import Landing_Img_1 from "../../assets/ama_bhoomi_bgi.jpg";
 import ad1 from "../../assets/ad1.png";
 import ad2 from "../../assets/ad2.png";
 import ad3 from "../../assets/ad3.png";
-import googlePlayStore from "../../assets/google-play.svg"
-import appleStore from "../../assets/apple.svg"
+import googlePlayStore from "../../assets/google-play.svg";
+import appleStore from "../../assets/apple.svg";
 // import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/badminton_ENA.png";
@@ -244,7 +244,7 @@ const Landing = () => {
   useEffect(() => {
     fetchLandingPageData();
     setUserGeoLocation();
-    document.title = 'AMA BHOOMI';
+    document.title = "AMA BHOOMI";
   }, []);
 
   useEffect(() => {
@@ -535,6 +535,18 @@ const Landing = () => {
     }
   };
 
+  const [currentIndex1, setCurrentIndex1] = useState(0);
+  const nextImage1 = () => {
+    if (currentIndex1 < images.length - 3) {
+      setCurrentIndex1(currentIndex1 + 1);
+    }
+  };
+  const prevImage1 = () => {
+    if (currentIndex1 > 0) {
+      setCurrentIndex1(currentIndex1 - 1);
+    }
+  };
+
   // const [currentIndex, setCurrentIndex] = useState(0);
 
   //------- Advatisemant -----------
@@ -638,9 +650,9 @@ const Landing = () => {
                       onClick={(e) =>
                         navigate(
                           "/Sub_Park_Details" +
-                          `?facilityId=${encryptDataId(
-                            suggestion.facilityId
-                          )}`
+                            `?facilityId=${encryptDataId(
+                              suggestion.facilityId
+                            )}`
                         )
                       }
                     >
@@ -1042,8 +1054,9 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${selectedActivity === index ? "selected" : ""
-                  }`}
+                className={`activity ${
+                  selectedActivity === index ? "selected" : ""
+                }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
@@ -1070,9 +1083,9 @@ const Landing = () => {
                               onClick={(e) => {
                                 navigate(
                                   "/Sub_Park_Details" +
-                                  `?facilityId=${encryptDataId(
-                                    park.facilityId
-                                  )}`
+                                    `?facilityId=${encryptDataId(
+                                      park.facilityId
+                                    )}`
                                 );
                               }}
                             >
@@ -1107,14 +1120,14 @@ const Landing = () => {
         </div>
 
         <div className="carousel">
-          <button className="carousel-button2 left" onClick={prevImage}>
+          <button className="carousel-button2 left" onClick={prevImage1}>
             &lt;
           </button>
           <div className="carousel-container">
             <div
               className="carousel-images"
               // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
-              style={{ transform: `translateX(-${currentIndex * 420}px)` }} // Adjust transform value
+              style={{ transform: `translateX(-${currentIndex1 * 420}px)` }} // Adjust transform value
             >
               {images.map((image, index) => (
                 <div key={index} className="carousel-image-container">
@@ -1128,7 +1141,7 @@ const Landing = () => {
               ))}
             </div>
           </div>
-          <button className="carousel-button2 right" onClick={nextImage}>
+          <button className="carousel-button2 right" onClick={nextImage1}>
             &gt;
           </button>
         </div>
