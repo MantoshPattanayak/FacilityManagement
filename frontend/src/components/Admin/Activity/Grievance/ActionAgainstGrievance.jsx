@@ -8,7 +8,7 @@ import { decryptData } from '../../../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftLong, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeftLong, faClose, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import instance from '../../../../../env';
 import { formatDate } from '../../../../utils/utilityFunctions';
 
@@ -38,6 +38,9 @@ export default function ActionAgainstGrievance() {
     name: '',
     data: ''
   });
+  const [errorFileAttachment, setErrorFileAttachment] = useState({
+    responseFile: ''
+  });
 
   //function to call API to fetch grievance details
   async function fetchGrievanceDetails() {
@@ -55,66 +58,19 @@ export default function ActionAgainstGrievance() {
   // validate user input function
   function validateUserInput(data) {
     let errors = {};
+    const responseRegex=/^[a-zA-Z\s,\.]+$/;
+    const spaceBlockRegex = /^[^\s][^\n\r]*$/;
 
-    console.log(data);
-
-    if (data.title) {
-      // continue
-    }
-    else {
-      errors.title = "Please provide salutation."
-    }
-
-    if (data.firstName) {
-      if (!regex.NAME.test(data.firstName)) {
-        errors.firstName = "First name is incorrect."
+    if (data.response) {
+      if(!spaceBlockRegex.test(data.response)){
+        errors.response = 'Do not use spaces at beginning';
+      }
+      else if(!responseRegex.test(data.response)) {
+        errors.response = 'Please enter valid action response. Avoid use of special characters, if any.'
       }
     }
     else {
-      errors.firstName = "Please provide first name."
-    }
-
-    // if (data.middleName) {
-    //     if (!regex.NAME.test(data.middleName)) {
-    //         errors.middleName = "Middle name is incorrect."
-    //     }
-    // }
-    // else {
-    //     // errors.middleName = "Please provide middle name."
-    // }
-
-    if (data.lastName) {
-      if (!regex.NAME.test(data.lastName)) {
-        errors.lastName = "Last name is incorrect."
-      }
-    }
-    else {
-      errors.lastName = "Please provide last name."
-    }
-
-    if (data.mobileNumber) {
-      if (!regex.PHONE_NUMBER.test(data.mobileNumber)) {
-        errors.mobileNumber = "Last name is incorrect."
-      }
-    }
-    else {
-      errors.mobileNumber = "Please provide mobile number."
-    }
-
-    if (data.emailID) {
-      if (!regex.EMAIL.test(data.emailID)) {
-        errors.emailID = "Email ID is incorrect."
-      }
-    }
-    else {
-      errors.emailID = "Please provide email id."
-    }
-
-    if (data.role) {
-      // continue
-    }
-    else {
-      errors.role = "Please provide role."
+      errors.response = "Please enter action response."
     }
 
     return errors;
@@ -124,23 +80,25 @@ export default function ActionAgainstGrievance() {
   function handleChange(e) {
     e.preventDefault();
     setErrors({});
+    setErrorFileAttachment({});
     let { name, value } = e.target;
     if (name == 'responseFilePath') {
       let file = e.target.files[0];
       console.log('response file attachment', file);
-      if (isImageFile(file.name)) {
-        document.getElementById('responseFilePath').reset();
+      if (!isImageFile(file.name)) {
+        // document.getElementById('responseFilePath').reset();
         toast.warning('Please select image file.')
         return;
       }
       else {
         if (parseInt(file.size / 1024) <= 200) {
           const reader = new FileReader();
+          reader.readAsDataURL(file);
           reader.onloadend = () => {
             setResponseFile({
               name: file.name,
               data: reader.result
-            })
+            });
           }
         }
         else {
@@ -153,12 +111,14 @@ export default function ActionAgainstGrievance() {
       setFormData({ ...formData, [name]: value });
     }
     console.log('formData', formData);
+    console.log('response file', responseFile);
     return;
   }
 
   //function to seek confirmation
   function handleConfirmation(e) {
     e.preventDefault();
+    toast.dismiss();
     toast.warn(
       <div>
         <p>Are you sure you want to proceed?</p>
@@ -185,45 +145,43 @@ export default function ActionAgainstGrievance() {
   //function to submit user response
   async function handleSubmit(e) {
     e.preventDefault();
-
     setErrors({});
-
+    setErrorFileAttachment({});
     let errors = validateUserInput(formData);
 
-    if (Object.keys(errors).length <= 0) {
+    if(!responseFile.data) {
+      setErrorFileAttachment({
+        responseFile: 'Please select file to support action response.'
+      });
+    }
+
+    if (Object.keys(errors).length <= 0 && responseFile.data) {
       try {
-        let response = await axiosHttpClient('ADMIN_USER_UPDATE_API', 'put', {
-          grievanceId: formData.grievanceId,
-          title: formData.title,
-          fullName: formData.firstName + (formData.middleName ? ' ' + formData.middleName : '') + (formData.lastName ? ' ' + formData.lastName : ''),
-          userName: null,
-          // altMobileNumber: formData.altMobileNumber,
-          mobileNo: formData.mobileNumber,
-          emailId: formData.emailID,
-          roleId: formData.role,
-          statusId: formData.status,
-          genderId: null,
+        let response = await axiosHttpClient('ADMIN_ACTION_GRIEVANCE_API', 'post', {
+          grievanceMasterId: formData.grievanceMasterId, 
+          response: formData.response, 
+          filepath: responseFile
         }, null);
 
         console.log(response.data);
-        toast.success('User details updated successfully.', {
+        toast.success('Action response against grievance submitted successfully!', {
           autoClose: 2000,
           onClose: () => {
             setTimeout(() => {
-              navigate('/UAC/Users/ListOfUsers');
-            }, 1000);
+              navigate('/activity/grievance');
+            }, 500);
           }
         });
       }
       catch (error) {
         console.error(error);
-        toast.error('User details updation failed. Please try again.');
+        toast.error('Action response against grievance submission failed. Please try again.');
       }
     }
     else {
       setErrors(errors);
       console.log(errors);
-      toast.error('User details updation failed. Please try again.');
+      toast.error('Please enter all required fields.');
     }
   }
 
@@ -238,14 +196,18 @@ export default function ActionAgainstGrievance() {
   useEffect(() => {
     fetchGrievanceDetails();
     document.title = 'ADMIN | AMA BHOOMI';
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    
+  }, [responseFile, formData]);
 
   return (
     <div className='grievance-action'>
       <AdminHeader />
       <div className="form-container">
         <div className="form-heading">
-          <h2>{action == 'view' ? "View Grievance Details" : "Take action against grievance"}</h2>
+          <h2>{action == 'view' ? "View Grievance Details" : "Grievance Redressal"}</h2>
           <div className="flex flex-col-reverse items-end w-[100%]">
             <button
               className='back-button'
@@ -303,8 +265,8 @@ export default function ActionAgainstGrievance() {
             </div>
             <div className="form-group col-span-2 w-full">
               <label htmlFor="input1">Action response<span className='text-red-500'>*</span></label>
-              <textarea type="text" name='details' className='w-full' rows={5} value={formData.response} placeholder="Enter response" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} />
-              {errors.details && <p className='error-message'>{errors.details}</p>}
+              <textarea type="text" name='response' className='w-full' rows={5} value={formData.response || ''} placeholder="Enter response" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} />
+              {errors.response && <p className='error-message'>{errors.response}</p>}
             </div>
             <div className="form-group col-span-2">
               <label htmlFor="input1">File<span className='text-red-500'>*</span></label>
@@ -320,26 +282,37 @@ export default function ActionAgainstGrievance() {
                     View
                   </a>
                 ) : <div className="upload-btn-wrapper">
-                  <span className='flex justify-center'>
-                    <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" />
-                  </span>
-                  <input
-                    className="form-input"
-                    id="facilityArrayOfImages"
-                    name="facilityArrayOfImages"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleChange}
-                  />
-                  <p className="italic text-sm font-bold text-gray-500 flex justify-center">
-                    Max. Each image should be less than 200 KB.
-                  </p>
+                  <div className='h-[100%]'>
+                    <span className='flex justify-center'>
+                      <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" />
+                    </span>
+                    <input
+                      className=""
+                      id="responseFilePath"
+                      name="responseFilePath"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleChange}
+                    />
+                    <p className="italic text-sm font-bold text-gray-500 flex justify-center">
+                      Max. Each image should be less than 200 KB.
+                    </p>
+                  </div>
                   <div className="image-preview" id="imagePreview">
-                    { responseFile.name }
+                    {
+                      responseFile.name && 
+                      <>
+                        <p>{responseFile.name}</p> &nbsp; &nbsp;
+                        <span onClick={(e) => setResponseFile({ name: '', data: ''})} className='cursor-pointer text-red-500 text-2xl'><FontAwesomeIcon icon={faClose} /></span>
+                      </>
+                    }
+                    {
+                      !responseFile.name && <p>No file selected.</p>
+                    }
                   </div>
                 </div>
               }
+              { errorFileAttachment.responseFile && <p className='error-message'>{errorFileAttachment.responseFile}</p> }
             </div>
           </div>
           <div className="buttons-container">

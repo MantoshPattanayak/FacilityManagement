@@ -5,6 +5,9 @@ const grievanceMasters = db.grievancemasters;
 const statusMasters = db.statusmaster;
 const feedbacks = db.feedback
 const grievanceCategories = db.grievancecategories;
+const path = require('path');
+const fs = require('fs');
+const imageUpload = require('../../../utils/imageUpload');
 
 // insert grievance - start
 const addGrievance = async (req, res) => {
@@ -227,6 +230,8 @@ let actionTaken = async (req, res) => {
             filepath
         } = req.body;
 
+        console.log(req.body);
+
         let fetchGrievanceStatus = await statusMasters.findOne({
             where: {
                 parentStatusCode: 'GRIEVANCE_USER_STATUS',
@@ -241,6 +246,7 @@ let actionTaken = async (req, res) => {
 
             async function updateGrievanceResponse() {
                 let transaction;
+                console.log('updateGrievanceResponse');
                 try {
                     transaction = await sequelize.transaction();
                     
@@ -257,70 +263,40 @@ let actionTaken = async (req, res) => {
                         }
                     });
 
-                    if(filepath) {
-                        let filepathPath = null
-                        let filepathPath2 = null
-                        const uploadDir = process.env.UPLOAD_DIR
-                        const base64filepath = filepath ? filepath.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-                        const mimeMatch = filepath.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
-                        const mime = mimeMatch ? mimeMatch[1] : null;
-            
-                        if ([
-                            "image/jpeg",
-                            "image/png",
-                            "application/pdf",
-                            "application/msword",
-                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        ].includes(mime)) {
-                            const filepathBuffer = filepath ? Buffer.from(base64filepath, "base64") : null;
-                            if (filepathBuffer) {
-                                const eventDir = path.join(uploadDir, "filepath")
-            
-                                if (!fs.existsSync(eventDir)) {
-                                    fs.mkdirSync(eventDir, { recursive: true })
-                                }
-                                const fileExtension = mime ? mime.split("/")[1] : "txt";
-                                filepathPath = `${uploadDir}/eventDir/grievanceResponse.${grievanceMasterId}.${fileExtension}`
-                                fs.writeFileSync(filepathPath, uploadEventBuffer)
-                                filepathPath2 = `/eventDir/grievanceResponse.${grievanceMasterId}.${fileExtension}`
-                                let fileName = `grievanceResponse.${grievanceMasterId}.${fileExtension}`
-                                let fileType = mime ? mime.split("/")[0] : 'unknown'
-                                let createFile = await file.create({
-                                    fileName: fileName,
-                                    fileType: fileType,
-                                    url: filepathPath2,
-                                    statusId: 1,
-                                    createdDt: now(),
-                                    updatedDt: now()
-                                })
-            
-                                if (!createFile) {
-                                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
-                                }
-                                let createFileAttachment = await fileAttachment.create({
-                                    entityId: grievanceMasterId,
-                                    entityType: "grievance",
-                                    fileId: createFile.fileId,
-                                    statusId: 1,
-                                    filePurpose: "grievance image"
-                                })
-                            }
+                    let entityType = "grievance";
+                    let subDir = "grievance";
+                    let filePurpose = "grievanceActionResponse";
+                    let insertionData = {
+                        id: grievanceMasterId,
+                        name: filepath.name.split('.')[0] + '_grievanceActionResponse'
+                    }
+                    let errors = [];
+                    console.log({
+                        entityType, subDir, filePurpose, insertionData, userId,
+                    })
+                    const grievaneFileUpload = await imageUpload(filepath.data, entityType, subDir, filePurpose, insertionData, userId, errors);
+
+                    if(errors.length > 0){
+                        if(errors.some(error => error.includes("something went wrong"))){
+                          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors});
                         }
-                        else {
-                            return res.status(statusCode.BAD_REQUEST.code).json({ message: "Invalid File type for the image" })
-                        }
+                        return res.status(statusCode.BAD_REQUEST.code).json({message:errors});
                     }
                 }
                 catch (error) {
                     if (transaction) await transaction.rollback();
 
-                    console.error('Error creating user park booking:', error);
+                    console.error('Error submitting action response:', error);
                     res.status(statusCode.BAD_REQUEST.code).json({
-                        message: 'Park booking failed!',
+                        message: 'Action response submission failed',
                         data: []
                     })
                 }
             }
+
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'Action response against grievance submitted successfully.'
+            })
         }
         else {
             res.status(statusCode.BAD_REQUEST.code).json({
