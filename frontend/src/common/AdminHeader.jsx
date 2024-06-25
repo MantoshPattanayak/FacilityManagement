@@ -1,154 +1,11 @@
-// import React, { useState, useEffect, useRef } from "react";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faRightFromBracket, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-
-// import APP_LOGO from "../assets/ama-bhoomi_logo.png";
-// import { Link, useNavigate } from "react-router-dom";
-
-// const AdminHeader = () => {
-//   const [isMenuActive, setMenuActive] = useState(false);
-//   const [activeDropdown, setActiveDropdown] = useState(null);
-//   const menuRef = useRef(null);
-//   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState();
-//   const navigate = useNavigate();
-
-//   const toggleMenu = () => {
-//     setMenuActive(!isMenuActive);
-//     if (activeDropdown !== null) {
-//       setActiveDropdown(null);
-//     }
-//   };
-
-//   const collapseSubMenu = () => {
-//     if (activeDropdown) {
-//       activeDropdown.querySelector(".submenu").removeAttribute("style");
-//       activeDropdown.classList.remove("active");
-//       setActiveDropdown(null);
-//       console.log("collapse Submenu");
-//     }
-//   };
-
-//   const toggleSubMenu = (e) => {
-//     if (e.target.hasAttribute("data-toggle") && window.innerWidth <= 780) {
-//       e.preventDefault();
-//       const menuDropdown = e.target.parentElement;
-
-//       if (menuDropdown === activeDropdown) {
-//         collapseSubMenu();
-//       } else {
-//         collapseSubMenu();
-//         menuDropdown.classList.add("active");
-//         const subMenu = menuDropdown.querySelector(".submenu");
-//         subMenu.style.maxHeight = subMenu.scrollHeight + "px";
-//         setActiveDropdown(menuDropdown);
-//       }
-//     }
-//   };
-
-//   const resizeWindow = () => {
-//     if (window.innerWidth > 780) {
-//       setMenuActive(false);
-//       collapseSubMenu();
-//     }
-//   };
-
-//   const handleClickOutside = (e) => {
-//     if (menuRef.current && !menuRef.current.contains(e.target)) {
-//       setMenuActive(false);
-//       collapseSubMenu();
-//     }
-//   };
-
-//   const logout = () => {
-//     sessionStorage.setItem('isAdminLoggedIn', 0);
-//     navigate('/admin-login');
-//     return;
-//   }
-
-//   useEffect(() => {
-//     setIsAdminLoggedIn(sessionStorage?.getItem("isAdminLoggedIn") || 0);
-
-//     window.addEventListener("resize", resizeWindow);
-//     document.addEventListener("mousedown", handleClickOutside);
-//     return () => {
-//       window.removeEventListener("resize", resizeWindow);
-//       document.removeEventListener("mousedown", handleClickOutside);
-//     };
-//   }, []);
-
-//   return (
-//     <header className="header" id="header">
-//       <section className="wrapper container">
-//         <Link to={`${isAdminLoggedIn == 1 ? '/Dashboard/AdminDashboard' : '/admin-login'}`} className="brand">
-//           <div className="logo-ama-boomi">
-//             <img src={APP_LOGO} alt="ama bhoomi logo" className="h-[100%] top-0 absolute" />
-//           </div>
-//         </Link>
-//         <div className="burger" id="burger" onClick={toggleMenu}>
-//           <span className="burger-line"></span>
-//           <span className="burger-line"></span>
-//           <span className="burger-line"></span>
-//         </div>
-//         {
-//           (isAdminLoggedIn == 1) &&
-//           <>
-//             {isMenuActive && <div className="overlay" onClick={toggleMenu}></div>}
-//             <nav ref={menuRef} className={`navbar ${isMenuActive ? "active" : ""}`} id="navbar" onClick={toggleSubMenu}>
-//               <ul className="menu" id="menu">
-//                 <li className="menu-item"><a href="#" className="menu-link">Home</a></li>
-//                 <li className="menu-item menu-dropdown">
-//                   <span className="menu-link" data-toggle="submenu">MDM<FontAwesomeIcon icon={faChevronDown} /></span>
-//                   <ul className="submenu">
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Feature Link</a></li>
-//                   </ul>
-//                 </li>
-//                 <li className="menu-item menu-dropdown">
-//                   <span className="menu-link" data-toggle="submenu">Activity<FontAwesomeIcon icon={faChevronDown} /></span>
-//                   <ul className="submenu">
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Discover Link</a></li>
-//                   </ul>
-//                 </li>
-//                 <li className="menu-item"><a href="#" className="menu-link">Report</a></li>
-//                 <li className="menu-item menu-dropdown">
-//                   <span className="menu-link" data-toggle="submenu">UAC<FontAwesomeIcon icon={faChevronDown} /></span>
-//                   <ul className="submenu">
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-//                     <li className="submenu-item"><a href="#" className="submenu-link">Resource Link</a></li>
-//                   </ul>
-//                 </li>
-//                 <li className="menu" onClick={logout}>
-//                   <span className="menu-link" data-toggle="submenu"><FontAwesomeIcon icon={faRightFromBracket} /> Log out</span>
-//                 </li>
-//               </ul>
-//             </nav>
-//           </>
-//         }
-//       </section>
-//     </header>
-//   );
-// };
-
-// export default AdminHeader;
-
-
 import React, { useEffect, useState } from "react";
 import AppLogo from "../assets/ama-bhoomi_logo.png";
 import "../components/Public/Landing";
-import '../common/PublicHeader.css';
-// Font Awesome icon --------------------------------
+import '../common/AdminHeader.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPowerOff, faUser, faBars, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../utils/axios";
-// Import Redux Part ---------------------------------
-import { useDispatch, useSelector } from "react-redux";  // selector use for Read the data -----------------
+import { useDispatch, useSelector } from "react-redux";
 import { setLanguage, setLanguageContent } from "../utils/languageSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
@@ -204,21 +61,18 @@ export default function PublicHeader() {
     GetTotalNumberofCart();
   }, []);
 
-
   function handleLogout(e) {
-    // logOutUser(e);
     dispatch(Logout());
     async function logOutAPI() {
       try {
         let res = await axiosHttpClient('LOGOUT_API', 'post');
         console.log(res.data);
         toast.success('Logged out successfully!!', {
-          autoClose: 3000, // Toast timer duration in milliseconds
+          autoClose: 3000,
           onClose: () => {
-            // Navigate to another page after toast timer completes
             setTimeout(() => {
               navigate("/");
-            }, 1000); // Wait 1 second after toast timer completes before navigating
+            }, 1000);
           },
         });
       }
@@ -233,6 +87,53 @@ export default function PublicHeader() {
     setShowMediaIcon(prevState => !prevState);
   }
 
+  const menuData = [
+    {
+      id: "9",
+      name: "Dashboard",
+      orderIn: 1,
+      path: null,
+      children: [
+        { id: "10", name: "Admin Dashboard", orderIn: 1, path: "/Dashboard/AdminDashboard" }
+      ]
+    },
+    {
+      id: "7",
+      name: "Activity",
+      orderIn: 2,
+      path: "",
+      children: []
+    },
+    {
+      id: "1",
+      name: "UAC",
+      orderIn: 3,
+      path: "",
+      children: [
+        { id: "2", name: "Resource", orderIn: 1, path: "/UAC/Resources/ListOfResources" },
+        { id: "3", name: "Role", orderIn: 2, path: "/UAC/Role/ListOfRoles" },
+        { id: "4", name: "User", orderIn: 3, path: "/UAC/Users/ListOfUsers" },
+        { id: "5", name: "Role-Resource Access Control", orderIn: 4, path: "/UAC/RoleResource/View" },
+        { id: "6", name: "User-Resource Access Control", orderIn: 5, path: "/UAC/UserResource/View" }
+      ]
+    }
+  ];
+
+  const [hoveredMenu, setHoveredMenu] = useState(null);
+
+  const renderSubMenu = (children) => {
+    if (children.length === 0) return null;
+    return (
+      <ul className="submenu">
+        {children.map((subItem) => (
+          <li key={subItem.id}>
+            <Link to={subItem.path}>{subItem.name}</Link>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <header className="header-admin" id="header-public">
       {/* <ToastContainer /> */}
@@ -240,32 +141,38 @@ export default function PublicHeader() {
         <div className="logo-ama-boomi">
           <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
         </div>
-        <div className="navbar">
-          <ul className={showMediaIcon ? "hidden menu_links mobile_menu_links show" : "hidden menu_links mobile_menu_links"}>
-            <li>
-              {(language === 'EN') && <><button value={'OD'} onClick={() => setLanguageCode('OD')}>ଓଡ଼ିଆ</button> &nbsp; | </>}
-              {(language === 'OD') && <><button value={'EN'} onClick={() => setLanguageCode('EN')}>English</button> &nbsp; | </>}
+        <div className="navbar-2">
+          <ul className={showMediaIcon ? "menu_links mobile_menu_links show" : "menu_links"} >
+            {/* <li>
+              <Link to={'/Home'}>HOME</Link>
             </li>
             <li>
-              <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey === 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
+              <Link to={'/MDM'}>MDM</Link>
             </li>
             <li>
-              <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey === 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
-            </li>
-            <li>
-              <Link to={'/faqs'}>FAQ</Link>
-            </li>
-            <li>
-              <Link to={'/facilities'}>FACILITIES</Link>
-            </li>
-            <li>
-              <Link to={'/events'}>EVENTS</Link>
-            </li>
-            {isUserLoggedIn == 1 && (
-              <li>
-                <Link to={'/Event_hostPage'}>HOST EVENT</Link>
-              </li>
-            )}
+              <Link to={'/Reports'}>REPORTS</Link>
+            </li> */}
+            {menuData.map((menuItem) => {
+              if (menuItem.name === "Dashboard" && menuItem.children.length > 0) {
+                return menuItem.children.map((child) => (
+                  <li key={child.id}>
+                    <Link to={child.path}>{child.name}</Link>
+                  </li>
+                ));
+              } else {
+                return (
+                  <li
+                    key={menuItem.id}
+                    className="menu-item"
+                    onMouseEnter={() => setHoveredMenu(menuItem.id)}
+                    onMouseLeave={() => setHoveredMenu(null)}
+                  >
+                    <Link to={menuItem.path || "#"}>{menuItem.name}</Link>
+                    {hoveredMenu === menuItem.id && renderSubMenu(menuItem.children)}
+                  </li>
+                );
+              }
+            })}
             {isUserLoggedIn == 1 ? (
               <li>
                 <Link to={'/Profile'}>
@@ -274,7 +181,7 @@ export default function PublicHeader() {
               </li>
             ) : (
               <li>
-                <Link className="login-button" to="/login-signup">
+                <Link className="login-button" to="/admin-login">
                   LOGIN
                 </Link>
               </li>
@@ -291,7 +198,9 @@ export default function PublicHeader() {
             )}
             {isUserLoggedIn == 1 && (
               <li>
-                <Link onClick={handleLogout} to={'/'}><FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;</Link>
+                <Link onClick={handleLogout} to={'/'}>
+                  <FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;
+                </Link>
               </li>
             )}
           </ul>
