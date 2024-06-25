@@ -115,6 +115,7 @@ db1.faq = require('./frequentlyaskquestion.models')(sequelize,DataTypes)
 db1.feedback = require('./feedback.model')(sequelize, DataTypes)
 //promotion
 db1.promotions = require('./promotion.model')(sequelize, DataTypes)
+db1.facilitiesderived = require(`./facilitiesderived.models`)(sequelize, DataTypes)
 
 db1.departmentmasters = require('./departmentmasters.models')(sequelize, DataTypes)
 db1.grievancecategories = require('./grievancecategories.models')(sequelize, DataTypes)
@@ -135,7 +136,6 @@ db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey:"activityId
 db1.facilities.hasMany(db1.facilitytariff,{foreignKey:"facilityId"})
 db1.facilitytariff.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 // join operations end
-
 
 
 

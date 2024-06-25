@@ -22,7 +22,7 @@ const AdminDashboard = () => {
             {
                 label: '369',
                 data: [3, 4, 9, 2, 5],
-                backgroundColor: 'blue',
+                backgroundColor: 'rgb(143, 158, 215)',
                 borderColor: 'black',
                 borderWidth: 1,
             }
