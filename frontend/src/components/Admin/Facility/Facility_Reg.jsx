@@ -537,6 +537,7 @@ const Facility_Reg = () => {
         const PinCode_Regex = /^\d{6}$/;
         const Regex_Other = /^[a-zA-Z,-]+$/;
         const Area_Acre = /^\d+(\.\d+)?$/;
+        const Addition_Infromateion=/^[a-zA-Z\s,\.]+$/;
         const err = {};
         if (!value.facilityType) {
             err.facilityType = "Please Select the Facility Type";
@@ -565,7 +566,7 @@ const Facility_Reg = () => {
         }
         if (!value.address) {
             err.address = "Please Enter the address";
-        } else if (!Name_Regex.test(value.address)) {
+        } else if (!Addition_Infromateion.test(value.address)) {
             err.address = 'Please Enter a vaild Address'
         } else if (!space_block.test(value.address)) {
             err.address = 'Do not use spaces at beginning'
@@ -603,7 +604,7 @@ const Facility_Reg = () => {
             err.service = "Please Select the Services"
         }
         if (value.otherServices) {
-            if (!Regex_Other.test(value.otherServices)) {
+            if (!Addition_Infromateion.test(value.otherServices)) {
                 err.otherServices = "Please Enter a vaild Other services"
             }
             if (!space_block.test(value.otherServices)) {
@@ -614,7 +615,7 @@ const Facility_Reg = () => {
             err.amenity = 'Please Select the amenity'
         }
         if (value.otherAmenities) {
-            if (!Regex_Other.test(value.otherAmenities)) {
+            if (!Addition_Infromateion.test(value.otherAmenities)) {
                 err.otherAmenities = "Please Enter a Vaild Other Amenities"
             }
             if (!space_block.test(value.otherAmenities)) {
@@ -625,7 +626,7 @@ const Facility_Reg = () => {
             err.eventCategory = "Please Select the Event Category"
         }
         if (value.othereventCategory) {
-            if (!Regex_Other.test(value.othereventCategory)) {
+            if (!Addition_Infromateion.test(value.othereventCategory)) {
                 err.othereventCategory = "Please Enter a vaild Other Event Category"
             }
             if (!space_block.test(value.othereventCategory)) {
@@ -636,7 +637,7 @@ const Facility_Reg = () => {
             err.game = "Please Select the Game"
         }
         if (value.othergame) {
-            if (!Regex_Other.test(value.othergame)) {
+            if (!Addition_Infromateion.test(value.othergame)) {
                 err.othergame = "Please Enter a vaild Other Game"
             }
             if (!space_block.test(value.othergame)) {
@@ -646,7 +647,7 @@ const Facility_Reg = () => {
         if (!value.additionalDetails) {
             err.additionalDetails = "Please Enter the Additional Details"
         }
-        if (!Name_Regex.test(value.additionalDetails)) {
+        if (!Addition_Infromateion.test(value.additionalDetails)) {
             err.additionalDetails = "Please Enter a vaild Additional Details"
         }
         if (!space_block.test(value.additionalDetails)) {
@@ -665,6 +666,7 @@ const Facility_Reg = () => {
         const Name_Regex = /^[a-zA-Z ]+$/;
         const space_block = /^[^\s][^\n\r]*$/;
         const EMAIL_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        const Addition_Infromateion=/^[a-zA-Z\s,\.]+$/;
         if (!val.facilityisownedbBDA) {
             error.facilityisownedbBDA = "Please Select if the Facility is Owned by BDA or Not";
         }
@@ -706,7 +708,7 @@ const Facility_Reg = () => {
             }
             if (!val.ownersAddress) {
                 error.ownersAddress = "Please Enter the Owner’s Address";
-            } else if (!Name_Regex.test(val.ownersAddress)) {
+            } else if (!Addition_Infromateion.test(val.ownersAddress)) {
                 error.ownersAddress = "Please Enter a vaild Owner Address"
             } else if (!space_block.test(val.ownersAddress)) {
                 error.ownersAddress = "Do not use spaces at beginning"
