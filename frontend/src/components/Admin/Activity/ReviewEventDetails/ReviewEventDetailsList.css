@@ -1,3 +1,21 @@
+.heading h2 {
+    margin-bottom: 1.5vw;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    height: 9vh;
+    width: 627px;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+.heading {
+    width: 94vw;
+    display: contents;
+}
 .specialevent-search_text_conatiner_outer {
     display: flex;
     justify-content: center;
@@ -46,8 +64,8 @@
 
 .specialevent-eventdetails-tab {
     display: flex;
-    justify-content: space-evenly;
-    width: 49vw;
+    justify-content: space-between;
+    width: 627px;
     gap: 40px;
     margin-bottom: 10px;
 }
