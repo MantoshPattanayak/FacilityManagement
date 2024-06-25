@@ -84,7 +84,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
          return errors.push(`Invalid File type for facility file at index ${i}`);
         }
     } catch (err) {
-      errors.push(`something went wrong`)
+      errors.push(`Something went wrong`)
     }
 
 

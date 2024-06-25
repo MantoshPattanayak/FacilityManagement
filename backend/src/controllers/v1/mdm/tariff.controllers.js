@@ -320,10 +320,19 @@ let updateTariff = async (req,res)=>{
 
 let viewTariff = async (req,res)=>{
     try {
+        let limit = req.body.page_size ? req.body.page_size : 500;
+        let page = req.body.page_number ? req.body.page_number : 1;
+        let offset = (page - 1) * limit;
+
         let findViewTariff = await facilityTariff.findAll({include:[{
             model:facilities
         }]});
-        return res.status(statusCode.SUCCESS.code).json({message:"All Tariff Data", tariffData:findViewTariff})
+        
+    
+
+        let paginatedTariff = findViewTariff.slice(offset, offset + limit);
+
+        return res.status(statusCode.SUCCESS.code).json({message:"All Tariff Data", tariffData:paginatedTariff})
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
