@@ -257,6 +257,9 @@ body, html {
   color: #25D366;
   /* WhatsApp brand color */
 }
+.twitter-icon{
+  color: black;
+}
 
 .instagram-icon {
   color: #E4405F;
@@ -268,10 +271,7 @@ body, html {
   /* Facebook brand color */
 }
 
-.twitter-icon {
-  color: #1DA1F2;
-  /* Twitter brand color */
-}
+
 
 .term_condtion_conatiner {
   display: flex;

@@ -5,11 +5,12 @@ import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import verfiy_img from "../../../assets/verify_img.png"
 //Toast -----------------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 const Facility_Reg = () => {
     // useSate for page -------------------------------------------------
     const [currentStep, setCurrentStep] = useState(1);
@@ -73,6 +74,8 @@ const Facility_Reg = () => {
             facilityArrayOfImages: []
         }
     });
+    let navigate = useNavigate();
+
     // here call the api for get the initial data ---------------------------
     async function GetFacilityInitailData() {
         try {
@@ -96,6 +99,7 @@ const Facility_Reg = () => {
         const validationErrors2 = Validationinvantory(PostFacilityData)
         console.log("Handle Submit invatory error", validationErrors2)
         setformErrors({ ...validationErrors, ...validationErrors1 });
+        toast.dismiss();
         if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0 && Object.keys(validationErrors2).length === 0) {
             try {
                 let facilityisownedbBDAValue = PostFacilityData.facilityisownedbBDA === "Yes" ? 1 : 0;
@@ -132,8 +136,17 @@ const Facility_Reg = () => {
                     ownersAddress: PostFacilityData.ownersAddress || null
                 });
                 console.log("here Response of Post the data of Facility", res);
+                toast.success('Facility registration has been done successfully.', {
+                    autoClose: 2000,
+                    onClose: () => {
+                        setTimeout(() => {
+                            navigate('/facility-registration');
+                        }, 1000);
+                    }
+                });
             } catch (err) {
                 console.log("here error of Facility Post Data", err);
+                toast.error('Facility registration failed.');
                 setformErrors('')
             }
         } else {
@@ -168,12 +181,12 @@ const Facility_Reg = () => {
                 toast.info("No fields are required !");
                 setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
             }
-        } else if(name==="facilityType") {
+        } else if (name === "facilityType") {
             // Handle other input changes
             setPostFacilityData({ ...PostFacilityData, [name]: value });
             setIsPlayGround(Number(value) === 2); // Check true and False
-        }else{
-             setPostFacilityData({ ...PostFacilityData, [name]: value });
+        } else {
+            setPostFacilityData({ ...PostFacilityData, [name]: value });
         }
         // Run validation on input change
         const validationErrors = Validation({ ...PostFacilityData, [name]: value });
@@ -273,6 +286,40 @@ const Facility_Reg = () => {
             container.appendChild(fileLabel);
 
         });
+    };
+    // Remove Multiple Image here -----------------------------------------
+    const handleImageRemove = (name, index) => {
+        if (name === "facilityImageOne") {
+            setPostFacilityData(prevState => ({
+                ...prevState,
+                facilityImage: {
+                    ...prevState.facilityImage,
+                    facilityImageOne: ""
+                },
+                fileNames: {
+                    ...prevState.fileNames,
+                    facilityImageOne: ""
+                }
+            }));
+            toast.warning("Removed  Facility Image successfully!");
+        } else if (name === "facilityArrayOfImages") {
+            const updatedImages = [...PostFacilityData.facilityImage.facilityArrayOfImages];
+            const updatedFileNames = [...PostFacilityData.fileNames.facilityArrayOfImages];
+            updatedImages.splice(index, 1);
+            updatedFileNames.splice(index, 1);
+            setPostFacilityData(prevState => ({
+                ...prevState,
+                facilityImage: {
+                    ...prevState.facilityImage,
+                    facilityArrayOfImages: updatedImages
+                },
+                fileNames: {
+                    ...prevState.fileNames,
+                    facilityArrayOfImages: updatedFileNames
+                }
+            }));
+            toast.warning("Removed Additional Facility Images successfully!");
+        }
     };
     // Handle Day -----------------------------------------------------------
     const handleDayClick = (day, e) => {
@@ -412,6 +459,31 @@ const Facility_Reg = () => {
         console.log("PostFacilityData:", PostFacilityData);
         setformErrors((prevErrors) => ({ ...prevErrors, game: '' }));
     };
+    //function to seek confirmation ----------------------------------------------
+    function handleConfirmation(e) {
+        e.preventDefault();
+        toast.warn(
+            <div>
+                <p>Are you sure you want to proceed?</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <button  onClick={(e) => HandleSubmitFacility(e)} className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
+                    <button onClick={() => {
+                        toast.dismiss();
+                        toast.error('Action cancelled!', {
+                            // position: toast.POSITION.TOP_CENTER,
+                            // autoClose: 3000,
+                        });
+                    }} className='bg-red-400 text-white p-2 border rounded-md'>No</button>
+                </div>
+            </div>,
+            {
+                position: "top-center",
+                autoClose: false, // Disable auto close
+                closeOnClick: false, // Disable close on click
+            }
+        );
+        return;
+    }
     // here Prev and next page ---------------------------------------------------
     const nextStep = (e) => {
         e.preventDefault()
@@ -427,8 +499,11 @@ const Facility_Reg = () => {
             toast.success('Successfully moved to the next step!');
         } else {
             // If there are validation errors, display them and prevent moving to the next step
-            console.log('Validation errors:', validationErrors);
+
             toast.error('Please fill out all required fields.');
+            console.log('Validation errors:', validationErrors);
+            setformErrors(validationErrors)
+
         }
     };
     // 2nd from next step---------------------------------------------------------
@@ -442,8 +517,9 @@ const Facility_Reg = () => {
             toast.success('Successfully moved to the next step!');
         } else {
             // If there are validation errors, display them and prevent moving to the next step
-            console.log('Validation errors:', validationErrors1);
             toast.error('Please fill out all required fields.');
+            console.log('Validation errors:', validationErrors1);
+            setformErrors(validationErrors1)
         }
     };
     // Prev Button ----------------------------------------------------------------
@@ -460,7 +536,7 @@ const Facility_Reg = () => {
         const latitude_regex = /^[-+]?(?:[0-8]?\d(?:\.\d+)?|90(?:\.0+)?)$/;
         const PinCode_Regex = /^\d{6}$/;
         const Regex_Other = /^[a-zA-Z,-]+$/;
-        const Area_Acre=/^\d+(\.\d+)?$/;
+        const Area_Acre = /^\d+(\.\d+)?$/;
         const err = {};
         if (!value.facilityType) {
             err.facilityType = "Please Select the Facility Type";
@@ -648,7 +724,7 @@ const Facility_Reg = () => {
     // Vaildation of Invantory ---------------------------------------------------
     const Validationinvantory = (data) => {
         let errors = {};
-        const Number_item_regex= /^(?:[1-9][0-9]?|100)$/;
+        const Number_item_regex = /^(?:[1-9][0-9]?|100)$/;
         const equipmentIds = new Set();
         data.parkInventory.forEach((item, index) => {
             if (!item.equipmentId) {
@@ -658,12 +734,12 @@ const Facility_Reg = () => {
             } else {
                 equipmentIds.add(item.equipmentId);
             }
-            if(!item.count){
-                errors[`count${index}`]="Please Enter a Number of item/Equipment"
-            }else if (!Number_item_regex.test(item.count)){
-                errors[`count${index}`]="Please enter a valid number between 1 and 100."
+            if (!item.count) {
+                errors[`count${index}`] = "Please Enter a Number of item/Equipment"
+            } else if (!Number_item_regex.test(item.count)) {
+                errors[`count${index}`] = "Please enter a valid number between 1 and 100."
             }
-           
+
         });
         return errors;
     };
@@ -671,7 +747,7 @@ const Facility_Reg = () => {
     useEffect(() => {
         GetFacilityInitailData();
     }, [formErrors]);
-    
+
     return (
         <div>
             <div className="all_From_conatiner">
@@ -783,7 +859,7 @@ const Facility_Reg = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">
-                                        Pincode{" "}
+                                            Pincode{" "}
                                             <span className="text-red-600 font-bold text-xl">*</span>
                                         </label>
                                         <input
@@ -1058,57 +1134,57 @@ const Facility_Reg = () => {
                                         {formErrors.othereventCategory && <p className="error text-red-700">{formErrors.othereventCategory}</p>}
                                     </div>
                                 </div>
-                                 {isPlayGround && (
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id="AddressBox">
-                                        <label htmlFor="input1">
-                                            Game
-                                            <span className="text-red-600 font-bold text-xl">*</span>
-                                        </label>
-                                        <span className="Operating_day">
-                                            {fetchActivityData?.length > 0 &&
-                                                fetchActivityData?.map((item, index) => (
-                                                    <span key={index}>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                                handleGameClick(item.userActivityId)
-                                                            }
-                                                            className={`button-4 ${PostFacilityData.game.includes(
-                                                                item.userActivityId
-                                                            )
-                                                                ? "selected"
-                                                                : ""
-                                                                }`}
-                                                        >
-                                                            {item.userActivityName}
-                                                        </button>
-                                                    </span>
-                                                ))}
-                                        </span>
-                                        {formErrors.game && <p className="error text-red-700">{formErrors.game}</p>}
+                                {isPlayGround && (
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Game
+                                                <span className="text-red-600 font-bold text-xl">*</span>
+                                            </label>
+                                            <span className="Operating_day">
+                                                {fetchActivityData?.length > 0 &&
+                                                    fetchActivityData?.map((item, index) => (
+                                                        <span key={index}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    handleGameClick(item.userActivityId)
+                                                                }
+                                                                className={`button-4 ${PostFacilityData.game.includes(
+                                                                    item.userActivityId
+                                                                )
+                                                                    ? "selected"
+                                                                    : ""
+                                                                    }`}
+                                                            >
+                                                                {item.userActivityName}
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                            </span>
+                                            {formErrors.game && <p className="error text-red-700">{formErrors.game}</p>}
+                                        </div>
                                     </div>
-                                </div>
-                                 )}
-                                  {isPlayGround && (
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id="AddressBox">
-                                        <label htmlFor="input1">
-                                            Other Games
-                                        </label>
-                                        <input
-                                            type="massage"
-                                            id="input1"
-                                            className="input_padding"
-                                            placeholder="Enter some other amenities if you have"
-                                            name="othergame"
-                                            value={PostFacilityData.othergame}
-                                            onChange={handleChange}
-                                        />
-                                        {formErrors.othergame && <p className="error text-red-700">{formErrors.othergame}</p>}
+                                )}
+                                {isPlayGround && (
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Other Games
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="Enter some other amenities if you have"
+                                                name="othergame"
+                                                value={PostFacilityData.othergame}
+                                                onChange={handleChange}
+                                            />
+                                            {formErrors.othergame && <p className="error text-red-700">{formErrors.othergame}</p>}
+                                        </div>
                                     </div>
-                                </div>
-                                  )}
+                                )}
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
@@ -1147,7 +1223,11 @@ const Facility_Reg = () => {
                                         {formErrors.facilityImageOne && <p className="error text-red-700 font-bold text-lg">{formErrors.facilityImageOne}</p>}
                                         {PostFacilityData.fileNames.facilityImageOne && (
                                             <div className="image-preview" id="imagePreview">
-                                                <p>{PostFacilityData.fileNames.facilityImageOne}</p>
+                                                <p>{PostFacilityData.fileNames.facilityImageOne}
+                                                    <span onClick={() => handleImageRemove("facilityImageOne")} style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
+                                                        <FontAwesomeIcon icon={faTimes} />
+                                                    </span>
+                                                </p>
                                             </div>
                                         )}
                                     </div>
@@ -1172,7 +1252,12 @@ const Facility_Reg = () => {
                                         {PostFacilityData.fileNames.facilityArrayOfImages.length > 0 && (
                                             <div className="image-preview" id="imagePreview">
                                                 {PostFacilityData.fileNames.facilityArrayOfImages.map((fileName, index) => (
-                                                    <p key={index}>{fileName}</p>
+                                                    <p key={index}>
+                                                        {fileName}
+                                                        <span onClick={() => handleImageRemove("facilityArrayOfImages", index)} style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
+                                                            <FontAwesomeIcon icon={faTimes} />
+                                                        </span>
+                                                    </p>
                                                 ))}
                                             </div>
                                         )}
@@ -1422,11 +1507,705 @@ const Facility_Reg = () => {
                 )}
                 {/*----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
                 {currentStep === 3 && (
-                    <form onSubmit={HandleSubmitFacility}>
-                        <h1>hello Ji from 4</h1>
-                        <div className="buttons-container">
-                            <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
-                            <button type="submit" className="next_button">Submit</button>
+                    <form   onSubmit={handleConfirmation}   >
+                        <div className="Verify_FromConatriner">
+                            <div className="HostEvent_container">
+                                <div className="HostEvent_Heading">
+                                    <h1 className="verify_name_text">Step-1 (Facility details)</h1>
+                                    <div className="HeadingTitle9">
+                                        <div></div>
+                                        <h2>Facility details</h2>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Facility Type{" "}
+
+                                            </label>
+                                            <select
+                                                id="input2"
+                                                className="input_padding"
+                                                name="facilityType"
+                                                value={PostFacilityData.facilityType}
+                                                disabled
+                                            >
+                                                <option value="" disabled selected hidden>
+                                                    Select Facility Type
+                                                </option>
+                                                {FacilityTypeData?.length > 0 &&
+                                                    FacilityTypeData?.map((name, index) => {
+                                                        return (
+                                                            <option key={index} value={name.facilitytypeId}>
+                                                                {name.description}
+                                                            </option>
+                                                        );
+                                                    })}
+                                            </select>
+
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">
+                                                Facility Name{" "}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="input2"
+                                                className="input_padding"
+                                                placeholder=" Please Enter the Facility Name"
+                                                name="facilityName"
+                                                value={PostFacilityData.facilityName}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Longitude{" "}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="input_padding"
+                                                id="input1"
+                                                name="longitude"
+                                                placeholder="Please enter the Longitude "
+                                                value={PostFacilityData.longitude}
+                                                disabled
+                                            />
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">
+                                                Latitude
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="input2"
+                                                className="input_padding"
+                                                placeholder=" Please Enter the Latitude"
+                                                name="latitude"
+                                                value={PostFacilityData.latitude}
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Address
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="Enter address of your facility"
+                                                name="address"
+                                                value={PostFacilityData.address}
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Pincode{" "}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="input_padding"
+                                                id="input1"
+                                                placeholder="Enter Pincode "
+                                                name="pin"
+                                                value={PostFacilityData.pin}
+                                                disabled
+                                            />
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">
+                                                Area Acre{" "}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="input2"
+                                                className="input_padding"
+                                                placeholder="Enter Area"
+                                                name="area"
+                                                value={PostFacilityData.area}
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Operating From Time{" "}
+                                            </label>
+                                            <input
+                                                type="time"
+                                                className=" p-5"
+                                                placeholder="Enter Pin  "
+                                                name="operatingHoursFrom"
+                                                value={PostFacilityData.operatingHoursFrom}
+                                                disabled
+                                            />
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">
+                                                Operating To Time
+                                            </label>
+                                            <input
+                                                type="time"
+                                                id="input2"
+                                                className="input_padding p-5"
+                                                placeholder="Enter Area"
+                                                name="operatingHoursTo"
+                                                value={PostFacilityData.operatingHoursTo}
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Operating Days
+                                            </label>
+                                            <span className="Operating_day" name="operatingDays">
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.sun ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("sun", e)}
+                                                    disabled
+                                                >
+                                                    Sun
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.mon ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("mon", e)}
+                                                    disabled
+                                                >
+                                                    Mon
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.tue ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("tue", e)}
+                                                    disabled
+                                                >
+                                                    Tue
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.wed ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("wed", e)}
+                                                    disabled
+                                                >
+                                                    Wed
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.thu ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("thu", e)}
+                                                    disabled
+                                                >
+                                                    Thu
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.fri ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("fri", e)}
+                                                    disabled
+                                                >
+                                                    Fri
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`button-4 ${PostFacilityData.operatingDays.sat ? "selected" : ""
+                                                        }`}
+                                                    onClick={(e) => handleDayClick("sat", e)}
+                                                    disabled
+                                                >
+                                                    Sat
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Services
+                                                <span className="text-red-600 font-bold text-xl">*</span>
+                                            </label>
+                                            <span className="Operating_day">
+                                                {GetServiceData?.length > 0 &&
+                                                    GetServiceData.map((item, index) => (
+                                                        <span key={index}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleServiceClick(item.serviceId)}
+                                                                disabled
+                                                                className={`button-4 ${PostFacilityData.service.includes(
+                                                                    item.serviceId
+                                                                )
+                                                                    ? "selected"
+                                                                    : ""
+                                                                    }`}
+                                                            >
+                                                                {item.description}
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Other Services
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="Enter some other amenities if you have"
+                                                name="otherServices"
+                                                value={PostFacilityData.otherServices}
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Amenities
+
+                                            </label>
+                                            <span className="Operating_day">
+                                                {GetAmenitiesData?.length > 0 &&
+                                                    GetAmenitiesData?.map((data, index) => (
+                                                        <span key={index}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    handleAmenitiesClick(data.amenityId)
+                                                                }
+                                                                disabled
+                                                                className={`button-4 ${PostFacilityData.amenity.includes(
+                                                                    data.amenityId
+                                                                )
+                                                                    ? "selected"
+                                                                    : ""
+                                                                    }`}
+                                                            >
+                                                                {data.amenityName}
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Other Amenities
+
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="Enter some other amenities if you have"
+                                                name="otherAmenities"
+                                                value={PostFacilityData.otherAmenities}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Events Category
+                                                <span className="text-red-600 font-bold text-xl">*</span>
+                                            </label>
+                                            <span className="Operating_day">
+                                                {fetchEventCategoryData?.length > 0 &&
+                                                    fetchEventCategoryData.map((item, index) => (
+                                                        <span key={index}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    handleEventClick(item.eventCategoryId)
+                                                                }
+                                                                disabled
+                                                                className={`button-4 ${PostFacilityData.eventCategory.includes(
+                                                                    item.eventCategoryId
+                                                                )
+                                                                    ? "selected"
+                                                                    : ""
+                                                                    }`}
+                                                            >
+                                                                {item.eventCategoryName}
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Other Events Category
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="Enter some other amenities if you have"
+                                                name="othereventCategory"
+                                                value={PostFacilityData.othereventCategory}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    {isPlayGround && (
+                                        <div className="HostEvent_Row">
+                                            <div className="HostEvent_Group" id="AddressBox">
+                                                <label htmlFor="input1">
+                                                    Game
+                                                    <span className="text-red-600 font-bold text-xl">*</span>
+                                                </label>
+                                                <span className="Operating_day">
+                                                    {fetchActivityData?.length > 0 &&
+                                                        fetchActivityData?.map((item, index) => (
+                                                            <span key={index}>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        handleGameClick(item.userActivityId)
+                                                                    }
+                                                                    disabled
+                                                                    className={`button-4 ${PostFacilityData.game.includes(
+                                                                        item.userActivityId
+                                                                    )
+                                                                        ? "selected"
+                                                                        : ""
+                                                                        }`}
+                                                                >
+                                                                    {item.userActivityName}
+                                                                </button>
+                                                            </span>
+                                                        ))}
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                    )}
+                                    {isPlayGround && (
+                                        <div className="HostEvent_Row">
+                                            <div className="HostEvent_Group" id="AddressBox">
+                                                <label htmlFor="input1">
+                                                    Other Games
+                                                </label>
+                                                <input
+                                                    type="massage"
+                                                    id="input1"
+                                                    className="input_padding"
+                                                    placeholder="Enter some other amenities if you have"
+                                                    name="othergame"
+                                                    value={PostFacilityData.othergame}
+                                                    disabled
+                                                />
+
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                About the Facility
+
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="About the Facility"
+                                                name="additionalDetails"
+                                                value={PostFacilityData.additionalDetails}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <form id="myForm" className="m-0">
+                                        <div className="container" id="facilityImageOneContainer">
+                                            <h2 className="Upload_Image_text">Upload Facility Image</h2>
+                                            <div className="upload-btn-wrapper">
+                                                <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
+                                                <input
+                                                    className="form-input"
+                                                    id="facilityImageOne"
+                                                    name="facilityImageOne"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    disabled
+                                                />
+
+                                            </div>
+
+                                            {PostFacilityData.fileNames.facilityImageOne && (
+                                                <div className="image-preview" id="imagePreview">
+                                                    <p>{PostFacilityData.fileNames.facilityImageOne}
+
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="container" id="facilityArrayOfImagesContainer">
+                                            <h2 className="Upload_Image_text">Upload Additional Facility Images</h2>
+                                            <div className="upload-btn-wrapper">
+                                                <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
+                                                <input
+                                                    className="form-input"
+                                                    id="facilityArrayOfImages"
+                                                    name="facilityArrayOfImages"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    multiple
+                                                    disabled
+                                                />
+                                            </div>
+                                            {PostFacilityData.fileNames.facilityArrayOfImages.length > 0 && (
+                                                <div className="image-preview" id="imagePreview">
+                                                    {PostFacilityData.fileNames.facilityArrayOfImages.map((fileName, index) => (
+                                                        <p key={index}>
+                                                            {fileName}
+
+                                                        </p>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </form>
+                                    {/* Add Park inventory */}
+                                    <div className="Pakr_inventory_form_main_Conatiner">
+                                        <h1 className="Park_Inventory_text">Park Inventory</h1>
+                                        <div className="Table_Inventory">
+                                            <div className="Add_row_Button">
+
+                                            </div>
+                                            <table className="Inventory_table">
+
+                                                <thead className="Inventory_thead">
+                                                    <tr className="Inventory_tr">
+                                                        <th className="Inventory_th">Items/Equipment</th>
+                                                        <th className="Inventory_th">Number</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="Inventory_tbody">
+                                                    {PostFacilityData.parkInventory.map((item, index) => (
+                                                        <tr className="Inventory_tr" key={index}>
+                                                            <td className="Inventory_td">
+                                                                <select
+                                                                    className="Inventory_select"
+                                                                    value={item.equipmentId}
+                                                                    disabled
+                                                                >
+                                                                    <option value="">Select Equipment</option>
+                                                                    {Invantory.length > 0 && Invantory.map((item, index) => (
+                                                                        <option key={index} value={item.equipmentId}>
+                                                                            {item.description}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+
+                                                            </td>
+                                                            <td className="Inventory_td">
+                                                                <input
+                                                                    type="number"
+                                                                    className="Inventory_input"
+                                                                    value={item.count}
+                                                                    disabled
+                                                                />
+
+                                                            </td>
+
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            {/* ------------------------------------2nd From here --------------------------------- */}
+                            <div className="HostEvent_container">
+                                <div className="HostEvent_Heading">
+                                    <h1 className="verify_name_text">Step-2 (Event Details)</h1>
+                                    <div className="HeadingTitle9">
+                                        <div></div>
+                                        <h2>Ownership Details</h2>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">Facility is owned by BDA</label>
+                                            <select id="input2"
+                                                name="facilityisownedbBDA"
+                                                className="input_padding"
+                                                value={PostFacilityData.facilityisownedbBDA}
+                                                disabled
+                                            >
+                                                <option value="" disabled selected hidden>If yes, ownership details are not required</option>
+                                                <option value="Yes" >Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                            {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                First Name{" "}
+
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="input_padding"
+                                                id="input1"
+                                                placeholder="Enter First Name  "
+                                                name="firstName"
+                                                value={PostFacilityData.firstName}
+                                                disabled
+                                            />
+
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">
+                                                Last Name{" "}
+
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="input2"
+                                                className="input_padding"
+                                                placeholder="Enter Last Name"
+                                                name="lastName"
+                                                value={PostFacilityData.lastName}
+
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Phone Number{" "}
+
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="input_padding"
+                                                id="input1"
+                                                placeholder="Enter Phone Number"
+                                                name="phoneNumber"
+                                                value={PostFacilityData.phoneNumber}
+                                                onChange={handleChange}
+                                                disabled
+                                            />
+
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input2">
+                                                Email Adress{" "}
+
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="input2"
+                                                className="input_padding"
+                                                placeholder="Enter Email Adress"
+                                                name="emailAdress"
+                                                value={PostFacilityData.emailAdress}
+                                                onChange={handleChange}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Owner’s PAN card number{" "}
+                                                {!disabledFields && <span className="text-red-600 font-bold text-xl">*</span>}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="input_padding"
+                                                id="input1"
+                                                placeholder="Enter Owner’s PAN card number "
+                                                name="ownerPanCard"
+                                                value={PostFacilityData.ownerPanCard}
+                                                disabled
+                                            />
+
+                                        </div>
+                                        <div className="HostEvent_Group">
+                                            <label htmlFor="input1">
+                                                Ownership{" "}
+
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="input_padding"
+                                                id="input1"
+                                                placeholder="Enter  Ownership  "
+                                                name="ownership"
+                                                value={PostFacilityData.ownership}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="HostEvent_Row">
+                                        <div className="HostEvent_Group" id="AddressBox">
+                                            <label htmlFor="input1">
+                                                Owner’s Address
+
+                                            </label>
+                                            <input
+                                                type="massage"
+                                                id="input1"
+                                                className="input_padding"
+                                                placeholder="Enter address of your facility"
+                                                name="ownersAddress"
+                                                value={PostFacilityData.ownersAddress}
+                                                onChange={handleChange}
+                                                disabled
+                                            />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="buttons-container">
+                                    <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
+                                    <button type="submit" className="next_button"  >Submit</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 )}
