@@ -545,9 +545,7 @@ const Facility_Reg = () => {
             err.facilityName = "Please Enter the Facility Name";
         } else if (!space_block.test(value.facilityName)) {
             err.facilityName = 'Do not use spaces at beginning';
-        } else if (!Name_Regex.test(value.facilityName)) {
-            err.facilityName = "Please Enter a valid facility name "
-        }
+        } 
         if (!value.longitude) {
             err.longitude = "Please Enter the longitude";
         } else if (!space_block.test(value.longitude)) {
