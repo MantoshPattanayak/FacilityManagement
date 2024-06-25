@@ -318,7 +318,7 @@ const Facility_Reg = () => {
                     facilityArrayOfImages: updatedFileNames
                 }
             }));
-            toast.warning("Removed Additional Facility Images successfully!");
+            toast.warning("Removed Additional Facility Image successfully!");
         }
     };
     // Handle Day -----------------------------------------------------------
@@ -408,7 +408,6 @@ const Facility_Reg = () => {
     // Handle Remove (Row in table)---------------------------------------------
     const handleRemoveRow = (index, e) => {
         e.preventDefault();
-
         // Remove the row from parkInventory
         setPostFacilityData(prevState => ({
             ...prevState,
@@ -466,7 +465,7 @@ const Facility_Reg = () => {
             <div>
                 <p>Are you sure you want to proceed?</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button  onClick={(e) => HandleSubmitFacility(e)} className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
+                    <button onClick={(e) => HandleSubmitFacility(e)} className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
                     <button onClick={() => {
                         toast.dismiss();
                         toast.error('Action cancelled!', {
@@ -537,7 +536,7 @@ const Facility_Reg = () => {
         const PinCode_Regex = /^\d{6}$/;
         const Regex_Other = /^[a-zA-Z,-]+$/;
         const Area_Acre = /^\d+(\.\d+)?$/;
-        const Addition_Infromateion=/^[a-zA-Z\s,\.]+$/;
+        const Addition_Infromateion = /^[a-zA-Z\s,\.]+$/;
         const err = {};
         if (!value.facilityType) {
             err.facilityType = "Please Select the Facility Type";
@@ -666,7 +665,7 @@ const Facility_Reg = () => {
         const Name_Regex = /^[a-zA-Z ]+$/;
         const space_block = /^[^\s][^\n\r]*$/;
         const EMAIL_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        const Addition_Infromateion=/^[a-zA-Z\s,\.]+$/;
+        const Addition_Infromateion = /^[a-zA-Z\s,\.]+$/;
         if (!val.facilityisownedbBDA) {
             error.facilityisownedbBDA = "Please Select if the Facility is Owned by BDA or Not";
         }
@@ -1222,7 +1221,7 @@ const Facility_Reg = () => {
                                                 Max.image file should be less than or eqaul  200 KB.
                                             </p>
                                         </div>
-                                        {formErrors.facilityImageOne && <p className="error text-red-700 font-bold text-lg">{formErrors.facilityImageOne}</p>}
+                                        {formErrors.facilityImageOne && <p className="error text-red-700  text-sm">{formErrors.facilityImageOne}</p>}
                                         {PostFacilityData.fileNames.facilityImageOne && (
                                             <div className="image-preview" id="imagePreview">
                                                 <p>{PostFacilityData.fileNames.facilityImageOne}
@@ -1249,7 +1248,7 @@ const Facility_Reg = () => {
                                             <p className="italic text-sm font-bold text-gray-500">
                                                 Max. Each image should be less than 200 KB.
                                             </p>
-                                            <p className="text-red-500 font-medium">You can only upload up to 5  image for   Additional Facility Images .</p>
+                                            <p className="italic text-sm font-bold text-gray-600">You can only upload up to 5  image for   Additional Facility Images .</p>
                                         </div>
                                         {PostFacilityData.fileNames.facilityArrayOfImages.length > 0 && (
                                             <div className="image-preview" id="imagePreview">
@@ -1509,11 +1508,11 @@ const Facility_Reg = () => {
                 )}
                 {/*----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
                 {currentStep === 3 && (
-                    <form   onSubmit={handleConfirmation}   >
+                    <form onSubmit={handleConfirmation}   >
                         <div className="Verify_FromConatriner">
                             <div className="HostEvent_container">
                                 <div className="HostEvent_Heading">
-                                    <h1 className="verify_name_text">Step-1 (Facility details)</h1>
+                                    <h1 className="verify_name_text">Step-3 (Verify facility details before submit)</h1>
                                     <div className="HeadingTitle9">
                                         <div></div>
                                         <h2>Facility details</h2>
@@ -2057,7 +2056,7 @@ const Facility_Reg = () => {
                             {/* ------------------------------------2nd From here --------------------------------- */}
                             <div className="HostEvent_container">
                                 <div className="HostEvent_Heading">
-                                    <h1 className="verify_name_text">Step-2 (Event Details)</h1>
+
                                     <div className="HeadingTitle9">
                                         <div></div>
                                         <h2>Ownership Details</h2>
