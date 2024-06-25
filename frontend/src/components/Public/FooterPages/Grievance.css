@@ -10,6 +10,7 @@
 
 .heading {
     width: 94vw;
+    display: contents;
 }
 
 .heading h2 {
@@ -19,7 +20,7 @@
     font-weight: bold;
     font-size: 20px;
     height: 9vh;
-    width: 100%;
+    width: 627px;
     display: flex;
     align-items: center;
     padding-left: 2vh;
