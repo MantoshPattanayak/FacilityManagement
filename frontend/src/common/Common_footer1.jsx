@@ -8,7 +8,7 @@ import {
   faWhatsapp,
   faInstagram,
   faFacebook,
-  faTwitter,
+  faXTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
 const CommonFooter1 = () => {
@@ -83,7 +83,7 @@ const CommonFooter1 = () => {
                   className="social-icon facebook-icon"
                 />
                 <FontAwesomeIcon
-                  icon={faTwitter}
+                  icon={faXTwitter}
                   className="social-icon twitter-icon"
                 />
               </div>
