@@ -1,12 +1,13 @@
 // import css---------------------------------------------------------
 import "./Facility_Reg.css";
-// Facility Reg funcation --------------------------------------------
+// Facility Reg funcation ---------------------------------------------
 import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import verfiy_img from "../../../assets/verify_img.png"
-//Toast ----------------------------------------------------------------
+//Toast -----------------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 const Facility_Reg = () => {
@@ -23,6 +24,7 @@ const Facility_Reg = () => {
     const [disabledFields, setDisabledFields] = useState(false);
     // here set the error ---------------------------------------------------
     const [formErrors, setformErrors] = useState({});
+    const [isPlayGround, setIsPlayGround] = useState(false);
     // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
         facilityType: "",
@@ -53,8 +55,8 @@ const Facility_Reg = () => {
         othergame: "",
         additionalDetails: "",
         facilityImage: {  // Facility Image Upload -----------------------
-           facilityImageOne: "",
-           facilityArrayOfImages: [],
+            facilityImageOne: "",
+            facilityArrayOfImages: [],
         },
         parkInventory: [],
         // Post owner data ------------------------------------------------
@@ -67,8 +69,8 @@ const Facility_Reg = () => {
         ownership: "",
         ownersAddress: "",
         fileNames: {  // New state to store file names ----------------------
-          facilityImageOne: "",
-          facilityArrayOfImages: []
+            facilityImageOne: "",
+            facilityArrayOfImages: []
         }
     });
     // here call the api for get the initial data ---------------------------
@@ -91,9 +93,12 @@ const Facility_Reg = () => {
         e.preventDefault();
         const validationErrors = Validation(PostFacilityData);
         const validationErrors1 = Validation2(PostFacilityData)
+        const validationErrors2 = Validationinvantory(PostFacilityData)
+        console.log("Handle Submit invatory error", validationErrors2)
         setformErrors({ ...validationErrors, ...validationErrors1 });
-        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0) {
+        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0 && Object.keys(validationErrors2).length === 0) {
             try {
+                let facilityisownedbBDAValue = PostFacilityData.facilityisownedbBDA === "Yes" ? 1 : 0;
                 let res = await axiosHttpClient("Facility_Reg_Api", "post", {
                     facilityType: PostFacilityData.facilityType || null,
                     facilityName: PostFacilityData.facilityName || null,
@@ -117,7 +122,7 @@ const Facility_Reg = () => {
                     facilityImage: PostFacilityData.facilityImage || null,
                     parkInventory: PostFacilityData.parkInventory || null,
                     // Owner Data ---------------------------------------------------------------
-                    facilityisownedbBDA: PostFacilityData.facilityisownedbBDA || null,
+                    facilityisownedbBDA: facilityisownedbBDAValue,
                     firstName: PostFacilityData.firstName || null,
                     lastName: PostFacilityData.lastName || null,
                     phoneNumber: PostFacilityData.phoneNumber || null,
@@ -134,6 +139,8 @@ const Facility_Reg = () => {
         } else {
             setformErrors(validationErrors)
             setformErrors(validationErrors1)
+            setformErrors(validationErrors2)
+
         }
     }
     // handle Post Data------------------------------------------------------
@@ -142,9 +149,7 @@ const Facility_Reg = () => {
         const { name, value, files } = e.target;
         if (name === "facilityImageOne" || name === "facilityArrayOfImages") {
             handleImageUpload(name, files);
-
         } else if (name === "facilityisownedbBDA") {
-
             const isOwnerByBDA = value === "Yes";
             setPostFacilityData({ ...PostFacilityData, [name]: value });
             // Set disabled state for specific fields
@@ -163,10 +168,12 @@ const Facility_Reg = () => {
                 toast.info("No fields are required !");
                 setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
             }
-
-        } else {
+        } else if(name==="facilityType") {
             // Handle other input changes
             setPostFacilityData({ ...PostFacilityData, [name]: value });
+            setIsPlayGround(Number(value) === 2); // Check true and False
+        }else{
+             setPostFacilityData({ ...PostFacilityData, [name]: value });
         }
         // Run validation on input change
         const validationErrors = Validation({ ...PostFacilityData, [name]: value });
@@ -264,7 +271,7 @@ const Facility_Reg = () => {
             // const fileLabel = document.createElement("p");
             fileLabel.textContent = fileName;
             container.appendChild(fileLabel);
-            console.log("here file Names", fileName, fileLabel)
+
         });
     };
     // Handle Day -----------------------------------------------------------
@@ -349,18 +356,29 @@ const Facility_Reg = () => {
             ...prevState,
             parkInventory: [...prevState.parkInventory, { equipmentId: "", count: "" }]
         }));
+        toast.success("Row added successfully!");
     };
     // Handle Remove (Row in table)---------------------------------------------
     const handleRemoveRow = (index, e) => {
-        e.preventDefault()
+        e.preventDefault();
+
+        // Remove the row from parkInventory
         setPostFacilityData(prevState => ({
             ...prevState,
-            parkInventory: prevState.parkInventory.filter((_, i) => i !== index)  // index=  is excluded from the new array.means index
-            // here i is current index\
-            // _ current element, which is not used here.✈
+            parkInventory: prevState.parkInventory.filter((_, i) => i !== index)
         }));
 
-        console.log("here index", index)
+        // Remove errors associated with the removed row from formErrors
+        const updatedErrors = { ...formErrors };
+
+        // Delete errors for equipmentId and count at the specific index
+        delete updatedErrors[`equipmentId${index}`];
+        delete updatedErrors[`count${index}`];
+
+        // Update formErrors state with the updatedErrors
+        setformErrors(updatedErrors);
+        toast.warning("Row removed successfully!");
+        console.log("Removed row at index", index);
     };
     //handleChnage of handleEquipmentChange
     const handleEquipmentChange = (index, field, value) => {
@@ -399,8 +417,11 @@ const Facility_Reg = () => {
         e.preventDefault()
         // Perform validation before moving to the next step
         const validationErrors = Validation(PostFacilityData);
+        const validationErrors2 = Validationinvantory(PostFacilityData)
+        console.log("here error of Invantory".validationErrors2)
         setformErrors(validationErrors);
-        if (Object.keys(validationErrors).length === 0) {
+        setformErrors(validationErrors2);
+        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors2).length === 0) {
             // If there are no validation errors, move to the next step
             setCurrentStep(currentStep + 1);
             toast.success('Successfully moved to the next step!');
@@ -425,7 +446,7 @@ const Facility_Reg = () => {
             toast.error('Please fill out all required fields.');
         }
     };
-    // Prev Button -------------------------xxx------------------------------------
+    // Prev Button ----------------------------------------------------------------
     const prevStep = (e) => {
         e.preventDefault()
         setCurrentStep(currentStep - 1);
@@ -439,6 +460,7 @@ const Facility_Reg = () => {
         const latitude_regex = /^[-+]?(?:[0-8]?\d(?:\.\d+)?|90(?:\.0+)?)$/;
         const PinCode_Regex = /^\d{6}$/;
         const Regex_Other = /^[a-zA-Z,-]+$/;
+        const Area_Acre=/^\d+(\.\d+)?$/;
         const err = {};
         if (!value.facilityType) {
             err.facilityType = "Please Select the Facility Type";
@@ -483,7 +505,7 @@ const Facility_Reg = () => {
             err.area = "Please Enter the Area";
         } else if (!space_block.test(value.area)) {
             err.area = 'Do not use spaces at beginning'
-        } else if (!Name_Regex.test(value.area)) {
+        } else if (!Area_Acre.test(value.area)) {
             err.area = 'Please Enter a vaild Area'
         }
         if (!value.operatingHoursFrom) {
@@ -534,7 +556,7 @@ const Facility_Reg = () => {
                 err.othereventCategory = "Do not use spaces at beginning"
             }
         }
-        if (value.game.length === 0) {
+        if (value.facilityType === "2" && value.game.length === 0) {
             err.game = "Please Select the Game"
         }
         if (value.othergame) {
@@ -623,10 +645,33 @@ const Facility_Reg = () => {
         }
         return error;
     };
+    // Vaildation of Invantory ---------------------------------------------------
+    const Validationinvantory = (data) => {
+        let errors = {};
+        const Number_item_regex= /^(?:[1-9][0-9]?|100)$/;
+        const equipmentIds = new Set();
+        data.parkInventory.forEach((item, index) => {
+            if (!item.equipmentId) {
+                errors[`equipmentId${index}`] = "Equipment is required.";
+            } else if (equipmentIds.has(item.equipmentId)) {
+                errors[`equipmentId${index}`] = "Each equipment must be unique.";
+            } else {
+                equipmentIds.add(item.equipmentId);
+            }
+            if(!item.count){
+                errors[`count${index}`]="Please Enter a Number of item/Equipment"
+            }else if (!Number_item_regex.test(item.count)){
+                errors[`count${index}`]="Please enter a valid number between 1 and 100."
+            }
+           
+        });
+        return errors;
+    };
     //useEffect (Update data)-------------------------------------------------------
-       useEffect(() => {
+    useEffect(() => {
         GetFacilityInitailData();
     }, [formErrors]);
+    
     return (
         <div>
             <div className="all_From_conatiner">
@@ -659,7 +704,7 @@ const Facility_Reg = () => {
                                                 FacilityTypeData?.map((name, index) => {
                                                     return (
                                                         <option key={index} value={name.facilitytypeId}>
-                                                            {name.code}
+                                                            {name.description}
                                                         </option>
                                                     );
                                                 })}
@@ -738,14 +783,14 @@ const Facility_Reg = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">
-                                            Pin{" "}
+                                        Pincode{" "}
                                             <span className="text-red-600 font-bold text-xl">*</span>
                                         </label>
                                         <input
                                             type="text"
                                             className="input_padding"
                                             id="input1"
-                                            placeholder="Enter Pin  "
+                                            placeholder="Enter Pincode "
                                             name="pin"
                                             value={PostFacilityData.pin}
                                             onChange={handleChange}
@@ -754,7 +799,7 @@ const Facility_Reg = () => {
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">
-                                            Area{" "}
+                                            Area Acre{" "}
                                             <span className="text-red-600 font-bold text-xl">*</span>
                                         </label>
                                         <input
@@ -1013,6 +1058,7 @@ const Facility_Reg = () => {
                                         {formErrors.othereventCategory && <p className="error text-red-700">{formErrors.othereventCategory}</p>}
                                     </div>
                                 </div>
+                                 {isPlayGround && (
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
@@ -1043,6 +1089,8 @@ const Facility_Reg = () => {
                                         {formErrors.game && <p className="error text-red-700">{formErrors.game}</p>}
                                     </div>
                                 </div>
+                                 )}
+                                  {isPlayGround && (
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
@@ -1060,6 +1108,7 @@ const Facility_Reg = () => {
                                         {formErrors.othergame && <p className="error text-red-700">{formErrors.othergame}</p>}
                                     </div>
                                 </div>
+                                  )}
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
@@ -1133,7 +1182,11 @@ const Facility_Reg = () => {
                                 <div className="Pakr_inventory_form_main_Conatiner">
                                     <h1 className="Park_Inventory_text">Park Inventory</h1>
                                     <div className="Table_Inventory">
+                                        <div className="Add_row_Button">
+                                            <button className="Inventory_add_button" onClick={handleAddRow}>  Add Row <FontAwesomeIcon icon={faPlus} className="Add_icon" /> </button>
+                                        </div>
                                         <table className="Inventory_table">
+
                                             <thead className="Inventory_thead">
                                                 <tr className="Inventory_tr">
                                                     <th className="Inventory_th">Items/Equipment</th>
@@ -1157,6 +1210,9 @@ const Facility_Reg = () => {
                                                                     </option>
                                                                 ))}
                                                             </select>
+                                                            {formErrors[`equipmentId${index}`] && (
+                                                                <span className="error">{formErrors[`equipmentId${index}`]}</span>
+                                                            )}
                                                         </td>
                                                         <td className="Inventory_td">
                                                             <input
@@ -1165,20 +1221,24 @@ const Facility_Reg = () => {
                                                                 value={item.count}
                                                                 onChange={(e) => handleEquipmentChange(index, 'count', e.target.value)}
                                                             />
+                                                            {formErrors[`count${index}`] && (
+                                                                <span className="error">{formErrors[`count${index}`]}</span>
+                                                            )}
                                                         </td>
                                                         <td className="Inventory_td">
                                                             <button
                                                                 className="Inventory_button"
                                                                 onClick={(e) => handleRemoveRow(index, e)}
                                                             >
-                                                                Remove
+                                                                <FontAwesomeIcon icon={faMinus} className="Remove_icon" />
                                                             </button>
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
-                                        <button className="Inventory_add_button" onClick={handleAddRow}>Add Row</button>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -1214,7 +1274,7 @@ const Facility_Reg = () => {
                                             onChange={handleChange}
                                         >
                                             <option value="" disabled selected hidden>If yes, ownership details are not required</option>
-                                            <option value="Yes">Yes</option>
+                                            <option value="Yes" >Yes</option>
                                             <option value="No">No</option>
                                         </select>
                                         {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
