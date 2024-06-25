@@ -1067,7 +1067,7 @@ const Landing = () => {
             <img
               className="h-80"
               src={currentInnerImage}
-              alt={exploreNewActivities[selectedActivity].game}
+              alt={exploreNewActivities[selectedActivity]?.game}
             />
             <div className="exploreNewAct-secondDiv">
               {exploreNewActivities?.length > 0 &&

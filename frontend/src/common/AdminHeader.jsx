@@ -10,12 +10,11 @@ import { setLanguage, setLanguageContent } from "../utils/languageSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function PublicHeader() {
   const [showMediaIcon, setShowMediaIcon] = useState(false);
   const [GetCardCount, setGetCardCount] = useState([]);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState();
   const [refreshOnLogOut, setRefreshOnLogOut] = useState(Date.now());
 
   const dispatch = useDispatch();
@@ -23,9 +22,10 @@ export default function PublicHeader() {
   const language = useSelector((state) => state.language.language);
   const languageContent = useSelector((state) => state.language.languageContent);
   const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
+  const isAdminLoggedIn = useSelector((state) => state.auth.isAdminLoggedIn) || sessionStorage?.getItem("isAdminLoggedIn");
+  const menuData = isAdminLoggedIn ? useSelector((state) => state.auth.accessRoutes) || JSON.parse(sessionStorage.getItem('accessRoutes')) : null;
 
   useEffect(() => {
-    setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0);
     if (!isLanguageContentFetched) {
       getWebContent();
     }
@@ -48,19 +48,6 @@ export default function PublicHeader() {
     dispatch(setLanguage(languageCode));
   }
 
-  async function GetTotalNumberofCart() {
-    try {
-      let res = await axiosHttpClient('View_Card_UserId', 'get');
-      setGetCardCount(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    GetTotalNumberofCart();
-  }, []);
-
   function handleLogout(e) {
     dispatch(Logout());
     async function logOutAPI() {
@@ -71,7 +58,7 @@ export default function PublicHeader() {
           autoClose: 3000,
           onClose: () => {
             setTimeout(() => {
-              navigate("/");
+              navigate("/admin-login");
             }, 1000);
           },
         });
@@ -86,38 +73,6 @@ export default function PublicHeader() {
   function handleMenuToggle() {
     setShowMediaIcon(prevState => !prevState);
   }
-
-  const menuData = [
-    {
-      id: "9",
-      name: "Dashboard",
-      orderIn: 1,
-      path: null,
-      children: [
-        { id: "10", name: "Admin Dashboard", orderIn: 1, path: "/Dashboard/AdminDashboard" }
-      ]
-    },
-    {
-      id: "7",
-      name: "Activity",
-      orderIn: 2,
-      path: "",
-      children: []
-    },
-    {
-      id: "1",
-      name: "UAC",
-      orderIn: 3,
-      path: "",
-      children: [
-        { id: "2", name: "Resource", orderIn: 1, path: "/UAC/Resources/ListOfResources" },
-        { id: "3", name: "Role", orderIn: 2, path: "/UAC/Role/ListOfRoles" },
-        { id: "4", name: "User", orderIn: 3, path: "/UAC/Users/ListOfUsers" },
-        { id: "5", name: "Role-Resource Access Control", orderIn: 4, path: "/UAC/RoleResource/View" },
-        { id: "6", name: "User-Resource Access Control", orderIn: 5, path: "/UAC/UserResource/View" }
-      ]
-    }
-  ];
 
   const [hoveredMenu, setHoveredMenu] = useState(null);
 
@@ -143,20 +98,11 @@ export default function PublicHeader() {
         </div>
         <div className="navbar-2">
           <ul className={showMediaIcon ? "menu_links mobile_menu_links show" : "menu_links"} >
-            {/* <li>
-              <Link to={'/Home'}>HOME</Link>
-            </li>
-            <li>
-              <Link to={'/MDM'}>MDM</Link>
-            </li>
-            <li>
-              <Link to={'/Reports'}>REPORTS</Link>
-            </li> */}
-            {menuData.map((menuItem) => {
+            {menuData?.length > 0 && menuData?.map((menuItem) => {
               if (menuItem.name === "Dashboard" && menuItem.children.length > 0) {
                 return menuItem.children.map((child) => (
                   <li key={child.id}>
-                    <Link to={child.path}>{child.name}</Link>
+                    <Link to={child.path}>Dashboard</Link>
                   </li>
                 ));
               } else {
@@ -173,7 +119,7 @@ export default function PublicHeader() {
                 );
               }
             })}
-            {isUserLoggedIn == 1 ? (
+            {/* {isAdminLoggedIn == 1 ? (
               <li>
                 <Link to={'/Profile'}>
                   <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
@@ -185,8 +131,8 @@ export default function PublicHeader() {
                   LOGIN
                 </Link>
               </li>
-            )}
-            {isUserLoggedIn == 1 && (
+            )} */}
+            {/* {isAdminLoggedIn == 1 && (
               <li>
                 <Link className="relative flex items-center" to="/BookParks/Add_Card">
                   {GetCardCount.count > 0 && (
@@ -195,10 +141,10 @@ export default function PublicHeader() {
                   <span><FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> Cart</span>
                 </Link>
               </li>
-            )}
-            {isUserLoggedIn == 1 && (
+            )} */}
+            {isAdminLoggedIn == 1 && (
               <li>
-                <Link onClick={handleLogout} to={'/'}>
+                <Link onClick={handleLogout}>
                   <FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;
                 </Link>
               </li>
