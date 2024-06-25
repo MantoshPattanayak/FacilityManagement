@@ -10,7 +10,7 @@ router.get("/getTariffById/:tariffId", authenticateToken,tariffData.getTariffByI
 
 router.put("/updateTariff", authenticateToken,tariffData.updateTariff);
 
-router.get("/viewTariff", authenticateToken,tariffData.viewTariff);
+router.post("/viewTariff", authenticateToken,tariffData.viewTariff);
 
 
 module.exports = router;
