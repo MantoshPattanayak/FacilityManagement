@@ -24,7 +24,6 @@ const AdminLogin = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const location = useLocation();
-  const facilityId = new URLSearchParams(location.search).get("facilityId");
   const [otpGenerated, setOtpGenerated] = useState(false);
   const [timer, setTimer] = useState(0); // Initial timer value in seconds
 
@@ -164,7 +163,7 @@ const AdminLogin = () => {
 
   return (
     <div className="Main_container_Login">
-      <PublicHeader />
+      <AdminHeader />
 
       <div className="signup-container">
         <div className="flex justify-center"><h1 className="font-bold">Admin login</h1></div>
