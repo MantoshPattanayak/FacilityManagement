@@ -392,6 +392,10 @@ const initialDataFetch = async (req,res)=>{
 }
 
 
+const updateFacility = async(req,res)=>{
+
+}
+
 
 
 module.exports= {

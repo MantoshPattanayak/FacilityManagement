@@ -12,12 +12,18 @@ const useractivitymasters = db.useractivitymasters;
 const cart = db.cart
 const cartItem = db.cartItem
 const useractivitypreferences = db.userActivityPreference
+let port = process.env.PORT
 const { Op } = require('sequelize');
 var QRCode = require('qrcode')
-
+const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+const { v4: uuidv4 } = require('uuid');
+let uploadDir = process.env.UPLOAD_DIR
 // events booking table
 const eventBooking = db.eventBookings;
 const moment = require('moment');
+const fs = require('fs')
+const path = require('path')
+let eventactivites = db.eventActivities
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -209,6 +215,7 @@ let parkBooking = async (req, res) => {
             facilityPreference
         });
         let userId = req.user?.userId || 1;
+        let statusId = 1;
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -263,11 +270,48 @@ let parkBooking = async (req, res) => {
                     }, { transaction });
                 }
 
+                let findFacilityInformation = await facilities.findOne({
+                    where:{
+                        [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+                    }
+                })
+                let title = findFacilityInformation.facilityname;
+                let bookingRef = newParkBooking.bookingReference;
+                let location = findFacilityInformation.address;
+                let date = newParkBooking.bookingDate;
+                let time = newParkBooking.startDate;
+                let cost = newParkBooking.amount;
+                let totalMembers = newParkBooking.totalMembers;
+                let combinedData = `${newParkBooking.facilityBookingId},${entityTypeId},${entityId}`
+
+                let qrData = await QRCode.toDataURL(combinedData)
+                console.log('to generate pdf line 286',qrData)
+                const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
+                console.log(pdfBytes,'pdf bytes')
+                    // generate pdf and share the link
+                    // Generate a unique filename
+                    const uniqueId = uuidv4();
+                    
+                    const fileName = `${uniqueId}.pdf`;
+                    console.log('fileName')
+                    const filePath = path.join(uploadDir, 'ticketUploads', fileName);
+                    console.log('filePath')
+                    // Ensure the uploads directory exists
+                    if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
+                        fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
+                    }
+
+                    // Write the PDF bytes to a file
+                    fs.writeFileSync(filePath, pdfBytes);
+
+                const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
+
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Park booking done successfully',
-                    data: newParkBooking
+                    data: newParkBooking,
+                    shareableLink:shareableLink
                 })
             }
             catch (error) {
@@ -310,11 +354,47 @@ let parkBooking = async (req, res) => {
 
                 console.log('newPlaygroundBooking', newPlaygroundBooking);
 
+                let findFacilityInformation = await facilities.findOne({
+                    where:{
+                        [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+                    }
+                })
+                let title = findFacilityInformation.facilityname;
+                let bookingRef = newPlaygroundBooking.bookingReference;
+                let location = findFacilityInformation.address;
+                let date = newPlaygroundBooking.bookingDate;
+                let time = newPlaygroundBooking.startDate;
+                let cost = newPlaygroundBooking.amount;
+                let totalMembers = newPlaygroundBooking.totalMembers;
+                let combinedData = `${newPlaygroundBooking.facilityBookingId},${entityTypeId},${entityId}`
+                let qrData = await QRCode.toDataURL(combinedData)
+                console.log('to generate pdf line ',qrData)
+                const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
+                console.log(pdfBytes,'pdf bytes')
+                    // generate pdf and share the link
+                    // Generate a unique filename
+                    const uniqueId = uuidv4();
+                    
+                    const fileName = `${uniqueId}.pdf`;
+                    console.log('fileName')
+                    const filePath = path.join(uploadDir, 'ticketUploads', fileName);
+                    console.log('filePath')
+                    // Ensure the uploads directory exists
+                    if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
+                        fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
+                    }
+
+                    // Write the PDF bytes to a file
+                    fs.writeFileSync(filePath, pdfBytes);
+
+                const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
+
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Playground booking done successfully',
-                    data: newPlaygroundBooking
+                    data: newPlaygroundBooking,
+                    shareableLink:shareableLink
                 })
             }
             catch (error) {
@@ -358,6 +438,40 @@ let parkBooking = async (req, res) => {
                 }, { transaction });
 
                 console.log('eventBooking', eventBookingData);
+                let findEventInformation = await eventactivites.findOne({
+                    where:{
+                        [Op.and]:[{statusId:statusId},{eventId:eventId}]
+                    }
+                })
+                let title = findEventInformation.eventName;
+                let bookingRef = eventBookingData.bookingReference;
+                let location = findEventInformation.locationName;
+                let date = eventBookingData.bookingDate;
+                let time = eventBookingData.startDate;
+                let cost = eventBookingData.amount;
+                let totalMembers = eventBookingData.totalMembers;
+                let combinedData = `${eventBookingData.facilityBookingId},${entityTypeId},${entityId}`
+                let qrData = await QRCode.toDataURL(combinedData)
+                console.log('to generate pdf line ',qrData)
+                const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
+                console.log(pdfBytes,'pdf bytes')
+                    // generate pdf and share the link
+                    // Generate a unique filename
+                    const uniqueId = uuidv4();
+                    
+                    const fileName = `${uniqueId}.pdf`;
+                    console.log('fileName')
+                    const filePath = path.join(uploadDir, 'ticketUploads', fileName);
+                    console.log('filePath')
+                    // Ensure the uploads directory exists
+                    if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
+                        fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
+                    }
+
+                    // Write the PDF bytes to a file
+                    fs.writeFileSync(filePath, pdfBytes);
+
+                const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
 
                 await transaction.commit();
 
@@ -830,7 +944,138 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
         })
     }
 }
+let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMembers, qrData }) =>{
+    console.log('fhjsfjskljfklsjflksjlkfjsljfslkjfklkahjgsfs')
+    console.log(title, bookingRef, location, date, time, cost, totalMembers,'all parameters data')
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 400]);
+    const { width, height } = page.getSize();
+    const fontSize = 12;
+  
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    console.log("881")
+    // Add event title
+    page.drawText(title, {
+      x: 50,
+      y: height - 40,
+      size: fontSize + 8,
+      font: boldFont,
+      color: rgb(0, 0, 0),
+    });
+    console.log('890')
+    // Add booking reference
+    page.drawText(`Booking Ref# ${bookingRef}`, {
+      x: 50,
+      y: height - 70,
+      size: fontSize,
+      font: boldFont,
+      color: rgb(0, 0, 0),
+    });
+    console.log('899')
 
+    // Add location
+    page.drawText(`Location:\n${location}`, {
+      x: 50,
+      y: height - 100,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+      lineHeight: 15,
+    });
+    console.log('910')
+
+    // Add date and time
+    page.drawText(`Date`, {
+      x: 50,
+      y: height - 150,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('920')
+
+    page.drawText(`${date}`, {
+      x: 30,
+      y: height - 165,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('929')
+    page.drawText(`Time`, {
+      x: 150,
+      y: height - 150,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('937')
+
+    page.drawText(`${time}`, {
+      x: 150,
+      y: height - 165,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('946')
+
+    // Add cost and total members
+    page.drawText(`Cost`, {
+      x: 50,
+      y: height - 200,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('956')
+
+    page.drawText(`Rs ${cost} /-`, {
+      x: 50,
+      y: height - 215,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('965')
+
+    page.drawText(`Total Member(s)`, {
+      x: 150,
+      y: height - 200,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log('974')
+
+    page.drawText(`${totalMembers}`, {
+      x: 150,
+      y: height - 215,
+      size: fontSize,
+      font: font,
+      color: rgb(0, 0, 0),
+    });
+    console.log("983")
+
+    // Generate QR code
+    const qrCodeImage = qrData;
+    const qrCodeImageBytes = Buffer.from(qrCodeImage.split(',')[1], 'base64');
+    const qrCodeImageEmbed = await pdfDoc.embedPng(qrCodeImageBytes);
+    const qrCodeDims = qrCodeImageEmbed.scale(0.34);
+    console.log('990',qrCodeDims)
+    // Add QR code
+    page.drawImage(qrCodeImageEmbed, {
+      x: 50,
+      y: height - 300,
+      width: qrCodeDims.width,
+      height: qrCodeDims.height,
+    });
+  
+    // Serialize the PDF document to bytes (Uint8Array)
+    console.log('pdf doc',pdfDoc)
+    return await pdfDoc.save();
+  }
 
 let generateQRCode = async(req,res)=>{
     try {
@@ -863,7 +1108,7 @@ let generateQRCode = async(req,res)=>{
         })
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
         console.log('QRCODE', fetchBookingDetails)
-
+        
         return res.status(statusCode.SUCCESS.code).json({
             message:"Here is the QR code",
             bookingDetails:fetchBookingDetails
