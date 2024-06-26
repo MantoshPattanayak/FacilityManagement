@@ -39,7 +39,7 @@ const api = {
    //User-Resource
    USER_RESOURCE_DATALOAD_API: '/userResource/dataLoad', //get
    USER_RESOURCE_CREATE_API: '/userResource/insertUserResource', //post
-   USER_RESOURCE_VIEW_API: '/userResource/viewUserResource', //get
+   USER_RESOURCE_VIEW_API: '/userResource/viewUserResource', //post
    USER_RESOURCE_AUTOSUGGEST_API: '/userResource/autoSuggestionUserResource', //get
    //User
    ADMIN_USER_CREATE_API: '/userDetails/createUser', //post
