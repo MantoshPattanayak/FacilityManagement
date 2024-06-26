@@ -24,6 +24,8 @@ const moment = require('moment');
 const fs = require('fs')
 const path = require('path')
 let eventactivites = db.eventActivities
+let file = db.file;
+let fileAttachment = db.fileattachment
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -202,6 +204,78 @@ function addHoursToTime(timeString, hoursToAdd) {
  * @param {*} res 
  * @returns 
  */
+
+// ticket upload code start
+let uploadTicket = async(title, bookingRef, location, date, time, cost, totalMembers,combinedData, facilityBookingId,userId)=>{
+    try {
+        let qrData = await QRCode.toDataURL(combinedData)
+
+        let createdDt = new Date();
+        let updatedDt = new Date();
+        console.log(title, bookingRef, location, date, time, cost, totalMembers,combinedData,'all data')
+        const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
+        console.log(pdfBytes,'pdf bytes')
+            // generate pdf and share the link
+            // Generate a unique filename
+            const uniqueId = uuidv4();
+            
+            const fileName = `${uniqueId}.pdf`;
+            let fileType = "pdf"
+            console.log('fileName')
+            const filePath = path.join(uploadDir, 'ticketUploads', fileName);
+            console.log('filePath')
+            // Ensure the uploads directory exists
+            if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
+                fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
+            }
+
+            // Write the PDF bytes to a file
+            fs.writeFileSync(filePath, pdfBytes);
+
+        const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
+        console.log('jlfjlsdjfljd')
+        let entityType = 'facilityBooking'
+        let filePurpose = 'ticketBooking'
+        // add this to file and file attachment
+        // insert to file table and file attachment table
+         let url = `/ticketUploads/${fileName}`
+        let createFile = await file.create({
+            fileName: fileName,
+            fileType:fileType ,
+            url: url,
+            statusId: 1,
+            createdDt: createdDt,
+            updatedDt: updatedDt,
+            createdBy:userId,
+            updatedBy:userId
+          });
+          console.log('createFile', createFile)
+          if (!createFile) {
+            return errors.push(`Failed to create  ticket file`);
+          } else {
+            // Insert into file attachment table
+            let createFileAttachment = await fileAttachment.create({
+              entityId: facilityBookingId,
+              entityType: entityType,
+              fileId: createFile.fileId,
+              statusId: 1,
+              filePurpose: filePurpose
+            });
+
+            console.log('fjljdflds')
+            if (!createFileAttachment) {
+              return errors.push(`Failed to create file attachment for facility file at index ${i}`);
+            }
+            return  {shareableLink:shareableLink};
+          }
+       
+    } catch (err) {
+        return {
+            error:"Something went wrong"
+        }
+    }
+}
+// ticket upload code end
 let parkBooking = async (req, res) => {
     try {
         let {
@@ -275,45 +349,32 @@ let parkBooking = async (req, res) => {
                         [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
                     }
                 })
+               
+              
                 let title = findFacilityInformation.facilityname;
-                let bookingRef = newParkBooking.bookingReference;
+                let bookingRef = newParkBooking.dataValues.bookingReference;
                 let location = findFacilityInformation.address;
                 let date = bookingData.bookingDate;
-                let time = newParkBooking.startDate;
-                let cost = newParkBooking.amount;
-                let totalMembers = newParkBooking.totalMembers;
-                let combinedData = `${newParkBooking.facilityBookingId},${entityTypeId},${entityId}`
+                let time = newParkBooking.dataValues.startDate;
+                let cost = newParkBooking.dataValues.amount;
+                let totalMembers = newParkBooking.dataValues.totalMembers;
+                let combinedData = `${newParkBooking.dataValues.facilityBookingId},${entityTypeId},${entityId}`
+                let facilityBookingId = newParkBooking.dataValues.facilityBookingId
+                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
 
-                let qrData = await QRCode.toDataURL(combinedData)
-
-                console.log('to generate pdf line 286', date, 'jlfsdlflssfsfs',bookingData.bookingDate,'fdfdfd', typeof(date))
-
-                const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
-                console.log(pdfBytes,'pdf bytes')
-                    // generate pdf and share the link
-                    // Generate a unique filename
-                    const uniqueId = uuidv4();
-                    
-                    const fileName = `${uniqueId}.pdf`;
-                    console.log('fileName')
-                    const filePath = path.join(uploadDir, 'ticketUploads', fileName);
-                    console.log('filePath')
-                    // Ensure the uploads directory exists
-                    if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
-                        fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
-                    }
-
-                    // Write the PDF bytes to a file
-                    fs.writeFileSync(filePath, pdfBytes);
-
-                const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
+                if(ticketUploadAndGeneratePdf?.error){
+                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                        message:ticketUploadAndGeneratePdf.error
+                    })
+                }
+               
 
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Park booking done successfully',
                     data: newParkBooking,
-                    shareableLink:shareableLink
+                    shareableLink:ticketUploadAndGeneratePdf.shareableLink
                 })
             }
             catch (error) {
@@ -369,35 +430,24 @@ let parkBooking = async (req, res) => {
                 let cost = newPlaygroundBooking.amount;
                 let totalMembers = newPlaygroundBooking.totalMembers;
                 let combinedData = `${newPlaygroundBooking.facilityBookingId},${entityTypeId},${entityId}`
-                let qrData = await QRCode.toDataURL(combinedData)
-                console.log('to generate pdf line ',qrData)
-                const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
-                console.log(pdfBytes,'pdf bytes')
-                    // generate pdf and share the link
-                    // Generate a unique filename
-                    const uniqueId = uuidv4();
-                    
-                    const fileName = `${uniqueId}.pdf`;
-                    console.log('fileName')
-                    const filePath = path.join(uploadDir, 'ticketUploads', fileName);
-                    console.log('filePath')
-                    // Ensure the uploads directory exists
-                    if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
-                        fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
-                    }
+                let facilityBookingId = newParkBooking.dataValues.facilityBookingId
 
-                    // Write the PDF bytes to a file
-                    fs.writeFileSync(filePath, pdfBytes);
+                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
 
-                const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
+                if(ticketUploadAndGeneratePdf?.error){
+                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                        message:ticketUploadAndGeneratePdf.error
+                    })
+                }
+               
 
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Playground booking done successfully',
                     data: newPlaygroundBooking,
-                    shareableLink:shareableLink
-                })
+                    shareableLink:ticketUploadAndGeneratePdf.shareableLink
+                    })
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
@@ -453,33 +503,23 @@ let parkBooking = async (req, res) => {
                 let cost = eventBookingData.amount;
                 let totalMembers = eventBookingData.totalMembers;
                 let combinedData = `${eventBookingData.facilityBookingId},${entityTypeId},${entityId}`
-                let qrData = await QRCode.toDataURL(combinedData)
-                console.log('to generate pdf line ',qrData)
-                const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
-                console.log(pdfBytes,'pdf bytes')
-                    // generate pdf and share the link
-                    // Generate a unique filename
-                    const uniqueId = uuidv4();
-                    
-                    const fileName = `${uniqueId}.pdf`;
-                    console.log('fileName')
-                    const filePath = path.join(uploadDir, 'ticketUploads', fileName);
-                    console.log('filePath')
-                    // Ensure the uploads directory exists
-                    if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
-                        fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
-                    }
+                let facilityBookingId = newParkBooking.dataValues.facilityBookingId
 
-                    // Write the PDF bytes to a file
-                    fs.writeFileSync(filePath, pdfBytes);
+                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
 
-                const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
+                if(ticketUploadAndGeneratePdf?.error){
+                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                        message:ticketUploadAndGeneratePdf.error
+                    })
+                }
+               
 
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Event booking done successfully',
-                    data: eventBooking
+                    data: eventBooking,
+                    shareableLink:ticketUploadAndGeneratePdf.shareableLink
                 })
             }
             catch (error) {
@@ -1112,6 +1152,8 @@ let generateQRCode = async(req,res)=>{
     try {
         let {bookingId} = req.body
         let statusId = 1;
+        let entityType = 'facilityBooking'
+        let filePurpose = 'ticketBooking'
         if(!bookingId){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide required details"
@@ -1122,6 +1164,7 @@ let generateQRCode = async(req,res)=>{
                 facilityBookingId:bookingId
             }
         })
+        console.log('fetch facility', fetchFacilityId)
         let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
 
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
@@ -1137,8 +1180,10 @@ let generateQRCode = async(req,res)=>{
                 }
             ]
         })
+        let fetchPdfImage = await sequelize.query(`select url, entityType from amabhoomi.files f inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
-        console.log('QRCODE', fetchBookingDetails)
+        fetchBookingDetails.dataValues.url = fetchPdfImage[0].url
+        console.log('fetchPdfImage', fetchPdfImage)
         
         return res.status(statusCode.SUCCESS.code).json({
             message:"Here is the QR code",
