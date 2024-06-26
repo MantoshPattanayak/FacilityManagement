@@ -278,14 +278,16 @@ let parkBooking = async (req, res) => {
                 let title = findFacilityInformation.facilityname;
                 let bookingRef = newParkBooking.bookingReference;
                 let location = findFacilityInformation.address;
-                let date = newParkBooking.bookingDate;
+                let date = bookingData.bookingDate;
                 let time = newParkBooking.startDate;
                 let cost = newParkBooking.amount;
                 let totalMembers = newParkBooking.totalMembers;
                 let combinedData = `${newParkBooking.facilityBookingId},${entityTypeId},${entityId}`
 
                 let qrData = await QRCode.toDataURL(combinedData)
-                console.log('to generate pdf line 286',qrData)
+
+                console.log('to generate pdf line 286', date, 'jlfsdlflssfsfs',bookingData.bookingDate,'fdfdfd', typeof(date))
+
                 const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
                 console.log(pdfBytes,'pdf bytes')
                     // generate pdf and share the link
@@ -362,7 +364,7 @@ let parkBooking = async (req, res) => {
                 let title = findFacilityInformation.facilityname;
                 let bookingRef = newPlaygroundBooking.bookingReference;
                 let location = findFacilityInformation.address;
-                let date = newPlaygroundBooking.bookingDate;
+                let date =  bookingData.bookingDate;
                 let time = newPlaygroundBooking.startDate;
                 let cost = newPlaygroundBooking.amount;
                 let totalMembers = newPlaygroundBooking.totalMembers;
@@ -446,7 +448,7 @@ let parkBooking = async (req, res) => {
                 let title = findEventInformation.eventName;
                 let bookingRef = eventBookingData.bookingReference;
                 let location = findEventInformation.locationName;
-                let date = eventBookingData.bookingDate;
+                let date =  bookingData.bookingDate;
                 let time = eventBookingData.startDate;
                 let cost = eventBookingData.amount;
                 let totalMembers = eventBookingData.totalMembers;
