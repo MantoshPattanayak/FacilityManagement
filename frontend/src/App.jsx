@@ -83,6 +83,7 @@ import Facility_Reg from "./components/Admin/Facility/Facility_Reg";
 import AdminHeader from "./common/AdminHeader";
 // import AdminHeader from "./common/AdminHeader";
 import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
+import EventDetailsPage from './components/Admin/Activity/ReviewEventDetails/EventDetailsPage'
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -198,6 +199,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ReviewEventDetailsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Activity/EventDetailsPage"
+                element={
+                  <ProtectedRoute>
+                    <EventDetailsPage />
                   </ProtectedRoute>
                 }
               />
@@ -430,7 +439,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-                          <Route
+              <Route
                 path="/common/AdminHeader"
                 element={
                   <ProtectedRoute>
