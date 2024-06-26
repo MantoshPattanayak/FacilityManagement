@@ -7,15 +7,12 @@ import axiosHttpClient from '../../../utils/axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './Facility_ViewList.css';
 import { useCallback } from 'react';
-
 export default function Facility_ViewList() {
-
     let navigate = useNavigate();
     const [tableData, setTableData] = useState([]);
     const [searchOptions, setSearchOptions] = useState([]);
     const [givenReq, setGivenReq] = useState();
-
-    // API call to fetch list of registered facilities
+    // API call to fetch list of registered facilities -------------------------
     async function fetchFacilityList(givenReq = null) {
         try {
             let res = await axiosHttpClient('View_Park_Data', 'post', {
@@ -23,63 +20,55 @@ export default function Facility_ViewList() {
                 facilityTypeId: null,
             });
             setTableData(res.data.data);
-            console.log(res.data.data);
+            console.log("Here Response of Facility List Data", res);
         }
         catch (error) {
             console.error(error);
         }
     }
-
-    // function to encrypt required data
+    // function to encrypt required data ----------------------------------------
     function encryptDataId(id) {
         let res = encryptData(id);
         return res;
     }
-
-    // function to manage API calls while user search input entry
+    // function to manage API calls while user search input entry ---------------
     function debounce(fn, delay) {
         let timeoutId;
         return function (...args) {
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(() => {
-            fn(...args);
-          }, delay);
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                fn(...args);
+            }, delay);
         };
     }
-    
-    //Debounced fetchFacilityList function while searching
+    //Debounced fetchFacilityList function while searching -------------------------
     const debouncedFetchFacilityList = useCallback(debounce(fetchFacilityList, 1000), []);
-
-    // on page load, fetch data and set title
+    // on page load, fetch data and set title --------------------------------------
     useEffect(() => {
         document.title = 'ADMIN | AMA BHOOMI';
         fetchFacilityList();
     }, []);
-
-    // on search input, call fetch data function
+    // on search input, call fetch data function-------------------------------------
     useEffect(() => {
-        if(givenReq != null)
+        if (givenReq != null)
             debouncedFetchFacilityList(givenReq);
     }, [givenReq, debouncedFetchFacilityList]);
 
     return (
-        <>
+        <div className='ListOfUsers1'>
             <AdminHeader />
-            <div className="Main_Conatiner_table_FacilityReg">
+            <div className="Main_Conatiner_table">
                 <div className='table-heading'>
-                    <h2 className="table-heading">List of Registered Facilities</h2>
+                    <h2 className="table-heading">List of Facility Details</h2>
                 </div>
-
                 <div className="search_text_conatiner">
-                    <button className='search_field_button' onClick={() => navigate('/facility-registration')}>Register new facility</button>
-                    <input type="text" className="search_input_field outline-none" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+                    <button className='search_field_button' onClick={() => navigate('/facility-registration')}>Facility Registration</button>
+                    <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
                     {/* <SearchDropdown /> */}
                 </div>
-
                 <div className="table_Container">
                     <table >
                         <thead>
-                            {/* <tr> */}
                             <th scope="col">Sl No.</th>
                             <th scope="col">Facility Name</th>
                             <th scope="col">Facility Address</th>
@@ -88,7 +77,6 @@ export default function Facility_ViewList() {
                             <th scope="col">Status</th>
                             <th scope="col">View</th>
                             <th scope="col">Edit</th>
-                            {/* </tr> */}
                         </thead>
                         <tbody >
                             {
@@ -129,6 +117,6 @@ export default function Facility_ViewList() {
                     </table>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
