@@ -5,7 +5,7 @@
     font-weight: bold;
     font-size: 20px;
     height: 9vh;
-    width: 627px;
+    width: 830px;
     display: flex;
     align-items: center;
     /* justify-content: center; */
@@ -41,7 +41,7 @@
 
 
 .specialevent-search_text_conatiner {
-    width: 627px;
+    width: 830px;
     display: flex;
     justify-content: space-between;
     padding: 0;
@@ -65,7 +65,7 @@
 .specialevent-eventdetails-tab {
     display: flex;
     justify-content: space-between;
-    width: 627px;
+    width: 830px;
     gap: 40px;
     margin-bottom: 10px;
 }
@@ -101,7 +101,7 @@
     align-items: center;
     justify-content: flex-start;
     gap: 24px;
-    width: 630px;
+    width: 830px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     height: 90vh;
     overflow-y: scroll;
@@ -109,7 +109,7 @@
 
 .specialevent-eventdetails-carddetails {
     /* border: 1px solid #B9B9B97D; */
-    width: 627px;
+    width: 800px;
     height: 144px;
     border-radius: 10px;
     padding: 12px;
@@ -145,7 +145,7 @@
     font-size: 11px;
 }
 
-.specialevent-eventdetails-eventbutton {
+.Event-Details-btn {
     display: flex;
     align-items: center;
     justify-content: center;

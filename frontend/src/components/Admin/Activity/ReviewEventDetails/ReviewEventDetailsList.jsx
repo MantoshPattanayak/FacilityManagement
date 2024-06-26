@@ -1,14 +1,16 @@
 import React from "react";
 import AdminHeader from "../../../../common/AdminHeader";
 import Footer from "../../../../common/Footer";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faClock } from "@fortawesome/free-solid-svg-icons";
 import "./ReviewEventDetailsList.css";
 import eventPhoto from "../../../../assets/ama_bhoomi_bg.jpg";
 import axiosHttpClient from "../../../../utils/axios";
-
+// Import  Crypto js for entry and decrpty the data -----------------------------------
+// import { decryptData, encryptData } from "../../../utils/encryptData";
+import { decryptData, encryptData } from "../../../../utils/encryptData";
 export default function ReviewEventDetailsList() {
   const tabList = [
     {
@@ -25,69 +27,34 @@ export default function ReviewEventDetailsList() {
     },
   ];
   const [tab, setTab] = useState(tabList);
-  const eventDetailsData = [
-    {
-      eventName: "International ",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "09:35 AM",
-      createdDate: "2024-04-12T09:35:23.410",
-    },
-    {
-      eventName: " Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "09:45 AM",
-      createdDate: "2024-04-15T09:45:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "09:55 AM",
-      createdDate: "2024-04-15T09:55:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "10:05 AM",
-      createdDate: "2024-04-15T10:05:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "11:15 AM",
-      createdDate: "2024-04-14T11:15:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "11:25 AM",
-      createdDate: "2024-04-14T11:25:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "11:35 AM",
-      createdDate: "2024-04-14T11:35:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "11:45 AM",
-      createdDate: "2024-04-14T11:45:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "11:55 AM",
-      createdDate: "2024-04-14T11:55:23.410",
-    },
-    {
-      eventName: "International Odissi Dance Festival",
-      eventAddress: "Janata Maidan, Chandrasekharpur, Bhubaneswar",
-      bookedTiming: "12:05 PM",
-      createdDate: "2024-04-14T12:05:23.410",
-    },
-  ];
-  const [eventDetails, setEventDetails] = useState(eventDetailsData);
+
+  const [eventDetails, setEventDetails] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
+  //here Location / crypto and navigate the page---------------
+  const location = useLocation();
+  const viewId = decryptData(
+    new URLSearchParams(location.search).get("viewId")
+  );
+  const action = new URLSearchParams(location.search).get("action");
+  const navigate = useNavigate();
+  // here Get the data --------------------------------
+  async function GetDisplayReviewEvents() {
+    try {
+      let res = await axiosHttpClient(
+        "REVIEW_EVENTS_VIEWLIST_API",
+        "post", {
+          statusInput: 10
+        }
+      );
+      console.log("Get data of ResourceEvent", res);
+    } catch (err) {
+      console.log("here Error", err);
+    }
+  }
+
+  useEffect(() => {
+    GetDisplayReviewEvents();
+  }, []);
 
   //fetch data of event details
   const fetchInitialData = async () => {
@@ -109,7 +76,7 @@ export default function ReviewEventDetailsList() {
   //     console.log("useEffect triggered");
   //     fetchInitialData();
   //   }, [tab]);
-
+// Cal the time and data --------------------------------
   function calculateTime(dataTime) {
     let currentDateTime = new Date();
     let inputDateTime = new Date(dataTime);
@@ -136,7 +103,11 @@ export default function ReviewEventDetailsList() {
     setTab(tabListCopy);
     return;
   }
-  const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
+ // Encrpt data---------------------- 
+  function encryptDataId(id) {
+    let res = encryptData(id);
+    return res;
+  }
 
   useEffect(() => {
     // Filter eventDetails based on selectedDate on change
@@ -152,7 +123,7 @@ export default function ReviewEventDetailsList() {
       });
       setEventDetails(filteredEvents);
     } else {
-      setEventDetails(eventDetailsData); // Reset to all events if no date selected
+      // setEventDetails(); // Reset to all events if no date selected
     }
   }, [selectedDate]);
 
@@ -234,15 +205,23 @@ export default function ReviewEventDetailsList() {
                       </div>
                     </div>
                     {/* <div><button className='eventdetails-eventbutton' onClick={navigateToDetailsPage(event.eventName)}>Event details</button></div> */}
-                    <Link
-                      className="specialevent-eventdetails-eventbutton"
-                      to={{
-                        pathname: "/Activity/EventDetailsPage",
-                        search: "?eventId=456",
-                      }}
+                    <button className="Event-Details-btn"
+                      onClick={() => navigate("/Activity/EventDetailsPage")}
                     >
                       Event Details
-                    </Link>
+                    </button>
+                    <div>
+                    <Link
+                          key={table_index}
+                          to={{
+                            pathname: "/Activity/EventDetailsPage",
+                            search: `?viewId=${encryptDataId(viewId)}`,
+                          }}
+                        >
+                          Details
+                        </Link>
+                      </div>
+
                   </div>
                 </div>
               );
