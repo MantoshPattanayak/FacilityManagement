@@ -944,11 +944,12 @@ let viewCartItemsWRTCartItemId = async(req,res)=>{
         })
     }
 }
+
 let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMembers, qrData }) =>{
     console.log('fhjsfjskljfklsjflksjlkfjsljfslkjfklkahjgsfs')
     console.log(title, bookingRef, location, date, time, cost, totalMembers,'all parameters data')
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([600, 400]);
+    const page = pdfDoc.addPage([400, 400]);
     const { width, height } = page.getSize();
     const fontSize = 12;
   
@@ -956,105 +957,133 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
     const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
     console.log("881")
     // Add event title
+    page.drawRectangle({
+        x: 10,
+        y: 10,
+        width: width - 20,
+        height: height - 20,
+        borderColor: rgb(0.2, 0.2, 0.2),
+        borderWidth: 1,
+        borderStyle: 'dotted',
+    });
+        // Center the title
+        const titleFontSize = 15;
+        const titleWidth = boldFont.widthOfTextAtSize(title, titleFontSize);
+        const titleX = (width - titleWidth) / 2;
+    
     page.drawText(title, {
-      x: 50,
-      y: height - 40,
-      size: fontSize + 8,
-      font: boldFont,
-      color: rgb(0, 0, 0),
+        x: titleX,
+        y: height - 50,
+        size: titleFontSize,
+        font: boldFont,
+        color: rgb(0.2, 0.2, 0.2),
     });
     console.log('890')
     // Add booking reference
     page.drawText(`Booking Ref# ${bookingRef}`, {
-      x: 50,
-      y: height - 70,
-      size: fontSize,
-      font: boldFont,
-      color: rgb(0, 0, 0),
+        x: 50,
+        y: height - 80,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.25, 0.28, 0.3),
     });
     console.log('899')
+ 
+    page.drawLine({
+        start: { x: 40, y: height - 95 },
+        end: { x: width - 40, y: height - 95 },
+        thickness: 1,
+        color: rgb(0.36, 0.4, 0.45),
+    });
+    
 
     // Add location
-    page.drawText(`Location:\n${location}`, {
-      x: 50,
-      y: height - 100,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
-      lineHeight: 15,
+    page.drawText('Location:', {
+        x: 50,
+        y: height - 120,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.26, 0.29, 0.31),
     });
-    console.log('910')
+    page.drawText(location, {
+        x: 50,
+        y: height - 140,
+        size: 12,
+        font: boldFont,
+        color: rgb(0.11, 0.11, 0.11),
+    });
+
 
     // Add date and time
     page.drawText(`Date`, {
-      x: 50,
-      y: height - 150,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: 50,
+        y: height - 180,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.32, 0.34, 0.35),
     });
     console.log('920')
 
     page.drawText(`${date}`, {
-      x: 30,
-      y: height - 165,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: 50,
+        y: height - 200,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.11, 0.11, 0.11),
     });
     console.log('929')
     page.drawText(`Time`, {
-      x: 150,
-      y: height - 150,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: width - 150,
+        y: height - 180,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.31, 0.33, 0.34),
     });
     console.log('937')
 
     page.drawText(`${time}`, {
-      x: 150,
-      y: height - 165,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: width - 150,
+        y: height - 200,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.11, 0.11, 0.11),
     });
     console.log('946')
 
     // Add cost and total members
     page.drawText(`Cost`, {
-      x: 50,
-      y: height - 200,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: 50,
+        y: height - 240,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.32, 0.34, 0.35),
     });
     console.log('956')
 
     page.drawText(`Rs ${cost} /-`, {
-      x: 50,
-      y: height - 215,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: 50,
+        y: height - 260,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.11, 0.11, 0.11),
     });
     console.log('965')
 
     page.drawText(`Total Member(s)`, {
-      x: 150,
-      y: height - 200,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+        x: width - 150,
+        y: height - 240,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.31, 0.33, 0.34),
     });
     console.log('974')
 
-    page.drawText(`${totalMembers}`, {
-      x: 150,
-      y: height - 215,
-      size: fontSize,
-      font: font,
-      color: rgb(0, 0, 0),
+    page.drawText(totalMembers.toString(), {
+        x: width - 120,
+        y: height - 260,
+        size: 15,
+        font: boldFont,
+        color: rgb(0.11, 0.11, 0.11),
     });
     console.log("983")
 
@@ -1062,14 +1091,14 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
     const qrCodeImage = qrData;
     const qrCodeImageBytes = Buffer.from(qrCodeImage.split(',')[1], 'base64');
     const qrCodeImageEmbed = await pdfDoc.embedPng(qrCodeImageBytes);
-    const qrCodeDims = qrCodeImageEmbed.scale(0.34);
+    const qrCodeDims = qrCodeImageEmbed.scale(0.6);
     console.log('990',qrCodeDims)
     // Add QR code
     page.drawImage(qrCodeImageEmbed, {
-      x: 50,
-      y: height - 300,
-      width: qrCodeDims.width,
-      height: qrCodeDims.height,
+        x: 50,
+        y: height - 340,
+        width: qrCodeDims.width,
+        height: qrCodeDims.height,
     });
   
     // Serialize the PDF document to bytes (Uint8Array)

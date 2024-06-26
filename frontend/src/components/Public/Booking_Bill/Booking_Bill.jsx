@@ -2,7 +2,7 @@
 import "./Booking_Bill.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
-import { faFacebook, faWhatsapp, faInstagram,faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faWhatsapp, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
 import { useState, useEffect } from "react";
@@ -82,11 +82,11 @@ const Bokking_Bill = () => {
         GeneratePdf()
     }
 
-// Toggle Popopup-
-const ToggleSharePopup=()=>{
-    setShowSharePopup(!showSharePopup)
-}
-const shareUrl = "https://example.com"; // Replace this with your actual URL
+    // Toggle Popopup-
+    const ToggleSharePopup = () => {
+        setShowSharePopup(!showSharePopup)
+    }
+    const shareUrl = "https://example.com"; // Replace this with your actual URL
     const title = "Check out this ticket!"; // Replace this with your desired title
     // formate of date and Time ------------------
     function formatTime(time24) {
@@ -143,31 +143,31 @@ const shareUrl = "https://example.com"; // Replace this with your actual URL
                 </div>
                 <div className="share_Popup_icon">
 
-             
-                <span className="Share_icon" onClick={ToggleSharePopup}>
-                    <FontAwesomeIcon icon={faShareAlt} className="share-icon_font" />
-                </span>
-                {showSharePopup && (
-                <div className="share-popup">
-                    <FacebookShareButton url={shareUrl} quote={title}>
-                        <FontAwesomeIcon icon={faFacebook} className="social-media-icon_fa" />
-                    </FacebookShareButton>
-                    <WhatsappShareButton url={shareUrl}>
-                        <FontAwesomeIcon icon={faWhatsapp} className="social-media-icon_what " />
-                    </WhatsappShareButton>
-                    <InstapaperShareButton url={shareUrl} title={title}>
-                        <FontAwesomeIcon icon={faInstagram} className="social-media-icon_insta" />
-                    </InstapaperShareButton>
-                    <EmailShareButton url={shareUrl} title={title}>
-                        <FontAwesomeIcon icon={faEnvelope} className="social-media-icon_email" />
-                    </EmailShareButton>
-                    <TwitterShareButton url={shareUrl} title={title}>
-                        <FontAwesomeIcon icon={faTwitter} className="social-media-icon_twitter" />
-                    </TwitterShareButton>
-                    {/* Add more share buttons as needed */}
+
+                    <span className="Share_icon" onClick={ToggleSharePopup}>
+                        <FontAwesomeIcon icon={faShareAlt} className="share-icon_font" />
+                    </span>
+                    {showSharePopup && (
+                        <div className="share-popup">
+                            <FacebookShareButton url={shareUrl} quote={title}>
+                                <FontAwesomeIcon icon={faFacebook} className="social-media-icon_fa" />
+                            </FacebookShareButton>
+                            <WhatsappShareButton url={shareUrl}>
+                                <FontAwesomeIcon icon={faWhatsapp} className="social-media-icon_what " />
+                            </WhatsappShareButton>
+                            <InstapaperShareButton url={shareUrl} title={title}>
+                                <FontAwesomeIcon icon={faInstagram} className="social-media-icon_insta" />
+                            </InstapaperShareButton>
+                            <EmailShareButton url={shareUrl} title={title}>
+                                <FontAwesomeIcon icon={faEnvelope} className="social-media-icon_email" />
+                            </EmailShareButton>
+                            <TwitterShareButton url={shareUrl} title={title}>
+                                <FontAwesomeIcon icon={faTwitter} className="social-media-icon_twitter" />
+                            </TwitterShareButton>
+                            {/* Add more share buttons as needed */}
+                        </div>
+                    )}
                 </div>
-            )}
-           </div>
                 <div className="ticket-header">
                     <h2>Booking Ref#</h2>
                     <p>{Bill_Data.bookingReference}</p>
