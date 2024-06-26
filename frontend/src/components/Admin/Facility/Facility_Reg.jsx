@@ -7,6 +7,8 @@ import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import verfiy_img from "../../../assets/verify_img.png"
+// import header and Footer-----------------------------
+import AdminHeader from '../../../common/AdminHeader'
 //Toast -----------------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -750,6 +752,7 @@ const Facility_Reg = () => {
     return (
         <div>
             <div className="all_From_conatiner">
+                <AdminHeader/>
                 {currentStep === 1 && (
                     <form className="event-host_1st_Page">
                         <div className="HostEvent_container">
