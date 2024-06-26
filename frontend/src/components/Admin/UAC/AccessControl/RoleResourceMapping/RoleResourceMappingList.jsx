@@ -18,7 +18,7 @@ const RoleResourceMappingList = () => {
   async function fetchRoleResourceMappingListData() {
     try {
       let res = await axiosHttpClient("ROLE_RESOURCE_VIEW_API", "get");
-      setTableData(res.data.data); // Assuming res.data.data contains the array of objects
+      setTableData(res.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -56,7 +56,7 @@ const RoleResourceMappingList = () => {
         </div>
 
         <div className="table_Container">
-          <table>
+          <table className="rrmlTh">
             <thead>
               <tr>
                 <th scope="col">Role Name</th>
@@ -75,9 +75,21 @@ const RoleResourceMappingList = () => {
                       <td data-label="Role Name">{data.role}</td>
                       <td data-label="Resource Name">{data.resourceName}</td>
                       <td data-label="Parent Resource Name">
-                        {data.parentResourceName}
+                        {data.parentResourceName
+                          ? data.parentResourceName
+                          : "NA"}
                       </td>
-                      <td data-label="Status">{data.status}</td>
+                      <td
+                        className={`${
+                          data.status === 1
+                            ? "active-status-rrml"
+                            : "Inactive-status-rrml"
+                        }`}
+                        data-label="Status"
+                      >
+                        {data.status === 1 && "Active"}
+                        {data.status === 2 && "Inactive"}
+                      </td>
                       <td data-label="View">
                         <Link
                           to={{
