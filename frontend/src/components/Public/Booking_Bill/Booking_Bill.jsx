@@ -23,7 +23,9 @@ import {
 const Bokking_Bill = () => {
     const [Bill_Data, setBill_Data] = useState([])
     const [showSharePopup, setShowSharePopup] = useState(false);
-
+    //   here share Url on social Media ---------------------------------
+    const[shareUrl, setshareUrl]=useState("")
+    const [title, setTitle] = useState(["Check out this ticket!"]);
     const bookingId = decryptData(
         new URLSearchParams(location.search).get("bookingId")
     );
@@ -34,9 +36,13 @@ const Bokking_Bill = () => {
 
                 bookingId: bookingId
             })
+            const dynamicUrlPart = res.data.bookingDetails.url; 
             console.log("here Response of Bill Data", res)
             setBill_Data(res.data.bookingDetails)
-
+          
+            setshareUrl(`http://localhost:8000/static${dynamicUrlPart}`)
+            setTitle(`           Check out ${res.data.bookingDetails.facility.facilityname} ticket!                          `)
+           
         }
         catch (err) {
             console.log("Here error of Get Bill Data", err)
@@ -86,8 +92,8 @@ const Bokking_Bill = () => {
     const ToggleSharePopup = () => {
         setShowSharePopup(!showSharePopup)
     }
-    const shareUrl = "https://example.com"; // Replace this with your actual URL
-    const title = "Check out this ticket!"; // Replace this with your desired title
+
+  
     // formate of date and Time ------------------
     function formatTime(time24) {
         //format 24 hour time as 12 hour time
@@ -149,10 +155,10 @@ const Bokking_Bill = () => {
                     </span>
                     {showSharePopup && (
                         <div className="share-popup">
-                            <FacebookShareButton url={shareUrl} quote={title}>
+                            <FacebookShareButton url={shareUrl} title={title}>
                                 <FontAwesomeIcon icon={faFacebook} className="social-media-icon_fa" />
                             </FacebookShareButton>
-                            <WhatsappShareButton url={shareUrl}>
+                            <WhatsappShareButton url={shareUrl} title={title}>
                                 <FontAwesomeIcon icon={faWhatsapp} className="social-media-icon_what " />
                             </WhatsappShareButton>
                             <InstapaperShareButton url={shareUrl} title={title}>

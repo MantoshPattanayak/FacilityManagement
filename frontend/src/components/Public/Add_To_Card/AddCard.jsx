@@ -87,7 +87,7 @@ const Add_Card = () => {
                             <div className="p-5" key={cardItem.cartItemId}>
                                 <div className="card_item_conatiner_heading9">
                                     <h1 className="text_heading9">{cardItem.facilityTypeName}</h1>
-                                   <button onClick={(e) =>  UpdateCart(e, cardItem.cartItemId)}> <h1 className="icon9" > <FontAwesomeIcon icon={faTrash} className="delete-icon" /></h1></button> 
+                                   <button onClick={(e) =>  UpdateCart(e, cardItem.cartItemId)}> <h1 className="icon9" > <FontAwesomeIcon icon={faTrash} className="delete-icon22" /></h1></button> 
                                 </div>
                                 <div className="Cont_card9">
                                     <span className="Location_Name_icon9">
