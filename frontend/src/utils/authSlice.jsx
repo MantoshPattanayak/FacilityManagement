@@ -38,6 +38,7 @@ const authSlice = createSlice({
             state.refreshToken = null;
             state.user = null;
             state.sid = null;
+            state.accessRoutes = null;
             // here Clear token from storage -------------------------------------------
             sessionStorage.clear();
             localStorage.clear();
