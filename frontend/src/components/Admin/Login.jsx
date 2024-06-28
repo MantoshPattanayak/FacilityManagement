@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../Public/Login.css";
 import AdminHeader from "../../common/AdminHeader";
-import Footer from "../../common/Footer";
 // Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import PublicHeader from "../../common/PublicHeader";
-// EncrptData here --------------------------------------------------------
+// EncrptData here --------------------------------------------
 import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -16,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { adminLogin } from "../../utils/authSlice";
 
 const AdminLogin = () => {
-  // UseState for Post the data---------------------------------
+  // UseState for Post the data--------------------------------
   const [LogingDataPost, setLogingDataPost] = useState({
     Mobile: "",
     otp: "",
@@ -81,7 +79,7 @@ const AdminLogin = () => {
           let homeRoute = res.data.authorizedResource.filter((route) => { return route.name == 'Dashboard' })[0].children[0].path;
           if(!homeRoute){
             toast.error('User access not provided!');
-            return;
+            // return;
           }
 
           // pop-up to show successful login
@@ -114,7 +112,6 @@ const AdminLogin = () => {
     console.log("LogingDataPost", LogingDataPost);
     return;
   }
-
 
   // Validation here ----------------------------------------
   const validation = (value) => {
