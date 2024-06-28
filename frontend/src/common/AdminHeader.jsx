@@ -7,74 +7,68 @@ import { faPowerOff, faUser, faBars, faShoppingCart } from "@fortawesome/free-so
 import axiosHttpClient from "../utils/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage, setLanguageContent } from "../utils/languageSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 
-export default function PublicHeader() {
+export default function AdminHeader() {
   const [showMediaIcon, setShowMediaIcon] = useState(false);
-  const [GetCardCount, setGetCardCount] = useState([]);
-  const [refreshOnLogOut, setRefreshOnLogOut] = useState(Date.now());
-
+  const [hoveredMenu, setHoveredMenu] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const language = useSelector((state) => state.language.language);
-  const languageContent = useSelector((state) => state.language.languageContent);
-  const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
+  const location = useLocation();
+  const [refresh, setRefresh] = useState(false);
+  // const language = useSelector((state) => state.language.language);
+  // const languageContent = useSelector((state) => state.language.languageContent);
+  // const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
   const isAdminLoggedIn = useSelector((state) => state.auth.isAdminLoggedIn) || sessionStorage?.getItem("isAdminLoggedIn");
-  const menuData = isAdminLoggedIn ? useSelector((state) => state.auth.accessRoutes) || JSON.parse(sessionStorage.getItem('accessRoutes')) : null;
+  const [menuData, setMenuData] = useState([]);
+  let accessRoutes = useSelector((state) => state.auth.accessRoutes);
 
-  useEffect(() => {
-    if (!isLanguageContentFetched) {
-      getWebContent();
-    }
-  }, [isLanguageContentFetched, language]);
+  // useEffect(() => {
+  //   if (!isLanguageContentFetched) {
+  //     getWebContent();
+  //   }
+  // }, [isLanguageContentFetched, language]);
 
-  async function getWebContent() {
-    try {
-      const res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
-      if (Array.isArray(res.data.languageContentResultData)) {
-        dispatch(setLanguageContent(res.data.languageContentResultData));
-      } else {
-        console.log('valid language content data:', res.data.languageContentResultData);
-      }
-    } catch (error) {
-      console.error('Error fetching language content:', error);
-    }
-  }
+  // async function getWebContent() {
+  //   try {
+  //     const res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
+  //     if (Array.isArray(res.data.languageContentResultData)) {
+  //       dispatch(setLanguageContent(res.data.languageContentResultData));
+  //     } else {
+  //       console.log('valid language content data:', res.data.languageContentResultData);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching language content:', error);
+  //   }
+  // }
 
-  function setLanguageCode(languageCode) {
-    dispatch(setLanguage(languageCode));
-  }
+  // function setLanguageCode(languageCode) {
+  //   dispatch(setLanguage(languageCode));
+  // }
 
-  function handleLogout(e) {
-    dispatch(Logout());
-    async function logOutAPI() {
+  async function handleLogout(e) {
+    // async function logOutAPI() {
       try {
         let res = await axiosHttpClient('LOGOUT_API', 'post');
         console.log(res.data);
-        toast.success('Logged out successfully!!', {
-          autoClose: 3000,
-          onClose: () => {
-            setTimeout(() => {
-              navigate("/admin-login");
-            }, 1000);
-          },
-        });
+        toast.success('Logged out successfully!!');
+        dispatch(Logout());
+        setRefresh(prevState => !prevState);
+        sessionStorage.clear();
+        localStorage.clear();
       }
       catch (error) {
         console.error(error);
       }
-    }
-    logOutAPI();
+    // }
+    // logOutAPI();
   }
 
   function handleMenuToggle() {
     setShowMediaIcon(prevState => !prevState);
   }
-
-  const [hoveredMenu, setHoveredMenu] = useState(null);
 
   const renderSubMenu = (children) => {
     if (children.length === 0) return null;
@@ -89,6 +83,14 @@ export default function PublicHeader() {
     );
   };
 
+  useEffect(() => {
+    setMenuData(accessRoutes || JSON.parse(sessionStorage.getItem('accessRoutes')));
+  }, [refresh]);
+
+  useEffect(() => {
+    setMenuData(accessRoutes || JSON.parse(sessionStorage.getItem('accessRoutes')));
+  }, [])
+
   return (
     <header className="header-admin" id="header-public">
       {/* <ToastContainer /> */}
@@ -98,7 +100,7 @@ export default function PublicHeader() {
         </div>
         <div className="navbar-2">
           <ul className={showMediaIcon ? "menu_links mobile_menu_links show" : "menu_links"} >
-            {menuData?.length > 0 && menuData?.map((menuItem) => {
+            {isAdminLoggedIn == 1 && menuData?.length > 0 && menuData?.map((menuItem) => {
               if (menuItem.name === "Dashboard" && menuItem.children.length > 0) {
                 return menuItem.children.map((child) => (
                   <li key={child.id}>
@@ -144,7 +146,7 @@ export default function PublicHeader() {
             )} */}
             {isAdminLoggedIn == 1 && (
               <li>
-                <Link onClick={handleLogout}>
+                <Link onClick={handleLogout} to={'/admin-login'}>
                   <FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;
                 </Link>
               </li>
