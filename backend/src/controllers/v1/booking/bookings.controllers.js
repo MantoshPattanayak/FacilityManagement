@@ -331,10 +331,17 @@ let parkBooking = async (req, res) => {
                     statusId: 1,
                     paymentstatus: '',
                     createdBy: userId
-                }, { transaction });
+                }, { transaction, returning: true  });
 
-                console.log('newParkBooking', newParkBooking);
+                console.log(newParkBooking.facilityBookingId, 'newParkBooking data created' );
+                let findTheBookingDetails = await facilitybookings.findOne({
+                    where:{
+                       [Op.and]: [{facilityBookingId:newParkBooking.facilityBookingId},{statusId:statusId}]
+                    },
+                     transaction 
+                })
 
+                console.log('facilityBookingBookingReference find ', findTheBookingDetails)
                 for (let i = 0; i < bookingData.activityPreference.length; i++) {
                     const newParkBookingActivityPreference = await userbookingactivities.create({
                         facilityBookingId: newParkBooking.dataValues.facilityBookingId,
@@ -352,7 +359,7 @@ let parkBooking = async (req, res) => {
                
               
                 let title = findFacilityInformation.facilityname;
-                let bookingRef = newParkBooking.dataValues.bookingReference;
+                let bookingRef = findTheBookingDetails.dataValues.bookingReference;
                 let location = findFacilityInformation.address;
                 let date = bookingData.bookingDate;
                 let time = newParkBooking.dataValues.startDate;
@@ -422,15 +429,21 @@ let parkBooking = async (req, res) => {
                         [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
                     }
                 })
+                let findTheBookingDetails = await facilitybookings.findOne({
+                    where:{
+                       [Op.and]: [{facilityBookingId:newPlaygroundBooking.facilityBookingId},{statusId:statusId}]
+                    },
+                     transaction 
+                })
                 let title = findFacilityInformation.facilityname;
-                let bookingRef = newPlaygroundBooking.bookingReference;
+                let bookingRef = findTheBookingDetails.bookingReference;
                 let location = findFacilityInformation.address;
                 let date =  bookingData.bookingDate;
                 let time = newPlaygroundBooking.startDate;
                 let cost = newPlaygroundBooking.amount;
                 let totalMembers = newPlaygroundBooking.totalMembers;
                 let combinedData = `${newPlaygroundBooking.facilityBookingId},${entityTypeId},${entityId}`
-                let facilityBookingId = newParkBooking.dataValues.facilityBookingId
+                let facilityBookingId = newPlaygroundBooking.dataValues.facilityBookingId
 
                 let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
 
@@ -495,15 +508,21 @@ let parkBooking = async (req, res) => {
                         [Op.and]:[{statusId:statusId},{eventId:eventId}]
                     }
                 })
+                let findTheBookingDetails = await facilitybookings.findOne({
+                    where:{
+                       [Op.and]: [{facilityBookingId:eventBookingData.facilityBookingId},{statusId:statusId}]
+                    },
+                     transaction 
+                })
                 let title = findEventInformation.eventName;
-                let bookingRef = eventBookingData.bookingReference;
+                let bookingRef = findTheBookingDetails.bookingReference;
                 let location = findEventInformation.locationName;
                 let date =  bookingData.bookingDate;
                 let time = eventBookingData.startDate;
                 let cost = eventBookingData.amount;
                 let totalMembers = eventBookingData.totalMembers;
                 let combinedData = `${eventBookingData.facilityBookingId},${entityTypeId},${entityId}`
-                let facilityBookingId = newParkBooking.dataValues.facilityBookingId
+                let facilityBookingId = eventBookingData.dataValues.facilityBookingId
 
                 let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
 
