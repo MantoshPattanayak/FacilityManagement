@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../Dashboard/AdminDashboard.css';
 import AdminHeader from '../../../common/AdminHeader';
 import Footer from '../../../common/Footer';
@@ -33,6 +33,10 @@ const AdminDashboard = () => {
         // Add your chart options here
 
     };
+
+    useEffect(() => {
+
+    }, [])
 
     return (
         <div>

@@ -167,6 +167,9 @@
     width: auto;
   }
 }
+.delete-icon22{
+  color: #fff;
+}
 
 @media (min-width: 768px) {
   .button-379 {
