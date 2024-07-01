@@ -45,9 +45,12 @@ body {
 /* Add this CSS */
 .iconPlayApple {
     position: fixed;
-    top: 40vh;  /* Adjust this value as needed */
-    right: 10px;  /* Adjust this value as needed */
-    z-index: 1000;  /* Ensure it is above other content */
+    top: 40vh;
+    /* Adjust this value as needed */
+    right: 10px;
+    /* Adjust this value as needed */
+    z-index: 1000;
+    /* Ensure it is above other content */
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -55,14 +58,17 @@ body {
     background-color: white;
     padding: 10px;
     border-radius: 16px;
-  }
-  
+}
 
-  .iconPlayApple img {
-    margin: 0 5px;  /* Add some space between icons */
-    width: 40px;  /* Adjust the width of the icons */
-    height: auto;  /* Maintain aspect ratio */
-  }
+
+.iconPlayApple img {
+    margin: 0 5px;
+    /* Add some space between icons */
+    width: 40px;
+    /* Adjust the width of the icons */
+    height: auto;
+    /* Maintain aspect ratio */
+}
 
 .adImg {
     height: 20vh;
