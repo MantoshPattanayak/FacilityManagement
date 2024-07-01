@@ -16,65 +16,71 @@ let createTariff = async (req,res)=>{
         console.log('req body',req.body)
         let userId = req.user.userId
         let statusId = 1;
-        let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
-        if(!facilityId && !operatingHoursFrom && !operatingHoursTo && !dayWeek && !amount && !validityFrom && !validityTo){
+        let {facilityTariff} = req.body
+        let tariffCreationData;
+        // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
+
+        if(facilityTariff.length>0 || facilityTariff.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek  || !tariffData.amount  || !tariffData.validityFrom  || !tariffData.validityTo})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"
             })
         }
-
-        let tariffCreationData = {
-            facilityId:facilityId,
-            operatingHoursFrom:operatingHoursFrom,
-            operatingHoursTo:operatingHoursTo,
-            sun:dayWeek.sun,
-            mon:dayWeek.mon,
-            tue:dayWeek.tue,
-            wed:dayWeek.wed,
-            thu:dayWeek.thu,
-            fri:dayWeek.fri,
-            sat:dayWeek.sat,
-            amount:amount,
-            validityFrom:validityFrom,
-            validityTo:validityTo,
-            createdBy:userId,
-            createdDt:new Date(),
-            updatedBy:userId,
-            updatedDt:new Date(),
-            statusId:statusId
-        }
-        let findIfTheFacilityId = await facilityTariff.findOne({
-            where: {
-                [Op.and]: [
-                    {
-                        validityFrom: {
-                            [Op.lte]: validityFrom
-                        }
-                    },
-                    {
-                        validityTo: {
-                            [Op.gte]: validityFrom
-                        }
-                    },
-                    {
-                        statusId: statusId
-                    },
-                    {
-                        facilityId: facilityId
-                    },
-                    {
-                        operatingHoursFrom: {
-                            [Op.lte]: operatingHoursFrom
-                        }
-                    },
-                    {
-                        operatingHoursTo: {
-                            [Op.gte]: operatingHoursFrom
-                        }
-                    }
-                ]
+        facilityTariff.array.forEach(async(eachTariffObject) => {
+             tariffCreationData = {
+                facilityId:eachTariffObject.facilityId,
+                operatingHoursFrom:eachTariffObject.operatingHoursFrom,
+                operatingHoursTo:eachTariffObject.operatingHoursTo,
+                sun:eachTariffObject.dayWeek.sun,
+                mon:eachTariffObject.dayWeek.mon,
+                tue:eachTariffObject.dayWeek.tue,
+                wed:eachTariffObject.dayWeek.wed,
+                thu:eachTariffObject.dayWeek.thu,
+                fri:eachTariffObject.dayWeek.fri,
+                sat:eachTariffObject.dayWeek.sat,
+                amount:eachTariffObject.amount,
+                validityFrom:eachTariffObject.validityFrom,
+                validityTo:eachTariffObject.validityTo,
+                createdBy:userId,
+                createdDt:new Date(),
+                updatedBy:userId,
+                updatedDt:new Date(),
+                statusId:statusId
             }
-        });
+
+            let findIfTheFacilityId = await facilityTariff.findOne({
+                where: {
+                    [Op.and]: [
+                        {
+                            validityFrom: {
+                                [Op.lte]: eachTariffObject.validityFrom
+                            }
+                        },
+                        {
+                            validityTo: {
+                                [Op.gte]: eachTariffObject.validityFrom
+                            }
+                        },
+                        {
+                            statusId: statusId
+                        },
+                        {
+                            facilityId: eachTariffObject.facilityId
+                        },
+                        {
+                            operatingHoursFrom: {
+                                [Op.lte]: eachTariffObject.operatingHoursFrom
+                            }
+                        },
+                        {
+                            operatingHoursTo: {
+                                [Op.gte]: eachTariffObject.operatingHoursFrom
+                            }
+                        }
+                    ]
+                }
+            });
+
+            
         console.log(findIfTheFacilityId,'findif the facilityId')
 
         if(findIfTheFacilityId){
@@ -93,6 +99,13 @@ let createTariff = async (req,res)=>{
         else{
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json('Something went wrong')
         }
+
+
+        }
+    );
+        
+      
+
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
            message: err.message
