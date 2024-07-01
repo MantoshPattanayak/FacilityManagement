@@ -76,6 +76,9 @@ import {
 } from "../../utils/utilityFunctions.js";
 // import for slider
 
+import TourGuide from "../../common/TourGuide.jsx";
+// import "./YourStyles.css";
+
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
 
 // mediaquary for responsive landing page
@@ -99,6 +102,7 @@ const responsive = {
 };
 
 const Landing = () => {
+  const [runTour, setRunTour] = useState(false);
   const [mapdata, setmapdata] = useState([]);
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
@@ -245,6 +249,7 @@ const Landing = () => {
     fetchLandingPageData();
     setUserGeoLocation();
     document.title = "AMA BHOOMI";
+    setRunTour(true);
   }, []);
 
   useEffect(() => {
@@ -1166,6 +1171,7 @@ const Landing = () => {
       </div>
 
       {/* <div className="footer"></div> */}
+      <TourGuide run={runTour} />
     </div>
   );
 };
