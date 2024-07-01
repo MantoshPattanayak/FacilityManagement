@@ -1,11 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const facilitytariff = sequelize.define('facilitytariffmaster', {
+    const facilitytariff = sequelize.define('facilitytariffdetails', {
         // Model attributes are defined here
-        tariffMasterId: {
+        tariffDetailId: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
+        },
+        tariffMasterId:{
+            type:DataTypes.INTEGER
         },
         facilityId: {
             type: DataTypes.INTEGER,
