@@ -7,28 +7,63 @@ const sequelize = db.sequelize;
 const facilities = db.facilities;
 const facilityType = db.facilitytype
 const facilityTariff = db.facilitytariff
+let tarifftype = db.tarifftype
+let tariffmaster = db.tariffmaster
 const Sequelize = db.Sequelize;
 let {Op} = require('sequelize')
+let faciltyActivity = db.facilityactivities;
+let facilityEvents = db.facilityEvents;
 
 // create tariff api
 let createTariff = async (req,res)=>{
+    let transaction 
     try {
         console.log('req body',req.body)
+        let createdDt = new Date();
+        let updatedDt = new Date();
         let userId = req.user.userId
         let statusId = 1;
         let {facilityTariff} = req.body
         let tariffCreationData;
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
+         transaction = await sequelize.transaction();
 
-        if(facilityTariff.length>0 || facilityTariff.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek   || !tariffData.validityFrom  || !tariffData.validityTo ||  !tariffData.tariffMasterId })){
+        if(facilityTariff.length>0 || facilityTariff.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek   || !tariffData.validityFrom  || !tariffData.validityTo ||  !tariffData.tariffTypeId || !tariffData.entityId})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"
             })
         }
+        let tariffMasterCreationData;
+
         facilityTariff.array.forEach(async(eachTariffObject) => {
+            let findOutIfTheTariffAlreadyPresentOrNot  = await tariffmaster.findOne({
+                where:{[Op.and]:[{facilityId:eachTariffObject.facilityId}, {entityId:eachTariffObject.entityId},{tariffTypeId:eachTariffObject.tariffTypeId},{statusId:statusId}]},  
+                transaction 
+            })
+            let tariffMasterQuery // for inserting the data to tariff masters
+            if(!findOutIfTheTariffAlreadyPresentOrNot){
+                tariffMasterCreationData = {
+                    facilityId:eachTariffObject.facilityId,
+                    entityId:eachTariffObject.entityId,
+                    tariffTypeId:eachTariffObject.tariffTypeId,
+                    statusId:statusId,
+                    createdBy:userId,
+                    createdDt:createdDt,
+                    updatedBy:userId,
+                    updatedDt:updatedDt
+                }
+    
+             tariffMasterQuery = await tariffmaster.create(tariffMasterCreationData,{ transaction, returning: true  })
+            }
+            else{
+                 tariffMasterQuery = {};
+                tariffMasterQuery.tariffMasterId = findOutIfTheTariffAlreadyPresentOrNot.tariffMasterId;
+            }
+           
+
              tariffCreationData = {
                 facilityId:eachTariffObject.facilityId,
-                tariffMasterId:eachTariffObject.tariffMasterId,
+                tariffMasterId:tariffMasterQuery.tariffMasterId,
                 operatingHoursFrom:eachTariffObject.operatingHoursFrom,
                 operatingHoursTo:eachTariffObject.operatingHoursTo,
                 sun:eachTariffObject.dayWeek.sun,
@@ -81,7 +116,7 @@ let createTariff = async (req,res)=>{
                             }
                         }
                     ]
-                }
+                },  transaction 
             });
 
             
@@ -93,7 +128,9 @@ let createTariff = async (req,res)=>{
             })
         }
     
-        let createTariffData = await facilityTariff.create(tariffCreationData)
+        let createTariffData = await facilityTariff.create(tariffCreationData,{ transaction, returning: true  })
+
+        await transaction.commit(); // If everything goes well, will do the commit here
 
         if(createTariffData){
             return res.status(statusCode.SUCCESS.code).json({
@@ -101,6 +138,7 @@ let createTariff = async (req,res)=>{
             })
         }
         else{
+            if(transaction) await transaction.rollback();
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json('Something went wrong')
         }
 
@@ -111,6 +149,7 @@ let createTariff = async (req,res)=>{
       
 
     } catch (err) {
+        if(transaction) await transaction.rollback();
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
            message: err.message
         })
@@ -423,9 +462,22 @@ let viewTariff = async (req,res)=>{
     }
 }
 
+// let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
+//     try {
+//         let {facilityId,tariffTypeId} = req.body
+//         let statusId =1;
+//         let tariffTypeQuery = await tarifftype.findAll({where:{statusId:statusId}})
+//         if(facilityId && tariffTypeId==1){
+//             let findTheNameOfThoseActivities = await 
+//         }
+//     } catch (err) {
+//         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
+//     }
+// }
 module.exports= {
     createTariff,
     getTariffById,
     updateTariff,
-    viewTariff
+    viewTariff,
+    // initialDataForTariffSelectionWRTCategory
 }
