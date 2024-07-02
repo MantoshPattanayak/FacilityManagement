@@ -15,11 +15,6 @@ const CommonFooter1 = () => {
   return (
     <div>
       <footer className="common-footer">
-        {/* <div className='header_footer'>
-                    <img className='Ama_Logo' src={Logo}></img>
-                    <h1 className='Ama_name'> AMA BHOOMI</h1>
-                </div> */}
-
         <div className="footer-content">
           <div className="footer-column1">
             <h1 className="Amam_text">AMA BHOOMI</h1>
@@ -49,7 +44,8 @@ const CommonFooter1 = () => {
           <div className="footer-column2">
             <ul className="Ul_contact_partner">
               <li>
-                <a href="#">Contact Us</a>
+
+                <Link to="/ContactUs">Contact Us</Link>
               </li>
               <li>
                 <a href="#">Partner with us</a>
@@ -58,7 +54,7 @@ const CommonFooter1 = () => {
                 <Link to="/grievance-feedback-form">Grievance</Link>
               </li>
               <li>
-              <Link to="/grievance-feedback-form">Feedback</Link>
+                <Link to="/grievance-feedback-form">Feedback</Link>
               </li>
             </ul>
             <div className="term_condtion_conatiner">
