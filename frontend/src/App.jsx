@@ -67,6 +67,7 @@ import Book_Event from "./components/Public/BookParks/Book_Event";
 import PublicLoader from "./common/PublicLoader";
 // here Import Admin Page -----------------xxxx----------------------
 import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
+import ViewTariffList from "./components/Admin/MDM/Tariff/ViewTariffList";
 // import provider for connect to our app
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
@@ -436,6 +437,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <TariffDetails />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/ViewTariffList"
+                element={
+                  <ProtectedRoute>
+                    <ViewTariffList />
                   </ProtectedRoute>
                 }
               />

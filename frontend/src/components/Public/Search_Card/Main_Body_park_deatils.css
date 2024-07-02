@@ -117,8 +117,9 @@
 }
 
 .Card_img {
-    width: 100%;
+
     border-radius: 15px;
+    height: 20vh;
 }
 
 .card_text {
