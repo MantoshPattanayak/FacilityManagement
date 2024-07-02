@@ -86,6 +86,10 @@ module.exports = (sequelize,DataTypes)=>{
         pin:{
             type:DataTypes.INTEGER
         },
+        helpNumber:{
+            type:DataTypes.INTEGER
+
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },
