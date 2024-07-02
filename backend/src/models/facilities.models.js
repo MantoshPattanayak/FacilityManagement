@@ -90,6 +90,12 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.INTEGER
 
         },
+        about:{
+            type:DataTypes.DataTypes.TEXT('medium')
+        },
+        facilitytype:{
+            type:DataTypes.STRING(255)
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },
