@@ -119,7 +119,7 @@ const viewParkDetails = async(req,res)=>{
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership, fl.url
-        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId`
+        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId `
         
         let facilities;
 
@@ -158,7 +158,7 @@ const viewParkDetails = async(req,res)=>{
             console.log('24')
             if (filterConditions.length > 0 && !facilityTypeId) {
                 console.log('filter condn', filterConditions,facility)
-                facility += ` WHERE ${filterConditions.join(' AND ')}`;
+                facility += ` WHERE ${filterConditions.join(' AND ')} and ft.filePurpose = 'singleFacilityImage'`;
                 console.log('facility',facility)
                  facilities = await sequelize.query(facility,{
                     replacements:[new Date()]
@@ -167,7 +167,7 @@ const viewParkDetails = async(req,res)=>{
             if (facilityTypeId) {
                 console.log('25')
 
-                facility += ` WHERE f.facilityTypeId=?`;
+                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = 'singleFacilityImage'`;
             
                 if (filterConditions.length) {
                     // Add selected filter conditions
@@ -182,7 +182,7 @@ const viewParkDetails = async(req,res)=>{
         if (facilityTypeId && !selectedFilter) {
             console.log('25')
 
-            facility += ` WHERE f.facilityTypeId=?`;   
+            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = 'singleFacilityImage'`;   
         
             facilities = await sequelize.query(facility, {
                 replacements: [new Date(),facilityTypeId]
@@ -191,7 +191,7 @@ const viewParkDetails = async(req,res)=>{
 
         if (!facilityTypeId && !selectedFilter) {
             console.log('25')
-
+            facility += ` WHERE  ft.filePurpose = 'singleFacilityImage'`;   
             facilities = await sequelize.query(facility, {
                 replacements: [new Date()]
             });
