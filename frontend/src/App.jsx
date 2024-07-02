@@ -86,6 +86,8 @@ import AdminHeader from "./common/AdminHeader";
 // import AdminHeader from "./common/AdminHeader";
 import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
 import EventDetailsPage from './components/Admin/Activity/ReviewEventDetails/EventDetailsPage'
+// import Conact Us Page-------------------------
+import ContactUs from "./components/Public/FooterPages/ContactUs";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -466,7 +468,20 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+               {/* Footer pages */}
+                 <Route
+                path="/ContactUs"
+                element={
+                  <ProtectedRoute>
+                    <ContactUs/>
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
+
+           
+           
+            
             {/* <Footer /> */}
             <CommonFooter1 />
           </div>

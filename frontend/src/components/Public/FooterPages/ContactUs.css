@@ -1,0 +1,111 @@
+.Main_Container_ContactUs_Pages {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.Container_Contact {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Contact_us_text_name {
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 600;
+   
+}
+.get_touch{
+    font-size: 30px;
+}
+.Child_Container_Contact {
+    display: flex;
+    width: 70%;
+    padding: 20px;
+    border-radius: 10px;
+    gap: 20px;
+  
+}
+
+.Contact_Info_Container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-right: 80px;
+
+}
+
+.Contact_Info_Box {
+    display: flex;
+    align-items: center;
+    background-color: #e9ecef;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.Contact_Info_Text {
+    margin-left: 10px;
+    font-size: 18px;
+}
+.icon_contact{
+    font-size: 40px;
+    color: #007BFF;
+}
+
+.Form_Container {
+    flex: 2;
+
+
+
+}
+
+.Contact_Form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+}
+
+.Form_Field_contact {
+    margin-bottom: 15px;
+}
+
+.Form_Field_contact label {
+    display: block;
+    margin-bottom: 5px;
+   font-weight: 600;
+}
+
+.Form_Field_contact input,
+.Form_Field_contact textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.Form_Field_contact textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+.button-3 {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-3:hover {
+    background-color: #0056b3;
+}

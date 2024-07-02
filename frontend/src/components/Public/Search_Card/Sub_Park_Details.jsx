@@ -406,9 +406,7 @@ const Sub_Park_Details = () => {
                     src={Park_img}
                     alt="Parking"
                   /> */}
-                  <div className="service-icon">
-                    <MdHomeRepairService size={80} color="green" />
-                  </div>
+                  
                   <p className="service_name">{item.code}</p>
                 </div>
               </div>
