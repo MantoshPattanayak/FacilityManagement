@@ -488,7 +488,7 @@ const Main_Body_Park_Details = () => {
       </div>
       {/* Heere Name of Park, sports dyamics ---------------------------------------- */}
       <span className="text_name_park">
-        <h1 className="name_park">
+        <h1 className="name_park1">
           {(facilityTypeId == 1) && "Parks"}
           {(facilityTypeId == 2) && "Playgrounds"}
           {(facilityTypeId == 3) && "Multi-purpose Grounds"}
