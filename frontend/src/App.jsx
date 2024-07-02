@@ -20,6 +20,7 @@ import ReviewEventDetailsList from "./components/Admin/Activity/ReviewEventDetai
 import SignUp from "./components/Public/SignUp";
 import Login from "./components/Public/Login";
 import ForgotPassword from "./components/Public/Forgot_Password/ForgotPassword";
+import Search_card from "./components/Public/Search_card";
 //import BookParks files here
 import Book_Now from "./components/Public/BookParks/Book_Now";
 //User profile (Booking Details)
@@ -112,6 +113,14 @@ function App() {
               <Route path="/Stakeholders" element={<Stakeholders />} />
               <Route path="/StandOut" element={<StandOut />} />
               <Route path="/faqs" element={<FqaPage />} />
+
+              {/* Search by place name  */}
+              <Route
+                path="/Search_card"
+                element={
+                  <Search_card />
+                }
+              />
 
               {/* Public (Book Parks)  */}
               <Route
