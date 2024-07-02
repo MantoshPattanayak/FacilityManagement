@@ -91,7 +91,7 @@ module.exports = (sequelize,DataTypes)=>{
 
         },
         about:{
-            type:DataTypes.DataTypes.TEXT('medium')
+            type:DataTypes.TEXT('medium')
         },
         facilitytype:{
             type:DataTypes.STRING(255)
