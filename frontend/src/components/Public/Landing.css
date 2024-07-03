@@ -2141,6 +2141,10 @@ margin-top: 20px;
         padding: 6px;
         font-size: 14px;
     }
+
+    .input-icon{
+        font-size: 10px;
+    }
 }
 
 
@@ -2303,3 +2307,22 @@ margin-top: 20px;
     font-size: 15px;
 
 }
+
+/* search input field */
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .search-bar {
+    padding-right: 30px; 
+  }
+  
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+ 
+  }
+  
