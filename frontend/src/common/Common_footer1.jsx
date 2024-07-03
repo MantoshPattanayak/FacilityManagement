@@ -58,9 +58,10 @@ const CommonFooter1 = () => {
               </li>
             </ul>
             <div className="term_condtion_conatiner">
-              <p>Disclaimer</p>
-              <p>Privacy Policy</p>
-              <p>Terms & Condtitions</p>
+              <Link to='/Disclaimer'><p>Disclaimer</p></Link>
+              
+              <Link to='/Privacy_Policy'> <p>Privacy Policy</p></Link> 
+             <Link to='/Terms_ConditionPage'><p> Terms & Condtitions</p></Link>
             </div>
 
             <div className="Socail_media">

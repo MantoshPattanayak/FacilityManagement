@@ -88,6 +88,10 @@ import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
 import EventDetailsPage from './components/Admin/Activity/ReviewEventDetails/EventDetailsPage'
 // import Conact Us Page-------------------------
 import ContactUs from "./components/Public/FooterPages/ContactUs";
+// Terms and Condition ----------------------------------------
+import Terms_ConditionPage from "./components/Public/FooterPages/Terms_ConditionPage";
+import Disclaimer from "./components/Public/FooterPages/Disclaimer";
+import Privacy_Policy from "./components/Public/FooterPages/Privacy_Policy";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -468,12 +472,38 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+             
                {/* Footer pages */}
                  <Route
                 path="/ContactUs"
                 element={
                   <ProtectedRoute>
                     <ContactUs/>
+                  </ProtectedRoute>
+                }
+              />
+             
+                  <Route
+                path="/Terms_ConditionPage"
+                element={
+                  <ProtectedRoute>
+                    <Terms_ConditionPage/>
+                  </ProtectedRoute>
+                }
+              />
+                     <Route
+                path="/Disclaimer"
+                element={
+                  <ProtectedRoute>
+                    < Disclaimer/>
+                  </ProtectedRoute>
+                }
+              />
+                      <Route
+                path="/Privacy_Policy"
+                element={
+                  <ProtectedRoute>
+                    <Privacy_Policy/>
                   </ProtectedRoute>
                 }
               />
