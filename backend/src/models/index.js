@@ -116,7 +116,10 @@ db1.feedback = require('./feedback.model')(sequelize, DataTypes)
 //promotion
 db1.promotions = require('./promotion.model')(sequelize, DataTypes)
 db1.facilitiesderived = require(`./facilitiesderived.models`)(sequelize, DataTypes)
-
+// add facility tariff master and facility tariff type
+db1.tariffmaster = require('./facilitytariffmaster.models')(sequelize,DataTypes)
+db1.tarifftype = require('./tariffType.models')(sequelize,DataTypes)
+// add department models here
 db1.departmentmasters = require('./departmentmasters.models')(sequelize, DataTypes)
 db1.grievancecategories = require('./grievancecategories.models')(sequelize, DataTypes)
 // bank details table 

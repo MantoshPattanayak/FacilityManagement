@@ -87,12 +87,12 @@ body {
     gap: 24px;
     /* width: 630px; */
     border: 1px solid rgba(0, 0, 0, 0.2);
-    height: 450px;
+    height: 650px;
     overflow-y: scroll;
 }
 .eventdetails-carddetails {
     border: 1px solid #B9B9B97D;
-    width: 530px;
+    width: 600px;
     height: 144px;
     border-radius: 10px;
     padding: 12px;

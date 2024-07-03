@@ -100,6 +100,8 @@ const api = {
    ADMIN_VIEW_GRIEVANCE_BY_ID_API: '/grievance/viewgrievance', //get params - grievanceId
    // admin-dashboard
    ADMIN_DASHBOARD_FETCH_API: '/auth/admin-dashboard',   //post    facilityId
+   // Tariff Api (MDM)
+   View_Tariff_List_Api:'/tariffData/viewTariff '
 }
 
 export default api;
