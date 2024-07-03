@@ -1,7 +1,5 @@
 module.exports = (sequelize,DataTypes)=>{
 
-
-
 const Facility = sequelize.define('facilitiesderived',{
     facilityId:{
         type:DataTypes.INTEGER,
