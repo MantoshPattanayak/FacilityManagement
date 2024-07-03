@@ -13,7 +13,8 @@ const Sequelize = db.Sequelize;
 let {Op} = require('sequelize')
 let faciltyActivity = db.facilityactivities;
 let facilityEvents = db.facilityEvents;
-
+let useractivitymaster = db.useractivitymasters
+let eventcategorymaster = db.eventCategoryMaster
 // create tariff api
 let createTariff = async (req,res)=>{
     let transaction 
@@ -462,22 +463,78 @@ let viewTariff = async (req,res)=>{
     }
 }
 
-// let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
-//     try {
-//         let {facilityId,tariffTypeId} = req.body
-//         let statusId =1;
-//         let tariffTypeQuery = await tarifftype.findAll({where:{statusId:statusId}})
-//         if(facilityId && tariffTypeId==1){
-//             let findTheNameOfThoseActivities = await 
-//         }
-//     } catch (err) {
-//         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
-//     }
-// }
+let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
+    try {
+        let {facilityId,tariffTypeId} = req.body
+        let statusId =1;
+        let findTheNameOfThoseActivities;
+        let findTheNameOfThoseSports;
+        let findTheNameOfThoseEvents;
+        let findFacilityTypeIdFromFacilityTable
+        let tariffTypeQuery = await tarifftype.findAll({where:{statusId:statusId}})
+        if(facilityId){
+             findFacilityTypeIdFromFacilityTable = await facilities.findOne({
+                where:{
+                   [Op.and]:[ {statusId:statusId},{facilityId:facilityId}]
+                }
+            })
+        }
+   
+        if(facilityId && tariffTypeId==1){
+             findTheNameOfThoseActivities = await faciltyActivity.findAll({
+                where:{
+                    [Op.and]:[{facilityTypeId:{[Op.ne]:2}},{statusId:statusId},{facilityId:facilityId}]
+                },
+                include: [{
+                    model: useractivitymaster
+                    // Add any additional options for the included model here if needed
+                }]
+        
+    })
+        }
+        if(findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId==2){
+           
+                findTheNameOfThoseSports = await faciltyActivity.findAll({
+                   where:{[Op.and]:[{facilityTypeId:{[Op.eq]:2}},{statusId:statusId},{facilityId:facilityId}]
+           },
+           include:[
+           { model: useractivitymaster
+            // Add any additional options for the included model here if needed
+            }
+           ]
+        }
+       )
+        }
+        if(facilityId && tariffTypeId==3){
+           
+            findTheNameOfThoseEvents = await facilityEvents.findAll({
+               where:{[Op.and]:[{facilityTypeId:{[Op.eq]:2}},{statusId:statusId},{facilityId:facilityId}]
+       },
+       include:[
+        { model: eventcategorymaster
+         // Add any additional options for the included model here if needed
+         }
+        ]
+    }
+   )
+    }
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"Initial Data for tariff",
+            tariffTypeData:tariffTypeQuery,
+            activityData:findTheNameOfThoseActivities,
+            sportsData:findTheNameOfThoseSports,
+            eventsData:findTheNameOfThoseEvents
+        })   
+        
+     
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
+    }
+}
 module.exports= {
     createTariff,
     getTariffById,
     updateTariff,
     viewTariff,
-    // initialDataForTariffSelectionWRTCategory
+    initialDataForTariffSelectionWRTCategory
 }

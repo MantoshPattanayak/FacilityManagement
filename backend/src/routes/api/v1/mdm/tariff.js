@@ -12,5 +12,6 @@ router.put("/updateTariff", authenticateToken,tariffData.updateTariff);
 
 router.post("/viewTariff", authenticateToken,tariffData.viewTariff);
 
+router.post("/initialDataForTariffSelectionWRTCategory", authenticateToken,tariffData.initialDataForTariffSelectionWRTCategory);
 
 module.exports = router;
