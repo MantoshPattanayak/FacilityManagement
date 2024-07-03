@@ -114,7 +114,7 @@ const viewParkDetails = async(req,res)=>{
         let selectedFilter = req.body.selectedFilter?req.body.selectedFilter:null;
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId,'selected filter',selectedFilter)
-
+        let facilityImagePurpose = 'singleFacilityImage'
         let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
@@ -158,16 +158,16 @@ const viewParkDetails = async(req,res)=>{
             console.log('24')
             if (filterConditions.length > 0 && !facilityTypeId) {
                 console.log('filter condn', filterConditions,facility)
-                facility += ` WHERE ${filterConditions.join(' AND ')} and ft.filePurpose = 'singleFacilityImage'`;
+                facility += ` WHERE ${filterConditions.join(' AND ')} and ft.filePurpose = ?`;
                 console.log('facility',facility)
                  facilities = await sequelize.query(facility,{
-                    replacements:[new Date()]
+                    replacements:[new Date(),facilityImagePurpose]
                 })
             }
             if (facilityTypeId) {
                 console.log('25')
 
-                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = 'singleFacilityImage'`;
+                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ?`;
             
                 if (filterConditions.length) {
                     // Add selected filter conditions
@@ -175,25 +175,26 @@ const viewParkDetails = async(req,res)=>{
                 }
             
                 facilities = await sequelize.query(facility, {
-                    replacements: [new Date(),facilityTypeId]
+                    replacements: [new Date(),facilityTypeId,facilityImagePurpose]
                 });
             }
         }
         if (facilityTypeId && !selectedFilter) {
             console.log('25')
 
-            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = 'singleFacilityImage'`;   
+            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? `;   
         
             facilities = await sequelize.query(facility, {
-                replacements: [new Date(),facilityTypeId]
+                replacements: [new Date(),facilityTypeId,facilityImagePurpose]
             });
         }
 
         if (!facilityTypeId && !selectedFilter) {
             console.log('25')
-            facility += ` WHERE  ft.filePurpose = 'singleFacilityImage'`;   
+            facility += ` WHERE  ft.filePurpose = ?`;   
+            console.log('facility query', facility)
             facilities = await sequelize.query(facility, {
-                replacements: [new Date()]
+                replacements: [new Date(),facilityImagePurpose]
             });
         }
     
@@ -261,6 +262,7 @@ const autoSuggestionForViewParkDetails = async (req,res)=>{
 const viewParkById = async (req,res)=>{
     try{
         let userId = req.user?.userId || 1;
+        let multipleFacilityImage="multipleFacilityImage"
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         let findFacilityTypeId = await facilitiesTable.findOne({
             where:{
@@ -272,10 +274,10 @@ const viewParkById = async (req,res)=>{
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
             end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url 
-            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? `
+            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? and ft.filePurpose = ? `
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
-            replacements:[new Date(), facilityId]
+            replacements:[new Date(), facilityId,multipleFacilityImage]
         })
 
         let fetchEventDetailsQuery = `select eventName, eventCategoryId,locationName,eventDate,eventStartTime,
@@ -367,6 +369,7 @@ let calculateDistance = (lat1, long1, lat2, long2) => {
         const distance = earthRadius * c; // Distance in kilometers
 
         // console.log('Calculated Distance:', distance);
+        console.log(distance, "distance")
         return distance;
 
 };
@@ -823,14 +826,15 @@ const nearByDataInMap = async (req, res) => {
 
         // Execute the constructed query
         const fetchFacilities = await sequelize.query(fetchFacilitiesQuery, {
-            replacements: replacements
+            replacements: replacements,
+            type:Sequelize.QueryTypes.SELECT
         });
 
         // Process the fetched data as needed
-
+        console.log('fetchFacilities',fetchFacilities)
                 let getNearByData = [];
-        for (const data of fetchFacilities[0]) {
-            // console.log('data',data.latitude,data.longitude)
+        for (const data of fetchFacilities) {
+            console.log('data',fetchFacilities,'fetchFacilitiesData')
             let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
             if (distance <= range) {
                 console.log('distance', distance)

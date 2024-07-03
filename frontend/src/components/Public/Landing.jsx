@@ -179,7 +179,7 @@ const Landing = () => {
   };
   const selectedImage = backGround_images[currentIndexBg];
 
-  //function to fetch suggestions of facilities on input by user
+    //function to fetch suggestions of facilities on input by user
   async function fetchAutoSuggestData() {
     try {
       let response = await axiosHttpClient("View_Park_Data", "post", {
@@ -452,6 +452,22 @@ const Landing = () => {
   //   };
   // }, []);
 
+
+  // To handle search input field in landing page..............
+
+  const handleSearch = () => {
+    if (inputFacility.trim() !== "") {
+      navigate(`/Search_card?query=${encodeURIComponent(inputFacility)}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  }
+
+  
   // handleGameClick ------------------------------------------------
 
   const handleGameClick = (index, activity) => {
@@ -631,16 +647,24 @@ const Landing = () => {
             <h2 className="typing-animation">
               Explore, Book and Enjoy Open Spaces{" "}
             </h2>
-            <input
-              ref={searchInputRef}
-              className="search-bar"
-              type="text"
-              name="search"
-              placeholder="Search by Name and Location"
-              value={inputFacility}
-              autoComplete="off"
-              onChange={handleInputFacility}
-            />
+            <div className="input-wrapper">
+              <input
+                ref={searchInputRef}
+                className="search-bar"
+                type="text"
+                name="search"
+                placeholder="Search by Name and Location"
+                value={inputFacility}
+                autoComplete="off"
+                onChange={handleInputFacility}
+                onKeyDown={handleKeyDown}
+              />
+              <FontAwesomeIcon 
+                  icon={faArrowRight}
+                  className="input-icon"
+                  onClick={handleSearch}
+                  />
+            </div>
             {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
                 {suggestions.length > 0 ? (
@@ -655,9 +679,9 @@ const Landing = () => {
                       onClick={(e) =>
                         navigate(
                           "/Sub_Park_Details" +
-                            `?facilityId=${encryptDataId(
-                              suggestion.facilityId
-                            )}`
+                          `?facilityId=${encryptDataId(
+                            suggestion.facilityId
+                          )}`
                         )
                       }
                     >
@@ -1059,9 +1083,8 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${
-                  selectedActivity === index ? "selected" : ""
-                }`}
+                className={`activity ${selectedActivity === index ? "selected" : ""
+                  }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
@@ -1088,9 +1111,9 @@ const Landing = () => {
                               onClick={(e) => {
                                 navigate(
                                   "/Sub_Park_Details" +
-                                    `?facilityId=${encryptDataId(
-                                      park.facilityId
-                                    )}`
+                                  `?facilityId=${encryptDataId(
+                                    park.facilityId
+                                  )}`
                                 );
                               }}
                             >

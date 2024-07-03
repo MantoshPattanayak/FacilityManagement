@@ -21,13 +21,13 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.STRING(20)
         },
         areaAcres:{
-            type:DataTypes.DECIMAL
+            type:DataTypes.DOUBLE
         },
         latitude:{
-            type:DataTypes.DECIMAL
+            type:DataTypes.DOUBLE
         },
         longitude:{
-            type:DataTypes.DECIMAL
+            type:DataTypes.DOUBLE
         },
         address:{
             type:DataTypes.STRING(255)
@@ -87,8 +87,7 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.INTEGER
         },
         helpNumber:{
-            type:DataTypes.INTEGER
-
+            type:DataTypes.BIGINT
         },
         about:{
             type:DataTypes.TEXT('medium')
