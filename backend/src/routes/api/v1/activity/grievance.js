@@ -17,4 +17,9 @@ router.get('/viewgrievance/:grievanceId', authenticateToken,grievanceController.
 router.post('/action-grievance',authenticateToken, grievanceController.actionTaken);
 // create feedack
 router.post("/createFeedback", grievanceController.createFeedback); 
+
+router.post("/createFeedback", grievanceController.createFeedback); 
+
+router.post("/contactUs",grievanceController.contactRequest)
+
 module.exports = router;

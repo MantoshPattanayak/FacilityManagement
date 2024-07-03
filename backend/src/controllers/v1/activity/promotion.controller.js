@@ -3,6 +3,7 @@ const statusCode = require("../../../utils/statusCode");
 const db = require("../../../models");
 const statusMasters = db.statusmaster;
 const promotion = db.promotions
+
 const createPromotion = async (req, res) => {
     try {
       let createPromotion;
@@ -262,6 +263,7 @@ const createPromotion = async (req, res) => {
         })
     }
 }
+
   module.exports = {
     createPromotion,
     updatePromotion,
