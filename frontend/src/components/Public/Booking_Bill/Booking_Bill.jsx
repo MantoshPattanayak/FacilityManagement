@@ -26,15 +26,13 @@ const Bokking_Bill = () => {
     //   here share Url on social Media ---------------------------------
     const[shareUrl, setshareUrl]=useState("")
     const [title, setTitle] = useState(["Check out this ticket!"]);
-    const bookingId = decryptData(
-        new URLSearchParams(location.search).get("bookingId")
-    );
+    const bookingId = decryptData(new URLSearchParams(location.search).get("bookingId"));
+    const entitytTypeId = decryptData(new URLSearchParams(location.search).get("typeId"));
     // here Post/get the data of Bill ------------------
     async function GetBill_Data() {
         try {
             let res = await axiosHttpClient("VIEW_TICKET_BILL_API", "post", {
-
-                bookingId: bookingId
+                bookingId: bookingId, entitytTypeId: entitytTypeId
             })
             const dynamicUrlPart = res.data.bookingDetails.url; 
             console.log("here Response of Bill Data", res)

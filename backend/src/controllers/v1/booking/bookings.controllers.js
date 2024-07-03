@@ -499,7 +499,8 @@ let parkBooking = async (req, res) => {
                     amount: bookingData.amount,
                     statusId: 1,
                     paymentstatus: '',
-                    createdBy: userId
+                    createdBy: userId,
+                    createdOn: new Date()
                 }, { transaction });
 
                 console.log('eventBooking', eventBookingData);

@@ -941,7 +941,7 @@ let viewBookings = async (req, res) => {
     let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS  UPCOMING  CANCELLED  HISTORY
 
     let searchQuery = `select 
-        fb.facilityBookingId as bookingId, f.facilityId as Id, f.facilityname as name, f2.description as type, f.address as location, fb.startDate,
+        fb.facilityBookingId as bookingId, f.facilityId as Id, f2.facilityTypeId as typeId, f.facilityname as name, f2.description as type, f.address as location, fb.startDate,
         fb.endDate, s.statusCode, fb.sportsName, fb.bookingDate, fb.createdOn as createdDate
       from amabhoomi.facilitybookings fb
       inner join amabhoomi.facilities f on f.facilityId = fb.facilityId
@@ -959,7 +959,7 @@ let viewBookings = async (req, res) => {
 
     let searchQueryEvents = `select 
         fb.eventBookingId as bookingId, f.eventId as Id, f.eventName as name, f.eventCategoryId, f.locationName as location, 
-        fb.bookingDate, s.statusCode, 'EVENTS' as type, fb.createdOn as createdDate
+        fb.bookingDate, s.statusCode, 'EVENTS' as type, '6' as typeId, fb.createdOn as createdDate
       from amabhoomi.eventbookings fb
       inner join amabhoomi.eventactivities f on f.eventId = fb.eventId
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
@@ -973,13 +973,14 @@ let viewBookings = async (req, res) => {
        */
 
     let searchQueryEventHostRequest = `select 
-        fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategory, f2.facilityname, e.locationName as location, e.eventDate, 
-        fb.bookingDate, s.statusCode, fb.bookingDate, 'EVENT_HOST_REQUEST' as type, fb.createdOn as createdDate
+        fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategoryId, ecm.eventCategoryName, f2.facilityname, e.locationName as location, e.eventDate, 
+        fb.bookingDate, s.statusCode, fb.bookingDate, 'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdOn as createdDate
       from amabhoomi.hostbookings fb
       inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
       inner join amabhoomi.eventactivities e on e.eventId = f.eventId
       inner join amabhoomi.facilities f2 on f2.facilityId = e.facilityId
       inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
+      inner join amabhoomi.eventcategorymasters ecm on ecm.eventCategoryId = e.eventCategoryId
       where fb.createdBy = ?
       order by fb.createdOn ${sortingOrder}`;
 
