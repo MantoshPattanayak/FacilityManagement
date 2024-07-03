@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axiosHttpClient from '../../../../utils/axios';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { formatDateYYYYMMDD, formatDate } from '../../../../utils/utilityFunctions';
+import { formatDate } from '../../../../utils/utilityFunctions';
 import AdminHeader from '../../../../common/AdminHeader';
-import CommonFooter from '../../../../common/CommonFooter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { dataLength } from '../../../../utils/regexExpAndDataLength';
 import '../../../../common/CommonTable.css';
 import './ViewNotifications.css';
 import { encryptData } from '../../../../utils/encryptData';
@@ -44,7 +41,7 @@ export default function ViewNotifications() {
   return (
     <>
       <AdminHeader />
-      <div className="ViewNotifications-Container">
+      <div className="ViewNotifications">
         <div className='table-heading'>
           <h2 className="table-heading">View Notifications</h2>
         </div>
@@ -105,7 +102,6 @@ export default function ViewNotifications() {
           </table>
         </div>
       </div>
-      <CommonFooter />
     </>
   )
 }

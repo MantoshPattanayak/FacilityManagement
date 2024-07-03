@@ -1,6 +1,6 @@
-.ViewNotifications-Container {
+.ViewNotifications {
     margin: 130px auto 10px auto;
-    width: 70vw; /* Content width excluding AdminHeader and Footer */
+    width: 100%; /* Content width excluding AdminHeader and Footer */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,4 +8,231 @@
     min-height: 50vh;
     padding: 0 20px; /* Added padding for better spacing */
     box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* .ViewNotifications {
+    display: flex;
+    font-size: large;
+} */
+
+.ViewNotifications .search_text_conatiner {
+    margin-top: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ViewNotifications .search_input_field {
+    border: 1px solid black;
+    width: 30%;
+    border-radius: 15px;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.ViewNotifications .create-role-btn {
+    background-color: #fdfdfd;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: rgb(75, 73, 73);
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.ViewNotifications .create-role-btn:hover {
+    background-color: #c6c6c6;
+    transition: 0.5s;
+}
+
+/* Table styles */
+.ViewNotifications .Main_Conatiner_table {
+    width: 70vw;
+    margin: 75px auto 75px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /* min-height: 100vh; */
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.ViewNotifications .table-heading {
+    /* padding-left: 10px; */
+    /* margin-left: 10vw; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.ViewNotifications .table_Container {
+    overflow-y: auto;
+    max-height: 700px;
+    width: 100%;
+    /* Ensure table container takes full width */
+}
+
+.ViewNotifications .search_input_field {
+    padding: 5px;
+    width: 30vh;
+    border: 1px solid #3a3b3a;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+/* Style the input field border when it's focused */
+.ViewNotifications .search_input_field:focus {
+    border-color: #363736;
+}
+
+/* Style the placeholder text */
+.ViewNotifications .search_input_field::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+
+.ViewNotifications table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.ViewNotifications table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+}
+
+.ViewNotifications table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+}
+
+.ViewNotifications table th,
+.ViewNotifications table td {
+    padding: .625em;
+    text-align: center;
+}
+
+.ViewNotifications table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    background-color: #3e82ff;
+    color: #f8f8f8;
+}
+
+.ViewNotifications tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.ViewNotifications tbody tr:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+/* Pagination styles */
+.ViewNotifications .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ViewNotifications .pagination button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ViewNotifications .pagination button:hover {
+    background-color: #ddd;
+}
+
+.ViewNotifications .pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ViewNotifications .pagination button.active {
+    background-color: #00b562;
+    color: white;
+    border: 1px solid #00b562;
+}
+
+/* Media queries */
+@media screen and (max-width: 768px) {
+    .ViewNotifications {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ViewNotifications .search_text_conatiner {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ViewNotifications .search_input_field {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .ViewNotifications .create-role-btn {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .ViewNotifications .Main_Conatiner_table {
+        width: 90%;
+        padding: 0 10px;
+        /* Adjusted padding for smaller screens */
+    }
+
+    .ViewNotifications .table_Container {
+        overflow-x: auto;
+        /* Added horizontal scroll for small screens */
+        max-width: 100%;
+    }
+
+    .ViewNotifications .pagination {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ViewNotifications .pagination button {
+        margin: 5px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .ViewNotifications .search_input_field {
+        width: 100%;
+    }
+
+    .ViewNotifications table th,
+    .ViewNotifications table td {
+        padding: .5em;
+    }
+
+    .ViewNotifications table caption {
+        font-size: 1.3em;
+    }
 }

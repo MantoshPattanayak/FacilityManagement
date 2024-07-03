@@ -55,7 +55,7 @@ const AdminLogin = () => {
 
     const errors = validation(LogingDataPost);
     console.log(errors);
-
+    toast.dismiss();
     if (Object.keys(errors).length === 0) {
       try {
         const res = await axiosHttpClient("PRIVATE_LOGIN_VERIFY_OTP_API", "post", {

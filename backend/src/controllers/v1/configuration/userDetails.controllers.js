@@ -938,7 +938,7 @@ let viewBookings = async (req, res) => {
     let facilityType = req.body.facilityType || null; //EVENTS-6   EVENT_HOST_REQUEST-7   PARKS -1  PLAYGROUNDS-2  MULTIPURPOSE_GROUND-3
     let facilityTypeId = req.body.facilityTypeId || null;
     let sortingOrder = req.body.sortingOrder || "desc"; // asc or desc
-    let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS     HISTORY
+    let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS  UPCOMING  CANCELLED  HISTORY
 
     let searchQuery = `select 
         fb.facilityBookingId as bookingId, f.facilityId as Id, f.facilityname as name, f2.description as type, f.address as location, fb.startDate,
