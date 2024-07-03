@@ -302,7 +302,7 @@ const BookingDetails = () => {
 
                           to={{
                             pathname: "/profile/booking-details/ticket",
-                            search: `?bookingId=${encryptDataId(event.bookingId)}`,
+                            search: `?bookingId=${encryptDataId(event.bookingId)}&typeId=${encryptDataId(event.typeId)}`,
                           }}
                           className="eventdetails-eventbutton"
 
