@@ -7,7 +7,8 @@ const initialState = {
     user: null,
     sid: null,
     accessRoutes: null,
-    roleId: null
+    roleId: null,
+    tourGuide: true
 }
 // Create Slice for store the data --------------------------------------------------
 const authSlice = createSlice({
@@ -68,8 +69,13 @@ const authSlice = createSlice({
             sessionStorage.setItem('session-id', sid);
             sessionStorage.setItem("userInfo", roleId);
             sessionStorage.setItem('accessRoutes', JSON.stringify(accessRoutes));
+        },
+        manageTourGuide(state, action) {
+            state.tourGuide = action.payload.tourGuide;
+            console.log('state tourGuide', state.tourGuide, action.payload.tourGuide);
+            localStorage.setItem('tourGuide', action.payload.tourGuide);
         }
     }
 });
-export const { loginSuccess, Logout, adminLogin } = authSlice.actions;
+export const { loginSuccess, Logout, adminLogin, manageTourGuide } = authSlice.actions;
 export default authSlice.reducer;

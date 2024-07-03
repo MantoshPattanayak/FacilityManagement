@@ -511,21 +511,21 @@ let parkBooking = async (req, res) => {
                         [Op.and]:[{statusId:statusId},{eventId:eventId}]
                     }
                 })
-                let findTheBookingDetails = await facilitybookings.findOne({
-                    where:{
-                       [Op.and]: [{facilityBookingId:eventBookingData.facilityBookingId},{statusId:statusId}]
-                    },
-                     transaction 
-                })
+                // let findTheBookingDetails = await facilitybookings.findOne({
+                //     where:{
+                //        [Op.and]: [{facilityBookingId:eventBookingData.facilityBookingId},{statusId:statusId}]
+                //     },
+                //      transaction 
+                // })
                 let title = findEventInformation.eventName;
-                let bookingRef = findTheBookingDetails.bookingReference;
+                let bookingRef = eventBookingData.bookingReference;
                 let location = findEventInformation.locationName;
                 let date =  bookingData.bookingDate;
                 let time = eventBookingData.startDate;
                 let cost = eventBookingData.amount;
                 let totalMembers = eventBookingData.totalMembers;
-                let combinedData = `${eventBookingData.facilityBookingId},${entityTypeId},${entityId}`
-                let facilityBookingId = eventBookingData.dataValues.facilityBookingId
+                let combinedData = `${eventBookingData.eventBookingId},${entityTypeId},${entityId}`
+                let eventBookingId = eventBookingData.eventBookingId;
 
                 let entityType = 'eventBooking'
 

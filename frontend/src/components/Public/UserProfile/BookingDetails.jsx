@@ -19,8 +19,6 @@ import { encryptData } from "../../../utils/encryptData";
 import No_Data_icon from "../../../assets/No_Data_icon.png";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { decryptData } from "../../../utils/encryptData";
-// import format
-import Bokking_Bill from "../Booking_Bill/Booking_Bill";
 // redux --------------------------------------------------------------------------
 import { useDispatch } from 'react-redux';
 import { Logout } from "../../../utils/authSlice";
@@ -36,11 +34,11 @@ const BookingDetails = () => {
       tabCode: "ALL_BOOKINGS",
       active: true,
     },
-    // {
-    //   tabName: "Cancelled",
-    //   tabCode: "CANCELLED",
-    //   active: false,
-    // },
+    {
+      tabName: "Upcoming",
+      tabCode: "UPCOMING",
+      active: false,
+    },
     {
       tabName: "History",
       tabCode: "HISTORY",

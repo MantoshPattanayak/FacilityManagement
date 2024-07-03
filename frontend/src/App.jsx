@@ -92,6 +92,7 @@ import ContactUs from "./components/Public/FooterPages/ContactUs";
 import Terms_ConditionPage from "./components/Public/FooterPages/Terms_ConditionPage";
 import Disclaimer from "./components/Public/FooterPages/Disclaimer";
 import Privacy_Policy from "./components/Public/FooterPages/Privacy_Policy";
+import Partnerwithus from "./components/Public/FooterPages/PartnerWithUs";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -472,46 +473,55 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-             
-               {/* Footer pages */}
-                 <Route
+
+              {/* Footer pages */}
+              <Route
                 path="/ContactUs"
                 element={
                   <ProtectedRoute>
-                    <ContactUs/>
+                    <ContactUs />
                   </ProtectedRoute>
                 }
               />
-             
-                  <Route
+
+              <Route
                 path="/Terms_ConditionPage"
                 element={
                   <ProtectedRoute>
-                    <Terms_ConditionPage/>
+                    <Terms_ConditionPage />
                   </ProtectedRoute>
                 }
               />
-                     <Route
+              <Route
                 path="/Disclaimer"
                 element={
                   <ProtectedRoute>
-                    < Disclaimer/>
+                    < Disclaimer />
                   </ProtectedRoute>
                 }
               />
-                      <Route
+
+              <Route
                 path="/Privacy_Policy"
                 element={
                   <ProtectedRoute>
-                    <Privacy_Policy/>
+                    <Privacy_Policy />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Partnerwithus"
+                element={
+                  <ProtectedRoute>
+                    <Partnerwithus />
                   </ProtectedRoute>
                 }
               />
             </Routes>
 
-           
-           
-            
+
+
+
             {/* <Footer /> */}
             <CommonFooter1 />
           </div>
