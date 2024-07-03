@@ -17,13 +17,18 @@ export default function AddNewNotification() {
         notificationTitle: '',
         notificationContent: '',
         validFromDate: new Date(),
-        validToDate: new Date()
+        validToDate: new Date(),
+        fileAttachment: {
+            name: '',
+            data: ''
+        }
     });
     const [errors, setErrors] = useState({
         notificationTitle: '',
         notificationContent: '',
         validFromDate: '',
-        validToDate: ''
+        validToDate: '',
+        fileAttachment: ''
     });
 
     // validation function to validate form data while submit

@@ -16,7 +16,8 @@ const viewEventactivities = async (req, res) => {
       ea.facilityId,
       f.facilityname,
       ea.eventName, 
-      ea.eventCategory, 
+      ea.eventCategoryId,
+      ecm.eventCategoryName as eventCategory,
       ea.locationName, 
       ea.eventDate, 
       ea.eventStartTime,
@@ -25,23 +26,24 @@ const viewEventactivities = async (req, res) => {
       ea.ticketSalesEnabled,
       ea.ticketPrice,
       ea.eventImagePath,
-      ea.additionalFilesPath,
+      ea.additionalFilePath,
       TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
       CASE
       	WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
         THEN 'ACTIVE'
       	ELSE 'CLOSED'
       END AS status,
-      ea.remarks,
       ea.additionalDetails
       FROM 
       amabhoomi.eventactivities ea 
       INNER JOIN 
       amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
-      left join
+      LEFT JOIN
       amabhoomi.facilities f on ea.facilityId = f.facilityId
+      left join
+      amabhoomi.eventcategorymasters ecm on ea.eventCategoryId = ecm.eventCategoryId
       ORDER BY
-      ea.eventDate DESC
+      ea.eventDate desc
     `);
 
     // console.log(showAllEventactivities, "all Eventactivities");
@@ -85,14 +87,15 @@ const viewEventactivitiesById = async (req, res) => {
       f.facilityname,
       f.latitude,
       f.longitude,
-      ea.eventName, 
-      ea.eventCategory, 
+      ea.eventName,
+      ea.eventCategoryId,
+      e.eventCategoryName as eventCategory, 
       ea.locationName, 
       ea.descriptionOfEvent,
       ea.ticketSalesEnabled,
       ea.ticketPrice,
       ea.eventImagePath,
-      ea.additionalFilesPath,
+      ea.additionalFilePath,
       ea.eventDate, 
       ea.eventStartTime,
       ea.eventEndTime,
@@ -101,7 +104,6 @@ const viewEventactivitiesById = async (req, res) => {
       	WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') THEN 'ACTIVE'
       	ELSE 'CLOSED'
       END AS status,
-      ea.remarks,
       ea.additionalDetails
       FROM 
         amabhoomi.eventactivities ea 
@@ -109,6 +111,8 @@ const viewEventactivitiesById = async (req, res) => {
         amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
       LEFT JOIN
         amabhoomi.facilities f ON ea.facilityId = f.facilityId
+      left join 
+      	amabhoomi.eventcategorymasters e on e.eventCategoryId = ea.eventCategoryId
       WHERE 
       ea.eventId = :eventId
     `,

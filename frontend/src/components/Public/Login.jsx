@@ -62,7 +62,7 @@ const Login = () => {
 
     const errors = validation(LogingDataPost);
     console.log(errors);
-
+    toast.dismiss();
     if (Object.keys(errors).length === 0) {
       try {
         const res = await axiosHttpClient("PUBLIC_SIGNUP_VERIFY_OTP_API", "post", {

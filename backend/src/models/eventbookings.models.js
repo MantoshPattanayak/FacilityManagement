@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        totalMembers: {
+            type: DataTypes.INTEGER,
+        },
         bookingDate: {
             type: DataTypes.DATEONLY,
             allowNull: true

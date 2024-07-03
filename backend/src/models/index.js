@@ -153,8 +153,8 @@ db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey: 'activityI
 
 
 
-db1.faq.sync({
-  alter: false,
+db1.eventBookings.sync({
+  alter: true,
 });
 
 module.exports = db1;
