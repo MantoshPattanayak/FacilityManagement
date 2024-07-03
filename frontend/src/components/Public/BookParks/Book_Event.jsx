@@ -4,10 +4,7 @@ import PublicHeader from "../../../common/PublicHeader";
 import CommonFooter from "../../../common/CommonFooter";
 // here import Icon ------------------------------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faMinus, faShoppingCart, faIndianRupeeSign, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 // Import Navigate and Crypto -----------------------------------
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { decryptData } from "../../../utils/encryptData";
@@ -18,17 +15,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import "./Book_Now_Sport.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
-const Book_Event=()=>{
-     // UseSate for post data -------------------------------------
-     const [formData, setFormData] = useState({
+import { calculateTimeDifferenceinHours } from "../../../utils/utilityFunctions";
+const Book_Event = () => {
+    // UseSate for post data -------------------------------------
+    const [formData, setFormData] = useState({
         entityId: "",
         entityTypeId: "",
         facilityPreference: {
             playersLimit: 1,
-            sports: "",
             startTime: "",
             durationInHours: 1,
             bookingDate: "",
+            price:""
         },
     });
     const [FacilitiesData, setFacilitiesData] = useState('');
@@ -37,28 +35,67 @@ const Book_Event=()=>{
     const navigate = useNavigate();
 
     // Here Increment ------------------------------------------------
-    const handleDecrement = () => {
-        if (formData.facilityPreference.durationInHours > 1) {
-            setFormData(prevState => ({
-                ...prevState,
-                facilityPreference: {
-                    ...prevState.facilityPreference,
-                    durationInHours: prevState.facilityPreference.durationInHours - 1
-                }
-            }));
+    const handleDecrement = (e) => {
+        let { name } = e.target;
+
+        if(name = "playersLimit"){
+            let newValue = formData.facilityPreference.playersLimit;
+            newValue--;
+            if(newValue < 1){
+                toast.dismiss();
+                toast.warning("Atleast one member required for booking.");
+                return;
+            }
+            let formDataCopy = JSON.parse(JSON.stringify(formData));
+            formDataCopy.facilityPreference.playersLimit = newValue;
+            setFormData(formDataCopy);
+            return;
+        }
+        else{
+            if (formData.facilityPreference.durationInHours > 1) {
+                setFormData(prevState => ({
+                    ...prevState,
+                    facilityPreference: {
+                        ...prevState.facilityPreference,
+                        durationInHours: prevState.facilityPreference.durationInHours - 1
+                    }
+                }));
+            }
         }
     };
 
     // Decrement ------------------------------------------------
-    const handleIncrement = () => {
-        if (formData.facilityPreference.durationInHours < 4) {
-            setFormData(prevState => ({
-                ...prevState,
-                facilityPreference: {
-                    ...prevState.facilityPreference,
-                    durationInHours: prevState.facilityPreference.durationInHours + 1
-                }
-            }));
+    const handleIncrement = (e) => {
+        e.preventDefault();
+        let { name } = e.target;
+        console.log(name);
+
+        if(name = "playersLimit"){
+            console.log("first");
+            let newValue = formData.facilityPreference.playersLimit;
+            newValue++;
+            console.log("2", newValue)
+            if(newValue > 5){
+                toast.dismiss();
+                toast.warning("Maximum members allowed per booking is 5.");
+                return;
+            }
+            let formDataCopy = JSON.parse(JSON.stringify(formData));
+            formDataCopy.facilityPreference.playersLimit = newValue;
+            setFormData(formDataCopy);
+            return;
+        }
+        else{
+            console.log("3");
+            if (formData.facilityPreference.durationInHours < 4) {
+                setFormData(prevState => ({
+                    ...prevState,
+                    facilityPreference: {
+                        ...prevState.facilityPreference,
+                        durationInHours: prevState.facilityPreference.durationInHours + 1
+                    }
+                }));
+            }
         }
     };
 
@@ -79,7 +116,7 @@ const Book_Event=()=>{
     };
     // here Post the data (Add to Cart) -------------------------------
     async function HandleAddtoCart() {
-
+        console.log("form data submit", formData)
         try {
             if (!validateForm()) return;
             // Prepare request body
@@ -87,7 +124,6 @@ const Book_Event=()=>{
                 entityId: formData.entityId,
                 entityTypeId: formData.entityTypeId,
                 facilityPreference: formData.facilityPreference
-
             };
             let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
             toast.success('Add to Cart has been done  successfully.', {
@@ -114,8 +150,13 @@ const Book_Event=()=>{
             const requestBody = {
                 entityId: formData.entityId,
                 entityTypeId: formData.entityTypeId,
-                facilityPreference: formData.facilityPreference
-
+                facilityPreference: {
+                    totalMembers: formData.facilityPreference.playersLimit,
+                    bookingDate: formData.facilityPreference.bookingDate,
+                    startTime: formData.facilityPreference.startTime,
+                    durationInHours: formData.facilityPreference.durationInHours,
+                    amount: formData.facilityPreference.playersLimit * formData.facilityPreference.playersLimit,
+                }
             };
             let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", requestBody);
             toast.success('Booking details submitted successfully', {
@@ -140,12 +181,20 @@ const Book_Event=()=>{
             let res = await axiosHttpClient("VIEW_EVENT_BY_ID_API", "get", {}, facilityId);
 
             console.log("response of facility fetch api", res);
+            console.log('duration', res.data.eventActivityDetails.eventEndTime, res.data.eventActivityDetails.eventStartTime)
             setFacilitiesData(res.data.eventActivityDetails);
             setFormData({
                 ...formData,
                 ["entityTypeId"]: 6,
                 ["facilityId"]: res.data.eventActivityDetails.eventId,
                 ["entityId"]: res.data.eventActivityDetails.eventId,
+                ["facilityPreference"]: {
+                    playersLimit: 1,
+                    startTime: res.data.eventActivityDetails.eventStartTime,
+                    durationInHours: calculateTimeDifferenceinHours(res.data.eventActivityDetails.eventStartTime, res.data.eventActivityDetails.eventEndTime),
+                    bookingDate: res.data.eventActivityDetails.eventDate,
+                    price: res.data.eventActivityDetails.ticketPrice
+                }
             });
         } catch (err) {
             console.log("here Error", err);
@@ -178,128 +227,157 @@ const Book_Event=()=>{
         setErrors(err);
         return Object.keys(err).length === 0; // Returns true if no errors
     };
-    return(
+
+    return (
         <div className="Book_sport_Main_conatiner">
-        <ToastContainer />
-        <PublicHeader />
-        <div className="Book_sport_Child_conatiner">
-            <div className="Add_sport_form">
-                <div className="sport_name_Book">
-                    <h1 className="Faclity_Name"> {FacilitiesData?.eventName}</h1>
-                    <p className="Faclity_Address"> {FacilitiesData?.locationName}</p>
-                </div>
-                <div class="bookingFormWrapper">
-                    <form class="bookingForm">
-                        <div className="fromgroup_par">
+            <ToastContainer />
+            <PublicHeader />
+            <div className="Book_sport_Child_conatiner">
+                <div className="Add_sport_form">
+                    <div className="sport_name_Book">
+                        <h1 className="Faclity_Name"> {FacilitiesData?.eventName}, {FacilitiesData?.locationName}</h1>
+                        {/* <p className="Faclity_Address"> </p> */}
+                    </div>
+                    <div class="bookingFormWrapper">
+                        <form class="bookingForm">
+                            <div className="fromgroup_par">
+                                <div class="formGroup">
+                                    <span class="fieldName" >Total Members</span>
+                                    <div className="increament_decrement_conatiner">
+                                        <button
+                                            type="button"
+                                            name="playersLimit"
+                                            className="decrement-button"
+                                            onClick={handleDecrement}
+                                        >
+                                            <FontAwesomeIcon icon={faMinus} />
+                                        </button>
+                                        <input
+                                            type="text"
+                                            className="formInput_Add_member"
+                                            value={formData.facilityPreference.playersLimit}
+                                            name="playersLimit"
+                                            onChange={handleChangeInput}
+                                            disabled
+                                        />
+                                        <button
+                                            type="button"
+                                            name="playersLimit"
+                                            className="increment-button"
+                                            onClick={handleIncrement}
+                                        >
+                                            <FontAwesomeIcon icon={faPlus} />
+                                        </button>
+                                    </div>
+                                    {/* <select class="formSelect"
+                                        name="playersLimit"
+                                        value={formData.facilityPreference.playersLimit}
+                                        onChange={handleChangeInput}
+                                    >
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                        <option value="">3</option>
+                                        <option value="">4</option>
+                                        <option value="">5</option>
+                                        <option value="">6</option>
+                                        <option value="">7</option>
+                                        <option value="">8</option>
+                                        <option value="">9</option>
+                                        <option value="">10</option>
+                                        <option value="">11</option>
+                                        <option value="">12</option>
+                                        <option value="">1</option>
+                                        <option value="">13</option>
+                                        <option value="">14</option>
+                                        <option value="">15</option>
+                                        <option value="">16</option>
+                                        <option value="">17</option>
+                                        <option value="">18</option>
+                                        <option value="">19</option>
+                                        <option value="">20</option>
+                                    </select> */}
+
+                                </div>
+                                <span className="error_massage_span">
+                                    {errors.playersLimit && <span className="errorMessage">{errors.playersLimit}</span>}
+                                </span>
+
+                            </div>
+
+                            <div className="fromgroup_par">
+                                <div class="formGroup">
+                                    <span class="fieldName">Date</span>
+                                    <input type="date" class="formInput" name="bookingDate" value={formData.facilityPreference.bookingDate} onChange={handleChangeInput} disabled />
+                                </div>
+                                <span className="error_massage_span">
+                                    {errors.bookingDate && <span className="errorMessage">{errors.bookingDate}</span>}
+                                </span>
+
+                            </div>
+                            <div className="fromgroup_par">
+                                <div class="formGroup">
+                                    <span class="fieldName">Start Time</span>
+                                    <input type="time" class="formInput" name="startTime" value={formData.facilityPreference.startTime} onChange={handleChangeInput} disabled />
+                                </div>
+                                <span className="error_massage_span">
+                                    {errors.startTime && <span className="errorMessage">{errors.startTime}</span>}
+                                </span>
+
+                            </div>
+
                             <div class="formGroup">
-                                <span class="fieldName" >Total Members</span>
-                                <select class="formSelect"
-                                    name="sports"
-                                    value={formData.sports}
-                                    onChange={handleChangeInput} >
-                                     <option value="">1</option>
-                                     <option value="">2</option>
-                                     <option value="">3</option>
-                                     <option value="">4</option>
-                                     <option value="">5</option>
-                                     <option value="">6</option>
-                                     <option value="">7</option>
-                                     <option value="">8</option>
-                                     <option value="">9</option>
-                                     <option value="">10</option>
-
-                                     <option value="">11</option>
-                                     <option value="">12</option>
-                                     <option value="">1</option>
-
-                                     <option value="">13</option>
-                                     <option value="">14</option>
-                                     <option value="">15</option>
-                                     <option value="">16</option>
-
-                                     <option value="">17</option>
-                                     <option value="">18</option>
-                                     <option value="">19</option>
-                                     <option value="">20</option>
-                                 
-                                </select>
-
+                                <span class="fieldName">Duration</span>
+                                <div className="increament_decrement_conatiner">
+                                    <button
+                                        type="button"
+                                        className="decrement-button"
+                                        onClick={handleDecrement}
+                                        disabled
+                                    >
+                                        <FontAwesomeIcon icon={faMinus} />
+                                    </button>
+                                    <input
+                                        type="text"
+                                        className="formInput_Add_member"
+                                        value={formData.facilityPreference.durationInHours}
+                                        name="durationInHours"
+                                        onChange={handleChangeInput}
+                                        disabled
+                                    />
+                                    <button
+                                        type="button"
+                                        className="increment-button"
+                                        onClick={handleIncrement}
+                                        disabled
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} />
+                                    </button>
+                                </div>
                             </div>
-                            <span className="error_massage_span">
-                                {errors.sports && <span className="errorMessage">{errors.sports}</span>}
-                            </span>
-
-                        </div>
-
-                        <div className="fromgroup_par">
                             <div class="formGroup">
-                                <span class="fieldName"   >Date:</span>
-                                <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
+                                <span class="fieldName">Amount</span>
+                                <FontAwesomeIcon icon={faIndianRupeeSign} /><h1 className="price_Sport">&nbsp; {formData.facilityPreference.price * formData.facilityPreference.playersLimit}/-</h1>
                             </div>
-                            <span className="error_massage_span">
-                                {errors.bookingDate && <span className="errorMessage">{errors.bookingDate}</span>}
-                            </span>
-
-                        </div>
-                        <div className="fromgroup_par">
-                            <div class="formGroup">
-                                <span class="fieldName"   >Satrt Time:</span>
-                                <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
-                            </div>
-                            <span className="error_massage_span">
-                                {errors.startTime && <span className="errorMessage">{errors.startTime}</span>}
-                            </span>
-
-                        </div>
-                     
-                        <div class="formGroup">
-                            <span class="fieldName"  >Duration</span>
-                            <div className="increament_decrement_conatiner">
-                                <button
-                                    type="button"
-                                    className="decrement-button"
-
-                                    onClick={handleDecrement}
-                                >
-                                    <FontAwesomeIcon icon={faMinus} />
-                                </button>
-                                <input
-                                    type="text"
-                                    className="formInput_Add_member"
-                                    value={formData.facilityPreference.durationInHours}
-                                    name="durationInHours"
-                                    onChange={handleChangeInput}
-                                />
-                                <button
-                                    type="button"
-                                    className="increment-button"
-                                    onClick={handleIncrement}
-                                >
-                                    <FontAwesomeIcon icon={faPlus} />
-                                </button>
-                            </div>
-                        </div>
-                    
-                    </form>
-                </div>
-                <div className="Button_Conatiner_Sport">
-                    <button type="submit" class="Add_to_Cart"
-                        onClick={HandleAddtoCart}
-                    >
-                        <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
-                        Add to Cart
-                    </button>
-                    <button type="submit" class="Proceed_to_Payment" 
-                    onClick={HandleProccedToPayment}
-                    >
-                        <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                        Proceed to Payment
-                    </button>
+                        </form>
+                    </div>
+                    <div className="Button_Conatiner_Sport">
+                        <button type="submit" class="Add_to_Cart"
+                            onClick={HandleAddtoCart}
+                        >
+                            <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
+                            Add to Cart
+                        </button>
+                        <button type="submit" class="Proceed_to_Payment"
+                            onClick={HandleProccedToPayment}
+                        >
+                            <FontAwesomeIcon icon={faCreditCard} className="Icon" />
+                            Proceed to Payment
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
     )
 }
 

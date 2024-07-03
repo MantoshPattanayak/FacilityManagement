@@ -77,6 +77,8 @@ import {
 // import for slider
 
 import TourGuide from "../../common/TourGuide.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { manageTourGuide } from "../../utils/authSlice.jsx";
 // import "./YourStyles.css";
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
@@ -103,6 +105,7 @@ const responsive = {
 
 const Landing = () => {
   const [runTour, setRunTour] = useState(false);
+  const [showTour, setShowTour] = useState(localStorage.getItem('tourGuide') || 'true');
   const [mapdata, setmapdata] = useState([]);
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
@@ -126,7 +129,7 @@ const Landing = () => {
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
-
+  let dispatch = useDispatch();
   const [exploreNewActivities, setExploreNewActivities] = useState([
     {
       game: "Tennis",
@@ -179,7 +182,7 @@ const Landing = () => {
   };
   const selectedImage = backGround_images[currentIndexBg];
 
-    //function to fetch suggestions of facilities on input by user
+  //function to fetch suggestions of facilities on input by user
   async function fetchAutoSuggestData() {
     try {
       let response = await axiosHttpClient("View_Park_Data", "post", {
@@ -250,6 +253,7 @@ const Landing = () => {
     setUserGeoLocation();
     document.title = "AMA BHOOMI";
     setRunTour(true);
+    console.log('showTour', showTour);
   }, []);
 
   useEffect(() => {
@@ -394,7 +398,7 @@ const Landing = () => {
   // here Update the data-----------------------------------------------
   useEffect(() => {
     fecthMapData();
-  }, [givenReq, facilityTypeId]);
+  }, [givenReq, facilityTypeId, showTour]);
 
   //refresh on user input to show suggestions of facilities
   useEffect(() => {
@@ -625,6 +629,16 @@ const Landing = () => {
   };
 
   const styles = getStyles();
+
+  const handleJoyrideCallback = (data) => {
+    const { status, action } = data;
+    if (status === 'finished' || action === 'skip') {
+      // Save the state to local storage to prevent the tour from showing again
+      dispatch(manageTourGuide({ tourGuide: false }));
+      setRunTour(false);
+      setShowTour(false);
+    }
+  };
 
   return (
     <div className="landingcontainer">
@@ -1194,7 +1208,7 @@ const Landing = () => {
       </div>
 
       {/* <div className="footer"></div> */}
-      <TourGuide run={runTour} />
+      {(showTour == 'true') && <TourGuide run={runTour} callback={handleJoyrideCallback}/>}
     </div>
   );
 };

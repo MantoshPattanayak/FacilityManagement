@@ -19,6 +19,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@reduxjs/toolkit": "^2.2.4",
     "axios": "^1.4.0",
+    "backend": "file:..",
     "chart.js": "^4.4.2",
     "html2pdf.js": "^0.9.0",
     "jspdf": "^2.5.1",
@@ -37,7 +38,8 @@
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.5",
     "redux-persist": "^6.0.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "vite": "^5.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",
@@ -49,7 +51,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss-nesting": "^12.1.1",
-    "tailwindcss": "^3.4.3",
-    "vite": "^5.1.6"
+    "tailwindcss": "^3.4.3"
   }
 }

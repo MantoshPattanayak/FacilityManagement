@@ -6,7 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: {
-        main: './backend/server.js'
+        main: './backend/src/server.js'
     },
     output: {
         path: path.join(__dirname, 'dist', 'backend'),
@@ -49,20 +49,24 @@ module.exports = {
     // ],
     plugins: [
         new DefinePlugin({
-            PORT: JSON.stringify(process.env.PORT),
-            CORS_ORIGIN: JSON.stringify(process.env.CORS_ORIGIN),
-            API_VERSION: JSON.stringify(process.env.API_VERSION),
-            ACCESS_TOKEN_SECRET: JSON.stringify(process.env.ACCESS_TOKEN_SECRET),
-            REFRESH_TOKEN_SECRET: JSON.stringify(process.env.REFRESH_TOKEN_SECRET),
-            COOKIE_DOMAIN: JSON.stringify(process.env.COOKIE_DOMAIN),
-            URL: JSON.stringify(process.env.URL),
-            Encrypt_Decrypt_key: JSON.stringify(process.env.Encrypt_Decrypt_key),
-            IV: JSON.stringify(process.env.IV),
-            HOST: JSON.stringify(process.env.HOST),
-            USER_NAME: JSON.stringify(process.env.USER_NAME),
-            PASSWORD: JSON.stringify(process.env.PASSWORD),
-            DATABASE: JSON.stringify(process.env.DATABASE),
-            DIALECT: JSON.stringify(process.env.DIALECT)
+            API_VERSION             : JSON.stringify(process.env.API_VERSION),
+            PORT                    : JSON.stringify(process.env.PORT),
+            CORS_ORIGIN             : JSON.stringify(process.env.CORS_ORIGIN),
+            Encrypt_Decrypt_key     : JSON.stringify(process.env.Encrypt_Decrypt_key),
+            IV                      : JSON.stringify(process.env.IV),
+            HOST                    : JSON.stringify(process.env.HOST),
+            USER_NAME               : JSON.stringify(process.env.USER_NAME),
+            PASSWORD                : JSON.stringify(process.env.PASSWORD),
+            DATABASE                : JSON.stringify(process.env.DATABASE),
+            DIALECT                 : JSON.stringify(process.env.DIALECT),
+            UPLOAD_DIR              : JSON.stringify(process.env.UPLOAD_DIR),
+            SECRETJWTKEY            : JSON.stringify(process.env.SECRETJWTKEY),
+            GOOGLE_CLIENT_ID        : JSON.stringify(process.env.GOOGLE_CLIENT_ID),
+            GOOGLE_CLIENT_SECRET    : JSON.stringify(process.env.GOOGLE_CLIENT_SECRET),
+            RAZORPAY_API_KEY        : JSON.stringify(process.env.RAZORPAY_API_KEY),
+            RAZORPAY_APT_SECRET     : JSON.stringify(process.env.RAZORPAY_APT_SECRET),
+            ACCESS_TOKEN_SECRET     : JSON.stringify(process.env.ACCESS_TOKEN_SECRET),
+            REFRESH_TOKEN_SECRET    : JSON.stringify(process.env.REFRESH_TOKEN_SECRET),
         })
     ]
 };
