@@ -206,7 +206,7 @@ function addHoursToTime(timeString, hoursToAdd) {
  */
 
 // ticket upload code start
-let uploadTicket = async(title, bookingRef, location, date, time, cost, totalMembers,combinedData, facilityBookingId,userId)=>{
+let uploadTicket = async(title, bookingRef, location, date, time, cost, totalMembers,combinedData, facilityBookingId,userId,entityType)=>{
     try {
         let qrData = await QRCode.toDataURL(combinedData)
 
@@ -234,7 +234,6 @@ let uploadTicket = async(title, bookingRef, location, date, time, cost, totalMem
 
         const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
         console.log('jlfjlsdjfljd')
-        let entityType = 'facilityBooking'
         let filePurpose = 'ticketBooking'
         // add this to file and file attachment
         // insert to file table and file attachment table
@@ -367,7 +366,9 @@ let parkBooking = async (req, res) => {
                 let totalMembers = newParkBooking.dataValues.totalMembers;
                 let combinedData = `${newParkBooking.dataValues.facilityBookingId},${entityTypeId},${entityId}`
                 let facilityBookingId = newParkBooking.dataValues.facilityBookingId
-                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
+
+                let entityType = 'facilityBooking'
+                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId, entityType)
 
                 if(ticketUploadAndGeneratePdf?.error){
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -445,7 +446,9 @@ let parkBooking = async (req, res) => {
                 let combinedData = `${newPlaygroundBooking.facilityBookingId},${entityTypeId},${entityId}`
                 let facilityBookingId = newPlaygroundBooking.dataValues.facilityBookingId
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId)
+                let entityType = 'facilityBooking'
+
+                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId,entityType)
 
                 if(ticketUploadAndGeneratePdf?.error){
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -525,7 +528,9 @@ let parkBooking = async (req, res) => {
                 let combinedData = `${eventBookingData.eventBookingId},${entityTypeId},${entityId}`
                 let eventBookingId = eventBookingData.eventBookingId;
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId)
+                let entityType = 'eventBooking'
+
+                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId, entityType)
 
                 if(ticketUploadAndGeneratePdf?.error){
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -1170,9 +1175,24 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
 
 let generateQRCode = async(req,res)=>{
     try {
-        let {bookingId} = req.body
+        let {bookingId,entityTypeId} = req.body
         let statusId = 1;
-        let entityType = 'facilityBooking'
+        let entityType
+        if(entityTypeId==1 ||entityTypeId==2 || entityTypeId==3 ){
+            entityType = "facilityBooking"
+        }
+        else if(entityTypeId == 4 ) {
+            entityType = "bluewayBooking"
+        }
+        else if(entityTypeId == 5 ) {
+            entityType = "greenwayBooking"
+        }
+        else if(entityTypeId == 6 ) {
+            entityType = "eventBooking"
+        }
+        else if(entityTypeId == 7 ) {
+            entityType = "eventHostBooking"
+        }
         let filePurpose = 'ticketBooking'
         if(!bookingId){
             return res.status(statusCode.BAD_REQUEST.code).json({

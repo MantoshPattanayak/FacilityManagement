@@ -18,7 +18,7 @@ module.exports =(sequelize,DataTypes)=>{
             type:DataTypes.STRING(255)
         },
         eventDate:{
-            type:DataTypes.DATE
+            type:DataTypes.DATEONLY
         },
         eventStartTime:{
             type:DataTypes.TIME

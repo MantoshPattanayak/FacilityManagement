@@ -3,11 +3,14 @@ const statusCode = require("../../../utils/statusCode");
 const db = require("../../../models");
 const grievanceMasters = db.grievancemasters;
 const statusMasters = db.statusmaster;
+let contactUs = db.contactrequests
 const feedbacks = db.feedback
 const grievanceCategories = db.grievancecategories;
 const path = require('path');
 const fs = require('fs');
 const imageUpload = require('../../../utils/imageUpload');
+let { generateOtp,veriftyOtp } = require("../../../utils/generateandVerifyOtp");
+let {Op} =require('sequelize')
 
 // insert grievance - start
 const addGrievance = async (req, res) => {
@@ -349,11 +352,72 @@ const createFeedback = async (req, res) => {
 };
 //create feedback -end 
 
+let contactRequest = async (req,res)=>{
+    let transaction;
+    try {
+        transaction = await sequelize.transaction();
+      let updatedDt = new Date();
+      let createdDt = new Date();
+      let unauthorizedStatusId = 19;
+      let {fullName,mobileNo,emailId,message} = req.body
+
+      let findIfTheMobileNoExistAlready = await contactUs.findOne({
+        where:{
+            [Op.and]:[{mobileNo:mobileNo},{statusId:unauthorizedStatusId}]
+        }
+      })
+      if(findIfTheMobileNoExistAlready){
+        return res.status(statusCode.BAD_REQUEST.code).json({message:"One request is already opened with the given mobile number"})
+      }
+      let contactRequestData ={
+        fullName:fullName,
+        mobileNo:mobileNo,
+        emailId:emailId,
+        statusId:unauthorizedStatusId,
+        message:message,
+        updatedDt:updatedDt,
+        createdDt:createdDt                       
+      };
+
+      //   insert into contact request table
+       let createContactRequest = await contactUs.create(contactRequestData,{ transaction, returning: true  })
+       console.log('near 384 line')
+       if(createContactRequest){
+        let sendOtp = await generateOtp(mobileNo);
+        console.log('send otp',sendOtp)
+        if(sendOtp?.error){
+            await transaction.rollback();
+            if(sendOtp?.error== 'Something went wrong '){
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                    message:err.message
+                })
+            }
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:err.message
+            })
+           
+        }
+        await transaction.commit(); // If everything goes well, will do the commit here
+        return res.status(statusCode.CREATED.code).json({
+            message:"Your request is submitted sucessfully. Kindly verify your mobile number"
+           })
+       }
+       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:err.message
+      })
+    } catch (err) {
+        if(transaction) await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:err.message
+      })
+    }
+  }
 module.exports = {
     addGrievance,
     viewGrievanceList,
     viewGrievanceById,
     createFeedback,
     fetchInitialData,
-    actionTaken
+    actionTaken,
+    contactRequest
 }
