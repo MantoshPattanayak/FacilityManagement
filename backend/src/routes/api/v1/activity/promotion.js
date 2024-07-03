@@ -6,7 +6,7 @@ const promotionController = require("../../../../controllers/" + api_version + "
 
 router.post("/createPromotion",promotionUpload.fields([
     { name: 'imageUrl', maxCount: 1 }]),promotionController.createPromotion); 
-router.post("/updatePromotion",promotionUpload.fields([
+router.put("/updatePromotion",promotionUpload.fields([
     { name: 'imageUrl', maxCount: 1 }]),promotionController.updatePromotion)
 router.get('/fetchdata', promotionController. fetchData); 
 module.exports = router;
