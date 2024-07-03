@@ -48,7 +48,8 @@ const CommonFooter1 = () => {
                 <Link to="/ContactUs">Contact Us</Link>
               </li>
               <li>
-                <a href="#">Partner with us</a>
+                <Link to='/Partnerwithus'>Partner with us</Link>
+                
               </li>
               <li>
                 <Link to="/grievance-feedback-form">Grievance</Link>
