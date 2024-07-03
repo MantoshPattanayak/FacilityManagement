@@ -1,90 +1,122 @@
-/* Default styles */
-.Book_Now_Min_conatiner {
-  height: 100%;
-  /* width: 100%; */
-  width: 100vw;
-  /* background-color: #3ab75726; */
-  /* background-image:  url('../../../assets/BookNow_Background.png'); */
-}
-
 .booknow-container {
-  width: 56vw;
-  height: 155vh;
-  /* margin-top: 7%; */
-  margin-left: 33%;
-  box-sizing: border-box;
   display: flex;
-  /* flex-direction: column; */
+  justify-content: center;
   align-items: center;
-
+  padding: 20px;
+  margin-top: 5%;
 }
 
 .park-container {
-  width: 45vw;
-  /* height: 115vh; */
-  height: 132vh;
-  border: 1px solid rgb(193, 191, 191);
-  border-radius: 5px;
-  float: left;
-  padding-inline: 40px;
-  /* background-color: #EEEEEE; */
+  background-color: #f7f7f7;
+  padding: 20px;
+  width: 40vw;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.heading_BookNow {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+.heading_BookNow h1 {
+  font-size: 24px;
+  color: #226736;
+}
+
+.heading_BookNow h4 {
+  font-size: 16px;
+  color: #666;
+}
+
+.form_BookNow {
   display: flex;
   flex-direction: column;
 }
 
-
-.heading_BookNow {
-  margin-top: 10px;
-    width: 100%;
-    font-size: x-large;
-    font-weight: 600;
-    margin-bottom: 0px;
-    display: flex;
-    justify-content: space-between;
+.activities-selection {
+  margin-bottom: 20px;
 }
 
-.address p {
-  color: rgb(81, 86, 92);
+.activities-container {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-/* Hide the spin buttons in number inputs */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.activity-box {
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.input-fields0 {
-  float: left;
+.active-activity {
+  background-color: #ddd;
 }
 
-.member-input {
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 8vw;
-  height: 38px;
-  margin-left: 10px;
-  padding-left: 6px;
+.member-details,
+.booking-details {
+  margin-bottom: 20px;
 }
 
-.input-fields p {
-  margin-right: 20px;
+label {
   font-size: large;
-  font-weight: 600;
+  font-weight: 500;
+  color: #333;
 }
 
-.input-fields {
-  margin-top: 14px;
+.custom-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.duration-container {
+  display: flex;
+  align-items: center;
+}
+
+.duration-button {
+  display:flexbox;
+  margin-bottom: 5px;
+  padding: 8px;
+  border: none;
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+
+.buttons-container {
+  display: flex;
   justify-content: space-between;
 }
 
-/* .activity-preference {
-  margin-top: 20%;
-} */
+.add-to-cart-button,
+.submit-and-proceed-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
 
+.add-to-cart-button:disabled,
+.submit-and-proceed-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+
+/* Activity preference........ */
 .activity-preference span {
   font-size: large;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .games {
@@ -135,19 +167,31 @@ input[type="number"]::-webkit-inner-spin-button {
   border-radius: 5px;
 }
 
-/* .input-field-date {
-    margin-top: 13px;
-    margin-left: 5px;
-  
-    width: 190px;
-    height: 38px;
-    border: 1px solid black;
-    border-radius: 5px;
-    right: 0%;
-  } */
+
+/* Price book............. */
+.priceBook {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.priceBook label {
+  font-size: large;
+  font-weight: 500;
+}
+
+.price-display {
+  width: 12vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 
 
+
+/* Duration.............. */
 /* ----Duration----- */
 .input-container {
   position: relative;
@@ -246,210 +290,4 @@ input[type="number"]::-webkit-inner-spin-button {
 .duration label {
   font-size: large;
   font-weight: 500;
-}
-
-
-.priceBook {
-  width: auto;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.priceBook label {
-  font-size: large;
-  font-weight: 500;
-}
-
-.price-display {
-  width: 12vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-
-
-/* Media queries */
-@media screen and (max-width: 768px) {
-
-  .input-field-date,
-  .start-time input,
-  .duration input {
-    width: 100%;
-  }
-
-  .booknow-container {
-    width: 90%;
-    margin: 10% auto;
-  }
-
-  .park-container,
-  .cart-container {
-    width: 100%;
-    float: none;
-    margin-right: 0;
-  }
-
-  .park-container {
-    margin-bottom: 20px;
-  }
-
-  .input-fields p {
-    margin-right: 10px;
-  }
-
-  .game-btn {
-    margin-right: 5px;
-  }
-
-  .other-activities label,
-  .date label,
-  .start-time label,
-  .duration label {
-    font-size: medium;
-  }
-
-  .member-input,
-  .input-field-otheractivities,
-  .input-field-date {
-    width: 100%;
-  }
-
-  .input-field-date {
-    margin-top: 30px;
-  }
-}
-
-
-
-@media screen and (max-width: 450px) {
-
-  .input-field-date,
-  .start-time input,
-  .duration input {
-    width: 100%;
-    /* Make inputs full width */
-    margin-top: 10px;
-    /* Add some space between sections */
-  }
-
-  /* Adjust label font size for smaller screens */
-  .date label,
-  .start-time label,
-  .duration label {
-    font-size: small;
-  }
-
-  .booknow-container {
-    margin-top: 90px;
-  }
-
-  .activity-preference {
-    margin-top: 100px;
-  }
-}
-
-
-@media screen and (max-width: 1111px) {
-  /* .date label,
-    .start-time label,
-    .duration label {
-      display: block; 
-      margin-bottom: -34px;
-      padding-bottom: 0px;
-    } */
-
-  .date input,
-  .start-time input,
-  .duration input {
-    width: calc(100% - 110px);
-    /* Make inputs full width minus space for labels */
-
-    float: right;
-  }
-
-  .start-time label {
-    margin-top: 40px;
-  }
-
-  .duration label {
-    margin-top: 50px;
-  }
-
-  .addtocart-btn {
-    margin-top: 20px;
-    padding: 7px;
-  }
-}
-
-/* Additional media query for smaller screens */
-@media screen and (max-width: 768px) {
-
-  .date input,
-  .start-time input,
-  .duration input {
-    width: 100%;
-    /* Make inputs full width on smaller screens */
-  }
-}
-
-/* Add to process to card */
-.Add_to_card_main_conatiner {
-  padding: 50px;
-}
-
-.button_Book_Now {
-  display: flex;
-  justify-content: space-between;
-
-}
-
-
-
-.AddToCartButton {
-  background-color: #3AB757;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.AddToCartButton:hover {
-  transform: translateY(-1px) scale(1.05);
-  /* Apply a slight scale and lift effect on hover */
-  background-color: #007036;
-  /* Green */
-}
-
-.Icon {
-  margin-right: 8px;
-}
-
-
-.addtocart-btn {
-  background-color: #3AB757;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.addtocart-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  /* Apply a slight scale and lift effect on hover */
-  background-color: #009f2a;
-  /* Green */
 }
