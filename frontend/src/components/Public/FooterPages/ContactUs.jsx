@@ -5,12 +5,22 @@ import "./ContactUs.css"
 //font AwesomeIcon ---------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
+import ContactUsImage from "../../../assets/contact_us-removebg-preview.png"
 
 import PublicHeader from "../../../common/PublicHeader";
 const ContactUs = () => {
     return (
         <div className="Main_Container_ContactUs_Pages">
             <PublicHeader />
+            <div className="ContactUs_Child">
+                <span className="ContactUs_Text">
+                    <h1 className="Contact_us_text"> Contact Us </h1>
+                    <p className="p_tag_contact">Feel Free to Contact us and we will get back to you as soon as it possible</p>
+                </span>
+                <span className="Contact_us_image">
+                    <img className="Contact_image" src={ContactUsImage}></img>
+                </span>
+            </div>
             <div className="Container_Contact">
                 <h1 className="Contact_us_text_name">Contact Us</h1>
                 <div className="Child_Container_Contact">

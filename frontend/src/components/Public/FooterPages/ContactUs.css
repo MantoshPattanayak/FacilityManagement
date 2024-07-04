@@ -2,7 +2,28 @@
     font-family: Arial, sans-serif;
 
 }
-
+.ContactUs_Child{
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(140, 207, 155);
+    padding: 10px;
+}
+.ContactUs_Text{
+  margin-top: 140px;
+}
+.Contact_us_text{
+    font-size: 55px;
+    font-weight: bold;
+}
+.Contact_image{
+    height: 50vh;
+}
+.p_tag_contact{
+    font-size: 20px;
+}
+.Contact_us_image{
+ margin-top: 30px;
+}
 .Container_Contact {
     margin-top: 80px;
     display: flex;

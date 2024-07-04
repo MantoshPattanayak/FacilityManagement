@@ -87,15 +87,19 @@
 .prev_button:hover{
     background-color: #23272E;
 }
-.next_button{
-    background-color: #00B562;
+.next_button1{
     padding: 10px;
+    background-color: #176BFB;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
     width: 10%;
-    color: #fff;
-    float: right;
 }
-.next_button:hover{
-    background-color: green;
+.next_button1:hover{
+    background-color: #0144B7;
 }
 .step_from_css{
     text-align: center;
