@@ -152,7 +152,7 @@ justify-content: space-around;
 }
 .partner-form button {
     padding: 10px;
-    background-color: #029102;
+    background-color: #176bfb;
     color: white;
     border: none;
     border-radius: 5px;
@@ -164,7 +164,7 @@ justify-content: space-around;
 }
 
 .partner-form button:hover {
-    background-color: #0c8d00;
+    background-color: #0144b7;
 }
 
 @media (max-width: 600px) {

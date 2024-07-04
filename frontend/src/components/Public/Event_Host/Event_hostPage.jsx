@@ -555,7 +555,7 @@ const Event_hostPage = () => {
                             </div>
                             {/* Two more similar headings */}
                             <div className="buttons-container">
-                                <button type="submit" className="next_button">Next</button>
+                                <button type="submit" className="next_button1">Next</button>
                             </div>
                         </div>
                     </form>
@@ -804,7 +804,7 @@ const Event_hostPage = () => {
                             {/* Two more similar headings */}
                             <div className="buttons-container">
                                 <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
-                                <button type="submit" className="next_button">Next</button>
+                                <button type="submit" className="next_button1">Next</button>
                             </div>
                         </div>
                     </form>
@@ -1129,7 +1129,7 @@ const Event_hostPage = () => {
                             </div>
                             <div className="buttons-container">
                                 <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
-                                <button type="submit" className="next_button">Submit</button>
+                                <button type="submit" className="next_button1">Submit</button>
                             </div>
                         </div>
 

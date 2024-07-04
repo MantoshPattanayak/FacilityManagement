@@ -16,7 +16,7 @@ import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png"
 import greenway from "../../../assets/Greenway.png"
 import blueway from "../../../assets/blueways.png"
 // Data Not available Icon ---------------------------------------------------------------
-import No_Data_icon from "../../../assets/No_Data_icon.png";
+import No_Data_icon from "../../../assets/No_Data.png";
 import { useEffect, useState } from "react";
 // Import here to encrptData ------------------------------------------
 import { Link, useLocation, useNavigate } from "react-router-dom";

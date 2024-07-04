@@ -1366,6 +1366,10 @@ margin-top: 20px;
     .image-secondDiv img {
         height: 100%;
     }
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 20;
+          }
 }
 
 @media screen and (max-width: 1400px) {
@@ -1374,6 +1378,10 @@ margin-top: 20px;
         height: auto;
         gap: 2vh;
     }
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 12;
+          }
 
     /*---- event card section----*/
     .carousel-slide2 {
@@ -1411,7 +1419,10 @@ margin-top: 20px;
         height: auto;
         gap: 2vh;
     }
-
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 2;
+          }
 
     .bg-img {
         height: 50vh;
@@ -1478,6 +1489,10 @@ margin-top: 20px;
     .suggestions {
         top: 520px;
     }
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 2;
+          }
 }
 
 @media screen and (max-width: 1200px) {
@@ -1485,7 +1500,10 @@ margin-top: 20px;
     .bg-img {
         height: 50vh;
     }
-
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 2;
+          }
     /* header-content  Fonnt size-------------- */
     .header nav ul li a {
         font-size: 12px;
@@ -1720,6 +1738,10 @@ margin-top: 20px;
         align-items: flex-start;
         margin-left: -12vw;
     }
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 6;
+          }
 
     .Search-Conatiner {
         /* height: 36vh; */
@@ -1930,7 +1952,10 @@ margin-top: 20px;
     .landingcontainer {
         overflow-x: auto;
     }
-
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 2;
+          }
     .landing-page_contant {
         align-items: flex-end;
         /* margin-left: 2vw; */
@@ -2154,6 +2179,10 @@ margin-top: 20px;
     .landingcontainer {
         overflow-x: auto;
     }
+    .Current_Event_image{
+        align-items: center;
+          margin-left: 0;
+          }
 
     .Search-Conatiner {
         height: auto;
@@ -2260,6 +2289,10 @@ margin-top: 20px;
         top: 56vh;
         width: 75%;
     }
+    .Current_Event_image{
+        align-items: center;
+        margin-left: 2;
+          }
 
     .Search-Conatiner {
         height: 42vh;
@@ -2326,3 +2359,8 @@ margin-top: 20px;
  
   }
   
+
+  .Current_Event_image{
+align-items: center;
+margin-left: 450px;
+  }
