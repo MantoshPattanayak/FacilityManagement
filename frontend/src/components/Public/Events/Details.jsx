@@ -30,7 +30,8 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import PublicHeader from "../../../common/PublicHeader";
-
+// import images here
+import amabhoomi from '../../../assets/Anand_park.jpg';
 
 
 export default function Details() {
@@ -125,7 +126,17 @@ export default function Details() {
 
     return `${day}-${month}-${year}`;
   }
+// For image Carousel............
+  const images = [Park_img, amabhoomi, Park_img, amabhoomi, Park_img];
+  const [currentIndex1, setCurrentIndex1] = useState(0);
 
+  const handlePrev = () => {
+    setCurrentIndex1(currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex1(currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1);
+  };
 
   return (
     <div className="event-Sub_Manu_Conatiner">
@@ -145,9 +156,23 @@ export default function Details() {
       </div>
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="event-map_img_main_conatiner">
-        <div className="event-Image_conatiner">
-          <img className="event-Park_image" src={Park_img}></img>
+
+  
+
+        <div className="carousel-container1">
+          <div className="carousel1">
+          {/* <img className="event-Park_image" src={Park_img}></img> */}
+            <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
+          </div>
+          <button className="carousel1-button1 left1" onClick={handlePrev}>
+            &lt;
+          </button>
+          <button className="carousel1-button1 right1" onClick={handleNext}>
+            &gt;
+          </button>
         </div>
+
+
         <div className="event-Map_container">
           <span className="event-time_status grid grid-rows-2 grid-cols-3">
             <h1 className="event-time_text col-span-3">Event date: {formatDate(eventDetailsData?.eventDate)}</h1>
@@ -192,12 +217,12 @@ export default function Details() {
                     }}
                     className={`event-button-9`}
                   >
-                    Buy  Ticket
+                    Book Ticket
                   </Link>
                 </>
                 :
                 <>
-                  <button disabled className={`event-button-9 disabled:bg-slate-500`}>Buy  Ticket</button>
+                  <button disabled className={`event-button-9 disabled:bg-slate-500`}>Book Ticket</button>
                 </>
             }
           </span>

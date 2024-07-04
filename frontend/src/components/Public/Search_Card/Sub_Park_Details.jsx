@@ -66,8 +66,13 @@ const Sub_Park_Details = () => {
 
   }, [facilityId]);
 
+
   async function handleBookmarkStatus(e) {
     e.preventDefault();
+    if (!isUserLoggedIn) {
+      navigate("/login-signup");
+      return;
+    }
     const newBookmarkStatus = !isBookmarked;
     console.log('newBookmarkStatus', { currdate: new Date(), newBookmarkStatus, isBookmarked });
     try {
@@ -307,7 +312,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by" onClick={togglePopup}>Buy Ticket</button>
+                  <button role="button_by" onClick={togglePopup}>Book Ticket</button>
                 </Link>
               )
                 : FacilitiesData[0]?.facilityTypeId == 2 ? (
@@ -326,7 +331,7 @@ const Sub_Park_Details = () => {
                     }}
                     className="button-9"
                   >
-                    <button role="button_by">Buy Ticket</button>
+                    <button role="button_by">Book Ticket</button>
                   </Link>
                 )
                   : (
@@ -345,7 +350,7 @@ const Sub_Park_Details = () => {
                       }}
                       className="button-9"
                     >
-                      <button role="button_by">Buy Ticket</button>
+                      <button role="button_by">Book Ticket</button>
                     </Link>
                   )
             }
@@ -406,7 +411,7 @@ const Sub_Park_Details = () => {
                     src={Park_img}
                     alt="Parking"
                   /> */}
-                  
+
                   <p className="service_name">{item.code}</p>
                 </div>
               </div>
