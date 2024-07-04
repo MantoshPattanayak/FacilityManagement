@@ -1,0 +1,40 @@
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .image-container {
+    margin: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: calc(33.333% - 20px); 
+    max-width: 300px;
+  }
+  
+  .gallery-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .description {
+    padding: 10px;
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  @media (max-width: 1024px) {
+    .image-container {
+      width: calc(50% - 20px); 
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .image-container {
+      width: calc(100% - 20px);
+    }
+  }
+  
