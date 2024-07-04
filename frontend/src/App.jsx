@@ -65,6 +65,8 @@ import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
 import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
 import PublicLoader from "./common/PublicLoader";
+// here Gallery
+import Image_Gallery from "./components/Public/View_Gallery/Image_Gallery";
 // here Import Admin Page -----------------xxxx----------------------
 import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
 import ViewTariffList from "./components/Admin/MDM/Tariff/ViewTariffList";
@@ -93,6 +95,7 @@ import Terms_ConditionPage from "./components/Public/FooterPages/Terms_Condition
 import Disclaimer from "./components/Public/FooterPages/Disclaimer";
 import Privacy_Policy from "./components/Public/FooterPages/Privacy_Policy";
 import Partnerwithus from "./components/Public/FooterPages/PartnerWithUs";
+import Gallery from "./components/Public/View_Gallery/Image_Gallery";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -184,6 +187,14 @@ function App() {
                 path="/Profile"
                 element={
                   <Profile />
+                }
+              />
+
+              {/* gallery section */}
+                 <Route
+                path="/View_Gallery/Image_Gallery"
+                element={
+                  <Image_Gallery />
                 }
               />
 

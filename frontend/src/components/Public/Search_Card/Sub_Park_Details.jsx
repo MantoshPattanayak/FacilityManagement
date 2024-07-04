@@ -307,7 +307,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by" onClick={togglePopup}>Buy Ticket</button>
+                  <button role="button_by" onClick={togglePopup}>Book Ticket</button>
                 </Link>
               )
                 : FacilitiesData[0]?.facilityTypeId == 2 ? (
@@ -326,7 +326,7 @@ const Sub_Park_Details = () => {
                     }}
                     className="button-9"
                   >
-                    <button role="button_by">Buy Ticket</button>
+                    <button role="button_by">Book Ticket</button>
                   </Link>
                 )
                   : (
@@ -345,7 +345,7 @@ const Sub_Park_Details = () => {
                       }}
                       className="button-9"
                     >
-                      <button role="button_by">Buy Ticket</button>
+                      <button role="button_by">Book Ticket</button>
                     </Link>
                   )
             }

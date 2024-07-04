@@ -1156,7 +1156,7 @@ const Landing = () => {
             <h1>Gallery</h1>
           </div>
           <div className="viewMoreGallery">
-            <Link>View All</Link>
+            <Link to={'/View_Gallery/Image_Gallery'}>View All</Link>
             <FontAwesomeIcon icon={faArrowRight} />
           </div>
         </div>
