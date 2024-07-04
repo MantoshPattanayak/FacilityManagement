@@ -1,5 +1,6 @@
 import React from 'react';
 import './Image_Gallery.css';
+import PublicHeader from "../../../common/PublicHeader";
 import galleryImg1 from "../../../assets/Gallery_Anant Vihar Park,Phase-3,DDC Park_Pokhariput.jpg";
 import galleryImg2 from "../../../assets/Gallery_BDA Children's Park.jpg";
 import galleryImg3 from "../../../assets/Gallery_Disabled Friendly Park_Saheed Nagar.jpg";
@@ -46,6 +47,8 @@ const Image_Gallery = () => {
   ];
 
   return (
+    <>
+    <PublicHeader/>
     <div className="image-gallery">
       {images.map((image, index) => (
         <div key={index} className="image-container">
@@ -54,6 +57,7 @@ const Image_Gallery = () => {
         </div>
       ))}
     </div>
+    </>
   );
 }
 
