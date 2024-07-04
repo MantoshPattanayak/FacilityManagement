@@ -18,6 +18,8 @@ let viewList = async (req, res) => {
         let offset = (page - 1) * limit;
         let statusInput = req.body.statusCode ? req.body.statusCode : null;
 
+        console.log("statusInput", statusInput);
+
         let fetchEventListQuery = `
         select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address, f2.code as facilityType, e.createdDt as requestDate, s.statusCode as requestStatus from 
         amabhoomi.eventactivities e
@@ -25,12 +27,15 @@ let viewList = async (req, res) => {
         inner join amabhoomi.facilities f on f.facilityId = e.facilityId
         inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityId
         left join amabhoomi.statusmasters s on s.statusId = e.statusId and s.parentStatusCode = 'HOSTING_STATUS'
-        where s.statusCode = :statusInput`;
+        where s.statusCode = :statusInput
+        or s.statusCode IS NULL`;
 
         let viewEventListData = await sequelize.query(fetchEventListQuery, {
             type: Sequelize.QueryTypes.SELECT,
             replacements: { statusInput }
         })
+
+        console.log("viewEventListData", viewEventListData);
 
         let matchedData = viewEventListData;
 
@@ -46,7 +51,9 @@ let viewList = async (req, res) => {
 
         let paginatedUserResources = matchedData.slice(offset, limit + offset);
 
-        if (viewEventListData.length > 0) {
+        console.log('paginatedUserResources', paginatedUserResources);
+
+        if (paginatedUserResources.length > 0) {
             return res.status(statusCode.SUCCESS.code).send({ message: 'Events list Data', data: paginatedUserResources });
         }
         else

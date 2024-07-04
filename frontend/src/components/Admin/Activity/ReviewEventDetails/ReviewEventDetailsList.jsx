@@ -47,6 +47,7 @@ export default function ReviewEventDetailsList() {
         }
       );
       console.log("Get data of ResourceEvent", res);
+      setEventDetails(res.data.data);
     } catch (err) {
       console.log("here Error", err);
     }
@@ -57,25 +58,21 @@ export default function ReviewEventDetailsList() {
   }, []);
 
   //fetch data of event details
-  const fetchInitialData = async () => {
-    console.log("fetchInitialData called");
-    try {
-      let res = await axiosHttpClient("REVIEW_EVENTS_VIEWLIST_API", "post");
-      console.log("Review event initial data fetch response", res);
-      //    setEventDetails(res.data);
-    } catch (error) {
-      console.log("error in fetching data", error);
-    }
-  };
+  // const fetchInitialData = async () => {
+  //   console.log("fetchInitialData called");
+  //   try {
+  //     let res = await axiosHttpClient("REVIEW_EVENTS_VIEWLIST_API", "post");
+  //     console.log("Review event initial data fetch response", res);
+  //     // setEventDetails(res.data);
+  //   } catch (error) {
+  //     console.log("error in fetching data", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    console.log("useEffect triggered");
-    fetchInitialData();
-  }, []);
-  //   useEffect(() => {
-  //     console.log("useEffect triggered");
-  //     fetchInitialData();
-  //   }, [tab]);
+    useEffect(() => {
+      console.log("useEffect triggered");
+      GetDisplayReviewEvents();
+    }, [tab]);
 // Cal the time and data --------------------------------
   function calculateTime(dataTime) {
     let currentDateTime = new Date();
@@ -112,7 +109,7 @@ export default function ReviewEventDetailsList() {
   useEffect(() => {
     // Filter eventDetails based on selectedDate on change
     if (selectedDate) {
-      const filteredEvents = eventDetailsData.filter((event) => {
+      const filteredEvents = eventDetails.filter((event) => {
         const eventDate = new Date(event.createdDate);
         const selectedDateObj = new Date(selectedDate);
         return (
@@ -134,26 +131,23 @@ export default function ReviewEventDetailsList() {
   return (
     <>
       <AdminHeader />
-      <div className="specialevent-form-container">
-        {/* <div className="specialevent-form-heading">
-          <h2>Manage event details</h2>
-        </div> */}
-        <div className="heading">
+      <div className="ReviewEventRequest">
+        <div className="table-heading">
           <h2>Manage event details</h2>
         </div>
-        <div className="specialevent-search_text_conatiner">
+        <div className="search_text_conatiner">
           <input
             type="text"
-            className="specialevent-search_input_field"
+            className="search_input_field"
             placeholder="Search..."
           />
           <input
             type="date"
-            className="specialevent-search_input_calender"
+            className="search_input_calender"
             onChange={handleDateChange}
           />
         </div>
-        <div className="specialevent-eventdetails-tab">
+        <div className="eventdetails-tab">
           {tab?.length > 0 &&
             tab.map((tabData) => {
               if (tabData.active) {
@@ -182,50 +176,52 @@ export default function ReviewEventDetailsList() {
               }
             })}
         </div>
-        <div className="specialevent-eventdetails-cardsection">
+        <div className="eventdetails-cardsection">
           {eventDetails?.length > 0 &&
-            eventDetails.map((event) => {
+            eventDetails.map((event, index) => {
               return (
-                <div className="specialevent-eventdetails-carddetails">
-                  <div className="specialevent-eventdetails-photo">
+                <div className="eventdetails-carddetails">
+                  <div className="eventdetails-photo">
                     <img src={eventPhoto} />
                   </div>
-                  <div className="specialevent-eventdetails-details">
-                    <div className="specialevent-eventdetails-details-eventname">
+                  <div className="eventdetails-details">
+                    <div className="eventdetails-details-eventname">
                       {event.eventName}
                     </div>
-                    <div className="specialevent-eventdetails-details-eventAddress">
-                      {event.eventAddress}
+                    <div className="eventdetails-details-eventAddress">
+                      {event.eventAddress || 'NA'}
                     </div>
-                    <div className="flex justify-between specialevent-eventdetails-details-eventTime">
-                      <div>Booked at {event.bookedTiming}</div>
+                    <div className="flex eventdetails-details-eventTime">
+                      <div>Booking for {event.bookedTiming || 'NA'}</div>
                       <div>
                         <FontAwesomeIcon icon={faClock} />{" "}
-                        {event.createdDate.substring(0, 10)}{" "}
+                        {event.createdDate?.substring(0, 10) || 'NA'}
                       </div>
                     </div>
-                    {/* <div><button className='eventdetails-eventbutton' onClick={navigateToDetailsPage(event.eventName)}>Event details</button></div> */}
-                    <button className="Event-Details-btn"
-                      onClick={() => navigate("/Activity/EventDetailsPage")}
-                    >
-                      Event Details
-                    </button>
                     <div>
-                    <Link
-                          key={table_index}
-                          to={{
-                            pathname: "/Activity/EventDetailsPage",
-                            search: `?viewId=${encryptDataId(viewId)}`,
-                          }}
-                        >
-                          Details
-                        </Link>
-                      </div>
+                      <Link
+                        key={index}
+                        to={{
+                          pathname: "/Activity/EventDetailsPage",
+                          search: `?viewId=${encryptDataId(event.eventId)}`,
+                        }}
+                        className="Event-Details-btn"
+                      >
+                        View Details
+                      </Link>
+                    </div>
 
                   </div>
                 </div>
               );
             })}
+          {
+            eventDetails?.length == 0 && (
+              <div className="no-data-message-details">
+
+              </div>
+            )
+          }
         </div>
       </div>
       {/* <Footer /> */}
