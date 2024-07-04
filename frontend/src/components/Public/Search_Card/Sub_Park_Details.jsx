@@ -66,8 +66,13 @@ const Sub_Park_Details = () => {
 
   }, [facilityId]);
 
+
   async function handleBookmarkStatus(e) {
     e.preventDefault();
+    if (!isUserLoggedIn) {
+      navigate("/login-signup");
+      return;
+    }
     const newBookmarkStatus = !isBookmarked;
     console.log('newBookmarkStatus', { currdate: new Date(), newBookmarkStatus, isBookmarked });
     try {
@@ -406,7 +411,7 @@ const Sub_Park_Details = () => {
                     src={Park_img}
                     alt="Parking"
                   /> */}
-                  
+
                   <p className="service_name">{item.code}</p>
                 </div>
               </div>
