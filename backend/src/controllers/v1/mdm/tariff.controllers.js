@@ -24,23 +24,25 @@ let createTariff = async (req,res)=>{
         let updatedDt = new Date();
         let userId = req.user.userId
         let statusId = 1;
-        let {facilityTariff} = req.body
+        let {facilityTariffData} = req.body
         let tariffCreationData;
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
          transaction = await sequelize.transaction();
 
-        if(facilityTariff.length>0 || facilityTariff.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek   || !tariffData.validityFrom  || !tariffData.validityTo ||  !tariffData.tariffTypeId || !tariffData.entityId})){
+        if(facilityTariffData.length==0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek   || !tariffData.validityFrom  || !tariffData.validityTo ||  !tariffData.tariffTypeId || !tariffData.entityId})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"
             })
         }
         let tariffMasterCreationData;
-
-        facilityTariff.array.forEach(async(eachTariffObject) => {
+        console.log('each tariff object line 38')
+        facilityTariffData.forEach(async(eachTariffObject) => {
+            console.log('each tariff object', eachTariffObject)
             let findOutIfTheTariffAlreadyPresentOrNot  = await tariffmaster.findOne({
                 where:{[Op.and]:[{facilityId:eachTariffObject.facilityId}, {entityId:eachTariffObject.entityId},{tariffTypeId:eachTariffObject.tariffTypeId},{statusId:statusId}]},  
                 transaction 
             })
+            console.log('find out if the tariff', findOutIfTheTariffAlreadyPresentOrNot)
             let tariffMasterQuery // for inserting the data to tariff masters
             if(!findOutIfTheTariffAlreadyPresentOrNot){
                 tariffMasterCreationData = {
@@ -55,13 +57,14 @@ let createTariff = async (req,res)=>{
                 }
     
              tariffMasterQuery = await tariffmaster.create(tariffMasterCreationData,{ transaction, returning: true  })
+             console.log('tariff master query', tariffMasterQuery)
             }
             else{
                  tariffMasterQuery = {};
                 tariffMasterQuery.tariffMasterId = findOutIfTheTariffAlreadyPresentOrNot.tariffMasterId;
             }
            
-
+            console.log('hello 67 line')
              tariffCreationData = {
                 facilityId:eachTariffObject.facilityId,
                 tariffMasterId:tariffMasterQuery.tariffMasterId,
@@ -82,6 +85,7 @@ let createTariff = async (req,res)=>{
                 updatedDt:new Date(),
                 statusId:statusId
             }
+            console.log('hello 88 line', tariffCreationData)
 
             let findIfTheFacilityId = await facilityTariff.findOne({
                 where: {
@@ -100,7 +104,7 @@ let createTariff = async (req,res)=>{
                             statusId: statusId
                         },
                         {
-                            tariffMasterId:eachTariffObject.tariffMasterId
+                            tariffMasterId:tariffMasterQuery.tariffMasterId
                         }
                         ,
                         {
@@ -446,12 +450,23 @@ let viewTariff = async (req,res)=>{
         let limit = req.body.page_size ? req.body.page_size : 500;
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
-
-        let findViewTariff = await facilityTariff.findAll({include:[{
-            model:facilities
-        }]});
-        
-    
+        let givenReq = req.body.givenReq ? req.body.givenReq : null;
+        let statusId = 1;
+        let findViewTariff
+        if(givenReq){
+             findViewTariff = await facilities.findAll({
+                where:{
+                   [Op.and]: [{statusId:statusId},{facilityTypeId:givenReq}]
+                }
+            });
+        }
+        else{
+            findViewTariff = await facilities.findAll({
+                where:{
+                    statusId:statusId
+                }
+            });
+        }
 
         let paginatedTariff = findViewTariff.slice(offset, offset + limit);
 
