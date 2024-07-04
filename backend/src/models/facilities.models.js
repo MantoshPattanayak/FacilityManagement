@@ -89,12 +89,6 @@ module.exports = (sequelize,DataTypes)=>{
         helpNumber:{
             type:DataTypes.BIGINT
         },
-        about:{
-            type:DataTypes.TEXT('medium')
-        },
-        facilitytype:{
-            type:DataTypes.STRING(255)
-        },
         createdBy:{
             type:DataTypes.INTEGER
         },

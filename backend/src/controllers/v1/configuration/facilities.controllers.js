@@ -273,7 +273,7 @@ const viewParkById = async (req,res)=>{
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-            end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url 
+            end as status, address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url 
             from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? and ft.filePurpose = ? `
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
