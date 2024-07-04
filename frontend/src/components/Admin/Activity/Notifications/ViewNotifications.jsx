@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { formatDate } from '../../../../utils/utilityFunctions';
 import AdminHeader from '../../../../common/AdminHeader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../../../../common/CommonTable.css';
 import './ViewNotifications.css';
 import { encryptData } from '../../../../utils/encryptData';
@@ -43,17 +43,17 @@ export default function ViewNotifications() {
       <AdminHeader />
       <div className="ViewNotifications">
         <div className='table-heading'>
-          <h2 className="table-heading">View Notifications</h2>
+          <h2 className="">View Notifications</h2>
         </div>
 
         <div className="search_text_conatiner">
-          <button className='search_field_button' onClick={() => navigate('/Activity/AddNewNotification')}>Add new notification</button>
+          <button className='search_field_button' onClick={() => navigate('/Activity/AddNewNotification')}><FontAwesomeIcon icon={faPlus} /> Add new notification</button>
           <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
           {/* <SearchDropdown /> */}
         </div>
 
         <div className="table_Container">
-          <table >
+          <table>
             <thead>
               <tr>
                 <th scope="col">Title</th>

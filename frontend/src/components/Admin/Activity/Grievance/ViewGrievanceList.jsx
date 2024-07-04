@@ -19,7 +19,7 @@ export default function ViewGrievanceList() {
 
     async function fetchListOfUserData(givenReq = null) {
         try {
-            let res = await axiosHttpClient('ADMIN_VIEW_GRIEVANCE_LIST_API', 'post', {givenReq});
+            let res = await axiosHttpClient('ADMIN_VIEW_GRIEVANCE_LIST_API', 'post', { givenReq });
             setTableData(res.data.grievanceListData);
             console.log(res.data.grievanceListData);
         }
@@ -29,7 +29,7 @@ export default function ViewGrievanceList() {
     }
 
     // function to manage API calls while user search input entry
-    function debounce(fn, delay){
+    function debounce(fn, delay) {
         let timeoutId;
         return function (...args) {
             clearTimeout(timeoutId);
@@ -59,65 +59,67 @@ export default function ViewGrievanceList() {
     }
 
     return (
-        <div className='ViewGrievanceList'>
+        <>
             <AdminHeader />
-            <div className="Main_Conatiner_table">
-                <div className='table-heading'>
-                    <h2 className="table-heading">List of Grievances</h2>
-                </div>
+            <div className='ViewGrievanceList'>
+                <div className="Main_Conatiner_table">
+                    <div className='table-heading'>
+                        <h2 className="">List of Grievances</h2>
+                    </div>
 
-                <div className="search_text_conatiner">
-                    {/* <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button> */}
-                    <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
-                    {/* <SearchDropdown /> */}
-                </div>
+                    <div className="search_text_conatiner">
+                        {/* <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button> */}
+                        <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+                        {/* <SearchDropdown /> */}
+                    </div>
 
-                <div className="table_Container">
-                    <table >
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Mobile Number</th>
-                                <th scope="col">Email Address</th>
-                                <th scope="col">Subject</th>
-                                <th scope="col">Grievance Posted Date</th>
-                                <th scope="col">Grievance Closure Date</th>
-                                <th scope="col">Grievance Status</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody >
-                            {
-                                tableData?.length > 0 && tableData?.map((data, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td data-label="Name">{data.fullname}</td>
-                                            <td data-label="Number">{data.phoneNo}</td>
-                                            <td data-label="Email">{data.emailId}</td>
-                                            <td data-label="Subject">{data.subject}</td>
-                                            <td data-label="Grievance Posted Date">{formatDate(data.createdOn)}</td>
-                                            <td data-label="Grievance Closure Date">{formatDate(data.actionTakenDate) || 'NA'}</td>
-                                            <td data-label="Grievance Status"><p className={data.status == 'Pending' ? 'text-yellow-500' : data.status == 'Closed' ? 'text-green-500' : ''}>{data.status}</p></td>
-                                            <td data-label="Action">
-                                                <Link
-                                                    to={{
-                                                        pathname: '/activity/grievance-action',
-                                                        search: `?g=${encodeURIComponent(encryptDataId(data.grievanceMasterId))}${data.status == 'Pending' ? '&action=edit' : data.status == 'Closed' ? '&action=view' : ''}`
-                                                    }}
-                                                >
-                                                    {
-                                                        data.status == 'Pending' ? <FontAwesomeIcon icon={faPenToSquare} /> : data.status == 'Closed' ? <FontAwesomeIcon icon={faEye} /> : ''
-                                                    }
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
+                    <div className="table_Container">
+                        <table >
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Mobile Number</th>
+                                    <th scope="col">Subject</th>
+                                    <th scope="col">Posted Date</th>
+                                    <th scope="col">Closure Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {
+                                    tableData?.length > 0 && tableData?.map((data, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td data-label="Name">{data.fullname}</td>
+                                                <td data-label="Email">{data.emailId}</td>
+                                                <td data-label="Number">{data.phoneNo}</td>
+                                                <td data-label="Subject">{data.subject}</td>
+                                                <td data-label="Posted Date">{formatDate(data.createdOn)}</td>
+                                                <td data-label="Closure Date">{formatDate(data.actionTakenDate) || 'NA'}</td>
+                                                <td data-label="Status"><p className={data.status == 'Pending' ? 'text-yellow-500' : data.status == 'Closed' ? 'text-green-500' : ''}>{data.status || 'NA'}</p></td>
+                                                <td data-label="Action">
+                                                    <Link
+                                                        to={{
+                                                            pathname: '/activity/grievance-action',
+                                                            search: `?g=${encodeURIComponent(encryptDataId(data.grievanceMasterId))}${data.status == 'Pending' ? '&action=edit' : data.status == 'Closed' ? '&action=view' : '&action=view'}`
+                                                        }}
+                                                    >
+                                                        {
+                                                            data.status == 'Pending' ? <FontAwesomeIcon icon={faPenToSquare} /> : data.status == 'Closed' ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEye} />
+                                                        }
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
