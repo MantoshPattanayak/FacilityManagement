@@ -39,7 +39,7 @@
     "react-toastify": "^10.0.5",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
-    "vite": "^5.1.6"
+    "vite": "^5.3.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",

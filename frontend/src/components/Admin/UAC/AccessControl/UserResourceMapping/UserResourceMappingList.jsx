@@ -40,7 +40,7 @@ const UserResourceMappingList = () => {
       <div className="Main_Conatiner_table">
         <div className="headingHeader11">
           <div className="heading11">
-            <h1 className="heading-title">Role Resource Mapping List</h1>
+            <h1 className="heading-title">User resource mapping list</h1>
           </div>
         </div>
 

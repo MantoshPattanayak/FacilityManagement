@@ -55,12 +55,18 @@ const SpecialEvent = () => {
       <body className="bg-white">
         <div className="max-w-2xl mx-auto p-6">
           {/* Common Header of the page */}
-          <div className="header-role-specialevent">
+          {/* <div className="header-role-specialevent">
             <div className="rectangle"></div>
             <div className="roles">
               <h1><b>Special Event Booking</b></h1>
             </div>
+          </div> */}
+          <div className="editRoleResMapHead">
+          <div className="editRoleResMapHeadIn">
+            <div className="greenBar"></div>
+            <h2>Special Event Booking</h2>
           </div>
+        </div>
 
           {/* Toggle for public and private */}
           <div className="bauble_box">
