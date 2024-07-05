@@ -523,7 +523,7 @@ let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
         if(facilityId && tariffTypeId==3){
            
             findTheNameOfThoseEvents = await facilityEvents.findAll({
-               where:{[Op.and]:[{facilityTypeId:{[Op.eq]:2}},{statusId:statusId},{facilityId:facilityId}]
+               where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]
        },
        include:[
         { model: eventcategorymaster
