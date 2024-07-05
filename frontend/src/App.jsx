@@ -10,6 +10,7 @@ import EditResource from "./components/Admin/UAC/Resource/EditResource";
 import AdminDashboard from "./components/Admin/Dashboard/AdminDashboard";
 //common table
 import CommonTable from "./common/CommonTable";
+import CommonFrom from "./common/CommonFrom";
 import UnauthorizedPage from "./common/Unauthorized";
 import ListOfUsers from "./components/Admin/UAC/User/ListOfUsers";
 import CreateNewUser from "./components/Admin/UAC/User/CreateNewUser";
@@ -29,9 +30,11 @@ import BookingDetails from "./components/Public/UserProfile/BookingDetails";
 import Favorites from "./components/Public/UserProfile/Favorites";
 import RoleResourceMappingList from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/RoleResourceMappingList";
 import CreateRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/CreateRoleResourceMapping";
+import EditRoleResourceMapping from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/EditRoleResourceMapping";
 import SearchDropdown from "../../frontend/src/components/Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown";
 //user Resource
 import CreateUserResourceMapping from "./components/Admin/UAC/AccessControl/UserResourceMapping/CreateUserResourceMapping";
+import EditUserResourceMapping from "./components/Admin/UAC/AccessControl/UserResourceMapping/EditUserResourceMapping";
 import UserResourceMappingList from "./components/Admin/UAC/AccessControl/UserResourceMapping/UserResourceMappingList";
 // Resource
 import ListOfResources from "./components/Admin/UAC/Resource/ListOfResources";
@@ -96,6 +99,7 @@ import Disclaimer from "./components/Public/FooterPages/Disclaimer";
 import Privacy_Policy from "./components/Public/FooterPages/Privacy_Policy";
 import Partnerwithus from "./components/Public/FooterPages/PartnerWithUs";
 import Gallery from "./components/Public/View_Gallery/Image_Gallery";
+import SpecialEvent from "../src/components/Admin/Activity/SpecialEventBooking/SpecialEvent";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -145,6 +149,12 @@ function App() {
                 path="/BookParks/Book_Now"
                 element={
                   <Book_Now />
+                }
+              />
+              <Route
+                path="/BookEvent"
+                element={
+                  <BookEvent />
                 }
               />
               {/* Public (Add to Crad)  */}
@@ -369,6 +379,24 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Facility regd. */}
+              <Route
+                path="/Facility/Facility_Reg"
+                element={
+                  <ProtectedRoute>
+                    <Facility_Reg />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Facility/Facility_ViewList"
+                element={
+                  <ProtectedRoute>
+                    <Facility_ViewList />
+                  </ProtectedRoute>
+                }
+              />
               {/* Recource */}
               <Route
                 path="/UAC/Resources/ListOfResources"
@@ -404,6 +432,14 @@ function App() {
                 }
               />
               <Route
+                path="/UAC/Users/EditUserResourceMapping"
+                element={
+                  <ProtectedRoute>
+                    <EditUserResourceMapping />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/UAC/UserResource/View"
                 element={
                   <ProtectedRoute>
@@ -413,10 +449,18 @@ function App() {
               />
               {/* Role-Resource mapping  */}
               <Route
-                path="/UAC/RoleResource/Create"
+                path="/UAC/RoleResource/CreateRoleResourceMapping"
                 element={
                   <ProtectedRoute>
                     <CreateRoleResourceMapping />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UAC/RoleResource/EditRoleResourceMapping"
+                element={
+                  <ProtectedRoute>
+                    <EditRoleResourceMapping />
                   </ProtectedRoute>
                 }
               />
@@ -484,6 +528,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/common/CommonFrom"
+                element={
+                  <ProtectedRoute>
+                    <CommonFrom />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Footer pages */}
               <Route
@@ -525,6 +577,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Partnerwithus />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/SpecialEvent"
+                element={
+                  <ProtectedRoute>
+                    <SpecialEvent />
                   </ProtectedRoute>
                 }
               />
