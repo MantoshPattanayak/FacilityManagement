@@ -16,35 +16,32 @@ export default function ReviewEventDetailsList() {
     {
       tabName: "Hosting Requests",
       active: true,
+      statusInput: 10
     },
     {
       tabName: "Approved",
       active: false,
+      statusInput: 11
     },
     {
       tabName: "Rejected",
       active: false,
-    },
+      statusInput: 13
+    }
   ];
   const [tab, setTab] = useState(tabList);
 
   const [eventDetails, setEventDetails] = useState([]);
   const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
-  //here Location / crypto and navigate the page---------------
+  //here Location crypto and navigate the page ---------------
   const location = useLocation();
-  const viewId = decryptData(
-    new URLSearchParams(location.search).get("viewId")
-  );
-  const action = new URLSearchParams(location.search).get("action");
-  const navigate = useNavigate();
-  // here Get the data --------------------------------
+
+  // here Get the data -----------------------------------
   async function GetDisplayReviewEvents() {
     try {
       let res = await axiosHttpClient(
         "REVIEW_EVENTS_VIEWLIST_API",
-        "post", {
-          statusInput: 10
-        }
+        "post", { statusCode: tabList.filter((data) => { return data.active == true})[0].statusInput }
       );
       console.log("Get data of ResourceEvent", res);
       setEventDetails(res.data.data);
@@ -69,11 +66,12 @@ export default function ReviewEventDetailsList() {
   //   }
   // };
 
-    useEffect(() => {
-      console.log("useEffect triggered");
-      GetDisplayReviewEvents();
-    }, [tab]);
-// Cal the time and data --------------------------------
+  useEffect(() => {
+    console.log("useEffect triggered");
+    GetDisplayReviewEvents();
+  }, [tab]);
+
+  // Cal the time and data --------------------------------
   function calculateTime(dataTime) {
     let currentDateTime = new Date();
     let inputDateTime = new Date(dataTime);
@@ -89,6 +87,7 @@ export default function ReviewEventDetailsList() {
     let timeParams = differenceDateTime < 1 ? " min" : " hour(s)";
     return differenceDateTime + timeParams;
   }
+
   function manageCurrentTab(e, name) {
     // e.preventDefault();
     let tabListCopy = JSON.parse(JSON.stringify(tab));
@@ -100,7 +99,7 @@ export default function ReviewEventDetailsList() {
     setTab(tabListCopy);
     return;
   }
- // Encrpt data---------------------- 
+  // Encrpt data---------------------- 
   function encryptDataId(id) {
     let res = encryptData(id);
     return res;

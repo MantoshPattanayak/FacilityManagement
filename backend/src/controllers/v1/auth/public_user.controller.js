@@ -395,11 +395,12 @@ const homePage = async (req, res) => {
     );
 
     let viewNotificationsListQuery = `
-        select
-            *
+        select p.publicNotificationsId, p.publicNotificationsTitle, p.publicNotificationsContent, f.fileId, f.fileName, f.url,p.createdOn as createdAt
         from amabhoomi.publicnotifications p
-        where validFromDate <= ?
-        and validToDate >= ?
+        left join fileattachments fa on p.publicNotificationsId = fa.entityId and fa.entityType = 'publicNotification'
+        left join files f on f.fileId = fa.fileId and f.statusId = 1
+        where p.validFromDate <= ?
+        and p.validToDate >= ?
         `;
 
     let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
