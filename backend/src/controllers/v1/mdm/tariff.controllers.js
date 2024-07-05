@@ -194,15 +194,15 @@ let getTariffById = async (req,res)=>{
 
 let updateTariff = async (req,res)=>{
     try {
-        let {facilityTariff} = req.body
+        let {facilityTariffData} = req.body
         let statusId = 1;
-        if(facilityTariff.length>0 || facilityTariff.some((tariffData)=>{!tariffData.facilityId || !tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek || !tariffData.validityFrom  || !tariffData.validityTo || !tariffData.statusId || !tariffData.tariffMasterId})){
+        if(facilityTariffData.length>0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek || !tariffData.validityFrom  || !tariffData.validityTo || !tariffData.statusId || !tariffData.tariffMasterId || !tariffData.tariffDetailId})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"
             })
         }
         // let {tariffId,facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo,statusId }= req.body
-        facilityTariff.array.forEach(async(eachTariffObject) => {
+        facilityTariffData.forEach(async(eachTariffObject) => {
             let findTariffById = await facilityTariff.findOne({
                 where:{
                     [Op.and]:[{tariffMasterId:eachTariffObject.tariffId},{statusId:statusId}]
