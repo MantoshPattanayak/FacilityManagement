@@ -1,7 +1,7 @@
 import "./Landing.css";
 import gif from "../../assets/newImg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faFileLines, faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import axiosHttpClient from "../../utils/axios";
@@ -75,6 +75,7 @@ import {
 import TourGuide from "../../common/TourGuide.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { manageTourGuide } from "../../utils/authSlice.jsx";
+import instance from "../../../env.js";
 // import "./YourStyles.css";
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
@@ -123,6 +124,7 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
@@ -913,8 +915,8 @@ const Landing = () => {
       <div className="notice2">
         <div class="notice2-container">
           <span>Whats New</span>
-          <marquee behavior="" direction="left">
-            <div className="flex">
+          <marquee behavior="scroll" direction="left">
+            <div className={`flex`}>
               {notifications.map((notification) => {
                 const createdAtDate = new Date(notification.createdAt);
                 const currentDate = new Date();
@@ -925,7 +927,11 @@ const Landing = () => {
                   <p className="notce2para">
                     {diffInDays <= 100 ? <p className="New_text"> New </p> : ""}
                     {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
-                    {notification.publicNotificationsContent} &nbsp; &nbsp;
+                    {notification.publicNotificationsContent}&nbsp;
+                    {
+                      notification.url && <a href={instance().baseURL + '/static' + notification.url}>
+                        <FontAwesomeIcon icon={faFileLines} />
+                      </a>} &nbsp; &nbsp;
                   </p>
                 );
               })}

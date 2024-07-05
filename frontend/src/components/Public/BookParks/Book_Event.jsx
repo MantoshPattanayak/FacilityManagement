@@ -4,7 +4,7 @@ import PublicHeader from "../../../common/PublicHeader";
 import CommonFooter from "../../../common/CommonFooter";
 // here import Icon ------------------------------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
-import { faPlus, faMinus, faShoppingCart, faIndianRupeeSign, faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faMinus, faShoppingCart, faIndianRupeeSign, faCreditCard, faClose } from "@fortawesome/free-solid-svg-icons";
 // Import Navigate and Crypto -----------------------------------
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { decryptData } from "../../../utils/encryptData";
@@ -234,6 +234,7 @@ const Book_Event = () => {
             <PublicHeader />
             <div className="Book_sport_Child_conatiner">
                 <div className="Add_sport_form">
+                    <div className="text-xl flex justify-end cursor-pointer" onClick={(e) => navigate(-1)}><FontAwesomeIcon icon={faClose}/></div>
                     <div className="sport_name_Book">
                         <h1 className="Faclity_Name"> {FacilitiesData?.eventName}, {FacilitiesData?.locationName}</h1>
                         {/* <p className="Faclity_Address"> </p> */}
