@@ -101,7 +101,9 @@ const api = {
    // admin-dashboard
    ADMIN_DASHBOARD_FETCH_API: '/auth/admin-dashboard',   //post    facilityId
    // Tariff Api (MDM)
-   View_Tariff_List_Api:'/tariffData/viewTariff '
+   View_Tariff_List_Api:'/tariffData/viewTariff', // Post Method
+   Create_Tariff_Details_Api: '/tariffData/createTariff ', // Post Method
+   Initial_Data_Tariff_Details:'/tariffData/initialDataForTariffSelectionWRTCategory',
 }
 
 export default api;
