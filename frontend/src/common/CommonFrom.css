@@ -87,16 +87,18 @@
 .form-heading input[type="text"],
 input[type='date'],
 select {
-    /* width: 24vw; */
-    /* Converted from 100px to 8.33vw */
+    width: 100%;
+    height: 100%;
     padding: 0.625vw;
-    /* Converted from 5px to 0.625vw */
-    border: 0.0833vw solid #ccc;
-    /* Converted from 1px to 0.0833vw */
+    border: 0.0833vw solid #b1b1b1;
     border-radius: 0.417vw;
-    /* Converted from 5px to 0.417vw */
-    background-color: ghostwhite;
+    background-color: #ECECEE;
 }
+
+.form-heading input:focus {
+    border: 2px solid #405cf5; /* Change border color and thickness on focus */
+      outline: none; /* Remove default outline */
+  }
 
 .form-heading input[type="button"] {
     width: 25%;
