@@ -16,37 +16,35 @@ export default function ReviewEventDetailsList() {
     {
       tabName: "Hosting Requests",
       active: true,
+      statusInput: 10
     },
     {
       tabName: "Approved",
       active: false,
+      statusInput: 11
     },
     {
       tabName: "Rejected",
       active: false,
-    },
+      statusInput: 13
+    }
   ];
   const [tab, setTab] = useState(tabList);
 
   const [eventDetails, setEventDetails] = useState([]);
   const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
-  //here Location / crypto and navigate the page---------------
+  //here Location crypto and navigate the page ---------------
   const location = useLocation();
-  const viewId = decryptData(
-    new URLSearchParams(location.search).get("viewId")
-  );
-  const action = new URLSearchParams(location.search).get("action");
-  const navigate = useNavigate();
-  // here Get the data --------------------------------
+
+  // here Get the data -----------------------------------
   async function GetDisplayReviewEvents() {
     try {
       let res = await axiosHttpClient(
         "REVIEW_EVENTS_VIEWLIST_API",
-        "post", {
-          statusInput: 10
-        }
+        "post", { statusCode: tabList.filter((data) => { return data.active == true})[0].statusInput }
       );
       console.log("Get data of ResourceEvent", res);
+      setEventDetails(res.data.data);
     } catch (err) {
       console.log("here Error", err);
     }
@@ -57,26 +55,23 @@ export default function ReviewEventDetailsList() {
   }, []);
 
   //fetch data of event details
-  const fetchInitialData = async () => {
-    console.log("fetchInitialData called");
-    try {
-      let res = await axiosHttpClient("REVIEW_EVENTS_VIEWLIST_API", "post");
-      console.log("Review event initial data fetch response", res);
-      //    setEventDetails(res.data);
-    } catch (error) {
-      console.log("error in fetching data", error);
-    }
-  };
+  // const fetchInitialData = async () => {
+  //   console.log("fetchInitialData called");
+  //   try {
+  //     let res = await axiosHttpClient("REVIEW_EVENTS_VIEWLIST_API", "post");
+  //     console.log("Review event initial data fetch response", res);
+  //     // setEventDetails(res.data);
+  //   } catch (error) {
+  //     console.log("error in fetching data", error);
+  //   }
+  // };
 
   useEffect(() => {
     console.log("useEffect triggered");
-    fetchInitialData();
-  }, []);
-  //   useEffect(() => {
-  //     console.log("useEffect triggered");
-  //     fetchInitialData();
-  //   }, [tab]);
-// Cal the time and data --------------------------------
+    GetDisplayReviewEvents();
+  }, [tab]);
+
+  // Cal the time and data --------------------------------
   function calculateTime(dataTime) {
     let currentDateTime = new Date();
     let inputDateTime = new Date(dataTime);
@@ -92,6 +87,7 @@ export default function ReviewEventDetailsList() {
     let timeParams = differenceDateTime < 1 ? " min" : " hour(s)";
     return differenceDateTime + timeParams;
   }
+
   function manageCurrentTab(e, name) {
     // e.preventDefault();
     let tabListCopy = JSON.parse(JSON.stringify(tab));
@@ -103,7 +99,7 @@ export default function ReviewEventDetailsList() {
     setTab(tabListCopy);
     return;
   }
- // Encrpt data---------------------- 
+  // Encrpt data---------------------- 
   function encryptDataId(id) {
     let res = encryptData(id);
     return res;
@@ -112,7 +108,7 @@ export default function ReviewEventDetailsList() {
   useEffect(() => {
     // Filter eventDetails based on selectedDate on change
     if (selectedDate) {
-      const filteredEvents = eventDetailsData.filter((event) => {
+      const filteredEvents = eventDetails.filter((event) => {
         const eventDate = new Date(event.createdDate);
         const selectedDateObj = new Date(selectedDate);
         return (
@@ -134,26 +130,23 @@ export default function ReviewEventDetailsList() {
   return (
     <>
       <AdminHeader />
-      <div className="specialevent-form-container">
-        {/* <div className="specialevent-form-heading">
-          <h2>Manage event details</h2>
-        </div> */}
-        <div className="heading">
+      <div className="ReviewEventRequest">
+        <div className="table-heading">
           <h2>Manage event details</h2>
         </div>
-        <div className="specialevent-search_text_conatiner">
+        <div className="search_text_conatiner">
           <input
             type="text"
-            className="specialevent-search_input_field"
+            className="search_input_field"
             placeholder="Search..."
           />
           <input
             type="date"
-            className="specialevent-search_input_calender"
+            className="search_input_calender"
             onChange={handleDateChange}
           />
         </div>
-        <div className="specialevent-eventdetails-tab">
+        <div className="eventdetails-tab">
           {tab?.length > 0 &&
             tab.map((tabData) => {
               if (tabData.active) {
@@ -182,50 +175,52 @@ export default function ReviewEventDetailsList() {
               }
             })}
         </div>
-        <div className="specialevent-eventdetails-cardsection">
+        <div className="eventdetails-cardsection">
           {eventDetails?.length > 0 &&
-            eventDetails.map((event) => {
+            eventDetails.map((event, index) => {
               return (
-                <div className="specialevent-eventdetails-carddetails">
-                  <div className="specialevent-eventdetails-photo">
+                <div className="eventdetails-carddetails">
+                  <div className="eventdetails-photo">
                     <img src={eventPhoto} />
                   </div>
-                  <div className="specialevent-eventdetails-details">
-                    <div className="specialevent-eventdetails-details-eventname">
+                  <div className="eventdetails-details">
+                    <div className="eventdetails-details-eventname">
                       {event.eventName}
                     </div>
-                    <div className="specialevent-eventdetails-details-eventAddress">
-                      {event.eventAddress}
+                    <div className="eventdetails-details-eventAddress">
+                      {event.eventAddress || 'NA'}
                     </div>
-                    <div className="flex justify-between specialevent-eventdetails-details-eventTime">
-                      <div>Booked at {event.bookedTiming}</div>
+                    <div className="flex eventdetails-details-eventTime">
+                      <div>Booking for {event.bookedTiming || 'NA'}</div>
                       <div>
                         <FontAwesomeIcon icon={faClock} />{" "}
-                        {event.createdDate.substring(0, 10)}{" "}
+                        {event.createdDate?.substring(0, 10) || 'NA'}
                       </div>
                     </div>
-                    {/* <div><button className='eventdetails-eventbutton' onClick={navigateToDetailsPage(event.eventName)}>Event details</button></div> */}
-                    <button className="Event-Details-btn"
-                      onClick={() => navigate("/Activity/EventDetailsPage")}
-                    >
-                      Event Details
-                    </button>
                     <div>
-                    <Link
-                          key={table_index}
-                          to={{
-                            pathname: "/Activity/EventDetailsPage",
-                            search: `?viewId=${encryptDataId(viewId)}`,
-                          }}
-                        >
-                          Details
-                        </Link>
-                      </div>
+                      <Link
+                        key={index}
+                        to={{
+                          pathname: "/Activity/EventDetailsPage",
+                          search: `?viewId=${encryptDataId(event.eventId)}`,
+                        }}
+                        className="Event-Details-btn"
+                      >
+                        View Details
+                      </Link>
+                    </div>
 
                   </div>
                 </div>
               );
             })}
+          {
+            eventDetails?.length == 0 && (
+              <div className="no-data-message-details">
+
+              </div>
+            )
+          }
         </div>
       </div>
       {/* <Footer /> */}

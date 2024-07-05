@@ -1,14 +1,9 @@
 import "./Landing.css";
 import gif from "../../assets/newImg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useRef } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
+import { faFileLines, faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import axiosHttpClient from "../../utils/axios";
 import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
@@ -51,13 +46,14 @@ import { faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import anan_image from "../../assets/Anan_vihar.jpg";
+// Import Image for Current event--------------------
+import No_Current_Event_img from "../../assets/No_Current_Event_Data.png"
 // here import Park Image
 
 import PublicHeader from "../../common/PublicHeader.jsx";
 
 // Location icon and image all types of image---------------------------------------------
-// import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png"
-// import Park_img from "../../../assets/park_img1.jpg"
+
 import Yoga_img from "../../assets/Yoga_img.png";
 import greenway from "../../assets/Greenway.png";
 import Blueway from "../../assets/blueways.png";
@@ -79,6 +75,7 @@ import {
 import TourGuide from "../../common/TourGuide.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { manageTourGuide } from "../../utils/authSlice.jsx";
+import instance from "../../../env.js";
 // import "./YourStyles.css";
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
@@ -118,6 +115,7 @@ const Landing = () => {
   const [userLocation, setUserLocation] = useState(defaultCenter);
   const [nearbyParks, setNearbyParks] = useState([]);
   const [distanceRange, setDistanceRange] = useState(2);
+  const [currentIndex, setCurrentIndex] = useState(0);
   let randomKey = Math.random();
   let navigate = useNavigate();
   //set auto-suggest facilties
@@ -126,6 +124,7 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
@@ -161,8 +160,7 @@ const Landing = () => {
     },
   ]);
 
-  // const currentImage = yoga_bg;
-  // const currentInnerImage = yoga_1;
+
 
   const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
@@ -255,10 +253,8 @@ const Landing = () => {
     setRunTour(true);
     console.log('showTour', showTour);
   }, []);
+  // here error ------------
 
-  useEffect(() => {
-    getNearbyFacilities();
-  }, [userLocation, distanceRange, facilityTypeId]);
 
   function handleInputFacility(e, facilityId) {
     e.preventDefault();
@@ -345,6 +341,15 @@ const Landing = () => {
     }
   }
 
+  // here nearBy data -----------------------
+  // useEffect(() => {
+  //  if(userLocation && distanceRange && facilityTypeId){
+  //   getNearbyFacilities();
+  //  }
+
+  // }, [userLocation, distanceRange, facilityTypeId]);
+
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
 
   useEffect(() => {
@@ -409,52 +414,6 @@ const Landing = () => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  // const handleEventClick = (link, event) => {
-  //   event.preventDefault();
-  //   window.location.href = link
-  // };
-
-  // useEffect(() => {
-  //   // animations added to current events section
-  //   const container = containerRef.current;
-  //   const cards = container.querySelectorAll('.eventCard');
-
-  //   const cardWidth = cards[0].offsetWidth;
-  //   const firstCardClone = cards[0].cloneNode(true);
-  //   container.appendChild(firstCardClone);
-
-  //   const totalWidth = (cards.length + 1) * cardWidth;
-  //   container.style.width = totalWidth + 'px';
-
-  //   function startScrollAnimation() {
-  //     container.style.animation = 'scroll 55s linear infinite';
-  //   }
-
-  //   container.addEventListener('mouseenter', startScrollAnimation);
-
-  //   container.addEventListener('animationiteration', () => {
-  //     container.style.animation = 'none';
-  //     setTimeout(startScrollAnimation, 0);
-  //   });
-
-  //   // search functionality for user input in the field
-  //   const searchInput = searchInputRef.current;
-  //   searchInput.addEventListener('keypress', (e) => {
-  //     let inputVal;
-  //     if(e.key === 'Enter') {
-  //       inputVal = searchInput.value;
-  //       navigate(`/facilities?givenReq=${inputVal}`);
-  //     }
-  //   });
-
-  //   return () => {
-  //     container.removeEventListener('mouseenter', startScrollAnimation);
-  //     container.removeEventListener('animationiteration', () => {
-  //       container.style.animation = 'none';
-  //       setTimeout(startScrollAnimation, 0);
-  //     });
-  //   };
-  // }, []);
 
 
   // To handle search input field in landing page..............
@@ -471,21 +430,12 @@ const Landing = () => {
     }
   }
 
-  
+
   // handleGameClick ------------------------------------------------
 
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
-    // setSelectedActivity(index);
-    // if(selectedActivity !== null){
-    //   if (activity.game === "Cricket") {
-    //     setCurrentImage(cricket_bg);
-    //     setCurrentInnerImage(cricket_1);
-    //   } else if (activity.game === "Football") {
-    //     setCurrentImage(football_bg);
-    //     setCurrentInnerImage(football_1);
-    //   }
-    // }
+
     if (activity === "Football") {
       setCurrentImage(football_bg);
       setCurrentInnerImage(football_1);
@@ -501,15 +451,6 @@ const Landing = () => {
     }
   };
 
-  // const changeImg = (activityname) => {
-  //   if (activityname === "Cricket") {
-  //     setCurrentImage(cricket_bg);
-  //     setCurrentInnerImage(cricket_1);
-  //   } else if (activityname === "Football") {
-  //     setCurrentImage(football_bg);
-  //     setCurrentInnerImage(football_1);
-  //   }
-  // };
 
   //Gallery section
 
@@ -548,7 +489,7 @@ const Landing = () => {
     },
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+
   const nextImage = () => {
     if (currentIndex < images.length - 3) {
       setCurrentIndex(currentIndex + 1);
@@ -575,9 +516,7 @@ const Landing = () => {
   // const [currentIndex, setCurrentIndex] = useState(0);
 
   //------- Advatisemant -----------
-
   const ad = [adImg, ad1, ad2, ad3];
-
   // Home page image
   const getStyles = () => {
     const width = window.innerWidth;
@@ -627,9 +566,7 @@ const Landing = () => {
       return baseStyle;
     }
   };
-
   const styles = getStyles();
-
   const handleJoyrideCallback = (data) => {
     const { status, action } = data;
     if (status === 'finished' || action === 'skip') {
@@ -639,6 +576,8 @@ const Landing = () => {
       setShowTour(false);
     }
   };
+
+
 
   return (
     <div className="landingcontainer">
@@ -673,11 +612,11 @@ const Landing = () => {
                 onChange={handleInputFacility}
                 onKeyDown={handleKeyDown}
               />
-              <FontAwesomeIcon 
-                  icon={faArrowRight}
-                  className="input-icon"
-                  onClick={handleSearch}
-                  />
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="input-icon"
+                onClick={handleSearch}
+              />
             </div>
             {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
@@ -976,8 +915,8 @@ const Landing = () => {
       <div className="notice2">
         <div class="notice2-container">
           <span>Whats New</span>
-          <marquee behavior="" direction="left">
-            <div className="flex">
+          <marquee behavior="scroll" direction="left">
+            <div className={`flex`}>
               {notifications.map((notification) => {
                 const createdAtDate = new Date(notification.createdAt);
                 const currentDate = new Date();
@@ -988,7 +927,11 @@ const Landing = () => {
                   <p className="notce2para">
                     {diffInDays <= 100 ? <p className="New_text"> New </p> : ""}
                     {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
-                    {notification.publicNotificationsContent} &nbsp; &nbsp;
+                    {notification.publicNotificationsContent}&nbsp;
+                    {
+                      notification.url && <a href={instance().baseURL + '/static' + notification.url}>
+                        <FontAwesomeIcon icon={faFileLines} />
+                      </a>} &nbsp; &nbsp;
                   </p>
                 );
               })}
@@ -1019,63 +962,60 @@ const Landing = () => {
         {/* .........Card section scroll using carousel ..........*/}
 
         <div className="carousel">
-          <button className="carousel-button2 left" onClick={prevImage}>
-            &lt;
-          </button>
-          <div className="carousel-container">
-            <div
-              className="carousel-images"
-              // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
-              style={{ transform: `translateX(-${currentIndex * 420}px)` }} // Adjust transform value
-            >
-              {eventNameLanding.length > 0 &&
-                eventNameLanding.map((event, index) => (
-                  <Link
-                    key={index}
-                    className="carousel-slide2"
-                    to={
-                      "/events-details?eventId=" +
-                      `${encryptData(event.eventId)}`
-                    }
-                  >
-                    <img
-                      className="Yoga_image2"
-                      src={Yoga_img}
-                      alt="Yoga Event"
-                    ></img>
-                    <div className="carousel-slide-text">
-                      <h1 className="Name_yoga2">{event.eventName}</h1>
-                      <div className="carousel-slide-location">
-                        {/* <FontAwesomeIcon icon={faSearch} className="os-icon" /> */}
-                        <FontAwesomeIcon
-                          icon={faLocationDot}
-                          style={{ color: "#504f4e" }}
-                          className="os-icon"
-                        />
-                        <h1>{event.locationName}</h1>
+          {eventNameLanding.length > 1 ? (
+            <>
+              <button className="carousel-button2 left" onClick={prevImage}>
+                &lt;
+              </button>
+              <div className="carousel-container">
+                <div
+                  className="carousel-images"
+                  style={{ transform: `translateX(-${currentIndex * 420}px)` }} // Adjust transform value
+                >
+                  {eventNameLanding.map((event, index) => (
+                    <Link
+                      key={index}
+                      className="carousel-slide2"
+                      to={"/events-details?eventId=" + `${encryptData(event.eventId)}`}
+                    >
+                      <img
+                        className="Yoga_image2"
+                        src={Yoga_img}
+                        alt="Yoga Event"
+                      ></img>
+                      <div className="carousel-slide-text">
+                        <h1 className="Name_yoga2">{event.eventName}</h1>
+                        <div className="carousel-slide-location">
+                          <FontAwesomeIcon
+                            icon={faLocationDot}
+                            style={{ color: "#504f4e" }}
+                            className="os-icon"
+                          />
+                          <h1>{event.locationName}</h1>
+                        </div>
+                        <span className="Yoga_date_time2">
+                          <h1 className="Yoga_date2">
+                            {formatDate(event.eventDate)}
+                          </h1>
+                          <h1 className="Yoga_time2">
+                            {formatTime(event.eventStartTime)} -{" "}
+                            {formatTime(event.eventEndTime)}
+                          </h1>
+                        </span>
                       </div>
-                      <span className="Yoga_date_time2">
-                        {/* <h1 className={`Yoga_date2 ${event.status == "ACTIVE" ? "text-green-500" : "text-red-500"}`}>{event.status?.charAt(0).toUpperCase() + event.status?.slice(1)}</h1> */}
-                        <h1 className="Yoga_date2">
-                          {formatDate(event.eventDate)}
-                        </h1>
-                        <h1 className="Yoga_time2">
-                          {formatTime(event.eventStartTime)} -{" "}
-                          {formatTime(event.eventEndTime)}
-                        </h1>
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-
-              {/* {images.map((image, index) => (
-                <img key={index} src={image.img} alt={`carousel-img-${index}`} className="carousel-image" />
-              ))} */}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <button className="carousel-button2 right" onClick={nextImage}>
+                &gt;
+              </button>
+            </>
+          ) : (
+            <div className="no-data-message_Current_event1">
+              <img className="Current_Event_image" src={No_Current_Event_img}></img>
             </div>
-          </div>
-          <button className="carousel-button2 right" onClick={nextImage}>
-            &gt;
-          </button>
+          )}
         </div>
       </div>
 
@@ -1091,6 +1031,7 @@ const Landing = () => {
           <div className="whiteHeader"></div>
           <h1>Explore New Activities And Book</h1>
         </div>
+
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
@@ -1146,6 +1087,8 @@ const Landing = () => {
           </div>
         </div>
       </div>
+
+
 
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
 
@@ -1208,7 +1151,7 @@ const Landing = () => {
       </div>
 
       {/* <div className="footer"></div> */}
-      {(showTour == 'true') && <TourGuide run={runTour} callback={handleJoyrideCallback}/>}
+      {(showTour == 'true') && <TourGuide run={runTour} callback={handleJoyrideCallback} />}
     </div>
   );
 };

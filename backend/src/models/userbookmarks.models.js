@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const Bookmarks = sequelize.define('publicUserBookmarks', {
+    const Bookmarks = sequelize.define('publicuserbookmarks', {
         bookmarkId: {
             type: DataTypes.INTEGER,
             autoIncrement: true,

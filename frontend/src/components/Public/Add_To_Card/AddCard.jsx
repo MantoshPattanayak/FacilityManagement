@@ -21,7 +21,7 @@ import "./AddCard.css"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { decryptData } from "../../../utils/encryptData";
-import CommonFooter1 from "../../../common/Common_footer1";
+import No_item_cart from "../../../assets/No_items_to_cart.png"
 
 import { useSelector } from "react-redux";
 const Add_Card = () => {
@@ -82,8 +82,9 @@ const Add_Card = () => {
                     <div className="Card9">
                        <h1 className="card_text9">Cart</h1>
                     </div>
+                   {GetViewCradData.length > 0 ?(
                     <div className="card_item_conatiner9" >
-                        {GetViewCradData.length > 0 && GetViewCradData.map((cardItem) => (
+                        { GetViewCradData.map((cardItem) => (
                             <div className="p-5" key={cardItem.cartItemId}>
                                 <div className="card_item_conatiner_heading9">
                                     <h1 className="text_heading9">{cardItem.facilityTypeName}</h1>
@@ -122,10 +123,13 @@ const Add_Card = () => {
                             </button>
                         </div>
                     </div>
-
-
-
-
+                   ):(
+                    <div className="No_item_in_cart">
+                        <img src={No_item_cart}></img>
+                        </div>
+                   )
+                } 
+                    
                 </div>
 
             </div>
