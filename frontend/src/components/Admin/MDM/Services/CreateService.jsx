@@ -98,7 +98,7 @@ export default function CreateService() {
             <AdminHeader />
             <div className="CreateNewServiceContainer">
                 <div className="form-heading">
-                    <h2>Add new notification</h2>
+                    <h2>Add new service</h2>
                     <div className="flex flex-col-reverse items-end w-[100%]">
                         <button
                             className='back-button'
