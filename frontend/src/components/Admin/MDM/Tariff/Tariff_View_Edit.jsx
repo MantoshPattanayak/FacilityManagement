@@ -8,7 +8,7 @@ import axiosHttpClient from '../../../../utils/axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback } from 'react';
 // here Funcation of view Tariff Details -------------------------------------------------
-const ViewTariffList = () => {
+const Tariff_View_Edit = () => {
     let navigate = useNavigate();
     const [tableData, setTableData] = useState([]);
     const [searchOptions, setSearchOptions] = useState([]);
@@ -59,7 +59,7 @@ const ViewTariffList = () => {
             <AdminHeader />
             <div className="Main_Conatiner_table">
                 <div className='table-heading'>
-                    <h2 className="table-heading">List of Tariff Details</h2>
+                    <h2 className="table-heading">View Tariff Details</h2>
                 </div>
                 <div className="search_text_conatiner">
                     <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
@@ -108,4 +108,4 @@ const ViewTariffList = () => {
     )
 }
 
-export default ViewTariffList;
+export default Tariff_View_Edit;
