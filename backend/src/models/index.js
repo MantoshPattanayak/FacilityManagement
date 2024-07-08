@@ -141,20 +141,25 @@ db1.facilities.hasMany(db1.facilitytariff,{foreignKey:"facilityId"})
 db1.facilitytariff.belongsTo(db1.facilities,{foreignKey:"facilityId"})
 
 db1.eventCategoryMaster.hasMany(db1.facilityEvents,{foreignKey:"eventCategoryId"})
-db1.facilityEvents.belongsTo(db1.eventCategoryMaster,{foreignKey:"eventCategoryId"})
+db1.facilityEvents.belongsTo(db1.eventCategoryMaster,{foreignKey:"eventCategoryId",as:'activityData' })
 
 db1.useractivitymasters.hasMany(db1.facilityactivities,{ foreignKey: 'activityId', // This is the foreign key in db1.facilityactivities that references useractivitymasters
   sourceKey: 'userActivityId'}) // This is the source key in db1.useractivitymasters
 db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey: 'activityId', // This is the foreign key in db1.facilityactivities that references useractivitymasters
-  targetKey: 'userActivityId' // This is the target key in db1.useractivitymasters
+  targetKey: 'userActivityId',
+  as:'activityData' // This is the target key in db1.useractivitymasters
   })
+
+db1.tariffmaster.hasMany(db1.facilitytariff,{foreignKey:'tariffMasterId'});
+db1.facilitytariff.belongsTo(db1.tariffmaster,{foreignKey:'tariffMasterId'})
 
 
 // join operations end
 
 
 
-db1.publicnotifications.sync({
+db1.faq.sync({
+
   alter: false,
 });
 

@@ -5,7 +5,7 @@ import Footer from '../../../common/Footer';
 import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownLong, faCaretDown, faCaretUp, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faDownLong, faCaretDown, faCaretUp, faAngleRight, faTrophy } from "@fortawesome/free-solid-svg-icons";
 import img from '../../../assets/wave.jpg';
 import axiosHttpClient from '../../../utils/axios';
 Chart.register(
@@ -17,7 +17,7 @@ Chart.register(
 );
 
 const AdminDashboard = () => {
-    const data = {
+    const [graphData, setGraphData] = useState({
         labels: ['Mon', 'Tue', 'Wed', 'Fri', 'Sat'],
         datasets: [
             {
@@ -28,8 +28,9 @@ const AdminDashboard = () => {
                 borderWidth: 1,
             }
         ]
-    };
-    const [facilityId, setFacilityId] = useState();
+    });
+    const [facilityId, setFacilityId] = useState('');
+    const [facilityListData, setFacilityListData] = useState([]);
     const options = {
         // Add your chart options here
     };
@@ -44,6 +45,7 @@ const AdminDashboard = () => {
         specificFacilityBookingData: '',
     });
 
+    // API call to fetch dashboard data
     async function fetchAdminDashboardData() {
         try {
             let response = await axiosHttpClient('ADMIN_DASHBOARD_FETCH_API', 'post', { facilityId });
@@ -57,21 +59,79 @@ const AdminDashboard = () => {
                 activeEventsCount: response.data.activeEventsCount,
                 bookingEventData: response.data.bookingEventData,
                 specificFacilityBookingData: response.data.specificFacilityBookingData,
-            })
+            });
+            /**{
+                labels: ['Mon', 'Tue', 'Wed', 'Fri', 'Sat'],
+                datasets: [
+                    {
+                        label: '369',
+                        data: [3, 4, 9, 2, 5],
+                        backgroundColor: 'rgb(143, 158, 215)',
+                        borderColor: 'black',
+                        borderWidth: 1,
+                    }
+                ]
+            } */
+           setGraphData({
+                labels: [...response.data.specificFacilityBookingData.map((data) => {return data.bookingMonthName})],
+                    datasets: [
+                        {
+                            label: 'Facility bookings',
+                            data: [...response.data.specificFacilityBookingData.map((data) => {return data.bookingCount})],
+                            backgroundColor: 'rgb(143, 158, 215)',
+                            borderColor: 'grey',
+                            borderWidth: 1,
+                        }
+                ]
+           })
         }
         catch (error) {
             console.error('Error fetching dashboard data', error);
         }
     }
 
+    // API call to fetch list of facilities
+    async function fetchListOfFacilities() {
+        try {
+            let response = await axiosHttpClient('View_Park_Data', 'post');
+            console.log('list of facilities', response.data.data);
+            setFacilityListData(response.data.data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     // Function to calculate sum of total bookings of events
     const calculateTotalEventBookings = () => {
-        // return adminDashboardData?.bookingEventData?.reduce((acc, item) => acc + item.bookingcount, 0) || 0;
+        let sum = 0;
+        for (let i = 0; i < adminDashboardData?.bookingEventData.length; i++) {
+            sum = parseInt(sum + adminDashboardData?.bookingEventData[i]?.bookingcount);
+        }
+        // console.log('calculateTotalEventBookings sum', sum);
+        return sum;
     };
 
+    // Function to calculate sum of total bookings of events
+    const calculateTotalFacilityBookings = () => {
+        let sum = 0;
+        for (let i = 0; i < adminDashboardData?.specificFacilityBookingData.length; i++) {
+            sum = parseInt(sum + adminDashboardData?.specificFacilityBookingData[i]?.bookingCount);
+        }
+        // console.log('calculateTotalEventBookings sum', sum);
+        return sum;
+    };
+
+    // on page load, fetch
     useEffect(() => {
         fetchAdminDashboardData();
+        fetchListOfFacilities();
     }, []);
+
+    // on selecting facility name, refresh
+    useEffect(() => {
+        fetchAdminDashboardData();
+    }, [facilityId]);
 
     return (
         <div>
@@ -143,7 +203,7 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                             <div className="card-image">
-                                <h1>{calculateTotalEventBookings()}</h1>
+                                <h1>{calculateTotalFacilityBookings()}</h1>
                             </div>
                             <div className="curve-img"><img src={img} alt="" /></div>
                         </div>
@@ -153,123 +213,75 @@ const AdminDashboard = () => {
                     </div> */}
 
                     <div className='graph'
-
                         style={
                             {
                                 padding: '10px',
                                 width: '46%'
                             }
-
                         }>
                         <div className="input">
-                            <select className="dropdown-dashboard" >
-                                <option value="" disabled>Select an option</option>
-                                <option value="option1">Jaydev Vatika</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
+                            <select className="dropdown-dashboard" value={facilityId} onChange={(e) => setFacilityId(e.target.value)}>
+                                <option value={''}>Select</option>
+                                {
+                                    facilityListData?.length > 0 && facilityListData?.map((facility, index) => {
+                                        return <option key={index} value={facility.facilityId}>{facility.facilityname}</option>
+                                    })
+                                }
                                 <FontAwesomeIcon icon={faCaretDown} />
-
                             </select>
-
                         </div>
                         <Bar
-                            data={data}
+                            data={graphData}
                             options={options}
                         ></Bar>
                     </div>
                 </div>
 
-
-
                 {/* Activities */}
                 <div className="activity-container">
 
-                    <div className="popular-activity">
+                    <div className="popular-activity h-fit">
                         <h2 className='popular-activity-text'>Popular Activities</h2><br />
-                        <div className="games">
-                            <p>Cricket</p>
-                            <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 bookings</h4>
-
-                        </div>
-                        <div className="games">
-                            <p>Dance</p>
-                            <span>12<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 bookings</h4>
-                        </div>
-                        <div className="games">
-                            <p>Football</p>
-                            <span>32<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 bookings</h4>
-                        </div>
-                        <div className="games">
-                            <p>Yoga</p>
-                            <span>76<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 bookings</h4>
-                        </div>
-                        <div className="games">
-                            <p>Cricket</p>
-                            <span>12<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 bookings</h4>
-                        </div>
-                        <div className="games">
-                            <p>Dance</p>
-                            <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 bookings</h4>
-                        </div>
-                        <div className="games">
-                            <p>Football</p>
-                            <span>12<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 bookings</h4>
-                        </div><br /><br />
-                        <hr />
+                        {
+                            adminDashboardData.popularActivities?.length > 0 && adminDashboardData.popularActivities?.map((activity, index) => {
+                                if(index < 8){
+                                    return (
+                                        <div className="games" key={index}>
+                                            <p>{activity.userActivityName}</p>
+                                            {/* <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span> */}
+                                            <span>{index == 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
+                                            <h4>{activity.activityCount} bookings </h4> 
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
+                        <br /><br />
+                        {/* <hr />
                         <div className="vew-leaderboard">
                             <a href="#">View full Leaderboard <FontAwesomeIcon icon={faAngleRight} /></a>
-                        </div>
-
+                        </div> */}
                     </div>
-                    <div className="popular-facility">
-                        <h2 className='popular-activity-text'>Popular Facility</h2><br />
-                        <div className="games">
-                            <p>Buddha Jayanti Park</p>
-                            <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 users visited</h4>
 
-                        </div>
-                        <div className="games">
-                            <p>DIG park</p>
-                            <span>12<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 users visited</h4>
-                        </div>
-                        <div className="games">
-                            <p>Buddha Jayanti Park</p>
-                            <span>32<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 users visited</h4>
-                        </div>
-                        <div className="games">
-                            <p>IG park</p>
-                            <span>76<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 users visited</h4>
-                        </div>
-                        <div className="games">
-                            <p>Botanical Garden</p>
-                            <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 users visited</h4>
-                        </div>
-                        <div className="games">
-                            <p>Northwest region</p>
-                            <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span>
-                            <h4>112 bookings</h4>
-                        </div>
-                        <div className="games">
-                            <p>Bharatpur</p>
-                            <span>12<FontAwesomeIcon icon={faCaretDown} className="down" /></span>
-                            <h4>112 bookings</h4>
-                        </div><br /><br />
-                        <hr />
+                    <div className="popular-facility h-fit">
+                        <h2 className='popular-activity-text'>Popular Facilities</h2><br />
+                        {adminDashboardData.popularFacilities?.length > 0 && adminDashboardData.popularFacilities?.map((facility, index) => {
+                            if(index < 8){
+                                return (
+                                    <div className="games" key={index}>
+                                        <p>{facility.facilityname}</p>
+                                        {/* <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span> */}
+                                        <span>{index == 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
+                                        <h4>{facility.bookingscount} bookings</h4>
+                                    </div>
+                                )
+                            }
+                        })}
+                        <br /><br />
+                        {/* <hr />
                         <div className="vew-leaderboard">
                             <a href="#">View full Leaderboard <FontAwesomeIcon icon={faAngleRight} /></a>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 

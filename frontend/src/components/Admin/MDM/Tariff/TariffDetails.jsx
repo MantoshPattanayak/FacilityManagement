@@ -14,18 +14,19 @@ const TariffDetails = () => {
   const facilityId = decryptData(
     new URLSearchParams(location.search).get("facilityId")
   );
-  console.log("Decrpt data", facilityTypeId, facilityId);
+  console.log("Decrypt data", facilityTypeId, facilityId);
 
-  // Get initail Data -----------------------------------
+  // Get initial Data
   const [GetInitailData, setGetInitailData] = useState([]);
   const [GetactivityData, setGetactivityData] = useState([]);
-  const [GetFacilityData, setGetFacilityData] = useState([])
+  const [GetFacilityData, setGetFacilityData] = useState([]);
   const [errors, setErrors] = useState([]);
-  // Post tarifftype data -------------------------
+
+  // Post tariff type data
   const [PostTraifftype, setPostTraiffType] = useState({
     tariffTypeId: "",
   });
-  //------------Post Tariff Data --------------------------
+  // Post Tariff Data
   const [tariffRows, setTariffRows] = useState([
     {
       facilityId: facilityId,
@@ -41,16 +42,16 @@ const TariffDetails = () => {
         sat: ''
       },
       tariffTypeId: facilityTypeId,
-      entityId: 2
+      entityId: ''
     }
   ]);
-  // Handle OnChnage of Get initail Data -------------------
+  // Handle OnChange of Get initial Data
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPostTraiffType({ ...PostTraifftype, [name]: value });
     console.log("PostData", PostTraifftype);
   };
-  // Get Initail Data here (Call api) ------------------------
+  // Get Initial Data here (Call api)
   async function GetTariffInitailData() {
     try {
       let res = await axiosHttpClient("Initial_Data_Tariff_Details", "post", {
@@ -60,28 +61,27 @@ const TariffDetails = () => {
       });
       setGetInitailData(res.data.tariffTypeData);
       setGetactivityData(res.data.activityData);
-      setGetFacilityData(res.data.facilityData)
-      console.log("Here Response of Tariff Initail Data", res);
+      setGetFacilityData(res.data.facilityData);
+      console.log("Here Response of Tariff Initial Data", res);
     } catch (err) {
-      console.log("here error of Initail Data of Tariff", err);
+      console.log("Here error of Initial Data of Tariff", err);
     }
   }
-  // Hanlde Post Tariff Value (Onchange)----------------
+  // Handle Post Tariff Value (OnChange)
   const HanldePostTraiff = (e, index) => {
     const { name, value } = e.target;
     const updatedRows = [...tariffRows];
     if (name === 'entityId') {
       updatedRows[index][name] = parseInt(value, 10) || 0;
-    }
-    else if (name in updatedRows[index].dayWeek) {
+    } else if (name in updatedRows[index].dayWeek) {
       updatedRows[index].dayWeek[name] = value;
     } else {
       updatedRows[index][name] = value;
     }
-
     setTariffRows(updatedRows);
-  }
-  //here Post the data of Tariff details -------------------
+  };
+ 
+  // Post the data of Tariff details
   async function handle_Post_TariffData() {
     const errorList = validate();
     if (errorList.some(err => Object.keys(err).length > 0)) {
@@ -90,13 +90,14 @@ const TariffDetails = () => {
     try {
       let res = await axiosHttpClient('Create_Tariff_Details_Api', 'post', {
         facilityTariffData: tariffRows
-      })
-      console.log("Here Response Post Tariff Data", res)
+      });
+      console.log("Here Response Post Tariff Data", res);
     } catch (err) {
-      console.log("Here Error of Tariff Post data", err)
+      console.log("Here Error of Tariff Post data", err);
     }
   }
-  // Add row --------------------------------
+
+  // Add row
   const addRow = () => {
     setTariffRows([
       ...tariffRows,
@@ -117,24 +118,23 @@ const TariffDetails = () => {
         entityId: ''
       }
     ]);
-  }
-  // Remove Row -----------------------------
+  };
+
+  // Remove Row
   const deleteRow = (index) => {
     const updatedRows = [...tariffRows];
     updatedRows.splice(index, 1);
     setTariffRows(updatedRows);
-  }
+  };
   // Vaildation of Create Tariff -------------------------------------------
   const validate = () => {
     const errorList = [];
     tariffRows.forEach((row, index) => {
       const err = {};
-
-   
-    if((row.operatingHoursFrom)>(row.operatingHoursTo)){
-      err.operatingHoursFrom = "Start operating Hours From should be less than or equal to End";
-      err.operatingHoursTo = "End operating Hours To should be greater than or equal to Start";
-    }
+      if ((row.operatingHoursFrom) > (row.operatingHoursTo)) {
+        err.operatingHoursFrom = "Start operating Hours From should be less than or equal to End";
+        err.operatingHoursTo = "End operating Hours To should be greater than or equal to Start";
+      }
       if (!row.operatingHoursFrom) {
         err.operatingHoursFrom = "Please select the operating hours from";
       }
@@ -206,7 +206,7 @@ const TariffDetails = () => {
               onChange={handleChange}
             >
               <option value="">Select Facility Type</option>
-              {GetInitailData.length > 0 && GetInitailData?.map((item, index) => (
+              {GetInitailData?.length > 0 && GetInitailData?.map((item, index) => (
                 <option value={item.tariffTypeId} key={index}>
                   {item.code}
                 </option>
@@ -216,17 +216,31 @@ const TariffDetails = () => {
             <div className="icon">▼</div>
           </div>
 
+
           <div className="dropdown-container">
-            <select className="dropdown">
-              <option value="">Select Acitivities Type</option>
-              {GetactivityData?.length > 0 &&
-                GetactivityData?.map((data, index) => (
-                  <option key={index} value={data.activityId
-                  }>{data.useractivitymaster.userActivityName}</option>
+            <div className="dropdown-container">
+              <select
+                className="dropdown"
+                name="entityId"
+                value={tariffRows[0].entityId}
+                onChange={(e) => {
+                  const { value } = e.target;
+                  setTariffRows([{ ...tariffRows[0], entityId: parseInt(value, 10) || 0 }]);
+                }}
+              >
+                <option value="">Select Activities Type</option>
+                {GetactivityData?.map((data) => (
+                  <option key={data.activityId} value={data.activityId}>
+                    {data.useractivitymaster.userActivityName}
+                  </option>
                 ))}
-            </select>
-            <div className="icon">▼</div>
+              </select>
+
+              <div className="icon">▼</div>
+            </div>
+            {/* Additional form fields and handlers */}
           </div>
+
         </div>
 
         <div className="table-container">

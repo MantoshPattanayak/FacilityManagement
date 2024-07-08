@@ -60,12 +60,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             defaultValue: null
         },
-        validityFrom:{
-            type:DataTypes.DATE
-        },
-        validityTo:{
-            type:DataTypes.DATE
-        },
         createdBy: {
             type: DataTypes.INTEGER,
             defaultValue: null
