@@ -1,46 +1,56 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Profile.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { faTrash, faUser, faEnvelope, faMobileScreenButton, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faUser,
+  faEnvelope,
+  faMobileScreenButton,
+  faLocationDot,
+} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { encryptData, decryptData } from "../../../utils/encryptData";
 import CommonFooter from "../../../common/CommonFooter";
 import PublicHeader from "../../../common/PublicHeader";
-import { Link } from "react-router-dom"; import { logOutUser } from "../../../utils/utilityFunctions";
+import { Link } from "react-router-dom";
+import { logOutUser } from "../../../utils/utilityFunctions";
 import { useNavigate } from "react-router-dom";
 
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { Logout } from "../../../utils/authSlice";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Profile() {
   const dispatch = useDispatch(); // Initialize dispatch
   const navigate = useNavigate();
   const publicUserId = decryptData(
     new URLSearchParams(location.search).get("publicUserId")
   );
-  const [reenteredPassword, setReenteredPassword] = useState('');
+  // const languages = ["English", "ଓଡ଼ିଆ"];
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [reenteredPassword, setReenteredPassword] = useState("");
   const [selectedActivities, setSelectedActivities] = useState([]);
-  const [errors, setErrors] = useState({});  //to show error message
+  const [errors, setErrors] = useState({}); //to show error message
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    emailId: '',
-    language: '',
-    password: '',
-    userId: ''
+    firstName: "",
+    lastName: "",
+    phoneNo: "",
+    emailId: "",
+    language: "English",
+    password: "",
+    userId: "",
   });
   const [activityData, setActivityData] = useState([]);
+
   // API call to fetch preferred activities data
   async function getActivitiesData() {
     try {
       let res = await axiosHttpClient("VIEW_FILTER_OPTIONS_API", "get");
       console.log("getActivitiesData", res);
       setActivityData(res.data.fetchActivityMaster[0]);
-    }
-    catch (err) {
+    } catch (err) {
       console.log("there is an error ", err);
     }
   }
@@ -58,9 +68,8 @@ export default function Profile() {
     } else {
       setSelectedActivities([...selectedActivities, activity]);
     }
-    console.log('selectedActivities', selectedActivities);
+    console.log("selectedActivities", selectedActivities);
   };
-
 
   //--------------Validation--------------------------------
   const validateFormData = (formData) => {
@@ -70,26 +79,45 @@ export default function Profile() {
     // Name validation regex (assuming it contains only letters and spaces)
     const nameRegex = /^[A-Z][a-zA-Z]*$/;
 
+    // Mobile Number validation regex
+    const mobileNoRegex = /^(\d{3})[- ]?(\d{3})[- ]?(\d{4})$/;
+
     // Email validation regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const newErrors = {};
     // Validate password
-    if (reenteredPassword.trim() !== '' && !passwordRegex.test(formData.password.trim())) {
+    if (
+      reenteredPassword.trim() !== "" &&
+      !passwordRegex.test(formData.password.trim())
+    ) {
       console.log("Invalid password format");
       // Show a warning message
       // alert("Password must contain only letters, numbers, and special characters.");
       // return false;
-      newErrors.password = "Password must contain only letters, numbers, and special characters.";
+      newErrors.password =
+        "Password must contain only letters, numbers, and special characters.";
     }
 
     // Validate name
-    if (!nameRegex.test(formData.firstName.trim()) || !nameRegex.test(formData.lastName.trim())) {
+    if (
+      !nameRegex.test(formData.firstName.trim()) ||
+      !nameRegex.test(formData.lastName.trim())
+    ) {
       console.log("Invalid name format");
       // Show a warning message
       // alert("Name must contain only letters.");
       // return false;
       newErrors.name = "Name must contain only letters.";
+    }
+
+    // Validate email
+    if (!mobileNoRegex.test(formData.phoneNo.trim())) {
+      console.log("Invalid mobile number format");
+      // Show a warning message
+      // alert("Invalid email format.");
+      // return false;
+      newErrors.phoneNo = "Invalid mobile number format.";
     }
 
     // Validate email
@@ -105,7 +133,6 @@ export default function Profile() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -131,37 +158,48 @@ export default function Profile() {
       }
 
       // Check if the reentered password field is not empty and matches the new password
-      if (formData.password.trim() === '' && reenteredPassword.trim() === '') {
+      if (formData.password.trim() === "" && reenteredPassword.trim() === "") {
         // No password change, proceed with updating other data
       } else if (formData.password.trim() !== reenteredPassword.trim()) {
         console.log("Passwords do not match");
         // Show a warning message
-        alert("Passwords do not match. Please make sure your passwords match before updating.");
+        alert(
+          "Passwords do not match. Please make sure your passwords match before updating."
+        );
         return;
       }
 
-      let response = await axiosHttpClient('PROFILE_DATA_UPDATE_API', 'put', {
-        publicUserId: formData.publicUserId,
-        firstName: encryptData(formData.firstName),
-        lastName: encryptData(formData.lastName),
-        emailId: encryptData(formData.emailId),
-        language: encryptData(formData.language),
-        password: encryptData(formData.password),
-        activityPreference: selectedActivities.map((activity) => { return encryptData(activity) })
-      }, null);
+      let response = await axiosHttpClient(
+        "PROFILE_DATA_UPDATE_API",
+        "put",
+        {
+          publicUserId: formData.publicUserId,
+          firstName: encryptData(formData.firstName),
+          lastName: encryptData(formData.lastName),
+          phoneNo: encryptData(formData.phoneNo),
+          emailId: encryptData(formData.emailId),
+          language: encryptData(formData.language),
+          password: encryptData(formData.password),
+          activityPreference: selectedActivities.map((activity) => {
+            return encryptData(activity);
+          }),
+        },
+        null
+      );
 
       // Log updated form data after successful update
-      console.log('Updated Form Data:', {
+      console.log("Updated Form Data:", {
         firstName: formData.firstName,
         lastName: formData.lastName,
+        phoneNo: formData.phoneNo,
         emailId: formData.emailId,
         language: formData.language,
-        password: formData.password
+        password: formData.password,
       });
 
-      console.log('Update response:', response.data.data);
+      console.log("Update response:", response.data.data);
     } catch (error) {
-      console.error('Update error:', error);
+      console.error("Update error:", error);
     }
   };
 
@@ -196,9 +234,9 @@ export default function Profile() {
     dispatch(Logout());
     async function logOutAPI() {
       try {
-        let res = await axiosHttpClient('LOGOUT_API', 'post');
+        let res = await axiosHttpClient("LOGOUT_API", "post");
         console.log(res.data);
-        toast.success('Logged out successfully!!', {
+        toast.success("Logged out successfully!!", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
@@ -207,43 +245,42 @@ export default function Profile() {
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
         });
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
       }
     }
     logOutAPI();
-  }
+  };
 
   // get profile data from api
   async function fetchProfileDetails() {
     try {
-      let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
-      console.log('response of fetch profile api', res.data);
+      let res = await axiosHttpClient("PROFILE_DATA_VIEW_API", "post");
+      console.log("response of fetch profile api", res.data);
 
       let userName = decryptData(res.data.public_user.userName);
       let firstName = decryptData(res.data.public_user.firstName);
       let lastName = decryptData(res.data.public_user.lastName);
-      let emailId = decryptData(res.data.public_user.emailId);
       let phoneNo = decryptData(res.data.public_user.phoneNo);
+      let emailId = decryptData(res.data.public_user.emailId);
       let language = decryptData(res.data.public_user.language);
       let password = decryptData(res.data.public_user.password);
 
       setFormData({
-        userName: userName || '',
-        firstName: firstName || '',
-        lastName: lastName || '',
-        emailId: emailId || '',
-        phoneNo: phoneNo || '',
-        language: language || '',
-        password: password || '',
-        publicUserId: res.data.public_user.publicUserId
-      })
-    }
-    catch (error) {
+        userName: userName || "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        emailId: emailId || "",
+        phoneNo: phoneNo || "",
+        language: language || "English",
+        password: password || "",
+        publicUserId: res.data.public_user.publicUserId,
+      });
+      setSelectedLanguage(language || "English");
+    } catch (error) {
       console.error(error);
       if (error.respone.status == 401) {
-        toast.error('You are logged out. Kindly login first.', {
+        toast.error("You are logged out. Kindly login first.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
@@ -251,7 +288,7 @@ export default function Profile() {
               navigate("/");
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
-        })
+        });
       }
     }
   }
@@ -272,30 +309,30 @@ export default function Profile() {
     //   }
     // }
 
-    setFormData(prevFormData => {
+    setFormData((prevFormData) => {
       const updatedFormData = { ...prevFormData, [name]: value };
+      // updateLanguageInAPI(updatedFormData); // Update API
       console.log("here input data", updatedFormData);
       return updatedFormData;
     });
 
+    // if (name === "language") {
+    //   setSelectedLanguage(value);
+    // }
   };
 
-  // here Validation -----------------------------
-  // const validatation=()=>{
-  //   const err={};
-
-
-
-  //   return;
-  // }
+  const handleButtonClick = (language) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      language: language,
+    }));
+    setSelectedLanguage(language);
+  };
 
   // on page load
   useEffect(() => {
     fetchProfileDetails();
   }, []);
-
-
-
 
   return (
     <main>
@@ -306,21 +343,20 @@ export default function Profile() {
           <aside className="profile-leftside--Body">
             <div className="profile-view--Body">
               <div className="profile-about">
-                <div className="profile-about-icon" >
+                <div className="profile-about-icon">
                   <FontAwesomeIcon icon={faUser} />
                   <p>{formData.firstName + " " + formData.lastName}</p>
                 </div>
 
-                <div className="profile-about-icon" >
+                <div className="profile-about-icon">
                   <FontAwesomeIcon icon={faEnvelope} />
                   <p>{formData.emailId}</p>
                 </div>
 
-                <div className="profile-about-icon" >
+                <div className="profile-about-icon">
                   <FontAwesomeIcon icon={faMobileScreenButton} />
                   <p>{formData.phoneNo}</p>
                 </div>
-
               </div>
             </div>
             <div>
@@ -329,32 +365,31 @@ export default function Profile() {
                   <Link
                     to="/Profile"
                     className="profile-button"
-                    style={{ color: 'white', backgroundColor: "green" }}
+                    style={{ color: "white", backgroundColor: "green" }}
                   >
                     Edit User Profile
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/profile/booking-details"
-                    className=""
-                  >
+                  <Link to="/profile/booking-details" className="">
                     Booking Details
                   </Link>
                 </li>
                 <li>
-                  <Link to="/UserProfile/Favorites">
-                    Favorites
-                  </Link>
+                  <Link to="/UserProfile/Favorites">Favorites</Link>
                 </li>
-
               </ul>
               {/* Logout Button */}
-              <button className="button-67 " onClick={(e) => { handleLogout(e); navigate('/') }}>
+              <button
+                className="button-67 "
+                onClick={(e) => {
+                  handleLogout(e);
+                  navigate("/");
+                }}
+              >
                 <h1>Logout</h1>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>
-
             </div>
           </aside>
 
@@ -366,55 +401,159 @@ export default function Profile() {
             <form className="profile-form-Body" onSubmit={handleSubmit}>
               <div className="profilePhoto" onClick={handleProfileClick}>
                 {photoUrl ? (
-                  <img src={photoUrl} alt="Uploaded" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                  <img
+                    src={photoUrl}
+                    alt="Uploaded"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "50%",
+                    }}
+                  />
                 ) : (
                   <div className="profileIcon">
                     <FontAwesomeIcon icon={faCircleUser} />
                     <button>Add Photo</button>
                   </div>
-
                 )}
-                <input ref={fileInputRef} type="file" id="photoInput" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  id="photoInput"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
                 {photoUrl && (
                   <button type="button" onClick={clearPhoto}>
-                    <FontAwesomeIcon icon={faTrash} style={{ color: "#a41e1e", }} />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      style={{ color: "#a41e1e" }}
+                    />
                   </button>
                 )}
                 {!photoUrl && (
-                  <input ref={fileInputRef} type="file" id="photo" onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    id="photo"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                  />
                 )}
-
               </div>
-
-
 
               <div className="profile-formContainer">
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="firstName">First Name<span className="required-asterisk">*</span></label>
-                  <input type="text" name='firstName' placeholder="Enter First Name" value={formData.firstName} onChange={handleData} />
+                  <label htmlFor="firstName">
+                    First Name<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="Enter First Name"
+                    value={formData.firstName}
+                    onChange={handleData}
+                  />
 
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="lastName">Last Name<span className="required-asterisk">*</span></label>
-                  <input type="text" name='lastName' placeholder="Enter Last Name" value={formData.lastName} onChange={handleData} />
+                  <label htmlFor="lastName">
+                    Last Name<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Enter Last Name"
+                    value={formData.lastName}
+                    onChange={handleData}
+                  />
                   {errors.name && <span className="error">{errors.name}</span>}
                 </div>
 
                 <div className="profile-formContainer_Inner">
-                  <label htmlFor="email">Email<span className="required-asterisk">*</span></label>
-                  <input type="email" name='emailId' placeholder="Enter Email" value={formData.emailId} onChange={handleData} />
-                  {errors.email && <span className="error">{errors.email}</span>}
+                  <label htmlFor="aadhar">
+                    Aadhar Number<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="aadhar"
+                    name="aadharId"
+                    placeholder="Enter Aadhar Number"
+                    value={1234567890}
+                    readOnly
+                  />
                 </div>
 
                 <div className="profile-formContainer_Inner">
+                  <label htmlFor="phoneNo">
+                    Mobile No<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="phoneNo"
+                    placeholder="Enter Mobile Number"
+                    value={formData.phoneNo}
+                    onChange={handleData}
+                  />
+                  {errors.phoneNo && (
+                    <span className="error">{errors.phoneNo}</span>
+                  )}
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="email">
+                    Email<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="emailId"
+                    placeholder="Enter Email"
+                    value={formData.emailId}
+                    onChange={handleData}
+                  />
+                  {errors.email && (
+                    <span className="error">{errors.email}</span>
+                  )}
+                </div>
+
+                {/* <div className="profile-formContainer_Inner">
                   <label htmlFor="language">Language</label>
-                  <select id="language" name='language' value={formData.language} onChange={handleData}>
+                  <select
+                    id="language"
+                    name="language"
+                    value={formData.language}
+                    onChange={handleData}
+                  >
                     <option>English</option>
                     <option>ଓଡ଼ିଆ</option>
                   </select>
+                </div> */}
+
+                <div className="profile-rightside--divided">
+                  <label className="profile-rightside--Form-label">
+                    Language
+                  </label>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => handleButtonClick("English")}
+                      className={selectedLanguage === "English" ? "active" : ""}
+                    >
+                      English
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleButtonClick("ଓଡ଼ିଆ")}
+                      className={selectedLanguage === "ଓଡ଼ିଆ" ? "active" : ""}
+                    >
+                      ଓଡ଼ିଆ
+                    </button>
+                  </div>
                 </div>
+
                 {/* <div className="nearby-location">
                   <label htmlFor="nearby location">Preferred Location</label>
                   <div className="preferred-locations ">
@@ -460,18 +599,19 @@ export default function Profile() {
                     activityData.map((activity) => {
                       return (
                         <button
-                          className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${selectedActivities.includes(activity.userActivityId)
-                            ? "border-solid bg-green-800 text-white"
-                            : "border-solid border border-gray-600 "
-                            } text-black`}
-                          onClick={(e) => handleActivityToggle(e, activity.userActivityId)}
+                          className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${
+                            selectedActivities.includes(activity.userActivityId)
+                              ? "border-solid bg-green-800 text-white"
+                              : "border-solid border border-gray-600 "
+                          } text-black`}
+                          onClick={(e) =>
+                            handleActivityToggle(e, activity.userActivityId)
+                          }
                         >
                           <span>{activity.userActivityName}</span>
                         </button>
-                      )
-                    })
-
-                  }
+                      );
+                    })}
 
                   {/* Add more buttons for other activities */}
                 </div>
@@ -481,15 +621,14 @@ export default function Profile() {
                   id="ProfileActButton"
                   onClick={handleUpdate}
                 >
-                  Submit
+                  Update
                 </button>
                 {/* </form> */}
               </div>
             </form>
           </div>
         </div>
-
-      </div >
-    </main >
+      </div>
+    </main>
   );
 }
