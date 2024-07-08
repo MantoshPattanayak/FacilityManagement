@@ -100,6 +100,12 @@ import Privacy_Policy from "./components/Public/FooterPages/Privacy_Policy";
 import Partnerwithus from "./components/Public/FooterPages/PartnerWithUs";
 import Gallery from "./components/Public/View_Gallery/Image_Gallery";
 import SpecialEvent from "../src/components/Admin/Activity/SpecialEventBooking/SpecialEvent";
+import ViewServicesList from "./components/Admin/MDM/Services/ViewServicesList";
+import EditService from "./components/Admin/MDM/Services/EditService";
+import CreateService from "./components/Admin/MDM/Services/CreateService";
+import ViewAmenitiesList from "./components/Admin/MDM/AmenitiesMaster/ViewAmenitiesList";
+import CreateNewAmenity from "./components/Admin/MDM/AmenitiesMaster/CreateNewAmenity";
+import EditAmenity from "./components/Admin/MDM/AmenitiesMaster/EditAmenity";
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -589,11 +595,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/** Master Data Management */}
+              <Route path="/mdm/view-services" element={<ProtectedRoute><ViewServicesList /></ProtectedRoute>} />
+              <Route path="/mdm/edit-services" element={<ProtectedRoute><EditService /></ProtectedRoute>} />
+              <Route path="/mdm/create-services" element={<ProtectedRoute><CreateService /></ProtectedRoute>} />
+              <Route path="/mdm/view-amenities" element={<ProtectedRoute><ViewAmenitiesList /></ProtectedRoute>} />
+              <Route path="/mdm/create-amenities" element={<ProtectedRoute><CreateNewAmenity /></ProtectedRoute>} />
+              <Route path="/mdm/edit-amenities" element={<ProtectedRoute><EditAmenity /></ProtectedRoute>} />
             </Routes>
-
-
-
-
             {/* <Footer /> */}
             <CommonFooter1 />
           </div>

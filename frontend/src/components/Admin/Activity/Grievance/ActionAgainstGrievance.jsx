@@ -119,24 +119,53 @@ export default function ActionAgainstGrievance() {
   function handleConfirmation(e) {
     e.preventDefault();
     toast.dismiss();
+    // Disable interactions with the background
+    document.querySelectorAll('.grievance-action')[0].style.pointerEvents = 'none';
+    document.querySelectorAll('.grievance-action')[0].style.opacity = 0.4;
+
     toast.warn(
       <div>
         <p>Are you sure you want to proceed?</p>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <button onClick={() => handleSubmit(e)} className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
-          <button onClick={() => {
-            toast.dismiss();
-            toast.error('Action cancelled!', {
-              // position: toast.POSITION.TOP_CENTER,
-              // autoClose: 3000,
-            });
-          }} className='bg-red-400 text-white p-2 border rounded-md'>No</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSubmit();
+              // Re-enable interactions with the background
+              document.querySelectorAll('.grievance-action')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('.grievance-action')[0].style.opacity = 1;
+              toast.dismiss();
+            }}
+            className="bg-green-400 text-white p-2 border rounded-md"
+          >
+            Yes
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              // Re-enable interactions with the background
+              document.querySelectorAll('.grievance-action')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('.grievance-action')[0].style.opacity = 1;
+              toast.dismiss();
+              toast.error('Action cancelled!', {
+                position: "top-right",
+                autoClose: 3000,
+              });
+            }}
+            className="bg-red-400 text-white p-2 border rounded-md"
+          >
+            No
+          </button>
         </div>
       </div>,
       {
         position: "top-center",
         autoClose: false, // Disable auto close
         closeOnClick: false, // Disable close on click
+        onClose: () => {
+          // Re-enable interactions with the background if the toast is closed
+          document.body.style.pointerEvents = 'auto';
+        }
       }
     );
     return;
@@ -265,7 +294,7 @@ export default function ActionAgainstGrievance() {
             </div>
             <div className="form-group col-span-2 w-full">
               <label htmlFor="input1">Action response<span className='text-red-500'>*</span></label>
-              <textarea type="text" name='response' className='w-full' rows={5} value={formData.response || ''} placeholder="Enter response" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} />
+              <textarea type="text" name='response' className='w-full' rows={5} value={formData.response || ''} placeholder="Enter response" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} disabled={action == 'view' ? true : false}/>
               {errors.response && <p className='error-message'>{errors.response}</p>}
             </div>
             <div className="form-group col-span-2">
