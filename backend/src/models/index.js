@@ -154,7 +154,8 @@ db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey: 'activityI
 
 
 
-db1.publicnotifications.sync({
+db1.faq.sync({
+
   alter: false,
 });
 
