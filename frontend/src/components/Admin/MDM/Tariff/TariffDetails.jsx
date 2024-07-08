@@ -6,6 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrash, faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../../utils/axios";
 import { decryptData } from "../../../../utils/encryptData";
+//Toast -----------------------------------------------------------------
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const TariffDetails = () => {
   const facilityTypeId = decryptData(
@@ -16,7 +20,9 @@ const TariffDetails = () => {
   );
   console.log("Decrypt data", facilityTypeId, facilityId);
 
+
   // Get initial Data
+  let navigate = useNavigate();
   const [GetInitailData, setGetInitailData] = useState([]);
   const [GetactivityData, setGetactivityData] = useState([]);
   const [GetFacilityData, setGetFacilityData] = useState([]);
@@ -59,14 +65,21 @@ const TariffDetails = () => {
         facilityId,
         tariffTypeId: PostTraifftype.tariffTypeId,
       });
+      console.log("initial fetch data", res.data.tariffTypeData)
+      console.log("initial data fetch 2", res.data);
       setGetInitailData(res.data.tariffTypeData);
-      setGetactivityData(res.data.activityData);
+      if(PostTraifftype.tariffTypeId == 1) {
+        setGetactivityData();
+      }
+      // setGetactivityData(res.data.activityData);
+
       setGetFacilityData(res.data.facilityData);
       console.log("Here Response of Tariff Initial Data", res);
     } catch (err) {
       console.log("Here error of Initial Data of Tariff", err);
     }
   }
+
   // Handle Post Tariff Value (OnChange)
   const HanldePostTraiff = (e, index) => {
     const { name, value } = e.target;
@@ -80,7 +93,7 @@ const TariffDetails = () => {
     }
     setTariffRows(updatedRows);
   };
- 
+
   // Post the data of Tariff details
   async function handle_Post_TariffData() {
     const errorList = validate();
@@ -91,12 +104,20 @@ const TariffDetails = () => {
       let res = await axiosHttpClient('Create_Tariff_Details_Api', 'post', {
         facilityTariffData: tariffRows
       });
+      toast.success('Facility registration has been done successfully.', {
+        autoClose: 2000,
+        onClose: () => {
+          setTimeout(() => {
+            navigate('/facility-registration');
+          }, 1000);
+        }
+      });
       console.log("Here Response Post Tariff Data", res);
+
     } catch (err) {
       console.log("Here Error of Tariff Post data", err);
     }
   }
-
   // Add row
   const addRow = () => {
     setTariffRows([
@@ -119,7 +140,6 @@ const TariffDetails = () => {
       }
     ]);
   };
-
   // Remove Row
   const deleteRow = (index) => {
     const updatedRows = [...tariffRows];
@@ -127,11 +147,13 @@ const TariffDetails = () => {
     setTariffRows(updatedRows);
   };
   // Vaildation of Create Tariff -------------------------------------------
+  // Vaildation of Create Tariff
   const validate = () => {
     const errorList = [];
     tariffRows.forEach((row, index) => {
       const err = {};
-      if ((row.operatingHoursFrom) > (row.operatingHoursTo)) {
+      // Validation for operating hours
+      if (row.operatingHoursFrom > row.operatingHoursTo) {
         err.operatingHoursFrom = "Start operating Hours From should be less than or equal to End";
         err.operatingHoursTo = "End operating Hours To should be greater than or equal to Start";
       }
@@ -141,48 +163,59 @@ const TariffDetails = () => {
       if (!row.operatingHoursTo) {
         err.operatingHoursTo = "Please select the operating hours to";
       }
+
+      // Validation for dayWeek prices
       const regexPrice = /^\d{1,3}(?:,?\d{3})*(?:\.\d{1,2})?$/;
       if (!row.dayWeek.sun) {
-        err.sun = "Please Enter the Price for Sun"
-
+        err.sun = "Please Enter the Price for Sun";
       } else if (!regexPrice.test(row.dayWeek.sun)) {
         err.sun = "Please Enter a valid price for Sun";
       }
       if (!row.dayWeek.mon) {
-        err.mon = "Please Enter the Price for Mon"
+        err.mon = "Please Enter the Price for Mon";
       } else if (!regexPrice.test(row.dayWeek.mon)) {
-        err.mon = "Please Enter  a vaild Price for Mon"
+        err.mon = "Please Enter a valid Price for Mon";
       }
       if (!row.dayWeek.tue) {
-        err.tue = "Please Enter  the Price for Thu"
+        err.tue = "Please Enter the Price for Tue";
       } else if (!regexPrice.test(row.dayWeek.tue)) {
-        err.tue = "Please Enter a vaild Price for Tue"
+        err.tue = "Please Enter a valid Price for Tue";
       }
       if (!row.dayWeek.wed) {
-        err.wed = "Please Enter the Price for Wed"
+        err.wed = "Please Enter the Price for Wed";
       } else if (!regexPrice.test(row.dayWeek.wed)) {
-        err.wed = "Please Enter  a vaild Price for Wed"
+        err.wed = "Please Enter a valid Price for Wed";
       }
       if (!row.dayWeek.thu) {
-        err.thu = "Please Enter the Price for Thu"
+        err.thu = "Please Enter the Price for Thu";
       } else if (!regexPrice.test(row.dayWeek.thu)) {
-        err.thu = "Please Enter a vaild Price for Thu"
+        err.thu = "Please Enter a valid Price for Thu";
       }
       if (!row.dayWeek.fri) {
-        err.fri = "Please Enter the Price for Fri"
+        err.fri = "Please Enter the Price for Fri";
       } else if (!regexPrice.test(row.dayWeek.fri)) {
-        err.fri = "Please Enter a vaild Price for Fri "
+        err.fri = "Please Enter a valid Price for Fri";
       }
       if (!row.dayWeek.sat) {
-        err.sat = "Please Enter the Price for Sat"
+        err.sat = "Please Enter the Price for Sat";
       } else if (!regexPrice.test(row.dayWeek.sat)) {
-        err.sat = "Please Enter a vaild Price for sat"
+        err.sat = "Please Enter a valid Price for Sat";
       }
+
+      // Validation for tariffTypeId and entityId (dropdowns)
+      if (!row.tariffTypeId) {
+        err.tariffTypeId = "Please select a Facility Type";
+      }
+      if (!row.entityId) {
+        err.entityId = "Please select an Activities Type";
+      }
+
       errorList[index] = err;
     });
     setErrors(errorList);
     return errorList;
   };
+
 
   // useEffect for Update the get initail data of Tariff -----------------------
   useEffect(() => {
@@ -194,35 +227,38 @@ const TariffDetails = () => {
     <div>
       <AdminHeader />
       <div className="tariff-container">
+
         {/* input fields of form................ */}
         <h1 className="Park_Name">{GetFacilityData.facilityname}</h1>
         <p className="Address">{GetFacilityData.address}</p>
         <div className="form">
           <div className="dropdown-container">
-            <select
-              className="dropdown"
-              name="tariffTypeId"
-              value={PostTraifftype.tariffTypeId}
-              onChange={handleChange}
-            >
-              <option value="">Select Facility Type</option>
-              {GetInitailData?.length > 0 && GetInitailData?.map((item, index) => (
-                <option value={item.tariffTypeId} key={index}>
-                  {item.code}
-                </option>
-              ))}
-            </select>
+            <div className="dropdown-container">
+              <select
+                className="dropdown"
+                name="tariffTypeId"
+                value={PostTraifftype.tariffTypeId}
+                onChange={handleChange}
+              >
+                <option value="">Select Facility Type</option>
+                {GetInitailData?.length > 0 && GetInitailData?.map((item, index) => (
+                  <option value={item.tariffTypeId} key={index}>
+                    {item.code}
+                  </option>
+                ))}
+              </select>
 
-            <div className="icon">▼</div>
+              <div className="icon">▼</div>
+
+            </div>
+            {!PostTraifftype.tariffTypeId && <p className="error">Please select a facility type.</p>}
           </div>
-
-
           <div className="dropdown-container">
             <div className="dropdown-container">
               <select
                 className="dropdown"
                 name="entityId"
-                value={tariffRows[0].entityId}
+                value={tariffRows[0]?.entityId}
                 onChange={(e) => {
                   const { value } = e.target;
                   setTariffRows([{ ...tariffRows[0], entityId: parseInt(value, 10) || 0 }]);
@@ -235,9 +271,9 @@ const TariffDetails = () => {
                   </option>
                 ))}
               </select>
-
               <div className="icon">▼</div>
             </div>
+            {!tariffRows[0]?.entityId && <p className="error">Please select an activity type.</p>}
             {/* Additional form fields and handlers */}
           </div>
 
@@ -359,6 +395,7 @@ const TariffDetails = () => {
           </table>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
