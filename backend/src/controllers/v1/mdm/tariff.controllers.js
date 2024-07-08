@@ -29,7 +29,7 @@ let createTariff = async (req,res)=>{
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
          transaction = await sequelize.transaction();
 
-        if(facilityTariffData.length==0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek   || !tariffData.validityFrom  || !tariffData.validityTo ||  !tariffData.tariffTypeId || !tariffData.entityId})){
+        if(facilityTariffData.length==0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek  ||  !tariffData.tariffTypeId || !tariffData.entityId})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"
             })
@@ -77,8 +77,6 @@ let createTariff = async (req,res)=>{
                 thu:eachTariffObject.dayWeek.thu,
                 fri:eachTariffObject.dayWeek.fri,
                 sat:eachTariffObject.dayWeek.sat,
-                validityFrom:eachTariffObject.validityFrom,
-                validityTo:eachTariffObject.validityTo,
                 createdBy:userId,
                 createdDt:new Date(),
                 updatedBy:userId,
@@ -90,16 +88,6 @@ let createTariff = async (req,res)=>{
             let findIfTheFacilityId = await facilityTariff.findOne({
                 where: {
                     [Op.and]: [
-                        {
-                            validityFrom: {
-                                [Op.lte]: eachTariffObject.validityFrom
-                            }
-                        },
-                        {
-                            validityTo: {
-                                [Op.gte]: eachTariffObject.validityFrom
-                            }
-                        },
                         {
                             statusId: statusId
                         },
@@ -197,34 +185,58 @@ let updateTariff = async (req,res)=>{
     try {
         let {facilityTariffData} = req.body
         let statusId = 1;
-        if(facilityTariffData.length>0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek || !tariffData.validityFrom  || !tariffData.validityTo || !tariffData.statusId || !tariffData.tariffMasterId || !tariffData.tariffDetailId || !tariffData.tariffTypeId || !tariffData.entityId})){
+        let updateDataForTariff ={}
+        let tariffMasterCreationData;
+        let tariffMasterQuery // for inserting the data to tariff masters
+
+        if(facilityTariffData.length>0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek  || !tariffData.statusId || !tariffData.tariffMasterId || !tariffData.tariffDetailId || !tariffData.tariffTypeId || !tariffData.entityId})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"
             })
         }
-        // let {tariffId,facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo,statusId }= req.body
+        // let {tariffId,facilityId, operatingHoursFrom, operatingHoursTo, dayWeek,statusId }= req.body
         facilityTariffData.forEach(async(eachTariffObject) => {
-            let findTariff
+            let findTariffMaster = await tariffmaster.findOne({
+                where:{
+                    [Op.and]:[{statusId:statusId},{tariffMasterId:eachTariffObject.tariffMasterId}]
+                },
+                transaction 
+            })
+
             let findTariffById = await facilityTariff.findOne({
                 where:{
                     [Op.and]:[{tariffDetailId:eachTariffObject.tariffDetailId},{statusId:statusId}]
-                }
+                },
+                transaction 
             })
-            let updateDataForTariff ={}
+            if(eachTariffObject.entityId!=findTariffMaster.entityId || eachTariffObject.tariffTypeId!=findTariffMaster.tariffTypeId){
+                let findIfDuplicateDataExistInTariffMaster = await tariffmaster.findOne({
+                    where:{[Op.and]:[{facilityId:eachTariffObject.facilityId}, {entityId:eachTariffObject.entityId},{tariffTypeId:eachTariffObject.tariffTypeId},{statusId:statusId}]},  
+                    transaction 
+                })
+                if(!findIfDuplicateDataExistInTariffMaster){
+                     tariffMasterQuery // for inserting the data to tariff masters
+                        tariffMasterCreationData = {
+                            facilityId:eachTariffObject.facilityId,
+                            entityId:eachTariffObject.entityId,
+                            tariffTypeId:eachTariffObject.tariffTypeId,
+                            statusId:statusId,
+                            createdBy:userId,
+                            createdDt:createdDt,
+                            updatedBy:userId,
+                            updatedDt:updatedDt
+                        }
+                        
+                     tariffMasterQuery = await tariffmaster.create(tariffMasterCreationData,{ transaction, returning: true  })
+                
+                
+            }
+        }
+       
             if(eachTariffObject.facilityId!=findTariffById.facilityId){
                 let findIfDuplicateTariffFacilityExist = await facilityTariff.findOne({
                     where:{
                         [Op.and]: [
-                            {
-                                validityFrom: {
-                                    [Op.lte]: eachTariffObject.validityFrom
-                                }
-                            },
-                            {
-                                validityTo: {
-                                    [Op.gte]: eachTariffObject.validityFrom
-                                }
-                            },
                             {
                                 statusId: statusId
                             },
@@ -258,16 +270,6 @@ let updateTariff = async (req,res)=>{
                 let findIfDuplicateTariffFacilityExist = await facilityTariff.findOne({
                     where:{
                         [Op.and]: [
-                            {
-                                validityFrom: {
-                                    [Op.lte]: eachTariffObject.validityFrom
-                                }
-                            },
-                            {
-                                validityTo: {
-                                    [Op.gte]: eachTariffObject.validityFrom
-                                }
-                            },
                             {
                                 statusId:statusId
                             },
@@ -331,67 +333,13 @@ let updateTariff = async (req,res)=>{
             if(eachTariffObject.statusId!=findTariffById.statusId){
                 updateDataForTariff.statusId = eachTariffObject.statusId
             }
-            if(eachTariffObject.validityFrom!=findTariffById.validityFrom){
-                console.log('25345345353')
-    
-                let findIfDuplicateTariffFacilityExist = await facilityTariff.findOne({
-                    where:{
-                        [Op.and]: [
-                            {
-                                validityFrom: {
-                                    [Op.lte]: eachTariffObject.validityFrom
-                                }
-                            },
-                            {
-                                validityTo: {
-                                    [Op.gte]: eachTariffObject.validityFrom
-                                }
-                            },
-                            {
-                                statusId: statusId
-                            },
-                            {
-                                tariffMasterId:eachTariffObject.tariffMasterId
-                            },
-                            {
-                                facilityId: eachTariffObject.facilityId
-                            },
-                            {
-                                operatingHoursFrom: {
-                                    [Op.lte]: eachTariffObject.operatingHoursFrom
-                                }
-                            },
-                            {
-                                operatingHoursTo: {
-                                    [Op.gte]: eachTariffObject.operatingHoursFrom
-                                }
-                            }
-                        ]
-                    }
-                })
-                if(findIfDuplicateTariffFacilityExist){
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:"This facilityId is already mapped to one tariff. Please deactivate the status for the given facility Id"
-                    })
-                }
-                updateDataForTariff.validityFrom = eachTariffObject.validityFrom
-            }
+            
             if(eachTariffObject.tariffMasterId!=findTariffById.tariffMasterId){
                 console.log('25345345353')
     
                 let findIfDuplicateTariffFacilityExist = await facilityTariff.findOne({
                     where:{
                         [Op.and]: [
-                            {
-                                validityFrom: {
-                                    [Op.lte]: eachTariffObject.validityFrom
-                                }
-                            },
-                            {
-                                validityTo: {
-                                    [Op.gte]: eachTariffObject.validityFrom
-                                }
-                            },
                             {
                                 statusId: statusId
                             },
@@ -421,8 +369,32 @@ let updateTariff = async (req,res)=>{
                 }
                 updateDataForTariff.tariffMasterId = eachTariffObject.tariffMasterId
             }
-            if(validityTo!= findTariffById.validityTo){
-                updateDataForTariff.validityTo = eachTariffObject.validityTo
+            if(eachTariffObject.statusId != findTariffMaster.statusId || eachTariffObject.statusId != findTariffById.statusId){
+                let [inactiveTheTariffStatus] = await tariffmaster.update({
+                    statusId:eachTariffObject.statusId
+                },{
+                    where:{
+                        tariffMasterId:eachTariffObject.tariffMasterId
+                    }
+                }
+           )
+           let[inactiveTheFacilityTariffStatus] = await facilityTariff.update({
+                statusId:eachTariffObject.statusId
+            },{
+                where:{
+                    tariffDetailId:eachTariffObject.tariffDetailId
+                }
+            })
+            if(inactiveTheFacilityTariffStatus>0 && inactiveTheTariffStatus >0){
+                return res.status(statusCode.SUCCESS.code).json({
+                    message:"Data inactivate successfully"
+                })
+            }
+            else{
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message:"Data is not updated"
+                })
+            }
             }
             if(eachTariffObject){
                 updateDataForTariff.updatedBy = userId
