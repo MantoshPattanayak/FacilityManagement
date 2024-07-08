@@ -80,14 +80,7 @@ const TariffDetails = () => {
     }
     setTariffRows(updatedRows);
   };
-  // Handle the activity type selection change
-  const handleActivityChange = (e, index) => {
-    const { value } = e.target;
-    const updatedRows = [...tariffRows];
-    updatedRows[index].entityId = parseInt(value, 10) || 0;
-    setTariffRows(updatedRows);
-   
-  };
+ 
   // Post the data of Tariff details
   async function handle_Post_TariffData() {
     const errorList = validate();
@@ -103,6 +96,7 @@ const TariffDetails = () => {
       console.log("Here Error of Tariff Post data", err);
     }
   }
+
   // Add row
   const addRow = () => {
     setTariffRows([
@@ -222,27 +216,31 @@ const TariffDetails = () => {
             <div className="icon">▼</div>
           </div>
 
-          {tariffRows.map((row, rowIndex) => (
-            <div key={rowIndex} className="dropdown-container">
-              <div className="dropdown-container">
-                <select
-                  className="dropdown"
-                  value={row.entityId}
-                  onChange={(e) => handleActivityChange(e, rowIndex)}
-                >
-                  <option value="">Select Activities Type</option>
-                  {GetactivityData?.length > 0 &&
-                    GetactivityData?.map((data, index) => (
-                      <option key={index} value={data.activityId}>
-                        {data.useractivitymaster.userActivityName}
-                      </option>
-                    ))}
-                </select>
-                <div className="icon">▼</div>
-              </div>
-              {/* Additional form fields and handlers */}
+
+          <div className="dropdown-container">
+            <div className="dropdown-container">
+              <select
+                className="dropdown"
+                name="entityId"
+                value={tariffRows[0].entityId}
+                onChange={(e) => {
+                  const { value } = e.target;
+                  setTariffRows([{ ...tariffRows[0], entityId: parseInt(value, 10) || 0 }]);
+                }}
+              >
+                <option value="">Select Activities Type</option>
+                {GetactivityData?.map((data) => (
+                  <option key={data.activityId} value={data.activityId}>
+                    {data.useractivitymaster.userActivityName}
+                  </option>
+                ))}
+              </select>
+
+              <div className="icon">▼</div>
             </div>
-          ))}
+            {/* Additional form fields and handlers */}
+          </div>
+
         </div>
 
         <div className="table-container">
