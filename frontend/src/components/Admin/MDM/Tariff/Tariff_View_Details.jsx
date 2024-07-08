@@ -11,21 +11,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
-const TariffDetails = () => {
+const Tariff_View_Details = () => {
   const facilityTypeId = decryptData(
     new URLSearchParams(location.search).get("facilityTypeId")
   );
   const facilityId = decryptData(
     new URLSearchParams(location.search).get("facilityId")
   );
+  const action = new URLSearchParams(location.search).get('action');
   console.log("Decrypt data", facilityTypeId, facilityId);
 
 
   // Get initial Data
   let navigate = useNavigate();
-  const [GetInitailData, setGetInitailData] = useState([]);
-  const [GetactivityData, setGetactivityData] = useState([]);
-  const [GetFacilityData, setGetFacilityData] = useState([]);
+ 
+
   const [errors, setErrors] = useState([]);
 
   // Post tariff type data
@@ -51,27 +51,19 @@ const TariffDetails = () => {
       entityId: ''
     }
   ]);
-  // Handle OnChange of Get initial Data
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPostTraiffType({ ...PostTraifftype, [name]: value });
-    console.log("PostData", PostTraifftype);
-  };
+
   // Get Initial Data here (Call api)
   async function GetTariffInitailData() {
     try {
-      let res = await axiosHttpClient("Initial_Data_Tariff_Details", "post", {
+      let res = await axiosHttpClient("VIEW_TARIFF_DATA_BY_ID_API", "post", {
         facilityTypeId,
         facilityId,
-        tariffTypeId: PostTraifftype.tariffTypeId,
+        entityId:1,
+        tariffTypeId:1
+       
       });
-      console.log("initial fetch data", res.data.tariffTypeData)
-      console.log("initial data fetch 2", res.data);
-      setGetInitailData(res.data.tariffTypeData);
-    
-       setGetactivityData(res.data.activityData);
-
-      setGetFacilityData(res.data.facilityData);
+      console.log("initial fetch data", res)
+     
       console.log("Here Response of Tariff Initial Data", res);
     } catch (err) {
       console.log("Here error of Initial Data of Tariff", err);
@@ -117,7 +109,7 @@ const TariffDetails = () => {
       console.log("Here Error of Tariff Post data", err);
     }
   }
-  // Add row
+  // Add row --------------------------------
   const addRow = () => {
     setTariffRows([
       ...tariffRows,
@@ -226,67 +218,33 @@ const TariffDetails = () => {
     <div>
       <AdminHeader />
       <div className="tariff-container">
+        {/* {
+          action == 'View' && <h2 className="Heading_Tariff">View Role</h2>
+        }
+        {
+          action == 'Edit' && <h2 className="Heading_Tariff">Edit Role</h2>
+        } */}
 
         {/* input fields of form................ */}
-        <h1 className="Park_Name">{GetFacilityData.facilityname}</h1>
-        <p className="Address">{GetFacilityData.address}</p>
-        <div className="form">
-          <div className="dropdown-container">
-            <div className="dropdown-container">
-              <select
-                className="dropdown"
-                name="tariffTypeId"
-                value={PostTraifftype.tariffTypeId}
-                onChange={handleChange}
-              >
-                <option value="">Select Facility Type</option>
-                {GetInitailData?.length > 0 && GetInitailData?.map((item, index) => (
-                  <option value={item.tariffTypeId} key={index}>
-                    {item.code}
-                  </option>
-                ))}
-              </select>
+        <h1 className="Park_Name">Park_Name</h1>
+        <p className="Address">address</p>
+       
 
-              <div className="icon">▼</div>
-
-            </div>
-            {!PostTraifftype.tariffTypeId && <p className="error">Please select a facility type.</p>}
-          </div>
-          <div className="dropdown-container">
-            <div className="dropdown-container">
-              <select
-                className="dropdown"
-                name="entityId"
-                value={tariffRows[0]?.entityId}
-                onChange={(e) => {
-                  const { value } = e.target;
-                  setTariffRows([{ ...tariffRows[0], entityId: parseInt(value, 10) || 0 }]);
-                }}
-              >
-                <option value="">Select Activities Type</option>
-                {GetactivityData?.map((data) => (
-                  <option key={data.activityData.activityId} value={data.activityData.activityId}>
-                    {data.activityData.activityName}
-                  </option>
-                ))}
-              </select>
-              <div className="icon">▼</div>
-            </div>
-            {!tariffRows[0]?.entityId && <p className="error">Please select an activity type.</p>}
-            {/* Additional form fields and handlers */}
-          </div>
-
-        </div>
 
         <div className="table-container">
-          <div className="table-buttons">
-            <button className="add-icon" onClick={addRow}>
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-            <button className="edit-icon" onClick={handle_Post_TariffData}>
-              Save
-            </button>
-          </div>
+          {
+            action == 'Edit' &&
+            <div className="table-buttons">
+              <button className="add-icon" onClick={addRow}>
+                <FontAwesomeIcon icon={faPlus} />
+              </button>
+              <button className="edit-icon" onClick={handle_Post_TariffData}>
+                Save
+              </button>
+            </div>
+
+          }
+
           <table>
             <thead>
               <tr>
@@ -299,7 +257,11 @@ const TariffDetails = () => {
                 <th>Thus</th>
                 <th>Fri</th>
                 <th>Sat</th>
-                <th>Delete</th>
+                {
+                  action == 'Edit' &&
+                  <th>Delete</th>
+                }
+
 
               </tr>
             </thead>
@@ -312,6 +274,7 @@ const TariffDetails = () => {
                       name="operatingHoursFrom"
                       value={row.operatingHoursFrom}
                       onChange={(e) => HanldePostTraiff(e, index)}
+                      disabled={action == 'View' ? 1 : 0}
                     />
                     {errors[index]?.operatingHoursFrom && (
                       <span className="error">{errors[index].operatingHoursFrom}</span>
@@ -323,6 +286,7 @@ const TariffDetails = () => {
                       name="operatingHoursTo"
                       value={row.operatingHoursTo}
                       onChange={(e) => HanldePostTraiff(e, index)}
+                      disabled={action == 'View' ? 1 : 0}
                     />
                     {errors[index]?.operatingHoursTo && (
                       <span className="error">{errors[index].operatingHoursTo}</span>
@@ -331,7 +295,9 @@ const TariffDetails = () => {
                   <td><input type="text"
                     name="sun"
                     value={row.dayWeek.sun}
-                    onChange={(e) => HanldePostTraiff(e, index)} />
+                    onChange={(e) => HanldePostTraiff(e, index)}
+                    disabled={action == 'View' ? 1 : 0}
+                     />
                     {errors[index]?.sun && (
                       <span className="error">{errors[index].sun}</span>
                     )}
@@ -342,6 +308,7 @@ const TariffDetails = () => {
                       name="mon"
                       value={row.dayWeek.mon}
                       onChange={(e) => HanldePostTraiff(e, index)}
+                      disabled={action == 'View' ? 1 : 0}
                     />
                     {errors[index]?.mon && (
                       <span className="error">{errors[index].mon}</span>
@@ -351,6 +318,7 @@ const TariffDetails = () => {
                     name="tue"
                     value={row.dayWeek.tue}
                     onChange={(e) => HanldePostTraiff(e, index)}
+                    disabled={action == 'View' ? 1 : 0}
                   />
                     {errors[index]?.tue && (
                       <span className="error">{errors[index].tue}</span>
@@ -359,35 +327,49 @@ const TariffDetails = () => {
 
                   <td><input type="text" name="wed"
                     value={row.dayWeek.wed}
-                    onChange={(e) => HanldePostTraiff(e, index)} />
+                    onChange={(e) => HanldePostTraiff(e, index)} 
+                    disabled={action == 'View' ? 1 : 0}
+                    />
                     {errors[index]?.wed && (
                       <span className="error">{errors[index].wed}</span>
                     )}
                   </td>
                   <td><input type="text" name="thu" value={row.dayWeek.thu}
-                    onChange={(e) => HanldePostTraiff(e, index)} />
+                    onChange={(e) => HanldePostTraiff(e, index)} 
+                    disabled={action == 'View' ? 1 : 0}
+                    />
                     {errors[index]?.thu && (
                       <span className="error">{errors[index].thu}</span>
                     )}
                   </td>
                   <td><input type="text" name="fri"
                     value={row.dayWeek.fri}
-                    onChange={(e) => HanldePostTraiff(e, index)} />
+                    onChange={(e) => HanldePostTraiff(e, index)} 
+                    disabled={action == 'View' ? 1 : 0}
+                    />
                     {errors[index]?.fri && (
                       <span className="error">{errors[index].fri}</span>
                     )}
                   </td>
                   <td><input type="text" name="sat" value={row.dayWeek.sat}
-                    onChange={(e) => HanldePostTraiff(e, index)} />
+                    onChange={(e) => HanldePostTraiff(e, index)}
+                    disabled={action == 'View' ? 1 : 0}
+                     />
                     {errors[index]?.sat && (
                       <span className="error">{errors[index].sat}</span>
                     )}
                   </td>
-                  <td>
-                    <button className="delete-icon" onClick={() => deleteRow(index)}>
-                      <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                    </button>
-                  </td>
+                  {
+                    action == 'Edit' &&
+                    <td>
+
+                      <button className="delete-icon" onClick={() => deleteRow(index)}>
+                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                      </button>
+
+
+                    </td>
+                  }
                 </tr>
               ))}
             </tbody>
@@ -399,4 +381,4 @@ const TariffDetails = () => {
   );
 };
 
-export default TariffDetails;
+export default Tariff_View_Details;
