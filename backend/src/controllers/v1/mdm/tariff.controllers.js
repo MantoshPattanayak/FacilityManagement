@@ -415,7 +415,9 @@ let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
         let findTheNameOfThoseSports;
         let findTheNameOfThoseEvents;
         let findFacilityTypeIdFromFacilityTable
+
         let tariffTypeQuery = await tarifftype.findAll({where:{statusId:statusId}})
+
         if(facilityId){
              findFacilityTypeIdFromFacilityTable = await facilities.findOne({
                 where:{
@@ -430,24 +432,45 @@ let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
                     [Op.and]:[{facilityTypeId:{[Op.ne]:2}},{statusId:statusId},{facilityId:facilityId}]
                 },
                 include: [{
-                    model: useractivitymaster
+                    model: useractivitymaster,
+                    as:'activityData',
+                    attributes:[['userActivityId','activityId'],['userActivityName','activityName']]
+                    
                     // Add any additional options for the included model here if needed
                 }]
         
     })
+
+            return res.status(statusCode.SUCCESS.code).json({
+                message:"Initial Data for tariff",
+                facilityData:findFacilityTypeIdFromFacilityTable,
+                tariffTypeData:tariffTypeQuery,
+                activityData:findTheNameOfThoseActivities
+            })  
         }
-        if(findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId==2){
-           
-                findTheNameOfThoseSports = await faciltyActivity.findAll({
-                   where:{[Op.and]:[{facilityTypeId:{[Op.eq]:2}},{statusId:statusId},{facilityId:facilityId}]
-           },
-           include:[
-           { model: useractivitymaster
-            // Add any additional options for the included model here if needed
-            }
-           ]
-        }
-       )
+            if(findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId==2){
+            
+                    findTheNameOfThoseSports = await faciltyActivity.findAll({
+                    where:{[Op.and]:[{facilityTypeId:{[Op.eq]:2}},{statusId:statusId},{facilityId:facilityId}]
+            },
+            include:[
+                { model: useractivitymaster,
+                    as:'activityDetails',
+                    
+                    attributes:[['userActivityId','activityId'],['userActivityName','activityName']]
+                    // Add any additional options for the included model here if needed
+                    }
+                ]
+                }
+            )
+
+       
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"Initial Data for tariff",
+            facilityData:findFacilityTypeIdFromFacilityTable,
+            tariffTypeData:tariffTypeQuery,
+            activityData:findTheNameOfThoseSports
+        })
         }
         if(facilityId && tariffTypeId==3){
            
@@ -455,20 +478,26 @@ let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
                where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]
        },
        include:[
-        { model: eventcategorymaster
+        { model: eventcategorymaster,
+          as:'activityData',
+          attributes:[['eventCategoryId', 'activityId'], // Rename eventCategoryId to activityId
+          ['eventCategoryName', 'activityName']] // Rename eventCategoryName to activityName]
          // Add any additional options for the included model here if needed
          }
         ]
     }
    )
+    return res.status(statusCode.SUCCESS.code).json({
+        message:"Initial Data for tariff",
+        facilityData:findFacilityTypeIdFromFacilityTable,
+        tariffTypeData:tariffTypeQuery,
+        activityData:findTheNameOfThoseEvents
+    })  
     }
         return res.status(statusCode.SUCCESS.code).json({
             message:"Initial Data for tariff",
             facilityData:findFacilityTypeIdFromFacilityTable,
-            tariffTypeData:tariffTypeQuery,
-            activityData:findTheNameOfThoseActivities,
-            sportsData:findTheNameOfThoseSports,
-            eventsData:findTheNameOfThoseEvents
+            tariffTypeData:tariffTypeQuery
         })   
         
      
