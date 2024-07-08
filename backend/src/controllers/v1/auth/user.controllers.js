@@ -1238,7 +1238,7 @@ let adminDashboard = async (req, res) => {
     let activeUsersQuery = `
       select u.userId, r.roleId, r.roleCode
       from amabhoomi.usermasters u
-      inner join amabhoomi.rolemasters r on u.roleId = r.roleId and u.statusId = 1
+      inner join amabhoomi.rolemasters r on u.roleId = r.roleId and u.statusId = 1 and u.roleId = 4
     `;
 
     // query to fetch count of facility type wise
@@ -1259,6 +1259,33 @@ let adminDashboard = async (req, res) => {
       inner join amabhoomi.facilitytypes f2 on f.facilityTypeId = f2.facilitytypeId
       group by f.facilityId, f2.code
       order by bookingscount desc
+    `;
+
+    // query to fetch no. of active events
+    let activeEventQuery = `
+      SELECT 
+      ea.eventId,
+      ea.facilityId,
+      ea.eventName, 
+      ea.eventCategoryId,
+      ea.locationName, 
+      ea.eventDate, 
+      ea.eventStartTime,
+      ea.eventEndTime,
+      ea.descriptionOfEvent,
+      ea.ticketSalesEnabled,
+      ea.ticketPrice,
+      ea.eventImagePath,
+      ea.additionalFilePath,
+      TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
+      CASE
+      	WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
+        THEN 'ACTIVE'
+      	ELSE 'CLOSED'
+      END AS status
+      FROM 
+      amabhoomi.eventactivities ea
+      WHERE CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM')
     `;
 
     // query to fetch event bookings count event wise and facility wise
@@ -1293,6 +1320,10 @@ let adminDashboard = async (req, res) => {
     let bookingFacilityQueryResult = await sequelize.query(bookingFacilityQuery, {
       type: QueryTypes.SELECT
     });
+
+    let activeEventQueryResult = await sequelize.query(activeEventQuery, {
+      type: QueryTypes.SELECT
+    })
 
     let bookingEventQueryResult = await sequelize.query(bookingEventQuery, {
       type: QueryTypes.SELECT
@@ -1381,6 +1412,7 @@ let adminDashboard = async (req, res) => {
       facilitiesCount: facilitiesQueryResult,
       popularFacilities: bookingFacilityQueryResult,
       popularActivities: popularActivitiesQueryResult,
+      activeEventsCount: activeEventQueryResult.length,
       bookingEventData: bookingEventQueryResult,
       specificFacilityBookingData: facilityBookingsQueryResult
     })

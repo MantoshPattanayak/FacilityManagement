@@ -156,6 +156,7 @@ db1.facilitytariff.belongsTo(db1.tariffmaster,{foreignKey:'tariffMasterId'})
 
 
 db1.faq.sync({
+
   alter: false,
 });
 

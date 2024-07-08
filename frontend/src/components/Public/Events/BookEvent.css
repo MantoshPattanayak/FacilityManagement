@@ -52,10 +52,15 @@
   
   .input-bookevent input {
     width: calc(100% - 20px); /*( Adjust input width to fit within the container )*/
-    padding: 8px; 
-    border: 1px solid #ccc; 
-    border-radius: 3px; 
-    font-size: 14px;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #b1b1b1;
+    border-radius: 0.417vw;
+    background-color: #ECECEE;
+  }
+  .input-bookevent input:focus{
+    border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
   }
   
   .add-to-cart-btn {
