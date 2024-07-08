@@ -5,7 +5,7 @@ import Footer from '../../../common/Footer';
 import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownLong, faCaretDown, faCaretUp, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faDownLong, faCaretDown, faCaretUp, faAngleRight, faTrophy } from "@fortawesome/free-solid-svg-icons";
 import img from '../../../assets/wave.jpg';
 import axiosHttpClient from '../../../utils/axios';
 Chart.register(
@@ -249,18 +249,18 @@ const AdminDashboard = () => {
                                         <div className="games" key={index}>
                                             <p>{activity.userActivityName}</p>
                                             {/* <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span> */}
-                                            <span>{index + 1}</span>
-                                            <h4>{activity.activityCount} bookings</h4>
+                                            <span>{index == 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
+                                            <h4>{activity.activityCount} bookings </h4> 
                                         </div>
                                     )
                                 }
                             })
                         }
                         <br /><br />
-                        <hr />
+                        {/* <hr />
                         <div className="vew-leaderboard">
                             <a href="#">View full Leaderboard <FontAwesomeIcon icon={faAngleRight} /></a>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="popular-facility h-fit">
@@ -271,17 +271,17 @@ const AdminDashboard = () => {
                                     <div className="games" key={index}>
                                         <p>{facility.facilityname}</p>
                                         {/* <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span> */}
-                                        <span>{index + 1}</span>
-                                        <h4>{facility.bookingscount} users visited</h4>
+                                        <span>{index == 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
+                                        <h4>{facility.bookingscount} bookings</h4>
                                     </div>
                                 )
                             }
                         })}
                         <br /><br />
-                        <hr />
+                        {/* <hr />
                         <div className="vew-leaderboard">
                             <a href="#">View full Leaderboard <FontAwesomeIcon icon={faAngleRight} /></a>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
