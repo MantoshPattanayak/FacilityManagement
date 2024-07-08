@@ -149,7 +149,8 @@ db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey: 'activityI
   targetKey: 'userActivityId' // This is the target key in db1.useractivitymasters
   })
 
-
+db1.tariffmaster.hasMany(db1.facilitytariff,{foreignKey:'tariffMasterId'});
+db1.facilitytariff.belongsTo(db1.tariffmaster,{foreignKey:'tariffMasterId'})
 // join operations end
 
 
