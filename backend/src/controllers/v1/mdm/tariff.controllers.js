@@ -19,16 +19,17 @@ let eventcategorymaster = db.eventCategoryMaster
 let createTariff = async (req,res)=>{
     let transaction 
     try {
-        console.log('req body',req.body)
+       
         let createdDt = new Date();
         let updatedDt = new Date();
         let userId = req.user.userId
         let statusId = 1;
         let {facilityTariffData} = req.body
         let tariffCreationData;
+        console.log("tariff Create", facilityTariffData)
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
          transaction = await sequelize.transaction();
-
+   
         if(facilityTariffData.length==0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek   || !tariffData.validityFrom  || !tariffData.validityTo ||  !tariffData.tariffTypeId || !tariffData.entityId})){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide all required fields"

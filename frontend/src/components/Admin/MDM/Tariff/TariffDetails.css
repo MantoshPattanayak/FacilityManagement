@@ -5,7 +5,7 @@
 }
 
 .tariff-container {
-    margin-top: 8%;
+    margin-top: 10%;
     height: 100vh;
 }
 
@@ -166,3 +166,17 @@ table td input {
     visibility: visible;
 }
 
+
+/* name of park */
+.Park_Name{
+    font-size: 35px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+.Address{
+    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+
+}

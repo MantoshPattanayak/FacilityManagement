@@ -18,8 +18,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 60%;
-    /* Converted from 20px to 2.5vw */
+    width: 94%;
 }
 
 .user-create .form-container h1 {
@@ -85,18 +84,24 @@
    
 }
 
+
+
 .user-create .form-heading input[type="text"], .user-create input[type='date'], .user-create select {
-    width: 50%;
+    width: 100%;
     height: 100%;
-    /* Converted from 100px to 8.33vw */
     padding: 0.625vw;
-    /* Converted from 5px to 0.625vw */
-    border: 0.0833vw solid #ccc;
-    /* Converted from 1px to 0.0833vw */
+    border: 0.0833vw solid #b1b1b1;
     border-radius: 0.417vw;
-    /* Converted from 5px to 0.417vw */
-    background-color: ghostwhite;
+    background-color: #ECECEE;
 }
+
+.user-create .form-heading input[type="text"]:focus,
+.user-create input[type="date"]:focus,
+.user-create select:focus {
+    border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
+}
+
 
 .user-create .form-heading input[type="button"] {
     width: 25%;
@@ -193,6 +198,8 @@
 .user-create .cancel-button:disabled {
     background-color: gray;
 }
+
+
 
 /* Media query for tablets and larger screens */
 @media screen and (min-width: 768px) {
