@@ -463,12 +463,27 @@ const Facility_Reg = () => {
     //function to seek confirmation ----------------------------------------------
     function handleConfirmation(e) {
         e.preventDefault();
+        // Disable interactions with the background
+        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'none';
+        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 0.4;
         toast.warn(
             <div>
                 <p>Are you sure you want to proceed?</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button onClick={(e) => HandleSubmitFacility(e)} className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
-                    <button onClick={() => {
+                    <button 
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            HandleSubmitFacility(e);
+                            // Re-enable interactions with the background
+                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
+                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+                        }}
+                        className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
+                    <button onClick={(e) => {
+                        e.stopPropagation();
+                        // Re-enable interactions with the background
+                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
+                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
                         toast.dismiss();
                         toast.error('Action cancelled!', {
                             // position: toast.POSITION.TOP_CENTER,
