@@ -402,20 +402,41 @@ let viewTariff = async (req,res)=>{
         //     });
         // }
 
-         findViewTariff = await sequelize.query(`SELECT
-    f.facilityname,
+         findViewTariff = await sequelize.query(`   SELECT
+        f.facilityname,
     f.facilityId,
     f.facilityTypeId,
     CASE
         WHEN fa.id IS NOT NULL THEN fa.id
         ELSE fe.facilityEventId
-    END AS entityId,
+    END AS id,
     CASE
         WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
         WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
         WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
         ELSE NULL
     END AS tariffType,
+    CASE
+        WHEN CASE
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                ELSE NULL
+             END = 'ACTIVITIES' THEN 1
+        WHEN CASE
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                ELSE NULL
+             END = 'SPORTS' THEN 2
+        WHEN CASE
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                ELSE NULL
+             END = 'HOST_EVENT' THEN 3
+        ELSE NULL
+    END AS tariffTypeId,
     CASE
         WHEN EXISTS (
             SELECT 1
@@ -442,6 +463,7 @@ LEFT JOIN
     amabhoomi.facilityactivities fa ON f.facilityId = fa.facilityId
 LEFT JOIN
     amabhoomi.facilityevents fe ON f.facilityId = fe.facilityId;
+
 `,{
     type:QueryTypes.SELECT
 })
