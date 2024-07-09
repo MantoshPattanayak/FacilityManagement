@@ -155,7 +155,7 @@ let createTariff = async (req,res)=>{
 
 let getTariffById = async (req,res)=>{
     try {
-        console.log('1',req.params)
+        console.log('1',req.body)
         let {facilityId,entityId,tariffTypeId} = req.body
         let statusId = 1;
         
@@ -165,7 +165,10 @@ let getTariffById = async (req,res)=>{
             },
             include:[{
                 model:facilityTariff,
-                required:true
+                required:true,
+                where: {
+                    statusId: statusId  
+                }
             }]
         })
         if(findTariffById){
