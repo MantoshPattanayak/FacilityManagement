@@ -5,11 +5,14 @@ import eventPhoto from "../../../assets/ama_bhoomi_bg.jpg";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faFilter,
+  faTrashCan,
   faEllipsisVertical,
   faClock,
   faUser,
   faRightFromBracket,
-  faEnvelope, faMobileScreenButton
+  faEnvelope,
+  faMobileScreenButton,
 } from "@fortawesome/free-solid-svg-icons";
 import CommonFooter from "../../../common/CommonFooter";
 import axiosHttpClient from "../../../utils/axios";
@@ -20,10 +23,10 @@ import No_Data_icon from "../../../assets/No_Data_icon.png";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { decryptData } from "../../../utils/encryptData";
 // redux --------------------------------------------------------------------------
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { Logout } from "../../../utils/authSlice";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BookingDetails = () => {
   const dispatch = useDispatch(); // Initialize dispatch
@@ -45,6 +48,16 @@ const BookingDetails = () => {
       active: false,
     },
   ];
+
+  //for filter Options
+  const [IsLoding, setIsLoding] = useState(false);
+  const [filters, setFilters] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState({
+    facilityType: new Array(),
+    BookingStatus: new Array(),
+  });
+
+  const [sortOrder, setSortOrder] = useState("desc"); // Default sort order: descending
   const [tab, setTab] = useState(tabList);
   const [eventDetailsData, setEventDetailsData] = useState([]);
 
@@ -53,30 +66,93 @@ const BookingDetails = () => {
     getBookingsDetails();
   }, []);
 
+  // Update useEffect to watch for selectedFilter changes
+  useEffect(() => {
+    getBookingsDetails();
+  }, [tab, selectedFilter, sortOrder]);
+
+  // API to get the booking details
   async function getBookingsDetails() {
-    let tabCode = tab?.find((data) => {
-      return data.active == true;
-    }).tabCode;
+    let tabCode = tab.find((data) => data.active === true).tabCode;
+
+    // Prepare the filter data
+    let filterData = {
+      tabName: tabCode,
+      facilityType: selectedFilter.facilityType,
+      bookingStatus: selectedFilter.BookingStatus,
+      sortingOrder: sortOrder,
+    };
 
     try {
-      let res = await axiosHttpClient(
-        "VIEW_BOOKINGS_API",
-        "post",
-        {
-          tabName: tabCode,
-        },
-        null
-      );
+      setIsLoding(true);
+      let res = await axiosHttpClient("VIEW_BOOKINGS_API", "post", filterData);
+      let sortedData = res.data.data.sort((a, b) => {
+        if (sortOrder === "asc") {
+          return new Date(a.bookingDate) - new Date(b.bookingDate);
+        } else {
+          return new Date(b.bookingDate) - new Date(a.bookingDate);
+        }
+      });
       setEventDetailsData(res.data.data);
       console.log("here response of all bookings details", res.data.data);
+      setIsLoding(false);
     } catch (err) {
       setEventDetailsData([]);
       console.log(err);
+      setIsLoding(false);
     }
   }
 
+  // API to get the filter details
+  async function getFiltersDetails() {
+    try {
+      let res = await axiosHttpClient(
+        "FETCH_BOOKINGS_INITIAL_FILTERDATA_API",
+        "get"
+      );
+      console.log("response of filter api", res.data.data);
+      let filterOptions = {
+        facilityType: res.data.data.facilityTypeQueryResult,
+        BookingStatus: res.data.data.statusCodeMasterQueryResult,
+      };
+      setFilters(filterOptions);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-  useEffect(() => { getBookingsDetails() }, [tab]);
+  useEffect(() => {
+    getBookingsDetails(), getFiltersDetails();
+  }, [tab]);
+
+  //  function to set filter selection
+  function handleFilterSelection(e, id, filterType) {
+    e.preventDefault();
+    let filterSelected = JSON.parse(JSON.stringify(selectedFilter));
+    if (filterSelected[filterType].includes(id)) {
+      filterSelected[filterType] = filterSelected[filterType].filter(
+        (data) => data != id
+      );
+    } else {
+      filterSelected[filterType].push(id);
+    }
+    setSelectedFilter(filterSelected);
+
+    // Fetch the filtered data
+    // getBookingsDetails();
+  }
+
+  //function to clear all filter selection
+  function clearFilterSelection(e) {
+    setSelectedFilter({
+      facilityType: [],
+      BookingStatus: [],
+    });
+    setIsFilterOpen(false);
+
+    // Fetch the filtered data
+    getBookingsDetails();
+  }
 
   function calculateTime(dataTime) {
     let currentDateTime = new Date();
@@ -101,17 +177,16 @@ const BookingDetails = () => {
       if (tab.tabName == name) tab.active = true;
       else tab.active = false;
     });
-    console.log('tabListCopy', tabListCopy);
+    console.log("tabListCopy", tabListCopy);
     setTab(tabListCopy);
     return;
   }
 
-
   //get the api here
 
-  const [userName, setUserName] = useState('');
-  const [emailId, setEmailId] = useState('');
-  const [phoneNo, setPhoneNo] = useState('');
+  const [userName, setUserName] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
 
   const publicUserId = decryptData(
     new URLSearchParams(location.search).get("publicUserId")
@@ -119,17 +194,20 @@ const BookingDetails = () => {
 
   async function fetchProfileDetails() {
     try {
-      let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
-      console.log('response of fetch profile api', res.data.public_user);
+      let res = await axiosHttpClient("PROFILE_DATA_VIEW_API", "post");
+      console.log("response of fetch profile api", res.data.public_user);
 
-      setUserName(decryptData(res.data.public_user.firstName) + ' ' + decryptData(res.data.public_user.lastName));
+      setUserName(
+        decryptData(res.data.public_user.firstName) +
+          " " +
+          decryptData(res.data.public_user.lastName)
+      );
       setEmailId(decryptData(res.data.public_user.emailId));
       setPhoneNo(decryptData(res.data.public_user.phoneNo));
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error in fetching data:", error);
       if (error.respone.status == 401) {
-        toast.error('You are logged out. Kindly login first.', {
+        toast.error("You are logged out. Kindly login first.", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
@@ -137,7 +215,7 @@ const BookingDetails = () => {
               navigate("/");
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
-        })
+        });
       }
     }
   }
@@ -151,9 +229,9 @@ const BookingDetails = () => {
     dispatch(Logout());
     async function logOutAPI() {
       try {
-        let res = await axiosHttpClient('LOGOUT_API', 'post');
+        let res = await axiosHttpClient("LOGOUT_API", "post");
         console.log(res.data);
-        toast.success('Logged out successfully!!', {
+        toast.success("Logged out successfully!!", {
           autoClose: 3000, // Toast timer duration in milliseconds
           onClose: () => {
             // Navigate to another page after toast timer completes
@@ -162,13 +240,12 @@ const BookingDetails = () => {
             }, 1000); // Wait 1 second after toast timer completes before navigating
           },
         });
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
       }
     }
     logOutAPI();
-  }
+  };
   // here Function to encryptDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
     let res = encryptData(id);
@@ -184,6 +261,13 @@ const BookingDetails = () => {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
+
+  // filter logic
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
   return (
     <div>
       <PublicHeader />
@@ -193,17 +277,17 @@ const BookingDetails = () => {
         <aside className="profile-leftside--Body">
           <div className="profile-view--Body">
             <div className="profile-about">
-              <div className="profile-about-icon" >
+              <div className="profile-about-icon">
                 <FontAwesomeIcon icon={faUser} />
                 <p>{userName}</p>
               </div>
 
-              <div className="profile-about-icon" >
+              <div className="profile-about-icon">
                 <FontAwesomeIcon icon={faEnvelope} />
                 <p>{emailId}</p>
               </div>
 
-              <div className="profile-about-icon" >
+              <div className="profile-about-icon">
                 <FontAwesomeIcon icon={faMobileScreenButton} />
                 <p>{phoneNo}</p>
               </div>
@@ -220,23 +304,26 @@ const BookingDetails = () => {
                 <Link
                   to="/BookingDetails"
                   className="profile-button"
-                  style={{ color: 'white', backgroundColor: 'green' }}
+                  style={{ color: "white", backgroundColor: "green" }}
                 >
                   Booking Details
                 </Link>
               </li>
               <li>
-                <Link to="/UserProfile/Favorites">
-                  Favorites
-                </Link>
+                <Link to="/UserProfile/Favorites">Favorites</Link>
               </li>
             </ul>
             {/* Logout Button */}
-            <button className="button-67 " onClick={(e) => { handleLogout(e); navigate('/') }}>
+            <button
+              className="button-67 "
+              onClick={(e) => {
+                handleLogout(e);
+                navigate("/");
+              }}
+            >
               <h1>Logout</h1>
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>
-
           </div>
         </aside>
         <div className="right-container-favorite">
@@ -271,8 +358,148 @@ const BookingDetails = () => {
                 }
               })}
           </div>
-          {
-            eventDetailsData?.length > 0 &&
+
+          {/* add filter option.............. */}
+          <div className="filterSctions">
+            <div className="grid grid-cols-3 gap-x-2 items-center">
+              <div className="filter-container col-span-1">
+                <div className="filter_option" onClick={toggleFilter}>
+                  <div className="filter-icon">
+                    <FontAwesomeIcon icon={faFilter} />
+                  </div>
+                  <div className="text-filter">Filters</div>
+                </div>
+                {isFilterOpen && (
+                  <div className="filter-dropdown grid grid-cols-3 gap-x-3 max-w-max	text-xs">
+                    <div className="col-span-1">
+                      <b>Facility Type</b>
+                      {filters?.facilityType?.length > 0 &&
+                        filters.facilityType.map((facility, index) => {
+                          if (
+                            selectedFilter.facilityType.includes(
+                              facility.facilitytypeId
+                            )
+                          ) {
+                            return (
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  name="boating"
+                                  onChange={(e) =>
+                                    handleFilterSelection(
+                                      e,
+                                      facility.facilitytypeId,
+                                      "facilityType"
+                                    )
+                                  }
+                                  checked={true}
+                                />
+                                {facility.description}
+                              </label>
+                            );
+                          } else {
+                            return (
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  name="boating"
+                                  onChange={(e) =>
+                                    handleFilterSelection(
+                                      e,
+                                      facility.facilitytypeId,
+                                      "facilityType"
+                                    )
+                                  }
+                                  checked={false}
+                                />
+                                {facility.description}
+                              </label>
+                            );
+                          }
+                        })}
+                    </div>
+                    <div className="col-span-1 max-w-max">
+                      <b>Booking Status</b>
+                      {filters?.BookingStatus?.length > 0 &&
+                        filters.BookingStatus.map((status, index) => {
+                          if (
+                            selectedFilter.BookingStatus.includes(
+                              status.statusId
+                            )
+                          ) {
+                            return (
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  name="boating"
+                                  onChange={(e) =>
+                                    handleFilterSelection(
+                                      e,
+                                      status.statusId,
+                                      "BookingStatus"
+                                    )
+                                  }
+                                  checked
+                                />
+                                {status.statusCode}
+                              </label>
+                            );
+                          } else {
+                            return (
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  name="boating"
+                                  onChange={(e) =>
+                                    handleFilterSelection(
+                                      e,
+                                      status.statusId,
+                                      "BookingStatus"
+                                    )
+                                  }
+                                />
+                                {status.statusCode}
+                              </label>
+                            );
+                          }
+                        })}
+                    </div>
+
+                    <div className="filter-group">
+                      <b>Sort by Booking Date</b>
+                      <div className="bookingDetailsSorting">
+                        <input
+                          type="radio"
+                          value="asc"
+                          checked={sortOrder === "asc"}
+                          onChange={() => setSortOrder("asc")}
+                        />
+                        <label>Ascending</label>
+                      </div>
+                      <div className="bookingDetailsSorting">
+                        <input
+                          type="radio"
+                          value="desc"
+                          checked={sortOrder === "desc"}
+                          onChange={() => setSortOrder("desc")}
+                        />
+                        <label>Descending</label>
+                      </div>
+                    </div>
+
+                    <div
+                      className="cursor-pointer"
+                      onClick={clearFilterSelection}
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} /> Clear
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {eventDetailsData?.length > 0 && (
             <div className="eventdetails-cardsection">
               {eventDetailsData?.length > 0 &&
                 eventDetailsData?.map((event) => {
@@ -289,40 +516,38 @@ const BookingDetails = () => {
                           {event.location}
                         </div>
                         <div className="flex justify-between eventdetails-details-eventTime">
-                          <div className="booking-date">Booking Date {formatDate(event.bookingDate)}</div>
+                          <div className="booking-date">
+                            Booking Date {formatDate(event.bookingDate)}
+                          </div>
                           {/* <div>
                               <FontAwesomeIcon icon={faClock} />{" "}
                               {calculateTime(event.createdDate)} ago
                             </div> */}
                         </div>
 
-
                         <Link
-
-
                           to={{
                             pathname: "/profile/booking-details/ticket",
-                            search: `?bookingId=${encryptDataId(event.bookingId)}&typeId=${encryptDataId(event.typeId)}`,
+                            search: `?bookingId=${encryptDataId(
+                              event.bookingId
+                            )}&typeId=${encryptDataId(event.typeId)}`,
                           }}
                           className="eventdetails-eventbutton"
-
                         >
                           Details
                         </Link>
-
                       </div>
                     </div>
                   );
                 })}
             </div>
-          }
+          )}
 
-          {
-            eventDetailsData?.length == 0 &&
+          {eventDetailsData?.length == 0 && (
             <div className="flex justify-center w-full">
               <img src={No_Data_icon} alt="No Data Found" />
             </div>
-          }
+          )}
         </div>
       </div>
     </div>
