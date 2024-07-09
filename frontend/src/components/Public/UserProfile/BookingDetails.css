@@ -49,6 +49,29 @@ body {
     margin-left: 3px;
 }
 /* right section */
+.filterSctions{
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-block: 2vh;
+}
+
+.filterCard{
+    width:max-content;
+}
+
+.filter-dropdown label{
+    font-size: small;
+    
+}
+.bookingDetailsSorting{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
 .eventdetails-tab {
     display: flex;
     justify-content: space-evenly;
@@ -85,14 +108,19 @@ body {
     align-items: center;
     justify-content: flex-start;
     gap: 24px;
-    /* width: 630px; */
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 830px;
+    /* border: 1px solid rgba(0, 0, 0, 0.2); */
     height: 650px;
     overflow-y: scroll;
+    /* overflow: hidden; */
 }
+
+.eventdetails-cardsection::-webkit-scrollbar {
+    display: none;
+  }
 .eventdetails-carddetails {
     border: 1px solid #B9B9B97D;
-    width: 600px;
+    width: 800px;
     height: 144px;
     border-radius: 10px;
     padding: 12px;
