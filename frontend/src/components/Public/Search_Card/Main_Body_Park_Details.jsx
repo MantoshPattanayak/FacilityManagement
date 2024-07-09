@@ -1,5 +1,5 @@
 // Function of Main Container ---------------------------------------
-import Cardimg from "../../../assets/Card_img.png";
+import Cardimg from "../../../assets/Park_image.jpg";
 import sport_image2 from "../../../assets/Sport_image.jpg"
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
@@ -110,7 +110,7 @@ const Main_Body_Park_Details = () => {
     let filterSelected = JSON.parse(JSON.stringify(selectedFilter));
     if (filterSelected[filterType].includes(id)) {
       // console.log('id includes...', id);
-      filterSelected[filterType] = filterSelected[filterType].filter((data)=> {return data != id});
+      filterSelected[filterType] = filterSelected[filterType].filter((data) => { return data != id });
     }
     else {
       filterSelected[filterType].push(id);
@@ -342,7 +342,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-20" src={MultiPark} alt="Multipark" />
-            <span className="button-text1">Multipurpose  Grounds</span>
+            <span className="button-text1">Multipurpose <br></br> Grounds</span>
           </button>
           {/* waterway */}
           <button
@@ -383,7 +383,7 @@ const Main_Body_Park_Details = () => {
                       if (selectedFilter.Activity.includes(activity.userActivityId)) {
                         return (
                           <label>
-                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={true}/>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={true} />
                             {activity.userActivityName}
                           </label>
                         )
@@ -391,7 +391,7 @@ const Main_Body_Park_Details = () => {
                       else {
                         return (
                           <label>
-                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={false}/>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={false} />
                             {activity.userActivityName}
                           </label>
                         )
@@ -523,7 +523,18 @@ const Main_Body_Park_Details = () => {
                   title={item.facilityname}
                 >
                   {/* <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" /> */}
-                  <img className="Card_img" src={item.url ? instance().baseURL + '/static/' + item.url : (facilityTypeId === 1 ? Cardimg : facilityTypeId === 2 ? sport_image2 : 'park_image')} alt="Park" />
+                  <img
+                    className="Card_img"
+                    src={item.url ? instance().baseURL + '/static/' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image)}
+                    alt="Park"
+                    onError={(e) => {
+                      // Fallback to a default image if the provided URL fails
+                      e.target.onerror = null; // Prevents looping
+                      e.target.src = item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image;
+                      console.log('Image Source:', item.url ? instance().baseURL + '/static/' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image));
+                    }}
+                    
+                  />
                   <div className="card_text">
                     <span className="Name_location">
                       <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
@@ -536,7 +547,7 @@ const Main_Body_Park_Details = () => {
                       >
                         {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
                       </button>
-                      
+
                       <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
                     </span>
                   </div>
