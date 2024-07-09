@@ -165,7 +165,10 @@ let getTariffById = async (req,res)=>{
             },
             include:[{
                 model:facilityTariff,
-                required:true
+                required:true,
+                where: {
+                    statusId: statusId  
+                }
             }]
         })
         if(findTariffById){

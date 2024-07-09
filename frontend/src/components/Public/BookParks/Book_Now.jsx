@@ -16,6 +16,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
 import { ToastContainer, toast } from "react-toastify";
 import PublicHeader from "../../../common/PublicHeader";
+import RazorpayButton from "../../../common/RazorpayButton";
 
 const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -60,7 +61,8 @@ const Book_Now = () => {
   async function getSub_park_details(facilityId) {
     try {
       let res = await axiosHttpClient("View_By_ParkId", "get", "", facilityId);
-      setFacilitiesData(res.data.facilitiesData);
+      console.log("view park details", res.data.facilitiesData[0]);
+      setFacilitiesData(res.data.facilitiesData[0]);
       setFormData((prevData) => ({
         ...prevData,
         entityTypeId: res.data.facilitiesData[0].facilityTypeId,
@@ -211,6 +213,15 @@ const Book_Now = () => {
     }
   };
 
+  const handlePaymentSuccess = (response) => {
+    console.log("Book park payment success", response);
+    handleSubmitAndProceed();
+  }
+
+  const handlePaymentFailure = (response) => {
+    console.log("Book park payment failure", response);
+  }
+
   const validateForm = (formData) => {
     let errors = {};
     if (!formData.totalMembers) errors.totalMembers = "Please provide number of members";
@@ -226,7 +237,7 @@ const Book_Now = () => {
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading_BookNow">
-            <h1> <b>{FacilitiesData?.[0]?.park_name || "Park Name"}</b></h1>
+            <h1> <b>{FacilitiesData?.facilityName || "Park Name"}</b></h1>
           </div>
 
           <div className="form_BookNow">
@@ -405,13 +416,21 @@ const Book_Now = () => {
               >
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
-              <button
+              <RazorpayButton
+                amount={amount1 * parseInt(formData.adults)}
+                currency={"INR"}
+                description={"Book now"}
+                onSuccess={handlePaymentSuccess}
+                onFailure={handlePaymentFailure}
+                isDisabled={isDisabled}
+              />
+              {/* <button
                 className="submit-and-proceed-button"
                 onClick={handleSubmitAndProceed}
                 disabled={isDisabled}
               >
                 <FontAwesomeIcon icon={faCreditCard} /> Submit & Proceed
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
