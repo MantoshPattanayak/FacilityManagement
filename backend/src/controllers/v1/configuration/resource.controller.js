@@ -62,7 +62,7 @@ const createResource = async (req, res) => {
         iconType: iconType || null,
         orderIn: orderIn,
         path: path,
-        statusId: status,
+        statusId: status || 1,
         remarks: remarks || null,
         parentResourceId:parentResourceId || null
       });

@@ -104,11 +104,13 @@ const api = {
    View_Tariff_List_Api:'/tariffData/viewTariff', // Post Method
    Create_Tariff_Details_Api: '/tariffData/createTariff ', // Post Method
    Initial_Data_Tariff_Details:'/tariffData/initialDataForTariffSelectionWRTCategory',
+   VIEW_TARIFF_DATA_BY_ID_API:'/tariffData/getTariffById',
    // SERVICES MASTER (MDM)
    VIEW_SERVICES_LIST_API: '/services/viewServicesList', //post givenReq
    CREATE_NEW_SERVICE_API: '/services/createService', //post code, description
    VIEW_SERVICE_BY_ID_API: '/services/viewServiceById', //get :serviceId
    UPDATE_SERVICE_API: '/services/updateService', //put code, description, serviceId, statusId
+   
 }
 
 export default api;

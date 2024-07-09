@@ -73,6 +73,7 @@ import Image_Gallery from "./components/Public/View_Gallery/Image_Gallery";
 // here Import Admin Page -----------------xxxx----------------------
 import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
 import ViewTariffList from "./components/Admin/MDM/Tariff/ViewTariffList";
+import Tariff_View_Details from "./components/Admin/MDM/Tariff/Tariff_View_Details";
 // import provider for connect to our app
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
@@ -207,7 +208,7 @@ function App() {
               />
 
               {/* gallery section */}
-                 <Route
+              <Route
                 path="/View_Gallery/Image_Gallery"
                 element={
                   <Image_Gallery />
@@ -509,6 +510,8 @@ function App() {
                 }
               />
 
+
+
               <Route
                 path="/ViewTariffList"
                 element={
@@ -517,7 +520,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
+              <Route
+                path="/Tariff_View_Details"
+                element={
+                  <ProtectedRoute>
+                    <Tariff_View_Details />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/ParkPayment"
                 element={

@@ -73,9 +73,9 @@ const ViewTariffList = () => {
                             <th scope="col">Facility Address</th>
                             <th scope="col">Location (Latitude, Longitude)</th>
                             <th scope="col">Ownership</th>
-
                             <th scope="col">Create</th>
-
+                            <th scope="col">Update</th>
+                            <th scope="col">View</th>
                         </thead>
                         <tbody >
                             {
@@ -96,6 +96,30 @@ const ViewTariffList = () => {
                                                 >
                                                     <FontAwesomeIcon icon={faPlusCircle} />
                                                 </Link>
+                                            </td>
+                                            <td data-label="Update">
+                                                <Link
+                                                    to={{
+                                                        pathname: '/Tariff_View_Details',
+                                                        search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=Edit`
+                                                    }}
+                                                    title='Edit'
+                                                >
+                                                    <FontAwesomeIcon icon={faPenToSquare} />
+                                                </Link>
+
+                                            </td>
+                                            <td data-label="View">
+                                            <Link
+                                                    to={{
+                                                        pathname: '/Tariff_View_Details',
+                                                        search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=View`
+                                                    }}
+                                                    title='View'
+                                                >
+                                                   <FontAwesomeIcon icon={faEye} />
+                                                </Link>
+                                                
                                             </td>
 
                                         </tr>

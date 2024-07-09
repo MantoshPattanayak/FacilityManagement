@@ -226,6 +226,8 @@
 .profile-formContainer input[type="text"],
 .profile-formContainer input[type="email"],
 .profile-formContainer input[type="password"],
+.profile-formContainer input[type="aadhar"],
+.profile-formContainer input[type="tel"],
 .profile-formContainer select {
   /* width: 100%;
   padding: 0.5rem;
@@ -290,6 +292,29 @@
 .activityButton.selected {
   background-color: #6ab04c;
 }
+
+.profile-rightside--divided button{
+  padding: 8px 16px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.profile-rightside--divided .active{
+  background-color: #008000;
+  color: #fff;
+  border-color: #008000;
+}
+
+.profile-rightside--divided button:hover {
+  background-color: #ddd;
+}
+
 
 @media (min-width: 768px) {
   .button-67 {
