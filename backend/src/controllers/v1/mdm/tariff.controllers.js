@@ -409,7 +409,7 @@ let viewTariff = async (req,res)=>{
     CASE
         WHEN fa.id IS NOT NULL THEN fa.id
         ELSE fe.facilityEventId
-    END AS id,
+    END AS entityId,
     CASE
         WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
         WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
