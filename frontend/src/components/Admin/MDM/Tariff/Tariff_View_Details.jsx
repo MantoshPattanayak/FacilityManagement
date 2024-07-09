@@ -10,7 +10,7 @@ import { decryptData } from "../../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-
+import TariffDetails from "./TariffDetails";
 const Tariff_View_Details = () => {
   const facilityTypeId = decryptData(
     new URLSearchParams(location.search).get("facilityTypeId")
@@ -18,24 +18,24 @@ const Tariff_View_Details = () => {
   const facilityId = decryptData(
     new URLSearchParams(location.search).get("facilityId")
   );
+  const entityId = decryptData(
+    new URLSearchParams(location.search).get("entityId")
+  );
+  const tariffTypeId = decryptData(
+    new URLSearchParams(location.search).get("tariffTypeId")
+  );
+  console.log("here facilitytype, facilityid, entityid", facilityId, facilityTypeId, entityId)
   const action = new URLSearchParams(location.search).get('action');
-  console.log("Decrypt data", facilityTypeId, facilityId);
-
-
+  console.log("Decrypt data", facilityTypeId, facilityId, tariffTypeId);
   // Get initial Data
   let navigate = useNavigate();
- 
-
+  // show the error msg set in useSate --------------------------------------------
   const [errors, setErrors] = useState([]);
-
-  // Post tariff type data
-  const [PostTraifftype, setPostTraiffType] = useState({
-    tariffTypeId: "",
-  });
-  // Post Tariff Data
+  const [GetInitailName, setGetInitailName] = useState([])
+  // Post Tariff Data and set Rows ------------------------------------------------
   const [tariffRows, setTariffRows] = useState([
     {
-      facilityId: facilityId,
+      facilityId: '',
       operatingHoursFrom: "",
       operatingHoursTo: "",
       dayWeek: {
@@ -47,30 +47,38 @@ const Tariff_View_Details = () => {
         fri: '',
         sat: ''
       },
-      tariffTypeId: facilityTypeId,
+      tariffTypeId: '',
       entityId: ''
     }
   ]);
-
-  // Get Initial Data here (Call api)
+  // Get Initial Data here (Call api) -----------------------
   async function GetTariffInitailData() {
     try {
       let res = await axiosHttpClient("VIEW_TARIFF_DATA_BY_ID_API", "post", {
         facilityTypeId,
         facilityId,
-        entityId:1,
-        tariffTypeId:1
-       
+        entityId,
+        tariffTypeId
       });
-      console.log("initial fetch data", res)
-     
-      console.log("Here Response of Tariff Initial Data", res);
+      console.log("View fetch data of Tariff By Id", res)
+      const fetchedRows = res.data.tariffData.facilitytariffdetails.map(row => ({
+        ...row,
+        dayWeek: {
+          sun: row.sun || '',
+          mon: row.mon || '',
+          tue: row.tue || '',
+          wed: row.wed || '',
+          thu: row.thu || '',
+          fri: row.fri || '',
+          sat: row.sat || ''
+        }
+      }));
+      setTariffRows(fetchedRows);
     } catch (err) {
-      console.log("Here error of Initial Data of Tariff", err);
+      console.log("Here error of View By Id  Tariff Data", err);
     }
   }
-
-  // Handle Post Tariff Value (OnChange)
+  // Handle Post Tariff Value (OnChange) ---------------------
   const HanldePostTraiff = (e, index) => {
     const { name, value } = e.target;
     const updatedRows = [...tariffRows];
@@ -83,18 +91,23 @@ const Tariff_View_Details = () => {
     }
     setTariffRows(updatedRows);
   };
-
-  // Post the data of Tariff details
-  async function handle_Post_TariffData() {
+  // Post the data of Tariff details ------------------------
+  async function handle_Post_TariffData_Tariff(newRows) {
+  
     const errorList = validate();
     if (errorList.some(err => Object.keys(err).length > 0)) {
       return; // Prevent submission if there are errors
     }
     try {
+      if (!Array.isArray(newRows) || newRows.length === 0) {
+        return; // No new rows to post
+      }
+
+      console.log("here new row", newRows)
       let res = await axiosHttpClient('Create_Tariff_Details_Api', 'post', {
-        facilityTariffData: tariffRows
+        facilityTariffData: newRows
       });
-      toast.success('Tariff registration has been done successfully.', {
+      toast.success('Tariff Updated has been done successfully.', {
         autoClose: 2000,
         onClose: () => {
           setTimeout(() => {
@@ -105,11 +118,81 @@ const Tariff_View_Details = () => {
       console.log("Here Response Post Tariff Data", res);
 
     } catch (err) {
-      toast.error('Tariff registration failed.');
+      toast.error('Faild to  Updated Tariff. Try agin22 !')
       console.log("Here Error of Tariff Post data", err);
     }
   }
-  // Add row --------------------------------
+  // Update Tariff Data ------------------------------------------------
+  async function UpdateTariffData(existingRows) {
+    console.log("here existing Rows", existingRows)
+    const errorList = validate();
+    if (errorList.some(err => Object.keys(err).length > 0)) {
+      return; // Prevent submission if there are errors
+    }
+    try {
+      if (!Array.isArray(existingRows) || existingRows.length === 0) {
+        return; // No existing rows to update
+      }
+      console.log("here existing row", existingRows)
+      let res = await axiosHttpClient('Update_Tariff_Data', 'put', {
+        facilityTariffData: existingRows
+      })
+      toast.success('Tariff Updated has been done successfully.', {
+        autoClose: 2000,
+        onClose: () => {
+          setTimeout(() => {
+            navigate('/ViewTariffList');
+          }, 1000);
+        }
+      });
+      console.log("here Response of Tariff Updated", res)
+
+    }
+    catch (err) {
+      console.log("here Error of Update Tariff Data", err)
+      toast.error('Faild to  Updated Tariff. Try agin !')
+    }
+  }
+  // here Hanlde for Post the data (accoding to action) ------------------
+  const handleSubmitTariffData = () => {
+    const newRows = tariffRows.filter(row => row.isNew);
+    const existingRows = tariffRows.filter(row => !row.isNew);
+    handle_Post_TariffData_Tariff(newRows);
+    UpdateTariffData(existingRows);
+  }
+  // here Delete funcation (Delete Tariff data)------------------
+  async function DeleteTariffData(tariffDetailId) {
+    console.log("here OnClikc api call pass paramter", tariffDetailId)
+    try {
+      let res = await axiosHttpClient('Delete_Tariff_Data', 'post', {
+        statusId: 2,
+        tariffDetailId
+      })
+      console.log("here Response of Delete Tariff Data", res)
+      toast.success('Tariff data deleted successfully.');
+
+      GetTariffInitailData(); //Reload the data (After SucessFully Delete) ------
+    }
+    catch (err) {
+      console.log("here Error of Delete Tariff Data", err)
+      toast.error('Failed to delete tariff data.');
+    }
+  }
+  async function GetName_and_initail_Data() {
+    try {
+      let res = await axiosHttpClient("Initial_Data_Tariff_Details", 'post', {
+        facilityTypeId,
+        facilityId,
+        tariffTypeId
+      })
+      console.log("here Response of Get Name and initail data ", res)
+      setGetInitailName(res.data.facilityData)
+    }
+    catch (err) {
+      console.log("here Error of Get Inatil Data and Name", err)
+    }
+  }
+  // Add row ------------------------------------------------------------
   const addRow = () => {
     setTariffRows([
       ...tariffRows,
@@ -126,19 +209,28 @@ const Tariff_View_Details = () => {
           fri: '',
           sat: ''
         },
-        tariffTypeId: '',
-        entityId: ''
+        tariffTypeId:'',
+        entityId:'',
+        isNew: true
       }
     ]);
+    toast.success("Row added successfully!")
   };
-  // Remove Row
-  const deleteRow = (index) => {
-    const updatedRows = [...tariffRows];
-    updatedRows.splice(index, 1);
-    setTariffRows(updatedRows);
+  // Remove Row -----------------------------------------------------------
+  const deleteRow = (index, tariffDetailId) => {
+    console.log("here TariffDetailsId", tariffDetailId)
+    if (tariffDetailId) {
+      DeleteTariffData(tariffDetailId)
+    } else {
+      const updatedRows = [...tariffRows];
+      updatedRows.splice(index, 1);
+      console.log("Updated Row", updatedRows)
+      setTariffRows(updatedRows);
+    }
+
+
   };
-  // Vaildation of Create Tariff -------------------------------------------
-  // Vaildation of Create Tariff
+  // Vaildation of Update Tariff Data and Create Tariff Data -------------------------
   const validate = () => {
     const errorList = [];
     tariffRows.forEach((row, index) => {
@@ -192,15 +284,6 @@ const Tariff_View_Details = () => {
       } else if (!regexPrice.test(row.dayWeek.sat)) {
         err.sat = "Please Enter a valid Price for Sat";
       }
-
-      // Validation for tariffTypeId and entityId (dropdowns)
-      if (!row.tariffTypeId) {
-        err.tariffTypeId = "Please select a Facility Type";
-      }
-      if (!row.entityId) {
-        err.entityId = "Please select an Activities Type";
-      }
-
       errorList[index] = err;
     });
     setErrors(errorList);
@@ -211,26 +294,16 @@ const Tariff_View_Details = () => {
   // useEffect for Update the get initail data of Tariff -----------------------
   useEffect(() => {
     GetTariffInitailData();
-  }, [PostTraifftype]);
-
+    GetName_and_initail_Data();
+  }, []);
 
   return (
     <div>
       <AdminHeader />
       <div className="tariff-container">
-        {/* {
-          action == 'View' && <h2 className="Heading_Tariff">View Role</h2>
-        }
-        {
-          action == 'Edit' && <h2 className="Heading_Tariff">Edit Role</h2>
-        } */}
-
         {/* input fields of form................ */}
-        <h1 className="Park_Name">Park_Name</h1>
-        <p className="Address">address</p>
-       
-
-
+        <h1 className="Park_Name">{GetInitailName.facilityname}</h1>
+        <p className="Address">{GetInitailName.address}</p>
         <div className="table-container">
           {
             action == 'Edit' &&
@@ -238,13 +311,11 @@ const Tariff_View_Details = () => {
               <button className="add-icon" onClick={addRow}>
                 <FontAwesomeIcon icon={faPlus} />
               </button>
-              <button className="edit-icon" onClick={handle_Post_TariffData}>
+              <button className="edit-icon" onClick={handleSubmitTariffData}>
                 Save
               </button>
             </div>
-
           }
-
           <table>
             <thead>
               <tr>
@@ -261,8 +332,6 @@ const Tariff_View_Details = () => {
                   action == 'Edit' &&
                   <th>Delete</th>
                 }
-
-
               </tr>
             </thead>
             <tbody>
@@ -297,11 +366,10 @@ const Tariff_View_Details = () => {
                     value={row.dayWeek.sun}
                     onChange={(e) => HanldePostTraiff(e, index)}
                     disabled={action == 'View' ? 1 : 0}
-                     />
+                  />
                     {errors[index]?.sun && (
                       <span className="error">{errors[index].sun}</span>
                     )}
-
                   </td>
                   <td>
                     <input type="text"
@@ -324,29 +392,28 @@ const Tariff_View_Details = () => {
                       <span className="error">{errors[index].tue}</span>
                     )}
                   </td>
-
                   <td><input type="text" name="wed"
                     value={row.dayWeek.wed}
-                    onChange={(e) => HanldePostTraiff(e, index)} 
+                    onChange={(e) => HanldePostTraiff(e, index)}
                     disabled={action == 'View' ? 1 : 0}
-                    />
+                  />
                     {errors[index]?.wed && (
                       <span className="error">{errors[index].wed}</span>
                     )}
                   </td>
                   <td><input type="text" name="thu" value={row.dayWeek.thu}
-                    onChange={(e) => HanldePostTraiff(e, index)} 
+                    onChange={(e) => HanldePostTraiff(e, index)}
                     disabled={action == 'View' ? 1 : 0}
-                    />
+                  />
                     {errors[index]?.thu && (
                       <span className="error">{errors[index].thu}</span>
                     )}
                   </td>
                   <td><input type="text" name="fri"
                     value={row.dayWeek.fri}
-                    onChange={(e) => HanldePostTraiff(e, index)} 
+                    onChange={(e) => HanldePostTraiff(e, index)}
                     disabled={action == 'View' ? 1 : 0}
-                    />
+                  />
                     {errors[index]?.fri && (
                       <span className="error">{errors[index].fri}</span>
                     )}
@@ -354,7 +421,7 @@ const Tariff_View_Details = () => {
                   <td><input type="text" name="sat" value={row.dayWeek.sat}
                     onChange={(e) => HanldePostTraiff(e, index)}
                     disabled={action == 'View' ? 1 : 0}
-                     />
+                  />
                     {errors[index]?.sat && (
                       <span className="error">{errors[index].sat}</span>
                     )}
@@ -362,12 +429,9 @@ const Tariff_View_Details = () => {
                   {
                     action == 'Edit' &&
                     <td>
-
-                      <button className="delete-icon" onClick={() => deleteRow(index)}>
+                      <button className="delete-icon" onClick={() => deleteRow(index, row.tariffDetailId)}>
                         <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                       </button>
-
-
                     </td>
                   }
                 </tr>

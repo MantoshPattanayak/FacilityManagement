@@ -103,8 +103,10 @@ const api = {
    // Tariff Api (MDM)
    View_Tariff_List_Api:'/tariffData/viewTariff', // Post Method
    Create_Tariff_Details_Api: '/tariffData/createTariff ', // Post Method
-   Initial_Data_Tariff_Details:'/tariffData/initialDataForTariffSelectionWRTCategory',
-   VIEW_TARIFF_DATA_BY_ID_API:'/tariffData/getTariffById',
+   Initial_Data_Tariff_Details:'/tariffData/initialDataForTariffSelectionWRTCategory', //post
+   VIEW_TARIFF_DATA_BY_ID_API:'/tariffData/getTariffById', //post
+   Update_Tariff_Data:'/tariffData/updateTariff', //Put
+   Delete_Tariff_Data:'/tariffData/inActiveEachTariffData', //Post
    // SERVICES MASTER (MDM)
    VIEW_SERVICES_LIST_API: '/services/viewServicesList', //post givenReq
    CREATE_NEW_SERVICE_API: '/services/createService', //post code, description
