@@ -175,7 +175,7 @@ export default function EditService() {
       <AdminHeader />
       <div className="CreateNewServiceContainer">
         <div className="form-heading">
-          <h2>Add new notification</h2>
+          <h2>Edit/View Service details</h2>
           <div className="flex flex-col-reverse items-end w-[100%]">
             <button
               className='back-button'

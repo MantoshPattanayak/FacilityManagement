@@ -26,7 +26,7 @@ let createTariff = async (req,res)=>{
         let statusId = 1;
         let {facilityTariffData} = req.body
         let tariffCreationData;
-        console.log("tariff Create", facilityTariffData)
+        console.log("tariff Create data", facilityTariffData)
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
          transaction = await sequelize.transaction();
 
@@ -155,7 +155,7 @@ let createTariff = async (req,res)=>{
 
 let getTariffById = async (req,res)=>{
     try {
-        console.log('1',req.params)
+        console.log('1',req.body)
         let {facilityId,entityId,tariffTypeId} = req.body
         let statusId = 1;
         
@@ -165,7 +165,10 @@ let getTariffById = async (req,res)=>{
             },
             include:[{
                 model:facilityTariff,
-                required:true
+                required:true,
+                where: {
+                    statusId: statusId  
+                }
             }]
         })
         if(findTariffById){
@@ -191,7 +194,7 @@ let updateTariff = async (req, res) => {
         let userId = req.user.userId;
         transaction = await sequelize.transaction();
         let { facilityTariffData } = req.body;
-        console.log('facilityTariffData', facilityTariffData);
+        console.log('facilityTariffData Update', facilityTariffData);
         let statusId = 1;
         let updateDataForTariff = {};
 
@@ -350,6 +353,7 @@ let updateTariff = async (req, res) => {
 let inActiveEachTariffData = async(req,res)=>{
     try {
         let {tariffDetailId,statusId}= req.body;
+      console.log("here Response ", req.body)
         
         let [inActiveTheStatus] = await facilityTariff.update({
             statusId:statusId
@@ -359,6 +363,7 @@ let inActiveEachTariffData = async(req,res)=>{
             }
         }
     )
+   
     if(inActiveTheStatus>0){
         return res.status(statusCode.SUCCESS.code).json({
             message:`Data deactivated successfully`
@@ -382,20 +387,91 @@ let viewTariff = async (req,res)=>{
         let givenReq = req.body.givenReq ? req.body.givenReq : null;
         let statusId = 1;
         let findViewTariff
-        if(givenReq){
-             findViewTariff = await facilities.findAll({
-                where:{
-                   [Op.and]: [{statusId:statusId},{facilityTypeId:givenReq}]
-                }
-            });
-        }
-        else{
-            findViewTariff = await facilities.findAll({
-                where:{
-                    statusId:statusId
-                }
-            });
-        }
+        // if(givenReq){
+        //      findViewTariff = await facilities.findAll({
+        //         where:{
+        //            [Op.and]: [{statusId:statusId},{facilityTypeId:givenReq}]
+        //         }
+        //     });
+        // }
+        // else{
+        //     findViewTariff = await facilities.findAll({
+        //         where:{
+        //             statusId:statusId
+        //         },
+        //         include:[
+        //             {
+        //                 model:
+        //             }
+        //         ]
+        //     });
+        // }
+
+         findViewTariff = await sequelize.query(`   SELECT
+        f.facilityname,
+    f.facilityId,
+    f.facilityTypeId,
+    CASE
+        WHEN fa.id IS NOT NULL THEN fa.id
+        ELSE fe.facilityEventId
+    END AS entityId,
+    CASE
+        WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+        WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+        WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+        ELSE NULL
+    END AS tariffType,
+    CASE
+        WHEN CASE
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                ELSE NULL
+             END = 'ACTIVITIES' THEN 1
+        WHEN CASE
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                ELSE NULL
+             END = 'SPORTS' THEN 2
+        WHEN CASE
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                ELSE NULL
+             END = 'HOST_EVENT' THEN 3
+        ELSE NULL
+    END AS tariffTypeId,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM amabhoomi.tarifftypes tt
+            WHERE tt.code = 
+                CASE
+                    WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                    WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                    WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                    ELSE NULL
+                END
+            AND NOT EXISTS (
+                SELECT 1
+                FROM amabhoomi.tariffmasters tm
+                WHERE tm.tariffTypeId = tt.tariffTypeId
+                AND tm.facilityId = f.facilityId
+            )
+        ) THEN 0
+        ELSE 1
+    END AS tariffCheck
+FROM
+    amabhoomi.facilities f
+LEFT JOIN
+    amabhoomi.facilityactivities fa ON f.facilityId = fa.facilityId
+LEFT JOIN
+    amabhoomi.facilityevents fe ON f.facilityId = fe.facilityId;
+
+`,{
+    type:QueryTypes.SELECT
+})
 
         let paginatedTariff = findViewTariff.slice(offset, offset + limit);
 
@@ -505,6 +581,8 @@ let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
     }
 }
+
+
 module.exports= {
     createTariff,
     getTariffById,
