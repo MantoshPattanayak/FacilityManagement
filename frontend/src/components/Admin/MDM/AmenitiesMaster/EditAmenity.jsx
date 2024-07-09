@@ -13,24 +13,22 @@ import { decryptData } from '../../../../utils/encryptData';
 export default function EditAmenity() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    code: '',
-    description: '',
+    amenityName: '',
   });
   const [errors, setErrors] = useState({
-    code: '',
-    description: '',
+    amenityName: '',
   });
   const [refresh, setRefresh] = useState(false);
   const location = useLocation();
   const action = new URLSearchParams(location.search).get('action');
   const amenityId = decryptData(new URLSearchParams(location.search).get('a'));
 
-  async function fetchServiceDetailsById() {
+  async function fetchAmenityDetailsById() {
     try {
       let response = await axiosHttpClient('VIEW_AMENITY_BY_ID_API', 'get', {}, amenityId);
       console.log('response of fetched amenity details', response.data.data);
-      let { code, description, statusId } = response.data.data;
-      setFormData({ code, description, statusId, amenityId });
+      let { amenityName, statusId } = response.data.data;
+      setFormData({ amenityName, statusId });
     }
     catch (error) {
       console.error(error);
@@ -41,11 +39,8 @@ export default function EditAmenity() {
   let validation = (formData) => {
     let error = {};
 
-    if (!formData.code) {
-      error.code = 'Please enter Code.';
-    }
-    if (!formData.description) {
-      error.description = 'Please enter Description.';
+    if (!formData.amenityName) {
+      error.amenityName = 'Please enter amenity name.';
     }
     return error;
   }
@@ -161,13 +156,11 @@ export default function EditAmenity() {
 
   // run on page load
   useEffect(() => {
-    fetchServiceDetailsById();
+    fetchAmenityDetailsById();
   }, [])
 
   // refresh component on change of refresh state variable
-  useEffect(() => {
-
-  }, [refresh]);
+  useEffect(() => {}, [refresh]);
 
   return (
     <div>
@@ -185,14 +178,9 @@ export default function EditAmenity() {
           </div>
           <div className="grid grid-rows-2 grid-cols-2 gap-x-16 gap-y-2 w-[100%]">
             <div className="form-group col-span-1">
-              <label htmlFor="input2">Service Code <span className='text-red-500'>*</span></label>
-              <input type="text" name='code' value={formData.code} placeholder="Enter Code" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_SHORT} onChange={handleChange} disabled={action == "view" ? true : false} />
-              {errors.code && <p className='error-message'>{errors.code}</p>}
-            </div>
-            <div className="form-group col-span-1">
-              <label htmlFor="input2">Service Description <span className='text-red-500'>*</span></label>
-              <input type='text' name='description' value={formData.description} placeholder="Enter Description" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} disabled={action == "view" ? true : false} />
-              {errors.description && <p className='error-message'>{errors.description}</p>}
+              <label htmlFor="input2">Amenity name<span className='text-red-500'>*</span></label>
+              <input type='text' name='amenityName' value={formData.amenityName} placeholder="Enter Amenity name" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} disabled={action == "view" ? true : false} />
+              {errors.amenityName && <p className='error-message'>{errors.amenityName}</p>}
             </div>
             <div className="form-group col-span-1">
               <label htmlFor="input2">Status<span className='text-red-500'>*</span></label>

@@ -111,10 +111,13 @@ const api = {
    VIEW_SERVICE_BY_ID_API: '/services/viewServiceById', //get :serviceId
    UPDATE_SERVICE_API: '/services/updateService', //put code, description, serviceId, statusId
    // AMENITIES MASTER (MDM)
-   VIEW_AMENITIES_LIST_API: '/services/viewAmenitiesList', //post givenReq
-   CREATE_NEW_AMENITY_API: '/services/createAmenity', //post code, description
-   VIEW_AMENITY_BY_ID_API: '/services/viewAmenityById', //get :serviceId
-   UPDATE_AMENITY_API: '/services/updateAmenity', //put code, description, serviceId, statusId
+   VIEW_AMENITIES_LIST_API: '/amenities/viewAmenitiesList', //post givenReq
+   CREATE_NEW_AMENITY_API: '/amenities/createAmenity', //post code, description
+   VIEW_AMENITY_BY_ID_API: '/amenities/viewAmenityById', //get :serviceId
+   UPDATE_AMENITY_API: '/amenities/updateAmenity', //put code, description, serviceId, statusId
+   // PAYMENT
+   CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
+   RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 
 }
 
 export default api;

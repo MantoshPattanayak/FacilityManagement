@@ -154,6 +154,11 @@ let updateService = async (req, res) => {
         if(statusId && fetchServiceDetailsById.statusId != statusId) {
             paramsForUpdate.statusId = statusId;
         }
+        if(Object.keys(paramsForUpdate).length == 0){
+            res.status(statusCode.BAD_REQUEST.code).json({
+                message: "No changes made!"
+            })
+        }
         paramsForUpdate.updatedBy = userId;
         paramsForUpdate.updatedOn = new Date();
         console.log('params', paramsForUpdate);

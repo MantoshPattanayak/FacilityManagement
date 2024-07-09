@@ -77,8 +77,7 @@ export default function ViewAmenitiesList() {
             <table >
               <thead>
                 <tr>
-                  <th scope="col">Code</th>
-                  <th scope="col">Description</th>
+                  <th scope="col">Amenity Name</th>
                   <th scope="col">Created On</th>
                   <th scope="col">Status</th>
                   <th scope="col">View</th>
@@ -90,19 +89,18 @@ export default function ViewAmenitiesList() {
                   tableData?.length > 0 && tableData?.map((data, index) => {
                     return (
                       <tr key={index}>
-                        <td data-label="Code">{data.code}</td>
-                        <td data-label="Description">{data.description}</td>
+                        <td data-label="Amenity Name">{data.amenityName}</td>
                         <td data-label="Created On">{formatDate(data.createdOn)}</td>
                         <td data-label="Status">
-                          <p className={data.statusId == '1' ? 'text-green-500' : data.statusId == '2' ? 'text-red-500' : ''}>
-                            {data.statusId == '1' ? 'ACTIVE' : data.status == '2' ? 'INACTIVE' : ''}
+                          <p className={data.status == 'ACTIVE' ? 'text-green-500' : data.status == 'INACTIVE' ? 'text-red-500' : ''}>
+                            {data.status}
                           </p>
                         </td>
                         <td data-label="View">
                           <Link
                             to={{
                               pathname: '/mdm/edit-amenities',
-                              search: `?a=${encodeURIComponent(encryptDataId(data.serviceId))}&action=view`
+                              search: `?a=${encodeURIComponent(encryptDataId(data.amenityId))}&action=view`
                             }}
                           >
                             <FontAwesomeIcon icon={faEye} />
@@ -112,7 +110,7 @@ export default function ViewAmenitiesList() {
                           <Link
                             to={{
                               pathname: '/mdm/edit-amenities',
-                              search: `?a=${encodeURIComponent(encryptDataId(data.serviceId))}${data.statusId == '1' ? '&action=edit' : data.statusId == '2' ? '&action=view' : '&action=view'}`
+                              search: `?a=${encodeURIComponent(encryptDataId(data.amenityId))}${data.status == 'ACTIVE' ? '&action=edit' : data.status == 'INACTIVE' ? '&action=view' : '&action=view'}`
                             }}
                           >
                             <FontAwesomeIcon icon={faPenToSquare} />

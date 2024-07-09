@@ -10,12 +10,12 @@ let viewAmenitiesList = async (req, res) => {
         let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
         console.log("givenReq", givenReq);
 
-        let fetchServicesQuery = `
-            SELECT s.serviceId, s.code, s.description, s.statusId, s2.description as status, s.createdOn from amabhoomi.services s
-            INNER JOIN amabhoomi.statusmasters s2 on s.statusId = s2.statusId and s2.parentStatusCode = 'RECORD_STATUS'
+        let fetchAmenitiesQuery = `
+            SELECT a.amenityId, a.amenityName, s2.statusId, s2.statusCode as status, a.createdOn from amabhoomi.amenitymasters a
+            INNER JOIN amabhoomi.statusmasters s2 on a.statusId = s2.statusId and s2.parentStatusCode = 'RECORD_STATUS'
         `;
-        let fetchServicesList = await sequelize.query(fetchServicesQuery);
-        let matchedData = fetchServicesList[0];
+        let fetchAmenitiesList = await sequelize.query(fetchAmenitiesQuery);
+        let matchedData = fetchAmenitiesList[0];
         // console.log(fetchServicesList[0]);
 
         if(givenReq) {
@@ -49,14 +49,12 @@ let viewAmenitiesList = async (req, res) => {
 
 let createAmenity = async (req, res) => {
     try {
-        let { code, description } = req.body;
+        let { amenityName } = req.body;
         let userId = req.user.userId;
 
-        let checkExistingData = await serviceMaster.findAll({
+        let checkExistingData = await amenintiesMaster.findAll({
             where: {
-                [Op.or]: [
-                    { code: code }, { description: description }
-                ]
+                amenityName: amenityName
             }
         });
 
@@ -67,19 +65,16 @@ let createAmenity = async (req, res) => {
         }
 
         // create new service details with active status
-        let createNewService = await serviceMaster.create({
-            code: code,
-            description: description,
+        let createAmenityService = await amenintiesMaster.create({
+            amenityName: amenityName,
             statusId: 1,
-            createrBy: userId
+            createdBy: userId
         });
 
-        
-
-        console.log('new service', createNewService);
+        console.log('new service', createAmenityService);
         res.status(statusCode.SUCCESS.code).json({
             message: "New service details added!",
-            data: createNewService
+            data: createAmenityService
         });
     }
     catch(error) {
@@ -91,12 +86,12 @@ let createAmenity = async (req, res) => {
 
 let viewAmenityById = async (req, res) => {
     try {
-        let serviceId = req.params.amenityId;
-        console.log('serviceId', amenityId);
+        let amenityId = req.params.amenityId;
+        console.log('amenityId', amenityId);
 
-        let fetchServiceDetailsById = await serviceMaster.findOne({
+        let fetchAmenityDetailsById = await amenintiesMaster.findOne({
             where: {
-                serviceId: serviceId
+                amenityId: amenityId
             }
         });
 
@@ -106,17 +101,17 @@ let viewAmenityById = async (req, res) => {
         //     }
         // });
 
-        console.log('fetchServiceDetailsById', fetchServiceDetailsById.dataValues);
+        console.log('fetchAmenityDetailsById', fetchAmenityDetailsById.dataValues);
 
-        if(fetchServiceDetailsById.dataValues) {
+        if(fetchAmenityDetailsById.dataValues) {
             res.status(statusCode.SUCCESS.code).json({
-                message: "Service details",
-                data: fetchServiceDetailsById
+                message: "Amenity details",
+                data: fetchAmenityDetailsById
             })
         }
         else{
             res.status(statusCode.NOTFOUND.code).json({
-                message: "Service details not found!",
+                message: "Amenity details not found!",
                 data: []
             })
         }
@@ -130,50 +125,54 @@ let viewAmenityById = async (req, res) => {
 
 let updateAmenity = async (req, res) => {
     try {
-        let { code, description, serviceId, statusId } = req.body;
+        let { amenityName, amenityId, statusId } = req.body;
         let paramsForUpdate = new Array();
         let userId = req.user.userId;
+        console.log({ amenityName, amenityId, statusId });
 
         //fetch previously saved details
-        let fetchServiceDetailsById = await serviceMaster.findOne({
+        let fetchAmenitiesDetailsById = await amenintiesMaster.findOne({
             where: {
-                serviceId: serviceId
+                amenityId: amenityId
             }
         });
 
-        console.log("fetchServiceDetailsById", fetchServiceDetailsById);
+        console.log("fetchAmenitiesDetailsById", fetchAmenitiesDetailsById);
 
         // compare each param and push to update params array
-        if(code && fetchServiceDetailsById.code != code) {
-            paramsForUpdate.code = code;
+        if(amenityName && fetchAmenitiesDetailsById.amenityName != amenityName) {
+            paramsForUpdate.amenityName = amenityName;
         }
-        if(description && fetchServiceDetailsById.description != description) {
-            paramsForUpdate.description = description;
-        }
-        if(statusId && fetchServiceDetailsById.statusId != statusId) {
+        if(statusId && fetchAmenitiesDetailsById.statusId != statusId) {
             paramsForUpdate.statusId = statusId;
+        }
+        console.log('params', paramsForUpdate);
+        if(Object.keys(paramsForUpdate).length == 0){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "No changes made!"
+            })
         }
         paramsForUpdate.updatedBy = userId;
         paramsForUpdate.updatedOn = new Date();
         console.log('params', paramsForUpdate);
 
-        let [updateServiceCount] = await serviceMaster.update(
+        let [updateAmenitiesCount] = await amenintiesMaster.update(
             paramsForUpdate,
             {
                 where: {
-                    serviceId: serviceId
+                    amenityId: amenityId
                 }
             }
         );
-        console.log("updateServiceCount", updateServiceCount);
-        if(updateServiceCount > 0) {
+        console.log("updateAmenitiesCount", updateAmenitiesCount);
+        if(updateAmenitiesCount > 0) {
             res.status(statusCode.SUCCESS.code).json({
-                message: 'Service details updated successfully!'
+                message: 'Amenity details updated successfully!'
             });
         }
         else{
             res.status(statusCode.BAD_REQUEST.code).json({
-                message: 'Failed to update service details!'
+                message: 'Failed to update amenity details!'
             });
         }
     }
