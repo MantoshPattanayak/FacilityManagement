@@ -382,20 +382,67 @@ let viewTariff = async (req,res)=>{
         let givenReq = req.body.givenReq ? req.body.givenReq : null;
         let statusId = 1;
         let findViewTariff
-        if(givenReq){
-             findViewTariff = await facilities.findAll({
-                where:{
-                   [Op.and]: [{statusId:statusId},{facilityTypeId:givenReq}]
-                }
-            });
-        }
-        else{
-            findViewTariff = await facilities.findAll({
-                where:{
-                    statusId:statusId
-                }
-            });
-        }
+        // if(givenReq){
+        //      findViewTariff = await facilities.findAll({
+        //         where:{
+        //            [Op.and]: [{statusId:statusId},{facilityTypeId:givenReq}]
+        //         }
+        //     });
+        // }
+        // else{
+        //     findViewTariff = await facilities.findAll({
+        //         where:{
+        //             statusId:statusId
+        //         },
+        //         include:[
+        //             {
+        //                 model:
+        //             }
+        //         ]
+        //     });
+        // }
+
+         findViewTariff = await sequelize.query(`SELECT
+    f.facilityname,
+    CASE
+        WHEN fa.id IS NOT NULL THEN fa.id
+        ELSE fe.facilityEventId
+    END AS id,
+    CASE
+        WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+        WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+        WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+        ELSE NULL
+    END AS tariffType,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM amabhoomi.tarifftypes tt
+            WHERE tt.code = 
+                CASE
+                    WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+                    WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+                    WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+                    ELSE NULL
+                END
+            AND NOT EXISTS (
+                SELECT 1
+                FROM amabhoomi.tariffmasters tm
+                WHERE tm.tariffTypeId = tt.tariffTypeId
+                AND tm.facilityId = f.facilityId
+            )
+        ) THEN 1
+        ELSE 0
+    END AS tariffCheck
+FROM
+    amabhoomi.facilities f
+LEFT JOIN
+    amabhoomi.facilityactivities fa ON f.facilityId = fa.facilityId
+LEFT JOIN
+    amabhoomi.facilityevents fe ON f.facilityId = fe.facilityId;
+`,{
+    type:QueryTypes.SELECT
+})
 
         let paginatedTariff = findViewTariff.slice(offset, offset + limit);
 
@@ -505,6 +552,8 @@ let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
     }
 }
+
+
 module.exports= {
     createTariff,
     getTariffById,
