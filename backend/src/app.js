@@ -76,6 +76,8 @@ const tariffRoute = require(`./routes/api/`+api_version+`/mdm/tariff`)
 
 const services = require('./routes/api/' + api_version + '/mdm/services')
 
+const amenities = require('./routes/api/' + api_version + '/mdm/amenities')
+
 console.log(port, "port");
 
 app.use(
@@ -141,6 +143,8 @@ app.use("/promotion", promotionRoute)
 app.use("/tariffData",tariffRoute)
 //services-master
 app.use('/services', services)
+//amenities-master
+app.use('/amenities', amenities)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
