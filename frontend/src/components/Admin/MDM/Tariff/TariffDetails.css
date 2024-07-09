@@ -140,21 +140,6 @@ table td input {
     visibility: hidden;
     transition: opacity 0.3s, visibility 0.3s;
 }
-.edit-icon:hover::after{
-    content: 'Edit row';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 5px;
-    border-radius: 4px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-}
 
 .add-icon:hover::after {
     opacity: 1;

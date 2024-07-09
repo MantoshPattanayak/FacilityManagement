@@ -1,4 +1,4 @@
-import { faEye, faPenToSquare, faAngleDown, faUserPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faCheckCircle, faPenToSquare, faAngleDown, faUserPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import AdminHeader from '../../../../common/AdminHeader';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -70,9 +70,7 @@ const ViewTariffList = () => {
                         <thead>
                             <th scope="col">Sl No.</th>
                             <th scope="col">Facility Name</th>
-                            <th scope="col">Facility Address</th>
-                            <th scope="col">Location (Latitude, Longitude)</th>
-                            <th scope="col">Ownership</th>
+                            <th scope="col">Facility Type</th>
                             <th scope="col">Create</th>
                             <th scope="col">Update</th>
                             <th scope="col">View</th>
@@ -84,43 +82,60 @@ const ViewTariffList = () => {
                                         <tr key={data.index}>
                                             <td data-label="Sl No.">{index + 1}</td>
                                             <td data-label="Facility Name">{data.facilityname}</td>
-                                            <td data-label="Address">{data.address}</td>
-                                            <td data-label="Location">{data.latitude}, {data.longitude}</td>
-                                            <td data-label="Ownership">{data.ownership}</td>
-                                            <td data-label="View">
-                                                <Link
-                                                    to={{
-                                                        pathname: '/TariffDetails',
-                                                        search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=view`
-                                                    }}
-                                                >
-                                                    <FontAwesomeIcon icon={faPlusCircle} />
-                                                </Link>
-                                            </td>
-                                            <td data-label="Update">
-                                                <Link
-                                                    to={{
-                                                        pathname: '/Tariff_View_Details',
-                                                        search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=Edit`
-                                                    }}
-                                                    title='Edit'
-                                                >
-                                                    <FontAwesomeIcon icon={faPenToSquare} />
-                                                </Link>
+                                            <td data-label="Address">{data.tariffType}</td>
+                                            {data.tariffCheck == 0 ? (
+                                                <td data-label="View">
+                                                    <Link
+                                                        to={{
+                                                            
+                                                            pathname: '/TariffDetails',
+                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=view`
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon icon={faPlusCircle} />
+                                                    </Link>
+                                                </td>
+                                            ) : (
+                                                <td>
+                                                    {/* <FontAwesomeIcon icon={faCheckCircle} className='text-green-700' /> */}
+                                                    Created
+                                                </td>
+                                            )}
+                                            {data.tariffCheck == 1 ? (
+                                                <td data-label="Update">
+                                                    <Link
+                                                        to={{
+                                                            pathname: '/Tariff_View_Details',
+                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}
+                                                             &entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=Edit`
+                                                        }}
+                                                        title='Edit'
+                                                    >
+                                                        <FontAwesomeIcon icon={faPenToSquare} />
+                                                    </Link>
 
-                                            </td>
-                                            <td data-label="View">
-                                            <Link
-                                                    to={{
-                                                        pathname: '/Tariff_View_Details',
-                                                        search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=View`
-                                                    }}
-                                                    title='View'
-                                                >
-                                                   <FontAwesomeIcon icon={faEye} />
-                                                </Link>
-                                                
-                                            </td>
+                                                </td>
+                                            ) : (
+                                                <td>Not Created</td>
+                                            )}
+                                            {data.tariffCheck == 1 ? (
+                                                <td data-label="View">
+                                                    <Link
+                                                        to={{
+                                                            pathname: '/Tariff_View_Details',
+                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=View`
+                                                        }}
+                                                        title='View'
+                                                    >
+                                                        <FontAwesomeIcon icon={faEye} />
+                                                    </Link>
+
+                                                </td>
+
+                                            ) : (
+                                                <td>Not Created</td>
+                                            )}
+
 
                                         </tr>
                                     )
