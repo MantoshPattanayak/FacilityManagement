@@ -962,3 +962,68 @@ align-items: center;
           font-weight: 600;
         }
       }
+
+
+      /* carousel for events................... */
+      .carousel-container {
+        position: relative;
+        overflow: hidden;
+        width: 80vw;
+        max-width: 80vw;
+        margin: auto
+      }
+      
+      .carousel-wrapper {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+      
+      .carousel-slide {
+        min-width: 0%;
+        box-sizing: border-box;
+        
+      }
+      
+      .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 1;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .carousel-button.left {
+        left: 20px;
+      }
+      
+      .carousel-button.right {
+        right: 10px;
+      }
+      
+      .Yoga_image {
+        width: 100%;
+        height: auto;
+      }
+      
+      /* back button........ */
+      .back_btn{
+        background-color: #3d58e0; 
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 10px;
+      }
