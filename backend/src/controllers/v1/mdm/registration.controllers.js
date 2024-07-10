@@ -446,7 +446,7 @@ const getFacilityWrtId = async(req,res)=>{
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
-     let findInventoryDetails = await sequelize.query(`select i.equipmentfacilityId as equipmentId , i2.code  from amabhoomi.inventoryfacilities i inner join inventorymasters i2 on i.equipmentId = i2.equipmentId where i.facilityId = ? and i.statusId = ?
+     let findInventoryDetails = await sequelize.query(`select i.equipmentfacilityId as equipmentId ,i.count, i2.code  from amabhoomi.inventoryfacilities i inner join inventorymasters i2 on i.equipmentId = i2.equipmentId where i.facilityId = ? and i.statusId = ?
 
       `,
             { replacements:[facilityId,statusId],
@@ -591,7 +591,7 @@ const updateFacility = async(req,res)=>{
       if(facilityImage?.facilityImageOne){
         if(facilityImage.facilityImageOne?.fileId!=0){
           //update the data
-          let uploadSingleFacilityImage = await imageUpdate(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+          let updateSingleFacilityImage = await imageUpdate(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
 
         }
         else{
