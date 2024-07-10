@@ -26,6 +26,8 @@ let ownershipDetails = db.ownershipDetails
 const { Op } = require('sequelize');
 let user = db.usermaster
 let imageUpload = require('../../../utils/imageUpload')
+let imageUpdate= require('../../../utils/imageUpdate')
+
 let facilityEvent = db.facilityEvents
 // Admin facility registration
 
@@ -402,7 +404,7 @@ const getFacilityWrtId = async(req,res)=>{
       'ownership',['facilityTypeId','facilityType'],'scheme',['areaAcres','area'],
       'operatingHoursFrom','operatingHoursTo','sun','mon','tue',
       'wed','thu',
-      'fri','sat',['otherGames','othergame'],'otherServices','otherAmenities',['otherEventCategories','othereventCategory'],'additionalDetails','pin','helpNumber' ]
+      'fri','sat',['otherGames','othergame'],'otherServices','otherAmenities',['otherEventCategories','othereventCategory'],'additionalDetails','pin','helpNumber','longitude','latitude','address' ]
     })
     let findAmenityDetails = await sequelize.query(`select am.amenityName,fa.amenityFacilityId as amenityId from amabhoomi.amenitymasters am inner join facilityamenities fa on fa.amenityId = am.amenityId where fa.facilityId = ? and fa.statusId=?`,
       
@@ -589,7 +591,8 @@ const updateFacility = async(req,res)=>{
       if(facilityImage?.facilityImageOne){
         if(facilityImage.facilityImageOne?.fileId!=0){
           //update the data
-          
+          let uploadSingleFacilityImage = await imageUpdate(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+
         }
         else{
           // create the data
