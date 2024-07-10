@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus, faTimes,faEye } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faTimes, faEye } from '@fortawesome/free-solid-svg-icons';
 import verfiy_img from "../../../assets/verify_img.png"
 // import header and Footer-----------------------------
 import AdminHeader from '../../../common/AdminHeader'
@@ -120,7 +120,7 @@ const Facility_Edit_View = () => {
                 facilityImageOne: facilityImageOne || [],
                 game: game.map(acc => acc.userActivityId) || [],
                 ownersAddress: ownersAddress.length > 0 ? ownersAddress[0] : {},
-               
+
                 parkInventory: parkInventory || [],
                 service: service.map(acc => acc.serviceId) || []
             });
@@ -826,7 +826,7 @@ const Facility_Edit_View = () => {
         return errors;
     };
     // here Open Image on new tabe------------------------
-        const openImageInNewTab = (imageUrl) => {
+    const openImageInNewTab = (imageUrl) => {
         window.open(imageUrl, '_blank');
     };
     //useEffect (Update data)-------------------------------------------------------
@@ -1349,7 +1349,7 @@ const Facility_Edit_View = () => {
                                                             <span
                                                                 onClick={() => handleImageRemove("facilityImageOne")}
                                                                 style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
-                                                                
+
                                                             </span>
                                                             <span
                                                                 onClick={() => openImageInNewTab(image.url)}
@@ -1496,16 +1496,23 @@ const Facility_Edit_View = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Facility is owned by BDA ? <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <select id="input2"
+                                        <select
+                                            id="input2"
                                             name="facilityisownedbBDA"
                                             className="input_padding"
                                             value={PostFacilityData.ownersAddress.facilityisownedbBDA}
                                             onChange={handleChange}
-                                            disabled={action == 'View' ? 1 : 0}
+                                            disabled={action === 'View'}
                                         >
-                                            <option value="" disabled selected hidden>If yes, ownership details are not required</option>
-                                            <option value="Yes" >Yes</option>
-                                            <option value="No">No</option>
+                                            <option value="" disabled hidden>
+                                                If yes, ownership details are not required
+                                            </option>
+                                            <option value="Yes" selected={PostFacilityData.ownersAddress.facilityisownedbBDA === '1'}>
+                                                Yes
+                                            </option>
+                                            <option value="No" selected={PostFacilityData.ownersAddress.facilityisownedbBDA === '0'}>
+                                                No
+                                            </option>
                                         </select>
                                         {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
                                     </div>
@@ -1525,7 +1532,7 @@ const Facility_Edit_View = () => {
                                             value={PostFacilityData?.ownersAddress?.firstName}
                                             onChange={handleChange}
                                             disabled={disabledFields || action === 'View'}
-                                           
+
                                         />
                                         {formErrors.firstName && <p className="error text-red-700">{formErrors.firstName}</p>}
                                     </div>
@@ -1543,7 +1550,7 @@ const Facility_Edit_View = () => {
                                             value={PostFacilityData.ownersAddress.lastName}
                                             onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
-                                        
+
                                         />
                                         {formErrors.lastName && <p className="error text-red-700">{formErrors.lastName}</p>}
                                     </div>
@@ -1562,7 +1569,7 @@ const Facility_Edit_View = () => {
                                             name="phoneNumber"
                                             value={PostFacilityData.ownersAddress.phoneNumber}
                                             onChange={handleChange}
-                                            disabled={disabledFields|| action == 'View' ? 1 : 0}
+                                            disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
                                         {formErrors.phoneNumber && <p className="error text-red-700">{formErrors.phoneNumber}</p>}
                                     </div>
@@ -1579,7 +1586,7 @@ const Facility_Edit_View = () => {
                                             name="emailAdress"
                                             value={PostFacilityData.ownersAddress.emailAddress}
                                             onChange={handleChange}
-                                            disabled={disabledFields ||  action == 'View' ? 1 : 0}
+                                            disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
                                         {formErrors.emailAdress && <p className="error text-red-700">{formErrors.emailAdress}</p>}
                                     </div>
@@ -1598,7 +1605,7 @@ const Facility_Edit_View = () => {
                                             name="ownerPanCard"
                                             value={PostFacilityData.ownersAddress.ownerPanCard}
                                             onChange={handleChange}
-                                            disabled={disabledFields ||  action == 'View' ? 1 : 0}
+                                            disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
                                         {formErrors.ownerPanCard && <p className="error text-red-700">{formErrors.ownerPanCard}</p>}
                                     </div>
@@ -1615,7 +1622,7 @@ const Facility_Edit_View = () => {
                                             name="ownership"
                                             value={PostFacilityData.ownersAddress.ownership}
                                             onChange={handleChange}
-                                            disabled={disabledFields ||  action == 'View' ? 1 : 0}
+                                            disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
                                         {formErrors.ownership && <p className="error text-red-700">{formErrors.ownership}</p>}
                                     </div>
