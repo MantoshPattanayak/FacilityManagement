@@ -407,67 +407,98 @@ let viewTariff = async (req,res)=>{
         //     });
         // }
 
-         findViewTariff = await sequelize.query(`   SELECT
-        f.facilityname,
+         findViewTariff = await sequelize.query(`  SELECT 
+
+    f.facilityname AS facilityName,
+
     f.facilityId,
+
     f.facilityTypeId,
-    CASE
-        WHEN fa.id IS NOT NULL THEN fa.id
-        ELSE fe.facilityEventId
-    END AS entityId,
-    CASE
-        WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+
+    fa.id AS entityId, -- Map the primary key of facilityactivities to entityId
+
+    CASE 
+
         WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+
+        WHEN fa.id IS NOT NULL THEN 'ACTIVITIES'
+
         WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
-        ELSE NULL
+
+        ELSE ''
+
     END AS tariffType,
+
+    tt.code AS tariffTypeCode,
+
     CASE
-        WHEN CASE
-                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
-                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
-                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
-                ELSE NULL
-             END = 'ACTIVITIES' THEN 1
-        WHEN CASE
-                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
-                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
-                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
-                ELSE NULL
-             END = 'SPORTS' THEN 2
-        WHEN CASE
-                WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
-                WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
-                WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
-                ELSE NULL
-             END = 'HOST_EVENT' THEN 3
+
+        WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 1
+
+        WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 2
+
+        WHEN fe.facilityEventId IS NOT NULL THEN 3
+
         ELSE NULL
+
     END AS tariffTypeId,
+
     CASE
+
         WHEN EXISTS (
+
             SELECT 1
-            FROM amabhoomi.tarifftypes tt
-            WHERE tt.code = 
+
+            FROM tarifftypes tt2
+
+            JOIN tariffmasters tm2 ON tm2.tariffTypeId = tt2.tariffTypeId
+
+            WHERE tt2.code = 
+
                 CASE
-                    WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 'ACTIVITIES'
+
                     WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
+
+                    WHEN fa.id IS NOT NULL THEN 'ACTIVITIES'
+
                     WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
+
                     ELSE NULL
+
                 END
-            AND NOT EXISTS (
-                SELECT 1
-                FROM amabhoomi.tariffmasters tm
-                WHERE tm.tariffTypeId = tt.tariffTypeId
-                AND tm.facilityId = f.facilityId
-            )
-        ) THEN 0
-        ELSE 1
+
+            AND tm2.facilityId = f.facilityId
+
+        ) THEN 1
+
+        ELSE 0
+
     END AS tariffCheck
-FROM
-    amabhoomi.facilities f
-LEFT JOIN
-    amabhoomi.facilityactivities fa ON f.facilityId = fa.facilityId
-LEFT JOIN
-    amabhoomi.facilityevents fe ON f.facilityId = fe.facilityId;
+
+FROM 
+
+    facilities f
+
+LEFT JOIN 
+
+    facilityactivities fa ON f.facilityId = fa.facilityId
+
+LEFT JOIN 
+
+    facilityevents fe ON f.facilityId = fe.facilityId
+
+LEFT JOIN 
+
+    tariffmasters tm ON f.facilityId = tm.facilityId
+
+LEFT JOIN 
+
+    tarifftypes tt ON tm.tariffTypeId = tt.tariffTypeId
+
+GROUP BY 
+
+    f.facilityname, f.facilityId, f.facilityTypeId, fa.id, tt.code, fa.id, fe.facilityEventId;
+
 
 `,{
     type:QueryTypes.SELECT

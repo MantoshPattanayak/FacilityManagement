@@ -397,9 +397,14 @@ const getFacilityWrtId = async(req,res)=>{
     let{facilityId,facilityTypeId} = req.body
     let statusId = 1
     let findTheFacilityDetils = await facilities.findOne({
-      where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]}
+      where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]},
+      attributes:[['facilityname','facilityName'],
+      'ownership',['facilityTypeId','facilityType'],'scheme',['areaAcres','area'],
+      'operatingHoursFrom','operatingHoursTo','sun','mon','tue',
+      'wed','thu',
+      'fri','sat',['otherGames','othergame'],'otherServices','otherAmenities',['otherEventCategories','othereventCategory'],'additionalDetails','pin','helpNumber' ]
     })
-    let findAmenityDetails = await sequelize.query(`select am.amenityName,fa.amenityFacilityId from amabhoomi.amenitymasters am inner join facilityamenities fa on fa.amenityId = am.amenityId where fa.facilityId = ? and fa.statusId=?`,
+    let findAmenityDetails = await sequelize.query(`select am.amenityName,fa.amenityFacilityId as amenityId from amabhoomi.amenitymasters am inner join facilityamenities fa on fa.amenityId = am.amenityId where fa.facilityId = ? and fa.statusId=?`,
       
      { replacements:[facilityId,statusId],
       type:QueryTypes.SELECT}
@@ -411,35 +416,35 @@ const getFacilityWrtId = async(req,res)=>{
        type:QueryTypes.SELECT}
      )
    
-     let findActivityDetails = await sequelize.query(`select fa.id , um.userActivityName  from amabhoomi.facilityactivities fa inner join useractivitymasters um on fa.activityId = um.userActivityId where fa.facilityId = ? and fa.statusId= ? and fa.facilityTypeId = ?`,
+     let findActivityDetails = await sequelize.query(`select fa.id as userActivityId , um.userActivityName as userActivityName  from amabhoomi.facilityactivities fa inner join useractivitymasters um on fa.activityId = um.userActivityId where fa.facilityId = ? and fa.statusId= ? and fa.facilityTypeId = ?`,
       
       { replacements:[facilityId,statusId,facilityTypeId],
        type:QueryTypes.SELECT}
      )
 
-     let findEventDetails = await sequelize.query(`select em.eventCategoryName, fe.facilityEventId  from amabhoomi.facilityevents fe inner join eventcategorymasters em on em.eventCategoryId = fe.eventCategoryId where  fe.facilityId = ? and fe.statusId = ? `,
+     let findEventDetails = await sequelize.query(`select em.eventCategoryName, fe.facilityEventId as eventCategoryId  from amabhoomi.facilityevents fe inner join eventcategorymasters em on em.eventCategoryId = fe.eventCategoryId where  fe.facilityId = ? and fe.statusId = ? `,
       
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
      
-     let findMultipleImages = await sequelize.query(`select f.* from amabhoomi.files f  inner join fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = 'multipleFacilityImage' and fa.entityType = 'facilities'  and fa.statusId= ?`,
+     let findMultipleImages = await sequelize.query(`select f.fileId, f.fileName as code, f.fileType, f.url, fa.attachmentId from amabhoomi.files f  inner join fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = 'multipleFacilityImage' and fa.entityType = 'facilities'  and fa.statusId= ?`,
       
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
 
-     let findSingleImage = await sequelize.query(`select f.* from amabhoomi.files f  inner join fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = 'singleFacilityImage'and fa.entityType = 'facilities'  and fa.statusId= ?`,
+     let findSingleImage = await sequelize.query(`select f.fileId, f.fileName as code, f.fileType, f.url, fa.attachmentId from amabhoomi.files f  inner join fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = 'singleFacilityImage'and fa.entityType = 'facilities'  and fa.statusId= ?`,
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
 
-     let findOwnerDetails = await sequelize.query(`select o.* from amabhoomi.ownershipdetails o inner join facilities f on f.ownershipDetailId = o.ownershipDetailId where f.facilityId= ? and o.statusId = ?
+     let findOwnerDetails = await sequelize.query(`select o.ownershipDetailId,o.firstName,o.lastName,o.phoneNo as phoneNumber,o.emailId as emailAddress, o.ownerPanCardNumber as ownerPanCard,o.ownerAddress as ownersAddress,o.isFacilityByBda as facilityisownedbBDA from amabhoomi.ownershipdetails o inner join facilities f on f.ownershipDetailId = o.ownershipDetailId where f.facilityId= ? and o.statusId = ?
 `,
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
-     let findInventoryDetails = await sequelize.query(`select i.equipmentfacilityId , i2.code  from amabhoomi.inventoryfacilities i inner join inventorymasters i2 on i.equipmentId = i2.equipmentId where i.facilityId = ? and i.statusId = ?
+     let findInventoryDetails = await sequelize.query(`select i.equipmentfacilityId as equipmentId , i2.code  from amabhoomi.inventoryfacilities i inner join inventorymasters i2 on i.equipmentId = i2.equipmentId where i.facilityId = ? and i.statusId = ?
 
       `,
             { replacements:[facilityId,statusId],
@@ -463,7 +468,143 @@ const getFacilityWrtId = async(req,res)=>{
   }
 }
 const updateFacility = async(req,res)=>{
+  let transaction;
+  try {
+    transaction = await sequelize.transaction();
+    let { 
+      facilityId,
+      facilityType,
+      facilityName,
+      longitude,
+      latitude,
+      address,
+      pin,
+      ownership,
+      area,
+      operatingHoursFrom,
+      operatingHoursTo,
+      operatingDays,  //here operating days will come in the form of array of data i.e. array of  days
+      service,  //here services will be given in the form of object 
+      otherServices, //here others will be given in the form of string 
+      amenity, // here amenities will be given in the form of form of object 
+      otherAmenities, // here other amenities will be given in the form of string
+      additionalDetails,
+      facilityImage,
+      eventCategory,
+      othereventCategory,
+      game,
+      othergame,
+      parkInventory,
+      // owner details
+      ownershipDetailId, 
+      firstName,
+      lastName,
+  facilityisownedbBDA,
+      phoneNumber,
+      emailAdress,
+      ownerPanCard,
+      ownersAddress} = req.body
 
+      let updateFacilityDataVariable = {}
+      let updateAmenityDataVariable = {}
+      let updateActivityDataVariable = {}
+      let updateServiceDataVariable = {}
+      let updateOwnershipDataVariable = {}
+      let updateInventoryDataVariable = {}
+      let updateSingleImageDataVariable = {}
+      let updateMultipleImageDataVariable = {}
+      if(facilityType){
+        updateFacilityDataVariable.facilityTypeId = facilityType
+        updateActivityDataVariable.facilityTypeId = facilityType
+      }
+      if(facilityName){
+        updateFacilityDataVariable.facilityname = facilityName
+      }
+      if(longitude){
+        updateFacilityDataVariable.longitude = longitude
+      }
+      if(latitude){
+        updateFacilityDataVariable.latitude = latitude
+      }
+      if(address){
+        updateFacilityDataVariable.address = address
+      }
+      if(pin){
+        updateFacilityDataVariable.pin = pin
+      }
+      if(ownership){
+        updateFacilityDataVariable.ownership = ownership
+      }
+      if(area){
+        updateFacilityDataVariable.area = area
+      }
+      if(operatingHoursFrom){
+        updateFacilityDataVariable.operatingHoursFrom = operatingHoursFrom
+      }
+      if(operatingHoursTo){
+        updateFacilityDataVariable.operatingHoursTo = operatingHoursTo
+      }
+      if(operatingDays){
+        if(operatingDays?.sun){
+          updateFacilityDataVariable.sun = sun 
+        }
+        if(operatingDays?.mon){
+          updateFacilityDataVariable.mon = mon 
+        }
+        if(operatingDays?.tue){
+          updateFacilityDataVariable.tue = tue 
+        }
+        if(operatingDays?.wed){
+          updateFacilityDataVariable.wed = wed 
+        }
+        if(operatingDays?.thu){
+          updateFacilityDataVariable.thu = thu 
+        }
+        if(operatingDays?.fri){
+          updateFacilityDataVariable.fri = fri 
+        }
+        if(operatingDays?.sat){
+          updateFacilityDataVariable.fri = sat 
+        }
+      }
+    if(othergame){
+      updateFacilityDataVariable.otherGames = othergame 
+    }
+    if(additionalDetails){
+      updateFacilityDataVariable.additionalDetails = additionalDetails 
+    }
+    if(otherServices){
+      updateFacilityDataVariable.otherServices = otherServices 
+    }
+    if(otherAmenities){
+      updateFacilityDataVariable.otherAmenities = otherAmenities 
+    }
+    if(isFacilityByBda){
+      updateOwnershipDataVariable.isFacilityByBda = facilityisownedbBDA 
+    }
+    if(othereventCategory){
+      updateOwnershipDataVariable.otherEventCategories = othereventCategory 
+    }
+    if(facilityImage){
+      if(facilityImage?.facilityImageOne){
+        if(facilityImage.facilityImageOne?.fileId!=0){
+          //update the data
+          
+        }
+        else{
+          // create the data
+        }
+      }
+
+
+    }
+    
+      
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
 }
 
 
