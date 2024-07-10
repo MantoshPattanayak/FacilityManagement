@@ -3,7 +3,7 @@ const db = require('../models')
 const file = db.file;
 const fileAttachment = db.fileattachment
 const path = require('path')
-let  imageUpdate = async (imageData,entityType,subDir,filePurpose,insertionData,userId,errors)=>{
+let  imageUpdate = async (imageData,subDir,insertionData,userId,errors)=>{
     // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {

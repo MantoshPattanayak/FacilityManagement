@@ -184,7 +184,6 @@ const registerFacility = async (req, res) => {
            id:createFacilities.facilityId,
            name:createFacilities.facilityname
           }
-
         if(cardFacilityImage){
           let errors = [];
           let subDir = "facilityImages"
@@ -589,21 +588,49 @@ const updateFacility = async(req,res)=>{
     }
     if(facilityImage){
       if(facilityImage?.facilityImageOne){
+        let cardFacilityImage = facilityImage.facilityImageOne.data
         if(facilityImage.facilityImageOne?.fileId!=0){
+          let errors=[];
+          let insertionData = {
+           id:createFacilities.facilityId,
+           name:createFacilities.facilityname,
+           fileId:facilityImage.facilityImageOne?.fileId
+          }
+             let subDir = "facilityImages"
           //update the data
-          let updateSingleFacilityImage = await imageUpdate(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
-
+          let updateSingleFacilityImage = await imageUpdate(cardFacilityImage,subDir,insertionData,userId,errors,transaction)
+          if(errors.length>0){
+            if(errors.some(error => error.includes("something went wrong"))){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+            }
+            return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+          }
         }
         else{
           // create the data
+          let entityType = 'facilities'
+          let errors = [];
+          let subDir = "facilityImages"
+          let filePurpose = "singleFacilityImage"
+          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+          console.log( uploadSingleFacilityImage,'165 line facility image')
+          if(errors.length>0){
+            if(errors.some(error => error.includes("something went wrong"))){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+            }
+            return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+          }
+
+          
         }
       }
-
+      // facility array of images
+      if(facilityImage?.facilityImage){
 
     }
     
       
-  } catch (err) {
+  } }catch (err) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
