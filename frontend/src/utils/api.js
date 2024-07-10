@@ -117,6 +117,11 @@ const api = {
    CREATE_NEW_AMENITY_API: '/amenities/createAmenity', //post code, description
    VIEW_AMENITY_BY_ID_API: '/amenities/viewAmenityById', //get :serviceId
    UPDATE_AMENITY_API: '/amenities/updateAmenity', //put code, description, serviceId, statusId
+   // INVENTORY MASTER (MDM)
+   VIEW_INVENTORIES_LIST_API: '/inventories/viewInventoryList', //post givenReq
+   CREATE_NEW_INVENTORY_API: '/inventories/createInventory', //post code, description
+   VIEW_INVENTORY_BY_ID_API: '/inventories/viewInventoryById', //get :equipmentId
+   UPDATE_INVENTORY_API: '/inventories/updateInventory', //put code, description, equipmentId, statusId
    // PAYMENT
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 

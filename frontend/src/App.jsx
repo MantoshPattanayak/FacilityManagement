@@ -108,6 +108,10 @@ import ViewAmenitiesList from "./components/Admin/MDM/AmenitiesMaster/ViewAmenit
 import CreateNewAmenity from "./components/Admin/MDM/AmenitiesMaster/CreateNewAmenity";
 import EditAmenity from "./components/Admin/MDM/AmenitiesMaster/EditAmenity";
 import Activity_Preference_popup from './components/Public/BookParks/Popups_Book_now/Activity_Preference_popup'
+import ViewInventoryList from "./components/Admin/MDM/InventoryMaster/ViewInventoryList";
+import CreateInventory from "./components/Admin/MDM/InventoryMaster/CreateInventory";
+import EditInventory from "./components/Admin/MDM/InventoryMaster/EditInventory";
+
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -618,6 +622,9 @@ function App() {
               <Route path="/mdm/view-amenities" element={<ProtectedRoute><ViewAmenitiesList /></ProtectedRoute>} />
               <Route path="/mdm/create-amenities" element={<ProtectedRoute><CreateNewAmenity /></ProtectedRoute>} />
               <Route path="/mdm/edit-amenities" element={<ProtectedRoute><EditAmenity /></ProtectedRoute>} />
+              <Route path="/mdm/view-inventory" element={<ProtectedRoute><ViewInventoryList /></ProtectedRoute>} />
+              <Route path="/mdm/create-inventory" element={<ProtectedRoute><CreateInventory /></ProtectedRoute>} />
+              <Route path="/mdm/edit-inventory" element={<ProtectedRoute><EditInventory /></ProtectedRoute>} />
             </Routes>
             {/* <Footer /> */}
             <CommonFooter1 />
