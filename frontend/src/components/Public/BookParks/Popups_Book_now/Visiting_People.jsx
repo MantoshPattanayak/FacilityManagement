@@ -65,7 +65,7 @@ const Visiting_People = ({ closePopup }) => {
   };
 
   return (
-    <div className=' fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
+    <div className='VisitingPeople fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
 
     <div className='popup-overlay'>
       <div className="popup-content">
