@@ -1,0 +1,280 @@
+.CreateEventCategoryContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Converted from 20px to 2vh */
+    max-width: 100%;
+    width: 100%;
+    /* Changed to vw, and adjusted for centering */
+    margin: 0 auto;
+    /* Center the container */
+    margin-top: 10vh;
+    background-color: #F7F7F7;
+    overflow-y: auto;
+}
+
+.CreateEventCategoryContainer .form-heading {
+    padding: 2.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    /* Converted from 20px to 2.5vw */
+}
+
+.CreateEventCategoryContainer .form-heading h2 {
+    margin-bottom: 1.5vw;
+    /* Converted from 10px to 1.5vw */
+    /* min-width: 5vw; */
+    width: 100%;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+
+.CreateEventCategoryContainer .form-row {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 1vw;
+    max-width: 100%;
+    width: 84vw;
+    justify-content: space-between;
+    padding-inline: 1vw;
+}
+
+.CreateEventCategoryContainer .form-group {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+}
+
+.CreateEventCategoryContainer .form-heading label {
+    margin-bottom: 0.5vw;
+    /* Converted from 5px to 0.5vw */
+    color: #595959;
+    font-weight: bold;
+}
+
+.CreateEventCategoryContainer .form-heading select {
+    width: 24vw;
+    height: 100%;
+    padding: 0.625vw;
+    border: 2px solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+
+}
+
+.CreateEventCategoryContainer .form-heading input[type="text"],
+.CreateEventCategoryContainer input[type='date'],
+.CreateEventCategoryContainer select {
+    width: 100%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 2px solid #c6c6c6;
+    border-radius: 0.417vw;
+    background-color: white;
+}
+
+.CreateEventCategoryContainer .form-heading input:focus, .CreateEventCategoryContainer .form-heading select:focus {
+    border: 2px solid #405cf5;
+    outline: none;
+  }
+
+.CreateEventCategoryContainer .form-heading input[type="button"] {
+    width: 25%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: white;
+    cursor: pointer;
+}
+
+.CreateEventCategoryContainer .form-heading .div-border {
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+}
+
+.CreateEventCategoryContainer .form-heading input[type="text"]:disabled,
+.CreateEventCategoryContainer .form-heading textarea:disabled {
+    background-color: rgb(241, 241, 241);
+}
+
+.CreateEventCategoryContainer textarea {
+    padding: 0.625vw;
+    border: 2px solid #ccc;
+    border-radius: 0.417vw;
+    background-color: white;
+}
+
+.CreateEventCategoryContainer textarea:focus {
+    border: 2px solid #405cf5;
+    outline: none;
+}
+
+.CreateEventCategoryContainer .buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    padding-left: 0;
+    width: 100%;
+}
+
+.CreateEventCategoryContainer .approve-button,
+.CreateEventCategoryContainer .cancel-button {
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.CreateEventCategoryContainer .back-button {
+    padding: 0.5em;
+    margin: 0.5em;
+    /* Adjusted margin */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+}
+
+.CreateEventCategoryContainer .approve-button {
+    background-color: #176BFB;
+    color: white;
+}
+
+.CreateEventCategoryContainer .cancel-button {
+    background-color: #c6c6c6;
+    color: white;
+}
+
+.CreateEventCategoryContainer .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 10rem;
+    grid-row-gap: 10px;
+    width: 100%;
+}
+
+.CreateEventCategoryContainer .error-message {
+    color: red;
+    font-size: 14px;
+}
+
+.CreateEventCategoryContainer .approve-button:disabled,
+.CreateEventCategoryContainer .cancel-button:disabled {
+    background-color: gray;
+}
+
+/* Media query for tablets and larger screens */
+@media screen and (min-width: 768px) {
+
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
+        padding: 0.6em 1.5em;
+        margin: 0.2em;
+    }
+    .CreateEventCategoryContainer .form-row {
+        flex-wrap: wrap;
+    }
+
+    .CreateEventCategoryContainer .form-heading h2 {
+        height: 5vh;
+        /* Change height for larger screens */
+    }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 767px) {
+
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
+        width: 100%;
+        /* Make buttons full width */
+    }
+
+    .CreateEventCategoryContainer .form-row {
+        flex-direction: column;
+        gap: 1.5vw;
+        /* Increased gap for better spacing */
+    }
+
+    .CreateEventCategoryContainer .form-group {
+        width: 100%;
+    }
+
+    .CreateEventCategoryContainer input[type="text"] {
+        width: 100%;
+    }
+
+    .CreateEventCategoryContainer {
+        width: 100%;
+        font-size: small;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .CreateEventCategoryContainer .form-heading h2 {
+        margin-bottom: 1.5vw;
+        min-width: 90vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+
+    .CreateEventCategoryContainer .form-heading {
+        max-width: 90vw;
+    }
+
+    .CreateEventCategoryContainer .CreateEventCategoryContainer {
+        width: 100%;
+        font-size: small;
+    }
+
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
+    }
+
+    .CreateEventCategoryContainer label {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 368px) {
+    .CreateEventCategoryContainer .form-heading h2 {
+        margin-bottom: 1.5vw;
+        height: 5vh;
+        padding-left: 2vh;
+        width: 50%;
+    }
+
+    .CreateEventCategoryContainer .form-heading {
+        max-width: 100%;
+    }
+
+    .CreateEventCategoryContainer {
+        width: 90%;
+        font-size: small;
+    }
+
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
+    }
+}
