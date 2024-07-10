@@ -54,10 +54,7 @@ let  imageUpdate = async (imageData,entityType,subDir,filePurpose,insertionData,
               fileName: fileName,
               fileType: fileType,
               url: uploadFilePath2,
-              statusId: 1,
-              createdDt: createdDt,
               updatedDt: updatedDt,
-              createdBy:userId,
               updatedBy:userId
             },
        { where:{
