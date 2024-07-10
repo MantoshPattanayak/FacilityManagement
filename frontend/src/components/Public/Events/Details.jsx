@@ -1,6 +1,8 @@
 import React from 'react'
 import '../Events/Details.css'
 import { useState, useEffect, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 // Here Import Admin Header AND fOOTER ------------------------------------
 import CommonFooter from "../../../common/CommonFooter";
@@ -126,7 +128,7 @@ export default function Details() {
 
     return `${day}-${month}-${year}`;
   }
-// For image Carousel............
+  // For image Carousel............
   const images = [Park_img, amabhoomi, Park_img, amabhoomi, Park_img];
   const [currentIndex1, setCurrentIndex1] = useState(0);
 
@@ -157,11 +159,11 @@ export default function Details() {
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="event-map_img_main_conatiner">
 
-  
+
 
         <div className="carousel-container1">
           <div className="carousel1">
-          {/* <img className="event-Park_image" src={Park_img}></img> */}
+            {/* <img className="event-Park_image" src={Park_img}></img> */}
             <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
           </div>
           <button className="carousel1-button1 left1" onClick={handlePrev}>
@@ -246,6 +248,16 @@ export default function Details() {
             </LoadScript>
           </div>
         </div>
+        {/* Back button............. */}
+        <Link to={'/events'}>
+          <div className="back_button">
+
+            <button className="back_btn">
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </button>
+          </div>
+        </Link>
       </div>
 
       {/* -----------------------------services------------------------------------------ */}
@@ -303,7 +315,7 @@ export default function Details() {
         </div>
       </div>
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
- 
+
     </div>
   )
 }

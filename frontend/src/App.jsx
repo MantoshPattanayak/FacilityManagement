@@ -107,6 +107,7 @@ import CreateService from "./components/Admin/MDM/Services/CreateService";
 import ViewAmenitiesList from "./components/Admin/MDM/AmenitiesMaster/ViewAmenitiesList";
 import CreateNewAmenity from "./components/Admin/MDM/AmenitiesMaster/CreateNewAmenity";
 import EditAmenity from "./components/Admin/MDM/AmenitiesMaster/EditAmenity";
+import Activity_Preference_popup from './components/Public/BookParks/Popups_Book_now/Activity_Preference_popup'
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
 
@@ -143,7 +144,12 @@ function App() {
                   <Search_card />
                 }
               />
-
+              {/* <Route
+                path="/activity-popup"
+                element={
+                  <Activity_Preference_popup />
+                }
+              /> */}
               {/* Public (Book Parks)  */}
               <Route
                 path="/BookParks/Book_Now_Sport"

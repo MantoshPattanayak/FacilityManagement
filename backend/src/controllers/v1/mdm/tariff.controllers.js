@@ -26,7 +26,7 @@ let createTariff = async (req,res)=>{
         let statusId = 1;
         let {facilityTariffData} = req.body
         let tariffCreationData;
-        console.log("tariff Create", facilityTariffData)
+        console.log("tariff Create data", facilityTariffData)
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
          transaction = await sequelize.transaction();
 
@@ -194,7 +194,7 @@ let updateTariff = async (req, res) => {
         let userId = req.user.userId;
         transaction = await sequelize.transaction();
         let { facilityTariffData } = req.body;
-        console.log('facilityTariffData', facilityTariffData);
+        console.log('facilityTariffData Update', facilityTariffData);
         let statusId = 1;
         let updateDataForTariff = {};
 
@@ -353,6 +353,7 @@ let updateTariff = async (req, res) => {
 let inActiveEachTariffData = async(req,res)=>{
     try {
         let {tariffDetailId,statusId}= req.body;
+      console.log("here Response ", req.body)
         
         let [inActiveTheStatus] = await facilityTariff.update({
             statusId:statusId
@@ -362,6 +363,7 @@ let inActiveEachTariffData = async(req,res)=>{
             }
         }
     )
+   
     if(inActiveTheStatus>0){
         return res.status(statusCode.SUCCESS.code).json({
             message:`Data deactivated successfully`
@@ -457,8 +459,8 @@ let viewTariff = async (req,res)=>{
                 WHERE tm.tariffTypeId = tt.tariffTypeId
                 AND tm.facilityId = f.facilityId
             )
-        ) THEN 1
-        ELSE 0
+        ) THEN 0
+        ELSE 1
     END AS tariffCheck
 FROM
     amabhoomi.facilities f

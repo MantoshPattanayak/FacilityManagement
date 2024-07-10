@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Sub_Park_Details.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
 
@@ -36,6 +37,7 @@ import PublicHeader from "../../../common/PublicHeader";
 import Book_Now from "../BookParks/Book_Now";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
 
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
@@ -53,19 +55,16 @@ const Sub_Park_Details = () => {
   const [operatingDays, setOperatingDays] = useState('');
   const [bookmarkId, setBookmarkId] = useState(null);
   //Here is the popup state
-
+  const [showPeople, setShowPeople] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
-
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
 
   }, [facilityId]);
-
 
   async function handleBookmarkStatus(e) {
     e.preventDefault();
@@ -214,6 +213,16 @@ const Sub_Park_Details = () => {
     setCurrentIndex1(currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1);
   };
 
+  const [currentIndex2, setCurrentIndex2] = useState(0);
+
+  const handleEventPrev = () => {
+    setCurrentIndex2(currentIndex2 === 0 ? EventAvailable.length - 1 : currentIndex2 - 1);
+  };
+
+  const handleEventNext = () => {
+    setCurrentIndex2(currentIndex2 === EventAvailable.length - 1 ? 0 : currentIndex2 + 1);
+  };
+
   return (
     <div className="Sub_Manu_Conatiner">
       <PublicHeader />
@@ -297,23 +306,31 @@ const Sub_Park_Details = () => {
 
             {
               FacilitiesData[0]?.facilityTypeId == 1 ? (
-                <Link
-                  to={{
-                    pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now" : "/login-signup"
-                      }`,
-                    search: `${isUserLoggedIn == 1
-                      ? `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}`
-                      : `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
-                      }`,
-                  }}
-                  className="button-9"
-                >
-                  <button role="button_by" onClick={togglePopup}>Book Ticket</button>
-                </Link>
+                // <Link
+                //   to={{
+                //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
+                //       }`,
+                //     search: `${isUserLoggedIn == 1
+                //       ? `?facilityId=${encryptDataId(
+                //         FacilitiesData[0]?.facilityId
+                //       )}`
+                //       : `?facilityId=${encryptDataId(
+                //         FacilitiesData[0]?.facilityId
+                //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
+                //       }`,
+                //   }}
+                //   className="button-9"
+                // >
+                //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
+                //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
+
+
+                // </Link>
+                <button onClick={() => setShowPeople(true)} className="button-9">
+                  Book Ticket
+                </button>
+
+
               )
                 : FacilitiesData[0]?.facilityTypeId == 2 ? (
                   <Link
@@ -350,7 +367,11 @@ const Sub_Park_Details = () => {
                       }}
                       className="button-9"
                     >
-                      <button role="button_by">Book Ticket</button>
+                      <button role="button_by"
+                        onClick={() => setShowPeople(true)}
+                      >
+                        Book Ticket
+                      </button>
                     </Link>
                   )
             }
@@ -397,6 +418,18 @@ const Sub_Park_Details = () => {
             </LoadScript>
           </div>
         </div>
+
+        {/* Back button............. */}
+        <Link to={'/facilities'}>
+          <div className="back_button">
+
+            <button className="back_btn">
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </button>
+          </div>
+        </Link>
+
       </div>
       <div className="other-contents">
         {/* -----------------------------services------------------------------------------ */}
@@ -460,7 +493,7 @@ const Sub_Park_Details = () => {
           </div>
         </div>
         {/* -------------------------Event Available ----------------------------------------------------------- */}
-        <div className="Event_Available_main_conatiner">
+        {/* <div className="Event_Available_main_conatiner">
           <h1 className="Service_text">Event Available</h1>
           <div className="Sub_Park_Details">
             {EventAvailable?.length > 0 &&
@@ -493,11 +526,40 @@ const Sub_Park_Details = () => {
               })}
             {EventAvailable?.length == 0 && <p>No events.</p>}
           </div>
+        </div> */}
+
+        <div className="Event_Available_main_conatiner">
+          <h1 className="Service_text">Event Available</h1>
+
+          <div className="carousel-container">
+            <button className="carousel-button left" onClick={handleEventPrev}>
+              &lt;
+            </button>
+            <div className="carousel-wrapper" style={{ transform: `translateX(-${currentIndex2 * 100}%)` }}>
+              {EventAvailable.map((event, index) => (
+                <div key={index} className="carousel-slide">
+                  <img className="Yoga_image" src={Yoga_img} alt="Event" />
+                  <h1 className="Name_yoga">{event.eventName}</h1>
+                  <span className="Yoga_date_time">
+                    <h1>Date: {formatDate(event.eventDate)}</h1>
+                    <h1>Time: {formatTime(event.eventTime)}</h1>
+                  </span>
+                </div>
+              ))}
+            </div>
+            <button className="carousel-button right" onClick={handleEventNext}>
+              &gt;
+            </button>
+          </div>
+
         </div>
         {/* <Book_Now/> */}
       </div>
 
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
+
+      {showPeople && <Visiting_People />}
+
     </div >
   );
 };
