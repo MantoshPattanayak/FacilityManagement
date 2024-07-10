@@ -139,6 +139,19 @@ let updateAmenity = async (req, res) => {
 
         console.log("fetchAmenitiesDetailsById", fetchAmenitiesDetailsById);
 
+        // check if entered data already exists
+        let fetchExistingData = await amenintiesMaster.findAll({
+            where: {
+                [Op.or]: [{ code: code }, { description: description }]
+            }
+        })
+
+        if(fetchExistingData.length > 0) {
+            return res.status(statusCode.CONFLICT.code).json({
+                message: 'Entered data already exists.'
+            })
+        }
+
         // compare each param and push to update params array
         if(amenityName && fetchAmenitiesDetailsById.amenityName != amenityName) {
             paramsForUpdate.amenityName = amenityName;
