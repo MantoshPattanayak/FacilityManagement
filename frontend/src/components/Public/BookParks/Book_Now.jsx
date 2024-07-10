@@ -126,20 +126,14 @@ const Book_Now = () => {
       updatedFormData.totalMembers = 40;
     }
 
-<<<<<<< Updated upstream
     setAmount1(formData.amount);
     // setIsDisabled(updatedFormData.totalMembers > 40);
     setIsDisabled(validateForm(updatedFormData));
-=======
-    setAmount1(updatedFormData.amount);
-    setIsDisabled(updatedFormData.totalMembers > 40);
->>>>>>> Stashed changes
     setFormData(updatedFormData);
     setRefresh(prevState => !prevState);
   };
 
   const handleDecrease = (field) => {
-<<<<<<< Updated upstream
     setFormData((prevData) => ({
       ...prevData,
       [field]: Math.max(0, prevData[field] - 1),
@@ -155,43 +149,6 @@ const Book_Now = () => {
     }));
     setIsDisabled(validateForm(formData));
     setRefresh(prevState => !prevState);
-=======
-    const newValue = Math.max(0, formData[field] - 1);
-    const updatedFormData = {
-      ...formData,
-      [field]: newValue,
-    };
-
-    if (["children", "seniorCitizen", "adults"].includes(field)) {
-      updatedFormData.totalMembers =
-        (field === "children" ? newValue : formData.children) +
-        (field === "seniorCitizen" ? newValue : formData.seniorCitizen) +
-        (field === "adults" ? newValue : formData.adults);
-    }
-
-    setAmount1(updatedFormData.amount);
-    setIsDisabled(updatedFormData.totalMembers > 40);
-    setFormData(updatedFormData);
-  };
-
-  const handleIncrease = (field) => {
-    const newValue = formData[field] + 1;
-    const updatedFormData = {
-      ...formData,
-      [field]: newValue,
-    };
-
-    if (["children", "seniorCitizen", "adults"].includes(field)) {
-      updatedFormData.totalMembers =
-        (field === "children" ? newValue : formData.children) +
-        (field === "seniorCitizen" ? newValue : formData.seniorCitizen) +
-        (field === "adults" ? newValue : formData.adults);
-    }
-
-    setAmount1(updatedFormData.amount);
-    setIsDisabled(updatedFormData.totalMembers > 40);
-    setFormData(updatedFormData);
->>>>>>> Stashed changes
   };
 
   const handleAddtoCart = async () => {
@@ -489,7 +446,6 @@ const Book_Now = () => {
               >
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
-<<<<<<< Updated upstream
               <RazorpayButton
                 amount={amount1 * parseInt(formData.adults)}
                 currency={"INR"}
@@ -498,10 +454,6 @@ const Book_Now = () => {
                 onFailure={handlePaymentFailure}
                 isDisabled={isDisabled}
               />
-=======
-
-
->>>>>>> Stashed changes
               {/* <button
                 className="submit-and-proceed-button"
                 onClick={handleSubmitAndProceed}
@@ -509,18 +461,6 @@ const Book_Now = () => {
               >
                 <FontAwesomeIcon icon={faCreditCard} /> Submit & Proceed
               </button> */}
-<<<<<<< Updated upstream
-=======
-              <button
-                className="submit-and-proceed-button"
-                // onClick={()=> setShowPeople(true)}
-                disabled={isDisabled}
-              >
-                <FontAwesomeIcon icon={faCreditCard} /> Submit & Proceed
-              </button>
-
-
->>>>>>> Stashed changes
             </div>
           </div>
         </div>

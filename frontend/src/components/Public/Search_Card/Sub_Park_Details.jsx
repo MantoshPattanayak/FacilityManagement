@@ -369,7 +369,6 @@ const Sub_Park_Details = () => {
                     >
                       <button role="button_by"
                         onClick={() => setShowPeople(true)}
-
                       >
                         Book Ticket
                       </button>
