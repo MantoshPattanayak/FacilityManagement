@@ -8,4 +8,6 @@ router.post("/facilityRegistration",authenticateToken, registration.registerFaci
 
 router.get("/initialData", authenticateToken,registration.initialDataFetch);
 
+router.post("/getFacilityWrtId", authenticateToken,registration.getFacilityWrtId);
+
 module.exports = router;
