@@ -38,7 +38,7 @@ const Book_Now = () => {
     otherActivities: "",
     bookingDate: new Date().toISOString().split("T")[0],
     startTime: new Date().toTimeString().split(" ")[0],
-    durationInHours: 0,
+    durationInHours: 1,
     facilityId: "",
     entityId: "",
     entityTypeId: "",
@@ -47,6 +47,7 @@ const Book_Now = () => {
   });
 
   let facilityId = decryptData(new URLSearchParams(location.search).get("facilityId"));
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     getSub_park_details(facilityId);
@@ -55,8 +56,14 @@ const Book_Now = () => {
 
   useEffect(() => {
     console.log("selectedGames", selectedGames);
+    if(selectedGames.length > 0) {
+      setFormData(prevState => ({
+        ...prevState,
+        ['activityPreference']: selectedGames
+      }));
+    }
     console.log("formData", formData);
-  }, [selectedGames, formData]);
+  }, [refresh, selectedGames]);
 
   async function getSub_park_details(facilityId) {
     try {
@@ -89,6 +96,12 @@ const Book_Now = () => {
         ? prevGames.filter((item) => item !== game)
         : [...prevGames, game]
     );
+    // setFormData((prevState) => ({
+    //   ...prevState,
+    //   ["activityPreference"]: prevState.activityPreference.includes(game) ? prevState.activityPreference.filter((item) => item !== game) : [...prevState.activityPreference, game]
+    // }))
+    setIsDisabled(validateForm(formData));
+    setRefresh(prevState => !prevState);
   };
 
   const handleChangeInput = (e) => {
@@ -112,8 +125,10 @@ const Book_Now = () => {
     }
 
     setAmount1(formData.amount);
-    setIsDisabled(updatedFormData.totalMembers > 40);
+    // setIsDisabled(updatedFormData.totalMembers > 40);
+    setIsDisabled(validateForm(updatedFormData));
     setFormData(updatedFormData);
+    setRefresh(prevState => !prevState);
   };
 
   const handleDecrease = (field) => {
@@ -121,6 +136,8 @@ const Book_Now = () => {
       ...prevData,
       [field]: Math.max(0, prevData[field] - 1),
     }));
+    setIsDisabled(validateForm(formData));
+    setRefresh(prevState => !prevState);
   };
 
   const handleIncrease = (field) => {
@@ -128,6 +145,8 @@ const Book_Now = () => {
       ...prevData,
       [field]: prevData[field] + 1,
     }));
+    setIsDisabled(validateForm(formData));
+    setRefresh(prevState => !prevState);
   };
 
   const handleAddtoCart = async () => {
@@ -175,8 +194,10 @@ const Book_Now = () => {
   const handleSubmitAndProceed = async () => {
     let modifiedFormData = {
       ...formData,
+      ["totalMembers"]: formData.children + formData.seniorCitizen + formData.adults,
       activityPreference: selectedGames,
     };
+    console.log("modifiedFormData", modifiedFormData);
 
     if (validateForm(modifiedFormData) && modifiedFormData.totalMembers <= 40) {
       try {
@@ -209,8 +230,9 @@ const Book_Now = () => {
         toast.error("Booking details submission failed.");
       }
     } else {
-      toast.error("Please fill the required data or ensure total members are <= 40.");
+      toast.error("Please fill the required data.");
     }
+
   };
 
   const handlePaymentSuccess = (response) => {
@@ -224,11 +246,14 @@ const Book_Now = () => {
 
   const validateForm = (formData) => {
     let errors = {};
-    if (!formData.totalMembers) errors.totalMembers = "Please provide number of members";
+    console.log("formData", formData.activityPreference, selectedGames);
+    if (formData.totalMembers > 0 && formData.totalMembers <= 40 ) errors.totalMembers = "Please provide number of members between 0 and 40";
     if (!formData.bookingDate) errors.date = "Please provide date.";
     if (!formData.startTime) errors.startTime = "Please provide Start time.";
     if (!formData.durationInHours) errors.durationInHours = "Please provide duration.";
-    return Object.keys(errors).length === 0;
+    if(formData.activityPreference.length < 1 || selectedGames.length < 1) errors.activityPreference = "Please select an activity.";
+    console.log(errors);
+    return Object.keys(errors).length === 0 ? false : true;
   };
 
   return (
