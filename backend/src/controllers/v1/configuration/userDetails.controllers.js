@@ -929,16 +929,18 @@ let fetchInitialData = async (req, res) => {
 
 let viewBookings = async (req, res) => {
   try {
+    console.log("view bookings");
     let userId = req.user?.userId || 1;
     let fromDate = req.body.fromDate
       ? new Date(req.body.fromDate)
       : null || null;
     let toDate = req.body.toDate ? new Date(req.body.toDate) : null || null;
-    let bookingStatus = req.body.bookingStatus || null;
-    let facilityTypeId = req.body.facilityType || null; //EVENTS-6   EVENT_HOST_REQUEST-7   PARKS -1  PLAYGROUNDS-2  MULTIPURPOSE_GROUND-3
+    let bookingStatus = req.body.bookingStatus.length > 0 ? req.body.bookingStatus.join(',') : null;
+    let facilityTypeId = req.body.facilityType.length > 0 ? req.body.facilityType.join(',') : null; //EVENTS-6   EVENT_HOST_REQUEST-7   PARKS -1  PLAYGROUNDS-2  MULTIPURPOSE_GROUND-3
     let sortingOrder = req.body.sortingOrder || "desc"; // asc or desc
     let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS  UPCOMING  HISTORY
 
+    console.log("req body params", {userId, facilityTypeId, sortingOrder, tabName, bookingStatus});
 
     // search query for facility bookings
     let searchQuery = `select 
@@ -951,8 +953,8 @@ let viewBookings = async (req, res) => {
     where fb.createdBy = ${userId}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (${bookingStatus} IS NULL OR s.statusId = ${bookingStatus})
-    OR (${facilityTypeId} IS NULL OR f2.facilityTypeId = ${facilityTypeId})
+    OR (s.statusId IN (${bookingStatus}))
+    OR (f2.facilityTypeId IN (${facilityTypeId}))
     order by fb.createdOn ${sortingOrder}`;
 
 
@@ -962,18 +964,21 @@ let viewBookings = async (req, res) => {
       fb.bookingDate, s.statusCode, 'EVENTS' as type, '6' as typeId, fb.createdOn as createdDate
     from amabhoomi.eventbookings fb
     inner join amabhoomi.eventactivities f on f.eventId = fb.eventId
+    inner join amabhoomi.facilities f2 on f.facilityId = f2.facilityId
     inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
     where fb.createdBy = ${userId}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (${bookingStatus} IS NULL OR s.statusId = ${bookingStatus})
-    OR (${facilityTypeId} IS NULL OR f2.facilityTypeId = ${facilityTypeId})
+    OR (s.statusId IN (${bookingStatus}))
+    OR (f2.facilityTypeId IN (${facilityTypeId}))
     order by fb.createdOn ${sortingOrder}`;
 
     // search query for event host booking
     let searchQueryEventHostRequest = `select 
-      fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategoryId, ecm.eventCategoryName, f2.facilityname, e.locationName as location, e.eventDate, 
-      fb.bookingDate, s.statusCode, fb.bookingDate, 'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdOn as createdDate
+      fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategoryId, 
+      ecm.eventCategoryName, f2.facilityname, e.locationName as location, e.eventDate, 
+      fb.bookingDate, s.statusCode, fb.bookingDate, 
+      'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdOn as createdDate
     from amabhoomi.hostbookings fb
     inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
     inner join amabhoomi.eventactivities e on e.eventId = f.eventId
@@ -983,37 +988,59 @@ let viewBookings = async (req, res) => {
     where fb.createdBy = ${userId}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (${bookingStatus} IS NULL OR s.statusId = ${bookingStatus})
-    OR (${facilityTypeId} IS NULL OR f2.facilityTypeId = ${facilityTypeId})
+    OR (s.statusId IN (${bookingStatus}))
+    OR (f2.facilityTypeId IN (${facilityTypeId}))
     order by fb.createdOn ${sortingOrder}`;
 
     if (tabName == "ALL_BOOKINGS") {
-      console.log(1)
+      console.log(11)
       let searchQueryResult = await sequelize.query(searchQuery, {
         type: Sequelize.QueryTypes.SELECT,
       });
-      console.log("searchQueryResult", searchQueryResult);
+      // console.log("searchQueryResult", searchQueryResult);
 
-      console.log(2)
+      console.log(22, searchQueryResult.length);
       let searchEventQueryResult = await sequelize.query(searchQueryEvents, {
         type: Sequelize.QueryTypes.SELECT,
       });
 
-      console.log(3)
+      console.log(33, searchEventQueryResult.length)
       let searchEventHostQueryResult = await sequelize.query(searchQueryEventHostRequest, {
         type: Sequelize.QueryTypes.SELECT,
       });
 
-      let modifiedResultArray = [
-        ...searchQueryResult,
-        ...searchEventQueryResult,
-        ...searchEventHostQueryResult
-      ];
+      console.log(44, searchEventHostQueryResult.length)
+      let modifiedResultArray = [];
+
+      if(facilityTypeId) {  // if facility type is selected, then show data as per facility type
+        facilityTypeId = facilityTypeId.split(',');
+        console.log("facilityTypeId", facilityTypeId);
+        if(facilityTypeId.includes('6')) {  // event type filter selected
+          console.log(51)
+          modifiedResultArray = [...modifiedResultArray, ...searchEventQueryResult];
+        }
+        if(facilityTypeId.includes('7')) {  // event host type filter selected
+          console.log(52)
+          modifiedResultArray = [...modifiedResultArray, ...searchEventHostQueryResult];
+        }
+        if(facilityTypeId.includes('1') || facilityTypeId.includes('2') || facilityTypeId.includes('3')) {  // parks, playgrounds, mp grounds filter type selected
+          console.log(53)
+          modifiedResultArray = [...modifiedResultArray, ...searchQueryResult];
+        }
+      }
+      else {  // if facility type not selected, then show all data
+        modifiedResultArray = [
+          ...searchQueryResult,
+          ...searchEventQueryResult,
+          ...searchEventHostQueryResult
+        ];
+      }
+      
       modifiedResultArray = modifiedResultArray.sort((a, b) => {
         return new Date(b.bookingDate) - new Date(a.bookingDate);
       });
 
-      console.log("searchEventQueryResult", searchEventQueryResult);
+      // console.log("searchEventQueryResult", searchEventQueryResult);
 
       if (searchQueryResult.length == 0 && searchEventQueryResult.length == 0 && searchEventHostQueryResult.length == 0) {
         res.status(statusCode.NOTFOUND.code).json({
@@ -1159,10 +1186,10 @@ let initalFilterDataForBooking = async (req, res) => {
       },
     });
 
-    console.log("search results", {
-      facilityTypeQueryResult,
-      statusCodeMasterQueryResult,
-    });
+    // console.log("search results", {
+    //   facilityTypeQueryResult,
+    //   statusCodeMasterQueryResult,
+    // });
 
     res.status(statusCode.SUCCESS.code).json({
       message: "Initial filter data for Booking Details section",
