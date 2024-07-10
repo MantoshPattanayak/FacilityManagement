@@ -60,7 +60,8 @@ export default function PublicHeader() {
   }
 
   useEffect(() => {
-    GetTotalNumberofCart();
+    if(isUserLoggedIn)
+      GetTotalNumberofCart();
   }, []);
 
   useEffect(() => {
