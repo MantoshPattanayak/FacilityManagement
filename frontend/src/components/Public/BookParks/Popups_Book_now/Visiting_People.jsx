@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import './Visiting_People.css';
-import { decryptData } from '../../../../utils/encryptData';
-import Activity_Preference_popup from './Activity_Preference_popup';
-import { encryptData } from '../../../../utils/encryptData';
+import "./Visiting_People.css";
+import { decryptData } from "../../../../utils/encryptData";
+import Activity_Preference_popup from "./Activity_Preference_popup";
+import { encryptData } from "../../../../utils/encryptData";
 const Visiting_People = ({ closePopup, facilityId }) => {
-
   const [formData, setFormData] = useState({
     totalMembers: 0,
     children: 0,
@@ -27,7 +26,7 @@ const Visiting_People = ({ closePopup, facilityId }) => {
     priceBook: 0,
   });
 
-  console.log("facility id is here", formData.facilityId)
+  console.log("facility id is here", formData.facilityId);
 
   const [showPeople, setShowPeople] = useState(false);
 
@@ -78,45 +77,44 @@ const Visiting_People = ({ closePopup, facilityId }) => {
   };
 
   return (
-    <div className='VisitingPeople fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-
-    <div className='popup-overlay'>
-      <div className="popup-content">
-        <div className="popup-header">
-          <button className="icon-close" onClick={closePopup}>
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-        </div>
-        <div className="popup-body">
-          <h2 className="popup-title">IG PARK</h2>
-          <div className="member-details">
-            <div className="member-row">
-              <label htmlFor="children">Children (0-12):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("children")}
-                  disabled={formData.children <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="children"
-                  name="children"
-                  value={formData.children}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("children")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+      <div className="popup-overlay">
+        <div className="popup-content">
+          <div className="popup-header">
+            <button className="icon-close" onClick={closePopup}>
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+          <div className="popup-body">
+            <h2 className="popup-title">IG PARK</h2>
+            <div className="member-details">
+              <div className="member-row">
+                <label htmlFor="children">Children (0-12):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("children")}
+                    disabled={formData.children <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="children"
+                    name="children"
+                    value={formData.children}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("children")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
               </div>
-            </div>
 
               <div className="member-row">
                 <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
@@ -176,8 +174,12 @@ const Visiting_People = ({ closePopup, facilityId }) => {
             </div>
 
             <div className="popup-footer">
-              <button className="cancel-button" onClick={closePopup}>Cancel</button>
-              <button className="next-button" onClick={handleNext}>Next</button>
+              <button className="cancel-button" onClick={closePopup}>
+                Cancel
+              </button>
+              <button className="next-button" onClick={handleNext}>
+                Next
+              </button>
             </div>
           </div>
         </div>
