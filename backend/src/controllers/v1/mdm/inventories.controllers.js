@@ -2,22 +2,23 @@ const db = require("../../../models");
 const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
-let serviceMaster = db.services;
+let inventoryMaster = db.inventorymaster;
 let statusmaster = db.statusmaster;
 const { Op, where } = require('sequelize');
 
-let viewServicesList = async (req, res) => {
+let viewInventoryList = async (req, res) => {
     try {
         let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
         console.log("givenReq", givenReq);
 
-        let fetchServicesQuery = `
-            SELECT s.serviceId, s.code, s.description, s.statusId, s2.description as status, s.createdOn from amabhoomi.services s
-            INNER JOIN amabhoomi.statusmasters s2 on s.statusId = s2.statusId and s2.parentStatusCode = 'RECORD_STATUS'
+        let fetchInventoriesQuery = `
+            SELECT i.equipmentId, i.code, i.description, i.statusId, s2.description as status, i.createdOn 
+            from amabhoomi.inventorymasters i
+            INNER JOIN amabhoomi.statusmasters s2 on i.statusId = s2.statusId and s2.parentStatusCode = 'RECORD_STATUS'
         `;
-        let fetchServicesList = await sequelize.query(fetchServicesQuery);
-        let matchedData = fetchServicesList[0];
-        // console.log(fetchServicesList[0]);
+        let fetchInventoriesList = await sequelize.query(fetchInventoriesQuery);
+        let matchedData = fetchInventoriesList[0];
+        // console.log(fetchInventoriesList[0]);
 
         if(givenReq) {
             console.log(2)
@@ -32,12 +33,12 @@ let viewServicesList = async (req, res) => {
 
         matchedData.length > 0 ?
             res.status(statusCode.SUCCESS.code).json({
-                message: "services list",
+                message: "Inventories list",
                 data: matchedData.sort((a, b) => { return new Date(b.createdOn) - new Date(a.createdOn) })
             })
         :
             res.status(statusCode.NOTFOUND.code).json({
-                message: "no services found",
+                message: "no Inventories found",
                 data: []
             })
     }
@@ -48,12 +49,12 @@ let viewServicesList = async (req, res) => {
     }
 }
 
-let createService = async (req, res) => {
+let createInventory = async (req, res) => {
     try {
         let { code, description } = req.body;
         let userId = req.user.userId;
 
-        let checkExistingData = await serviceMaster.findAll({
+        let checkExistingData = await inventoryMaster.findAll({
             where: {
                 [Op.or]: [
                     { code: code }, { description: description }
@@ -63,24 +64,22 @@ let createService = async (req, res) => {
 
         if(checkExistingData.length > 0) {
             return res.status(statusCode.CONFLICT.code).json({
-                message: "Same service details data already exist! Kindly try again."
+                message: "Same inventory details data already exist! Kindly try again."
             })
         }
 
-        // create new service details with active status
-        let createNewService = await serviceMaster.create({
+        // create new inventory details with active status
+        let createNewInventory = await inventoryMaster.create({
             code: code,
             description: description,
             statusId: 1,
             createdBy: userId
         });
 
-        
-
-        console.log('new service', createNewService);
+        console.log('new service', createNewInventory);
         res.status(statusCode.SUCCESS.code).json({
-            message: "New service details added!",
-            data: createNewService
+            message: "New inventory details added!",
+            data: createNewInventory
         });
     }
     catch(error) {
@@ -90,14 +89,14 @@ let createService = async (req, res) => {
     }
 }
 
-let viewServiceById = async (req, res) => {
+let viewInventoryById = async (req, res) => {
     try {
-        let serviceId = req.params.serviceId;
-        console.log('serviceId', serviceId);
+        let equipmentId = req.params.equipmentId;
+        console.log('equipmentId', equipmentId);
 
-        let fetchServiceDetailsById = await serviceMaster.findOne({
+        let fetchInventoryDetailsById = await inventoryMaster.findOne({
             where: {
-                serviceId: serviceId
+                equipmentId: equipmentId
             }
         });
 
@@ -107,10 +106,43 @@ let viewServiceById = async (req, res) => {
         //     }
         // });
 
-        console.log('fetchServiceDetailsById', fetchServiceDetailsById.dataValues);
+        console.log('fetchServiceDetailsById', fetchInventoryDetailsById.dataValues);
+
+        if(fetchInventoryDetailsById.dataValues) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: "Inventory details",
+                data: fetchInventoryDetailsById
+            })
+        }
+        else{
+            res.status(statusCode.NOTFOUND.code).json({
+                message: "Inventory details not found!",
+                data: []
+            })
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error
+        })
+    }
+}
+
+let updateInventory = async (req, res) => {
+    try {
+        let { code, description, equipmentId, statusId } = req.body;
+        let paramsForUpdate = new Array();
+        let userId = req.user.userId;
+
+        //fetch previously saved details
+        let fetchServiceDetailsById = await inventoryMaster.findOne({
+            where: {
+                equipmentId: equipmentId
+            }
+        });
 
         // check if entered data already exists
-        let fetchExistingData = await serviceMaster.findAll({
+        let fetchExistingData = await inventoryMaster.findAll({
             where: {
                 [Op.or]: [{ code: code }, { description: description }]
             }
@@ -121,39 +153,6 @@ let viewServiceById = async (req, res) => {
                 message: 'Entered data already exists.'
             })
         }
-
-        if(fetchServiceDetailsById.dataValues) {
-            res.status(statusCode.SUCCESS.code).json({
-                message: "Service details",
-                data: fetchServiceDetailsById
-            })
-        }
-        else{
-            res.status(statusCode.NOTFOUND.code).json({
-                message: "Service details not found!",
-                data: []
-            })
-        }
-    }
-    catch(error) {
-        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message: error
-        })
-    }
-}
-
-let updateService = async (req, res) => {
-    try {
-        let { code, description, serviceId, statusId } = req.body;
-        let paramsForUpdate = new Array();
-        let userId = req.user.userId;
-
-        //fetch previously saved details
-        let fetchServiceDetailsById = await serviceMaster.findOne({
-            where: {
-                serviceId: serviceId
-            }
-        });
 
         console.log("fetchServiceDetailsById", fetchServiceDetailsById);
 
@@ -176,11 +175,11 @@ let updateService = async (req, res) => {
         paramsForUpdate.updatedOn = new Date();
         console.log('params', paramsForUpdate);
 
-        let [updateServiceCount] = await serviceMaster.update(
+        let [updateServiceCount] = await inventoryMaster.update(
             paramsForUpdate,
             {
                 where: {
-                    serviceId: serviceId
+                    equipmentId: equipmentId
                 }
             }
         );
@@ -204,8 +203,8 @@ let updateService = async (req, res) => {
 }
 
 module.exports = {
-    viewServicesList,
-    createService,
-    viewServiceById,
-    updateService
+    viewInventoryList,
+    createInventory,
+    viewInventoryById,
+    updateInventory
 }
