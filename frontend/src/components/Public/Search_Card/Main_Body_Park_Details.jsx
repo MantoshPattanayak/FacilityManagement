@@ -17,7 +17,7 @@ import greenway from "../../../assets/Greenway.png"
 import blueway from "../../../assets/blueways.png"
 // Data Not available Icon ---------------------------------------------------------------
 import No_Data_icon from "../../../assets/No_Data.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 // Import here to encrptData ------------------------------------------
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
@@ -275,6 +275,21 @@ const Main_Body_Park_Details = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  //When Click on outside filter it will close............................................
+
+  const filterRef = useRef(null); // Ref for the filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   //Return here------------------------------------------------------------------------------------------------------------
   return (
@@ -375,7 +390,7 @@ const Main_Body_Park_Details = () => {
               <div className="text-filter">Filters</div>
             </div>
             {isFilterOpen && (
-              <div className="filter-dropdown grid grid-cols-3 gap-x-3">
+              <div className="filter-dropdown grid grid-cols-3 gap-x-3" ref={filterRef} style={{width:"max-content"}}>
                 <div className="col-span-1">
                   <b>Activities</b>
                   {
@@ -525,13 +540,13 @@ const Main_Body_Park_Details = () => {
                   {/* <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" /> */}
                   <img
                     className="Card_img"
-                    src={item.url ? instance().baseURL + '/static/' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image)}
+                    src={item.url ? instance().baseURL + '/static' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image)}
                     alt="Park"
                     onError={(e) => {
                       // Fallback to a default image if the provided URL fails
                       e.target.onerror = null; // Prevents looping
                       e.target.src = item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image;
-                      console.log('Image Source:', item.url ? instance().baseURL + '/static/' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image));
+                      console.log('Image Source: ', item.url,item.url ? instance().baseURL + '/static' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image));
                     }}
                     
                   />

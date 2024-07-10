@@ -1,6 +1,6 @@
 import React from "react";
 import "../UserProfile/BookingDetails.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import eventPhoto from "../../../assets/ama_bhoomi_bg.jpg";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -268,6 +268,23 @@ const BookingDetails = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
+
+  //When Click on outside filter it will close............................................
+
+  const filterRef = useRef(null); // Ref for the filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div>
       <PublicHeader />
@@ -370,8 +387,12 @@ const BookingDetails = () => {
                   <div className="text-filter">Filters</div>
                 </div>
                 {isFilterOpen && (
-                  <div className="filter-dropdown grid grid-cols-3 gap-x-3 max-w-max	text-xs">
-                    <div className="col-span-1">
+                  <div
+                    className="filter-dropdown grid grid-cols-3 gap-x-3 max-w-max	text-xs w-content"
+                    ref={filterRef}
+                    style={{ width: "max-content" }}
+                  >
+                    <div className="col-span-1 max-w-max mx-auto">
                       <b>Facility Type</b>
                       {filters?.facilityType?.length > 0 &&
                         filters.facilityType.map((facility, index) => {
@@ -465,7 +486,7 @@ const BookingDetails = () => {
                         })}
                     </div>
 
-                    <div className="filter-group">
+                    <div className="filter-group flex justify-start flex-col items-baseline h-max-content">
                       <b>Sort by Booking Date</b>
                       <div className="bookingDetailsSorting">
                         <input
