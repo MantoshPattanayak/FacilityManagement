@@ -392,6 +392,76 @@ const initialDataFetch = async (req,res)=>{
 }
 
 
+const getFacilityWrtId = async(req,res)=>{
+  try {
+    let{facilityId,facilityTypeId} = req.body
+    let statusId = 1
+    let findTheFacilityDetils = await facilities.findOne({
+      where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]}
+    })
+    let findAmenityDetails = await sequelize.query(`select am.amenityName,fa.amenityFacilityId from amabhoomi.amenitymasters am inner join facilityamenities fa on fa.amenityId = am.amenityId where fa.facilityId = ? and fa.statusId=?`,
+      
+     { replacements:[facilityId,statusId],
+      type:QueryTypes.SELECT}
+    )
+
+    let findServiceDetails = await sequelize.query(` select s.code, sf.serviceId from services s  inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.facilityId = ? and sf.statusId=?`,
+      
+      { replacements:[facilityId,statusId],
+       type:QueryTypes.SELECT}
+     )
+   
+     let findActivityDetails = await sequelize.query(`select fa.id , um.userActivityName  from amabhoomi.facilityactivities fa inner join useractivitymasters um on fa.activityId = um.userActivityId where fa.facilityId = ? and fa.statusId= ? and fa.facilityTypeId = ?`,
+      
+      { replacements:[facilityId,statusId,facilityTypeId],
+       type:QueryTypes.SELECT}
+     )
+
+     let findEventDetails = await sequelize.query(`select em.eventCategoryName, fe.facilityEventId  from amabhoomi.facilityevents fe inner join eventcategorymasters em on em.eventCategoryId = fe.eventCategoryId where  fe.facilityId = ? and fe.statusId = ? `,
+      
+      { replacements:[facilityId,statusId],
+       type:QueryTypes.SELECT}
+     )
+     
+     let findMultipleImages = await sequelize.query(`select f.* from amabhoomi.files f  inner join fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = 'multipleFacilityImage' and fa.entityType = 'facilities'  and fa.statusId= ?`,
+      
+      { replacements:[facilityId,statusId],
+       type:QueryTypes.SELECT}
+     )
+
+     let findSingleImage = await sequelize.query(`select f.* from amabhoomi.files f  inner join fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = 'singleFacilityImage'and fa.entityType = 'facilities'  and fa.statusId= ?`,
+      { replacements:[facilityId,statusId],
+       type:QueryTypes.SELECT}
+     )
+
+     let findOwnerDetails = await sequelize.query(`select o.* from amabhoomi.ownershipdetails o inner join facilities f on f.ownershipDetailId = o.ownershipDetailId where f.facilityId= ? and o.statusId = ?
+`,
+      { replacements:[facilityId,statusId],
+       type:QueryTypes.SELECT}
+     )
+     let findInventoryDetails = await sequelize.query(`select i.equipmentfacilityId , i2.code  from amabhoomi.inventoryfacilities i inner join inventorymasters i2 on i.equipmentId = i2.equipmentId where i.facilityId = ? and i.statusId = ?
+
+      `,
+            { replacements:[facilityId,statusId],
+             type:QueryTypes.SELECT}
+           )
+    return res.status(statusCode.SUCCESS.code).json({message:"These are all get facility with respect to Id",
+      facilityData:findTheFacilityDetils,
+      amenity:findAmenityDetails,
+      service:findServiceDetails,
+      eventCategory:findEventDetails,
+      facilityImageOne:findSingleImage,
+      facilityArrayOfImages:findMultipleImages,
+      parkInventory:findInventoryDetails,
+      game:findActivityDetails,
+      ownersAddress:findOwnerDetails
+    })
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
 const updateFacility = async(req,res)=>{
 
 }
@@ -400,5 +470,6 @@ const updateFacility = async(req,res)=>{
 
 module.exports= {
     registerFacility,
-    initialDataFetch
+    initialDataFetch,
+    getFacilityWrtId
 }

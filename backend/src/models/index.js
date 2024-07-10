@@ -153,6 +153,37 @@ db1.facilityactivities.belongsTo(db1.useractivitymasters,{foreignKey: 'activityI
 db1.tariffmaster.hasMany(db1.facilitytariff,{foreignKey:'tariffMasterId'});
 db1.facilitytariff.belongsTo(db1.tariffmaster,{foreignKey:'tariffMasterId'})
 
+// for facilityRegistration details fetch
+
+db1.facilities.hasMany(db1.amenityfacilities,{foreignKey:'facilityId'});
+db1.amenityfacilities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
+
+
+db1.facilities.hasMany(db1.facilityEvents,{foreignKey:'facilityId'});
+db1.facilityEvents.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
+
+db1.facilities.hasMany(db1.servicefacilities,{foreignKey:'facilityId'});
+db1.servicefacilities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
+db1.facilities.hasMany(db1.inventoryfacilities,{foreignKey:'facilityId'});
+db1.inventoryfacilities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
+db1.ownershipDetails.hasMany(db1.facilities,{foreignKey:'ownershipDetailId'});
+db1.facilities.belongsTo(db1.ownershipDetails,{foreignKey:'ownershipDetailId'})
+
+
+// db1.facilities.hasMany(db1.fileattachment,{foreignKey:'entityId',
+//   targetKey:'facilityId'
+// })
+// db1.fileattachment.hasMany(db1.facilities,{foreignKey:'entityId',
+//   sourceKey:'facilityId'
+// })
+
+
+db1.inventorymaster.hasMany(db1.inventoryfacilities,{foreignKey:'equipmentId'})
+db1.inventoryfacilities.hasMany(db1.inventorymaster,{foreignKey:'equipmentId'})
 
 // join operations end
 
