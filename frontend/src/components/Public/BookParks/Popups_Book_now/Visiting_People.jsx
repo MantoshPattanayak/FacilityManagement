@@ -78,45 +78,44 @@ const Visiting_People = ({ closePopup, facilityId }) => {
   };
 
   return (
-    <div className='VisitingPeople fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-
-    <div className='popup-overlay'>
-      <div className="popup-content">
-        <div className="popup-header">
-          <button className="icon-close" onClick={closePopup}>
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-        </div>
-        <div className="popup-body">
-          <h2 className="popup-title">IG PARK</h2>
-          <div className="member-details">
-            <div className="member-row">
-              <label htmlFor="children">Children (0-12):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("children")}
-                  disabled={formData.children <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="children"
-                  name="children"
-                  value={formData.children}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("children")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+    <div className='fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
+      <div className='popup-overlay'>
+        <div className="popup-content">
+          <div className="popup-header">
+            <button className="icon-close" onClick={closePopup}>
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+          <div className="popup-body">
+            <h2 className="popup-title">IG PARK</h2>
+            <div className="member-details">
+              <div className="member-row">
+                <label htmlFor="children">Children (0-12):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("children")}
+                    disabled={formData.children <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="children"
+                    name="children"
+                    value={formData.children}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("children")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
               </div>
-            </div>
 
               <div className="member-row">
                 <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
