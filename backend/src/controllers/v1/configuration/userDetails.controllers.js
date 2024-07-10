@@ -941,7 +941,7 @@ let viewBookings = async (req, res) => {
     let tabName = req.body.tabName || "ALL_BOOKINGS"; //ALL_BOOKINGS  UPCOMING  HISTORY
 
     console.log("req body params", {userId, facilityTypeId, sortingOrder, tabName, bookingStatus});
-
+    let upcomingWhereCondition = '';
     // search query for facility bookings
     let searchQuery = `select 
       fb.facilityBookingId as bookingId, f.facilityId as Id, f2.facilityTypeId as typeId, f.facilityname as name, f2.description as type, f.address as location, fb.startDate,
@@ -951,10 +951,11 @@ let viewBookings = async (req, res) => {
     inner join amabhoomi.facilitytypes f2 on f.facilityTypeId = f2.facilitytypeId
     inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
     where fb.createdBy = ${userId}
+    ${upcomingWhereCondition}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (s.statusId IN (${bookingStatus}))
-    OR (f2.facilityTypeId IN (${facilityTypeId}))
+    OR (s.statusId IN ${bookingStatus})
+    OR (f2.facilityTypeId IN ${facilityTypeId})
     order by fb.createdOn ${sortingOrder}`;
 
 
@@ -967,10 +968,11 @@ let viewBookings = async (req, res) => {
     inner join amabhoomi.facilities f2 on f.facilityId = f2.facilityId
     inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
     where fb.createdBy = ${userId}
+    ${upcomingWhereCondition}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (s.statusId IN (${bookingStatus}))
-    OR (f2.facilityTypeId IN (${facilityTypeId}))
+    OR (s.statusId IN ${bookingStatus})
+    OR (f2.facilityTypeId IN ${facilityTypeId})
     order by fb.createdOn ${sortingOrder}`;
 
     // search query for event host booking
@@ -986,10 +988,11 @@ let viewBookings = async (req, res) => {
     inner join amabhoomi.statusmasters s on s.statusId = fb.statusId
     inner join amabhoomi.eventcategorymasters ecm on ecm.eventCategoryId = e.eventCategoryId
     where fb.createdBy = ${userId}
+    ${upcomingWhereCondition}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (s.statusId IN (${bookingStatus}))
-    OR (f2.facilityTypeId IN (${facilityTypeId}))
+    OR (s.statusId IN ${bookingStatus})
+    OR (f2.facilityTypeId IN ${facilityTypeId})
     order by fb.createdOn ${sortingOrder}`;
 
     if (tabName == "ALL_BOOKINGS") {
@@ -1056,6 +1059,7 @@ let viewBookings = async (req, res) => {
       }
     }
     else if (tabName == "UPCOMING") {
+      upcomingWhereCondition = "and CONCAT(fb.bookingDate , ' ', fb.startDate) > CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM')";
       let searchQueryResult = await sequelize.query(searchQuery, {
         type: Sequelize.QueryTypes.SELECT,
       });
@@ -1069,11 +1073,30 @@ let viewBookings = async (req, res) => {
         type: Sequelize.QueryTypes.SELECT,
       });
 
-      let modifiedResultArray = [
-        ...searchQueryResult,
-        ...searchEventQueryResult,
-        ...searchEventHostQueryResult
-      ];
+      if(facilityTypeId) {  // if facility type is selected, then show data as per facility type
+        facilityTypeId = facilityTypeId.split(',');
+        console.log("facilityTypeId", facilityTypeId);
+        if(facilityTypeId.includes('6')) {  // event type filter selected
+          console.log(51)
+          modifiedResultArray = [...modifiedResultArray, ...searchEventQueryResult];
+        }
+        if(facilityTypeId.includes('7')) {  // event host type filter selected
+          console.log(52)
+          modifiedResultArray = [...modifiedResultArray, ...searchEventHostQueryResult];
+        }
+        if(facilityTypeId.includes('1') || facilityTypeId.includes('2') || facilityTypeId.includes('3')) {  // parks, playgrounds, mp grounds filter type selected
+          console.log(53)
+          modifiedResultArray = [...modifiedResultArray, ...searchQueryResult];
+        }
+      }
+      else {  // if facility type not selected, then show all data
+        modifiedResultArray = [
+          ...searchQueryResult,
+          ...searchEventQueryResult,
+          ...searchEventHostQueryResult
+        ];
+      }
+
       modifiedResultArray = modifiedResultArray.sort((a, b) => {
         return new Date(b.bookingDate) - new Date(a.bookingDate);
       });
@@ -1094,79 +1117,63 @@ let viewBookings = async (req, res) => {
       }
     } 
     else if (tabName == "HISTORY") {
-      let searchQueryResult = await sequelize.query(
-        searchQueryEventHostRequest,
-        {
-          replacements: [userId],
-          type: Sequelize.QueryTypes.SELECT,
-        }
-      );
+      upcomingWhereCondition = "and CONCAT(fb.bookingDate , ' ', fb.startDate) < CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM')";
+      let searchQueryResult = await sequelize.query(searchQuery, {
+        type: Sequelize.QueryTypes.SELECT,
+      });
+      console.log("searchQueryResult", searchQueryResult);
 
-      if (searchQueryResult.length == 0) {
+      let searchEventQueryResult = await sequelize.query(searchQueryEvents, {
+        type: Sequelize.QueryTypes.SELECT,
+      });
+
+      let searchEventHostQueryResult = await sequelize.query(searchQueryEventHostRequest, {
+        type: Sequelize.QueryTypes.SELECT,
+      });
+
+      if(facilityTypeId) {  // if facility type is selected, then show data as per facility type
+        facilityTypeId = facilityTypeId.split(',');
+        console.log("facilityTypeId", facilityTypeId);
+        if(facilityTypeId.includes('6')) {  // event type filter selected
+          console.log(51)
+          modifiedResultArray = [...modifiedResultArray, ...searchEventQueryResult];
+        }
+        if(facilityTypeId.includes('7')) {  // event host type filter selected
+          console.log(52)
+          modifiedResultArray = [...modifiedResultArray, ...searchEventHostQueryResult];
+        }
+        if(facilityTypeId.includes('1') || facilityTypeId.includes('2') || facilityTypeId.includes('3')) {  // parks, playgrounds, mp grounds filter type selected
+          console.log(53)
+          modifiedResultArray = [...modifiedResultArray, ...searchQueryResult];
+        }
+      }
+      else {  // if facility type not selected, then show all data
+        modifiedResultArray = [
+          ...searchQueryResult,
+          ...searchEventQueryResult,
+          ...searchEventHostQueryResult
+        ];
+      }
+      
+      modifiedResultArray = modifiedResultArray.sort((a, b) => {
+        return new Date(b.bookingDate) - new Date(a.bookingDate);
+      });
+
+      console.log("searchEventQueryResult", searchEventQueryResult);
+
+      if (searchQueryResult.length == 0 && searchEventQueryResult.length == 0 && searchEventHostQueryResult.length == 0) {
         res.status(statusCode.NOTFOUND.code).json({
-          message: "No bookings data found for event host requests",
-          eventHostRequests: [],
+          message:
+            "No bookings data found for parks, playgrounds, multi-grounds or event host requests.",
+          data: [],
         });
       } else {
         res.status(statusCode.SUCCESS.code).json({
-          message: "All bookings for event host requests",
-          eventHostRequests: searchQueryResult,
+          message: "All bookings of parks, playgrounds, multi-grounds",
+          data: modifiedResultArray,
         });
       }
-    } else {
-      res.status(statusCode.BAD_REQUEST.code).json({
-        message: "Tab not selected",
-      });
     }
-
-    // if (facilityType != 'EVENTS' && facilityType != 'EVENT_HOST_REQUEST') {
-    //   searchQueryResult = await sequelize.query(
-    //     searchQuery,
-    //     {
-    //       replacements: [userId, fromDate, fromDate, toDate, toDate, bookingStatus, bookingStatus, facilityTypeId, facilityTypeId],
-    //       type: Sequelize.QueryTypes.SELECT
-    //     }
-    //   );
-
-    //   res.status(statusCode.SUCCESS.code).json({
-    //     message: 'Data of all bookings for parks, playgrounds, multipurpose grounds',
-    //     data: searchQueryResult
-    //   })
-    // }
-    // else if (facilityType == 'EVENTS') {
-    //   searchQueryResult = await sequelize.query(
-    //     searchQueryEvents,
-    //     {
-    //       replacements: [userId, fromDate, fromDate, toDate, toDate, bookingStatus, bookingStatus],
-    //       type: Sequelize.QueryTypes.SELECT
-    //     }
-    //   );
-
-    //   res.status(statusCode.SUCCESS.code).json({
-    //     message: 'Data of all bookings for event booking',
-    //     data: searchQueryResult
-    //   })
-    // }
-    // else if (facilityType == 'EVENT_HOST_REQUEST'){
-    //   searchQueryResult = await sequelize.query(
-    //     searchQueryEventHostRequest,
-    //     {
-    //       replacements: [userId, fromDate, fromDate, toDate, toDate, bookingStatus, bookingStatus],
-    //       type: Sequelize.QueryTypes.SELECT
-    //     }
-    //   );
-
-    //   res.status(statusCode.SUCCESS.code).json({
-    //     message: 'Data of all bookings for event host request',
-    //     data: searchQueryResult
-    //   })
-    // }
-    // else {
-    //   res.status(statusCode.BAD_REQUEST.code).json({
-    //     message: 'Please provide filter options.',
-    //     data: []
-    //   })
-    // }
   } catch (error) {
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
