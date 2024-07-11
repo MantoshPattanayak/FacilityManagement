@@ -480,4 +480,7 @@ text-transform: capitalize;
   font-size: 33px;
   color: rgb(199, 0, 0);
 }
-
+.File_Name_View{
+  display: flex;
+  flex-direction: row;
+}
