@@ -22,7 +22,8 @@ let uploadDir = process.env.UPLOAD_DIR
 const eventBooking = db.eventBookings;
 const moment = require('moment');
 const fs = require('fs')
-const path = require('path')
+const path = require('path');
+const checkForCancellation = require("../../../utils/bookingCancellation");
 let eventactivites = db.eventActivities
 let file = db.file;
 let fileAttachment = db.fileattachment
@@ -1249,6 +1250,65 @@ let verifyTheQRCode = async(req,res)=>{
         })
     }
 }
+
+let cancelBooking = async (req, res) => {
+    try {
+        let { bookingId, entityId, entityTypeId } = req.body;
+        let currentDate = new Date();
+
+        // compare entityTypeId and execute cancelBooking function
+        if (entityTypeId == 1 || entityTypeId == 2 || entityTypeId == 3) {  // if entityType is Park, Playground or MP grounds
+            cancelFacilityBooking();
+        }
+        else if(entityTypeId == 6) {    // if entityType is Event
+            cancelEventBooking();
+        }
+        else if(entityTypeId == 7) {    // if entityType is Event Host
+            cancelEventHostBooking();
+        }
+
+        async function cancelFacilityBooking() {
+            let transaction = await sequelize.transaction();
+            try {
+                // fetch booking details
+                let fetchFacilityBookingDetails = await facilitybookings.findOne({
+                    where: {
+                        facilityBookingId: bookingId
+                    },
+                }, {transaction});
+
+                let { bool, amount } = checkForCancellation(currentDate, fetchFacilityBookingDetails.bookingDate);
+                if(bool) {  // if cancellation allowed, proceed with refund process with some refund amount
+                    let [updateBookingDetailsCount] = await facilitybookings.update({
+                        
+                    }, {
+                        where: {
+                            facilityBookingId: bookingId
+                        }
+                    }, { transaction, returning: true });
+                }
+                else {
+                    return res.status(statusCode.SUCCESS.code).json({
+                        message: "Your ticket has been cancelled as per your request. According to the cancellation policy, no refund amount shall be disbursed."
+                    })
+                }
+            }
+            catch(error) {
+                res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                    message: error.message
+                })
+            }
+        }
+        async function cancelEventBooking() {}
+        async function cancelEventHostBooking() {}
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     parkBooking,
     parkBookingFormInitialData,
@@ -1257,5 +1317,6 @@ module.exports = {
     updateCart,
     viewCartItemsWRTCartItemId,
     generateQRCode,
-    verifyTheQRCode
+    verifyTheQRCode,
+    cancelBooking
 }
