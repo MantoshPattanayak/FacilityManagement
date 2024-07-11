@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { faXmark, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./Booking_Schedule.css";
 import Book_Now from "../Book_Now";
-import { encryptData } from "../../../../utils/encryptData";
+import { decryptData, encryptData } from "../../../../utils/encryptData";
 const Booking_Schedule = ({
   closePopup,
   formData,
@@ -20,7 +20,7 @@ const Booking_Schedule = ({
     seniorCitizen,
     adults,
   });
-  // const [showPeople, setShowPeople] = useState(false);
+  const [sendData, setsendData] = useState(false);
   const navigate = useNavigate();
   const [bookingData, setBookingData] = useState({
     bookingDate: formData.bookingDate,
@@ -39,6 +39,8 @@ const Booking_Schedule = ({
     facilityPreference: formData.facilityPreference,
     priceBook: formData.priceBook,
   });
+
+  let facilityId = decryptData(bookingData.facilityId);
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -62,12 +64,28 @@ const Booking_Schedule = ({
     }));
   };
 
+  // function handleBookingData(e) {
+  //   e.preventDefault(); 
+  //   navigate(
+  //     `/BookParks/Book_Now?d=${encodeURIComponent(
+  //       encryptData(JSON.stringify(bookingData))
+  //     )}&facilityId=${encryptData(facilityId)}`
+  //   );   
+  // }
+
   function handleBookingData(e) {
+    // e.preventDefault();
+    // navigate(
+    //   `/BookParks/Book_Now?d=${encodeURIComponent(
+    //     encryptData(JSON.stringify(bookingData))
+    //   )}&facilityId=${encryptData(facilityId)}`
+    // );
     e.preventDefault();
+    const encryptedData = encryptData(JSON.stringify(bookingData));
+    const encryptedFacilityId = encryptData(facilityId);
+    console.log("Encoded data being sent:", { encryptedData, encryptedFacilityId });
     navigate(
-      `/BookParks/Book_Now?d=${encodeURIComponent(
-        encryptData(JSON.stringify(bookingData))
-      )}&facilityId=${encryptData(facilityId)}`
+      `/BookParks/Book_Now?d=${encodeURIComponent(encryptedData)}&facilityId=${encodeURIComponent(encryptedFacilityId)}`
     );
   }
 
@@ -131,9 +149,9 @@ const Booking_Schedule = ({
               Next
             </button>
           </div>
-          {/* {showPeople && (
+          {/* {sendData && (
           <Book_Now
-            closePopup={() => setShowPeople(false)}
+            closePopup={() => setsendData(false)}
             bookingData={bookingData}
           />
         )} */}
