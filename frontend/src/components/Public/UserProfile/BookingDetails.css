@@ -63,7 +63,7 @@ body {
 
 .filter-dropdown label{
     font-size: small;
-    
+    width:max-content;
 }
 .bookingDetailsSorting{
     display: flex;

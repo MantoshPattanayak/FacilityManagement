@@ -558,7 +558,7 @@ const Sub_Park_Details = () => {
 
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
 
-      {showPeople && <Visiting_People />}
+      {showPeople && <Visiting_People facilityId={encryptDataId(FacilitiesData[0]?.facilityId)} />}
 
     </div >
   );
@@ -566,3 +566,5 @@ const Sub_Park_Details = () => {
 
 // Export Sub_Park_details ------------------------
 export default Sub_Park_Details;
+
+

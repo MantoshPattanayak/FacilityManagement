@@ -19,7 +19,8 @@ import { ToastContainer, toast } from "react-toastify";
 import PublicHeader from "../../../common/PublicHeader";
 import RazorpayButton from "../../../common/RazorpayButton";
 
-const Book_Now = () => {
+const Book_Now = ({ bookingData }) => {
+  console.log("here is the bookingData ", bookingData);
   const [selectedGames, setSelectedGames] = useState([]);
   const [FacilitiesData, setFacilitiesData] = useState([]);
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
@@ -29,18 +30,17 @@ const Book_Now = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-
   const [formData, setFormData] = useState({
-    totalMembers: 0,
-    children: 0,
-    seniorCitizen: 0,
-    adults: 0,
+    totalMembers: bookingData.totalMembers,
+    children: bookingData.children,
+    seniorCitizen: bookingData.seniorCitizen,
+    adults: bookingData.adults,
     amount: "10.00",
     activityPreference: [],
-    otherActivities: "",
-    bookingDate: new Date().toISOString().split("T")[0],
-    startTime: new Date().toTimeString().split(" ")[0],
-    durationInHours: 1,
+    otherActivities: bookingData.otherActivities,
+    bookingDate: bookingData.bookingDate,
+    startTime: bookingData.startTime,
+    durationInHours: bookingData.durationInHours,
     facilityId: "",
     entityId: "",
     entityTypeId: "",
@@ -48,7 +48,9 @@ const Book_Now = () => {
     priceBook: 0,
   });
 
-  let facilityId = decryptData(new URLSearchParams(location.search).get("facilityId"));
+  let facilityId = decryptData(
+    new URLSearchParams(location.search).get("facilityId")
+  );
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
@@ -58,10 +60,10 @@ const Book_Now = () => {
 
   useEffect(() => {
     console.log("selectedGames", selectedGames);
-    if(selectedGames.length > 0) {
-      setFormData(prevState => ({
+    if (selectedGames.length > 0) {
+      setFormData((prevState) => ({
         ...prevState,
-        ['activityPreference']: selectedGames
+        ["activityPreference"]: selectedGames,
       }));
     }
     console.log("formData", formData);
@@ -103,7 +105,7 @@ const Book_Now = () => {
     //   ["activityPreference"]: prevState.activityPreference.includes(game) ? prevState.activityPreference.filter((item) => item !== game) : [...prevState.activityPreference, game]
     // }))
     setIsDisabled(validateForm(formData));
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleChangeInput = (e) => {
@@ -130,7 +132,7 @@ const Book_Now = () => {
     // setIsDisabled(updatedFormData.totalMembers > 40);
     setIsDisabled(validateForm(updatedFormData));
     setFormData(updatedFormData);
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleDecrease = (field) => {
@@ -139,7 +141,7 @@ const Book_Now = () => {
       [field]: Math.max(0, prevData[field] - 1),
     }));
     setIsDisabled(validateForm(formData));
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleIncrease = (field) => {
@@ -148,7 +150,7 @@ const Book_Now = () => {
       [field]: prevData[field] + 1,
     }));
     setIsDisabled(validateForm(formData));
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleAddtoCart = async () => {
@@ -196,7 +198,8 @@ const Book_Now = () => {
   const handleSubmitAndProceed = async () => {
     let modifiedFormData = {
       ...formData,
-      ["totalMembers"]: formData.children + formData.seniorCitizen + formData.adults,
+      ["totalMembers"]:
+        formData.children + formData.seniorCitizen + formData.adults,
       activityPreference: selectedGames,
     };
     console.log("modifiedFormData", modifiedFormData);
@@ -234,26 +237,28 @@ const Book_Now = () => {
     } else {
       toast.error("Please fill the required data.");
     }
-
   };
 
   const handlePaymentSuccess = (response) => {
     console.log("Book park payment success", response);
     handleSubmitAndProceed();
-  }
+  };
 
   const handlePaymentFailure = (response) => {
     console.log("Book park payment failure", response);
-  }
+  };
 
   const validateForm = (formData) => {
     let errors = {};
     console.log("formData", formData.activityPreference, selectedGames);
-    if (formData.totalMembers > 0 && formData.totalMembers <= 40 ) errors.totalMembers = "Please provide number of members between 0 and 40";
+    if (formData.totalMembers > 0 && formData.totalMembers <= 40)
+      errors.totalMembers = "Please provide number of members between 0 and 40";
     if (!formData.bookingDate) errors.date = "Please provide date.";
     if (!formData.startTime) errors.startTime = "Please provide Start time.";
-    if (!formData.durationInHours) errors.durationInHours = "Please provide duration.";
-    if(formData.activityPreference.length < 1 || selectedGames.length < 1) errors.activityPreference = "Please select an activity.";
+    if (!formData.durationInHours)
+      errors.durationInHours = "Please provide duration.";
+    if (formData.activityPreference.length < 1 || selectedGames.length < 1)
+      errors.activityPreference = "Please select an activity.";
     console.log(errors);
     return Object.keys(errors).length === 0 ? false : true;
   };
@@ -264,7 +269,10 @@ const Book_Now = () => {
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading_BookNow">
-            <h1> <b>{FacilitiesData?.facilityName || "Park Name"}</b></h1>
+            <h1>
+              {" "}
+              <b>{FacilitiesData?.facilityName || "Park Name"}</b>
+            </h1>
           </div>
 
           <div className="form_BookNow">
@@ -292,7 +300,6 @@ const Book_Now = () => {
                   onClick={() => handleIncrease("children")}
                 >
                   <FontAwesomeIcon icon={faPlus} />
-
                 </button>
               </div>
 
@@ -347,20 +354,20 @@ const Book_Now = () => {
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
               </div>
-
             </div>
 
-{/* Activity preference................................................... */}
+            {/* Activity preference................................................... */}
             <div className="activity-preference">
               <span>Activity Preference</span>
               <div className="games">
                 {activityPreferenceData?.length > 0 &&
                   activityPreferenceData.map((activity) => (
                     <button
-                      className={`game-btn ${selectedGames.includes(activity.userActivityId)
-                        ? "selected"
-                        : ""
-                        }`}
+                      className={`game-btn ${
+                        selectedGames.includes(activity.userActivityId)
+                          ? "selected"
+                          : ""
+                      }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
@@ -379,8 +386,8 @@ const Book_Now = () => {
                 onChange={handleChangeInput}
               />
             </div>
-            
-{/* booking details................................................... */}
+
+            {/* booking details................................................... */}
             <div className="booking-details">
               <label htmlFor="bookingDate">Booking Date:</label>
               <input
@@ -466,7 +473,7 @@ const Book_Now = () => {
         </div>
       </div>
       <ToastContainer />
-     {/* {showPeople && <Visiting_People />} */}
+      {/* {showPeople && <Visiting_People />} */}
     </div>
   );
 };

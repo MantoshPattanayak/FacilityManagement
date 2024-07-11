@@ -90,6 +90,7 @@ const api = {
    // Get Facility Initail Data Admin--------------------
    Get_Facility_Intail_Data:'/adminFacility/initialData', // get Method
    Facility_Reg_Api:'/adminFacility/facilityRegistration', // Post Method
+   Facility_Update_View_By_ID_Api:'/adminFacility/getFacilityWrtId', //Post Method 
    //grievance-feedback for user
    GRIEVANCE_INITIAL_DATA_API: '/grievance/initial-data',  //get
    USER_SUBMIT_GRIEVANCE_API: '/grievance/submit-grievance',   //post   fullname, emailId, phoneNo, subject, details, statusId, filepath, isWhatsappNumber

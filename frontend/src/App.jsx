@@ -88,6 +88,7 @@ import Grievance from "./components/Public/FooterPages/Grievance";
 import Bokking_Bill from "./components/Public/Booking_Bill/Booking_Bill";
 // Faclity Reg----------------
 import Facility_Reg from "./components/Admin/Facility/Facility_Reg";
+import Facility_Edit_View from "./components/Admin/Facility/Facility_Edit_View";
 import AdminHeader from "./common/AdminHeader";
 // import AdminHeader from "./common/AdminHeader";
 import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
@@ -130,6 +131,8 @@ function App() {
               {/* HOME */}
 
               <Route path="/" element={<Landing />} />
+              {/* Facility_Reg and View_edit */}
+              <Route path="/Facility_Edit_View" element={<ProtectedRoute><Facility_Edit_View/></ProtectedRoute>} />
               <Route path="/facility-registration" element={<ProtectedRoute><Facility_Reg /></ProtectedRoute>} />
               <Route path="/facility-viewlist" element={<ProtectedRoute><Facility_ViewList /></ProtectedRoute>} />
               <Route path="/PublicLoader" element={<PublicLoader />} />
