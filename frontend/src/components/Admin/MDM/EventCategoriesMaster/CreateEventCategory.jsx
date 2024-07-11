@@ -12,11 +12,11 @@ import './CreateEventCategory.css';
 export default function CreateEventCategory() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        code: '',
+        eventCategoryName: '',
         description: '',
     });
     const [errors, setErrors] = useState({
-      code: '',
+      eventCategoryName: '',
       description: '',
     });
     const [refresh, setRefresh] = useState(false);
@@ -25,11 +25,26 @@ export default function CreateEventCategory() {
     let validation = (formData) => {
         let error = {};
 
-        if (!formData.code) {
-            error.code = 'Please enter Code.';
+        if (!formData.eventCategoryName) {
+            error.eventCategoryName = 'Please enter Name.';
         }
         if (!formData.description) {
             error.description = 'Please enter Description.';
+        }
+
+        //highlight input fields whose field values are incorrect
+        for(let i = 0; i <= Object.keys(error).length; i++) {
+            const inputElement = document.getElementsByName(Object.keys(error)[i]);
+            inputElement[0] ? inputElement[0].style.border = '2px solid #C84040' : '';
+            // Add focus event listener
+            inputElement[0] ? inputElement[0].addEventListener('focus', () => {
+                inputElement[0].style.border = '2px solid #176BFB'; // Change border color on focus
+            }) : '';
+        
+            // Add blur event listener to reset the border style when focus is lost
+            inputElement[0] ? inputElement[0].addEventListener('blur', () => {
+                inputElement[0].style.border = '2px solid #C84040'; // Reset to original border color
+            }) : '';
         }
         return error;
     }
@@ -37,6 +52,12 @@ export default function CreateEventCategory() {
     // save user input data to formData object on entering values
     let handleChange = (e) => {
         let { name, value } = e.target;
+        // if error in input field, then handle the border color while entering input
+        // const inputElement = document.getElementsByName(name);
+        // let borderStyle = inputElement[0].style.border;
+        // if(borderStyle.includes('rgb(200, 64, 64)')) {
+        //     inputElement[0].style.border = "2px solid #176BFB";
+        // }
         setErrors({});
         setFormData({ ...formData, [name]: value });
         console.log('formData', formData);
@@ -52,7 +73,7 @@ export default function CreateEventCategory() {
         }
 
         try {
-            let res = await axiosHttpClient('CREATE_NEW_SERVICE_API', 'post', formData);
+            let res = await axiosHttpClient('CREATE_NEW_EVENTCATEGORY_API', 'post', formData);
 
             console.log('form submit response', res.data);
             toast.dismiss();
@@ -76,12 +97,12 @@ export default function CreateEventCategory() {
     let clearForm = () => {
       toast.dismiss();
         setFormData({
-          code: '',
+          eventCategoryName: '',
           description: '',
         });
 
         setErrors({
-          code: '',
+          eventCategoryName: '',
           description: '',
         });
         setRefresh(prevState => !prevState);
@@ -97,7 +118,7 @@ export default function CreateEventCategory() {
             <AdminHeader />
             <div className="CreateEventCategoryContainer">
                 <div className="form-heading">
-                    <h2>Add new service</h2>
+                    <h2>Add new event category</h2>
                     <div className="flex flex-col-reverse items-end w-[100%]">
                         <button
                             className='back-button'
@@ -108,12 +129,12 @@ export default function CreateEventCategory() {
                     </div>
                     <div className="grid grid-rows-1 grid-cols-2 gap-x-16 gap-y-2 w-[100%]">
                         <div className="form-group col-span-1">
-                            <label htmlFor="input2">Service Code <span className='text-red-500'>*</span></label>
-                            <input type="text" name='code' value={formData.code} placeholder="Enter Code" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_SHORT} onChange={handleChange} />
-                            {errors.code && <p className='error-message'>{errors.code}</p>}
+                            <label htmlFor="input2">Event Category Name<span className='text-red-500'>*</span></label>
+                            <input type="text" name='eventCategoryName' value={formData.eventCategoryName} placeholder="Enter Name" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_SHORT} onChange={handleChange} />
+                            {errors.eventCategoryName && <p className='error-message'>{errors.eventCategoryName}</p>}
                         </div>
                         <div className="form-group col-span-1">
-                            <label htmlFor="input2">Service Description <span className='text-red-500'>*</span></label>
+                            <label htmlFor="input2">Event Category Description <span className='text-red-500'>*</span></label>
                             <input type='text' name='description' value={formData.description} placeholder="Enter Description" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} />
                             {errors.description && <p className='error-message'>{errors.description}</p>}
                         </div>

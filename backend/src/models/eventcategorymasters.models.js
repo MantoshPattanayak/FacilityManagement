@@ -16,13 +16,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
         },
         createdBy: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
         },
         updatedBy: {
             type: DataTypes.INTEGER
         },
         createdDt: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
         },
         updatedDt: {
             type: DataTypes.DATE
