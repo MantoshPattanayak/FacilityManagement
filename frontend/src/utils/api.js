@@ -129,6 +129,7 @@ const api = {
    VIEW_EVENTCATEGORY_BY_ID_API: '/eventcategories/viewEventCategoryById', //get :eventCategoryId
    UPDATE_EVENTCATEGORY_API: '/eventcategories/updateEventCategory', //put eventCategoryName, description, eventCategoryId, statusId
    // PAYMENT
+   FETCH_RAZORPAY_API_KEY: '/razorPayPayment/getRazorpayApiKeys', //get
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 
 }
