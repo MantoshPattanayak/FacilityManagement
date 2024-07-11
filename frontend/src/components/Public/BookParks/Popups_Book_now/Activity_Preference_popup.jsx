@@ -67,6 +67,7 @@ const Activity_Preference_popup = ({ formData }) => {
     setLocalFormData(updatedFormData);
   };
 
+ 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
       <div className="activity_preference_popup ">
@@ -112,7 +113,8 @@ const Activity_Preference_popup = ({ formData }) => {
         {showPeople && (
           <Booking_Schedule
             closePopup={() => setShowPeople(false)}
-            formData={localFormData}
+            formData={{ ...localFormData, activityPreference: selectedGames }}
+            // formData={localFormData}
             totalMembers={localFormData.totalMembers}
             children={localFormData.children}
             seniorCitizen={localFormData.seniorCitizen}

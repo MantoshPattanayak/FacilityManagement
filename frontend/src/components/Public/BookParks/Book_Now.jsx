@@ -11,6 +11,7 @@ import {
   faPlus,
   faMinus,
   faIndianRupeeSign,
+  faArrowLeftLong
 } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -19,34 +20,55 @@ import { ToastContainer, toast } from "react-toastify";
 import PublicHeader from "../../../common/PublicHeader";
 import RazorpayButton from "../../../common/RazorpayButton";
 
-const Book_Now = ({ bookingData }) => {
-  console.log("here is the bookingData ", bookingData);
+const Book_Now = () => {
+  const location = useLocation();
+  const [bookingData, setBookingData] = useState(null);
   const [selectedGames, setSelectedGames] = useState([]);
   const [FacilitiesData, setFacilitiesData] = useState([]);
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [amount1, setAmount1] = useState([0]);
-
-  const location = useLocation();
+  const [formData, setFormData] = useState({});
+  // const [amount1, setAmount1] = useState([10]);
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    totalMembers: bookingData.totalMembers,
-    children: bookingData.children,
-    seniorCitizen: bookingData.seniorCitizen,
-    adults: bookingData.adults,
-    amount: "10.00",
-    activityPreference: [],
-    otherActivities: bookingData.otherActivities,
-    bookingDate: bookingData.bookingDate,
-    startTime: bookingData.startTime,
-    durationInHours: bookingData.durationInHours,
-    facilityId: "",
-    entityId: "",
-    entityTypeId: "",
-    facilityPreference: "",
-    priceBook: 0,
-  });
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const encryptedData = queryParams.get("d");
+    console.log("Encrypted Data: ", encryptedData);
+    if (encryptedData) {
+      try {
+        const decryptedData = JSON.parse(decryptData(encryptedData));
+        console.log("Decrypted Data: ", decryptedData);
+        setFormData(decryptedData);
+        setSelectedGames(decryptedData.activityPreference); // Set selectedGames initially
+      } catch (error) {
+        console.error("Error decrypting data", error);
+      }
+    }
+  }, [location.search]);
+
+  // useEffect(() => {
+  //   console.log("Booking Data: ", bookingData);
+  // }, [bookingData]);
+
+  // console.log(bookingData.totalMembers);
+  // const [formData, setFormData] = useState({
+  //   totalMembers: bookingData.totalMembers,
+  //   children: bookingData ? bookingData.children : 0,
+  //   seniorCitizen: bookingData ? bookingData.seniorCitizen : 0,
+  //   adults: bookingData ? bookingData.adults : 0,
+  //   amount: "10.00",
+  //   activityPreference: [],
+  //   otherActivities: bookingData ? bookingData.otherActivities : "",
+  //   bookingDate: bookingData ? bookingData.bookingDate : "",
+  //   startTime: bookingData ? bookingData.startTime : "",
+  //   durationInHours: bookingData ? bookingData.durationInHours : 0,
+  //   facilityId: bookingData ? bookingData.facilityId : "",
+  //   entityId: "",
+  //   entityTypeId: "",
+  //   facilityPreference: "",
+  //   priceBook: 0,
+  // });
 
   let facilityId = decryptData(
     new URLSearchParams(location.search).get("facilityId")
@@ -54,19 +76,21 @@ const Book_Now = ({ bookingData }) => {
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    getSub_park_details(facilityId);
+    if (facilityId) {
+      getSub_park_details(facilityId);
+    }
     getParkBookingInitialData();
-  }, []);
+  }, [facilityId]);
 
   useEffect(() => {
-    console.log("selectedGames", selectedGames);
+    console.log("Selected Games: ", selectedGames);
     if (selectedGames.length > 0) {
       setFormData((prevState) => ({
         ...prevState,
         ["activityPreference"]: selectedGames,
       }));
     }
-    console.log("formData", formData);
+    console.log("Form Data: ", formData);
   }, [refresh, selectedGames]);
 
   async function getSub_park_details(facilityId) {
@@ -153,6 +177,8 @@ const Book_Now = ({ bookingData }) => {
     setRefresh((prevState) => !prevState);
   };
 
+  let price = formData.amount * formData.adults;
+
   const handleAddtoCart = async () => {
     let modifiedFormData = {
       ...formData,
@@ -168,7 +194,7 @@ const Book_Now = ({ bookingData }) => {
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
           duration: modifiedFormData.durationInHours,
-          price: amount1 * modifiedFormData.adults,
+          price: formData.a * modifiedFormData.adults,
         };
 
         const requestBody = {
@@ -208,7 +234,7 @@ const Book_Now = ({ bookingData }) => {
       try {
         const facilityPreference = {
           totalMembers: modifiedFormData.totalMembers,
-          amount: amount1 * modifiedFormData.adults,
+          amount: formData.amount * modifiedFormData.adults,
           activityPreference: modifiedFormData.activityPreference,
           otherActivities: modifiedFormData.otherActivities,
           bookingDate: modifiedFormData.bookingDate,
@@ -273,6 +299,15 @@ const Book_Now = ({ bookingData }) => {
               {" "}
               <b>{FacilitiesData?.facilityName || "Park Name"}</b>
             </h1>
+            <Link to={`/Sub_Park_Details?facilityId=${encodeURIComponent(encryptData(formData.facilityId))}`}>
+          <div className="back_button">
+
+            <button className="back_btn">
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </button>
+          </div>
+        </Link>
           </div>
 
           <div className="form_BookNow">
@@ -363,6 +398,7 @@ const Book_Now = ({ bookingData }) => {
                 {activityPreferenceData?.length > 0 &&
                   activityPreferenceData.map((activity) => (
                     <button
+                      key={activity.userActivityId}
                       className={`game-btn ${
                         selectedGames.includes(activity.userActivityId)
                           ? "selected"
@@ -440,7 +476,8 @@ const Book_Now = ({ bookingData }) => {
               <label htmlFor=""> Amount (in rupees) :</label>
               <span className="price-display">
                 <FontAwesomeIcon icon={faIndianRupeeSign} />
-                <b>{amount1 * parseInt(formData.adults)}</b>
+                {/* <b>{amount1 *(formData.adults)}</b> */}
+                <b>{price}</b>
                 <b>/-</b>
               </span>
             </div>
@@ -454,7 +491,7 @@ const Book_Now = ({ bookingData }) => {
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
               <RazorpayButton
-                amount={amount1 * parseInt(formData.adults)}
+                amount={formData.amount * parseInt(formData.adults)}
                 currency={"INR"}
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
