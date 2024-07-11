@@ -289,11 +289,11 @@ const Book_Now = () => {
     return Object.keys(errors).length === 0 ? false : true;
   };
 
-  const formatTime = (time) => {
-    const [hours, minutes] = time.split(':');
-    return `${hours}:${minutes}`;
-  }
-  
+  // const formatTime = (time) => {
+  //   const [hours, minutes] = time.split(':');
+  //   return `${hours}:${minutes}`;
+  // }
+
   return (
     <div className="Book_Now_Min_conatiner">
       <PublicHeader />
@@ -448,7 +448,7 @@ const Book_Now = () => {
                 type="time"
                 id="startTime"
                 name="startTime"
-                value={formatTime(formData.startTime)}
+                value={formData.startTime}
                 onChange={handleChangeInput}
                 className="custom-input"
               />
