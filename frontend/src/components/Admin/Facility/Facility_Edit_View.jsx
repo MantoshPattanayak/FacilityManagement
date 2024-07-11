@@ -122,7 +122,16 @@ const Facility_Edit_View = () => {
                 ownersAddress: ownersAddress.length > 0 ? ownersAddress[0] : {},
 
                 parkInventory: parkInventory || [],
-                service: service.map(acc => acc.serviceId) || []
+                service: service.map(acc => acc.serviceId) || [],
+                operatingDays: {
+                    sun: facilityData.sun,
+                    mon: facilityData.mon,
+                    tue: facilityData.tue,
+                    wed: facilityData.wed,
+                    thu: facilityData.thu,
+                    fri: facilityData.fri,
+                    sat: facilityData.sat,
+                }
             });
         }
         catch (err) {
@@ -1029,8 +1038,7 @@ const Facility_Edit_View = () => {
                                         <span className="Operating_day" name="operatingDays">
                                             <button
                                                 type="button"
-                                                className={`button-4 ${PostFacilityData.operatingDays.sun ? "selected" : ""
-                                                    }`}
+                                                className={`button-4 ${PostFacilityData.operatingDays?.sun ? "selected" : ""}`}
                                                 onClick={(e) => handleDayClick("sun", e)}
                                                 disabled={action == 'View' ? 1 : 0}
                                             >
@@ -1363,7 +1371,8 @@ const Facility_Edit_View = () => {
                                         )}
                                     </div>
                                     <div className="container" id="facilityArrayOfImagesContainer">
-
+                                        {action=='Edit' && 
+                                         <div>                                     
                                         <h2 className="Upload_Image_text">Upload Additional Facility Images</h2>
                                         <div className="upload-btn-wrapper">
                                             <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
@@ -1381,17 +1390,30 @@ const Facility_Edit_View = () => {
                                                 Max. Each image should be less than 200 KB.
                                             </p>
                                             <p className="italic text-sm font-bold text-gray-600">You can only upload up to 5  image for   Additional Facility Images .</p>
+                                        </div>                                
                                         </div>
-                                        {PostFacilityData.fileNames.facilityArrayOfImages.length > 0 && (
+                                          }
+                                        {PostFacilityData.facilityArrayOfImages && (
                                             <div className="image-preview" id="imagePreview">
-                                                {PostFacilityData.fileNames.facilityArrayOfImages.map((fileName, index) => (
-                                                    <p key={index}>
-                                                        {fileName}
-                                                        <span onClick={() => handleImageRemove("facilityArrayOfImages", index)} style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
-                                                            <FontAwesomeIcon icon={faTimes} />
+                                                {PostFacilityData.facilityArrayOfImages.map(image => (
+                                                   
+
+                                                   
+                                                        <span key={image.attachmentId}>
+                                                            {image.code}
+                                                            <span
+                                                                onClick={() => handleImageRemove("facilityImageOne")}
+                                                                style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
+
+                                                            </span>
+                                                            <span
+                                                                onClick={() => openImageInNewTab(image.url)}
+                                                                style={{ cursor: 'pointer', color: 'blue', marginLeft: '10px' }}>
+                                                                <FontAwesomeIcon icon={faEye} />
+                                                            </span>
                                                         </span>
-                                                    </p>
-                                                ))}
+                                                       
+                                                    ))}
                                             </div>
                                         )}
                                     </div>
@@ -1507,12 +1529,21 @@ const Facility_Edit_View = () => {
                                             <option value="" disabled hidden>
                                                 If yes, ownership details are not required
                                             </option>
-                                            <option value="Yes" selected={PostFacilityData.ownersAddress.facilityisownedbBDA === '1'}>
-                                                Yes
-                                            </option>
-                                            <option value="No" selected={PostFacilityData.ownersAddress.facilityisownedbBDA === '0'}>
-                                                No
-                                            </option>
+                                            {
+                                                PostFacilityData.ownersAddress.facilityisownedbBDA === 0 && (
+                                                    <option value="Yes" selected={PostFacilityData.ownersAddress.facilityisownedbBDA}>
+                                                        Yes
+                                                    </option>
+                                                )
+
+
+                                            }
+                                            {PostFacilityData.ownersAddress.facilityisownedbBDA === 1 && (
+                                                <option value="No" selected={PostFacilityData.ownersAddress.facilityisownedbBDA == 1}>
+                                                    No
+                                                </option>
+                                            )}
+
                                         </select>
                                         {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
                                     </div>
