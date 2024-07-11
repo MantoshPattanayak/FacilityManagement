@@ -9,9 +9,9 @@ import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
 
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
-import { MdHomeRepairService } from 'react-icons/md';
+import { MdHomeRepairService } from "react-icons/md";
 import Park_img from "../../../assets/Park_details.jpg";
-import amabhoomi from '../../../assets/ama_bhoomi_bgi.jpg';
+import amabhoomi from "../../../assets/ama_bhoomi_bgi.jpg";
 import sport_image from "../../../assets/sport_details_image.jpg";
 
 import Yoga_img from "../../../assets/Yoga_img.png";
@@ -36,8 +36,9 @@ import {
 import PublicHeader from "../../../common/PublicHeader";
 import Book_Now from "../BookParks/Book_Now";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
+import instance from "../../../../env";
 
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
@@ -52,7 +53,7 @@ const Sub_Park_Details = () => {
   const navigate = useNavigate();
   const isUserLoggedIn = sessionStorage.getItem("isUserLoggedIn") || 0;
   const [toRoute, setToRoute] = useState();
-  const [operatingDays, setOperatingDays] = useState('');
+  const [operatingDays, setOperatingDays] = useState("");
   const [bookmarkId, setBookmarkId] = useState(null);
   //Here is the popup state
   const [showPeople, setShowPeople] = useState(false);
@@ -61,10 +62,10 @@ const Sub_Park_Details = () => {
     setShowPopup(!showPopup);
   };
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [images, setImagesList] = useState([Park_img, amabhoomi, Park_img, amabhoomi, Park_img]);
+  const [currentIndex1, setCurrentIndex1] = useState(0);
 
-  useEffect(() => {
-
-  }, [facilityId]);
+  useEffect(() => {}, [facilityId]);
 
   async function handleBookmarkStatus(e) {
     e.preventDefault();
@@ -73,34 +74,34 @@ const Sub_Park_Details = () => {
       return;
     }
     const newBookmarkStatus = !isBookmarked;
-    console.log('newBookmarkStatus', { currdate: new Date(), newBookmarkStatus, isBookmarked });
+    console.log("newBookmarkStatus", {
+      currdate: new Date(),
+      newBookmarkStatus,
+      isBookmarked,
+    });
     try {
       let res = await axiosHttpClient(
-        newBookmarkStatus == false ? 'REMOVE_BOOKMARK_API' : 'ADD_BOOKMARK_API',
-        'post',
+        newBookmarkStatus == false ? "REMOVE_BOOKMARK_API" : "ADD_BOOKMARK_API",
+        "post",
         newBookmarkStatus == false ? { bookmarkId } : { facilityId }
       );
-      console.log('response', res.data);
+      console.log("response", res.data);
       if (newBookmarkStatus == false) {
         toast.warning(res.data.message);
         setIsBookmarked(newBookmarkStatus);
-      }
-      else {
+      } else {
         toast.success(res.data.message);
         setIsBookmarked(newBookmarkStatus);
-      };
-
-    }
-    catch (error) {
+      }
+    } catch (error) {
       console.error(error);
       if (error.response.status == 401) {
-        toast.error('You are not logged in to bookmark.');
-      }
-      else {
-        toast.error('Bookmarking failed!');
+        toast.error("You are not logged in to bookmark.");
+      } else {
+        toast.error("Bookmarking failed!");
       }
     }
-  };
+  }
 
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
@@ -119,30 +120,38 @@ const Sub_Park_Details = () => {
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
       setOperatingDaysFromRes(res);
-      console.log('response of fetch facility details', res);
+      if(res.data.facilitiesData.length > 0) {
+        let imagesData = res.data.facilitiesData.map((facility) => {
+          return facility.url || null
+        });
+        console.log("Images data", imagesData);
+        setImagesList(imagesData);
+      }
+      
+      console.log("response of fetch facility details", res.data.facilitiesData);
 
       function setOperatingDaysFromRes(res) {
         let operatingDaysFromRes = [];
         if (res.data.facilitiesData[0].sun == 1) {
-          operatingDaysFromRes.push('Sun');
+          operatingDaysFromRes.push("Sun");
         }
         if (res.data.facilitiesData[0].mon == 1) {
-          operatingDaysFromRes.push('Mon');
+          operatingDaysFromRes.push("Mon");
         }
         if (res.data.facilitiesData[0].tue == 1) {
-          operatingDaysFromRes.push('Tue');
+          operatingDaysFromRes.push("Tue");
         }
         if (res.data.facilitiesData[0].wed == 1) {
-          operatingDaysFromRes.push('Wed');
+          operatingDaysFromRes.push("Wed");
         }
         if (res.data.facilitiesData[0].thu == 1) {
-          operatingDaysFromRes.push('Thu');
+          operatingDaysFromRes.push("Thu");
         }
         if (res.data.facilitiesData[0].fri == 1) {
-          operatingDaysFromRes.push('Fri');
+          operatingDaysFromRes.push("Fri");
         }
         if (res.data.facilitiesData[0].sat == 1) {
-          operatingDaysFromRes.push('Sat');
+          operatingDaysFromRes.push("Sat");
         }
         setOperatingDays(operatingDaysFromRes);
       }
@@ -154,30 +163,30 @@ const Sub_Park_Details = () => {
   async function getUserBookmarks() {
     if (isUserLoggedIn) {
       try {
-        let res = await axiosHttpClient('VIEW_BOOKMARKS_LIST_API', 'post');
-        console.log('user bookmarks', { res: res.data.data, facilityId });
+        let res = await axiosHttpClient("VIEW_BOOKMARKS_LIST_API", "post");
+        console.log("user bookmarks", { res: res.data.data, facilityId });
         let bookmarkBool = res.data?.data?.some((data) => {
-          if (['Parks', 'Playgrounds', 'Multi Purpose Ground'].includes(data.facilityType)) {
+          if (
+            ["Parks", "Playgrounds", "Multi Purpose Ground"].includes(
+              data.facilityType
+            )
+          ) {
             console.log(data);
             setBookmarkId(data.bookmarkId);
             return data.id == facilityId;
           }
         });
         setIsBookmarked(bookmarkBool);
-        console.log('is this facility bookmarked', bookmarkBool);
-      }
-      catch (error) {
+        console.log("is this facility bookmarked", bookmarkBool);
+      } catch (error) {
         console.error(error);
       }
-    }
-    else {
+    } else {
       return;
     }
   }
 
-  useEffect(() => {
-
-  }, [isBookmarked])
+  useEffect(() => {}, [isBookmarked]);
 
   useEffect(() => {
     getSub_park_details();
@@ -202,32 +211,52 @@ const Sub_Park_Details = () => {
     return `${day}-${month}-${year}`;
   }
 
-  const images = [Park_img, amabhoomi, Park_img, amabhoomi, Park_img];
-  const [currentIndex1, setCurrentIndex1] = useState(0);
-
   const handlePrev = () => {
-    setCurrentIndex1(currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1);
+    setCurrentIndex1(
+      currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1
+    );
   };
 
   const handleNext = () => {
-    setCurrentIndex1(currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1);
+    setCurrentIndex1(
+      currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1
+    );
   };
 
   const [currentIndex2, setCurrentIndex2] = useState(0);
 
   const handleEventPrev = () => {
-    setCurrentIndex2(currentIndex2 === 0 ? EventAvailable.length - 1 : currentIndex2 - 1);
+    setCurrentIndex2(
+      currentIndex2 === 0 ? EventAvailable.length - 1 : currentIndex2 - 1
+    );
   };
 
   const handleEventNext = () => {
-    setCurrentIndex2(currentIndex2 === EventAvailable.length - 1 ? 0 : currentIndex2 + 1);
+    setCurrentIndex2(
+      currentIndex2 === EventAvailable.length - 1 ? 0 : currentIndex2 + 1
+    );
   };
+
+  function closePopup(bool) {
+    setShowPeople(bool);
+    return;
+  }
 
   return (
     <div className="Sub_Manu_Conatiner">
       <PublicHeader />
       <ToastContainer />
-      <div className={FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1 ? "Header_Img" : FacilitiesData[0]?.facilityTypeId === 2 ? "playground_header_image" : FacilitiesData[0]?.facilityTypeId === 3 ? "MulitGroud" : ""}>
+      <div
+        className={
+          FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1
+            ? "Header_Img"
+            : FacilitiesData[0]?.facilityTypeId === 2
+            ? "playground_header_image"
+            : FacilitiesData[0]?.facilityTypeId === 3
+            ? "MulitGroud"
+            : ""
+        }
+      >
         <h1 className="text-park">
           {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
         </h1>
@@ -242,7 +271,10 @@ const Sub_Park_Details = () => {
       <div className="map_img_main_conatiner">
         <div className="carousel-container1">
           <div className="carousel1">
-            <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
+            <img
+              src={instance().baseURL + '/static' + images[currentIndex1]}
+              alt={`Slide ${currentIndex1 + 1}`}
+            />
           </div>
           <button className="carousel1-button1 left1" onClick={handlePrev}>
             &lt;
@@ -258,9 +290,8 @@ const Sub_Park_Details = () => {
               <h1 className="time_text">
                 <p className="timing-day">Timing :</p>
                 <span className="timing-day-text">
-                  {formatTime(
-                    FacilitiesData[0]?.operatingHoursFrom
-                  )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+                  {formatTime(FacilitiesData[0]?.operatingHoursFrom)} -{" "}
+                  {formatTime(FacilitiesData[0]?.operatingHoursTo)}
                 </span>
               </h1>
               {/* <div className="open-close-btn">
@@ -275,125 +306,139 @@ const Sub_Park_Details = () => {
               </button>
               </div> */}
 
-              <div className={`bookmark ${isBookmarked ? 'bookmarked' : ''}`} onClick={handleBookmarkStatus}>
-                <FontAwesomeIcon icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular} />
+              <div
+                className={`bookmark ${isBookmarked ? "bookmarked" : ""}`}
+                onClick={handleBookmarkStatus}
+              >
+                <FontAwesomeIcon
+                  icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular}
+                />
               </div>
             </div>
 
             <div className="day-open-close-status">
               <h1 className="date_text text-[12px]">
                 <p className="timing-day">Day :</p>
-                <span className="timing-day-text">{operatingDays.toString()}</span>
+                <span className="timing-day-text">
+                  {operatingDays.toString()}
+                </span>
               </h1>
 
               <div className="open-close-btn">
                 <button
-                  className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
-                    ? "open"
-                    : "closed"
-                    }`}
+                  className={`Open_Button ${
+                    FacilitiesData.length > 0 &&
+                    FacilitiesData[0].status === "open"
+                      ? "open"
+                      : "closed"
+                  }`}
                 >
                   {FacilitiesData?.length > 0 &&
                     FacilitiesData[0]?.status.toUpperCase()}
                 </button>
               </div>
             </div>
-
-
           </span>
 
           <span className="Button_ticket_container">
+            {FacilitiesData[0]?.facilityTypeId == 1 ? (
+              // <Link
+              //   to={{
+              //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
+              //       }`,
+              //     search: `${isUserLoggedIn == 1
+              //       ? `?facilityId=${encryptDataId(
+              //         FacilitiesData[0]?.facilityId
+              //       )}`
+              //       : `?facilityId=${encryptDataId(
+              //         FacilitiesData[0]?.facilityId
+              //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
+              //       }`,
+              //   }}
+              //   className="button-9"
+              // >
+              //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
+              //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
 
-            {
-              FacilitiesData[0]?.facilityTypeId == 1 ? (
-                // <Link
-                //   to={{
-                //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
-                //       }`,
-                //     search: `${isUserLoggedIn == 1
-                //       ? `?facilityId=${encryptDataId(
-                //         FacilitiesData[0]?.facilityId
-                //       )}`
-                //       : `?facilityId=${encryptDataId(
-                //         FacilitiesData[0]?.facilityId
-                //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
-                //       }`,
-                //   }}
-                //   className="button-9"
-                // >
-                //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
-                //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
-
-
-                // </Link>
-                <button onClick={() => setShowPeople(true)} className="button-9">
-                  Book Ticket
-                </button>
-
-
-              )
-                : FacilitiesData[0]?.facilityTypeId == 2 ? (
-                  <Link
-                    to={{
-                      pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now_Sport" : "/login-signup"
-                        }`,
-                      search: `${isUserLoggedIn == 1
-                        ? `?facilityId=${encryptDataId(
+              // </Link>
+              <button onClick={() => setShowPeople(true)} className="button-9">
+                Book Ticket
+              </button>
+            ) : FacilitiesData[0]?.facilityTypeId == 2 ? (
+              <Link
+                to={{
+                  pathname: `${
+                    isUserLoggedIn == 1
+                      ? "/BookParks/Book_Now_Sport"
+                      : "/login-signup"
+                  }`,
+                  search: `${
+                    isUserLoggedIn == 1
+                      ? `?facilityId=${encryptDataId(
                           FacilitiesData[0]?.facilityId
                         )}`
-                        : `?facilityId=${encryptDataId(
+                      : `?facilityId=${encryptDataId(
                           FacilitiesData[0]?.facilityId
-                        )}` + `&redirect=${encryptDataId("/BookParks/Book_Now_Sport")}`
-                        }`,
-                    }}
-                    className="button-9"
-                  >
-                    <button role="button_by">Book Ticket</button>
-                  </Link>
-                )
-                  : (
-                    <Link
-                      to={{
-                        pathname: `${isUserLoggedIn == 1 ? "/BookParks/Book_Now_Sport" : "/login-signup"
-                          }`,
-                        search: `${isUserLoggedIn == 1
-                          ? `?facilityId=${encryptDataId(
-                            FacilitiesData[0]?.facilityId
-                          )}`
-                          : `?facilityId=${encryptDataId(
-                            FacilitiesData[0]?.facilityId
-                          )}` + `&redirect=${encryptDataId("/BookParks/Book_Now_Sport")}`
-                          }`,
-                      }}
-                      className="button-9"
-                    >
-                      <button role="button_by"
-                        onClick={() => setShowPeople(true)}
-                      >
-                        Book Ticket
-                      </button>
-                    </Link>
-                  )
-            }
+                        )}` +
+                        `&redirect=${encryptDataId(
+                          "/BookParks/Book_Now_Sport"
+                        )}`
+                  }`,
+                }}
+                className="button-9"
+              >
+                <button role="button_by">Book Ticket</button>
+              </Link>
+            ) : (
+              <Link
+                to={{
+                  pathname: `${
+                    isUserLoggedIn == 1
+                      ? "/BookParks/Book_Now_Sport"
+                      : "/login-signup"
+                  }`,
+                  search: `${
+                    isUserLoggedIn == 1
+                      ? `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}`
+                      : `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}` +
+                        `&redirect=${encryptDataId(
+                          "/BookParks/Book_Now_Sport"
+                        )}`
+                  }`,
+                }}
+                className="button-9"
+              >
+                <button role="button_by" onClick={() => setShowPeople(true)}>
+                  Book Ticket
+                </button>
+              </Link>
+            )}
 
-            < Link
+            <Link
               to={{
-                pathname: `${isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-                  }`,
-                search: `${isUserLoggedIn == 1
-                  ? `?facilityId=${encryptDataId(
-                    FacilitiesData[0]?.facilityId
-                  )}`
-                  : `?facilityId=${encryptDataId(
-                    FacilitiesData[0]?.facilityId
-                  )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-                  }`,
+                pathname: `${
+                  isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                }`,
+                search: `${
+                  isUserLoggedIn == 1
+                    ? `?facilityId=${encryptDataId(
+                        FacilitiesData[0]?.facilityId
+                      )}`
+                    : `?facilityId=${encryptDataId(
+                        FacilitiesData[0]?.facilityId
+                      )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
+                }`,
               }}
               className="button-10"
             >
-              <button role="button_by" className="name_button">Host Event</button>
+              <button role="button_by" className="name_button">
+                Host Event
+              </button>
             </Link>
-
           </span>
 
           <div className="Map_image">
@@ -420,16 +465,14 @@ const Sub_Park_Details = () => {
         </div>
 
         {/* Back button............. */}
-        <Link to={'/facilities'}>
+        <Link to={"/facilities"}>
           <div className="back_button">
-
             <button className="back_btn">
               <FontAwesomeIcon icon={faArrowLeftLong} />
               Back
             </button>
           </div>
         </Link>
-
       </div>
       <div className="other-contents">
         {/* -----------------------------services------------------------------------------ */}
@@ -535,7 +578,10 @@ const Sub_Park_Details = () => {
             <button className="carousel-button left" onClick={handleEventPrev}>
               &lt;
             </button>
-            <div className="carousel-wrapper" style={{ transform: `translateX(-${currentIndex2 * 100}%)` }}>
+            <div
+              className="carousel-wrapper"
+              style={{ transform: `translateX(-${currentIndex2 * 100}%)` }}
+            >
               {EventAvailable.map((event, index) => (
                 <div key={index} className="carousel-slide">
                   <img className="Yoga_image" src={Yoga_img} alt="Event" />
@@ -551,20 +597,22 @@ const Sub_Park_Details = () => {
               &gt;
             </button>
           </div>
-
         </div>
         {/* <Book_Now/> */}
       </div>
 
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
 
-      {showPeople && <Visiting_People facilityId={encryptDataId(FacilitiesData[0]?.facilityId)} />}
-
-    </div >
+      {showPeople && (
+        <Visiting_People
+          closePopup={closePopup}
+          facilityId={encryptDataId(FacilitiesData[0]?.facilityId)}
+          facilityName={FacilitiesData[0]?.facilityName}
+        />
+      )}
+    </div>
   );
 };
 
 // Export Sub_Park_details ------------------------
 export default Sub_Park_Details;
-
-

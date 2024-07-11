@@ -89,11 +89,16 @@ const Booking_Schedule = ({
     );
   }
 
+  const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="booking-schedule-popup">
         <div className="popup-header">
-          <button className="icon-close" onClick={closePopup}>
+          <button className="icon-close" onClick={()=>closePopup(false)}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
@@ -113,7 +118,7 @@ const Booking_Schedule = ({
             type="time"
             id="startTime"
             name="startTime"
-            value={bookingData.startTime}
+            value={formatTime(bookingData.startTime)}
             onChange={handleChangeInput}
             className="custom-input"
           />
@@ -144,7 +149,7 @@ const Booking_Schedule = ({
             </button>
           </div>
           <div className="popup-footer">
-            <button className="cancel-button">Cancel</button>
+            <button className="cancel-button" onClick={()=>closePopup(false)}>Cancel</button>
             <button className="next-button" onClick={handleBookingData}>
               Next
             </button>

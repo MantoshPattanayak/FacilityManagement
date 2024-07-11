@@ -191,7 +191,7 @@ const registerFacility = async (req, res) => {
           let subDir = "facilityImages"
           let filePurpose = "singleFacilityImage"
           console.log('163 line facility image')
-          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, 1)
           console.log( uploadSingleFacilityImage,'165 line facility image')
           if(errors.length>0){
             if(errors.some(error => error.includes("something went wrong"))){
@@ -206,7 +206,7 @@ const registerFacility = async (req, res) => {
           let filePurpose = "multipleFacilityImage"
           for (let i = 0; i < arrayFacilityImage.length; i++) {
             let eachFacilityImage = arrayFacilityImage[i]
-            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, i)
           }
           if(errors.length>0){
             if(errors.some(error => error.includes("something went wrong"))){

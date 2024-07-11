@@ -11,7 +11,7 @@ import {
   faPlus,
   faMinus,
   faIndianRupeeSign,
-  faArrowLeftLong
+  faArrowLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -289,6 +289,11 @@ const Book_Now = () => {
     return Object.keys(errors).length === 0 ? false : true;
   };
 
+  // const formatTime = (time) => {
+  //   const [hours, minutes] = time.split(':');
+  //   return `${hours}:${minutes}`;
+  // }
+
   return (
     <div className="Book_Now_Min_conatiner">
       <PublicHeader />
@@ -299,15 +304,18 @@ const Book_Now = () => {
               {" "}
               <b>{FacilitiesData?.facilityName || "Park Name"}</b>
             </h1>
-            <Link to={`/Sub_Park_Details?facilityId=${encodeURIComponent(encryptData(formData.facilityId))}`}>
-          <div className="back_button">
-
-            <button className="back_btn">
-              <FontAwesomeIcon icon={faArrowLeftLong} />
-              Back
-            </button>
-          </div>
-        </Link>
+            <Link
+              to={`/Sub_Park_Details?facilityId=${encodeURIComponent(
+                encryptData(formData.facilityId)
+              )}`}
+            >
+              <div className="back_button">
+                <button className="back_btn">
+                  <FontAwesomeIcon icon={faArrowLeftLong} />
+                  Back
+                </button>
+              </div>
+            </Link>
           </div>
 
           <div className="form_BookNow">
@@ -491,7 +499,7 @@ const Book_Now = () => {
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
               <RazorpayButton
-                amount={formData.amount * parseInt(formData.adults)}
+                amount={price}
                 currency={"INR"}
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
