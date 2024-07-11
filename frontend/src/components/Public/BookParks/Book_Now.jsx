@@ -486,7 +486,7 @@ const Book_Now = () => {
               <button
                 className="add-to-cart-button"
                 onClick={handleAddtoCart}
-                disabled={isDisabled}
+                disabled={formData.totalMembers > 0 ? false : true}
               >
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
@@ -496,7 +496,7 @@ const Book_Now = () => {
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
                 onFailure={handlePaymentFailure}
-                isDisabled={isDisabled}
+                disabled={formData.totalMembers > 0 ? false : true}
               />
               {/* <button
                 className="submit-and-proceed-button"
