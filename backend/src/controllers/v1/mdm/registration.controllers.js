@@ -77,6 +77,7 @@ const registerFacility = async (req, res) => {
       ownerPanCard,
       ownersAddress,
     } = req.body;
+    console.log("here facility Req ", req.body)
 
     let createFacilities;
     let findOwnerId;

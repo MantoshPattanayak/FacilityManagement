@@ -36,8 +36,11 @@ const Facility_Edit_View = () => {
     // here disabled use for Remove and dispable the placeholder of Onwer details -
     const [disabledFields, setDisabledFields] = useState(false);
     // here set the error ---------------------------------------------------
-    const [formErrors, setformErrors] = useState({});
+    const [formErrors, setformErrors] = useState([]);
     const [isPlayGround, setIsPlayGround] = useState(false);
+    // Edit Post the data start ----------------------------😆😆✈✈✈✈
+    // here use this useSate to store the DisPlay Facility Data --------------
+    const [initialFacilityDataStore, setinitialFacilityDataStore] = useState({})
     // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
         facilityType: "",
@@ -86,59 +89,6 @@ const Facility_Edit_View = () => {
             facilityArrayOfImages: []
         }
     });
-
-    // here Api of View Facility Data --------------------------------------
-    async function DisplayFacilityData() {
-        try {
-            let res = await axiosHttpClient('Facility_Update_View_By_ID_Api', 'post', {
-                facilityId,
-                facilityTypeId
-            })
-            console.log("here Response of Display Facility Data", res)
-            const {
-                amenity,
-                eventCategory,
-                facilityArrayOfImages,
-                facilityData,
-                facilityImageOne,
-                game,
-                ownersAddress,
-                parkInventory,
-                service,
-
-            } = res.data;
-            // Update PostFacilityData state with fetched data
-            setPostFacilityData({
-                ...PostFacilityData,
-                amenity: amenity.map(acc => acc.amenityId) || [],
-                eventCategory: eventCategory.map(ec => ec.eventCategoryId) || [],
-                facilityArrayOfImages: facilityArrayOfImages || [],
-                facilityData: {
-                    ...PostFacilityData.facilityData,
-                    ...facilityData
-                },
-                facilityImageOne: facilityImageOne || [],
-                game: game.map(acc => acc.userActivityId) || [],
-                ownersAddress: ownersAddress.length > 0 ? ownersAddress[0] : {},
-
-                parkInventory: parkInventory || [],
-                service: service.map(acc => acc.serviceId) || [],
-                operatingDays: {
-                    sun: facilityData.sun,
-                    mon: facilityData.mon,
-                    tue: facilityData.tue,
-                    wed: facilityData.wed,
-                    thu: facilityData.thu,
-                    fri: facilityData.fri,
-                    sat: facilityData.sat,
-                }
-            });
-        }
-        catch (err) {
-            console.log("here Error of Facility Data", err)
-        }
-    }
-
     // here call the api for get the initial data ---------------------------
     async function GetFacilityInitailData() {
         try {
@@ -154,86 +104,24 @@ const Facility_Edit_View = () => {
             console.log("here error of Facility intail data ", err);
         }
     }
-    // here Post the data ---------------------------------------------------
-    async function HandleSubmitFacility(e) {
-        e.preventDefault();
-        const validationErrors = Validation(PostFacilityData);
-        const validationErrors1 = Validation2(PostFacilityData)
-        const validationErrors2 = Validationinvantory(PostFacilityData)
-        console.log("Handle Submit invatory error", validationErrors2)
-
-        setformErrors({ ...validationErrors, ...validationErrors1, ...validationErrors2 });
-        toast.dismiss();
-        if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0 && Object.keys(validationErrors2).length === 0) {
-            try {
-                let facilityisownedbBDAValue = PostFacilityData.facilityisownedbBDA === "Yes" ? 1 : 0;
-                let res = await axiosHttpClient("Facility_Reg_Api", "post", {
-                    facilityType: PostFacilityData.facilityType || null,
-                    facilityName: PostFacilityData.facilityName || null,
-                    longitude: PostFacilityData.longitude || null,
-                    latitude: PostFacilityData.latitude || null,
-                    address: PostFacilityData.address || null,
-                    pin: PostFacilityData.pin || null,
-                    area: PostFacilityData.area || null,
-                    operatingHoursFrom: PostFacilityData.operatingHoursFrom || null,
-                    operatingHoursTo: PostFacilityData.operatingHoursTo || null,
-                    operatingDays: PostFacilityData.operatingDays || null,
-                    service: PostFacilityData.service || {},
-                    otherServices: PostFacilityData.otherServices || null,
-                    amenity: PostFacilityData.amenity || {},
-                    eventCategory: PostFacilityData.eventCategory || {},
-                    othereventCategory: PostFacilityData.othereventCategory || null,
-                    game: PostFacilityData.game || {},
-                    othergame: PostFacilityData.othergame || null,
-                    otherAmenities: PostFacilityData.otherAmenities || null,
-                    additionalDetails: PostFacilityData.additionalDetails || null,
-                    facilityImage: PostFacilityData.facilityImage || null,
-                    parkInventory: PostFacilityData.parkInventory || null,
-                    // Owner Data ---------------------------------------------------------------
-                    facilityisownedbBDA: facilityisownedbBDAValue,
-                    firstName: PostFacilityData.firstName || null,
-                    lastName: PostFacilityData.lastName || null,
-                    phoneNumber: PostFacilityData.phoneNumber || null,
-                    emailAdress: PostFacilityData.emailAdress || null,
-                    ownerPanCard: PostFacilityData.ownerPanCard || null,
-                    ownership: PostFacilityData.ownership || null,
-                    ownersAddress: PostFacilityData.ownersAddress || null
-                });
-                console.log("here Response of Post the data of Facility", res);
-                toast.success('Facility registration has been done successfully.', {
-                    autoClose: 2000,
-                    onClose: () => {
-                        setTimeout(() => {
-                            navigate('/facility-registration');
-                        }, 1000);
-                    }
-                });
-            } catch (err) {
-                console.log("here error of Facility Post Data", err);
-                toast.error('Facility registration failed.');
-                setformErrors('')
-            }
-        } else {
-            setformErrors(validationErrors)
-            setformErrors(validationErrors1)
-            setformErrors(validationErrors2)
-
-        }
-    }
-    // handle Post Data------------------------------------------------------
+    // here Api of View Facility Data --------------------------------------
+    // Function to handle changes in the input fields
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value, files } = e.target;
+        // Handle image uploads
         if (name === "facilityImageOne" || name === "facilityArrayOfImages") {
             handleImageUpload(name, files);
         } else if (name === "facilityisownedbBDA") {
             const isOwnerByBDA = value === "Yes";
-            setPostFacilityData({ ...PostFacilityData, [name]: value });
-            // Set disabled state for specific fields
+            setPostFacilityData((prevData) => ({
+                ...prevData,
+                [name]: value
+            }));
             setDisabledFields(isOwnerByBDA);
             if (isOwnerByBDA) {
                 // Reset input fields if user selects "Yes"
-                setPostFacilityData(prevData => ({
+                setPostFacilityData((prevData) => ({
                     ...prevData,
                     firstName: "",
                     lastName: "",
@@ -242,20 +130,173 @@ const Facility_Edit_View = () => {
                     ownerPanCard: "",
                     ownersAddress: ""
                 }));
-                toast.info("No fields are required !");
+                toast.info("No fields are required!");
                 setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
             }
         } else if (name === "facilityType") {
             // Handle other input changes
-            setPostFacilityData({ ...PostFacilityData, [name]: value });
-            setIsPlayGround(Number(value) === 2); // Check true and False
+            setPostFacilityData((prevData) => ({
+                ...prevData,
+                [name]: value
+            }));
+            setIsPlayGround(Number(value) === 2); // Check true and false
+        } else if (name in PostFacilityData.facilityData) {
+            setPostFacilityData((prevData) => ({
+                ...prevData,
+                facilityData: {
+                    ...prevData.facilityData,
+                    [name]: value
+                }
+            }));
         } else {
-            setPostFacilityData({ ...PostFacilityData, [name]: value });
+            setPostFacilityData((prevData) => ({
+                ...prevData,
+                [name]: value
+            }));
         }
-        // Run validation on input change
-        const validationErrors = Validation({ ...PostFacilityData, [name]: value });
-        setformErrors(validationErrors);
     };
+    // Display facility data
+    async function DisplayFacilityData() {
+        try {
+            let res = await axiosHttpClient('Facility_Update_View_By_ID_Api', 'post', {
+                facilityId,
+                facilityTypeId
+            });
+            console.log("Response of Display Facility Data", res.data);
+            const {
+                amenity,
+                eventCategory,
+                facilityArrayOfImages,
+                facilityData,
+                facilityImageOne,
+                game,
+                ownersAddress,
+                parkInventory,
+                service
+            } = res.data;
+            const fetchDataDisplayFacility = {
+                amenity: amenity.map(acc => acc.amenityId) || [],
+                eventCategory: eventCategory.map(ec => ec.eventCategoryId) || [],
+                facilityArrayOfImages: facilityArrayOfImages || [],
+                facilityData: {
+                    ...PostFacilityData.facilityData,
+                    ...facilityData
+                },
+                facilityImageOne: facilityImageOne || [],
+                game: game.map(acc => acc.userActivityId) || [],
+                ownersAddress: ownersAddress.length > 0 ? ownersAddress[0] : {},
+                parkInventory: parkInventory || [],
+                service: service.map(acc => acc.serviceId) || [],
+                operatingDays: {
+                    sun: facilityData.sun,
+                    mon: facilityData.mon,
+                    tue: facilityData.tue,
+                    wed: facilityData.wed,
+                    thu: facilityData.thu,
+                    fri: facilityData.fri,
+                    sat: facilityData.sat
+                }
+            };
+            // Update PostFacilityData state with fetched data
+            setPostFacilityData(fetchDataDisplayFacility);
+            // Store initial facility data
+            setinitialFacilityDataStore(fetchDataDisplayFacility);
+        } catch (err) {
+            console.log("Error of Facility Data", err);
+        }
+    }
+
+    // Function to get changed values and Compare ---------------------
+    const getChnageValues = (initialData, currentData) => {
+        const changedValues = {};
+        // Function to deep compare objects
+        const isEqual = (obj1, obj2) => {
+            return JSON.stringify(obj1) === JSON.stringify(obj2);
+        };
+        for (const key in currentData) {
+            if (key === 'parkInventory') {
+                const changedInventory = [];
+                currentData[key].forEach((item, index) => {
+                    if (!isEqual(initialData[key][index], item)) {
+                        changedInventory.push(item);
+                    }
+                });
+                if (changedInventory.length > 0) {
+                    changedValues[key] = changedInventory;
+                }
+            } else if (typeof currentData[key] === 'object' && !Array.isArray(currentData[key]) && currentData[key] !== null) {
+                const nestedChanges = {};
+                for (const nestedKey in currentData[key]) {
+                    if (!isEqual(initialData[key][nestedKey], currentData[key][nestedKey])) {
+                        nestedChanges[nestedKey] = currentData[key][nestedKey];
+                    }
+                }
+                if (Object.keys(nestedChanges).length > 0) {
+                    changedValues[key] = nestedChanges;
+                }
+            } else if (!isEqual(initialData[key], currentData[key])) {
+                changedValues[key] = currentData[key];
+            }
+        }
+        return changedValues;
+    };
+
+
+    // Function to handle form submission
+    async function HandleSubmitFacility(e) {
+        e.preventDefault();
+        toast.dismiss();
+        try {
+            let facilityisownedbBDAValue = PostFacilityData.facilityisownedbBDA === "Yes" ? 1 : 0;
+            const ChangesValues = getChnageValues(initialFacilityDataStore, PostFacilityData);
+            console.log("Changed Values", ChangesValues);
+            const payloadfacilityData = {
+                ...ChangesValues,
+                facilityType: PostFacilityData.facilityType || null,
+                facilityName: PostFacilityData.facilityName || null,
+                longitude: PostFacilityData.longitude || null,
+                latitude: PostFacilityData.latitude || null,
+                address: PostFacilityData.address || null,
+                pin: PostFacilityData.pin || null,
+                area: PostFacilityData.area || null,
+                operatingHoursFrom: PostFacilityData.operatingHoursFrom || null,
+                operatingHoursTo: PostFacilityData.operatingHoursTo || null,
+                operatingDays: PostFacilityData.operatingDays || null,
+                service: PostFacilityData.service || {},
+                otherServices: PostFacilityData.otherServices || null,
+                amenity: PostFacilityData.amenity || {},
+                eventCategory: PostFacilityData.eventCategory || {},
+                othereventCategory: PostFacilityData.othereventCategory || null,
+                game: PostFacilityData.game || {},
+                othergame: PostFacilityData.othergame || null,
+                otherAmenities: PostFacilityData.otherAmenities || null,
+                additionalDetails: PostFacilityData.additionalDetails || null,
+                facilityImage: PostFacilityData.facilityImage || null,
+                parkInventory: PostFacilityData.parkInventory || null,
+                facilityisownedbBDA: facilityisownedbBDAValue,
+                firstName: PostFacilityData.firstName || null,
+                lastName: PostFacilityData.lastName || null,
+                phoneNumber: PostFacilityData.phoneNumber || null,
+                emailAdress: PostFacilityData.emailAdress || null,
+                ownerPanCard: PostFacilityData.ownerPanCard || null,
+                ownership: PostFacilityData.ownership || null,
+                ownersAddress: PostFacilityData.ownersAddress || null
+            };
+            let res = await axiosHttpClient("Facility_Reg_Api", "post", payloadfacilityData);
+            console.log("Response of Post the data of Facility", res);
+            toast.success('Facility registration has been done successfully.', {
+                autoClose: 2000,
+                onClose: () => {
+                    setTimeout(() => {
+                        navigate('/facility-viewlist');
+                    }, 1000);
+                }
+            });
+        } catch (err) {
+            console.log("Error of Facility Post Data", err);
+            toast.error('Facility registration failed.');
+        }
+    }
     // here Handle for Upload Mulitple and single Image ---------------------
     const handleImageUpload = (name, files) => {
         if (files && files.length > 0) {
@@ -336,7 +377,7 @@ const Facility_Edit_View = () => {
                 } else {
                     toast.warning("Total size of images should not exceed 1000 KB for up to 5 images.");
                     document.getElementById("myForm").reset();
-                    setformErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+
                 }
             }
         }
@@ -400,33 +441,19 @@ const Facility_Edit_View = () => {
             return updatedPostFacilityData;
         });
         // Clear specific error for operatingDays and update validation
-        setformErrors(prevErrors => {
-            const { operatingDays, ...otherErrors } = prevErrors;
-            const validationErrors = Validation2({ ...PostFacilityData, operatingDays });
-            return { ...otherErrors, ...validationErrors };
-        });
-        console.log("PostFacilityData:", PostFacilityData);
+
     };
     //  Handle serviceId (set here )-------------------------------------------
     const handleServiceClick = (Id) => {
-        console.log("handle service click", Id);
-        console.log("PostFacilityData service 1", PostFacilityData.service);
-
         setPostFacilityData((prevState) => {
-            // If the serviceId exists, remove it, else add it
             let updatedService = [...prevState.service];
             if (updatedService.includes(Id)) {
-                updatedService = updatedService.filter((service) => {
-                    return service !== Id;
-                });
+                updatedService = updatedService.filter((service) => service !== Id);
             } else {
                 updatedService.push(Id);
             }
             return { ...prevState, service: updatedService };
-
         });
-        setformErrors((prevErrors) => ({ ...prevErrors, service: '' }));
-        console.log("PostFacilityData service 2", PostFacilityData.service);
     };
     // Handle Amenities Data --------------------------------------------------
     const handleAmenitiesClick = (amenityId) => {
@@ -442,7 +469,7 @@ const Facility_Edit_View = () => {
             }
             return { ...prevState, amenity: updatedamenity };
         });
-        setformErrors((prevErrors) => ({ ...prevErrors, amenity: '' }));
+
     };
     // Handle Event------------------------------------------------------------
     const handleEventClick = (eventCategoryId) => {
@@ -458,7 +485,7 @@ const Facility_Edit_View = () => {
             }
             return { ...prevState, eventCategory: updatedeventCategory };
         });
-        setformErrors((prevErrors) => ({ ...prevErrors, eventCategory: '' }));
+
     };
     // Handle Add row of table -------------------------------------------------
     const handleAddRow = (e) => {
@@ -486,9 +513,7 @@ const Facility_Edit_View = () => {
         delete updatedErrors[`count${index}`];
 
         // Update formErrors state with the updatedErrors
-        setformErrors(updatedErrors);
-        toast.warning("Row removed successfully!");
-        console.log("Removed row at index", index);
+
     };
     //handleChnage of handleEquipmentChange
     const handleEquipmentChange = (index, field, value) => {
@@ -519,98 +544,31 @@ const Facility_Edit_View = () => {
             return { ...prevState, game: updatedgame };
         });
         // Log the current state for debugging
-        console.log("PostFacilityData:", PostFacilityData);
-        setformErrors((prevErrors) => ({ ...prevErrors, game: '' }));
+
     };
-    //function to seek confirmation ----------------------------------------------
-    function handleConfirmation(e) {
-        e.preventDefault();
-        // Disable interactions with the background
-        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'none';
-        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 0.4;
-        toast.warn(
-            <div>
-                <p>Are you sure you want to proceed?</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            HandleSubmitFacility(e);
-                            // Re-enable interactions with the background
-                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
-                        }}
-                        className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        // Re-enable interactions with the background
-                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
-                        toast.dismiss();
-                        toast.error('Action cancelled!', {
-                            // position: toast.POSITION.TOP_CENTER,
-                            // autoClose: 3000,
-                        });
-                    }} className='bg-red-400 text-white p-2 border rounded-md'>No</button>
-                </div>
-            </div>,
-            {
-                position: "top-center",
-                autoClose: false, // Disable auto close
-                closeOnClick: false, // Disable close on click
-            }
-        );
-        return;
-    }
     // here Prev and next page ---------------------------------------------------
     const nextStep = (e) => {
         e.preventDefault()
         // Perform validation before moving to the next step
-        if (action == 'Edit') {
-            const validationErrors = Validation(PostFacilityData);
-            const validationErrors2 = Validationinvantory(PostFacilityData)
-            console.log("here error of Invantory", validationErrors2)
-            // Merge all error togther ----------------------
-            const combinedErrors = { ...validationErrors, ...validationErrors2 }
-            setformErrors(combinedErrors);
-            if (Object.keys(combinedErrors).length === 0) {
-                // If there are no validation errors, move to the next step
-                setCurrentStep(currentStep + 1);
-                toast.success('Successfully moved to the next step!');
-            } else {
-                // If there are validation errors, display them and prevent moving to the next step
-
-                toast.error('Please fill out all required fields.');
-                console.log('Validation errors:', validationErrors);
-                setformErrors(combinedErrors)
 
 
-            }
 
-        } else {
-            setCurrentStep(currentStep + 1);
-        }
+        setCurrentStep(currentStep + 1);
+        toast.success('Successfully moved to the next step!');
+
+
+
+
+
 
     };
     // 2nd from next step---------------------------------------------------------
     const nextStep2 = (e) => {
         e.preventDefault()
-        if (action == 'Edit') {
-            const validationErrors1 = Validation2(PostFacilityData);
-            setformErrors(validationErrors1);
-            if (Object.keys(validationErrors1).length === 0) {
-                // If there are no validation errors, move to the next step
-                setCurrentStep(currentStep + 1);
-                toast.success('Successfully moved to the next step!');
-            } else {
-                // If there are validation errors, display them and prevent moving to the next step
-                toast.error('Please fill out all required fields.');
-                console.log('Validation errors:', validationErrors1);
-                setformErrors(validationErrors1)
-            }
-        } else {
-            setCurrentStep(currentStep + 1);
-        }
+
+        setCurrentStep(currentStep + 1);
+        toast.success('Successfully moved to the next step!');
+
 
     };
     // Prev Button ----------------------------------------------------------------
@@ -619,221 +577,6 @@ const Facility_Edit_View = () => {
         setCurrentStep(currentStep - 1);
         toast.success('Successfully moved to the Previous Step!');
     };
-    // Validation of 1st form ------------------------------------------------------
-    const Validation = (value) => {
-        const space_block = /^[^\s][^\n\r]*$/;
-        const Name_Regex = /^[a-zA-Z ]+$/;
-        const Longtitude_regex = /^(?:(?:\d|[1-8]\d|90)\.\d+|(?:9[0-7]|[1-8]\d|\d)(?:\.\d+)?)$/;
-        const latitude_regex = /^[-+]?(?:[0-8]?\d(?:\.\d+)?|90(?:\.0+)?)$/;
-        const PinCode_Regex = /^\d{6}$/;
-        const Regex_Other = /^[a-zA-Z,-]+$/;
-        const Area_Acre = /^\d+(\.\d+)?$/;
-        const Addition_Infromateion = /^[a-zA-Z\s,\.]+$/;
-        const err = {};
-        if (!value.facilityType) {
-            err.facilityType = "Please Select the Facility Type";
-        }
-        if (!value.facilityName) {
-            err.facilityName = "Please Enter the Facility Name";
-        } else if (!space_block.test(value.facilityName)) {
-            err.facilityName = 'Do not use spaces at beginning';
-        }
-        if (!value.longitude) {
-            err.longitude = "Please Enter the longitude";
-        } else if (!space_block.test(value.longitude)) {
-            err.longitude = "Do not use spaces at beginning"
-        }
-        else if (!Longtitude_regex.test(value.longitude)) {
-            err.longitude = "Please Enter a vaild longitude"
-        }
-        if (!value.latitude) {
-            err.latitude = "Please Enter the latitude";
-        } else if (!latitude_regex.test(value.latitude)) {
-            err.latitude = "Please Enter a vaild latitude"
-        } else if (!space_block.test(value.latitude)) {
-            err.latitude = 'Do not use spaces at beginning'
-        }
-        if (!value.address) {
-            err.address = "Please Enter the address";
-        } else if (!Addition_Infromateion.test(value.address)) {
-            err.address = 'Please Enter a vaild Address'
-        } else if (!space_block.test(value.address)) {
-            err.address = 'Do not use spaces at beginning'
-        }
-        if (!value.pin) {
-            err.pin = "Please Enter the Pincode";
-        } else if (!space_block.test(value.pin)) {
-            err.pin = "Do not use spaces at beginning"
-        } else if (!PinCode_Regex.test(value.pin)) {
-            err.pin = 'Please Enter a vaild Pincode'
-        }
-        if (!value.area) {
-            err.area = "Please Enter the Area";
-        } else if (!space_block.test(value.area)) {
-            err.area = 'Do not use spaces at beginning'
-        } else if (!Area_Acre.test(value.area)) {
-            err.area = 'Please Enter a vaild Area'
-        }
-        if (!value.operatingHoursFrom) {
-            err.operatingHoursFrom = "Please Select the Operating Hours From";
-        }
-        if (!value.operatingHoursTo) {
-            err.operatingHoursTo = "Please Select the Operating Hours To";
-        }
-        // here check start hours should less then or equal to opetingHourTo
-        if ((value.operatingHoursFrom) > (value.operatingHoursTo)) {
-            err.operatingHoursFrom = "Start operating Hours From should be less than or equal to End Event Date";
-            err.operatingHoursTo = "End operating Hours To should be greater than or equal to Start Event Date";
-        }
-        const isAnyDaySelected = Object.values(value.operatingDays).some((day) => day === 1);
-        if (!isAnyDaySelected) {
-            err.operatingDays = "Please Select the Operating Days";
-        }
-        if (value.service.length === 0) {
-            err.service = "Please Select the Services"
-        }
-        if (value.otherServices) {
-            if (!Addition_Infromateion.test(value.otherServices)) {
-                err.otherServices = "Please Enter a vaild Other services"
-            }
-            if (!space_block.test(value.otherServices)) {
-                err.otherServices = 'Do not use spaces at beginning'
-            }
-        }
-        if (value.amenity.length === 0) {
-            err.amenity = 'Please Select the amenity'
-        }
-        if (value.otherAmenities) {
-            if (!Addition_Infromateion.test(value.otherAmenities)) {
-                err.otherAmenities = "Please Enter a Vaild Other Amenities"
-            }
-            if (!space_block.test(value.otherAmenities)) {
-                err.otherAmenities = "Do not use spaces at beginning"
-            }
-        }
-        if (value.eventCategory.length === 0) {
-            err.eventCategory = "Please Select the Event Category"
-        }
-        if (value.othereventCategory) {
-            if (!Addition_Infromateion.test(value.othereventCategory)) {
-                err.othereventCategory = "Please Enter a vaild Other Event Category"
-            }
-            if (!space_block.test(value.othereventCategory)) {
-                err.othereventCategory = "Do not use spaces at beginning"
-            }
-        }
-        if (value.facilityType === "2" && value.game.length === 0) {
-            err.game = "Please Select the Game"
-        }
-        if (value.othergame) {
-            if (!Addition_Infromateion.test(value.othergame)) {
-                err.othergame = "Please Enter a vaild Other Game"
-            }
-            if (!space_block.test(value.othergame)) {
-                err.othergame = "Do not use spaces at beginning"
-            }
-        }
-        if (!value.additionalDetails) {
-            err.additionalDetails = "Please Enter the Additional Details"
-        }
-        if (!Addition_Infromateion.test(value.additionalDetails)) {
-            err.additionalDetails = "Please Enter a vaild Additional Details"
-        }
-        if (!space_block.test(value.additionalDetails)) {
-            err.additionalDetails = "Do not use spaces at beginning"
-        }
-        if (!value.facilityImage.facilityImageOne) {
-            err.facilityImageOne = "Please Upload the Facility Image"
-        }
-        return err;
-    }
-    // Vaildation of 2nd form ------------------------------------------------------
-    const Validation2 = (val) => {
-        const error = {};
-        const panCardRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-        const PHONE_NUMBER = /^[1-9]\d{9}$/;
-        const Name_Regex = /^[a-zA-Z ]+$/;
-        const space_block = /^[^\s][^\n\r]*$/;
-        const EMAIL_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        const Addition_Infromateion = /^[a-zA-Z\s,\.]+$/;
-        if (!val.facilityisownedbBDA) {
-            error.facilityisownedbBDA = "Please Select if the Facility is Owned by BDA or Not";
-        }
-        if (val.facilityisownedbBDA === 'No') {
-            if (!val.firstName) {
-                error.firstName = "Please Enter the First Name";
-            } else if (!Name_Regex.test(val.firstName)) {
-                error.firstName = "Please Enter a valid First Name";
-            } else if (!space_block.test(val.firstName)) {
-                error.firstName = "Do not use spaces at the beginning";
-            }
-            if (!val.lastName) {
-                error.lastName = "Please Enter the Last Name";
-            } else if (!Name_Regex.test(val.lastName)) {
-                error.lastName = "Please Enter a valid Last Name";
-            } else if (!space_block.test(val.lastName)) {
-                error.lastName = "Do not use spaces at the beginning";
-            }
-            if (!val.phoneNumber) {
-                error.phoneNumber = "Please Enter the Phone Number";
-            } else if (!PHONE_NUMBER.test(val.phoneNumber)) {
-                error.phoneNumber = "Please Enter a vaild Phone Number"
-            } else if (!space_block.test(val.phoneNumber)) {
-                error.phoneNumber = "Do not use spaces at beginning"
-            }
-            if (!val.emailAdress) {
-                error.emailAdress = "Please Enter the Email Address";
-            } else if (!EMAIL_regex.test(val.emailAdress)) {
-                error.emailAdress = "Please Enter a valid Email Address"
-            } else if (!space_block.test(val.emailAdress)) {
-                error.emailAdress = "Do not use spaces at beginning"
-            }
-            if (!val.ownerPanCard) {
-                error.ownerPanCard = "Please Enter the Owner’s PAN Card Number";
-            } else if (!panCardRegex.test(val.ownerPanCard)) {
-                error.ownerPanCard = "Please Enter a vaild Pan Card Number"
-            } else if (!space_block.test(val.ownerPanCard)) {
-                error.ownerPanCard = "Do not use spaces at beginning"
-            }
-            if (!val.ownersAddress) {
-                error.ownersAddress = "Please Enter the Owner’s Address";
-            } else if (!Addition_Infromateion.test(val.ownersAddress)) {
-                error.ownersAddress = "Please Enter a vaild Owner Address"
-            } else if (!space_block.test(val.ownersAddress)) {
-                error.ownersAddress = "Do not use spaces at beginning"
-            }
-            if (!val.ownership) {
-                error.ownership = "Please Enter the Ownership"
-            } else if (!Name_Regex.test(val.ownership)) {
-                error.ownership = "Please Enter a vaild ownership"
-            } else if (!space_block.test(val.ownership)) {
-                error.ownership = "Do not use spaces at beginning"
-            }
-        }
-        return error;
-    };
-    // Vaildation of Invantory ---------------------------------------------------
-    const Validationinvantory = (data) => {
-        let errors = {};
-        const Number_item_regex = /^(?:[1-9][0-9]?|100)$/;
-        const equipmentIds = new Set();
-        data.parkInventory.forEach((item, index) => {
-            if (!item.equipmentId) {
-                errors[`equipmentId${index}`] = "Equipment is required.";
-            } else if (equipmentIds.has(item.equipmentId)) {
-                errors[`equipmentId${index}`] = "Each equipment must be unique.";
-            } else {
-                equipmentIds.add(item.equipmentId);
-            }
-            if (!item.count) {
-                errors[`count${index}`] = "Please Enter a Number of item/Equipment"
-            } else if (!Number_item_regex.test(item.count)) {
-                errors[`count${index}`] = "Please enter a valid number between 1 and 100."
-            }
-
-        });
-        return errors;
-    };
     // here Open Image on new tabe------------------------
     const openImageInNewTab = (imageUrl) => {
         window.open(imageUrl, '_blank');
@@ -841,17 +584,16 @@ const Facility_Edit_View = () => {
     //useEffect (Update data)-------------------------------------------------------
     useEffect(() => {
         GetFacilityInitailData();
-        DisplayFacilityData()
     }, [formErrors]);
+
+    useEffect(() => {
+        DisplayFacilityData()
+    }, [])
 
     return (
         <div>
             <div className="all_From_conatiner">
                 <AdminHeader />
-
-
-
-
                 {currentStep === 1 && (
                     <form className="event-host_1st_Page">
                         <div className="HostEvent_container">
@@ -1009,7 +751,7 @@ const Facility_Edit_View = () => {
                                             onChange={handleChange}
                                             disabled={action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.operatingHoursFrom && <p className="error text-red-700">{formErrors.operatingHoursFrom}</p>}
+                                        {/* {formErrors.operatingHoursFrom && <p className="error text-red-700">{formErrors.operatingHoursFrom}</p>} */}
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">
@@ -1026,7 +768,7 @@ const Facility_Edit_View = () => {
                                             onChange={handleChange}
                                             disabled={action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.operatingHoursTo && <p className="error text-red-700">{formErrors.operatingHoursTo}</p>}
+                                        {/* {formErrors.operatingHoursTo && <p className="error text-red-700">{formErrors.operatingHoursTo}</p>} */}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -1348,7 +1090,7 @@ const Facility_Edit_View = () => {
                                             </div>
                                         }
                                         {formErrors.facilityImageOne && <p className="error text-red-700  text-sm">{formErrors.facilityImageOne}</p>}
-                                        {PostFacilityData.facilityImageOne && (
+                                        {PostFacilityData?.facilityImageOne && (
                                             <div className="image-preview" id="imagePreview">
                                                 <p>
                                                     {PostFacilityData.facilityImageOne.map(image => (
@@ -1371,49 +1113,49 @@ const Facility_Edit_View = () => {
                                         )}
                                     </div>
                                     <div className="container" id="facilityArrayOfImagesContainer">
-                                        {action=='Edit' && 
-                                         <div>                                     
-                                        <h2 className="Upload_Image_text">Upload Additional Facility Images</h2>
-                                        <div className="upload-btn-wrapper">
-                                            <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
-                                            <input
-                                                className="form-input"
-                                                id="facilityArrayOfImages"
-                                                name="facilityArrayOfImages"
-                                                type="file"
-                                                accept="image/*"
-                                                multiple
-                                                onChange={handleChange}
-                                                disabled={action == 'View' ? 1 : 0}
-                                            />
-                                            <p className="italic text-sm font-bold text-gray-500">
-                                                Max. Each image should be less than 200 KB.
-                                            </p>
-                                            <p className="italic text-sm font-bold text-gray-600">You can only upload up to 5  image for   Additional Facility Images .</p>
-                                        </div>                                
-                                        </div>
-                                          }
+                                        {action == 'Edit' &&
+                                            <div>
+                                                <h2 className="Upload_Image_text">Upload Additional Facility Images</h2>
+                                                <div className="upload-btn-wrapper">
+                                                    <span> <FontAwesomeIcon icon={faCloudUploadAlt} className="Upload_Iocn" /> </span>
+                                                    <input
+                                                        className="form-input"
+                                                        id="facilityArrayOfImages"
+                                                        name="facilityArrayOfImages"
+                                                        type="file"
+                                                        accept="image/*"
+                                                        multiple
+                                                        onChange={handleChange}
+                                                        disabled={action == 'View' ? 1 : 0}
+                                                    />
+                                                    <p className="italic text-sm font-bold text-gray-500">
+                                                        Max. Each image should be less than 200 KB.
+                                                    </p>
+                                                    <p className="italic text-sm font-bold text-gray-600">You can only upload up to 5  image for   Additional Facility Images .</p>
+                                                </div>
+                                            </div>
+                                        }
                                         {PostFacilityData.facilityArrayOfImages && (
                                             <div className="image-preview" id="imagePreview">
                                                 {PostFacilityData.facilityArrayOfImages.map(image => (
-                                                   
 
-                                                   
-                                                        <span key={image.attachmentId}>
-                                                            {image.code}
-                                                            <span
-                                                                onClick={() => handleImageRemove("facilityImageOne")}
-                                                                style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
 
-                                                            </span>
-                                                            <span
-                                                                onClick={() => openImageInNewTab(image.url)}
-                                                                style={{ cursor: 'pointer', color: 'blue', marginLeft: '10px' }}>
-                                                                <FontAwesomeIcon icon={faEye} />
-                                                            </span>
+
+                                                    <span key={image.attachmentId}>
+                                                        {image.code}
+                                                        <span
+                                                            onClick={() => handleImageRemove("facilityImageOne")}
+                                                            style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
+
                                                         </span>
-                                                       
-                                                    ))}
+                                                        <span
+                                                            onClick={() => openImageInNewTab(image.url)}
+                                                            style={{ cursor: 'pointer', color: 'blue', marginLeft: '10px' }}>
+                                                            <FontAwesomeIcon icon={faEye} />
+                                                        </span>
+                                                    </span>
+
+                                                ))}
                                             </div>
                                         )}
                                     </div>
@@ -1522,15 +1264,16 @@ const Facility_Edit_View = () => {
                                             id="input2"
                                             name="facilityisownedbBDA"
                                             className="input_padding"
-                                            value={PostFacilityData.ownersAddress.facilityisownedbBDA}
-                                            onChange={handleChange}
+                                            // value={PostFacilityData?.ownersAddress?.facilityisownedbBDA}
+                                            // onChange={handleChange}
                                             disabled={action === 'View'}
                                         >
                                             <option value="" disabled hidden>
                                                 If yes, ownership details are not required
                                             </option>
-                                            {
-                                                PostFacilityData.ownersAddress.facilityisownedbBDA === 0 && (
+
+                                            {action == 'View' &&
+                                                PostFacilityData?.ownersAddress?.facilityisownedbBDA === 0 && (
                                                     <option value="Yes" selected={PostFacilityData.ownersAddress.facilityisownedbBDA}>
                                                         Yes
                                                     </option>
@@ -1538,14 +1281,14 @@ const Facility_Edit_View = () => {
 
 
                                             }
-                                            {PostFacilityData.ownersAddress.facilityisownedbBDA === 1 && (
+                                            {PostFacilityData?.ownersAddress?.facilityisownedbBDA === 1 && (
                                                 <option value="No" selected={PostFacilityData.ownersAddress.facilityisownedbBDA == 1}>
                                                     No
                                                 </option>
                                             )}
 
                                         </select>
-                                        {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>}
+                                        {/* {formErrors.facilityisownedbBDA && <p className="error text-red-700">{formErrors.facilityisownedbBDA}</p>} */}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -1565,7 +1308,7 @@ const Facility_Edit_View = () => {
                                             disabled={disabledFields || action === 'View'}
 
                                         />
-                                        {formErrors.firstName && <p className="error text-red-700">{formErrors.firstName}</p>}
+                                        {/* {formErrors.firstName && <p className="error text-red-700">{formErrors.firstName}</p>} */}
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">
@@ -1578,12 +1321,12 @@ const Facility_Edit_View = () => {
                                             className="input_padding"
                                             placeholder="Enter Last Name"
                                             name="lastName"
-                                            value={PostFacilityData.ownersAddress.lastName}
+                                            value={PostFacilityData?.ownersAddress?.lastName}
                                             onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
 
                                         />
-                                        {formErrors.lastName && <p className="error text-red-700">{formErrors.lastName}</p>}
+                                        {/* {formErrors.lastName && <p className="error text-red-700">{formErrors.lastName}</p>} */}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -1598,11 +1341,11 @@ const Facility_Edit_View = () => {
                                             id="input1"
                                             placeholder="Enter Phone Number"
                                             name="phoneNumber"
-                                            value={PostFacilityData.ownersAddress.phoneNumber}
+                                            value={PostFacilityData?.ownersAddress?.phoneNumber}
                                             onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.phoneNumber && <p className="error text-red-700">{formErrors.phoneNumber}</p>}
+                                        {/* {formErrors.phoneNumber && <p className="error text-red-700">{formErrors.phoneNumber}</p>} */}
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">
@@ -1615,11 +1358,11 @@ const Facility_Edit_View = () => {
                                             className="input_padding"
                                             placeholder="Enter Email Adress"
                                             name="emailAdress"
-                                            value={PostFacilityData.ownersAddress.emailAddress}
+                                            value={PostFacilityData?.ownersAddress?.emailAddress}
                                             onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.emailAdress && <p className="error text-red-700">{formErrors.emailAdress}</p>}
+                                        {/* {formErrors.emailAdress && <p className="error text-red-700">{formErrors.emailAdress}</p>} */}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -1634,11 +1377,11 @@ const Facility_Edit_View = () => {
                                             id="input1"
                                             placeholder="Enter Owner’s PAN card number "
                                             name="ownerPanCard"
-                                            value={PostFacilityData.ownersAddress.ownerPanCard}
+                                            value={PostFacilityData?.ownersAddress?.ownerPanCard}
                                             onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.ownerPanCard && <p className="error text-red-700">{formErrors.ownerPanCard}</p>}
+                                        {/* {formErrors.ownerPanCard && <p className="error text-red-700">{formErrors.ownerPanCard}</p>} */}
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">
@@ -1651,11 +1394,11 @@ const Facility_Edit_View = () => {
                                             id="input1"
                                             placeholder="Enter  Ownership  "
                                             name="ownership"
-                                            value={PostFacilityData.ownersAddress.ownership}
+                                            value={PostFacilityData?.ownersAddress?.ownership}
                                             onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.ownership && <p className="error text-red-700">{formErrors.ownership}</p>}
+                                        {/* {formErrors.ownership && <p className="error text-red-700">{formErrors.ownership}</p>} */}
                                     </div>
                                 </div>
                                 <div className="HostEvent_Row">
@@ -1670,11 +1413,11 @@ const Facility_Edit_View = () => {
                                             className="input_padding"
                                             placeholder="Enter address of your facility"
                                             name="ownersAddress"
-                                            value={PostFacilityData.ownersAddress.ownersAddress}
-                                            onChange={handleChange}
+                                            // value={PostFacilityData?.ownersAddress?.ownersAddress}
+                                            // onChange={handleChange}
                                             disabled={disabledFields || action == 'View' ? 1 : 0}
                                         />
-                                        {formErrors.ownersAddress && <p className="error text-red-700">{formErrors.ownersAddress}</p>}
+                                        {/* {formErrors.ownersAddress && <p className="error text-red-700">{formErrors.ownersAddress}</p>} */}
                                     </div>
                                 </div>
                             </div>
@@ -1701,7 +1444,7 @@ const Facility_Edit_View = () => {
                     <div>
 
                         {currentStep === 3 && (
-                            <form onSubmit={handleConfirmation}   >
+                            <form onSubmit={HandleSubmitFacility}   >
                                 <div className="Verify_FromConatriner">
                                     <div className="HostEvent_container">
                                         <div className="HostEvent_Heading">
@@ -2141,7 +1884,7 @@ const Facility_Edit_View = () => {
 
                                                 </div>
                                             </div>
-                                            <form id="myForm" className="m-0">
+                                            {/* <form id="myForm" className="m-0">
                                                 <div className="container" id="facilityImageOneContainer">
                                                     <h2 className="Upload_Image_text">Upload Facility Image</h2>
                                                     <div className="upload-btn-wrapper">
@@ -2190,7 +1933,7 @@ const Facility_Edit_View = () => {
                                                         </div>
                                                     )}
                                                 </div>
-                                            </form>
+                                            </form> */}
                                             {/* Add Park inventory */}
                                             <div className="Pakr_inventory_form_main_Conatiner">
                                                 <h1 className="Park_Inventory_text">Park Inventory</h1>
