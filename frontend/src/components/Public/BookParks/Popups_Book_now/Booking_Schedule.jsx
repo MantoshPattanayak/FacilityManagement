@@ -119,7 +119,6 @@ const Booking_Schedule = ({
             id="startTime"
             name="startTime"
             value={formatTime(bookingData.startTime)}
-            // value={bookingData.startTime}
             onChange={handleChangeInput}
             className="custom-input"
           />
