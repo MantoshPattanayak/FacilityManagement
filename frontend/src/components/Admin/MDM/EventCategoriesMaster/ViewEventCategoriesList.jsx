@@ -16,9 +16,9 @@ export default function ViewEventCategoriesList() {
     const [tableData, setTableData] = useState([]);
     const [givenReq, setGivenReq] = useState('');
 
-    async function fetchServicesList(givenReq = null) {
+    async function fetchEventCategoriesList(givenReq = null) {
         try {
-            let res = await axiosHttpClient('VIEW_SERVICES_LIST_API', 'post', { givenReq });
+            let res = await axiosHttpClient('VIEW_EVENTCATEGORIES_LIST_API', 'post', { givenReq });
             setTableData(res.data.data);
             console.log(res.data.data);
         }
@@ -39,17 +39,17 @@ export default function ViewEventCategoriesList() {
     }
 
     //Debounced fetchFacilityList function while searching
-    const debouncedFetchUserList = useCallback(debounce(fetchServicesList, 1000), []);
+    const debouncedFetchEventCategoriesList = useCallback(debounce(fetchEventCategoriesList, 1000), []);
 
     useEffect(() => {
         document.title = 'ADMIN | AMA BHOOMI';
-        fetchServicesList();
+        fetchEventCategoriesList();
     }, []);
 
     useEffect(() => {
         if (givenReq != null)
-            debouncedFetchUserList(givenReq);
-    }, [givenReq, debouncedFetchUserList]);
+            debouncedFetchEventCategoriesList(givenReq);
+    }, [givenReq, debouncedFetchEventCategoriesList]);
 
 
     function encryptDataId(id) {
@@ -63,11 +63,11 @@ export default function ViewEventCategoriesList() {
             <div className='ViewEventCategoriesList'>
                 <div className="Main_Conatiner_table">
                     <div className='table-heading'>
-                        <h2 className="">List of Services master</h2>
+                        <h2 className="">List of Event Categories master</h2>
                     </div>
 
                     <div className="search_text_conatiner">
-                        <button className='search_field_button' onClick={() => navigate('/mdm/create-services')}><FontAwesomeIcon icon={faPlus} /> Add new service</button>
+                        <button className='search_field_button' onClick={() => navigate('/mdm/create-eventcategories')}><FontAwesomeIcon icon={faPlus} /> Add new event category</button>
                         <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
                         {/* <SearchDropdown /> */}
                     </div>
@@ -76,7 +76,7 @@ export default function ViewEventCategoriesList() {
                         <table >
                             <thead>
                                 <tr>
-                                    <th scope="col">Code</th>
+                                    <th scope="col">Name</th>
                                     <th scope="col">Description</th>
                                     <th scope="col">Created On</th>
                                     <th scope="col">Status</th>
@@ -89,19 +89,19 @@ export default function ViewEventCategoriesList() {
                                     tableData?.length > 0 && tableData?.map((data, index) => {
                                         return (
                                             <tr key={index}>
-                                                <td data-label="Code">{data.code}</td>
+                                                <td data-label="Name">{data.eventCategoryName}</td>
                                                 <td data-label="Description">{data.description}</td>
                                                 <td data-label="Created On">{formatDate(data.createdOn)}</td>
                                                 <td data-label="Status">
                                                     <p className={data.statusId == '1' ? 'text-green-500' : data.statusId == '2' ? 'text-red-500' : ''}>
-                                                        {data.statusId == '1' ? 'ACTIVE' : data.status == '2' ? 'INACTIVE' : ''}
+                                                        {data.status}
                                                     </p>
                                                 </td>
                                                 <td data-label="View">
                                                     <Link
                                                         to={{
-                                                            pathname: '/mdm/edit-services',
-                                                            search: `?s=${encodeURIComponent(encryptDataId(data.serviceId))}&action=view`
+                                                            pathname: '/mdm/edit-eventcategories',
+                                                            search: `?s=${encodeURIComponent(encryptDataId(data.eventCategoryId))}&action=view`
                                                         }}
                                                     >
                                                         <FontAwesomeIcon icon={faEye} />
@@ -110,8 +110,8 @@ export default function ViewEventCategoriesList() {
                                                 <td data-label="Edit">
                                                     <Link
                                                         to={{
-                                                            pathname: '/mdm/edit-services',
-                                                            search: `?s=${encodeURIComponent(encryptDataId(data.serviceId))}${data.statusId == '1' ? '&action=edit' : data.statusId == '2' ? '&action=view' : '&action=view'}`
+                                                            pathname: '/mdm/edit-eventcategories',
+                                                            search: `?s=${encodeURIComponent(encryptDataId(data.eventCategoryId))}${data.statusId == '1' ? '&action=edit' : data.statusId == '2' ? '&action=view' : '&action=view'}`
                                                         }}
                                                     >
                                                         <FontAwesomeIcon icon={faPenToSquare} />

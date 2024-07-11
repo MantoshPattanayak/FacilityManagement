@@ -13,26 +13,26 @@ import { decryptData } from '../../../../utils/encryptData';
 export default function EditEventCategory() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    code: '',
+    eventCategoryName: '',
     description: '',
   });
   const [errors, setErrors] = useState({
-    code: '',
+    eventCategoryName: '',
     description: '',
   });
   const [refresh, setRefresh] = useState(false);
   const location = useLocation();
   const action = new URLSearchParams(location.search).get('action');
-  const serviceId = decryptData(new URLSearchParams(location.search).get('s'));
+  const eventCategoryId = decryptData(new URLSearchParams(location.search).get('s'));
 
-  async function fetchServiceDetailsById() {
+  async function fetchEventCategoryDetailsById() {
     try {
-      let response = await axiosHttpClient('VIEW_SERVICE_BY_ID_API', 'get', {}, serviceId);
+      let response = await axiosHttpClient('VIEW_EVENTCATEGORY_BY_ID_API', 'get', {}, eventCategoryId);
       console.log('response of fetched service details', response.data.data);
-      let { code, description, statusId } = response.data.data;
-      setFormData({ code, description, statusId, serviceId });
+      let { eventCategoryName, description, statusId } = response.data.data;
+      setFormData({ eventCategoryName, description, statusId, eventCategoryId });
     }
-    catch(error) {
+    catch (error) {
       console.error(error);
     }
   }
@@ -41,11 +41,29 @@ export default function EditEventCategory() {
   let validation = (formData) => {
     let error = {};
 
-    if (!formData.code) {
-      error.code = 'Please enter Code.';
+    if (!formData.eventCategoryName) {
+      error.eventCategoryName = 'Please enter Name.';
     }
     if (!formData.description) {
       error.description = 'Please enter Description.';
+    }
+    if (!formData.statusId) {
+      error.statusId = 'Please enter status.';
+    }
+
+    //highlight input fields whose field values are incorrect
+    for (let i = 0; i <= Object.keys(error).length; i++) {
+      const inputElement = document.getElementsByName(Object.keys(error)[i]);
+      inputElement[0] ? inputElement[0].style.border = '2px solid #C84040' : '';
+      // Add focus event listener
+      inputElement[0] ? inputElement[0].addEventListener('focus', () => {
+        inputElement[0].style.border = '2px solid #176BFB'; // Change border color on focus
+      }) : '';
+
+      // Add blur event listener to reset the border style when focus is lost
+      inputElement[0] ? inputElement[0].addEventListener('blur', () => {
+        inputElement[0].style.border = '2px solid #C84040'; // Reset to original border color
+      }) : '';
     }
     return error;
   }
@@ -63,8 +81,8 @@ export default function EditEventCategory() {
     e.preventDefault();
     toast.dismiss();
     // Disable interactions with the background
-    document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'none';
-    document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 0.4;
+    document.querySelectorAll('.CreateEventCategoryContainer')[0].style.pointerEvents = 'none';
+    document.querySelectorAll('.CreateEventCategoryContainer')[0].style.opacity = 0.4;
 
     toast.warn(
       <div>
@@ -75,8 +93,8 @@ export default function EditEventCategory() {
               e.stopPropagation();
               handleSubmit();
               // Re-enable interactions with the background
-              document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+              document.querySelectorAll('.CreateEventCategoryContainer')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('.CreateEventCategoryContainer')[0].style.opacity = 1;
               toast.dismiss();
             }}
             className="bg-green-400 text-white p-2 border rounded-md"
@@ -87,8 +105,8 @@ export default function EditEventCategory() {
             onClick={(e) => {
               e.stopPropagation();
               // Re-enable interactions with the background
-              document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+              document.querySelectorAll('.CreateEventCategoryContainer')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('.CreateEventCategoryContainer')[0].style.opacity = 1;
               toast.dismiss();
               toast.error('Action cancelled!', {
                 position: "top-right",
@@ -120,27 +138,27 @@ export default function EditEventCategory() {
     setErrors(errors);
     if (Object.keys(errors).length > 0) {
       toast.error('Please enter proper values.');
-      return;
     }
+    else {
+      try {
+        let res = await axiosHttpClient('UPDATE_EVENTCATEGORY_API', 'put', formData);
 
-    try {
-      let res = await axiosHttpClient('UPDATE_SERVICE_API', 'put', formData);
-
-      console.log('form submit response', res.data);
-      toast.dismiss();
-      toast.success(res.data.message, {
-        autoClose: 3000, // Toast timer duration in milliseconds
-        onClose: () => {
-          // Navigate to another page after toast timer completes
-          setTimeout(() => {
-            navigate(-1);
-          }, 1000); // Wait 1 second after toast timer completes before navigating
-        }
-      });
-    }
-    catch (error) {
-      console.error(error);
-      toast.error(error.response.data.message);
+        console.log('form submit response', res.data);
+        toast.dismiss();
+        toast.success(res.data.message, {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate(-1);
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          }
+        });
+      }
+      catch (error) {
+        console.error(error);
+        toast.error(error.response.data.message);
+      }
     }
   }
 
@@ -148,12 +166,12 @@ export default function EditEventCategory() {
   let clearForm = () => {
     toast.dismiss();
     setFormData({
-      code: '',
+      eventCategoryName: '',
       description: '',
     });
 
     setErrors({
-      code: '',
+      eventCategoryName: '',
       description: '',
     });
     setRefresh(prevState => !prevState);
@@ -161,20 +179,18 @@ export default function EditEventCategory() {
 
   // run on page load
   useEffect(() => {
-    fetchServiceDetailsById();
+    fetchEventCategoryDetailsById();
   }, [])
 
   // refresh component on change of refresh state variable
-  useEffect(() => {
-
-  }, [refresh]);
+  useEffect(() => { }, [refresh]);
 
   return (
     <div>
       <AdminHeader />
-      <div className="CreateNewServiceContainer">
+      <div className="CreateEventCategoryContainer">
         <div className="form-heading">
-          <h2>Edit/View Service details</h2>
+          <h2>Edit/View Event category details</h2>
           <div className="flex flex-col-reverse items-end w-[100%]">
             <button
               className='back-button'
@@ -185,18 +201,18 @@ export default function EditEventCategory() {
           </div>
           <div className="grid grid-rows-2 grid-cols-2 gap-x-16 gap-y-2 w-[100%]">
             <div className="form-group col-span-1">
-              <label htmlFor="input2">Service Code <span className='text-red-500'>*</span></label>
-              <input type="text" name='code' value={formData.code} placeholder="Enter Code" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_SHORT} onChange={handleChange} disabled={action=="view" ? true: false} />
-              {errors.code && <p className='error-message'>{errors.code}</p>}
+              <label htmlFor="input2">Event Category Name <span className='text-red-500'>*</span></label>
+              <input type="text" name='eventCategoryName' value={formData.eventCategoryName} placeholder="Enter Name" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_SHORT} onChange={handleChange} disabled={action == "view" ? true : false} />
+              {errors.eventCategoryName && <p className='error-message'>{errors.eventCategoryName}</p>}
             </div>
             <div className="form-group col-span-1">
-              <label htmlFor="input2">Service Description <span className='text-red-500'>*</span></label>
-              <input type='text' name='description' value={formData.description} placeholder="Enter Description" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} disabled={action=="view" ? true: false} />
+              <label htmlFor="input2">Event Category Description <span className='text-red-500'>*</span></label>
+              <input type='text' name='description' value={formData.description} placeholder="Enter Description" autoComplete='off' maxLength={dataLength.STRING_VARCHAR_LONG} onChange={handleChange} disabled={action == "view" ? true : false} />
               {errors.description && <p className='error-message'>{errors.description}</p>}
             </div>
             <div className="form-group col-span-1">
               <label htmlFor="input2">Status<span className='text-red-500'>*</span></label>
-              <select name='statusId' value={formData.statusId} placeholder="Enter Description" autoComplete='off' onChange={handleChange} disabled={action=="view" ? true: false}>
+              <select name='statusId' value={formData.statusId} placeholder="Enter Description" autoComplete='off' onChange={handleChange} disabled={action == "view" ? true : false}>
                 <option value={''}>Select</option>
                 <option value={'1'}>ACTIVE</option>
                 <option value={'2'}>INACTIVE</option>
@@ -205,7 +221,7 @@ export default function EditEventCategory() {
             </div>
           </div>
           <div className="buttons-container">
-            <button className="approve-button" onClick={handleConfirmation} disabled={action=="view" ? true: false}>Submit</button>
+            <button className="approve-button" onClick={handleConfirmation} disabled={action == "view" ? true : false}>Submit</button>
           </div>
         </div>
       </div>

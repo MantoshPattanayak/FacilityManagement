@@ -11,7 +11,7 @@ let viewEventCategoriesList = async (req, res) => {
         console.log("givenReq", givenReq);
 
         let fetchEventCategoriesQuery = `
-            SELECT e.eventCategoryId, e.eventCategoryName, s2.statusId, s2.statusCode as status, e.createdDt as createdOn 
+            SELECT e.eventCategoryId, e.eventCategoryName, e.description, s2.statusId, s2.statusCode as status, e.createdDt as createdOn 
             from amabhoomi.eventcategorymasters e
             INNER JOIN amabhoomi.statusmasters s2 on e.statusId = s2.statusId and s2.parentStatusCode = 'RECORD_STATUS'
         `;
