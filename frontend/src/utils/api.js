@@ -124,10 +124,10 @@ const api = {
    VIEW_INVENTORY_BY_ID_API: '/inventories/viewInventoryById', //get :equipmentId
    UPDATE_INVENTORY_API: '/inventories/updateInventory', //put code, description, equipmentId, statusId
    // EVENT CATEGORIES MASTER (MDM)
-   VIEW_INVENTORIES_LIST_API: '/eventcategories/viewEventCategoriesList', //post givenReq
-   CREATE_NEW_INVENTORY_API: '/eventcategories/createEventCategory', //post eventCategoryName, description
-   VIEW_INVENTORY_BY_ID_API: '/eventcategories/viewEventCategoryById', //get :eventCategoryId
-   UPDATE_INVENTORY_API: '/eventcategories/updateEventCategory', //put eventCategoryName, description, eventCategoryId, statusId
+   VIEW_EVENTCATEGORIES_LIST_API: '/eventcategories/viewEventCategoriesList', //post givenReq
+   CREATE_NEW_EVENTCATEGORY_API: '/eventcategories/createEventCategory', //post eventCategoryName, description
+   VIEW_EVENTCATEGORY_BY_ID_API: '/eventcategories/viewEventCategoryById', //get :eventCategoryId
+   UPDATE_EVENTCATEGORY_API: '/eventcategories/updateEventCategory', //put eventCategoryName, description, eventCategoryId, statusId
    // PAYMENT
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 

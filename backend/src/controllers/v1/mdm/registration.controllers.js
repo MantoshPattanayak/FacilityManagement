@@ -400,13 +400,13 @@ const getFacilityWrtId = async(req,res)=>{
     let statusId = 1
     let findTheFacilityDetils = await facilities.findOne({
       where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]},
-      attributes:[['facilityname','facilityName'],
+      attributes:[['facilityname','facilityName'], 'facilityId',
       'ownership',['facilityTypeId','facilityType'],'scheme',['areaAcres','area'],
       'operatingHoursFrom','operatingHoursTo','sun','mon','tue',
       'wed','thu',
       'fri','sat',['otherGames','othergame'],'otherServices','otherAmenities',['otherEventCategories','othereventCategory'],'additionalDetails','pin','helpNumber','longitude','latitude','address' ]
     })
-    let findAmenityDetails = await sequelize.query(`select am.amenityName,fa.amenityFacilityId as amenityId from amabhoomi.amenitymasters am inner join facilityamenities fa on fa.amenityId = am.amenityId where fa.facilityId = ? and fa.statusId=?`,
+    let findAmenityDetails = await sequelize.query(`select am.amenityName, am.amenityId, fa.amenityFacilityId from amabhoomi.amenitymasters am inner join facilityamenities fa on fa.amenityId = am.amenityId where fa.facilityId = ? and fa.statusId=?`,
       
      { replacements:[facilityId,statusId],
       type:QueryTypes.SELECT}
@@ -441,8 +441,13 @@ const getFacilityWrtId = async(req,res)=>{
        type:QueryTypes.SELECT}
      )
 
-     let findOwnerDetails = await sequelize.query(`select o.ownershipDetailId,o.firstName,o.lastName,o.phoneNo as phoneNumber,o.emailId as emailAddress, o.ownerPanCardNumber as ownerPanCard,o.ownerAddress as ownersAddress,o.isFacilityByBda as facilityisownedbBDA from amabhoomi.ownershipdetails o inner join facilities f on f.ownershipDetailId = o.ownershipDetailId where f.facilityId= ? and o.statusId = ?
-`,
+     let findOwnerDetails = await sequelize.query(`
+      select o.ownershipDetailId,o.firstName,o.lastName,o.phoneNo as phoneNumber,
+      o.emailId as emailAddress, o.ownerPanCardNumber as ownerPanCard,o.ownerAddress as ownersAddress,
+      o.isFacilityByBda as facilityisownedbBDA 
+      from amabhoomi.ownershipdetails o 
+      inner join facilities f on f.ownershipDetailId = o.ownershipDetailId 
+      where f.facilityId= ? and o.statusId = ?`,
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
