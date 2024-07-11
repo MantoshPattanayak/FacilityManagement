@@ -11,7 +11,7 @@ import {
   faPlus,
   faMinus,
   faIndianRupeeSign,
-  faArrowLeftLong
+  faArrowLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -299,15 +299,18 @@ const Book_Now = () => {
               {" "}
               <b>{FacilitiesData?.facilityName || "Park Name"}</b>
             </h1>
-            <Link to={`/Sub_Park_Details?facilityId=${encodeURIComponent(encryptData(formData.facilityId))}`}>
-          <div className="back_button">
-
-            <button className="back_btn">
-              <FontAwesomeIcon icon={faArrowLeftLong} />
-              Back
-            </button>
-          </div>
-        </Link>
+            <Link
+              to={`/Sub_Park_Details?facilityId=${encodeURIComponent(
+                encryptData(formData.facilityId)
+              )}`}
+            >
+              <div className="back_button">
+                <button className="back_btn">
+                  <FontAwesomeIcon icon={faArrowLeftLong} />
+                  Back
+                </button>
+              </div>
+            </Link>
           </div>
 
           <div className="form_BookNow">
