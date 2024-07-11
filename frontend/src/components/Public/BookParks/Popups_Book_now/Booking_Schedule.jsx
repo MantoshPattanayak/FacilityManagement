@@ -93,7 +93,7 @@ const Booking_Schedule = ({
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="booking-schedule-popup">
         <div className="popup-header">
-          <button className="icon-close" onClick={closePopup}>
+          <button className="icon-close" onClick={()=>closePopup(false)}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
@@ -144,7 +144,7 @@ const Booking_Schedule = ({
             </button>
           </div>
           <div className="popup-footer">
-            <button className="cancel-button">Cancel</button>
+            <button className="cancel-button" onClick={()=>closePopup(false)}>Cancel</button>
             <button className="next-button" onClick={handleBookingData}>
               Next
             </button>

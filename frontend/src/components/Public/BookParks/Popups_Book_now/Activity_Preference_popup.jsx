@@ -8,7 +8,7 @@ import axiosHttpClient from "../../../../utils/axios";
 import { decryptData } from "../../../../utils/encryptData";
 import Booking_Schedule from "./Booking_Schedule";
 
-const Activity_Preference_popup = ({ formData }) => {
+const Activity_Preference_popup = ({ closePopup, formData }) => {
   console.log("Received formData:", formData);
   const [showPeople, setShowPeople] = useState(false);
   const [localFormData, setLocalFormData] = useState(formData);
@@ -16,10 +16,10 @@ const Activity_Preference_popup = ({ formData }) => {
   const [selectedGames, setSelectedGames] = useState([]);
 
   const location = useLocation();
-  
+
   //Decrypting the facility id
-  let facilityId =decryptData(formData.facilityId)
-  console.log("facilityid is here", facilityId)
+  let facilityId = decryptData(formData.facilityId);
+  console.log("facilityid is here", facilityId);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -67,12 +67,11 @@ const Activity_Preference_popup = ({ formData }) => {
     setLocalFormData(updatedFormData);
   };
 
- 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
       <div className="activity_preference_popup ">
         <div className="activity-preference">
-          <button className="icon-close">
+          <button className="icon-close" onClick={() => closePopup(false)}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
           <span>Activity Preference</span>
@@ -105,7 +104,9 @@ const Activity_Preference_popup = ({ formData }) => {
           />
         </div>
         <div className="popup-footer">
-          <button className="cancel-button">Cancel</button>
+          <button className="cancel-button" onClick={() => closePopup(false)}>
+            Cancel
+          </button>
           <button className="next-button" onClick={() => setShowPeople(true)}>
             Next
           </button>

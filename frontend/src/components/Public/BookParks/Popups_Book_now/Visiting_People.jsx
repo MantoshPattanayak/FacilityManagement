@@ -5,7 +5,10 @@ import "./Visiting_People.css";
 import { decryptData } from "../../../../utils/encryptData";
 import Activity_Preference_popup from "./Activity_Preference_popup";
 import { encryptData } from "../../../../utils/encryptData";
-const Visiting_People = ({ closePopup, facilityId }) => {
+import { Link, useNavigate} from "react-router-dom";
+
+const Visiting_People = ({ closePopup, facilityId, facilityName }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     totalMembers: 0,
     children: 0,
@@ -29,6 +32,7 @@ const Visiting_People = ({ closePopup, facilityId }) => {
   console.log("facility id is here", formData.facilityId);
 
   const [showPeople, setShowPeople] = useState(false);
+  const [close, setClose] = useState(false);
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -76,17 +80,30 @@ const Visiting_People = ({ closePopup, facilityId }) => {
     setShowPeople(true);
   };
 
+  const handleClose = () => {
+    navigate(`/Sub_Park_Details?facilityId=${encodeURIComponent(encryptData(facilityId))}`);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
       <div className="popup-overlay">
         <div className="popup-content">
           <div className="popup-header">
-            <button className="icon-close" onClick={closePopup}>
+            {/* <Link
+              to={`/Sub_Park_Details?facilityId=${encodeURIComponent(
+                encryptData(formData.facilityId)
+              )}`}
+            >
+              <button className="icon-close" onClick={closePopup}>
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            </Link> */}
+            <button className="icon-close" onClick={(e) => closePopup(false)}>
               <FontAwesomeIcon icon={faXmark} />
             </button>
           </div>
           <div className="popup-body">
-            <h2 className="popup-title">IG PARK</h2>
+            <h2 className="popup-title">{facilityName}</h2>
             <div className="member-details">
               <div className="member-row">
                 <label htmlFor="children">Children (0-12):</label>
@@ -174,7 +191,7 @@ const Visiting_People = ({ closePopup, facilityId }) => {
             </div>
 
             <div className="popup-footer">
-              <button className="cancel-button" onClick={closePopup}>
+              <button className="cancel-button" onClick={(e) => closePopup(false)}>
                 Cancel
               </button>
               <button className="next-button" onClick={handleNext}>
@@ -183,7 +200,7 @@ const Visiting_People = ({ closePopup, facilityId }) => {
             </div>
           </div>
         </div>
-        {showPeople && <Activity_Preference_popup formData={formData} />}
+        {showPeople && <Activity_Preference_popup closePopup={closePopup} formData={formData} />}
       </div>
     </div>
   );
