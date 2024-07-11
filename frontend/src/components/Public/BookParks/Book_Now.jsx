@@ -494,7 +494,7 @@ const Book_Now = () => {
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
               <RazorpayButton
-                amount={formData.amount * parseInt(formData.adults)}
+                amount={price}
                 currency={"INR"}
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
