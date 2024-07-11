@@ -112,6 +112,9 @@ import Activity_Preference_popup from './components/Public/BookParks/Popups_Book
 import ViewInventoryList from "./components/Admin/MDM/InventoryMaster/ViewInventoryList";
 import CreateInventory from "./components/Admin/MDM/InventoryMaster/CreateInventory";
 import EditInventory from "./components/Admin/MDM/InventoryMaster/EditInventory";
+import ViewEventCategoriesList from "./components/Admin/MDM/EventCategoriesMaster/ViewEventCategoriesList";
+import CreateEventCategory from "./components/Admin/MDM/EventCategoriesMaster/CreateEventCategory";
+import EditEventCategory from "./components/Admin/MDM/EventCategoriesMaster/EditEventCategory";
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -628,6 +631,9 @@ function App() {
               <Route path="/mdm/view-inventory" element={<ProtectedRoute><ViewInventoryList /></ProtectedRoute>} />
               <Route path="/mdm/create-inventory" element={<ProtectedRoute><CreateInventory /></ProtectedRoute>} />
               <Route path="/mdm/edit-inventory" element={<ProtectedRoute><EditInventory /></ProtectedRoute>} />
+              <Route path="/mdm/view-eventcategories" element={<ProtectedRoute><ViewEventCategoriesList /></ProtectedRoute>} />
+              <Route path="/mdm/create-eventcategories" element={<ProtectedRoute><CreateEventCategory /></ProtectedRoute>} />
+              <Route path="/mdm/edit-eventcategories" element={<ProtectedRoute><EditEventCategory /></ProtectedRoute>} />
             </Routes>
             {/* <Footer /> */}
             <CommonFooter1 />

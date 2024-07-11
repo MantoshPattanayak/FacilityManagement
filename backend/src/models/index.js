@@ -189,8 +189,7 @@ db1.inventoryfacilities.hasMany(db1.inventorymaster,{foreignKey:'equipmentId'})
 
 
 
-db1.faq.sync({
-
+db1.eventCategoryMaster.sync({
   alter: false,
 });
 

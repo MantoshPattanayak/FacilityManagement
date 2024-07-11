@@ -954,8 +954,8 @@ let viewBookings = async (req, res) => {
     ${upcomingWhereCondition}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (s.statusId IN ${bookingStatus})
-    OR (f2.facilityTypeId IN ${facilityTypeId})
+    OR (s.statusId IN (${bookingStatus}))
+    OR (f2.facilityTypeId IN (${facilityTypeId}))
     order by fb.createdOn ${sortingOrder}`;
 
 
@@ -971,8 +971,8 @@ let viewBookings = async (req, res) => {
     ${upcomingWhereCondition}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (s.statusId IN ${bookingStatus})
-    OR (f2.facilityTypeId IN ${facilityTypeId})
+    OR (s.statusId IN (${bookingStatus}))
+    OR (f2.facilityTypeId IN (${facilityTypeId}))
     order by fb.createdOn ${sortingOrder}`;
 
     // search query for event host booking
@@ -991,8 +991,8 @@ let viewBookings = async (req, res) => {
     ${upcomingWhereCondition}
     OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
     OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
-    OR (s.statusId IN ${bookingStatus})
-    OR (f2.facilityTypeId IN ${facilityTypeId})
+    OR (s.statusId IN (${bookingStatus}))
+    OR (f2.facilityTypeId IN (${facilityTypeId}))
     order by fb.createdOn ${sortingOrder}`;
 
     if (tabName == "ALL_BOOKINGS") {

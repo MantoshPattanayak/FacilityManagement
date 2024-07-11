@@ -128,7 +128,6 @@
     
   }
   
-  
 @media (min-width: 768px) {
     .button-379 {
       padding: 10px 30px;
@@ -265,4 +264,316 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.cancellationPolicyContainer .proceed-button:disabled {
+  cursor: not-allowed;
+  background-color: gray;
+}
+
+/* Extra small devices (phones, 0px and up) */
+@media (max-width: 575.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 6%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 85%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 3%;
+    line-height: 1.1rem;
+    min-height: 400px;
+    overflow-y: scroll;
+    word-wrap: break-word;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 11px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Small devices (small tablets and large phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 4%;
+    line-height: 1.3rem;
+    min-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 14px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 1.5rem;
+    min-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 2rem;
+    min-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:5%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 2rem;
+    min-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 2rem;
+    min-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
 }
