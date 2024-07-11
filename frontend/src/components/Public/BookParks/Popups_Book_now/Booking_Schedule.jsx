@@ -89,6 +89,11 @@ const Booking_Schedule = ({
     );
   }
 
+  const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="booking-schedule-popup">
@@ -113,7 +118,8 @@ const Booking_Schedule = ({
             type="time"
             id="startTime"
             name="startTime"
-            value={bookingData.startTime}
+            value={formatTime(bookingData.startTime)}
+            // value={bookingData.startTime}
             onChange={handleChangeInput}
             className="custom-input"
           />
