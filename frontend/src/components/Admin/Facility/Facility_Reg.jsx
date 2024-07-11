@@ -464,8 +464,8 @@ const Facility_Reg = () => {
     function handleConfirmation(e) {
         e.preventDefault();
         // Disable interactions with the background
-        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'none';
-        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 0.4;
+        document.querySelectorAll('.all_From_conatiner')[0].style.pointerEvents = 'none';
+        document.querySelectorAll('.all_From_conatiner')[0].style.opacity = 0.4;
         toast.warn(
             <div>
                 <p>Are you sure you want to proceed?</p>
@@ -475,15 +475,15 @@ const Facility_Reg = () => {
                             e.stopPropagation();
                             HandleSubmitFacility(e);
                             // Re-enable interactions with the background
-                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+                            document.querySelectorAll('.all_From_conatiner')[0].style.pointerEvents = 'auto';
+                            document.querySelectorAll('.all_From_conatiner')[0].style.opacity = 1;
                         }}
                         className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
                     <button onClick={(e) => {
                         e.stopPropagation();
                         // Re-enable interactions with the background
-                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+                        document.querySelectorAll('.all_From_conatiner')[0].style.pointerEvents = 'auto';
+                        document.querySelectorAll('.all_From_conatiner')[0].style.opacity = 1;
                         toast.dismiss();
                         toast.error('Action cancelled!', {
                             // position: toast.POSITION.TOP_CENTER,

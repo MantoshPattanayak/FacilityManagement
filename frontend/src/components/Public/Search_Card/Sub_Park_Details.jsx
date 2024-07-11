@@ -38,6 +38,7 @@ import Book_Now from "../BookParks/Book_Now";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
+import instance from "../../../../env";
 
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
@@ -61,6 +62,8 @@ const Sub_Park_Details = () => {
     setShowPopup(!showPopup);
   };
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [images, setImagesList] = useState([Park_img, amabhoomi, Park_img, amabhoomi, Park_img]);
+  const [currentIndex1, setCurrentIndex1] = useState(0);
 
   useEffect(() => {}, [facilityId]);
 
@@ -117,7 +120,15 @@ const Sub_Park_Details = () => {
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
       setOperatingDaysFromRes(res);
-      console.log("response of fetch facility details", res);
+      if(res.data.facilitiesData.length > 0) {
+        let imagesData = res.data.facilitiesData.map((facility) => {
+          return facility.url || null
+        });
+        console.log("Images data", imagesData);
+        setImagesList(imagesData);
+      }
+      
+      console.log("response of fetch facility details", res.data.facilitiesData);
 
       function setOperatingDaysFromRes(res) {
         let operatingDaysFromRes = [];
@@ -200,9 +211,6 @@ const Sub_Park_Details = () => {
     return `${day}-${month}-${year}`;
   }
 
-  const images = [Park_img, amabhoomi, Park_img, amabhoomi, Park_img];
-  const [currentIndex1, setCurrentIndex1] = useState(0);
-
   const handlePrev = () => {
     setCurrentIndex1(
       currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1
@@ -264,7 +272,7 @@ const Sub_Park_Details = () => {
         <div className="carousel-container1">
           <div className="carousel1">
             <img
-              src={images[currentIndex1]}
+              src={instance().baseURL + '/static' + images[currentIndex1]}
               alt={`Slide ${currentIndex1 + 1}`}
             />
           </div>
