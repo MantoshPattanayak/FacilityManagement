@@ -195,6 +195,7 @@ select {
 .approve-button:disabled,
 .cancel-button:disabled {
     background-color: gray;
+    cursor: not-allowed;
 }
 
 /* Media query for tablets and larger screens */
