@@ -532,7 +532,7 @@ let parkBooking = async (req, res) => {
 
                 let entityType = 'eventBooking'
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
+                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId, entityType)
 
                 if (ticketUploadAndGeneratePdf?.error) {
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -598,7 +598,8 @@ let insertAndUpdateTheCartItems = async (checkIsItemAlreadyExist, entityId, enti
             let updateTheCart = await cartItem.update({
                 facilityPreference: facilityPreference,
                 updatedDt: updatedDt,
-                updatedBy: userId
+                updatedBy: userId,
+                statusId: statusId
             },
                 {
                     where:
@@ -851,8 +852,8 @@ let addToCart = async (req, res) => {
                         sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`),
                         {
                             [Op.or]: [
-                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startDate') >= :startTime`),
-                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startDate') <= :endTime`)
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`),
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.endTime') <= :endTime`)
                             ]
                         }
                     ]
@@ -865,7 +866,6 @@ let addToCart = async (req, res) => {
             });
 
             console.log(checkIsItemAlreadyExist, 'check is item  already exist')
-
 
             let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist, entityId, entityTypeId, facilityPreference, createdDt, updatedDt, statusIdForCartItem, userId, isUserExist)
             if (findTheResult?.error) {
@@ -898,7 +898,7 @@ let viewCartByUserId = async (req, res) => {
             where: {
                 [Op.and]: [{ userId: userId }, { statusId: 1 }]
             }
-        })
+        });
         console.log('findCartIdByUserId', findCartIdByUserId);
         if (findCartIdByUserId) {
             console.log(findCartIdByUserId.cartId, 'cartId')
@@ -913,7 +913,10 @@ let viewCartByUserId = async (req, res) => {
                 {
                     type: sequelize.QueryTypes.SELECT,
                     replacements: [findCartIdByUserId.cartId]
-                })
+            });
+
+            // cart details for event booking only
+
             //     let findCartItemsWRTCartId = await cartItem.findAll({
             //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
             //     where:{
