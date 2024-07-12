@@ -194,7 +194,7 @@ const Book_Now = () => {
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
           duration: modifiedFormData.durationInHours,
-          price: formData.a * modifiedFormData.adults,
+          price: formData.amount * modifiedFormData.adults,
         };
 
         const requestBody = {
@@ -208,7 +208,7 @@ const Book_Now = () => {
           autoClose: 3000,
           onClose: () => {
             setTimeout(() => {
-              navigate("/BookParks/Add_Card");
+              navigate("/cart-details");
             }, 1000);
           },
         });
