@@ -16,6 +16,8 @@ import "./Book_Now_Sport.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 import { calculateTimeDifferenceinHours } from "../../../utils/utilityFunctions";
+import RazorpayButton from "../../../common/RazorpayButton";
+
 const Book_Event = () => {
     // UseSate for post data -------------------------------------
     const [formData, setFormData] = useState({
@@ -123,7 +125,13 @@ const Book_Event = () => {
             const requestBody = {
                 entityId: formData.entityId,
                 entityTypeId: formData.entityTypeId,
-                facilityPreference: formData.facilityPreference
+                facilityPreference: {
+                    totalMembers: formData.facilityPreference.playersLimit,
+                    bookingDate: formData.facilityPreference.bookingDate,
+                    startTime: formData.facilityPreference.startTime,
+                    durationInHours: formData.facilityPreference.durationInHours,
+                    amount: formData.facilityPreference.price * formData.facilityPreference.playersLimit,
+                }
             };
             let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
             toast.success('Add to Cart has been done  successfully.', {
@@ -155,7 +163,7 @@ const Book_Event = () => {
                     bookingDate: formData.facilityPreference.bookingDate,
                     startTime: formData.facilityPreference.startTime,
                     durationInHours: formData.facilityPreference.durationInHours,
-                    amount: formData.facilityPreference.playersLimit * formData.facilityPreference.playersLimit,
+                    amount: formData.facilityPreference.price * formData.facilityPreference.playersLimit,
                 }
             };
             let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", requestBody);
@@ -169,7 +177,7 @@ const Book_Event = () => {
                 }
             });
         } catch (err) {
-            console.error("here Error of Sport Booking", err);
+            console.error("here Error of Event Booking", err);
             toast.error('Booking details submission failed.')
         }
     }
@@ -227,6 +235,18 @@ const Book_Event = () => {
         setErrors(err);
         return Object.keys(err).length === 0; // Returns true if no errors
     };
+
+    const handleSuccess = (response) => {
+        console.log(response);
+        HandleProccedToPayment();
+    }
+
+    const handleFailure = (response) => {
+        console.log(response);
+        toast.dismiss();
+        toast.error('Payment failed!!');
+        return;
+    }
 
     return (
         <div className="Book_sport_Main_conatiner">
@@ -362,18 +382,25 @@ const Book_Event = () => {
                         </form>
                     </div>
                     <div className="Button_Conatiner_Sport">
-                        <button type="submit" class="Add_to_Cart"
+                        <button type="submit" class="approve-button"
                             onClick={HandleAddtoCart}
                         >
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        <button type="submit" class="Proceed_to_Payment"
+                        <RazorpayButton 
+                            amount={formData.facilityPreference.price * formData.facilityPreference.playersLimit}
+                            currency={"INR"}
+                            description={"Pay now"}
+                            onSuccess={handleSuccess}
+                            onFailure={handleFailure}
+                        />
+                        {/* <button type="submit" class="Proceed_to_Payment"
                             onClick={HandleProccedToPayment}
                         >
                             <FontAwesomeIcon icon={faCreditCard} className="Icon" />
                             Proceed to Payment
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
