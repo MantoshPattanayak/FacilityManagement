@@ -272,6 +272,8 @@ const Book_Now = () => {
 
   const handlePaymentFailure = (response) => {
     console.log("Book park payment failure", response);
+    toast.dismiss();
+    toast.error(response.description);
   };
 
   const validateForm = (formData) => {

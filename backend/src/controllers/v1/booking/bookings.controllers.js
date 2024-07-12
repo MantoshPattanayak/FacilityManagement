@@ -1177,8 +1177,22 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
 let generateQRCode = async(req,res)=>{
     try {
         let {bookingId,entityTypeId} = req.body
+        console.log({bookingId,entityTypeId});
+        
+        if(!bookingId){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:"Please provide required details"
+            })
+        }
+        let fetchFacilityId =  await facilitybookings.findOne({
+            where:{
+                facilityBookingId:bookingId
+            }
+        })
+        console.log("fetchFacilityId", fetchFacilityId.facilityTypeId);
+        entityTypeId = fetchFacilityId.facilityTypeId;
         let statusId = 1;
-        let entityType
+        let entityType;
         if(entityTypeId==1 ||entityTypeId==2 || entityTypeId==3 ){
             entityType = "facilityBooking"
         }
@@ -1195,21 +1209,12 @@ let generateQRCode = async(req,res)=>{
             entityType = "eventHostBooking"
         }
         let filePurpose = 'ticketBooking'
-        if(!bookingId){
-            return res.status(statusCode.BAD_REQUEST.code).json({
-                message:"Please provide required details"
-            })
-        }
-        let fetchFacilityId =  await facilitybookings.findOne({
-            where:{
-                facilityBookingId:bookingId
-            }
-        })
+        
         console.log('fetch facility', fetchFacilityId)
         let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
-
+        console.log(1)
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
-
+        console.log(2)
         let fetchBookingDetails = await facilitybookings.findOne({
             
             where:{
@@ -1221,9 +1226,17 @@ let generateQRCode = async(req,res)=>{
                 }
             ]
         })
-        let fetchPdfImage = await sequelize.query(`select url, entityType from amabhoomi.files f inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
+        console.log(3, {bookingId,filePurpose,entityType,statusId});
+        let fetchPdfImage = await sequelize.query(`
+            select url, entityType from amabhoomi.files f 
+            inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId 
+            where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`
+            ,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
+        console.log(4)
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
+        console.log(5)
         fetchBookingDetails.dataValues.url = fetchPdfImage[0].url
+        console.log(6)
         console.log('fetchPdfImage', fetchPdfImage)
         
         return res.status(statusCode.SUCCESS.code).json({
