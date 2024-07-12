@@ -1,54 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import axiosHttpClient from '../../../../utils/axios';
-import 'react-toastify/dist/ReactToastify.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { formatDate } from '../../../../utils/utilityFunctions';
-import AdminHeader from '../../../../common/AdminHeader';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
-import '../../../../common/CommonTable.css';
-import './ViewNotifications.css';
-import { encryptData } from '../../../../utils/encryptData';
+import React, { useEffect, useState } from "react";
+import axiosHttpClient from "../../../../utils/axios";
+import "react-toastify/dist/ReactToastify.css";
+import { Link, useNavigate } from "react-router-dom";
+import { formatDate } from "../../../../utils/utilityFunctions";
+import AdminHeader from "../../../../common/AdminHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEye,
+  faPenToSquare,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import "../../../../common/CommonTable.css";
+import "./ViewNotifications.css";
+import { encryptData } from "../../../../utils/encryptData";
 
 export default function ViewNotifications() {
   const navigate = useNavigate();
-  const [givenReq, setGivenReq] = useState('');
+  const [givenReq, setGivenReq] = useState("");
   const [tableData, setTableData] = useState([]);
 
   // function to fetch notifications list data
   let fetchNotificationsList = async () => {
-    try{
-      let res = await axiosHttpClient('VIEW_NOTIFICATIONS_LIST_API', 'post', {
-        givenReq: givenReq
+    try {
+      let res = await axiosHttpClient("VIEW_NOTIFICATIONS_LIST_API", "post", {
+        givenReq: givenReq,
       });
 
-      console.log('fetch notifications list data', res.data.paginatedviewNotificationsListQueryData);
+      console.log(
+        "fetch notifications list data",
+        res.data.paginatedviewNotificationsListQueryData
+      );
       setTableData(res.data.paginatedviewNotificationsListQueryData);
-    }
-    catch(error) {
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  // useEffect(() => {
+  //   fetchNotificationsList();
+  // }, []);
 
   useEffect(() => {
     fetchNotificationsList();
-  }, [])
-
-  useEffect(() => {
-    fetchNotificationsList();
-  }, [givenReq])
+  }, [givenReq]);
 
   return (
-    <>
+    <div>
       <AdminHeader />
       <div className="ViewNotifications">
-        <div className='table-heading'>
+        <div className="table-heading">
           <h2 className="">View Notifications</h2>
         </div>
 
         <div className="search_text_conatiner">
-          <button className='search_field_button' onClick={() => navigate('/Activity/AddNewNotification')}><FontAwesomeIcon icon={faPlus} /> Add new notification</button>
-          <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+          <button
+            className="search_field_button"
+            onClick={() => navigate("/Activity/AddNewNotification")}
+          >
+            <FontAwesomeIcon icon={faPlus} /> Add new notification
+          </button>
+          <input
+            type="text"
+            className="search_input_field"
+            value={givenReq}
+            placeholder="Search..."
+            onChange={(e) => setGivenReq(e.target.value)}
+          />
           {/* <SearchDropdown /> */}
         </div>
 
@@ -65,20 +82,30 @@ export default function ViewNotifications() {
                 <th scope="col">Edit</th>
               </tr>
             </thead>
-            <tbody >
-              {
-                tableData?.length > 0 && tableData?.map((data) => {
+            <tbody>
+              {tableData?.length > 0 &&
+                tableData?.map((data) => {
                   return (
                     <tr key={data.publicNotificationsId}>
-                      <td data-label="Title">{data.publicNotificationsTitle}</td>
-                      <td data-label="Content">{data.publicNotificationsContent}</td>
-                      <td data-label="Valid From">{formatDate(data.validFromDate)}</td>
-                      <td data-label="Valid To">{formatDate(data.validToDate)}</td>
+                      <td data-label="Title">
+                        {data.publicNotificationsTitle}
+                      </td>
+                      <td data-label="Content">
+                        {data.publicNotificationsContent}
+                      </td>
+                      <td data-label="Valid From">
+                        {formatDate(data.validFromDate)}
+                      </td>
+                      <td data-label="Valid To">
+                        {formatDate(data.validToDate)}
+                      </td>
                       <td data-label="View">
                         <Link
                           to={{
-                            pathname: '/Activity/EditNotification',
-                            search: `?notificationId=${encodeURIComponent(encryptData(data.publicNotificationsId))}&action=view`
+                            pathname: "/Activity/EditNotification",
+                            search: `?notificationId=${encodeURIComponent(
+                              encryptData(data.publicNotificationsId)
+                            )}&action=view`,
                           }}
                         >
                           <FontAwesomeIcon icon={faEye} />
@@ -87,21 +114,22 @@ export default function ViewNotifications() {
                       <td data-label="Edit">
                         <Link
                           to={{
-                            pathname: '/Activity/EditNotification',
-                            search: `?notificationId=${encodeURIComponent(encryptData(data.publicNotificationsId))}&action=edit`
+                            pathname: "/Activity/EditNotification",
+                            search: `?notificationId=${encodeURIComponent(
+                              encryptData(data.publicNotificationsId)
+                            )}&action=edit`,
                           }}
                         >
                           <FontAwesomeIcon icon={faPenToSquare} />
                         </Link>
                       </td>
                     </tr>
-                  )
-                })
-              }
+                  );
+                })}
             </tbody>
           </table>
         </div>
       </div>
-    </>
-  )
+    </div>
+  );
 }
