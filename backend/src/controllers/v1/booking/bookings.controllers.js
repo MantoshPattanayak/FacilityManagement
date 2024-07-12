@@ -27,6 +27,7 @@ const checkForCancellation = require("../../../utils/bookingCancellation");
 let eventactivites = db.eventActivities
 let file = db.file;
 let fileAttachment = db.fileattachment
+let hostBooking = db.hosteventbookings
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -1179,18 +1180,7 @@ let generateQRCode = async(req,res)=>{
         let {bookingId,entityTypeId} = req.body
         console.log({bookingId,entityTypeId});
         
-        if(!bookingId){
-            return res.status(statusCode.BAD_REQUEST.code).json({
-                message:"Please provide required details"
-            })
-        }
-        let fetchFacilityId =  await facilitybookings.findOne({
-            where:{
-                facilityBookingId:bookingId
-            }
-        })
-        console.log("fetchFacilityId", fetchFacilityId.facilityTypeId);
-        entityTypeId = fetchFacilityId.facilityTypeId;
+        let fetchBookingDetails;
         let statusId = 1;
         let entityType;
         if(entityTypeId==1 ||entityTypeId==2 || entityTypeId==3 ){
@@ -1208,24 +1198,54 @@ let generateQRCode = async(req,res)=>{
         else if(entityTypeId == 7 ) {
             entityType = "eventHostBooking"
         }
-        let filePurpose = 'ticketBooking'
-        
+        if(!bookingId){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:"Please provide required details"
+            })
+        }
+        let fetchFacilityId =  await facilitybookings.findOne({
+            where:{
+                facilityBookingId:bookingId
+            }
+        })
         console.log('fetch facility', fetchFacilityId)
         let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
         console.log(1)
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
         console.log(2)
-        let fetchBookingDetails = await facilitybookings.findOne({
+        if(entityTypeId==1 || entityTypeId ==2 || entityTypeId==3 || entityTypeId ==4 || entityTypeId == 5){
+            fetchBookingDetails = await facilitybookings.findOne({
             
-            where:{
-               [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
-            },
-            include:[
-                {
-                    model:facilities
-                }
-            ]
+                where:{
+                   [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
+                },
+                include:[
+                    {
+                        model:facilities
+                    }
+                ]
+            })
+        }
+      
+        else if(entityTypeId ==6){
+            fetchBookingDetails = await sequelize.query(`select f.*,e2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join eventbookings e2 on e2.eventId =e.eventId 
+            where e2.eventBookingId= ? and e2.statusId = ? `,
+        {
+            type:QueryTypes.SELECT,
+            replacements:[bookingId,statusId]
         })
+
+        }
+        
+        else if(entityTypeId ==7){
+            fetchBookingDetails = await sequelize.query(`select f.*, h2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join hosteventdetails h on h.eventId = e.eventId 
+             inner join hostbookings h2 on h2.hostId = h.hostId where h2.hostBookingId= ? and h2.statusId = ? `,
+            {
+                type:QueryTypes.SELECT,
+                replacements:[bookingId,statusId]
+            })
+
+        }
         console.log(3, {bookingId,filePurpose,entityType,statusId});
         let fetchPdfImage = await sequelize.query(`
             select url, entityType from amabhoomi.files f 

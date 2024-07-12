@@ -64,6 +64,10 @@ db1.hosteventdetails = require("./hosteventdetails.models")(
   sequelize,
   DataTypes
 );
+db1.hosteventbookings = require("./hosteventbooking.models")(
+  sequelize,
+  DataTypes
+);
 db1.facilitybookings = require("./facilitybookings.models")(
   sequelize,
   DataTypes
@@ -187,6 +191,12 @@ db1.inventoryfacilities.hasMany(db1.inventorymaster,{foreignKey:'equipmentId'})
 
 // join operations end
 
+
+db1.facilities.hasMany(db1.eventActivities,{foreignKey:'facilityId'})
+db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
+db1.eventActivities.hasMany(db1.hosteventbookings,{foreignKey:'facilityId'})
+db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 db1.eventCategoryMaster.sync({
