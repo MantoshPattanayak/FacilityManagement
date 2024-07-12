@@ -10,4 +10,6 @@ router.get("/initialData", authenticateToken,registration.initialDataFetch);
 
 router.post("/getFacilityWrtId", authenticateToken,registration.getFacilityWrtId);
 
+router.put("/updateFacility", authenticateToken,registration.updateFacility);
+
 module.exports = router;

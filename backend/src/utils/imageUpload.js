@@ -3,7 +3,7 @@ const db = require('../models')
 const file = db.file;
 const fileAttachment = db.fileattachment
 const path = require('path')
-let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber)=>{
+let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber,transaction)=>{
     // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
@@ -59,7 +59,8 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
               updatedDt: updatedDt,
               createdBy:userId,
               updatedBy:userId
-            });
+            },
+          transaction);
             console.log('createFile', createFile)
             if (!createFile) {
               return errors.push(`Failed to create file  for facility file at index ${i}`);
@@ -72,7 +73,8 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
                 fileId: createFile.fileId,
                 statusId: 1,
                 filePurpose: filePurpose
-              });
+              },
+            transaction);
 
               if (!createFileAttachment) {
                 return errors.push(`Failed to create file attachment for facility file at index ${i}`);
