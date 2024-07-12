@@ -27,6 +27,7 @@ const checkForCancellation = require("../../../utils/bookingCancellation");
 let eventactivites = db.eventActivities
 let file = db.file;
 let fileAttachment = db.fileattachment
+let hostBooking = db.hosteventbookings
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -54,7 +55,7 @@ let parkBookingTestForPark = async (req, res) => {
             startTime,
             durationInHours
         }, 'before change');
-   
+
 
         // Function to add hours to a time string
         // function addHoursToTime(timeString, hoursToAdd) {
@@ -75,7 +76,7 @@ let parkBookingTestForPark = async (req, res) => {
         //     return newTimeString;
         // }
 
-        const endTime = addHoursToTime(startTime, Number(durationInHours) );
+        const endTime = addHoursToTime(startTime, Number(durationInHours));
 
         console.log({
             facilityId,
@@ -99,7 +100,7 @@ let parkBookingTestForPark = async (req, res) => {
 
         bookingTransaction();
         // res.status(200).json({message: 'Booking details submitted!'})
-        
+
         async function bookingTransaction() {
             let transaction;
             try {
@@ -184,7 +185,7 @@ let parkBookingFormInitialData = async (req, res) => {
 function addHoursToTime(timeString, hoursToAdd) {
     // Parse the time string into hours and minutes
     const [hours, minutes] = timeString.split(':').map(Number);
-    console.log({hours, minutes, hoursToAdd});
+    console.log({ hours, minutes, hoursToAdd });
 
     // Add the hours
     let newHours = (hours + hoursToAdd) % 24;
@@ -207,71 +208,71 @@ function addHoursToTime(timeString, hoursToAdd) {
  */
 
 // ticket upload code start
-let uploadTicket = async(title, bookingRef, location, date, time, cost, totalMembers,combinedData, facilityBookingId,userId,entityType)=>{
+let uploadTicket = async (title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType) => {
     try {
         let qrData = await QRCode.toDataURL(combinedData)
 
         let createdDt = new Date();
         let updatedDt = new Date();
-        console.log(title, bookingRef, location, date, time, cost, totalMembers,combinedData,'all data')
-        const pdfBytes = await generatePDF({title,bookingRef, location, date, time, cost, totalMembers, qrData });
-        console.log(pdfBytes,'pdf bytes')
-            // generate pdf and share the link
-            // Generate a unique filename
-            const uniqueId = uuidv4();
-            
-            const fileName = `${uniqueId}.pdf`;
-            let fileType = "pdf"
-            console.log('fileName')
-            const filePath = path.join(uploadDir, 'ticketUploads', fileName);
-            console.log('filePath')
-            // Ensure the uploads directory exists
-            if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
-                fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
-            }
+        console.log(title, bookingRef, location, date, time, cost, totalMembers, combinedData, 'all data')
+        const pdfBytes = await generatePDF({ title, bookingRef, location, date, time, cost, totalMembers, qrData });
+        console.log(pdfBytes, 'pdf bytes')
+        // generate pdf and share the link
+        // Generate a unique filename
+        const uniqueId = uuidv4();
 
-            // Write the PDF bytes to a file
-            fs.writeFileSync(filePath, pdfBytes);
+        const fileName = `${uniqueId}.pdf`;
+        let fileType = "pdf"
+        console.log('fileName')
+        const filePath = path.join(uploadDir, 'ticketUploads', fileName);
+        console.log('filePath')
+        // Ensure the uploads directory exists
+        if (!fs.existsSync(path.join(uploadDir, 'ticketUploads'))) {
+            fs.mkdirSync(path.join(uploadDir, 'ticketUploads'));
+        }
+
+        // Write the PDF bytes to a file
+        fs.writeFileSync(filePath, pdfBytes);
 
         const shareableLink = `http://localhost:${port}/static/ticketUploads/${fileName}`;
         console.log('jlfjlsdjfljd')
         let filePurpose = 'ticketBooking'
         // add this to file and file attachment
         // insert to file table and file attachment table
-         let url = `/ticketUploads/${fileName}`
+        let url = `/ticketUploads/${fileName}`
         let createFile = await file.create({
             fileName: fileName,
-            fileType:fileType ,
+            fileType: fileType,
             url: url,
             statusId: 1,
             createdDt: createdDt,
             updatedDt: updatedDt,
-            createdBy:userId,
-            updatedBy:userId
-          });
-          console.log('createFile', createFile)
-          if (!createFile) {
+            createdBy: userId,
+            updatedBy: userId
+        });
+        console.log('createFile', createFile)
+        if (!createFile) {
             return errors.push(`Failed to create  ticket file`);
-          } else {
+        } else {
             // Insert into file attachment table
             let createFileAttachment = await fileAttachment.create({
-              entityId: facilityBookingId,
-              entityType: entityType,
-              fileId: createFile.fileId,
-              statusId: 1,
-              filePurpose: filePurpose
+                entityId: facilityBookingId,
+                entityType: entityType,
+                fileId: createFile.fileId,
+                statusId: 1,
+                filePurpose: filePurpose
             });
 
             console.log('fjljdflds')
             if (!createFileAttachment) {
-              return errors.push(`Failed to create file attachment for facility file at index ${i}`);
+                return errors.push(`Failed to create file attachment for facility file at index ${i}`);
             }
-            return  {shareableLink:shareableLink};
-          }
-       
+            return { shareableLink: shareableLink };
+        }
+
     } catch (err) {
         return {
-            error:"Something went wrong"
+            error: "Something went wrong"
         }
     }
 }
@@ -296,19 +297,19 @@ let parkBooking = async (req, res) => {
          * 3	MULTIPURPOSE_GROUND
          * 6	EVENTS
          */
-        if(entityTypeId == 1){
+        if (entityTypeId == 1) {
             bookingTransactionForPark(entityId, facilityPreference);
         }
-        else if(entityTypeId == 2){
+        else if (entityTypeId == 2) {
             bookingTransactionForPlaygrounds(entityId, facilityPreference);
         }
-        else if(entityTypeId == 3){
+        else if (entityTypeId == 3) {
             bookingTransactionForMPgrounds(entityId, facilityPreference);
         }
-        else if(entityTypeId == 6) {
+        else if (entityTypeId == 6) {
             bookingTransactionForEvents(entityId, facilityPreference);
         }
-        else{
+        else {
             res.status(statusCode.BAD_REQUEST.code).json({
                 message: 'Booking failed.'
             })
@@ -331,14 +332,14 @@ let parkBooking = async (req, res) => {
                     statusId: 1,
                     paymentstatus: '',
                     createdBy: userId
-                }, { transaction, returning: true  });
+                }, { transaction, returning: true });
 
-                console.log(newParkBooking.facilityBookingId, 'newParkBooking data created' );
+                console.log(newParkBooking.facilityBookingId, 'newParkBooking data created');
                 let findTheBookingDetails = await facilitybookings.findOne({
-                    where:{
-                       [Op.and]: [{facilityBookingId:newParkBooking.facilityBookingId},{statusId:statusId}]
+                    where: {
+                        [Op.and]: [{ facilityBookingId: newParkBooking.facilityBookingId }, { statusId: statusId }]
                     },
-                     transaction 
+                    transaction
                 })
 
                 console.log('facilityBookingBookingReference find ', findTheBookingDetails)
@@ -352,12 +353,12 @@ let parkBooking = async (req, res) => {
                 }
 
                 let findFacilityInformation = await facilities.findOne({
-                    where:{
-                        [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+                    where: {
+                        [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
                     }
                 })
-               
-              
+
+
                 let title = findFacilityInformation.facilityname;
                 let bookingRef = findTheBookingDetails.dataValues.bookingReference;
                 let location = findFacilityInformation.address;
@@ -369,21 +370,21 @@ let parkBooking = async (req, res) => {
                 let facilityBookingId = newParkBooking.dataValues.facilityBookingId
 
                 let entityType = 'facilityBooking'
-                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId, entityType)
+                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
 
-                if(ticketUploadAndGeneratePdf?.error){
+                if (ticketUploadAndGeneratePdf?.error) {
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message:ticketUploadAndGeneratePdf.error
+                        message: ticketUploadAndGeneratePdf.error
                     })
                 }
-               
+
 
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Park booking done successfully',
                     data: newParkBooking,
-                    shareableLink:ticketUploadAndGeneratePdf.shareableLink
+                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 })
             }
             catch (error) {
@@ -427,20 +428,20 @@ let parkBooking = async (req, res) => {
                 console.log('newPlaygroundBooking', newPlaygroundBooking);
 
                 let findFacilityInformation = await facilities.findOne({
-                    where:{
-                        [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+                    where: {
+                        [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
                     }
                 })
                 let findTheBookingDetails = await facilitybookings.findOne({
-                    where:{
-                       [Op.and]: [{facilityBookingId:newPlaygroundBooking.facilityBookingId},{statusId:statusId}]
+                    where: {
+                        [Op.and]: [{ facilityBookingId: newPlaygroundBooking.facilityBookingId }, { statusId: statusId }]
                     },
-                     transaction 
+                    transaction
                 })
                 let title = findFacilityInformation.facilityname;
                 let bookingRef = findTheBookingDetails.bookingReference;
                 let location = findFacilityInformation.address;
-                let date =  bookingData.bookingDate;
+                let date = bookingData.bookingDate;
                 let time = newPlaygroundBooking.startDate;
                 let cost = newPlaygroundBooking.amount;
                 let totalMembers = newPlaygroundBooking.totalMembers;
@@ -449,22 +450,22 @@ let parkBooking = async (req, res) => {
 
                 let entityType = 'facilityBooking'
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId,entityType)
+                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
 
-                if(ticketUploadAndGeneratePdf?.error){
+                if (ticketUploadAndGeneratePdf?.error) {
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message:ticketUploadAndGeneratePdf.error
+                        message: ticketUploadAndGeneratePdf.error
                     })
                 }
-               
+
 
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Playground booking done successfully',
                     data: newPlaygroundBooking,
-                    shareableLink:ticketUploadAndGeneratePdf.shareableLink
-                    })
+                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
+                })
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
@@ -509,8 +510,8 @@ let parkBooking = async (req, res) => {
 
                 console.log('eventBooking', eventBookingData);
                 let findEventInformation = await eventactivites.findOne({
-                    where:{
-                        [Op.and]:[{statusId:statusId},{eventId:eventId}]
+                    where: {
+                        [Op.and]: [{ statusId: statusId }, { eventId: eventId }]
                     }
                 })
                 // let findTheBookingDetails = await facilitybookings.findOne({
@@ -522,7 +523,7 @@ let parkBooking = async (req, res) => {
                 let title = findEventInformation.eventName;
                 let bookingRef = eventBookingData.bookingReference;
                 let location = findEventInformation.locationName;
-                let date =  bookingData.bookingDate;
+                let date = bookingData.bookingDate;
                 let time = eventBookingData.startDate;
                 let cost = eventBookingData.amount;
                 let totalMembers = eventBookingData.totalMembers;
@@ -531,21 +532,21 @@ let parkBooking = async (req, res) => {
 
                 let entityType = 'eventBooking'
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title,bookingRef, location, date, time, cost, totalMembers, combinedData,facilityBookingId,userId, entityType)
+                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId, entityType)
 
-                if(ticketUploadAndGeneratePdf?.error){
+                if (ticketUploadAndGeneratePdf?.error) {
                     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message:ticketUploadAndGeneratePdf.error
+                        message: ticketUploadAndGeneratePdf.error
                     })
                 }
-               
+
 
                 await transaction.commit();
 
                 res.status(statusCode.SUCCESS.code).json({
                     message: 'Event booking done successfully',
                     data: eventBooking,
-                    shareableLink:ticketUploadAndGeneratePdf.shareableLink
+                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 })
             }
             catch (error) {
@@ -559,7 +560,7 @@ let parkBooking = async (req, res) => {
             }
         }
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         });
@@ -572,7 +573,7 @@ let parkBooking = async (req, res) => {
 
 
 // create cart
-function calculateEndTime(startTime,duration){
+function calculateEndTime(startTime, duration) {
 
     let momentStartTime = moment.duration(startTime);
     let momentDuration = moment.duration(duration);
@@ -588,109 +589,120 @@ function calculateEndTime(startTime,duration){
 
 
 
-let insertAndUpdateTheCartItems = async(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)=>{
+let insertAndUpdateTheCartItems = async (checkIsItemAlreadyExist, entityId, entityTypeId, facilityPreference, createdDt, updatedDt, statusId, userId, isUserExist) => {
     try {
-        console.log(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,'here is the data')
-          // if exist then update
-          if(checkIsItemAlreadyExist){
+        console.log(checkIsItemAlreadyExist, entityId, entityTypeId, facilityPreference, 'here is the data')
+        // if exist then update
+        if (checkIsItemAlreadyExist) {
             console.log('if exist')
             let updateTheCart = await cartItem.update({
-               facilityPreference:facilityPreference,
-                updatedDt:updatedDt,
-                updatedBy:userId
+                facilityPreference: facilityPreference,
+                updatedDt: updatedDt,
+                updatedBy: userId,
+                statusId: statusId
             },
-            {
-                where:
                 {
-                    cartItemId:checkIsItemAlreadyExist.cartItemId
+                    where:
+                    {
+                        cartItemId: checkIsItemAlreadyExist.cartItemId
+                    }
                 }
-            }
-        )
-        console.log('2',updateTheCart)
-        if(updateTheCart>0){
+            )
+            console.log('2', updateTheCart)
+            if (updateTheCart > 0) {
 
-               return  null;
-          
-         
-        }
-        else{
+                return null;
+
+
+            }
+            else {
                 return {
-                    error:"Item is not added to the cart"
+                    error: "Item is not added to the cart"
                 }
-        
-        }
-            
+
+            }
+
         }
         // else add the item
-        else{
+        else {
             console.log('add to cart')
             let createAddToCart = await cartItem.create({
-                cartId:isUserExist.cartId,
-                entityId:entityId,
-                entityTypeId:entityTypeId,
-                facilityPreference:facilityPreference,
-                statusId:statusId,
-                createdDt:createdDt,
-                updatedDt:updatedDt,
-                createdBy:userId,
-                updatedBy:userId
+                cartId: isUserExist.cartId,
+                entityId: entityId,
+                entityTypeId: entityTypeId,
+                facilityPreference: facilityPreference,
+                statusId: statusId,
+                createdDt: createdDt,
+                updatedDt: updatedDt,
+                createdBy: userId,
+                updatedBy: userId
             })
 
 
-            if(createAddToCart){
+            if (createAddToCart) {
                 return null
-                  
-               
+
+
             }
-            else{
-              
-                return {error: "Item is not added to the cart"}
-                
+            else {
+
+                return { error: "Item is not added to the cart" }
+
             }
         }
     } catch (err) {
         return {
-            error:err.message
+            error: err.message
         }
     }
 }
 
 
-let addToCart = async (req,res)=>{
+let addToCart = async (req, res) => {
     try {
-        console.log('here reponse of sports',req.body)
+        console.log('here reponse of sports', req.body)
         let userId = req.user?.userId || 1;
         let createdDt = new Date();
         let updatedDt = new Date();
-        let statusId = 1
-        let {entityId, entityTypeId, facilityPreference} = req.body
-        console.log(typeof(entityId),'req.body',entityTypeId==2)
+        let statusId = 1;
+        let { entityId, entityTypeId, facilityPreference } = req.body
+        console.log(typeof (entityId), 'req.body', entityTypeId == 2)
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
-        
+
+        let statusIdForCartItem = await statusmasters.findAll({
+            where: {
+                parentStatusCode: "CART_ITEM_STATUS"
+            }
+        });
+        console.log("statusId list", statusId);
+        statusIdForCartItem = statusIdForCartItem.filter((status) => {
+            return status.dataValues.statusCode == 'IN_CART';
+        })[0].dataValues.statusId;
+
         // first checks in the carts table consist of the user id 
-        let isUserExist = await  cart.findOne({
-            where:{
-                [Op.and]:[{userId:userId},{statusId:statusId}]
+        let isUserExist = await cart.findOne({
+            where: {
+                [Op.and]: [{ userId: userId }, { statusId: statusId }]
             }
         })
         // if not exist add to cart table
-        if(!isUserExist){
+        if (!isUserExist) {
             isUserExist = await cart.create({
-                userId:userId,
-                createdDt:createdDt,
-                updatedDt:updatedDt,
-                statusId:statusId
+                userId: userId,
+                createdDt: createdDt,
+                updatedDt: updatedDt,
+                statusId: statusId
             })
         }
         // then check entity wise where the user wants to add the data
-        if(entityTypeId == 1){
+        if (entityTypeId == 1) {
             console.log('parks')
             // if parks
-            let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
+            let momentEndTime = calculateEndTime(facilityPreference.startTime, facilityPreference.duration)
 
-            console.log('values', facilityPreference.bookingDate,facilityPreference.startTime,momentEndTime )
+            console.log('values', facilityPreference.bookingDate, facilityPreference.startTime, momentEndTime)
             // first check the item already exist or not
-      
+
             const checkIsItemAlreadyExist = await cartItem.findOne({
                 where: {
                     [Op.and]: [
@@ -712,37 +724,37 @@ let addToCart = async (req,res)=>{
                     endTime: momentEndTime
                 }
             });
-           
-                // facilityPreference = {
-                //     totalMembers:facilityPreference.totalMembers,
-                //     otherActivities:facilityPreference.otherActivities,
-                //     startTime:facilityPreference.startTime,
-                //     duration:facilityPreference.duration,
-                //     activityPreference:facilityPreference.activityPreference,
-                //     price:facilityPreference.price
-                // }
 
-            
-                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
-                console.log('findthe resultttttt',findTheResult)
-                if(findTheResult?.error){
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:findTheResult.error
-                    })
-                    
-                }
-                else{
-                    return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
-                }
+            // facilityPreference = {
+            //     totalMembers:facilityPreference.totalMembers,
+            //     otherActivities:facilityPreference.otherActivities,
+            //     startTime:facilityPreference.startTime,
+            //     duration:facilityPreference.duration,
+            //     activityPreference:facilityPreference.activityPreference,
+            //     price:facilityPreference.price
+            // }
+
+
+            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist, entityId, entityTypeId, facilityPreference, createdDt, updatedDt, statusIdForCartItem, userId, isUserExist)
+            console.log('findthe resultttttt', findTheResult)
+            if (findTheResult?.error) {
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message: findTheResult.error
+                })
+
+            }
+            else {
+                return res.status(statusCode.SUCCESS.code).json({ message: "Item is successfully added to cart" })
+            }
         }
-        else if(entityTypeId == 2){
+        else if (entityTypeId == 2) {
             // if playgrounds
             console.log('playgrounds')
 
-         
-              // first check the item already exist or not
-      
-              const checkIsItemAlreadyExist = await cartItem.findOne({
+
+            // first check the item already exist or not
+
+            const checkIsItemAlreadyExist = await cartItem.findOne({
                 where: {
                     [Op.and]: [
                         { entityId: entityId },
@@ -763,49 +775,54 @@ let addToCart = async (req,res)=>{
                     endTime: facilityPreference.endTime,
                 }
             });
-              // if exist then update
-                //   facilityPreference = {
-                //     playersLimit:playersLimit,
-                //     sports:sports,
-                //     startTime:startTime,
-                //     endTime:endTime,
-                //     price:price,
-                //   }
-               
-                let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
-                if(findTheResult?.error){
-                    return res.status(statusCode.BAD_REQUEST.code).json({
-                        message:findTheResult.error
-                    })
-                    
-                }
-                else{
-                    return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
-                }
+            // if exist then update
+            //   facilityPreference = {
+            //     playersLimit:playersLimit,
+            //     sports:sports,
+            //     startTime:startTime,
+            //     endTime:endTime,
+            //     price:price,
+            //   }
+
+            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist, entityId, entityTypeId, facilityPreference, createdDt, updatedDt, statusIdForCartItem, userId, isUserExist)
+            if (findTheResult?.error) {
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message: findTheResult.error
+                })
+
+            }
+            else {
+                return res.status(statusCode.SUCCESS.code).json({ message: "Item is successfully added to cart" })
+            }
 
 
         }
-        else if(entityTypeId == 3){
+        else if (entityTypeId == 3) {
             // if Multipurpose ground
-           
+
         }
-        else if(entityTypeId == 4){
+        else if (entityTypeId == 4) {
             // if blueway location
         }
-        else if(entityTypeId == 5){
+        else if (entityTypeId == 5) {
             //  if greenways
         }
-        else if(entityTypeId ==  6){
+        else if (entityTypeId == 6) {
             console.log('1')
 
             // if events
-                // facilityPreference = { 
+            // facilityPreference = { 
             //     totalMembers:totalMembers,
             //     startTime:startTime,
             //     duration:duration,
             //     price:price
             // }
-            let momentEndTime = calculateEndTime(facilityPreference.startTime,facilityPreference.duration)
+            // totalMembers: formData.facilityPreference.playersLimit,
+            //         bookingDate: formData.facilityPreference.bookingDate,
+            //         startTime: formData.facilityPreference.startTime,
+            //         durationInHours: formData.facilityPreference.durationInHours,
+            //         amount: formData.facilityPreference.playersLimit * formData.facilityPreference.playersLimit,
+            let momentEndTime = calculateEndTime(facilityPreference.startTime, facilityPreference.durationInHours)
 
             // let checkIsItemAlreadyExist = await cartItem.findOne({
             //     where:{
@@ -836,7 +853,7 @@ let addToCart = async (req,res)=>{
                         {
                             [Op.or]: [
                                 sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`),
-                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`)
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.endTime') <= :endTime`)
                             ]
                         }
                     ]
@@ -848,25 +865,24 @@ let addToCart = async (req,res)=>{
                 }
             });
 
-                console.log(checkIsItemAlreadyExist,'check is item  already exist')
+            console.log(checkIsItemAlreadyExist, 'check is item  already exist')
 
-            
-            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist,entityId,entityTypeId,facilityPreference,createdDt,updatedDt,statusId,userId,isUserExist)
-            if(findTheResult?.error){
+            let findTheResult = await insertAndUpdateTheCartItems(checkIsItemAlreadyExist, entityId, entityTypeId, facilityPreference, createdDt, updatedDt, statusIdForCartItem, userId, isUserExist)
+            if (findTheResult?.error) {
                 return res.status(statusCode.BAD_REQUEST.code).json({
-                    message:findTheResult.error
+                    message: findTheResult.error
                 })
-                
+
             }
-            else{
-                return res.status(statusCode.SUCCESS.code).json({message:"Item is successfully added to cart"})
+            else {
+                return res.status(statusCode.SUCCESS.code).json({ message: "Item is successfully added to cart" })
             }
-            
+
         }
-        
+
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
     }
 }
@@ -874,153 +890,176 @@ let addToCart = async (req,res)=>{
 
 // view cart by useID
 
-let viewCartByUserId = async(req,res)=>{
+let viewCartByUserId = async (req, res) => {
     try {
         const userId = req.user?.userId || 1
-    
+
         let findCartIdByUserId = await cart.findOne({
-            where:{
-            [Op.and]:[{userId: userId},{statusId:1}]
+            where: {
+                [Op.and]: [{ userId: userId }, { statusId: 1 }]
             }
-        })
+        });
         console.log('findCartIdByUserId', findCartIdByUserId);
-        if(findCartIdByUserId){
-            console.log(findCartIdByUserId.cartId,'cartId')
-            let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
-            amabhoomi.cartitems c left join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.statusId = 1 and c.cartId = ?`,
-            { type: sequelize.QueryTypes.SELECT ,
-            replacements:[findCartIdByUserId.cartId]})
-        //     let findCartItemsWRTCartId = await cartItem.findAll({
-        //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
-        //     where:{
-                
-        //         [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
-                
-             
-        //     },
-        //     include: [
-        //         {
-        //           model: facilitytype,
-        //           attributes: ["code"],
-        //           on: {
-        //             '$cartItem.entityTypeId$': sequelize.col('facilitytype.facilityTypeId')
-        //           },
-        //           required: true // true
-        //         },
-        //         {
-        //           model: facilities,
-        //           attributes: ["facilityName"],
-        //           on:{
-        //             '$cartItem.entityId$':sequelize.col('facilities.facilityId')
-        //           },
-        //           required: true //true
-        //         }
-        //       ],
-         
-        // })
+        if (findCartIdByUserId) {
+            console.log(findCartIdByUserId.cartId, 'cartId')
+            // cart details for facilities booking only
+            let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName, f3.url as imageUrl
+                from amabhoomi.cartitems c 
+                left join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  
+                inner join amabhoomi.facilities f on f.facilityId = c.entityId
+                inner join amabhoomi.fileattachments f2 on f2.entityId = f.facilityId and f2.entityType = 'facilities' and f2.filePurpose = 'singleFacilityImage'
+                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
+                where c.statusId = 21 and c.cartId = ?`,
+                {
+                    type: sequelize.QueryTypes.SELECT,
+                    replacements: [findCartIdByUserId.cartId]
+            });
 
-        console.log(findCartItemsWRTCartId,'findCartIdByUserId')
-        if(findCartIdByUserId.length<=0){
-            return res.status(statusCode.BAD_REQUEST.code).json({
-                message:  "Not a single item is associated with the cart"
-              })
-        }
-        return res.status(statusCode.SUCCESS.code).json({
-            message:"These are the cart items",data:findCartItemsWRTCartId, count:findCartItemsWRTCartId.length
-        })
+            // cart details for event booking only
+
+            //     let findCartItemsWRTCartId = await cartItem.findAll({
+            //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
+            //     where:{
+
+            //         [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
+
+
+            //     },
+            //     include: [
+            //         {
+            //           model: facilitytype,
+            //           attributes: ["code"],
+            //           on: {
+            //             '$cartItem.entityTypeId$': sequelize.col('facilitytype.facilityTypeId')
+            //           },
+            //           required: true // true
+            //         },
+            //         {
+            //           model: facilities,
+            //           attributes: ["facilityName"],
+            //           on:{
+            //             '$cartItem.entityId$':sequelize.col('facilities.facilityId')
+            //           },
+            //           required: true //true
+            //         }
+            //       ],
+
+            // })
+            findCartItemsWRTCartId = findCartItemsWRTCartId.map((cartItem) => {
+                cartItem.imageUrl = encodeURI(cartItem.imageUrl);
+                return cartItem;
+            })
+            console.log(findCartItemsWRTCartId, 'findCartIdByUserId')
+            if (findCartIdByUserId.length <= 0) {
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message: "Not a single item is associated with the cart"
+                })
+            }
+            return res.status(statusCode.SUCCESS.code).json({
+                message: "These are the cart items", data: findCartItemsWRTCartId, count: findCartItemsWRTCartId.length
+            })
 
         }
-        else{
+        else {
             return res.status(statusCode.BAD_REQUEST.code).json({
-              message:  "Not a single item is associated with the cart"
+                message: "Not a single item is associated with the cart"
             })
         }
 
 
-        
+
 
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
-        
+
     }
 }
 
 
-// remove the cart items
-
-let updateCart = async(req,res)=>{
+// update the cart items
+let updateCart = async (req, res) => {
     try {
-    
-        let userId = req.user?.userId||1
-        let cartItemId = req.params.cartItemId
-        let statusId = 2
 
-        let findTheCartIdFromUserId = await cart.findOne({
-            where:{
-                userId:userId
+        let userId = req.user?.userId || 1
+        let cartItemId = req.params.cartItemId
+        let statusId;
+        let action = req.body.action || 'IN_CART'; // IN_CART, SAVED_FOR_LATER, REMOVED
+
+        //fetch cart status list
+        let cartStatusList = await statusmasters.findAll({
+            where: {
+                [Op.and]: [{ statusCode: action }, { parentStatusCode: "CART_ITEM_STATUS" }]
+            }
+        });
+
+        statusId = cartStatusList[0].dataValues.statusId;   // set statusId according to input action
+
+        let findTheCartIdFromUserId = await cart.findOne({  // find cart details
+            where: {
+                userId: userId
             }
         })
-        console.log(findTheCartIdFromUserId,'fjd',cartItemId,'fd',findTheCartIdFromUserId.cartId)
-      
-            let removeTheCartItems = await cartItem.update(
-                {statusId:statusId},
-                {
-                    where:{
-                    [Op.and]:[{cartItemId:cartItemId,cartId:findTheCartIdFromUserId.cartId}]
-                }
-            })
-            console.log(removeTheCartItems,'cart items')
+        console.log(findTheCartIdFromUserId, 'fjd', cartItemId, 'fd', findTheCartIdFromUserId.cartId)
 
-            if(removeTheCartItems>0){
-                return res.status(statusCode.SUCCESS.code).json({
-                    message:"Successfully removed the items"
-                })
-            }
+        let [updateCartItems] = await cartItem.update(  // update cart item status according to input action
+            { statusId: statusId }, {
+                where: {
+                    [Op.and]: [{ cartItemId: cartItemId, cartId: findTheCartIdFromUserId.cartId }]
+                }
+        });
+
+        console.log(updateCartItems, 'cart items')
+
+        if (updateCartItems > 0) {
+            return res.status(statusCode.SUCCESS.code).json({
+                message: action == 'IN_CART' ? "Successfully added the item to cart" : action == 'SAVED_FOR_LATER' ? "Cart item moved to saved for later" : "Successfully removed the cart item"
+            })
+        }
 
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:"Something went wrong"
+            message: "Something went wrong"
         })
-      
+
     } catch (err) {
-       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message}) 
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
     }
 }
 
 // view cart w.r.t to cart Item id
-let viewCartItemsWRTCartItemId = async(req,res)=>{
+let viewCartItemsWRTCartItemId = async (req, res) => {
     try {
         let cartItemId = req.params.cartItemId;
 
         let viewTheCartItemData = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName from 
         amabhoomi.cartitems c inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  inner join amabhoomi.facilities f on f.facilityId = c.entityId where c.cartItemId = ? `,
-        {
-            replacements: [cartItemId],
-            type: sequelize.QueryTypes.SELECT
-        })
-        
+            {
+                replacements: [cartItemId],
+                type: sequelize.QueryTypes.SELECT
+            })
+
         return res.status(statusCode.SUCCESS.code).json({
             message:
                 "Here are the cart items data"
             ,
-            data:viewTheCartItemData
+            data: viewTheCartItemData
         })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
     }
 }
 
-let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMembers, qrData }) =>{
+let generatePDF = async ({ title, bookingRef, location, date, time, cost, totalMembers, qrData }) => {
     console.log('fhjsfjskljfklsjflksjlkfjsljfslkjfklkahjgsfs')
-    console.log(title, bookingRef, location, date, time, cost, totalMembers,'all parameters data')
+    console.log(title, bookingRef, location, date, time, cost, totalMembers, 'all parameters data')
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([400, 400]);
     const { width, height } = page.getSize();
     const fontSize = 12;
-  
+
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
     console.log("881")
@@ -1034,11 +1073,11 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
         borderWidth: 1,
         borderStyle: 'dotted',
     });
-        // Center the title
-        const titleFontSize = 15;
-        const titleWidth = boldFont.widthOfTextAtSize(title, titleFontSize);
-        const titleX = (width - titleWidth) / 2;
-    
+    // Center the title
+    const titleFontSize = 15;
+    const titleWidth = boldFont.widthOfTextAtSize(title, titleFontSize);
+    const titleX = (width - titleWidth) / 2;
+
     page.drawText(title, {
         x: titleX,
         y: height - 50,
@@ -1056,14 +1095,14 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
         color: rgb(0.25, 0.28, 0.3),
     });
     console.log('899')
- 
+
     page.drawLine({
         start: { x: 40, y: height - 95 },
         end: { x: width - 40, y: height - 95 },
         thickness: 1,
         color: rgb(0.36, 0.4, 0.45),
     });
-    
+
 
     // Add location
     page.drawText('Location:', {
@@ -1160,7 +1199,7 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
     const qrCodeImageBytes = Buffer.from(qrCodeImage.split(',')[1], 'base64');
     const qrCodeImageEmbed = await pdfDoc.embedPng(qrCodeImageBytes);
     const qrCodeDims = qrCodeImageEmbed.scale(0.6);
-    console.log('990',qrCodeDims)
+    console.log('990', qrCodeDims)
     // Add QR code
     page.drawImage(qrCodeImageEmbed, {
         x: 50,
@@ -1168,17 +1207,35 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
         width: qrCodeDims.width,
         height: qrCodeDims.height,
     });
-  
-    // Serialize the PDF document to bytes (Uint8Array)
-    console.log('pdf doc',pdfDoc)
-    return await pdfDoc.save();
-  }
 
-let generateQRCode = async(req,res)=>{
+    // Serialize the PDF document to bytes (Uint8Array)
+    console.log('pdf doc', pdfDoc)
+    return await pdfDoc.save();
+}
+
+let generateQRCode = async (req, res) => {
     try {
         let {bookingId,entityTypeId} = req.body
         console.log({bookingId,entityTypeId});
         
+        let fetchBookingDetails;
+        let statusId = 1;
+        let entityType;
+        if (entityTypeId == 1 || entityTypeId == 2 || entityTypeId == 3) {
+            entityType = "facilityBooking"
+        }
+        else if (entityTypeId == 4) {
+            entityType = "bluewayBooking"
+        }
+        else if (entityTypeId == 5) {
+            entityType = "greenwayBooking"
+        }
+        else if (entityTypeId == 6) {
+            entityType = "eventBooking"
+        }
+        else if (entityTypeId == 7) {
+            entityType = "eventHostBooking"
+        }
         if(!bookingId){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide required details"
@@ -1189,77 +1246,78 @@ let generateQRCode = async(req,res)=>{
                 facilityBookingId:bookingId
             }
         })
-        console.log("fetchFacilityId", fetchFacilityId.facilityTypeId);
-        entityTypeId = fetchFacilityId.facilityTypeId;
-        let statusId = 1;
-        let entityType;
-        if(entityTypeId==1 ||entityTypeId==2 || entityTypeId==3 ){
-            entityType = "facilityBooking"
-        }
-        else if(entityTypeId == 4 ) {
-            entityType = "bluewayBooking"
-        }
-        else if(entityTypeId == 5 ) {
-            entityType = "greenwayBooking"
-        }
-        else if(entityTypeId == 6 ) {
-            entityType = "eventBooking"
-        }
-        else if(entityTypeId == 7 ) {
-            entityType = "eventHostBooking"
-        }
-        let filePurpose = 'ticketBooking'
-        
         console.log('fetch facility', fetchFacilityId)
         let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
         console.log(1)
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
         console.log(2)
-        let fetchBookingDetails = await facilitybookings.findOne({
+        if(entityTypeId==1 || entityTypeId ==2 || entityTypeId==3 || entityTypeId ==4 || entityTypeId == 5){
+            fetchBookingDetails = await facilitybookings.findOne({
             
-            where:{
-               [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
-            },
-            include:[
-                {
-                    model:facilities
-                }
-            ]
+                where:{
+                   [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
+                },
+                include:[
+                    {
+                        model:facilities
+                    }
+                ]
+            })
+        }
+      
+        else if(entityTypeId ==6){
+            fetchBookingDetails = await sequelize.query(`select f.*,e2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join eventbookings e2 on e2.eventId =e.eventId 
+            where e2.eventBookingId= ? and e2.statusId = ? `,
+        {
+            type:QueryTypes.SELECT,
+            replacements:[bookingId,statusId]
         })
+
+        }
+        
+        else if(entityTypeId ==7){
+            fetchBookingDetails = await sequelize.query(`select f.*, h2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join hosteventdetails h on h.eventId = e.eventId 
+             inner join hostbookings h2 on h2.hostId = h.hostId where h2.hostBookingId= ? and h2.statusId = ? `,
+            {
+                type:QueryTypes.SELECT,
+                replacements:[bookingId,statusId]
+            })
+
+        }
         console.log(3, {bookingId,filePurpose,entityType,statusId});
         let fetchPdfImage = await sequelize.query(`
             select url, entityType from amabhoomi.files f 
             inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId 
             where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`
-            ,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
+            , { replacements: [bookingId, filePurpose, entityType, statusId], type: QueryTypes.SELECT })
         console.log(4)
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
         console.log(5)
         fetchBookingDetails.dataValues.url = fetchPdfImage[0].url
         console.log(6)
         console.log('fetchPdfImage', fetchPdfImage)
-        
+
         return res.status(statusCode.SUCCESS.code).json({
-            message:"Here is the QR code",
-            bookingDetails:fetchBookingDetails
-            
+            message: "Here is the QR code",
+            bookingDetails: fetchBookingDetails
+
         })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
     }
 }
 
 
-let verifyTheQRCode = async(req,res)=>{
+let verifyTheQRCode = async (req, res) => {
     try {
-        let {QrCodeData}= req.body
+        let { QrCodeData } = req.body
 
-        
+
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
     }
 }
@@ -1273,10 +1331,10 @@ let cancelBooking = async (req, res) => {
         if (entityTypeId == 1 || entityTypeId == 2 || entityTypeId == 3) {  // if entityType is Park, Playground or MP grounds
             cancelFacilityBooking();
         }
-        else if(entityTypeId == 6) {    // if entityType is Event
+        else if (entityTypeId == 6) {    // if entityType is Event
             cancelEventBooking();
         }
-        else if(entityTypeId == 7) {    // if entityType is Event Host
+        else if (entityTypeId == 7) {    // if entityType is Event Host
             cancelEventHostBooking();
         }
 
@@ -1288,12 +1346,12 @@ let cancelBooking = async (req, res) => {
                     where: {
                         facilityBookingId: bookingId
                     },
-                }, {transaction});
+                }, { transaction });
 
                 let { bool, amount } = checkForCancellation(currentDate, fetchFacilityBookingDetails.bookingDate);
-                if(bool) {  // if cancellation allowed, proceed with refund process with some refund amount
+                if (bool) {  // if cancellation allowed, proceed with refund process with some refund amount
                     let [updateBookingDetailsCount] = await facilitybookings.update({
-                        
+
                     }, {
                         where: {
                             facilityBookingId: bookingId
@@ -1306,16 +1364,16 @@ let cancelBooking = async (req, res) => {
                     })
                 }
             }
-            catch(error) {
+            catch (error) {
                 res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                     message: error.message
                 })
             }
         }
-        async function cancelEventBooking() {}
-        async function cancelEventHostBooking() {}
+        async function cancelEventBooking() { }
+        async function cancelEventHostBooking() { }
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
