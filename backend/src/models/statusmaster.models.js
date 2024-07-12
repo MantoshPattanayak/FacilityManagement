@@ -1,6 +1,6 @@
 module.exports = (sequelize,DataTypes)=>{
 
-const StatusMaster = sequelize.define('statusmaster', {
+const StatusMaster = sequelize.define('statusmasters', {
   // Model attributes are defined here
   statusId:{
     type:DataTypes.INTEGER,
