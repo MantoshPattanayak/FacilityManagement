@@ -143,7 +143,7 @@ const ProfileHistory = () => {
                 </a>
               </li>
               <li>
-                <a href="/BookParks/Add_Card">Cart Details</a>
+                <a href="/cart-details">Cart Details</a>
               </li>
             </ul>
             {/* Logout Button */}

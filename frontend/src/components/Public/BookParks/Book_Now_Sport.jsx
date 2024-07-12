@@ -91,7 +91,7 @@ const Book_Now_Sport = () => {
                 onClose: () => {
                     // Navigate to another page after toast timer completes
                     setTimeout(() => {
-                        navigate('/BookParks/Add_Card');
+                        navigate('/cart-details');
                     }, 1000); // Wait 1 second after toast timer completes before navigating
                 }
             });

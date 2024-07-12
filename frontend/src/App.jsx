@@ -63,7 +63,7 @@ import EventList from "./components/Public/Events/EventList";
 import Details from "./components/Public/Events/Details";
 import BookEvent from "./components/Public/Events/BookEvent";
 // Add to card
-import Add_Card from "./components/Public/Add_To_Card/AddCard";
+import AddToCart from "./components/Public/Add_To_Card/AddToCart";
 import Book_Now_Sport from "./components/Public/BookParks/Book_Now_Sport";
 import Book_Event from "./components/Public/BookParks/Book_Event";
 // here PublicLoader
@@ -182,9 +182,9 @@ function App() {
               />
               {/* Public (Add to Crad)  */}
               <Route
-                path="/BookParks/Add_Card"
+                path="/cart-details"
                 element={
-                  <Add_Card />
+                  <AddToCart />
                 }
               />
               <Route

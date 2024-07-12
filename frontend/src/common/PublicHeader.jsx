@@ -147,7 +147,7 @@ export default function PublicHeader() {
             )}
             {isUserLoggedIn == 1 && (
               <li>
-                <Link className="relative flex items-center" to="/BookParks/Add_Card">
+                <Link className="relative flex items-center" to="/cart-details">
                   {GetCardCount.count > 0 && (
                     <span className="cart-count absolute left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1 rounded-full">{GetCardCount.count}</span>
                   )}
