@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import axiosHttpClient from "../utils/axios";
-import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { faCreditCard, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Logo from '../../src/assets/ama_bhoomi_logo_odia.jpeg';
 import { decryptData } from "../utils/encryptData";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, isDisabled }) => {
   // dynamically load the script in the component
@@ -13,21 +14,24 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
     document.body.appendChild(script);
-  
+
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
   const checkoutHandler = async () => {
+    // fetch RAZORPAY API KEY
     const {
       data: { key, secret },
     } = await axiosHttpClient("FETCH_RAZORPAY_API_KEY", "get");
     console.log('apiKey', key);
 
+    // create RAZORPAY order
     const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { amount });
     console.log("order", order);
 
+    //proceed for RAZORPAY checkout
     const options = {
       key: decryptData(key),
       amount: order.amount,
@@ -38,21 +42,13 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
       order_id: order.id,
       handler: async function (response) {
         try {
-            console.log('razorpay response', response);            
-            // check for payment status
-            // let paymentStatusResponse = await fetch(`https://${key}:${secret}@api.razorpay.com/v1/orders/${order.id}`);
-            // if(!paymentStatusResponse.ok) {
-            //   throw new Error('Network response not OK.')
-            // }
-            // console.log('paymentStatusResponse', paymentStatusResponse);
-            //payment verification
-            response.payment_status = paymentStatusResponse.status; // added payment capture status to request body
-            let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', response);
-            console.log(res);
-            onSuccess({response, res});
+          console.log('razorpay response', response);
+          let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', response);
+          console.log(res);
+          onSuccess({ response, res });
         }
-        catch(error) {
-            console.error(error);
+        catch (error) {
+          console.error(error);
         }
       },
       prefill: {
@@ -69,16 +65,20 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
     };
     const razor = new window.Razorpay(options);
     razor.on('payment.failed', function (response) {
-      console.error('payment failed', response);
-        // onFailure(response.error);
+      toast.error("Payment failed. Try again!");
+      console.log('payment failed in razorpay button', response.error);
+      onFailure(response.error);
     })
     razor.open();
   };
 
   return (
-    <button className="submit-and-proceed-button" onClick={checkoutHandler} disabled={isDisabled}>
-      <FontAwesomeIcon icon={faCreditCard} />&nbsp; Pay Now
-    </button>
+    <>
+      <button className="submit-and-proceed-button" onClick={checkoutHandler} disabled={isDisabled}>
+        <FontAwesomeIcon icon={faCreditCard} />&nbsp; Pay Now
+      </button>
+      <ToastContainer />
+    </>
   );
 };
 
