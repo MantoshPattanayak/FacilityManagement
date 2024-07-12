@@ -917,11 +917,23 @@ const facilityFilterOption = async (req, res) => {
     })
 }
 
+let findOverallSearch = async (req,res)=>{
+    try {
+        let givenReq = req.body.givenReq ? req.body.givenReq : null;
+        let findTheGivenReq = await sequelize.query(``)
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
 module.exports ={
     displayMapData,
     searchParkFacilities,
     viewParkDetails,
     viewParkById,
     nearByDataInMap,
-    facilityFilterOption
+    facilityFilterOption,
+    findOverallSearch
 }

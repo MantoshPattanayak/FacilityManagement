@@ -1179,6 +1179,7 @@ let generateQRCode = async(req,res)=>{
         let {bookingId,entityTypeId} = req.body
         let statusId = 1;
         let entityType
+        let filePurpose = 'ticketBooking'
         if(entityTypeId==1 ||entityTypeId==2 || entityTypeId==3 ){
             entityType = "facilityBooking"
         }
@@ -1194,7 +1195,6 @@ let generateQRCode = async(req,res)=>{
         else if(entityTypeId == 7 ) {
             entityType = "eventHostBooking"
         }
-        let filePurpose = 'ticketBooking'
         if(!bookingId){
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message:"Please provide required details"
@@ -1221,6 +1221,8 @@ let generateQRCode = async(req,res)=>{
                 }
             ]
         })
+        console.log('all data',bookingId,filePurpose,entityType,statusId)
+
         let fetchPdfImage = await sequelize.query(`select url, entityType from amabhoomi.files f inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
         fetchBookingDetails.dataValues.url = fetchPdfImage[0].url
