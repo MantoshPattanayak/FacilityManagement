@@ -1,4 +1,4 @@
-.form-container {
+.CreateEventCategoryContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,30 +13,17 @@
     overflow-y: auto;
 }
 
-.form-heading {
+.CreateEventCategoryContainer .form-heading {
     padding: 2.5vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 60%;
+    justify-content: center;
+    width: 100%;
     /* Converted from 20px to 2.5vw */
 }
 
-.form-container h1 {
-    margin-bottom: 1.5vw;
-    /* Converted from 10px to 1.5vw */
-    min-width: 90vw;
-    background-color: green;
-    color: black;
-    font-weight: bold;
-    height: 5vh;
-    display: flex;
-    align-items: center;
-    padding-left: 2vh;
-    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
-}
-
-.form-heading h2 {
+.CreateEventCategoryContainer .form-heading h2 {
     margin-bottom: 1.5vw;
     /* Converted from 10px to 1.5vw */
     /* min-width: 5vw; */
@@ -51,7 +38,8 @@
     background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
 }
 
-.form-row {
+
+.CreateEventCategoryContainer .form-row {
     display: flex;
     gap: 1vw;
     margin-bottom: 1vw;
@@ -61,93 +49,88 @@
     padding-inline: 1vw;
 }
 
-.form-group {
+.CreateEventCategoryContainer .form-group {
     display: flex;
     flex-direction: column;
     line-height: 1.5;
 }
 
-.form-heading label {
+.CreateEventCategoryContainer .form-heading label {
     margin-bottom: 0.5vw;
     /* Converted from 5px to 0.5vw */
     color: #595959;
     font-weight: bold;
 }
 
-.form-heading select {
+.CreateEventCategoryContainer .form-heading select {
     width: 24vw;
     height: 100%;
     padding: 0.625vw;
-    border: 0.0833vw solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 0.417vw;
     background-color: ghostwhite;
 
 }
 
-.form-heading input[type="text"],
-input[type='date'],
-select {
+.CreateEventCategoryContainer .form-heading input[type="text"],
+.CreateEventCategoryContainer input[type='date'],
+.CreateEventCategoryContainer select {
     width: 100%;
     height: 100%;
     padding: 0.625vw;
-    border: 0.0833vw solid #b1b1b1;
+    border: 2px solid #c6c6c6;
     border-radius: 0.417vw;
-    background-color: #ECECEE;
+    background-color: white;
 }
 
-.form-heading input:focus {
-    border: 2px solid #405cf5; /* Change border color and thickness on focus */
-      outline: none; /* Remove default outline */
+.CreateEventCategoryContainer .form-heading input:focus, .CreateEventCategoryContainer .form-heading select:focus {
+    border: 2px solid #405cf5;
+    outline: none;
   }
 
-.form-heading input[type="button"] {
+.CreateEventCategoryContainer .form-heading input[type="button"] {
     width: 25%;
-    /* Converted from 100px to 8.33vw */
     padding: 0.625vw;
-    /* Converted from 5px to 0.625vw */
     border: 0.0833vw solid #ccc;
-    /* Converted from 1px to 0.0833vw */
     border-radius: 0.417vw;
-    /* Converted from 5px to 0.417vw */
-    background-color: ghostwhite;
+    background-color: white;
     cursor: pointer;
 }
 
-.form-heading .div-border {
-    /* Converted from 100px to 8.33vw */
+.CreateEventCategoryContainer .form-heading .div-border {
     padding: 0.625vw;
-    /* Converted from 5px to 0.625vw */
     border: 0.0833vw solid #ccc;
-    /* Converted from 1px to 0.0833vw */
     border-radius: 0.417vw;
-    /* Converted from 5px to 0.417vw */
     background-color: ghostwhite;
 }
 
-.form-heading input[type="text"]:disabled,
-.form-heading textarea:disabled {
+.CreateEventCategoryContainer .form-heading input[type="text"]:disabled,
+.CreateEventCategoryContainer .form-heading textarea:disabled {
     background-color: rgb(241, 241, 241);
 }
 
-.form-container textarea {
+.CreateEventCategoryContainer textarea {
     padding: 0.625vw;
-    /* Converted from 5px to 0.625vw */
-    border: 0.0833vw solid #ccc;
-    /* Converted from 1px to 0.0833vw */
+    border: 2px solid #ccc;
     border-radius: 0.417vw;
-    /* Converted from 5px to 0.417vw */
-    background-color: ghostwhite;
+    background-color: white;
 }
 
-.form-container>.buttons-container {
+.CreateEventCategoryContainer textarea:focus {
+    border: 2px solid #405cf5;
+    outline: none;
+}
+
+.CreateEventCategoryContainer .buttons-container {
     display: flex;
-    justify-content: flex-start;
-    margin-top: 2vh;
-    padding-left: 7vw;
+    justify-content: flex-end;
+    margin-top: 10px;
+    padding-left: 0;
+    width: 100%;
 }
 
-.approve-button,
-.cancel-button {
+.CreateEventCategoryContainer .approve-button,
+.CreateEventCategoryContainer .cancel-button {
     padding: 10px;
     color: white;
     border: none;
@@ -157,7 +140,7 @@ select {
     transition: background-color 0.3s;
 }
 
-.back-button {
+.CreateEventCategoryContainer .back-button {
     padding: 0.5em;
     margin: 0.5em;
     /* Adjusted margin */
@@ -168,17 +151,17 @@ select {
     color: white;
 }
 
-.approve-button {
+.CreateEventCategoryContainer .approve-button {
     background-color: #176BFB;
     color: white;
 }
 
-.cancel-button {
+.CreateEventCategoryContainer .cancel-button {
     background-color: #c6c6c6;
     color: white;
 }
 
-.form-grid {
+.CreateEventCategoryContainer .form-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -187,44 +170,29 @@ select {
     width: 100%;
 }
 
-.error-message {
+.CreateEventCategoryContainer .error-message {
     color: red;
     font-size: 14px;
 }
 
-.approve-button:disabled,
-.cancel-button:disabled {
+.CreateEventCategoryContainer .approve-button:disabled,
+.CreateEventCategoryContainer .cancel-button:disabled {
     background-color: gray;
-    cursor: not-allowed;
 }
 
 /* Media query for tablets and larger screens */
 @media screen and (min-width: 768px) {
 
-    .approve-button,
-    .cancel-button {
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
         padding: 0.6em 1.5em;
         margin: 0.2em;
     }
-}
-
-/* Media query for smaller screens */
-@media screen and (max-width: 767px) {
-
-    .approve-button,
-    .cancel-button {
-        width: 100%;
-        /* Make buttons full width */
-    }
-}
-
-/* Media query for tablets and larger screens */
-@media screen and (min-width: 768px) {
-    .form-row {
+    .CreateEventCategoryContainer .form-row {
         flex-wrap: wrap;
     }
 
-    .form-heading h2 {
+    .CreateEventCategoryContainer .form-heading h2 {
         height: 5vh;
         /* Change height for larger screens */
     }
@@ -232,70 +200,80 @@ select {
 
 /* Media query for smaller screens */
 @media screen and (max-width: 767px) {
-    .form-row {
+
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
+        width: 100%;
+        /* Make buttons full width */
+    }
+
+    .CreateEventCategoryContainer .form-row {
         flex-direction: column;
         gap: 1.5vw;
         /* Increased gap for better spacing */
     }
 
-    .form-group {
+    .CreateEventCategoryContainer .form-group {
         width: 100%;
     }
 
-    input[type="text"] {
+    .CreateEventCategoryContainer input[type="text"] {
         width: 100%;
-        /* Full width input */
     }
 
-    .form-container {
+    .CreateEventCategoryContainer {
         width: 100%;
         font-size: small;
     }
 }
 
 @media screen and (max-width: 575px) {
-    .form-heading h2 {
+    .CreateEventCategoryContainer .form-heading h2 {
         margin-bottom: 1.5vw;
         min-width: 90vw;
         height: 5vh;
         padding-left: 2vh;
     }
 
-    .form-heading {
+    .CreateEventCategoryContainer .form-heading {
         max-width: 90vw;
     }
 
-    .form-container {
+    .CreateEventCategoryContainer .CreateEventCategoryContainer {
         width: 100%;
         font-size: small;
     }
 
-    .approve-button,
-    .cancel-button {
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
         padding: 9px 10px;
         margin: 0.5em;
+    }
+
+    .CreateEventCategoryContainer label {
+        font-size: 12px;
     }
 }
 
 @media screen and (max-width: 368px) {
-    .form-heading h2 {
+    .CreateEventCategoryContainer .form-heading h2 {
         margin-bottom: 1.5vw;
         height: 5vh;
         padding-left: 2vh;
         width: 50%;
     }
 
-    .form-heading {
+    .CreateEventCategoryContainer .form-heading {
         max-width: 100%;
     }
 
-    .form-container {
+    .CreateEventCategoryContainer {
         width: 90%;
         font-size: small;
     }
 
-    .approve-button,
-    .cancel-button {
+    .CreateEventCategoryContainer .approve-button,
+    .CreateEventCategoryContainer .cancel-button {
         padding: 9px 10px;
         margin: 0.5em;
     }

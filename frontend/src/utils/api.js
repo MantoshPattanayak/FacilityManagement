@@ -90,6 +90,7 @@ const api = {
    // Get Facility Initail Data Admin--------------------
    Get_Facility_Intail_Data:'/adminFacility/initialData', // get Method
    Facility_Reg_Api:'/adminFacility/facilityRegistration', // Post Method
+   Facility_Update_View_By_ID_Api:'/adminFacility/getFacilityWrtId', //Post Method 
    //grievance-feedback for user
    GRIEVANCE_INITIAL_DATA_API: '/grievance/initial-data',  //get
    USER_SUBMIT_GRIEVANCE_API: '/grievance/submit-grievance',   //post   fullname, emailId, phoneNo, subject, details, statusId, filepath, isWhatsappNumber
@@ -122,7 +123,13 @@ const api = {
    CREATE_NEW_INVENTORY_API: '/inventories/createInventory', //post code, description
    VIEW_INVENTORY_BY_ID_API: '/inventories/viewInventoryById', //get :equipmentId
    UPDATE_INVENTORY_API: '/inventories/updateInventory', //put code, description, equipmentId, statusId
+   // EVENT CATEGORIES MASTER (MDM)
+   VIEW_EVENTCATEGORIES_LIST_API: '/eventcategories/viewEventCategoriesList', //post givenReq
+   CREATE_NEW_EVENTCATEGORY_API: '/eventcategories/createEventCategory', //post eventCategoryName, description
+   VIEW_EVENTCATEGORY_BY_ID_API: '/eventcategories/viewEventCategoryById', //get :eventCategoryId
+   UPDATE_EVENTCATEGORY_API: '/eventcategories/updateEventCategory', //put eventCategoryName, description, eventCategoryId, statusId
    // PAYMENT
+   FETCH_RAZORPAY_API_KEY: '/razorPayPayment/getRazorpayApiKeys', //get
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 
 }

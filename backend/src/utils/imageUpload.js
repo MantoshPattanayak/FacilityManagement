@@ -3,7 +3,7 @@ const db = require('../models')
 const file = db.file;
 const fileAttachment = db.fileattachment
 const path = require('path')
-let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,userId,errors)=>{
+let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber)=>{
     // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
@@ -41,10 +41,10 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
             
             console.log(fileExtension,'34 file extension image file buffer')
 
-            uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}.${fileExtension}`;
+            uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
 
             fs.writeFileSync(uploadFilePath, uploadImageFileBuffer);
-            uploadFilePath2 = `/${subDir}/${insertionData.id}${insertionData.name}.${fileExtension}`;
+            uploadFilePath2 = `/${subDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
             console.log(uploadFilePath2,"upload file path2 43")
             let fileName = `${insertionData.id}${insertionData.name}.${fileExtension}`;
             let fileType = mime ? mime.split("/")[0] : 'unknown';

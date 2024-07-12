@@ -1,63 +1,104 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-
-import {
-  faXmark,
-  faMinus,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
-import './Booking_Schedule.css';
-
-const Booking_Schedule = ({ closePopup }) => {
-  const [formData, setFormData] = useState({
-    totalMembers: 0,
-    children: 0,
-    seniorCitizen: 0,
-    adults: 0,
-    amount: "10.00",
-    activityPreference: [],
-    otherActivities: "",
-    bookingDate: new Date().toISOString().split("T")[0],
-    startTime: new Date().toTimeString().split(" ")[0],
-    durationInHours: 0,
-    facilityId: "",
-    entityId: "",
-    entityTypeId: "",
-    facilityPreference: "",
-    priceBook: 0,
+import { Link, useNavigate } from "react-router-dom";
+import { faXmark, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import "./Booking_Schedule.css";
+import Book_Now from "../Book_Now";
+import { decryptData, encryptData } from "../../../../utils/encryptData";
+const Booking_Schedule = ({
+  closePopup,
+  formData,
+  totalMembers,
+  children,
+  seniorCitizen,
+  adults,
+}) => {
+  console.log("Received data in Booking_Schedule:", {
+    formData,
+    totalMembers,
+    children,
+    seniorCitizen,
+    adults,
   });
+  const [sendData, setsendData] = useState(false);
+  const navigate = useNavigate();
+  const [bookingData, setBookingData] = useState({
+    bookingDate: formData.bookingDate,
+    startTime: formData.startTime,
+    durationInHours: formData.durationInHours,
+    totalMembers: totalMembers,
+    children: children,
+    seniorCitizen: seniorCitizen,
+    adults: adults,
+    amount: "10.00",
+    activityPreference: formData.activityPreference,
+    otherActivities: formData.otherActivities,
+    facilityId: formData.facilityId,
+    entityId: formData.entityId,
+    entityTypeId: formData.entityTypeId,
+    facilityPreference: formData.facilityPreference,
+    priceBook: formData.priceBook,
+  });
+
+  let facilityId = decryptData(bookingData.facilityId);
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    let intValue = parseInt(value);
-    const updatedFormData = {
-      ...formData,
-      [name]: isNaN(value) ? value : intValue,
-    };
-
-    setFormData(updatedFormData);
+    setBookingData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleIncrease = (type) => {
-    setFormData((prevData) => ({
+    setBookingData((prevData) => ({
       ...prevData,
       [type]: prevData[type] + 1,
     }));
   };
 
   const handleDecrease = (type) => {
-    setFormData((prevData) => ({
+    setBookingData((prevData) => ({
       ...prevData,
       [type]: Math.max(prevData[type] - 1, 0),
     }));
   };
 
+  // function handleBookingData(e) {
+  //   e.preventDefault(); 
+  //   navigate(
+  //     `/BookParks/Book_Now?d=${encodeURIComponent(
+  //       encryptData(JSON.stringify(bookingData))
+  //     )}&facilityId=${encryptData(facilityId)}`
+  //   );   
+  // }
+
+  function handleBookingData(e) {
+    // e.preventDefault();
+    // navigate(
+    //   `/BookParks/Book_Now?d=${encodeURIComponent(
+    //     encryptData(JSON.stringify(bookingData))
+    //   )}&facilityId=${encryptData(facilityId)}`
+    // );
+    e.preventDefault();
+    const encryptedData = encryptData(JSON.stringify(bookingData));
+    const encryptedFacilityId = encryptData(facilityId);
+    console.log("Encoded data being sent:", { encryptedData, encryptedFacilityId });
+    navigate(
+      `/BookParks/Book_Now?d=${encodeURIComponent(encryptedData)}&facilityId=${encodeURIComponent(encryptedFacilityId)}`
+    );
+  }
+
+  const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
+  }
+
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-30  flex justify-center items-center'>
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="booking-schedule-popup">
         <div className="popup-header">
-          <button className="icon-close" onClick={closePopup}>
+          <button className="icon-close" onClick={()=>closePopup(false)}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
@@ -67,7 +108,7 @@ const Booking_Schedule = ({ closePopup }) => {
             type="date"
             id="bookingDate"
             name="bookingDate"
-            value={formData.bookingDate}
+            value={bookingData.bookingDate}
             onChange={handleChangeInput}
             className="custom-input"
           />
@@ -77,7 +118,7 @@ const Booking_Schedule = ({ closePopup }) => {
             type="time"
             id="startTime"
             name="startTime"
-            value={formData.startTime}
+            value={formatTime(bookingData.startTime)}
             onChange={handleChangeInput}
             className="custom-input"
           />
@@ -87,7 +128,7 @@ const Booking_Schedule = ({ closePopup }) => {
             <button
               className="duration-button"
               onClick={() => handleDecrease("durationInHours")}
-              disabled={formData.durationInHours <= 0}
+              disabled={bookingData.durationInHours <= 0}
             >
               <FontAwesomeIcon icon={faMinus} />
             </button>
@@ -95,7 +136,7 @@ const Booking_Schedule = ({ closePopup }) => {
               type="number"
               id="durationInHours"
               name="durationInHours"
-              value={formData.durationInHours}
+              value={bookingData.durationInHours}
               onChange={handleChangeInput}
               className="custom-input"
               min="0"
@@ -108,16 +149,21 @@ const Booking_Schedule = ({ closePopup }) => {
             </button>
           </div>
           <div className="popup-footer">
-            <button className="cancel-button" onClick={closePopup}>Cancel</button>
-            <Link to='/BookParks/Book_Now' >
-            <button className="next-button" >Next</button>
-            </Link>            
-           
+            <button className="cancel-button" onClick={()=>closePopup(false)}>Cancel</button>
+            <button className="next-button" onClick={handleBookingData}>
+              Next
+            </button>
           </div>
+          {/* {sendData && (
+          <Book_Now
+            closePopup={() => setsendData(false)}
+            bookingData={bookingData}
+          />
+        )} */}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Booking_Schedule;

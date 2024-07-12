@@ -92,8 +92,9 @@ export default function Facility_ViewList() {
                                             <td data-label="View">
                                                 <Link
                                                     to={{
-                                                        pathname: '/UAC/Users/Edit',
-                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&action=view`
+                                                        pathname: '/Facility_Edit_View',
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId))}
+                                                        &action=View`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faEye} />
@@ -102,8 +103,9 @@ export default function Facility_ViewList() {
                                             <td data-label="Edit">
                                                 <Link
                                                     to={{
-                                                        pathname: '/UAC/Users/Edit',
-                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&action=edit`
+                                                        pathname: '/Facility_Edit_View',
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId))}
+                                                        &action=Edit`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faPenToSquare} />

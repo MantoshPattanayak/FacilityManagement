@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import './Visiting_People.css';
-import Activity_Preference_popup from './Activity_Preference_popup';
+import "./Visiting_People.css";
+import { decryptData } from "../../../../utils/encryptData";
+import Activity_Preference_popup from "./Activity_Preference_popup";
+import { encryptData } from "../../../../utils/encryptData";
+import { Link, useNavigate} from "react-router-dom";
 
-const Visiting_People = ({ closePopup }) => {
+const Visiting_People = ({ closePopup, facilityId, facilityName }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     totalMembers: 0,
     children: 0,
@@ -16,14 +20,19 @@ const Visiting_People = ({ closePopup }) => {
     bookingDate: new Date().toISOString().split("T")[0],
     startTime: new Date().toTimeString().split(" ")[0],
     durationInHours: 0,
-    facilityId: "",
+    facilityId: decryptData(
+      new URLSearchParams(location.search).get("facilityId")
+    ),
     entityId: "",
     entityTypeId: "",
     facilityPreference: "",
     priceBook: 0,
   });
 
+  console.log("facility id is here", formData.facilityId);
+
   const [showPeople, setShowPeople] = useState(false);
+  const [close, setClose] = useState(false);
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -64,112 +73,135 @@ const Visiting_People = ({ closePopup }) => {
     }));
   };
 
+  const handleNext = () => {
+    // Example of encrypting facilityId before passing it to another component
+    formData.facilityId = encryptData(formData.facilityId);
+    // Do something with encryptedFacilityId, such as passing it to another component
+    setShowPeople(true);
+  };
+
+  const handleClose = () => {
+    navigate(`/Sub_Park_Details?facilityId=${encodeURIComponent(encryptData(facilityId))}`);
+  };
+
   return (
-    <div className='VisitingPeople fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
+    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+      <div className="popup-overlay">
+        <div className="popup-content">
+          <div className="popup-header">
+            {/* <Link
+              to={`/Sub_Park_Details?facilityId=${encodeURIComponent(
+                encryptData(formData.facilityId)
+              )}`}
+            >
+              <button className="icon-close" onClick={closePopup}>
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            </Link> */}
+            <button className="icon-close" onClick={(e) => closePopup(false)}>
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+          <div className="popup-body">
+            <h2 className="popup-title">{facilityName}</h2>
+            <div className="member-details">
+              <div className="member-row">
+                <label htmlFor="children">Children (0-12):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("children")}
+                    disabled={formData.children <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="children"
+                    name="children"
+                    value={formData.children}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("children")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
+              </div>
 
-    <div className='popup-overlay'>
-      <div className="popup-content">
-        <div className="popup-header">
-          <button className="icon-close" onClick={closePopup}>
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-        </div>
-        <div className="popup-body">
-          <h2 className="popup-title">IG PARK</h2>
-          <div className="member-details">
-            <div className="member-row">
-              <label htmlFor="children">Children (0-12):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("children")}
-                  disabled={formData.children <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="children"
-                  name="children"
-                  value={formData.children}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("children")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+              <div className="member-row">
+                <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("seniorCitizen")}
+                    disabled={formData.seniorCitizen <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="seniorCitizen"
+                    name="seniorCitizen"
+                    value={formData.seniorCitizen}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("seniorCitizen")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="member-row">
+                <label htmlFor="adults">Adults (13-59):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("adults")}
+                    disabled={formData.adults <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="adults"
+                    name="adults"
+                    value={formData.adults}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("adults")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="member-row">
-              <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("seniorCitizen")}
-                  disabled={formData.seniorCitizen <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="seniorCitizen"
-                  name="seniorCitizen"
-                  value={formData.seniorCitizen}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("seniorCitizen")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
-              </div>
-            </div>
-
-            <div className="member-row">
-              <label htmlFor="adults">Adults (13-59):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("adults")}
-                  disabled={formData.adults <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="adults"
-                  name="adults"
-                  value={formData.adults}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("adults")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
-              </div>
+            <div className="popup-footer">
+              <button className="cancel-button" onClick={(e) => closePopup(false)}>
+                Cancel
+              </button>
+              <button className="next-button" onClick={handleNext}>
+                Next
+              </button>
             </div>
           </div>
-
-          <div className="popup-footer">
-            <button className="cancel-button" onClick={closePopup}>Cancel</button>
-            <button className="next-button" onClick={() => setShowPeople(true)}>Next</button>
-          </div>
         </div>
+        {showPeople && <Activity_Preference_popup closePopup={closePopup} formData={formData} />}
       </div>
-      {showPeople && <Activity_Preference_popup />}
-    </div>
     </div>
   );
 };

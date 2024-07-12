@@ -77,7 +77,6 @@ const Facility_Reg = () => {
         }
     });
     let navigate = useNavigate();
-
     // here call the api for get the initial data ---------------------------
     async function GetFacilityInitailData() {
         try {
@@ -464,26 +463,26 @@ const Facility_Reg = () => {
     function handleConfirmation(e) {
         e.preventDefault();
         // Disable interactions with the background
-        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'none';
-        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 0.4;
+        document.querySelectorAll('.all_From_conatiner')[0].style.pointerEvents = 'none';
+        document.querySelectorAll('.all_From_conatiner')[0].style.opacity = 0.4;
         toast.warn(
             <div>
                 <p>Are you sure you want to proceed?</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button 
+                    <button
                         onClick={(e) => {
                             e.stopPropagation();
                             HandleSubmitFacility(e);
                             // Re-enable interactions with the background
-                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-                            document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+                            document.querySelectorAll('.all_From_conatiner')[0].style.pointerEvents = 'auto';
+                            document.querySelectorAll('.all_From_conatiner')[0].style.opacity = 1;
                         }}
                         className='bg-green-400 text-white p-2 border rounded-md'>Yes</button>
                     <button onClick={(e) => {
                         e.stopPropagation();
                         // Re-enable interactions with the background
-                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.pointerEvents = 'auto';
-                        document.querySelectorAll('.CreateNewServiceContainer')[0].style.opacity = 1;
+                        document.querySelectorAll('.all_From_conatiner')[0].style.pointerEvents = 'auto';
+                        document.querySelectorAll('.all_From_conatiner')[0].style.opacity = 1;
                         toast.dismiss();
                         toast.error('Action cancelled!', {
                             // position: toast.POSITION.TOP_CENTER,
@@ -519,6 +518,7 @@ const Facility_Reg = () => {
             toast.error('Please fill out all required fields.');
             console.log('Validation errors:', validationErrors);
             setformErrors(validationErrors)
+            setformErrors(validationErrors2)
 
         }
     };
@@ -562,7 +562,7 @@ const Facility_Reg = () => {
             err.facilityName = "Please Enter the Facility Name";
         } else if (!space_block.test(value.facilityName)) {
             err.facilityName = 'Do not use spaces at beginning';
-        } 
+        }
         if (!value.longitude) {
             err.longitude = "Please Enter the longitude";
         } else if (!space_block.test(value.longitude)) {
@@ -767,7 +767,7 @@ const Facility_Reg = () => {
     return (
         <div>
             <div className="all_From_conatiner">
-                <AdminHeader/>
+                <AdminHeader />
                 {currentStep === 1 && (
                     <form className="event-host_1st_Page">
                         <div className="HostEvent_container">

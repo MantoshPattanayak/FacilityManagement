@@ -11,6 +11,7 @@ import {
   faPlus,
   faMinus,
   faIndianRupeeSign,
+  faArrowLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -20,51 +21,76 @@ import PublicHeader from "../../../common/PublicHeader";
 import RazorpayButton from "../../../common/RazorpayButton";
 
 const Book_Now = () => {
+  const location = useLocation();
+  const [bookingData, setBookingData] = useState(null);
   const [selectedGames, setSelectedGames] = useState([]);
   const [FacilitiesData, setFacilitiesData] = useState([]);
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [amount1, setAmount1] = useState([0]);
-
-  const location = useLocation();
+  const [formData, setFormData] = useState({});
+  // const [amount1, setAmount1] = useState([10]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const encryptedData = queryParams.get("d");
+    console.log("Encrypted Data: ", encryptedData);
+    if (encryptedData) {
+      try {
+        const decryptedData = JSON.parse(decryptData(encryptedData));
+        console.log("Decrypted Data: ", decryptedData);
+        setFormData(decryptedData);
+        setSelectedGames(decryptedData.activityPreference); // Set selectedGames initially
+      } catch (error) {
+        console.error("Error decrypting data", error);
+      }
+    }
+  }, [location.search]);
 
-  const [formData, setFormData] = useState({
-    totalMembers: 0,
-    children: 0,
-    seniorCitizen: 0,
-    adults: 0,
-    amount: "10.00",
-    activityPreference: [],
-    otherActivities: "",
-    bookingDate: new Date().toISOString().split("T")[0],
-    startTime: new Date().toTimeString().split(" ")[0],
-    durationInHours: 1,
-    facilityId: "",
-    entityId: "",
-    entityTypeId: "",
-    facilityPreference: "",
-    priceBook: 0,
-  });
+  // useEffect(() => {
+  //   console.log("Booking Data: ", bookingData);
+  // }, [bookingData]);
 
-  let facilityId = decryptData(new URLSearchParams(location.search).get("facilityId"));
+  // console.log(bookingData.totalMembers);
+  // const [formData, setFormData] = useState({
+  //   totalMembers: bookingData.totalMembers,
+  //   children: bookingData ? bookingData.children : 0,
+  //   seniorCitizen: bookingData ? bookingData.seniorCitizen : 0,
+  //   adults: bookingData ? bookingData.adults : 0,
+  //   amount: "10.00",
+  //   activityPreference: [],
+  //   otherActivities: bookingData ? bookingData.otherActivities : "",
+  //   bookingDate: bookingData ? bookingData.bookingDate : "",
+  //   startTime: bookingData ? bookingData.startTime : "",
+  //   durationInHours: bookingData ? bookingData.durationInHours : 0,
+  //   facilityId: bookingData ? bookingData.facilityId : "",
+  //   entityId: "",
+  //   entityTypeId: "",
+  //   facilityPreference: "",
+  //   priceBook: 0,
+  // });
+
+  let facilityId = decryptData(
+    new URLSearchParams(location.search).get("facilityId")
+  );
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    getSub_park_details(facilityId);
+    if (facilityId) {
+      getSub_park_details(facilityId);
+    }
     getParkBookingInitialData();
-  }, []);
+  }, [facilityId]);
 
   useEffect(() => {
-    console.log("selectedGames", selectedGames);
-    if(selectedGames.length > 0) {
-      setFormData(prevState => ({
+    console.log("Selected Games: ", selectedGames);
+    if (selectedGames.length > 0) {
+      setFormData((prevState) => ({
         ...prevState,
-        ['activityPreference']: selectedGames
+        ["activityPreference"]: selectedGames,
       }));
     }
-    console.log("formData", formData);
+    console.log("Form Data: ", formData);
   }, [refresh, selectedGames]);
 
   async function getSub_park_details(facilityId) {
@@ -103,7 +129,7 @@ const Book_Now = () => {
     //   ["activityPreference"]: prevState.activityPreference.includes(game) ? prevState.activityPreference.filter((item) => item !== game) : [...prevState.activityPreference, game]
     // }))
     setIsDisabled(validateForm(formData));
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleChangeInput = (e) => {
@@ -130,7 +156,7 @@ const Book_Now = () => {
     // setIsDisabled(updatedFormData.totalMembers > 40);
     setIsDisabled(validateForm(updatedFormData));
     setFormData(updatedFormData);
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleDecrease = (field) => {
@@ -139,7 +165,7 @@ const Book_Now = () => {
       [field]: Math.max(0, prevData[field] - 1),
     }));
     setIsDisabled(validateForm(formData));
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
 
   const handleIncrease = (field) => {
@@ -148,8 +174,10 @@ const Book_Now = () => {
       [field]: prevData[field] + 1,
     }));
     setIsDisabled(validateForm(formData));
-    setRefresh(prevState => !prevState);
+    setRefresh((prevState) => !prevState);
   };
+
+  let price = formData.amount * formData.adults;
 
   const handleAddtoCart = async () => {
     let modifiedFormData = {
@@ -166,7 +194,7 @@ const Book_Now = () => {
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
           duration: modifiedFormData.durationInHours,
-          price: amount1 * modifiedFormData.adults,
+          price: formData.a * modifiedFormData.adults,
         };
 
         const requestBody = {
@@ -196,7 +224,8 @@ const Book_Now = () => {
   const handleSubmitAndProceed = async () => {
     let modifiedFormData = {
       ...formData,
-      ["totalMembers"]: formData.children + formData.seniorCitizen + formData.adults,
+      ["totalMembers"]:
+        formData.children + formData.seniorCitizen + formData.adults,
       activityPreference: selectedGames,
     };
     console.log("modifiedFormData", modifiedFormData);
@@ -205,7 +234,7 @@ const Book_Now = () => {
       try {
         const facilityPreference = {
           totalMembers: modifiedFormData.totalMembers,
-          amount: amount1 * modifiedFormData.adults,
+          amount: formData.amount * modifiedFormData.adults,
           activityPreference: modifiedFormData.activityPreference,
           otherActivities: modifiedFormData.otherActivities,
           bookingDate: modifiedFormData.bookingDate,
@@ -234,29 +263,36 @@ const Book_Now = () => {
     } else {
       toast.error("Please fill the required data.");
     }
-
   };
 
   const handlePaymentSuccess = (response) => {
     console.log("Book park payment success", response);
     handleSubmitAndProceed();
-  }
+  };
 
   const handlePaymentFailure = (response) => {
     console.log("Book park payment failure", response);
-  }
+  };
 
   const validateForm = (formData) => {
     let errors = {};
     console.log("formData", formData.activityPreference, selectedGames);
-    if (formData.totalMembers > 0 && formData.totalMembers <= 40 ) errors.totalMembers = "Please provide number of members between 0 and 40";
+    if (formData.totalMembers > 0 && formData.totalMembers <= 40)
+      errors.totalMembers = "Please provide number of members between 0 and 40";
     if (!formData.bookingDate) errors.date = "Please provide date.";
     if (!formData.startTime) errors.startTime = "Please provide Start time.";
-    if (!formData.durationInHours) errors.durationInHours = "Please provide duration.";
-    if(formData.activityPreference.length < 1 || selectedGames.length < 1) errors.activityPreference = "Please select an activity.";
+    if (!formData.durationInHours)
+      errors.durationInHours = "Please provide duration.";
+    if (formData.activityPreference.length < 1 || selectedGames.length < 1)
+      errors.activityPreference = "Please select an activity.";
     console.log(errors);
     return Object.keys(errors).length === 0 ? false : true;
   };
+
+  // const formatTime = (time) => {
+  //   const [hours, minutes] = time.split(':');
+  //   return `${hours}:${minutes}`;
+  // }
 
   return (
     <div className="Book_Now_Min_conatiner">
@@ -264,7 +300,22 @@ const Book_Now = () => {
       <div className="booknow-container">
         <div className="park-container">
           <div className="heading_BookNow">
-            <h1> <b>{FacilitiesData?.facilityName || "Park Name"}</b></h1>
+            <h1>
+              {" "}
+              <b>{FacilitiesData?.facilityName || "Park Name"}</b>
+            </h1>
+            <Link
+              to={`/Sub_Park_Details?facilityId=${encodeURIComponent(
+                encryptData(formData.facilityId)
+              )}`}
+            >
+              <div className="back_button">
+                <button className="back_btn">
+                  <FontAwesomeIcon icon={faArrowLeftLong} />
+                  Back
+                </button>
+              </div>
+            </Link>
           </div>
 
           <div className="form_BookNow">
@@ -292,7 +343,6 @@ const Book_Now = () => {
                   onClick={() => handleIncrease("children")}
                 >
                   <FontAwesomeIcon icon={faPlus} />
-
                 </button>
               </div>
 
@@ -347,20 +397,21 @@ const Book_Now = () => {
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
               </div>
-
             </div>
 
-{/* Activity preference................................................... */}
+            {/* Activity preference................................................... */}
             <div className="activity-preference">
               <span>Activity Preference</span>
               <div className="games">
                 {activityPreferenceData?.length > 0 &&
                   activityPreferenceData.map((activity) => (
                     <button
-                      className={`game-btn ${selectedGames.includes(activity.userActivityId)
-                        ? "selected"
-                        : ""
-                        }`}
+                      key={activity.userActivityId}
+                      className={`game-btn ${
+                        selectedGames.includes(activity.userActivityId)
+                          ? "selected"
+                          : ""
+                      }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
@@ -379,8 +430,8 @@ const Book_Now = () => {
                 onChange={handleChangeInput}
               />
             </div>
-            
-{/* booking details................................................... */}
+
+            {/* booking details................................................... */}
             <div className="booking-details">
               <label htmlFor="bookingDate">Booking Date:</label>
               <input
@@ -433,7 +484,8 @@ const Book_Now = () => {
               <label htmlFor=""> Amount (in rupees) :</label>
               <span className="price-display">
                 <FontAwesomeIcon icon={faIndianRupeeSign} />
-                <b>{amount1 * parseInt(formData.adults)}</b>
+                {/* <b>{amount1 *(formData.adults)}</b> */}
+                <b>{price}</b>
                 <b>/-</b>
               </span>
             </div>
@@ -442,17 +494,17 @@ const Book_Now = () => {
               <button
                 className="add-to-cart-button"
                 onClick={handleAddtoCart}
-                disabled={isDisabled}
+                disabled={formData.totalMembers > 0 ? false : true}
               >
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
               <RazorpayButton
-                amount={amount1 * parseInt(formData.adults)}
+                amount={price}
                 currency={"INR"}
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
                 onFailure={handlePaymentFailure}
-                isDisabled={isDisabled}
+                disabled={formData.totalMembers > 0 ? false : true}
               />
               {/* <button
                 className="submit-and-proceed-button"
@@ -466,7 +518,7 @@ const Book_Now = () => {
         </div>
       </div>
       <ToastContainer />
-     {/* {showPeople && <Visiting_People />} */}
+      {/* {showPeople && <Visiting_People />} */}
     </div>
   );
 };
