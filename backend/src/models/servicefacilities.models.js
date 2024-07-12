@@ -1,12 +1,15 @@
 module.exports = (sequelize,DataTypes)=>{
 
 const ServiceFacility = sequelize.define('servicefacilities',{
-    seriviceFacilityId:{
+    serviceFacilityId:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
         primaryKey:true
     },
     serviceId:{
+        type:DataTypes.INTEGER
+    },
+    facilityId:{
         type:DataTypes.INTEGER
     },
     statusId:{
@@ -18,7 +21,7 @@ const ServiceFacility = sequelize.define('servicefacilities',{
     createdBy:{
         type:DataTypes.INTEGER
     },
-    createdOn: {
+    createdDt: {
         type: DataTypes.DATE, // Define the column as DATE type
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
@@ -26,7 +29,7 @@ const ServiceFacility = sequelize.define('servicefacilities',{
     updatedBy:{
         type:DataTypes.INTEGER
     },
-    updatedOn: {
+    updatedDt: {
         type: DataTypes.DATE // Define the column as DATE type
     },
     deletedBy:{
@@ -37,7 +40,13 @@ const ServiceFacility = sequelize.define('servicefacilities',{
     }
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 
 return ServiceFacility
 }

@@ -1,14 +1,240 @@
-.logo .logo-ama-boomi {
-    height: 10%;
-    width: 10%;
-    position:absolute;
-}
-.navbar{
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 68px;
+    background-color: #003f12;
+    color: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+  
+  .header-content {
+    width: 94%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .navbar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar ul li {
+    margin-right: 20px;
+  }
+  
+  .navbar ul li:last-child {
+    margin-right: 0;
+  }
+  
+  .navbar ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .navbar ul li a:active {
+    font-weight: bolder;
+    text-decoration: underline;
+    border-bottom: 2px solid #d61a1a;
+    padding-bottom: 2px;
+  }
+  
+  .active {
+    font-weight: bolder;
+    text-decoration: underline;
+    border-bottom: 2px solid #d61a1a;
+    padding-bottom: 2px;
+  }
+  
+  .login-button {
+    width: 80px;
+    height: 34px;
+    background-color: #3AB757;
+    color: white;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .hamburger-menu {
+    display: none;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 101;
+  }
+  
+  .hamburger-menu .fa-bars {
+    font-size: larger;
+    font-weight: 600;
+  }
+  
+  @media screen and (max-width: 780px) {
+    .hamburger-menu {
+      display: block;
+    }
+  
+    .navbar ul {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background-color: #003f12;
+      position: absolute;
+      top: 68px;
+      left: 0;
+      padding: 0;
+    }
+  
+    .navbar ul.show {
+      display: flex;
+    }
+  
+    .navbar ul li {
+      margin: 10px 0;
+      text-align: center;
+    }
+  
+    .header-content {
+      justify-content: space-between;
+    }
+  }
+  
+  .logo-ama-boomi {
+    height: 10%;
+    width: 10%;
+    margin-right: auto;
+  }
+  
+  .logo-ama-boomi img {
+    height: 60px;
+    width: 80px;
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  /* PublicHeader.css */
+/* .menu-item {
+  position: relative;
+  display: inline-block;
 }
-.logo-ama-boomi img{
-    height: 30px;
-    width: 30px;
+
+.submenu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background: #003f12;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 4px;
+  min-width: 200px;
+  overflow: hidden;
 }
+
+.menu-item:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.submenu li:hover {
+  background: #272727;
+}
+
+.submenu li a {
+  color: #333;
+  text-decoration: none;
+}
+
+.submenu li a:hover {
+  color: #007bff;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu_links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.menu_links > li {
+  position: relative;
+}
+
+.mobile_menu_links.show {
+  display: flex !important;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+  }
+
+  .menu_links {
+    display: none;
+  }
+
+  .mobile_menu_links {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .mobile_menu_links.show {
+    display: flex;
+  }
+} */

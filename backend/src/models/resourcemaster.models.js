@@ -44,7 +44,7 @@ const ResourceMaster = sequelize.define('resourcemaster', {
   createdBy:{
     type:DataTypes.INTEGER
   },
-  createdOn: {
+  createdDt: {
     type: DataTypes.DATE, // Define the column as DATE type
     allowNull: false,
     defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Set default value to current timestamp
@@ -52,16 +52,14 @@ const ResourceMaster = sequelize.define('resourcemaster', {
   updatedBy:{
     type:DataTypes.INTEGER
   },
-  updatedOn: {
-    type: DataTypes.DATE // Define the column as DATE type
-  },
-  deletedBy:{
-    type:DataTypes.INTEGER
-  },
-  deletedOn: {
+  updatedDt: {
     type: DataTypes.DATE // Define the column as DATE type
   }
  
+}
+,
+{
+    timestamps:false
 }
 );
 

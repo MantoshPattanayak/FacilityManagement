@@ -43,7 +43,7 @@ let CryptoJS = require('crypto-js')
 // }
 
 
-const decrypt = (val) => {
+const decrypt =  (val) => {
     let key = process.env.Encrypt_Decrypt_key
     let iv= process.env.IV
     let parsedKey = CryptoJS.enc.Hex.parse(key);

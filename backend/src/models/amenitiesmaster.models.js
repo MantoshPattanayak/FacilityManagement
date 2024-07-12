@@ -9,7 +9,7 @@ const AmenityMaster = sequelize.define('amenitymaster',{
     amenityName:{
         type:DataTypes.STRING(80)
     },
-    status:{
+    statusId:{
         type:DataTypes.INTEGER
     },
     remarks:{
@@ -36,6 +36,9 @@ const AmenityMaster = sequelize.define('amenitymaster',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
+},
+{
+    timestamps:false
 })
 return AmenityMaster
 }

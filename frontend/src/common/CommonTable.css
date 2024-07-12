@@ -29,7 +29,7 @@
   .search_text_conatiner{
     display: flex;
     justify-content: space-between;
-    padding: 12px;
+    padding: 10px;
   }
 
     .search_field_button {
@@ -191,6 +191,7 @@ tbody tr:nth-child(even) {
     float: left;
     font-weight: bold;
     text-transform: uppercase;
+    margin-right: 10px;
   }
 
   table td:last-child {

@@ -1,26 +1,34 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./Sub_Park_Details.css";
-// Here Import Admin Header AND fOOTER ------------------------------------
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
+
 import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
 
-// Location icon and image all types of image---------------------------------------------
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
-import Park_img from "../../../assets/park_img1.jpg";
+import { MdHomeRepairService } from "react-icons/md";
+import Park_img from "../../../assets/Park_details.jpg";
+import amabhoomi from "../../../assets/ama_bhoomi_bgi.jpg";
+import sport_image from "../../../assets/sport_details_image.jpg";
+
 import Yoga_img from "../../../assets/Yoga_img.png";
 import Google_map from "../../../assets/Google_map.jpg";
 import correct_icon from "../../../assets/Correct_icon.png";
 import Phone_icon from "../../../assets/Phone_icon.png";
-// Import Aixos method---------------------------------------------
+
 import axiosHttpClient from "../../../utils/axios";
-// Import Navigate and Crypto -----------------------------------
 import { useLocation, useNavigate } from "react-router-dom";
 import { decryptData } from "../../../utils/encryptData";
-// Import here to encrptData ------------------------------------------
 
 import { Link } from "react-router-dom";
 import { encryptData } from "../../../utils/encryptData";
-// Google MAP --------------------------------
+import { useSelector } from "react-redux";
+// import image no data -----------------------------
+import No_Event_Data_img from '../../../assets/No_Event_available.png'
+
 import {
   GoogleMap,
   LoadScript,
@@ -28,34 +36,79 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import PublicHeader from "../../../common/PublicHeader";
-// Here Funcation of Sub_park_details------------------------------------------
+import Book_Now from "../BookParks/Book_Now";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
+import instance from "../../../../env";
+
 const Sub_Park_Details = () => {
-  // UseSate for get data -------------------------------------
   const [ServiceData, setServiceData] = useState([]);
   const [amenitiesData, setAmenitiesData] = useState([]);
   const [EventAvailable, setEventAvailable] = useState([]);
   const [FacilitiesData, setFacilitiesData] = useState([]);
-  // here Check Login Status------------------------------------
   const [LoginStatus, setLoginStatus] = useState([0]);
-
-  //here Location / crypto and navigate the page---------------
   const location = useLocation();
   const facilityId = decryptData(
     new URLSearchParams(location.search).get("facilityId")
   );
-  const action = new URLSearchParams(location.search).get("action");
   const navigate = useNavigate();
   const isUserLoggedIn = sessionStorage.getItem("isUserLoggedIn") || 0;
   const [toRoute, setToRoute] = useState();
-  // Here Map Api keys ------------------------------------------------------------
+  const [operatingDays, setOperatingDays] = useState("");
+  const [bookmarkId, setBookmarkId] = useState(null);
+  //Here is the popup state
+  const [showPeople, setShowPeople] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [images, setImagesList] = useState([Park_img, amabhoomi, Park_img, amabhoomi, Park_img]);
+  const [currentIndex1, setCurrentIndex1] = useState(0);
+
+  useEffect(() => { }, [facilityId]);
+
+  async function handleBookmarkStatus(e) {
+    e.preventDefault();
+    if (!isUserLoggedIn) {
+      navigate("/login-signup");
+      return;
+    }
+    const newBookmarkStatus = !isBookmarked;
+    console.log("newBookmarkStatus", {
+      currdate: new Date(),
+      newBookmarkStatus,
+      isBookmarked,
+    });
+    try {
+      let res = await axiosHttpClient(
+        newBookmarkStatus == false ? "REMOVE_BOOKMARK_API" : "ADD_BOOKMARK_API",
+        "post",
+        newBookmarkStatus == false ? { bookmarkId } : { facilityId }
+      );
+      console.log("response", res.data);
+      if (newBookmarkStatus == false) {
+        toast.warning(res.data.message);
+        setIsBookmarked(newBookmarkStatus);
+      } else {
+        toast.success(res.data.message);
+        setIsBookmarked(newBookmarkStatus);
+      }
+    } catch (error) {
+      console.error(error);
+      if (error.response.status == 401) {
+        toast.error("You are not logged in to bookmark.");
+      } else {
+        toast.error("Bookmarking failed!");
+      }
+    }
+  }
 
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
-  let randomKey = Math.random();
 
-  // Here Get the data of Sub_park_details------------------------------------------
   async function getSub_park_details() {
-    // console.log('facilityId', facilityId);
     try {
       let res = await axiosHttpClient(
         "View_By_ParkId",
@@ -64,78 +117,148 @@ const Sub_Park_Details = () => {
         facilityId
       );
 
-      console.log("here Response", res);
       setServiceData(res.data.serviceData);
       setAmenitiesData(res.data.amenitiesData);
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
+      setOperatingDaysFromRes(res);
+      if (res.data.facilitiesData.length > 0) {
+        let imagesData = res.data.facilitiesData.map((facility) => {
+          return facility.url || null
+        });
+        console.log("Images data", imagesData);
+        setImagesList(imagesData);
+      }
+
+      console.log("response of fetch facility details", res.data.facilitiesData);
+
+      function setOperatingDaysFromRes(res) {
+        let operatingDaysFromRes = [];
+        if (res.data.facilitiesData[0].sun == 1) {
+          operatingDaysFromRes.push("Sun");
+        }
+        if (res.data.facilitiesData[0].mon == 1) {
+          operatingDaysFromRes.push("Mon");
+        }
+        if (res.data.facilitiesData[0].tue == 1) {
+          operatingDaysFromRes.push("Tue");
+        }
+        if (res.data.facilitiesData[0].wed == 1) {
+          operatingDaysFromRes.push("Wed");
+        }
+        if (res.data.facilitiesData[0].thu == 1) {
+          operatingDaysFromRes.push("Thu");
+        }
+        if (res.data.facilitiesData[0].fri == 1) {
+          operatingDaysFromRes.push("Fri");
+        }
+        if (res.data.facilitiesData[0].sat == 1) {
+          operatingDaysFromRes.push("Sat");
+        }
+        setOperatingDays(operatingDaysFromRes);
+      }
     } catch (err) {
-      console.log("here Error", err);
+      console.log("Error fetching park details", err);
     }
   }
-  // For Find Out the Status of Login Page -----------------------------------
-  // For Find Out the Status of Login Page -------------------------------
 
-  useEffect(() => {}, [isUserLoggedIn]);
-
-  // UseEffect for Update the data---------------------------------------------
-  useEffect(() => {
-    getSub_park_details();
-  }, []);
-  // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
-  function encryptDataId(id) {
-    let res = encryptData(id);
-    return res;
+  async function getUserBookmarks() {
+    if (isUserLoggedIn) {
+      try {
+        let res = await axiosHttpClient("VIEW_BOOKMARKS_LIST_API", "post");
+        console.log("user bookmarks", { res: res.data.data, facilityId });
+        let bookmarkBool = res.data?.data?.some((data) => {
+          if (
+            ["Parks", "Playgrounds", "Multi Purpose Ground"].includes(
+              data.facilityType
+            )
+          ) {
+            console.log(data);
+            setBookmarkId(data.bookmarkId);
+            return data.id == facilityId;
+          }
+        });
+        setIsBookmarked(bookmarkBool);
+        console.log("is this facility bookmarked", bookmarkBool);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      return;
+    }
   }
 
-  //Image swap  conatiner ------------------------------------------------
-  const containerRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  useEffect(() => {
-    const container = containerRef.current;
-    const interval = setInterval(() => {
-      const newIndex = (currentIndex + 1) % 10;
-      setCurrentIndex(newIndex);
-      container.scrollLeft = newIndex * container.offsetWidth;
-    }, 4000); // Change box set every 3 seconds
+  useEffect(() => { }, [isBookmarked]);
 
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+  useEffect(() => {
+    getSub_park_details();
+    getUserBookmarks();
+  }, []);
+
+  function encryptDataId(id) {
+    return encryptData(id);
+  }
 
   function formatTime(time24) {
-    //format 24 hour time as 12 hour time
     if (!time24) return;
-    // Parse the input time string
     const [hours, minutes] = time24.split(":").map(Number);
-
-    // Determine AM or PM
     const period = hours >= 12 ? "PM" : "AM";
-
-    // Convert hours to 12-hour format
-    const hours12 = hours % 12 || 12; // 0 should be 12 in 12-hour format
-
-    // Format the time string
-    const time12 = `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
-
-    return time12;
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
   }
 
   function formatDate(date) {
-    //format input date as DD-MM-YYYY
     if (!date) return;
-
     const [year, month, day] = date.split("-");
-
     return `${day}-${month}-${year}`;
   }
 
-  // Here Return Function ------------------------------------------------------------
+  const handlePrev = () => {
+    setCurrentIndex1(
+      currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex1(
+      currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1
+    );
+  };
+
+  const [currentIndex2, setCurrentIndex2] = useState(0);
+
+  const handleEventPrev = () => {
+    setCurrentIndex2(
+      currentIndex2 === 0 ? EventAvailable.length - 1 : currentIndex2 - 1
+    );
+  };
+
+  const handleEventNext = () => {
+    setCurrentIndex2(
+      currentIndex2 === EventAvailable.length - 1 ? 0 : currentIndex2 + 1
+    );
+  };
+
+  function closePopup(bool) {
+    setShowPeople(bool);
+    return;
+  }
+
   return (
     <div className="Sub_Manu_Conatiner">
-      {/* here Header -----------------------------------------------------*/}
       <PublicHeader />
-      {/* Here Heading Image (Below of header) */}
-      <div className="Header_Img">
+      <ToastContainer />
+      <div
+        className={
+          FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1
+            ? "Header_Img"
+            : FacilitiesData[0]?.facilityTypeId === 2
+              ? "playground_header_image"
+              : FacilitiesData[0]?.facilityTypeId === 3
+                ? "MulitGroud"
+                : ""
+        }
+      >
         <h1 className="text-park">
           {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
         </h1>
@@ -146,79 +269,177 @@ const Sub_Park_Details = () => {
           </h1>
         </span>
       </div>
-      {/*---------------- Jsx for Map and Image ------------------- */}
+
       <div className="map_img_main_conatiner">
-        <div className="Image_conatiner">
-          <img className="Park_image" src={Park_img}></img>
+        <div className="carousel-container1">
+          <div className="carousel1">
+            <img
+              src={instance().baseURL + '/static' + images[currentIndex1]}
+              alt={`Slide ${currentIndex1 + 1}`}
+            />
+          </div>
+          <button className="carousel1-button1 left1" onClick={handlePrev}>
+            &lt;
+          </button>
+          <button className="carousel1-button1 right1" onClick={handleNext}>
+            &gt;
+          </button>
         </div>
+
         <div className="Map_container">
-          <span className="time_status">
-            <h1 className="time_text">
-              {" "}
-              Timing : {formatTime(
-                FacilitiesData[0]?.operatingHoursFrom
-              )} - {formatTime(FacilitiesData[0]?.operatingHoursTo)}
-            </h1>
-            <button
-              className={`Open_Button ${
-                FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
+          <span className="time_status flex flex-col">
+            <div className="flex">
+              <h1 className="time_text">
+                <p className="timing-day">Timing :</p>
+                <span className="timing-day-text">
+                  {formatTime(FacilitiesData[0]?.operatingHoursFrom)} -{" "}
+                  {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+                </span>
+              </h1>
+              {/* <div className="open-close-btn">
+              <button
+                className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
                   ? "open"
                   : "closed"
-              }`}
-            >
-              {FacilitiesData?.length > 0 &&
-                FacilitiesData[0]?.status.toUpperCase()}
-            </button>
+                  }`}
+              >
+                {FacilitiesData?.length > 0 &&
+                  FacilitiesData[0]?.status.toUpperCase()}
+              </button>
+              </div> */}
+
+              <div
+                className={`bookmark ${isBookmarked ? "bookmarked" : ""}`}
+                onClick={handleBookmarkStatus}
+              >
+                <FontAwesomeIcon
+                  icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular}
+                />
+              </div>
+            </div>
+
+            <div className="day-open-close-status">
+              <h1 className="date_text text-[12px]">
+                <p className="timing-day">Day :</p>
+                <span className="timing-day-text">
+                  {operatingDays.toString()}
+                </span>
+              </h1>
+
+              <div className="open-close-btn">
+                <button
+                  className={`Open_Button ${FacilitiesData.length > 0 &&
+                    FacilitiesData[0].status === "open"
+                    ? "open"
+                    : "closed"
+                    }`}
+                >
+                  {FacilitiesData?.length > 0 &&
+                    FacilitiesData[0]?.status.toUpperCase()}
+                </button>
+              </div>
+            </div>
           </span>
 
           <span className="Button_ticket_container">
-            <Link
-              to={{
-                pathname: `${
-                  isUserLoggedIn == 1 ? "/BookParks/Book_Now" : "/login-signup"
-                }`,
-                search: `${
-                  isUserLoggedIn == 1
-                    ? `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}`
-                    : `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
-                }`,
-              }}
-              className="button-9"
-            >
-              <button role="button_by">Buy a Ticket</button>
-            </Link>
-   
+            {FacilitiesData[0]?.facilityTypeId == 1 ? (
+              // <Link
+              //   to={{
+              //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
+              //       }`,
+              //     search: `${isUserLoggedIn == 1
+              //       ? `?facilityId=${encryptDataId(
+              //         FacilitiesData[0]?.facilityId
+              //       )}`
+              //       : `?facilityId=${encryptDataId(
+              //         FacilitiesData[0]?.facilityId
+              //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
+              //       }`,
+              //   }}
+              //   className="button-9"
+              // >
+              //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
+              //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
 
-
-            <Link
-              to={{
-                pathname: `${
-                  isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-                }`,
-                search: `${
-                  isUserLoggedIn == 1
+              // </Link>
+              <button onClick={() => setShowPeople(true)} className="button-9">
+                Book Ticket
+              </button>
+            ) : FacilitiesData[0]?.facilityTypeId == 2 ? (
+              <Link
+                to={{
+                  pathname: `${isUserLoggedIn == 1
+                    ? "/BookParks/Book_Now_Sport"
+                    : "/login-signup"
+                    }`,
+                  search: `${isUserLoggedIn == 1
                     ? `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}`
+                      FacilitiesData[0]?.facilityId
+                    )}`
                     : `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-                }`,
-              }}
-              className="button-9"
-            >
-                  <button role="button_by">Host Event</button>
+                      FacilitiesData[0]?.facilityId
+                    )}` +
+                    `&redirect=${encryptDataId(
+                      "/BookParks/Book_Now_Sport"
+                    )}`
+                    }`,
+                }}
+                className="button-9"
+              >
+                <button role="button_by">Book Ticket</button>
               </Link>
-        
+            ) : (
+              <Link
+                to={{
+                  pathname: `${isUserLoggedIn == 1
+                    ? "/BookParks/Book_Now_Sport"
+                    : "/login-signup"
+                    }`,
+                  search: `${isUserLoggedIn == 1
+                    ? `?facilityId=${encryptDataId(
+                      FacilitiesData[0]?.facilityId
+                    )}`
+                    : `?facilityId=${encryptDataId(
+                      FacilitiesData[0]?.facilityId
+                    )}` +
+                    `&redirect=${encryptDataId(
+                      "/BookParks/Book_Now_Sport"
+                    )}`
+                    }`,
+                }}
+                className="button-9"
+              >
+                <button role="button_by" onClick={() => setShowPeople(true)}>
+                  Book Ticket
+                </button>
+              </Link>
+            )}
+
+            <Link
+              to={{
+                pathname: `${isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                  }`,
+                search: `${isUserLoggedIn == 1
+                  ? `?facilityId=${encryptDataId(
+                    FacilitiesData[0]?.facilityId
+                  )}`
+                  : `?facilityId=${encryptDataId(
+                    FacilitiesData[0]?.facilityId
+                  )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
+                  }`,
+              }}
+              className="button-10"
+            >
+              <button role="button_by" className="name_button">
+                Host Event
+              </button>
+            </Link>
           </span>
 
           <div className="Map_image">
             <LoadScript googleMapsApiKey={apiKey}>
               <GoogleMap
+                ClassName="Map_image_Goole"
                 mapContainerStyle={{ height: "300px", width: "100%" }}
                 center={defaultCenter}
                 zoom={8}
@@ -237,105 +458,160 @@ const Sub_Park_Details = () => {
             </LoadScript>
           </div>
         </div>
-      </div>
 
-      {/* -----------------------------services------------------------------------------ */}
-      <div className="Service_Now_conatiner">
-        <h1 className="Service_text">Services</h1>
-        {ServiceData?.length > 0 &&
-          ServiceData?.map((item, index) => (
-            <div className="Service_Avilable" key={index}>
-              <div className="service_item">
-                <img
-                  className="service_Avil_img"
-                  src={Park_img}
-                  alt="Parking"
-                />
-                <p className="service_name">{item.code}</p>
+        {/* Back button............. */}
+        <Link to={"/facilities"}>
+          <div className="back_button">
+            <button className="back_btn">
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </button>
+          </div>
+        </Link>
+      </div>
+      <div className="other-contents">
+        {/* -----------------------------services------------------------------------------ */}
+        <div className="Service_Now_conatiner">
+          <h1 className="Service_text">Services</h1>
+          {ServiceData?.length > 0 &&
+            ServiceData?.map((item, index) => (
+              <div className="Service_Avilable" key={index}>
+                <div className="service_item">
+                  {/* <img
+                    className="service_Avil_img"
+                    src={Park_img}
+                    alt="Parking"
+                  /> */}
+
+                  <p className="service_name">{item.code}</p>
+                </div>
               </div>
-            </div>
-          ))}
-      </div>
-
-      {/* --------------------------- Amenities ------------------------------------------*/}
-      <div className="Amenities_Main_conatiner">
-        <h1 className="Service_text">Amenities</h1>
-        <div className="Amenities-Data">
-          {amenitiesData
-            .flatMap((group) => group) // Flatten the array of arrays
-            .filter(
-              (item, index, self) =>
-                self.findIndex((t) => t.amenityName === item.amenityName) ===
-                index
-            ) // Filter unique items
-            .map((item, index) => (
-              <span className="flex gap-2" key={index}>
-                <img
-                  className="Correct_icon"
-                  src={correct_icon}
-                  alt={`Amenity icon ${index}`}
-                />
-                <h1 className="Amenities_name">{item.amenityName}</h1>
-              </span>
             ))}
         </div>
-      </div>
 
-      {/* -------------------------- Here About -------------------------------------------- */}
-      <div className="About_Conatiner">
-        <h1 className="Service_text">About</h1>
-        <h1 className="About_text">
-          {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
-        </h1>
-      </div>
-      {/* -------------------------Helpline Number ------------------------------------------ */}
-      <div className="Helpline_number_conatine">
-        <h1 className="Service_text">Helpline Number</h1>
-        <div className="Contact_number">
-          <img className="Phone_icon" src={Phone_icon}></img>
-          <h1 className="Number">
-            {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
-          </h1>
-          <h1 className="Number">9192847567</h1>
+        {/* --------------------------- Amenities ------------------------------------------*/}
+        <div className="Amenities_Main_conatiner">
+          <h1 className="Service_text">Amenities</h1>
+          <div className="Amenities-Data">
+            {amenitiesData
+              .flatMap((group) => group) // Flatten the array of arrays
+              .filter(
+                (item, index, self) =>
+                  self.findIndex((t) => t.amenityName === item.amenityName) ===
+                  index
+              ) // Filter unique items
+              .map((item, index) => (
+                <span className="flex gap-2" key={index}>
+                  <img
+                    className="Correct_icon"
+                    src={correct_icon}
+                    alt={`Amenity icon ${index}`}
+                  />
+                  <h1 className="Amenities_name">{item.amenityName}</h1>
+                </span>
+              ))}
+          </div>
         </div>
-      </div>
-      {/* -------------------------Event Available ----------------------------------------------------------- */}
-      <div className="Event_Available_main_conatiner">
-        <h1 className="Service_text">Event Available</h1>
-        <div className="Sub_Park_Details">
-          {EventAvailable?.length > 0 &&
-            EventAvailable?.map((item, index) => {
-              return (
-                <div
-                  className="carousel-container"
-                  ref={containerRef}
-                  key={index}
-                >
-                  <div className="carousel-slide">
-                    <img
-                      className="Yoga_image"
-                      src={Yoga_img}
-                      alt="Event"
-                    ></img>
-                    <h1 className="Name_yoga"> {item.eventName}</h1>
+
+        {/* -------------------------- Here About -------------------------------------------- */}
+        <div className="About_Conatiner">
+          <h1 className="Service_text">About</h1>
+          <h1 className="About_text">
+            {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
+          </h1>
+        </div>
+        {/* -------------------------Helpline Number ------------------------------------------ */}
+        <div className="Helpline_number_conatine">
+          <h1 className="Service_text">Helpline Number</h1>
+          <div className="Contact_number">
+            <img className="Phone_icon" src={Phone_icon}></img>
+            <h1 className="Number">
+              {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
+            </h1>
+          </div>
+        </div>
+        {/* -------------------------Event Available ----------------------------------------------------------- */}
+        {/* <div className="Event_Available_main_conatiner">
+          <h1 className="Service_text">Event Available</h1>
+          <div className="Sub_Park_Details">
+            {EventAvailable?.length > 0 &&
+              EventAvailable?.map((item, index) => {
+                return (
+                  <div
+                    className="carousel-container"
+                    // ref={containerRef}
+                    key={index}
+                  >
+                    <div className="carousel-slide">
+                      <img
+                        className="Yoga_image"
+                        src={Yoga_img}
+                        alt="Event"
+                      ></img>
+                      <h1 className="Name_yoga"> {item.eventName}</h1>
+                      <span className="Yoga_date_time">
+                        <h1 className="Yoga_date">
+                          Date:-{formatDate(item.eventDate)}
+                        </h1>
+                        <h1 className="Yoga_time">
+                          Time:-{formatTime(item.eventStartTime)} -{" "}
+                          {formatTime(item.eventEndTime)}
+                        </h1>
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            {EventAvailable?.length == 0 && <p>No events.</p>}
+          </div>
+        </div> */}
+
+        <div className="Event_Available_main_conatiner">
+          <h1 className="Service_text">Event Available</h1>
+          {EventAvailable.length > 0 ? (
+            <div className="carousel-container">
+              <button className="carousel-button left" onClick={handleEventPrev}>
+                &lt;
+              </button>
+              <div
+                className="carousel-wrapper"
+                style={{ transform: `translateX(-${currentIndex2 * 100}%)` }}
+              >
+                {EventAvailable.map((event, index) => (
+                  <div key={index} className="carousel-slide">
+                    <img className="Yoga_image" src={Yoga_img} alt="Event" />
+                    <h1 className="Name_yoga">{event.eventName}</h1>
                     <span className="Yoga_date_time">
-                      <h1 className="Yoga_date">
-                        Date:-{formatDate(item.eventDate)}
-                      </h1>
-                      <h1 className="Yoga_time">
-                        Time:-{formatTime(item.eventStartTime)} -{" "}
-                        {formatTime(item.eventEndTime)}
-                      </h1>
+                      <h1>Date: {formatDate(event.eventDate)}</h1>
+                      <h1>Time: {formatTime(event.eventTime)}</h1>
                     </span>
                   </div>
-                </div>
-              );
-            })}
-          {EventAvailable?.length == 0 && <p>No events.</p>}
+                ))}
+              </div>
+              <button className="carousel-button right" onClick={handleEventNext}>
+                &gt;
+              </button>
+            </div>
+
+          ) : (
+            <div className="No_Event">
+              <img className="No_event_image" src={No_Event_Data_img}></img>
+            </div>
+          )}
+
         </div>
+        {/* <Book_Now/> */}
       </div>
+
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-      <CommonFooter />
+
+      {showPeople && (
+        <Visiting_People
+          closePopup={closePopup}
+          facilityId={encryptDataId(FacilitiesData[0]?.facilityId)}
+          facilityName={FacilitiesData[0]?.facilityName}
+        />
+      )}
     </div>
   );
 };

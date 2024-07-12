@@ -1,0 +1,339 @@
+.event-main__body__park {
+    padding-top: 60px;
+    width: 100%;
+}
+
+.event-body {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/event-pic.jpg");
+    height: 35vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.event-name_park_img {
+    padding: 140px;
+    font-size: 48px;
+    color: white;
+}
+
+/* Card here ------------------------------------------ */
+
+.event-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow cards to wrap to the next line */
+    justify-content: center;
+    /* Center cards horizontally */
+}
+
+.event-park-card-1 {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
+    padding: 8px;
+    gap: 14px;
+    margin: 20px;
+    border-radius: 18px;
+    background-color: #E0F8E5;
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.event-park-card-1:hover {
+    background-color: rgb(246, 245, 245);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+.event-Card_img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+.event-card_text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.event-park_name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212121;
+    font-style: normal;
+    margin-bottom: 5px;
+}
+
+.event-park_location {
+    font-size: 12px;
+    font-weight: 500;
+    color: #2f2f2f;
+}
+
+.event-time-details {
+    font-size: 12px;
+    font-weight: 500;
+    color: #2f2f2f;
+}
+
+.event-distance {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.event-Avilable {
+    color: rgb(3, 66, 9);
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: auto;
+    align-self: flex-end;
+}
+
+/* Search Container --------------------------------------*/
+.event-Search_container {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    gap: 14px;
+    margin: 20px;
+    margin-left: 90px;
+}
+
+/* Search Input */
+.event-search-container1 {
+    position: relative;
+    width: 300px;
+}
+
+.event-Search_input {
+    width: 100%;
+    padding: 8px;
+    padding-left: 40px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+}
+
+.event-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.event-search-icon svg {
+    width: 20px;
+    height: auto;
+}
+
+.event-Search_input:focus {
+    border-color: #029c3d;
+    outline: none;
+}
+
+/* Filter Button and Dropdown ----------------------------------------- */
+.event-Filter_grid {
+    padding: 10px;
+    margin-left: 90px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-gride_page select {
+    margin-right: 90px;
+    padding: 0.2vw;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.event-filter_button {
+    display: flex;
+    gap: 10px;
+}
+
+select {
+    border: none;
+    padding: 20px 20px;
+    border-radius: 5px;
+}
+
+select:focus {
+    outline: none;
+}
+
+.event-button-59 {
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #01b116;
+    box-sizing: border-box;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    fill: #000;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 35px;
+    justify-content: center;
+    outline: 0;
+    padding: 2px;
+    text-align: center;
+    min-width: 100px;
+    text-decoration: none;
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border-radius: 10px;
+}
+
+.event-button-59:focus {
+    color: #171e29;
+}
+
+.event-button-59:hover {
+    border-color: rgb(4, 156, 1);
+    background-color: rgb(2, 125, 0);
+    color: #fff;
+    fill: #06f;
+}
+
+@media (min-width: 768px) {
+    .event-button-59 {
+        min-width: 100px;
+    }
+}
+
+/* Table Container --------------------------- */
+.event-table_Container1 {
+    padding: 30px;
+}
+
+/* Small devices (portrait and landscape) */
+@media only screen and (max-width: 480px) {
+    .event-main__body__park {
+        padding-top: 20px;
+    }
+
+    .event-body {
+        height: 25vh;
+        background-position: center;
+    }
+
+    .event-name_park_img {
+        padding: 60px 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .event-Search_container {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .event-search-container1 {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .event-Filter_grid {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0;
+        margin-left: 0;
+    }
+
+    .event-gride_page select {
+        margin-right: 0;
+        padding: 8px;
+    }
+
+    .event-filter_button {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .event-button-59 {
+        font-size: 14px;
+        height: 30px;
+        min-width: 80px;
+        padding: 5px;
+    }
+
+    .event-card-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-park-card-1 {
+        width: 90%;
+        max-width: 100%;
+        margin: 10px 17px;
+    }
+
+    .event-table_Container1 {
+        padding: 10px;
+    }
+}
+
+/* Medium devices (portrait and landscape) */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .event-Filter_grid {
+        padding: 5px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .event-button-59 {
+        font-size: 14px;
+        height: 30px;
+        min-width: 56px;
+    }
+
+    .event-Search_container {
+        padding: 5px;
+        justify-content: center;
+        margin-left: 1px;
+    }
+
+    .event-body {
+        height: 12vh;
+        width: 100%;
+    }
+
+    .event-name_park_img {
+        padding: 50px;
+        font-size: 22px;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1023px) {
+    .event-Filter_grid {
+        padding: 5px;
+        padding: 10px;
+        margin-left: 60px;
+        justify-content: space-between;
+    }
+
+    .event-button-59 {
+        font-size: 14px;
+        height: 30px;
+        min-width: 56px;
+    }
+
+    .event-Search_container {
+        justify-content: flex-start;
+        padding: 8px;
+        margin-left: 60px;
+    }
+}

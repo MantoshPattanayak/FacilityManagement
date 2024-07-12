@@ -29,6 +29,9 @@ module.exports= (sequelize,DataTypes)=>{
         address:{
             type:DataTypes.STRING(50)
         },
+        statusId:{
+            type:DataTypes.INTEGER
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },
@@ -46,7 +49,12 @@ module.exports= (sequelize,DataTypes)=>{
 {
     timestamps: false,
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 
     return bankDetail
 }

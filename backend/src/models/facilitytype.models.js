@@ -40,6 +40,12 @@ const FacilityType = sequelize.define('facilitytype',{
     }
 
 
-})
+}
+,
+{
+    timestamps:false
+}
+
+)
 return FacilityType
 }

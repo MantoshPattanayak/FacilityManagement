@@ -28,7 +28,7 @@ export function resetRetry() {
 
 const axiosHttpClient = async (url, method, data, searchParams) => {
     const { baseURL, headers, urlTimeout } = instance();
-
+    // console.log('search', searchParams);
     let response = await axios({
         baseURL: searchParams ? baseURL + api[url] + `/${searchParams}` : baseURL + api[url],
         timeout: urlTimeout,
@@ -36,7 +36,9 @@ const axiosHttpClient = async (url, method, data, searchParams) => {
         headers,
         transformRequest: [function (data, headers) {
             // Do whatever you want to transform the data
+            if(!data) data = {};
             data = JSON.stringify(data);
+            // console.log(data)
             return data;
         }],
         

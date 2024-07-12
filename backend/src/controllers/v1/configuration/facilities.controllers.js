@@ -1,4 +1,3 @@
-// const { PI } = require('aws-sdk');
 const db = require('../../../models/index');
 const statusCode = require('../../../utils/statusCode');
 
@@ -11,9 +10,19 @@ const client = new Client({ node: 'http://localhost:9200' }); // Elasticsearch s
 const Sequelize = db.Sequelize
 
 let facilitiesTable = db.facilities;
+let facilitiesActivities = db.facilityactivities
+let userActivity = db.useractivitymasters;
+let facilityTariff = db.facilitytariff
+let userBookmark = db.bookmarks
+const fs = require('fs');
+
+
+
+const path = require('path');
 
 const displayMapData = async(req,res)=>{
     try{
+    
         let givenReq = req.body.givenReq?req.body.givenReq:null
         console.log(givenReq,'givenReq ')
 
@@ -59,6 +68,7 @@ const displayMapData = async(req,res)=>{
 
 const searchParkFacilities = async (req, res) => {
     try {
+        console.log('22')
         const { searchQuery } = req.query;
         console.log(searchQuery)
         
@@ -79,37 +89,117 @@ const searchParkFacilities = async (req, res) => {
     }
 };
 
+// Function to URL-encode file paths in the array
+function encodeUrls(facilitiesArray) {
+    console.log(facilitiesArray,'facilities Array')
+    return facilitiesArray.map(facility => {
+        // Check if the facility object has a "url" property
+        if (facility.url) {
+            // Encode the URL
+            facility.url = facility.url.split('/').map(encodeURIComponent).join('/');
+
+            // facility.url = encodeURIComponent(facility.url);
+        }
+        return facility;
+    });
+}
+
+
+
 const viewParkDetails = async(req,res)=>{
     try{
+        let userId = req.user?.userId || 1
         let givenReq = req.body.givenReq?req.body.givenReq:null
         let facilityTypeId = req.body.facilityTypeId?req.body.facilityTypeId:null
+        let selectedFilter = req.body.selectedFilter?req.body.selectedFilter:null;
         console.log(givenReq,'givenReq ')
-        console.log("fileid", facilityTypeId)
-
+        console.log("fileid", facilityTypeId,'selected filter',selectedFilter)
+        let facilityImagePurpose = 'singleFacilityImage'
         let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
-        end as status, address,latitude,longitude,areaAcres,ownership 
-        from amabhoomi.facilities f `
-   
-        let facilities = await sequelize.query(facility,{
-            replacements:[new Date()]
-        })
+        end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership, fl.url
+        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId `
+        
+        let facilities;
 
-       if(facilityTypeId){
-        console.log(1)
-         facility = `select facilityId, facilityname,facilityTypeId,case 
-            when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
-            else 'closed'
-        end as status, address,latitude,longitude,areaAcres,ownership 
-        from amabhoomi.facilities f where facilityTypeId=?`
-       
-        facilities = await sequelize.query(facility,{
-            replacements:[new Date(),facilityTypeId]
-        })
-        console.log(2,facilities)
-    }
+        if (selectedFilter) {
+            console.log('selected filter')
+            let filterConditions = [];
+        
+            if (selectedFilter.Amenities.length > 0) {
+                console.log('1')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityamenities WHERE amenityId IN (${selectedFilter.Amenities.join(',')}))`);
+            }
+            
+            if (selectedFilter.Activity.length > 0) {
+                console.log('2')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityactivities WHERE activityId IN (${selectedFilter.Activity.join(',')}))`);
+            }
+            if (selectedFilter.EventCategories.length > 0) {
+                let eventIds =[]
+                for (let i of selectedFilter.EventCategories) {
+                    console.log('i',i)
+                    let eventActivity = await sequelize.query('SELECT eat.eventId FROM eventcategorymasters ecm INNER JOIN eventactivities eat ON eat.eventCategoryId = ecm.eventCategoryId WHERE ecm.eventCategoryId = ?', {
+                        replacements: [i],
+                        type:Sequelize.QueryTypes.SELECT
+                    });
+                    eventIds.push(eventActivity[0].eventId)
+                    console.log('event ids',eventActivity)
+                }
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM eventactivities WHERE eventId IN (${eventIds.join(',')}))`);
 
+            }
+        
+            if (selectedFilter.Services.length > 0) {
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM servicefacilities WHERE serviceId IN (${selectedFilter.Services.join(',')}))`);
+            }
+            
+            console.log('24')
+            if (filterConditions.length > 0 && !facilityTypeId) {
+                console.log('filter condn', filterConditions,facility)
+                facility += ` WHERE ${filterConditions.join(' AND ')} and ft.filePurpose = ?`;
+                console.log('facility',facility)
+                 facilities = await sequelize.query(facility,{
+                    replacements:[new Date(),facilityImagePurpose]
+                })
+            }
+            if (facilityTypeId) {
+                console.log('25')
+
+                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ?`;
+            
+                if (filterConditions.length) {
+                    // Add selected filter conditions
+                    facility += ` AND ${filterConditions.join(' AND ')}`;
+                }
+            
+                facilities = await sequelize.query(facility, {
+                    replacements: [new Date(),facilityTypeId,facilityImagePurpose]
+                });
+            }
+        }
+        if (facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? `;   
+        
+            facilities = await sequelize.query(facility, {
+                replacements: [new Date(),facilityTypeId,facilityImagePurpose]
+            });
+        }
+
+        if (!facilityTypeId && !selectedFilter) {
+            console.log('25')
+            facility += ` WHERE  ft.filePurpose = ?`;   
+            console.log('facility query', facility)
+            facilities = await sequelize.query(facility, {
+                replacements: [new Date(),facilityImagePurpose]
+            });
+        }
+    
+
+    
         let matchedData = facilities[0];
         console.log('givenReq',givenReq)
         if(givenReq){
@@ -126,13 +216,25 @@ const viewParkDetails = async(req,res)=>{
                 ))
             )
             
-            console.log(matchedData,'matchedData')
+            // console.log(matchedData,'matchedData')
 
         }
-  
+        // const convertedData = convertImagesToBase64(matchedData);
+        // Call the function to encode URLs in the facilities array
+        const encodedFacilities = encodeUrls(matchedData);
+        // fetch bookmark details
+        let fetchBookmarkDetails = await userBookmark.findAll({
+            where:{
+                publicUserId:userId
+            }
+        })
+        // console.log(encodedFacilities)
+        // if selected filter comes 
+        
         return res.status(statusCode.SUCCESS.code).json({
             message: `All park facilities`,
-            data:matchedData
+            data:encodedFacilities,
+            bookmarkDetails:fetchBookmarkDetails
         })
 
 
@@ -159,19 +261,26 @@ const autoSuggestionForViewParkDetails = async (req,res)=>{
 
 const viewParkById = async (req,res)=>{
     try{
+        let userId = req.user?.userId || 1;
+        let multipleFacilityImage="multipleFacilityImage"
         let facilityId = req.params.facilityId? req.params.facilityId:null;
+        let findFacilityTypeId = await facilitiesTable.findOne({
+            where:{
+                facilityId:facilityId
+            }
+        })
         if(facilityId){
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-            end as status, address,latitude,longitude,areaAcres,helpNumber,about,operatingHoursFrom, operatingHoursTo 
-            from amabhoomi.facilities f where facilityId = ? `
+            end as status, address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url 
+            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? and ft.filePurpose = ? `
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
-            replacements:[new Date(), facilityId]
+            replacements:[new Date(), facilityId,multipleFacilityImage]
         })
 
-        let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
+        let fetchEventDetailsQuery = `select eventName, eventCategoryId,locationName,eventDate,eventStartTime,
         eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where facilityId=? and ticketSalesEnabled =1 `
 
         let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
@@ -191,12 +300,43 @@ const viewParkById = async (req,res)=>{
             {
                 replacements:[facilityId]
             })
+        // if the facilityType is playground then this facility activities will display some data
+        
+        let fetchfacilitiesActivities = await facilitiesActivities.findAll({
+            where:{
+                facilityTypeId:findFacilityTypeId.facilityTypeId
+            },
+            include:[
+               { 
+                model:facilitiesTable
+                },
+                {
+                    model:userActivity
+                }
+            ]
+        })
+
+        let fetchTariff = await facilityTariff.findOne({
+            where:{
+                facilityId:facilityId
+            }
+        })
+        let fetchBookmarkDetails = await userBookmark.findAll({
+            where:{
+                publicUserId:userId
+            }
+        })
+        const encodedFacilities = encodeUrls(fetchTheFacilitiesDetailsData[0]);
+
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
            facilitiesData: fetchTheFacilitiesDetailsData[0],
            eventDetails:fetchEventDetailsData[0],
             amenitiesData:fethAmenitiesDetailsDataData[0],
-            serviceData:fetchServicesDetailsData[0]
+            serviceData:fetchServicesDetailsData[0],
+            fetchfacilitiesActivities:fetchfacilitiesActivities,
+            fetchTariffData:fetchTariff,
+            fetchBookmarkDetails:fetchBookmarkDetails
         })
         }
         else{
@@ -229,68 +369,313 @@ let calculateDistance = (lat1, long1, lat2, long2) => {
         const distance = earthRadius * c; // Distance in kilometers
 
         // console.log('Calculated Distance:', distance);
+        console.log(distance, "distance")
         return distance;
 
 };
 
-const nearByDataInMap = async(req,res)=>{
-    try {
-        let {latitude,longitude,facilityTypeId,range,popular,free,paid} = req.body;
-        console.log('1',req.body)
-        // here range is bydefault set to 10
-        range = range?range:20;
-        let fetchFacilitiesQuery;
-        let fetchFacilities;
+// const nearByDataInMap = async(req,res)=>{
+//     try {
+//         let {latitude,longitude,facilityTypeId,range,popular,free,paid, order} = req.body;
+//         console.log('1',req.body)
+//         // here range is bydefault set to 10
+//         range = range?range:20;
+//         let fetchFacilitiesQuery;
+//         let fetchFacilities;
         
-        if(facilityTypeId){
+//         if(facilityTypeId){
 
-        //     fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo',
-        //     [Sequelize.literal('CASE WHEN TIME(?) between operatingHoursFrom and operatingHoursTo THEN open ELSE closed END'), 'status']],
-        //     where:{
-        //     facilityTypeId:facilityTypeId
-        // },
-        // replacements:[new Date()]
-    // })
-            console.log('23')
+//         //     fetchFacilities = await facilitiesTable.findAll({attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo',
+//         //     [Sequelize.literal('CASE WHEN TIME(?) between operatingHoursFrom and operatingHoursTo THEN open ELSE closed END'), 'status']],
+//         //     where:{
+//         //     facilityTypeId:facilityTypeId
+//         // },
+//         // replacements:[new Date()]
+//     // })
+//             console.log('23')
         
-        if(popular){
-            console.log('24')
-            fetchFacilitiesQuery  = `select count(fb.facilityBookingId)as noOfBookings,f.facilityId, f.facilityname,f.facilityTypeId,case 
-            when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
-            else 'closed'
-            end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership 
-            from amabhoomi.facilities f inner join amabhoomi.facilitybookings fb on f.facilityId = fb.facilityId group by fb.facilityId having f.facilityTypeId = ?
-            order by noOfBookings`,
+//         if(popular){
+//             console.log('24')
+//             fetchFacilitiesQuery  = `select count(fb.facilityBookingId)as noOfBookings,f.facilityId, f.facilityname,f.facilityTypeId,case 
+//             when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
+//             else 'closed'
+//             end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,max(fl.url) as url 
+//             from amabhoomi.facilities f inner join amabhoomi.facilitybookings fb on f.facilityId = fb.facilityId left join amabhoomi.fileattachments ft on fb.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId  group by fb.facilityId having f.facilityTypeId = ?
+//             order by noOfBookings`,
     
-            fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-            {
-                replacements:[new Date(),facilityTypeId]
+//             fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//             {
+//                 replacements:[new Date(),facilityTypeId]
                  
-            }
-            ) 
+//             }
+//             ) 
        
-        }
-        if(paid){
+//         }
+//         if(paid){
             
-            fetchFacilitiesQuery =  `select count(ft.tariffMasterId)as paidDetails,f.facilityId, f.facilityname,f.facilityTypeId,case 
-            when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
-            else 'closed'
-            end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership 
-            from amabhoomi.facilities f inner join amabhoomi.facilitytariffmasters ft on f.facilityId = ft.facilityId group by ft.facilityId having f.facilityTypeId =? `
+//             fetchFacilitiesQuery =  `select count(ft.tariffMasterId)as paidDetails,f.facilityId, f.facilityname,f.facilityTypeId,case 
+//             when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
+//             else 'closed'
+//             end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,max(fl.url) as url 
+//             from amabhoomi.facilities f inner join amabhoomi.facilitytariffmasters ft on f.facilityId = ft.facilityId left join amabhoomi.fileattachments fa on ft.facilityId = fa.entityId left join amabhoomi.files fl on fl.fileId= fa.fileId group by ft.facilityId having f.facilityTypeId =? `
            
 
-            fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-                {
-                    replacements:[new Date(),facilityTypeId]
+//             fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//                 {
+//                     replacements:[new Date(),facilityTypeId]
                      
-                }
-                )         
+//                 }
+//                 )         
                
-            }
-        if(free){
-            console.log('27')
-            fetchFacilitiesQuery =
-            `SELECT 
+//             }
+//         if(free){
+//             console.log('27')
+//             fetchFacilitiesQuery =
+//             `   
+//             SELECT 
+//         f.facilityId, 
+//         f.facilityname, 
+//         f.facilityTypeId,
+//         CASE 
+//             WHEN TIME(?) BETWEEN f.operatingHoursFrom AND f.operatingHoursTo THEN 'open'
+//             ELSE 'closed'
+//         END AS status, 
+//         f.address, 
+//         f.latitude, 
+//         f.longitude, 
+//         f.areaAcres, 
+//         f.ownership,
+//         f.sun, f.mon, f.tue, f.wed, f.thu, f.fri, f.sat, 
+//         (select fl.url from files fl inner join fileattachments fa on fl.fileId=fa.fileId where fa.entityId = f.facilityId)as url
+//     FROM 
+//         amabhoomi.facilities f 
+//     LEFT JOIN 
+//         amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId 
+
+//         WHERE 
+//         f.facilityTypeId = ?
+//         AND ft.facilityId IS NULL 
+//         group by f.facilityId `
+//             fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//                 {
+//                     replacements:[new Date(),facilityTypeId]
+                     
+//                 }
+//                 )         
+             
+
+//         }
+//         if(!free && !paid && !popular){
+//         fetchFacilitiesQuery  = `    
+//         select facilityId, facilityname,facilityTypeId,case 
+//             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
+//             else 'closed'
+//             end as status, address,latitude,longitude,areaAcres,ownership,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url  
+//             from amabhoomi.facilities f left join amabhoomi.fileattachments fa on fa.entityId = f.facilityId left join amabhoomi.files fl on 
+//             fl.fileId = fa.fileId where facilityTypeId = ?
+//         `,
+
+//         fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//         {
+//             replacements:[new Date(),facilityTypeId]
+             
+//         }
+//         )
+//         }
+//         console.log(fetchFacilitiesQuery, 'fetchFacilitiesQuery')
+//     }
+//         else
+//         {
+//             if(popular){
+//                 fetchFacilitiesQuery  = `select count(fb.facilityBookingId)as noOfBookings,f.facilityId, f.facilityname,f.facilityTypeId,case 
+//                 when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
+//                 else 'closed'
+//                 end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,max(fl.url) as url  
+//                 from amabhoomi.facilities f inner join amabhoomi.facilitybookings fb on f.facilityId = fb.facilityId left join amabhoomi.fileattachments ft on fb.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId  group by fb.facilityId
+//                 order by noOfBookings`,
+        
+//                 fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//                 {
+//                     replacements:[new Date()]
+                     
+//                 }
+//                 ) 
+            
+        
+//             }
+//             if(paid){
+//                 console.log('fd')
+                
+//                 fetchFacilitiesQuery =  `select count(ft.tariffMasterId)as paidDetails,f.facilityId, f.facilityname,f.facilityTypeId,case 
+//                 when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
+//                 else 'closed'
+//                 end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,max(fl.url) as url 
+//                 from amabhoomi.facilities f inner join amabhoomi.facilitytariffmasters ft on f.facilityId = ft.facilityId left join amabhoomi.fileattachments fa on ft.facilityId = fa.entityId left join amabhoomi.files fl on fl.fileId= fa.fileId group by ft.facilityId
+//                  `
+               
+    
+//                 fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//                     {
+//                         replacements:[new Date()]
+                         
+//                     }
+//                     )         
+                 
+//                 }
+//             if(free){
+//                 console.log('f')
+//                 fetchFacilitiesQuery =
+//                 `SELECT 
+//                 f.facilityId, 
+//                 f.facilityname, 
+//                 f.facilityTypeId,
+//                 CASE 
+//                     WHEN TIME(?) BETWEEN f.operatingHoursFrom AND f.operatingHoursTo THEN 'open'
+//                     ELSE 'closed'
+//                 END AS status, 
+//                 f.address, 
+//                 f.latitude, 
+//                 f.longitude, 
+//                 f.areaAcres, 
+//                 f.ownership,
+//                 f.sun, f.mon, f.tue, f.wed, f.thu, f.fri, f.sat, 
+//                 (select fl.url from files fl inner join fileattachments fa on fl.fileId=fa.fileId where fa.entityId = f.facilityId)as url
+//             FROM 
+//                 amabhoomi.facilities f 
+//             LEFT JOIN 
+//                 amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId 
+//                 WHERE 
+//                  ft.facilityId IS NULL 
+//                 group by f.facilityId`
+//                 fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//                     {
+//                         replacements:[new Date()]
+                         
+//                     }
+//                     )         
+                  
+    
+//             }
+
+//             console.log('without facility type id')
+//             if(!paid && !free && !popular){
+//              fetchFacilitiesQuery  = `select facilityId, facilityname,facilityTypeId,case 
+//              when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
+//              else 'closed'
+//              end as status, address,latitude,longitude,areaAcres,ownership,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url  
+//              from amabhoomi.facilities f left join amabhoomi.fileattachments fa on fa.entityId = f.facilityId left join amabhoomi.files fl on 
+//              fl.fileId = fa.fileId  `,
+
+//             fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
+//             {
+//                 replacements:[new Date()]
+               
+//             }, 
+//         )
+//     }
+//             // fetchFacilities = await facilitiesTable.findAll(
+//             //     {attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo',
+//             //     [
+//             //         Sequelize.literal('CASE WHEN TIME(?) BETWEEN operatingHoursFrom AND operatingHoursTo THEN "open" ELSE "closed" END'),
+//             //         'status'
+//             //       ]
+//             //     ],
+//             //     replacements: [new Date()] // Pass current time as a replacement
+//             //   });
+//         }
+//         // console.log('3' ,fetchFacilities[0])
+
+//         let getNearByData = [];
+//         for (const data of fetchFacilities[0]) {
+//             // console.log('data',data.latitude,data.longitude)
+//             let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
+//             if (distance <= range) {
+//                 getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
+//                     sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.url
+//                 });
+//             }
+//             // console.log(getNearByData,'getNearByData')
+//         }
+
+//         if(order == 1){
+//             console.log('order', 11)
+//             // ascending
+//             getNearByData.sort(function(a, b) {
+//                 // Convert names to lowercase for case-insensitive comparison
+//                 const nameA = a.facilityname.trim().toLowerCase();
+//                 const nameB = b.facilityname.trim().toLowerCase();
+            
+//                 // Use localeCompare for case-insensitive string comparison
+//                 return nameA.localeCompare(nameB);
+//             });
+
+//             console.log(getNearByData, 'getNearByData')
+
+            
+//         }
+//         else if(order == 2){
+//             // descending
+//             getNearByData.sort(function(a, b) {
+//                 // Convert names to lowercase for case-insensitive comparison
+//                 const nameA = a.facilityname.trim().toLowerCase();
+//                 const nameB = b.facilityname.trim().toLowerCase();
+            
+            
+//                 // Use localeCompare for case-insensitive string comparison
+//                 return nameB.localeCompare(nameA);
+//             });
+//         }
+
+//     //    console.log('get near by data',getNearByData)
+//        return res.status(statusCode.SUCCESS.code).json({
+//         message:'These are the near by data', data:getNearByData
+//        })
+
+//     } catch (err) {
+//         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+//             message:err.message
+//         })
+//     }
+// }
+
+
+
+
+function convertImagesToBase64(dataArray) {
+    return dataArray.map(item => {
+        try {
+            const imagePath = path.join(process.env.UPLOAD_DIR, item.url); // Construct absolute path to image
+            console.log(imagePath, 'imagePath')
+            const imageBuffer = fs.readFileSync(imagePath); // Read image file
+
+            // Convert image buffer to base64 string
+            const base64String = imageBuffer.toString('base64');
+
+            // Replace the relative path with the base64 string
+            return {
+                ...item,
+                url: base64String
+            };
+        } catch (error) {
+            console.error(`Error converting image ${item.url}:`, error.message);
+            return item; // Return the original item if an error occurs
+        }
+    });
+}
+
+const nearByDataInMap = async (req, res) => {
+    try {
+        let { latitude, longitude, facilityTypeId, range, popular, free, paid, order,selectedFilter } = req.body;
+
+        // Default range is set to 20 if not provided
+        range = range ? range : 20;
+
+        // Initialize query and replacements array
+        let fetchFacilitiesQuery = '';
+        let replacements = [new Date()]; // Always pass current time as a replacement
+
+        // Construct base query
+        fetchFacilitiesQuery = `SELECT 
             f.facilityId, 
             f.facilityname, 
             f.facilityTypeId,
@@ -302,155 +687,234 @@ const nearByDataInMap = async(req,res)=>{
             f.latitude, 
             f.longitude, 
             f.areaAcres, 
-            f.ownership 
-            FROM 
+            f.ownership,
+            f.sun, f.mon, f.tue, f.wed, f.thu, f.fri, f.sat, 
+            fl.url AS imageURL
+        FROM 
             amabhoomi.facilities f 
-            LEFT JOIN 
-            amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId 
-            WHERE 
-            ft.facilityId IS null and f.facilityTypeId =?`
-            fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-                {
-                    replacements:[new Date(),facilityTypeId]
-                     
-                }
-                )         
-             
+        LEFT JOIN 
+            amabhoomi.fileattachments fa ON fa.entityId = f.facilityId 
+        LEFT JOIN 
+            amabhoomi.files fl ON fl.fileId = fa.fileId`;
 
-        }
-        if(!free && !paid && !popular){
-        fetchFacilitiesQuery  = `select facilityId, facilityname,facilityTypeId,case 
-        when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
-        else 'closed'
-        end as status, address,latitude,longitude,areaAcres,ownership 
-        from amabhoomi.facilities f where facilityTypeId = ?`,
+        // if (free && paid && popular ) {
+        //     console.log('free paid popular')
+        //         fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId
+        //         LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
+        // }
 
-        fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-        {
-            replacements:[new Date(),facilityTypeId]
-             
+        // if (free && paid && !popular ) {
+        //     fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
+        // }
+        // if (free && popular && !paid) {
+        //     fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId
+        //     INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId `;
+        // }
+
+        // if (paid && popular && !free ) {
+        //     fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId
+        //     INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId `;
+        // }
+
+        // Apply filter conditions based on popular, free, paid
+
+        // if (popular && !free && !paid) {
+        //     fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId`;
+        // }
+
+        // if (free && !popular && !paid) {
+        //     fetchFacilitiesQuery += ` LEFT JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId `;
+        // }
+        // if (paid && !free && !popular) {
+        //     fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId`;
+        // }
+
+         if (popular) {
+            fetchFacilitiesQuery += ` INNER JOIN amabhoomi.facilitybookings fb ON f.facilityId = fb.facilityId`;
         }
-        )
-        }
+
+        if (selectedFilter) {
+            console.log('selected filter')
+            let filterConditions = [];
         
-    }
-        else
-        {
-            if(popular){
-                fetchFacilitiesQuery  = `select count(fb.facilityBookingId)as noOfBookings,f.facilityId, f.facilityname,f.facilityTypeId,case 
-                when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
-                else 'closed'
-                end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership 
-                from amabhoomi.facilities f inner join amabhoomi.facilitybookings fb on f.facilityId = fb.facilityId group by fb.facilityId
-                order by noOfBookings`,
-        
-                fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-                {
-                    replacements:[new Date()]
-                     
-                }
-                ) 
+            if (selectedFilter.Amenities.length > 0) {
+                console.log('1')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityamenities WHERE amenityId IN (${selectedFilter.Amenities.join(',')}))`);
+            }
             
-        
+            if (selectedFilter.Activity.length > 0) {
+                console.log('2')
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityactivities WHERE activityId IN (${selectedFilter.Activity.join(',')}))`);
             }
-            if(paid){
-                console.log('fd')
-                
-                fetchFacilitiesQuery =  `select count(ft.tariffMasterId)as paidDetails,f.facilityId, f.facilityname,f.facilityTypeId,case 
-                when Time(?) between f.operatingHoursFrom and f.operatingHoursTo then 'open'
-                else 'closed'
-                end as status, f.address,f.latitude,f.longitude,f.areaAcres,f.ownership 
-                from amabhoomi.facilities f inner join amabhoomi.facilitytariffmasters ft on f.facilityId = ft.facilityId group by ft.facilityId `
-               
-    
-                fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-                    {
-                        replacements:[new Date()]
-                         
+            if (selectedFilter.EventCategories.length > 0) {
+                let eventIds =[]
+                for (let i of selectedFilter.EventCategories) {
+                    console.log('i',i)
+                    let eventActivity = await sequelize.query('SELECT eat.eventId FROM eventcategorymasters ecm INNER JOIN eventactivities eat ON eat.eventCategoryId = ecm.eventCategoryId WHERE ecm.eventCategoryId = ?', {
+                        replacements: [i],
+                        type:Sequelize.QueryTypes.SELECT
+                    });
+                    console.log('event ids',eventActivity)
+                    if(eventActivity.length>0){
+                        eventIds.push(eventActivity[0].eventId)
                     }
-                    )         
-                 
                 }
-            if(free){
-                console.log('f')
-                fetchFacilitiesQuery =
-                `SELECT 
-                f.facilityId, 
-                f.facilityname, 
-                f.facilityTypeId,
-                CASE 
-                    WHEN TIME(?) BETWEEN f.operatingHoursFrom AND f.operatingHoursTo THEN 'open'
-                    ELSE 'closed'
-                END AS status, 
-                f.address, 
-                f.latitude, 
-                f.longitude, 
-                f.areaAcres, 
-                f.ownership 
-                FROM 
-                amabhoomi.facilities f 
-                LEFT JOIN 
-                amabhoomi.facilitytariffmasters ft ON f.facilityId = ft.facilityId 
-                WHERE 
-                ft.facilityId IS null`
-                fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-                    {
-                        replacements:[new Date()]
-                         
-                    }
-                    )         
-                  
-    
+                console.log('eventIds',eventIds)
+                if(eventIds.length>0){
+                    filterConditions.push(`f.facilityId IN (SELECT facilityId FROM eventactivities WHERE eventId IN (${eventIds.join(',')}))`);
+                }
+
             }
+        
+            if (selectedFilter.Services.length > 0) {
+                filterConditions.push(`f.facilityId IN (SELECT facilityId FROM servicefacilities WHERE serviceId IN (${selectedFilter.Services.join(',')}))`);
+            }
+            
+            console.log('24')
+            if (filterConditions.length > 0 && !facilityTypeId) {
+                console.log('filter condn', filterConditions)
+                fetchFacilitiesQuery += ` WHERE ${filterConditions.join(' AND ')}`;
+                console.log('facility')
+              
+            }
+            if (facilityTypeId) {
+                console.log('25')
 
-            console.log('without facility type id')
-            if(!paid && !free && !popular){
-             fetchFacilitiesQuery  = `select facilityId, facilityname,facilityTypeId,case 
-            when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
-            else 'closed'
-            end as status, address,latitude,longitude,areaAcres,ownership 
-            from amabhoomi.facilities f `,
+                fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
+            
+                if (filterConditions.length) {
+                    // Add selected filter conditions
+                    fetchFacilitiesQuery += ` AND ${filterConditions.join(' AND ')}`;
+                }
+            
+                replacements.push(facilityTypeId);
 
-            fetchFacilities = await sequelize.query(fetchFacilitiesQuery,
-            {
-                replacements:[new Date()]
-               
-            }, 
-        )
-    }
-            // fetchFacilities = await facilitiesTable.findAll(
-            //     {attributes:['facilityId','facilityname','facilityTypeId','latitude','longitude','address','areaAcres','operatingHoursFrom','operatingHoursTo',
-            //     [
-            //         Sequelize.literal('CASE WHEN TIME(?) BETWEEN operatingHoursFrom AND operatingHoursTo THEN "open" ELSE "closed" END'),
-            //         'status'
-            //       ]
-            //     ],
-            //     replacements: [new Date()] // Pass current time as a replacement
-            //   });
+            }
         }
-        console.log('3' ,fetchFacilities[0])
+          // Filter by facilityTypeId if provided
+        //   if (facilityTypeId) {
+        //     fetchFacilitiesQuery += ` WHERE f.facilityTypeId = ?`;
+            // if(free && !paid){
+            //     fetchFacilitiesQuery += ` and ft.facilityId IS NULL`
+            // }
+        //     replacements.push(facilityTypeId);
+        // }
 
-        let getNearByData = [];
-        for (const data of fetchFacilities[0]) {
-            // console.log('data',data.latitude,data.longitude)
+        // if(free && !facilityTypeId && !paid){
+        //     fetchFacilitiesQuery += ` where ft.facilityId IS NULL`
+        // }
+
+        if (facilityTypeId && !selectedFilter) {
+            console.log('25')
+
+            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
+            replacements.push(facilityTypeId);
+
+        }
+
+        // Group by facilityId
+        fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
+        console.log(fetchFacilitiesQuery,'fetchFacilitiesQuery')
+        // Sort order
+        // if (order == 1) {
+        //     // Ascending order
+        //     fetchFacilitiesQuery += ` ORDER BY f.facilityname ASC`;
+        // } else if (order == 2) {
+        //     // Descending order
+        //     fetchFacilitiesQuery += ` ORDER BY f.facilityname DESC`;
+        // }
+
+        // Execute the constructed query
+        const fetchFacilities = await sequelize.query(fetchFacilitiesQuery, {
+            replacements: replacements,
+            type:Sequelize.QueryTypes.SELECT
+        });
+
+        // Process the fetched data as needed
+        console.log('fetchFacilities',fetchFacilities)
+                let getNearByData = [];
+        for (const data of fetchFacilities) {
+            console.log('data',fetchFacilities,'fetchFacilitiesData')
             let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
             if (distance <= range) {
-                getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status});
+                console.log('distance', distance)
+                getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
+                    sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.imageURL
+                });
             }
             // console.log(getNearByData,'getNearByData')
         }
+        // console.log('fetchFacilities', fetchFacilities[0])
+        if(order == 1){
+            console.log('order', 11)
+            // ascending
+            getNearByData.sort(function(a, b) {
+                // Convert names to lowercase for case-insensitive comparison
+                const nameA = a.facilityname.trim().toLowerCase();
+                const nameB = b.facilityname.trim().toLowerCase();
+            
+                // Use localeCompare for case-insensitive string comparison
+                return nameA.localeCompare(nameB);
+            });
 
+            console.log(getNearByData, 'getNearByData')
 
-    //    console.log('get near by data',getNearByData)
-       return res.status(statusCode.SUCCESS.code).json({
-        message:'These are the near by data', data:getNearByData
-       })
+            
+        }
+        else if(order == 2){
+            // descending
+            getNearByData.sort(function(a, b) {
+                // Convert names to lowercase for case-insensitive comparison
+                const nameA = a.facilityname.trim().toLowerCase();
+                const nameB = b.facilityname.trim().toLowerCase();
+            
+            
+                // Use localeCompare for case-insensitive string comparison
+                return nameB.localeCompare(nameA);
+            });
+        }
+        console.log('get near by data')
+        // Construct response
+        // const convertedData = convertImagesToBase64(getNearByData);
+        const encodedFacilities = encodeUrls(getNearByData);
 
+        return res.status(statusCode.SUCCESS.code).json({
+            message: 'Nearby data retrieved successfully',
+            data: encodedFacilities // Assuming fetchFacilities is an array with the result at index 0
+        });
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
-        })
+            message: err.message
+        });
     }
+};
+
+// api to fetch filter option based on facility type
+const facilityFilterOption = async (req, res) => {
+    let facilityTypeId = req.params.facilityTypeId;
+    
+    let fetchActivityMaster = await sequelize.query(`
+        select * from amabhoomi.useractivitymasters u
+    `);
+
+    let fetchAmenitiesMaster = await sequelize.query(`
+        select * from amabhoomi.amenitymasters a
+    `);
+
+    let fetchServicesMaster = await sequelize.query(`
+        select * from amabhoomi.services s
+    `);
+
+    let fetchEventCategories = await sequelize.query(`
+        select * from amabhoomi.eventcategorymasters e 
+    `);
+
+    // console.log('fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster', { fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster });
+
+    res.status(statusCode.SUCCESS.code).json({
+        message: 'Activity, Amenity, Services List',
+        fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster, fetchEventCategories
+    })
 }
 
 module.exports ={
@@ -458,5 +922,6 @@ module.exports ={
     searchParkFacilities,
     viewParkDetails,
     viewParkById,
-    nearByDataInMap
+    nearByDataInMap,
+    facilityFilterOption
 }

@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
             defaultValue: null,
         },
+        facilityTypeId:{
+            type: DataTypes.INTEGER
+        },
         statusId: {
             type: DataTypes.INTEGER,
             defaultValue: null
@@ -39,6 +42,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             defaultValue: null
         }
-    })
+    }
+    ,
+    {
+        timestamps:false
+    }
+
+)
     return UserActivityMasters
 }

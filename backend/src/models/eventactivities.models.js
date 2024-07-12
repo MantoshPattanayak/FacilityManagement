@@ -11,14 +11,14 @@ module.exports =(sequelize,DataTypes)=>{
         eventName:{
             type:DataTypes.STRING(50)
         },
-        eventCategory:{
-            type:DataTypes.STRING(255)
+        eventCategoryId:{
+            type:DataTypes.INTEGER
         },
         locationName:{
             type:DataTypes.STRING(255)
         },
         eventDate:{
-            type:DataTypes.DATE
+            type:DataTypes.DATEONLY
         },
         eventStartTime:{
             type:DataTypes.TIME

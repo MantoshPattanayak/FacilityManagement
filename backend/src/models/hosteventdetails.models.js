@@ -27,17 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         phoneNo: {
             type: DataTypes.STRING(25),
         },
-        publicUserId: {
+        userId: {
             type: DataTypes.INTEGER,
         },
-        privateUserId: {
-            type: DataTypes.INTEGER,
-        },
+       
         organisationName: {
             type: DataTypes.STRING(25),
         },
         category: {
-            type: DataTypes.STRING(25),
+            type: DataTypes.INTEGER,
         },
         organisationAddress: {
             type: DataTypes.STRING(50),
@@ -66,13 +64,18 @@ module.exports = (sequelize, DataTypes) => {
         updatedBy: {
             type: DataTypes.INTEGER,
         },
-        createdOn: {
+        createdDt: {
             type: DataTypes.DATE,
             defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
         },
-        updatedOn: {
+        updatedDt: {
             type: DataTypes.DATE,
         }
-    });
+    }
+    ,
+    {
+        timestamps:false
+    }
+);
     return HostEventDetails
 }

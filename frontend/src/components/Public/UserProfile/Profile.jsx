@@ -1,15 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Profile.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faUser,
+  faEnvelope,
+  faMobileScreenButton,
+  faLocationDot,
+} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import axiosHttpClient from "../../../utils/axios";
+import { encryptData, decryptData } from "../../../utils/encryptData";
+import CommonFooter from "../../../common/CommonFooter";
+import PublicHeader from "../../../common/PublicHeader";
+import { Link } from "react-router-dom";
+import { logOutUser } from "../../../utils/utilityFunctions";
+import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from "react-redux";
+import { Logout } from "../../../utils/authSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Profile() {
-  function clearPhoto() {
-    const photoInput = document.getElementById("photo");
-    photoInput.value = ""; // Clear the value of the file input
-  }
-
+  const dispatch = useDispatch(); // Initialize dispatch
+  const navigate = useNavigate();
+  const publicUserId = decryptData(
+    new URLSearchParams(location.search).get("publicUserId")
+  );
+  // const languages = ["English", "ଓଡ଼ିଆ"];
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [reenteredPassword, setReenteredPassword] = useState("");
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [errors, setErrors] = useState({}); //to show error message
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNo: "",
+    emailId: "",
+    language: "English",
+    password: "",
+    userId: "",
+  });
+  const [activityData, setActivityData] = useState([]);
 
-  const handleActivityToggle = (activity) => {
+  // API call to fetch preferred activities data
+  async function getActivitiesData() {
+    try {
+      let res = await axiosHttpClient("VIEW_FILTER_OPTIONS_API", "get");
+      console.log("getActivitiesData", res);
+      setActivityData(res.data.fetchActivityMaster[0]);
+    } catch (err) {
+      console.log("there is an error ", err);
+    }
+  }
+  useEffect(() => {
+    getActivitiesData();
+  }, []);
+  // const [inputdata, setInputdata] = useState(formData);
+
+  const handleActivityToggle = (e, activity) => {
+    e.preventDefault();
     if (selectedActivities.includes(activity)) {
       setSelectedActivities(
         selectedActivities.filter((item) => item !== activity)
@@ -17,275 +68,565 @@ export default function Profile() {
     } else {
       setSelectedActivities([...selectedActivities, activity]);
     }
+    console.log("selectedActivities", selectedActivities);
+  };
+
+  //--------------Validation--------------------------------
+  const validateFormData = (formData) => {
+    // Password validation regex
+    const passwordRegex = /^(?=.*?[0-9])(?=.*?[A-Za-z]).{8,32}$/;
+
+    // Name validation regex (assuming it contains only letters and spaces)
+    const nameRegex = /^[A-Z][a-zA-Z]*$/;
+
+    // Mobile Number validation regex
+    const mobileNoRegex = /^(\d{3})[- ]?(\d{3})[- ]?(\d{4})$/;
+
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const newErrors = {};
+    // Validate password
+    if (
+      reenteredPassword.trim() !== "" &&
+      !passwordRegex.test(formData.password.trim())
+    ) {
+      console.log("Invalid password format");
+      // Show a warning message
+      // alert("Password must contain only letters, numbers, and special characters.");
+      // return false;
+      newErrors.password =
+        "Password must contain only letters, numbers, and special characters.";
+    }
+
+    // Validate name
+    if (
+      !nameRegex.test(formData.firstName.trim()) ||
+      !nameRegex.test(formData.lastName.trim())
+    ) {
+      console.log("Invalid name format");
+      // Show a warning message
+      // alert("Name must contain only letters.");
+      // return false;
+      newErrors.name = "Name must contain only letters.";
+    }
+
+    // Validate email
+    if (!mobileNoRegex.test(formData.phoneNo.trim())) {
+      console.log("Invalid mobile number format");
+      // Show a warning message
+      // alert("Invalid email format.");
+      // return false;
+      newErrors.phoneNo = "Invalid mobile number format.";
+    }
+
+    // Validate email
+    if (!emailRegex.test(formData.emailId.trim())) {
+      console.log("Invalid email format");
+      // Show a warning message
+      // alert("Invalid email format.");
+      // return false;
+      newErrors.email = "Invalid email format.";
+    }
+
+    // return true;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // handle form submission with selectedActivities
-    console.log(selectedActivities);
+    console.log("Selected Activities:", selectedActivities);
   };
+
+  //After clicking submit button Data willl upadate to api from here
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    // handle form submission with selectedActivities
+    console.log("Selected Activities:", selectedActivities); // Log selected activities
+
+    // Log form data before updating
+    console.log("Form Data Before Update:", formData);
+
+    try {
+      let updatedFormData = { ...formData };
+
+      //check validation
+      if (!validateFormData(formData)) {
+        return; // Stop execution if validation fails
+      }
+
+      // Check if the reentered password field is not empty and matches the new password
+      if (formData.password.trim() === "" && reenteredPassword.trim() === "") {
+        // No password change, proceed with updating other data
+      } else if (formData.password.trim() !== reenteredPassword.trim()) {
+        console.log("Passwords do not match");
+        // Show a warning message
+        alert(
+          "Passwords do not match. Please make sure your passwords match before updating."
+        );
+        return;
+      }
+
+      let response = await axiosHttpClient(
+        "PROFILE_DATA_UPDATE_API",
+        "put",
+        {
+          publicUserId: formData.publicUserId,
+          firstName: encryptData(formData.firstName),
+          lastName: encryptData(formData.lastName),
+          phoneNo: encryptData(formData.phoneNo),
+          emailId: encryptData(formData.emailId),
+          language: encryptData(formData.language),
+          password: encryptData(formData.password),
+          activityPreference: selectedActivities.map((activity) => {
+            return encryptData(activity);
+          }),
+        },
+        null
+      );
+
+      // Log updated form data after successful update
+      console.log("Updated Form Data:", {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneNo: formData.phoneNo,
+        emailId: formData.emailId,
+        language: formData.language,
+        password: formData.password,
+      });
+
+      console.log("Update response:", response.data.data);
+    } catch (error) {
+      console.error("Update error:", error);
+    }
+  };
+
+  //profile photo handler
+
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (!photoUrl) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhotoUrl(null);
+  };
+  //handle for Logout ------------------------------------
+  const handleLogout = (e) => {
+    // logOutUser(e);
+    dispatch(Logout());
+    async function logOutAPI() {
+      try {
+        let res = await axiosHttpClient("LOGOUT_API", "post");
+        console.log(res.data);
+        toast.success("Logged out successfully!!", {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    logOutAPI();
+  };
+
+  // get profile data from api
+  async function fetchProfileDetails() {
+    try {
+      let res = await axiosHttpClient("PROFILE_DATA_VIEW_API", "post");
+      console.log("response of fetch profile api", res.data);
+
+      let userName = decryptData(res.data.public_user.userName);
+      let firstName = decryptData(res.data.public_user.firstName);
+      let lastName = decryptData(res.data.public_user.lastName);
+      let phoneNo = decryptData(res.data.public_user.phoneNo);
+      let emailId = decryptData(res.data.public_user.emailId);
+      let language = decryptData(res.data.public_user.language);
+      let password = decryptData(res.data.public_user.password);
+
+      setFormData({
+        userName: userName || "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        emailId: emailId || "",
+        phoneNo: phoneNo || "",
+        language: language || "English",
+        password: password || "",
+        publicUserId: res.data.public_user.publicUserId,
+      });
+      setSelectedLanguage(language || "English");
+    } catch (error) {
+      console.error(error);
+      if (error.respone.status == 401) {
+        toast.error("You are logged out. Kindly login first.", {
+          autoClose: 3000, // Toast timer duration in milliseconds
+          onClose: () => {
+            // Navigate to another page after toast timer completes
+            setTimeout(() => {
+              navigate("/");
+            }, 1000); // Wait 1 second after toast timer completes before navigating
+          },
+        });
+      }
+    }
+  }
+
+  // Handle the input changes
+  const handleData = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+
+    // if (name === 'password') {
+    //   if (value === reenteredPassword && value.trim() !== '') {
+    //     // Passwords match and are not empty, update password
+    //     console.log("Passwords match, updating password");
+    //     setFormData(prevFormData => ({
+    //       ...prevFormData,
+    //       password: value
+    //     }));
+    //   }
+    // }
+
+    setFormData((prevFormData) => {
+      const updatedFormData = { ...prevFormData, [name]: value };
+      // updateLanguageInAPI(updatedFormData); // Update API
+      console.log("here input data", updatedFormData);
+      return updatedFormData;
+    });
+
+    // if (name === "language") {
+    //   setSelectedLanguage(value);
+    // }
+  };
+
+  const handleButtonClick = (language) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      language: language,
+    }));
+    setSelectedLanguage(language);
+  };
+
+  // on page load
+  useEffect(() => {
+    fetchProfileDetails();
+  }, []);
+
   return (
     <main>
-      <div className="profile--Main-Box">
-        {/* left side-section */}
-        <aside className="profile-leftside--Body">
-          <div className="profile-view--Body">
-            <img
-              src="https://placehold.co/100x100"
-              alt="Profile Image"
-              className="rounded-full mb-3"
-            />
-            <div className="profile-about">
-              <p>Akash Sharma</p>
-              <p>akashSharma4957@gmail.com</p>
-              <p>8877228919</p>
-            </div>
-          </div>
-          <div>
-            <ul className="profile-button--Section">
-              <li>
-                <a href="#" className="">
-                  {/* <svg
-                    className="w-6 h-6 mr-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2V6m0 4v10a1 1 0 01-1 1h-3m-6 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4m0-6V5a1 1 0 011-1h2a1 1 0 011 1v4m-4 0h4"
-                    ></path>
-                  </svg> */}
-                  Edit User Profile
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  // className="flex items-center p-2 text-zinc-700 hover:bg-zinc-100 rounded-lg"
-                >
-                  {/* <svg
-                    className="w-6 h-6 mr-3"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    stroke="currentColor"
-                    x="0px"
-                    y="0px"
-                    width="100"
-                    height="100"
-                    viewBox="0 0 32 32"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M 16 3 C 14.136719 3 12.601563 4.277344 12.15625 6 L 3 6 L 3 26 L 29 26 L 29 6 L 19.84375 6 C 19.398438 4.277344 17.863281 3 16 3 Z M 16 5 C 16.808594 5 17.429688 5.386719 17.75 6 L 14.25 6 C 14.570313 5.386719 15.191406 5 16 5 Z M 5 8 L 27 8 L 27 17 L 5 17 Z M 16 14 C 15.449219 14 15 14.449219 15 15 C 15 15.550781 15.449219 16 16 16 C 16.550781 16 17 15.550781 17 15 C 17 14.449219 16.550781 14 16 14 Z M 5 19 L 27 19 L 27 24 L 5 24 Z"
-                    ></path>
-                  </svg> */}
-                  Booking Details
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  {/* <svg
-                    className="w-6 h-6 mr-3"
-                    xmlns="http://www.w3.org/2000/svg"
-                    x="0px"
-                    y="0px"
-                    width="100"
-                    height="100"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M 12 1 C 8.6761905 1 6 3.6761905 6 7 L 6 8 C 4.9 8 4 8.9 4 10 L 4 20 C 4 21.1 4.9 22 6 22 L 18 22 C 19.1 22 20 21.1 20 20 L 20 10 C 20 8.9 19.1 8 18 8 L 18 7 C 18 3.6761905 15.32381 1 12 1 z M 12 3 C 14.27619 3 16 4.7238095 16 7 L 16 8 L 8 8 L 8 7 C 8 4.7238095 9.7238095 3 12 3 z M 8 14 C 8.55 14 9 14.45 9 15 C 9 15.55 8.55 16 8 16 C 7.45 16 7 15.55 7 15 C 7 14.45 7.45 14 8 14 z M 12 14 C 12.55 14 13 14.45 13 15 C 13 15.55 12.55 16 12 16 C 11.45 16 11 15.55 11 15 C 11 14.45 11.45 14 12 14 z M 16 14 C 16.55 14 17 14.45 17 15 C 17 15.55 16.55 16 16 16 C 15.45 16 15 15.55 15 15 C 15 14.45 15.45 14 16 14 z"></path>
-                  </svg> */}
-                  Change Password
-                </a>
-              </li>
-              <li>
-                <a href="#">Card Details</a>
-              </li>
-            </ul>
-            {/* Logout Button */}
-            <button className="button-67 ">Logout</button>
-          </div>
-        </aside>
+      <div>
+        <PublicHeader />
+        <div className="profile--Main-Box">
+          {/* left side-section */}
+          <aside className="profile-leftside--Body">
+            <div className="profile-view--Body">
+              <div className="profile-about">
+                <div className="profile-about-icon">
+                  <FontAwesomeIcon icon={faUser} />
+                  <p>{formData.firstName + " " + formData.lastName}</p>
+                </div>
 
-        {/* right side-section */}
-        <div className="profile-rightside--Body">
-          <h1>User-Profile</h1>
+                <div className="profile-about-icon">
+                  <FontAwesomeIcon icon={faEnvelope} />
+                  <p>{formData.emailId}</p>
+                </div>
 
-          {/* form-content */}
-          <form className="profile-form-Body" onSubmit={handleSubmit}>
-            <h3>Edit your Profile here--</h3>
-
-            {/* photo Upload */}
-            <label htmlFor="photo" className="profile-photoLabel">
-              Upload Photo
-            </label>
-            <input type="file" id="photo" accept="image/*" />
-            <button type="button" onClick={() => clearPhoto()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-x"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-
-            <div className="profile-formContainer">
-              <label htmlFor="firstName">First Name</label>
-              <input type="text" placeholder="akash" />
-              <label htmlFor="firstName">Last Name</label>
-              <input type="text" placeholder="sharma" />
-              <label htmlFor="email">Email</label>
-              <input type="email" placeholder="akashsharma4957@gmail.com" />
-              <label htmlFor="firstName">Last Name</label>
-              <input type="text" placeholder="sharma" />
-              <label htmlFor="language">Language</label>
-              <select id="language">
-                <option>English</option>
-                <option>Hindi</option>
-                <option>Spanish</option>
-              </select>
-              <label htmlFor="password">New Password</label>
-              <input type="password" placeholder="*******" />
-              <label htmlFor="NewPassword">Reenter New Password</label>
-              <input type="password" placeholder="*******" />
-            </div>
-
-            {/* choose preffered Activity */}
-            <div className="profile--Activity-Box">
-              <h2>
-                Preferred Activities{" "}
-                <span className="text-sm text-zinc-500">
-                  (user can select multiple activities)
-                </span>
-              </h2>
-              {/* <form onSubmit={handleSubmit}> */}
-              <div className="profile--Activity-options">
-                <button
-                  className={`select-none rounded-lg border border-gray-900 py-3 px-6 text-center font-sans text-xs uppercase ${
-                    selectedActivities.includes("Running")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white`}
-                  onClick={() => handleActivityToggle("Running")}
-                >
-                  <span>🏃 Running</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Yoga")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-6 py-3 rounded-lg`}
-                  onClick={() => handleActivityToggle("Yoga")}
-                >
-                  <span>🧘 Yoga</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Open-Gym")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-6 py-3 rounded-lg`}
-                  onClick={() => handleActivityToggle("Open-Gym")}
-                >
-                  <span>🏋️ Open-Gym</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Swimming")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Swimming")}
-                >
-                  <span>🏊 Swimming</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Cricket")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Cricket")}
-                >
-                  <span>🏏 Cricket</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Football")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Football")}
-                >
-                  <span>⚽ Football</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Volleyball")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Volleyball")}
-                >
-                  <span>🏐 Volleyball</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Badminton")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Badminton")}
-                >
-                  <span>🏸 Badminton</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Library")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Library")}
-                >
-                  <span>📚 Library</span>
-                </button>
-                <button
-                  className={`flex items-center justify-center gap-2 ${
-                    selectedActivities.includes("Boating")
-                      ? "bg-green-700"
-                      : "bg-green-500"
-                  } text-white px-4 py-2 rounded-lg`}
-                  onClick={() => handleActivityToggle("Boating")}
-                >
-                  <span>🛶 Boating</span>
-                </button>
-                {/* Add more buttons for other activities */}
+                <div className="profile-about-icon">
+                  <FontAwesomeIcon icon={faMobileScreenButton} />
+                  <p>{formData.phoneNo}</p>
+                </div>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg"
-              >
-                Submit
-              </button>
-              {/* </form> */}
             </div>
-          </form>
+            <div>
+              <ul className="profile-button--Section">
+                <li>
+                  <Link
+                    to="/Profile"
+                    className="profile-button"
+                    style={{ color: "white", backgroundColor: "green" }}
+                  >
+                    Edit User Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/profile/booking-details" className="">
+                    Booking Details
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/UserProfile/Favorites">Favorites</Link>
+                </li>
+              </ul>
+              {/* Logout Button */}
+              <button
+                className="button-67 "
+                onClick={(e) => {
+                  handleLogout(e);
+                  navigate("/");
+                }}
+              >
+                <h1>Logout</h1>
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              </button>
+            </div>
+          </aside>
+
+          {/* right side-section */}
+          <div className="profile-rightside--Body">
+            <h1>User-Profile</h1>
+
+            {/* form-content */}
+            <form className="profile-form-Body" onSubmit={handleSubmit}>
+              <div className="profilePhoto" onClick={handleProfileClick}>
+                {photoUrl ? (
+                  <img
+                    src={photoUrl}
+                    alt="Uploaded"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <div className="profileIcon">
+                    <FontAwesomeIcon icon={faCircleUser} />
+                    <button>Add Photo</button>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  id="photoInput"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
+                {photoUrl && (
+                  <button type="button" onClick={clearPhoto}>
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      style={{ color: "#a41e1e" }}
+                    />
+                  </button>
+                )}
+                {!photoUrl && (
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    id="photo"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                  />
+                )}
+              </div>
+
+              <div className="profile-formContainer">
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="firstName">
+                    First Name<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="Enter First Name"
+                    value={formData.firstName}
+                    onChange={handleData}
+                  />
+
+                  {errors.name && <span className="error">{errors.name}</span>}
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="lastName">
+                    Last Name<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Enter Last Name"
+                    value={formData.lastName}
+                    onChange={handleData}
+                  />
+                  {errors.name && <span className="error">{errors.name}</span>}
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="aadhar">
+                    Aadhar Number<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="aadhar"
+                    name="aadharId"
+                    placeholder="Enter Aadhar Number"
+                    value={1234567890}
+                    readOnly
+                  />
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="phoneNo">
+                    Mobile No<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="phoneNo"
+                    placeholder="Enter Mobile Number"
+                    value={formData.phoneNo}
+                    onChange={handleData}
+                  />
+                  {errors.phoneNo && (
+                    <span className="error">{errors.phoneNo}</span>
+                  )}
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="email">
+                    Email<span className="required-asterisk">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="emailId"
+                    placeholder="Enter Email"
+                    value={formData.emailId}
+                    onChange={handleData}
+                  />
+                  {errors.email && (
+                    <span className="error">{errors.email}</span>
+                  )}
+                </div>
+
+                {/* <div className="profile-formContainer_Inner">
+                  <label htmlFor="language">Language</label>
+                  <select
+                    id="language"
+                    name="language"
+                    value={formData.language}
+                    onChange={handleData}
+                  >
+                    <option>English</option>
+                    <option>ଓଡ଼ିଆ</option>
+                  </select>
+                </div> */}
+
+                <div className="profile-rightside--divided">
+                  <label className="profile-rightside--Form-label">
+                    Language
+                  </label>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => handleButtonClick("English")}
+                      className={selectedLanguage === "English" ? "active" : ""}
+                    >
+                      English
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleButtonClick("ଓଡ଼ିଆ")}
+                      className={selectedLanguage === "ଓଡ଼ିଆ" ? "active" : ""}
+                    >
+                      ଓଡ଼ିଆ
+                    </button>
+                  </div>
+                </div>
+
+                {/* <div className="nearby-location">
+                  <label htmlFor="nearby location">Preferred Location</label>
+                  <div className="preferred-locations ">
+                    <button>
+                      <span>Patia</span>
+                    </button>
+                    <button>
+                      <span>Jaydev vihar</span>
+                    </button>
+                    <button>
+                      <span>Vani vihar</span>
+                    </button>
+                    <button>
+                      <span>Baramunda</span>
+                    </button>
+
+                  </div>
+                </div> */}
+
+                {/* <div className="profile-formContainer_Inner">
+                  <label htmlFor="password">New Password</label>
+                  <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
+                </div>
+
+                <div className="profile-formContainer_Inner">
+                  <label htmlFor="NewPassword">Reenter New Password</label>
+                  <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
+                  {errors.password && <span className="error">{errors.password}</span>}
+                </div> */}
+              </div>
+
+              {/* choose preffered Activity */}
+              <div className="profile--Activity-Box">
+                <h2>
+                  Preferred Activities{" "}
+                  <span className="text-sm text-zinc-500">
+                    (user can select multiple activities)
+                  </span>
+                </h2>
+                {/* <form onSubmit={handleSubmit}> */}
+                <div className="profile--Activity-options">
+                  {activityData?.length > 0 &&
+                    activityData.map((activity) => {
+                      return (
+                        <button
+                          className={`select-none rounded-lg border border-gray py-3 px-6 text-center font-sans text-xs uppercase ${
+                            selectedActivities.includes(activity.userActivityId)
+                              ? "border-solid bg-green-800 text-white"
+                              : "border-solid border border-gray-600 "
+                          } text-black`}
+                          onClick={(e) =>
+                            handleActivityToggle(e, activity.userActivityId)
+                          }
+                        >
+                          <span>{activity.userActivityName}</span>
+                        </button>
+                      );
+                    })}
+
+                  {/* Add more buttons for other activities */}
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 text-white px-6 py-3 rounded-lg"
+                  id="ProfileActButton"
+                  onClick={handleUpdate}
+                >
+                  Update
+                </button>
+                {/* </form> */}
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </main>

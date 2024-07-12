@@ -4,24 +4,32 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const hosteventdetails = db.hosteventdetails;
 const Sequelize = db.Sequelize;
-const bankDetails = db.bankDetail;
+const bankDetails = db.bankdetails;
 const hostbooking = db.hostbookings
-const eventactivites = db.eventactivities
+const eventactivites = db.eventActivities
+let usermasters = db.usermaster
 const file = db.file;
 const fileAttachment = db.fileattachment;
 const sendEmail = require('../../../utils/generateEmail')
-const mailToken= require('../../../middlewares/mailToken.middlewares')
-
+const mailToken= require('../../../middlewares/mailToken.middlewares');
+let imageUpload = require('../../../utils/imageUpload')
+const {Op} = require('sequelize')
+let user = db.usermaster
+let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 const createHosteventdetails = async (req, res) => {
   try {
-    let publicUserId =1;
-    let role =1
-    let privateUserId =1
-    if(role){
-       privateUserId=1;
-      publicUserId= 2
-    }
+
+    let userId = req.user?.userId || 1;
+    let createdDt = new Date();
+    let updatedDt = new Date();
     let statusId = 1;
+
+
+    findTheRoleFromTheUserId = await user.findOne({
+      where:{
+        [Op.and]:[{userId:userId},{statusId:statusId}]
+      }
+    })
 
     let createHosteventdetails;
     let createBankDetails;
@@ -30,8 +38,8 @@ const createHosteventdetails = async (req, res) => {
     let createFileData;
     let createFileAttachmentData;
     let entityType = 'events'
+    let isEntity  = 1 ; // if the user comes first time then put this isEntity value or else put zero
     const {
-      
       organisationPanCardNumber,
       organisationName,
       organisationAddress,
@@ -44,7 +52,7 @@ const createHosteventdetails = async (req, res) => {
       bankName,
       bankIFSC,
       accountNumber,
-      eventCategory,
+      eventCategoryId,
       eventTitle,
       facilityId,
       locationName,
@@ -58,26 +66,96 @@ const createHosteventdetails = async (req, res) => {
       additionalFiles,
     } = req.body;
 console.log("here Reponse of Host event", req.body)
-    createBankDetails = await bankDetails.create({
-      beneficiaryName:beneficiaryName,
-      accountNumber:await encrypt(accountNumber),
-      accountType:accountType,
-      bankName:bankName,
-      bankIfscCode:bankIFSC
+    let checkIfEntityExist = await usermasters.findOne({
+      where:{
+       [Op.and]: [{userId:userId},{statusId:statusId},{isEntity:isEntity}]
+      }
     })
+    if(!checkIfEntityExist){
+      let [updateIsEntityInUserMaster] = await usermasters.update({isEntity:isEntity},
+      {  
+        where:{
+          [Op.and]: [{userId:userId},{statusId:statusId}]     
+            }
+          }
+      )
+      createBankDetails = await bankDetails.create({
+        beneficiaryName:beneficiaryName,
+        accountNumber:await encrypt(accountNumber),
+        accountType:accountType,
+        bankName:bankName,
+        bankIfscCode:bankIFSC,
+        createdBy:userId,
+        updatedBy:userId,
+        updatedDt:updatedDt,
+        createdDt:createdDt
+      })
+    }
+    else if(checkIfEntityExist){
+      let findTheBankDetails = await bankDetails.findOne({
+        where:{
+          [Op.and]:[{createdBy:userId},{statusId:statusId}]
+        }
+      })
+      if(findTheBankDetails){
+        let bankDetailsObject={};
+        if(findTheBankDetails.beneficiaryName!=beneficiaryName){
+          bankDetailsObject.beneficiaryName = beneficiaryName
+        }
+        if(findTheBankDetails.accountNumber!=encrypt(accountNumber)){
+          bankDetailsObject.accountNumber = accountNumber
+        }
+        if(findTheBankDetails.accountType!=accountType){
+          bankDetailsObject.accountType = accountType
+        }
+        if(findTheBankDetails.bankName!=bankName){
+          bankDetailsObject.bankName = bankName
+        }
+        if(findTheBankDetails.bankIfscCode!=bankIFSC){
+          bankDetailsObject.bankIfscCode = bankIFSC
+        }
+        let updateTheBankDetails  = await bankDetails.update(bankDetailsObject,{
+          where:{
+            [Op.and]:[{statusId:statusId},{createdBy:createdBy}]
+          }
+        })
+
+
+      }
+      else{
+        createBankDetails = await bankDetails.create({
+        beneficiaryName:beneficiaryName,
+        accountNumber:await encrypt(accountNumber),
+        accountType:accountType,
+        bankName:bankName,
+        bankIfscCode:bankIFSC,
+        createdBy:userId,
+        updatedBy:userId,
+        updatedDt:updatedDt,
+        createdDt:createdDt
+      })
+      }
+
+    }
+    
+  
     
     // Here we will get the event Id by inserting to the event activities table
     createEventActivities = await eventactivites.create({
       facilityId:facilityId,
       eventName:eventTitle,
-      eventCategory:eventCategory,
+      eventCategoryId:eventCategoryId,
       locationName:locationName,
       eventDate:eventDate,
       eventStartTime:(eventStartDate.slice(11,-1)),
       eventEndTime:(eventEndDate.slice(11,-1)),
       descriptionOfEvent:descriptionOfEvent,
       ticketSalesEnabled:isTicketSalesEnabled,
-      ticketPrice:ticketPrice
+      ticketPrice:ticketPrice,
+      createdDt:createdDt,
+      updatedDt:updatedDt,
+      createdBy:userId,
+      updatedBy:userId
     })
     if(createEventActivities){
       // then insert to host event tables
@@ -88,151 +166,60 @@ console.log("here Reponse of Host event", req.body)
           organisationPanCardNumber: organisationPanCardNumber,
           emailId: emailId,
           phoneNo: phoneNo,
-          publicUserId: publicUserId,
-          privateUserId: privateUserId,
+          userId: userId,
           organisationName: organisationName,
-          category: eventCategory,
+          category: eventCategoryId,
           organisationAddress: organisationAddress,
           eventDate: eventDate,
           eventStartTime: eventStartDate,
           eventEndDate: eventEndDate,
           Description: descriptionOfEvent,
           statusId: statusId,
+          createdBy:userId,
+          updatedBy:userId,
+          createdDt:createdDt,
+          updatedDt:updatedDt
         });
         
-    if(uploadEventImage)
-      {
-      let uploadEventImagePath=null
-      let uploadEventImagePath2= null
-      const uploadDir = process.env.UPLOAD_DIR
-      const base64UploadEventImage = uploadEventImage ? uploadEventImage.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, ""):null;
-      const mimeMatch = uploadEventImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
-      const mime = mimeMatch ? mimeMatch[1] : null;
-
-      if(  [
-        "image/jpeg",
-        "image/png",
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ].includes(mime)){
-        // convert base 64 to buffer for image ir document or set to null if not present
-        const uploadEventBuffer = uploadEventImage ? Buffer.from(base64UploadEventImage,"base64"):null;
-        if(uploadEventBuffer){
-          const eventDir = path.join(uploadDir,"eventImage")
-
-          // ensure the event image directory exists
-          if(!fs.existsSync(eventDir)){
-            fs.mkdirSync(eventDir,{recursive:true})
-          }
-          const fileExtension = mime ? mime.split("/")[1]:"txt";
-          uploadEventImagePath = `${uploadDir}/eventDir/${eventTitle}${createEventActivities.eventId}.${fileExtension}`
-          fs.writeFileSync(uploadEventImagePath,uploadEventBuffer)
-          uploadEventImagePath2 = `/eventDir//${eventTitle}${createEventActivities.eventId}.${fileExtension}`
-          let fileName = `${eventTitle}${createEventActivities.eventId}.${fileExtension}`
-          let fileType = mime ? mime.split("/")[0]:'unknown'
-          // insert to file table and file attachment table
-          let createFile = await file.create({
-            fileName:fileName,
-            fileType:fileType,
-            url:uploadEventImagePath2,
-            statusId:1,
-            createdDt:now(),
-            updatedDt:now()
-          })
-
-          if(!createFile){
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
-          }
-          let createFileAttachment = await fileAttachment.create({
-            entityId: createEventActivities.eventId,
-            entityType:entityType,
-            fileId:createFile.fileId,
-            statusId:1,
-            filePurpose:"Event Image"
-          })
-        }
-      }
-      else{
-        return res.status(statusCode.BAD_REQUEST.code).json({message:"Invalid File type for the event image"})
-      }
+    // Image upload work
+    let entityType = 'events'
+    let serverError = 'something went wrong'
+    let insertionData = {
+     id:createEventActivities.eventId,
+     name:createEventActivities.eventName
     }
- 
-
-    if (additionalFiles && Array.isArray(additionalFiles)) {
-      const errors = [];
-  
-      for (let i = 0; i < additionalFiles.length; i++) {
-        const additionalFile = additionalFiles[i];
-        let uploadaddtionalFilePath = null;
-        let uploadaddtionalFilePath2 = null;
-        const uploadDir = process.env.UPLOAD_DIR;
-        const base64UploadadditionalFile = additionalFile ? additionalFile.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-        const mimeMatch = additionalFile.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
-        const mime = mimeMatch ? mimeMatch[1] : null;
-  
-        if ([
-          "image/jpeg",
-          "image/png",
-          "application/pdf",
-          "application/msword",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ].includes(mime)) {
-          // convert base 64 to buffer for image or document or set to null if not present
-          const uploadaddtionalFileBuffer = additionalFile ? Buffer.from(base64UploadadditionalFile, "base64") : null;
-          if (uploadaddtionalFileBuffer) {
-            const eventaddtionalFileDir = path.join(uploadDir, "eventAdditionalFile");
-  
-            // ensure the event image directory exists
-            if (!fs.existsSync(eventaddtionalFileDir)) {
-              fs.mkdirSync(eventaddtionalFileDir, { recursive: true });
-            }
-            const fileExtension = mime ? mime.split("/")[1] : "txt";
-            uploadaddtionalFilePath = `${uploadDir}/eventaddtionalFileDir/${eventTitle}${createEventActivities.eventId}.${fileExtension}`;
-            fs.writeFileSync(uploadaddtionalFilePath, uploadEventBuffer);
-            uploadaddtionalFilePath2 = `/eventaddtionalFileDir//${eventTitle}${createEventActivities.eventId}.${fileExtension}`;
-            let fileName = `${eventTitle}${createEventActivities.eventId}.${fileExtension}`;
-            let fileType = mime ? mime.split("/")[0] : 'unknown';
-  
-            // insert to file table and file attachment table
-            let createFile = await file.create({
-              fileName: fileName,
-              fileType: fileType,
-              url: uploadaddtionalFilePath2,
-              statusId: 1,
-              createdDt: now(),
-              updatedDt: now()
-            });
-  
-            if (!createFile) {
-              errors.push(`Failed to create file  for additional file at index ${i}`);
-            } else {
-              // Insert into file attachment table
-              let createFileAttachment = await fileAttachment.create({
-                entityId: createEventActivities.eventId,
-                entityType: entityType,
-                fileId: createFile.fileId,
-                statusId: 1,
-                filePurpose: "Event additional file"
-              });
-  
-              if (!createFileAttachment) {
-                errors.push(`Failed to create file attachment for additional file at index ${i}`);
-              }
-            }
+    if (uploadEventImage) {
+        let errors = [];
+        let subDir = "eventDir"
+        let filePurpose = "Event Image"
+        console.log('326 line event image')
+        let uploadSingleEventImage = await imageUpload(uploadEventImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+        console.log( uploadSingleEventImage,'328 line event image')
+        if(errors.length>0){
+          if(errors.some(error => error.includes("something went wrong"))){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
           }
-        } else {
-          errors.push(`Invalid File type for additional file at index ${i}`);
+          return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
         }
-      }
-  
-      if (errors.length > 0) {
-        // Handle errors here, you can log them or do any other necessary action.
-        console.error("Errors occurred while processing additional files:", errors);
-        return res.status(statusCode.BAD_REQUEST.code).json({ errors: errors });
-      }
     }
-  
+      if(additionalFiles.length > 0){
+        const errors = [];
+        let subDir = "eventDir"
+        let filePurpose = "Event additional file"
+        for (let i = 0; i < additionalFiles.length; i++) {
+          const additionalFile = additionalFiles[i];
+          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors)
+        }
+        if(errors.length>0){
+          if(errors.some(error => error.includes("something went wrong"))){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+          }
+          return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+        }
+
+      }
+
+    
 
     //first insert to transaction 
     // second insert to the host booking 
@@ -287,7 +274,7 @@ console.log("here Reponse of Host event", req.body)
     else
     {
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:err.message
+        message:"Something went wrong"
       })
     }
 
@@ -308,7 +295,7 @@ const bankService = async (req, res) => {
     `);
 
     let findEventCategory =
-    await sequelize.query(`select eventCategoryId,eventName, eventType from
+    await sequelize.query(`select eventCategoryId,eventCategoryName from
   amabhoomi.eventcategorymasters`);
 
     return res
@@ -336,8 +323,48 @@ const eventDropdownData = async (req, res) => {
       .json({ message: err.message });
   }
 };
+
+let findEventHostDetailsData = async (req,res)=>{
+  try {
+    let userId = req.user?.userId || 1;
+    let statusId = 1;
+    let checkIfEntityExist = await usermasters.findOne({
+      where:{
+       [Op.and]: [{userId:userId},{statusId:statusId},{isEntity:isEntity}]
+      }
+    })
+    if(!checkIfEntityExist){
+      return res.status(statusCode.SUCCESS.code).json({
+        message:`it is not an entity`
+      })
+    }
+    let findOutBankDetails = await bankDetails.findOne({
+      where:{
+       [Op.and]:[{createdBy:userId},{statusId:statusId}]
+      }
+    })
+    let findOutOrganisationAndContactPersonDetails = await hosteventdetails.findOne(
+      {
+        where:{
+          [Op.and]:[{createdBy:userId},{statusId:statusId}]
+        }
+      }
+    ) 
+    return res.status(statusCode.SUCCESS.code).json({
+      message:`These are the data that will be exhibited in the event hosting form`,
+      bankDetails:findOutBankDetails,
+      hosteventdetails:findOutOrganisationAndContactPersonDetails
+    })
+
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
 module.exports = {
   createHosteventdetails,
   bankService,
   eventDropdownData,
+  findEventHostDetailsData
 };

@@ -1,6 +1,5 @@
 const db = require("../../../models/index");
 let statusCode = require("../../../utils/statusCode");
-const public_user = db.publicuser;
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const Sequelize = db.Sequelize;
@@ -8,75 +7,215 @@ const bcrypt = require("bcrypt");
 const { decrypt } = require("../../../middlewares/decryption.middlewares");
 const { encrypt } = require("../../../middlewares/encryption.middlewares");
 const facilityType = db.facilitytype;
+let user = db.usermaster
+const {Op} = require('sequelize')
 const updatepublic_user = async (req, res) => {
   try {
-    const {
-      publicUserId,
-      title,
-      firstName,
-      middleName,
-      lastName,
-      userName,
-      password,
-      phoneNo,
-      altPhoneNo,
-      emailId,
+    console.log('req body', req.body, req.user.userId)
+    let statusId = 1;
+    let userId = req.user.userId;
+    console.log(userId,'userId',req.user.userId)
+    let {
+      encryptTitle:title,
+      encryptFirstName:firstName,
+      encryptMiddleName:middleName,
+      encryptLastName:lastName,
+      encryptUserName: userName,
+      //password,
+      encryptPhoneNo:phoneNo,
+      encryptAltPhoneNo:altPhoneNo,
       profilePicture,
-      lastLogin,
+      encryptEmailId:emailId,
+      encryptActivities:activities,
+      encryptLanguagePreference:languagePreference, //need to change 
+      encryptPrefredLocation : preferedLocation //need to change
+      
     } = req.body;
+// console.log("Update Profile", req.body)
+    console.log("profile Update", req.body)
 
     let params = {};
-    if (existingUserName) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same user_name" });
-    } else if (existingPhoneNo) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same phone_no" });
-    } else if (existingAlternatePhoneNo) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist same alt_phone_no" });
-    } else if (existingUserEmail) {
-      return res
-        .status(statusCode.CONFLICT.code)
-        .json({ message: "User already exist with given email_id " });
-    }
-    let findPublicuserWithTheGivenId = await public_user.findOne({
+    let roleId =4;
+    
+ 
+    let findPublicuserWithTheGivenId = await user.findOne({
       where: {
-        publicUserId: publicUserId,
+        userId: userId,
       },
+      
     });
-    if (findPublicuserWithTheGivenId.title != title) {
+    console.log('2323')
+    if (findPublicuserWithTheGivenId.title != title && title) {
+      console.log('70')
       params.title = title;
-    } else if (findPublicuserWithTheGivenId.firstName != firstName) {
+    } else if (findPublicuserWithTheGivenId.firstName != firstName && firstName) {
+      console.log('firstname', firstName, '73')
       params.firstName = firstName;
-    } else if (findPublicuserWithTheGivenId.middleName != middleName) {
+    } else if (findPublicuserWithTheGivenId.middleName != middleName && middleName) {
       params.middleName = middleName;
-    } else if (findPublicuserWithTheGivenId.lastName != lastName) {
+    } else if (findPublicuserWithTheGivenId.lastName != lastName && lastName) {
       params.lastName = lastName;
-    } else if (findPublicuserWithTheGivenId.userName != userName) {
-      params.userName = userName;
-    } else if (findPublicuserWithTheGivenId.password != password) {
+    } else if (findPublicuserWithTheGivenId.userName != userName && userName) {
+        const existuserName = await user.findOne({
+          where: { userName: userName, statusId:statusId,roleId:roleId},
+        });
+        if (existuserName) {
+          return res
+            .status(statusCode.CONFLICT.code)
+            .json({ message: "User already exist same userName" });
+        }
+        params.userName = userName;
+    } else if (findPublicuserWithTheGivenId.password != password && password) {
       params.password = password;
-    } else if (findPublicuserWithTheGivenId.phoneNo != phoneNo) {
+    } else if (findPublicuserWithTheGivenId.phoneNo != phoneNo && phoneNo) {
+      const existingphoneNo = await user.findOne({
+        where: { phoneNo: phoneNo,statusId:statusId, roleId:roleId },
+      });
+      if (existingphoneNo) {
+        return res
+          .status(statusCode.CONFLICT.code)
+          .json({ message: "User already exist same phoneNo" });
+      } 
       params.phoneNo = phoneNo;
-    } else if (findPublicuserWithTheGivenId.altPhoneNo != altPhoneNo) {
+    } else if (findPublicuserWithTheGivenId.altPhoneNo != altPhoneNo && altPhoneNo) {
+        const existingaltPhoneNo = await user.findOne({
+          where: { altPhoneNo: altPhoneNo, statusId:statusId, roleId:roleId },
+        });
+        if (existingaltPhoneNo) {
+          return res
+            .status(statusCode.CONFLICT.code)
+            .json({ message: "User already exist same altPhoneNo" });
+        }
       params.altPhoneNo = altPhoneNo;
-    } else if (findPublicuserWithTheGivenId.emailId != emailId) {
+    } else if (findPublicuserWithTheGivenId.emailId != emailId && emailId) {
+      
+        const existingemailId = await user.findOne({
+          where: { emailId: emailId ,statusId:statusId, roleId:roleId },
+        });
+        if (existingemailId) {
+          return res.status(statusCode.CONFLICT.code).json({
+            message: "User already exist with given emailId",
+          });
+        }
       params.emailId = emailId;
-    } else if (findPublicuserWithTheGivenId.profilePicture != profilePicture) {
-      params.profilePicture = profilePicture;
-    } else if (findPublicuserWithTheGivenId.lastLogin != lastLogin) {
-      params.lastLogin = lastLogin;
     }
     let [updatepublicUserCount, updatepublicUserData] =
-      await public_user.update(params, {
-        where: { publicUserId: publicUserId },
+      await user.update(params, {
+        where: {
+          [Op.and]: [{userId: userId},{statusId:statusId},]
+         },
       });
 
-    if (updatepublicUserCount >= 0) {
+      console.log('update public user count', updatepublicUserCount)
+      try {
+        let [updatepublicUserCount, updatepublicUserData] =
+          await user.update(params, {
+            where: { userId: userId },
+          });
+      
+        if (activities) {
+          let fetchUserActivities = await useractivitypreferencesModels.findAll({
+            where: {
+              userId: userId,
+            },
+          });
+      
+          let fetchActivities = fetchUserActivities.map((data) => {
+            return data.userActivityId;
+          });
+      
+          for (let activity of activities) {
+            if (!fetchActivities.includes(activity)) {
+              await useractivitypreferencesModels.update(
+                {
+                  userId: userId,
+                  userActivityId: activity,
+                },
+                { transaction: t }
+              );
+            }
+          }
+      
+          // Update status to 2 for removed activities
+          for (let fetchActivity of fetchActivities) {
+            if (!activities.includes(fetchActivity)) {
+              await useractivitypreferencesModels.update(
+                { status: 2 },
+                { where: { userId: userId, userActivityId: fetchActivity }, transaction: t }
+              );
+            }
+            
+            await transaction.commit();
+  
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'User profile updated',
+            })
+          }
+        }
+      } catch (error) {
+        if (transaction) await transaction.rollback();
+  
+        console.error('Error User profile not updated:', error);
+        res.status(statusCode.BAD_REQUEST.code).json({
+            message: 'user profile not updated!',
+            data: []
+        })
+      }
+      if(profilePicture){
+        let profilePicturePath = null;
+        let profilePicturePath2 = null;
+
+        let uploadDir = process.env.UPLOAD_DIR;
+        let base64UploadprofilePicture = profilePicture ? profilePicture.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, ""): null;
+        let mimeMatch = userImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
+        let mime = mimeMatch ? mimeMatch[1]: null;
+        if([
+          "image/jpeg",
+          "image/png",
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ].includes(mime)){
+          // convert base 64 to buffer 
+          let uploadImageBuffer = userImage ? Buffer.from(base64UploadprofilePicture,'base64') : null;
+          if(uploadImageBuffer){
+            const profilePictureDir = path.join(uploadDir,"profilePictureDir");
+            if(!fs.existsSync(profilePictureDir)){
+              fs.mkdirSync(profilePictureDir,{recursive:true})
+            }
+            let fileExtension = mime ? mime.split("/")[1] : "txt";
+            profilePicturePath = `${uploadDir}/profilePictureDir/${newUser.userId}.${fileExtension}`
+            fs.writeFileSync(profilePicturePath, uploadImageBuffer);
+            profilePicturePath2= `/userImageDir/${userName}.${fileExtension}`
+            let fileName = `${newUser.userName}${newUser.userId}.${fileExtension}`
+            let fileType = mime ? mime.split("/")[0]:'unknown'
+            // insert to file table and file attachment table
+            let updateFile = await file.update({
+              fileName:fileName,
+              fileType:fileType,
+              url:profilePicturePath2,
+              statusId:1,
+              createdDt:now(),
+              updatedDt:now()
+            })
+  
+            if(!updateFile){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
+            }
+            let updateFileAttachment = await fileAttachment.update({
+              entityId: newUser.userId,
+              entityType:'usermaster',
+              fileId:createFile.fileId,
+              statusId:1,
+              filePurpose:"Profile Picture"
+            })
+          }
+        }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({message:"Invalid File type for the event image"})
+        }
+      }
+    if (updatepublicUserCount >= 1) {
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
       });
@@ -85,7 +224,6 @@ const updatepublic_user = async (req, res) => {
         message: "Not Updated ",
       });
     }
-    console.log(updatepublicUserData, "skbskb", updatepublicUserCount);
   } catch (error) {
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
@@ -93,6 +231,7 @@ const updatepublic_user = async (req, res) => {
     });
   }
 };
+
 
 //findAll
 // const viewpublic_user = async (req, res) => {
@@ -141,16 +280,20 @@ const updatepublic_user = async (req, res) => {
 const viewpublicUser = async (req, res) => {
   console.log("view user profile details");
   try {
-    let limit = req.body.page_size ? req.body.page_size : 50;
-    let page = req.body.page_number ? req.body.page_number : 1;
-    let offset = (page - 1) * limit;
-    let userId = req.user?.id || 1;
-
-    let showpublic_user = await public_user.findOne({
+    console.log(21, req.user.userId)
+    let userId = req.user?.userId || 1;
+    let publicRole = 4
+    let statusId = 1;
+    let showpublic_user = await user.findOne({
       where: {
-        publicUserId: userId,
+       [Op.and]: [{ userId: userId},{statusId:statusId},{roleId:publicRole}]
       },
     });
+
+    console.log('show public user', showpublic_user)
+    // let decryptUser = showpublic_user.map((encryptData)=>({
+    //   encryptData. && encryptdData
+    // }))
 
     // let givenReq = req.body.givenReq ? req.body.givenReq : null;
     // if (givenReq) {
@@ -204,8 +347,38 @@ const homePage = async (req, res) => {
       },
     });
 
-    let fetchEventDetailsQuery = `select eventName, eventCategory,locationName,eventDate,eventStartTime,
-    eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where ticketSalesEnabled =1 `;
+    // let fetchEventDetailsQuery = `select eventId, eventName, eventCategory,locationName,eventDate,eventStartTime,
+    // eventEndTime, descriptionOfEvent from amabhoomi.eventactivities where ticketSalesEnabled =1 `;
+
+    let fetchEventDetailsQuery = `
+      SELECT 
+      ea.eventId,
+      ea.facilityId,
+      f.facilityname,
+      ea.eventName, 
+      ea.eventCategoryId, 
+      ea.locationName, 
+      ea.eventDate, 
+      ea.eventStartTime,
+      ea.eventEndTime,
+      ea.descriptionOfEvent,
+      ea.ticketSalesEnabled,
+      ea.ticketPrice,
+      ea.eventImagePath,
+      ea.additionalFilePath,
+      TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
+      CASE
+        WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
+        THEN 'ACTIVE'
+        ELSE 'CLOSED'
+      END AS status,
+      ea.additionalDetails
+      FROM 
+      amabhoomi.eventactivities ea 
+      INNER JOIN amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
+      left join amabhoomi.facilities f on ea.facilityId = f.facilityId
+      where CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') <= CONVERT_TZ(ea.eventDate, @@session.time_zone, 'SYSTEM')
+      ORDER BY ea.eventDate DESC`;
 
     let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery);
     console.log(
@@ -222,11 +395,12 @@ const homePage = async (req, res) => {
     );
 
     let viewNotificationsListQuery = `
-        select
-            *
+        select p.publicNotificationsId, p.publicNotificationsTitle, p.publicNotificationsContent, f.fileId, f.fileName, f.url,p.createdOn as createdAt
         from amabhoomi.publicnotifications p
-        where validFromDate <= ?
-        and validToDate >= ?
+        left join fileattachments fa on p.publicNotificationsId = fa.entityId and fa.entityType = 'publicNotification'
+        left join files f on f.fileId = fa.fileId and f.statusId = 1
+        where p.validFromDate <= ?
+        and p.validToDate >= ?
         `;
 
     let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
@@ -234,13 +408,23 @@ const homePage = async (req, res) => {
       replacements: [new Date(), new Date()]
     })
 
+    let facilityActivitiesFetchQuery = `
+      select fa.id, f.facilityId, f.facilityTypeId, f.facilityname, u.userActivityId, u.userActivityName
+      from amabhoomi.facilityactivities fa
+      inner join amabhoomi.facilities f on f.facilityId = fa.facilityId
+      inner join amabhoomi.useractivitymasters u on fa.activityId = u.userActivityId
+    `;
+
+    let facilityActivitiesData = await sequelize.query(facilityActivitiesFetchQuery);
+
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,
       eventDetailsData: fetchEventDetailsData[0],
       amenityDetails: fetchAllAmenities[0],
       servicesDetails: fetchAllServices[0],
-      notificationsList:viewNotificationsListQueryData
+      notificationsList:viewNotificationsListQueryData,
+      exploreActivities: facilityActivitiesData[0]
     });
   } catch (err) {
     return res

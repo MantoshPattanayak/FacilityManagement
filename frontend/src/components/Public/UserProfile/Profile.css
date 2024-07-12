@@ -1,12 +1,36 @@
+/* //error */
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.profile-formContainer_Inner{
+  margin-bottom: 1rem;
+}
+
+
+/*-------------- Main Profile------------- */
+
 .profile--Main-Box {
-  height: 100vh;
+  height: auto;
   padding: 3rem 5rem;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   column-gap: 4rem;
   /* border: 2px solid red; */
+  margin-block: 5vh;
 }
+
+.profile-form-Body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4vh;
+}
+
 
 .profile-leftside--Body {
   width: 100%;
@@ -14,7 +38,12 @@
 }
 
 .profile-about {
-  font-size: 0.9rem;
+  font-size: 16px;
+    font-weight: 600;
+}
+
+.profileTitle {
+  width: 40vw;
 }
 
 .profile-view--Body {
@@ -28,32 +57,95 @@
   padding: 1.25rem;
 }
 
-.profile-button--Section > li {
-  margin: 1.14rem 0;
+.profile-button--Section>li {
+  margin: 0.5rem 0;
 }
 
 .profile-button--Active {
   background-color: rgba(0, 181, 98, 1);
 }
 
-.profile-button--Section > li > a {
+.profile-button--Section>li>a {
   display: flex;
   padding: 0.5rem;
+  height: 6vh;
   align-items: center;
-  /* border-radius: 0.5rem; */
-  /* color: #1d4ed8; */
+  border-radius: 6px;
+  justify-content: center;
+  background-color: #D9D9D9;
   font-weight: 500;
 }
 
-.profile-button--Section > li > a:hover {
+
+/* .profile-button--Section>li>a:hover {
   background-color: rgba(217, 217, 217, 1);
+} */
+
+.profile-button--Section li a:hover {
+  background-color: green; /* Green background on hover */
+  color: white; /* White text color on hover */
+}
+
+.profile-about-icon{
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+
+/* .profilePhoto {
+  display: flex;
+  align-items: center;
+} */
+
+/* .profilePhoto button {
+  border: 1px solid black;
+  padding: 4px;
+  border-radius: 8px;
+} */
+
+.profilePhoto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  /* width: fit-content; */
+}
+
+.profilePhoto input {
+  width: 12vw;
+  margin-inline: 1vw;
+}
+
+.profilePhoto svg {
+
+  height: 100px;
+  width: 100px;
+}
+
+.profilePhoto button svg {
+  height: 20px;
+}
+
+.profileIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.profileIcon button {
+  border: 0.5px solid black;
+  font-size: 11px;
+  padding: 2px;
+  border-radius: 4px;
 }
 
 /* button-section */
 /* CSS */
 .button-67 {
   align-items: center;
-  background: #f5f5fa;
+  /* background: #f5f5fa; */
   border-radius: 8px;
   display: flex;
   font-family: "Cascadia Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono",
@@ -67,11 +159,27 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .button-67:hover {
   background: #f8f8ff;
   box-shadow: -15px -15px 30px 0 #fff, 15px 15px 30px 0 #1d0dca17;
+}
+
+.profile-formContainer {
+  width: 40vw;
+}
+
+.profile-formContainer input {
+  height: 3vw;
+}
+
+.profile-formContainer select {
+  height: 3vw;
 }
 
 .profile-rightside--Body {
@@ -82,7 +190,7 @@
   /* box-sizing: border-box; */
 }
 
-.profile-rightside--Body > h1 {
+.profile-rightside--Body>h1 {
   text-align: center;
   font-weight: 600;
   font-size: 1.9rem;
@@ -95,8 +203,7 @@
 
 /* Style for form labels */
 .profile-formContainer label,
-.profile-photoLabel,
-.profile--Activity-Box > h2 {
+.profile--Activity-Box>h2 {
   display: block;
   margin-bottom: 0.5rem;
   color: rgb(63, 63, 70);
@@ -105,7 +212,13 @@
   font-size: 0.87rem;
 }
 
-.profile-form-Body > h3 {
+.profileTitle {
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+}
+
+.profileTitle>h3 {
   font-size: large;
   font-weight: bold;
 }
@@ -113,14 +226,41 @@
 .profile-formContainer input[type="text"],
 .profile-formContainer input[type="email"],
 .profile-formContainer input[type="password"],
+.profile-formContainer input[type="aadhar"],
+.profile-formContainer input[type="tel"],
 .profile-formContainer select {
-  width: 100%;
+  /* width: 100%;
   padding: 0.5rem;
-  margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease; */
+  width: 100%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #b1b1b1;
+    border-radius: 0.417vw;
+    background-color: #ECECEE;
+}
+
+.profile-formContainer input:focus{
+  border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
+}
+
+.profile--Activity-Box h2 {
+  padding-inline: 60px;
+}
+
+.profile--Activity-Box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#ProfileActButton {
+  width: 20vw;
+  margin-bottom: 6vh;
 }
 
 .profile--Activity-options {
@@ -143,9 +283,38 @@
   cursor: pointer;
   border: none;
 }
+
+.profile-button--Section {
+  display: flex;
+  flex-direction: column;
+}
+
 .activityButton.selected {
   background-color: #6ab04c;
 }
+
+.profile-rightside--divided button{
+  padding: 8px 16px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.profile-rightside--divided .active{
+  background-color: #008000;
+  color: #fff;
+  border-color: #008000;
+}
+
+.profile-rightside--divided button:hover {
+  background-color: #ddd;
+}
+
 
 @media (min-width: 768px) {
   .button-67 {
@@ -163,6 +332,7 @@
   .profile-leftside--Body {
     width: 17rem;
   }
+
   .profile-rightside--Body {
     /* align-items: center; */
     /* justify-content: center; */
@@ -171,4 +341,38 @@
     height: fit-content;
     /* border: 2px solid black; */
   }
+}
+
+/* preferred location */
+.preferred-locations button {
+  background-color: white; 
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  color: black;
+  padding: 8px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.preferred-locations button:hover{
+  background-color:rgb(25, 121, 31);
+}
+
+
+
+
+
+
+
+
+.required-asterisk {
+  color: red;
+  margin-left: 5px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
 }

@@ -1,25 +1,22 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import axiosHttpClient from '../../../../utils/axios';
 import AdminHeader from '../../../../common/AdminHeader';
 import Footer from '../../../../common/Footer';
 import { regex, dataLength } from '../../../../utils/regexExpAndDataLength';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
-
+import { useLocation, useNavigate } from "react-router-dom";
+import { decryptData } from "../../../../utils/encryptData";
 export default function EventDetailsPage(props) {
-    const location = useLocation();
+ 
     const eventId = new URLSearchParams(location.search).get('eventId');
     console.log('eventId', eventId);
-
-    async function fetchEventDetails(id) {
-        try {
-            let response = await axiosHttpClient('/api/fetch')
-        }
-        catch (err) {
-            console.error(err);
-        }
-    }
+    const location = useLocation();
+    const viewId = decryptData(
+      new URLSearchParams(location.search).get("veiwId")
+    );
+    const navigate = useNavigate();
+    
 
     return (
         <div className='w-[100%]'>

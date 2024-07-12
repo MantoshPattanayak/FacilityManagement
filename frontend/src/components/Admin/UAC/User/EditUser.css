@@ -1,0 +1,301 @@
+.user-edit .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Converted from 20px to 2vh */
+    max-width: 100%;
+    width: 100%;
+    /* Changed to vw, and adjusted for centering */
+    margin: 0 auto;
+    /* Center the container */
+    margin-top: 10vh;
+    background-color: #F7F7F7;
+    overflow-y: auto;
+}
+
+.user-edit .form-heading {
+    padding: 2.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 94%;
+    /* Converted from 20px to 2.5vw */
+}
+
+.user-edit .form-container h1 {
+    margin-bottom: 1.5vw;
+    /* Converted from 10px to 1.5vw */
+    min-width: 90vw;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+.user-edit .form-heading h2 {
+    margin-bottom: 1.5vw;
+    /* Converted from 10px to 1.5vw */
+    /* min-width: 5vw; */
+    width: 100%;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+.user-edit .form-row {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 1vw;
+    max-width: 100%;
+    width: 84vw;
+    justify-content: space-between;
+    padding-inline: 1vw;
+}
+
+.user-edit .form-group {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5  ;
+}
+
+.user-edit .form-heading label {
+    margin-bottom: 0.5vw;
+    /* Converted from 5px to 0.5vw */
+    color: #595959;
+    font-weight: bold;
+    width: 50%;
+}
+
+.user-edit .form-heading select {
+    width: 50%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+   
+}
+
+.user-edit .form-heading input[type="text"], .user-edit input[type='date'], .user-edit select {
+    width: 100%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #b1b1b1;
+    border-radius: 0.417vw;
+    background-color: #ECECEE;
+}
+
+.user-edit .form-heading input[type="text"]:focus,
+.user-edit input[type="date"]:focus,
+.user-edit select:focus {
+    border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
+}
+
+.user-edit .form-heading input[type="button"] {
+    width: 25%;
+    /* Converted from 100px to 8.33vw */
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+    background-color: ghostwhite;
+    cursor: pointer;
+}
+
+.user-edit .form-heading .div-border {
+    /* Converted from 100px to 8.33vw */
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+    background-color: ghostwhite;
+}
+
+.user-edit .form-heading input[type="text"]:disabled,  .user-edit .form-heading textarea:disabled {
+    background-color: rgb(241, 241, 241);
+}
+
+.user-edit .form-container textarea {
+    padding: 0.625vw;
+    /* Converted from 5px to 0.625vw */
+    border: 0.0833vw solid #ccc;
+    /* Converted from 1px to 0.0833vw */
+    border-radius: 0.417vw;
+    /* Converted from 5px to 0.417vw */
+    background-color: ghostwhite;
+}
+
+.user-edit .buttons-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 2vh;
+    /* padding-left: 7vw; */
+    width: 100%;
+}
+
+.user-edit .approve-button,
+.user-edit .cancel-button {
+    padding: 0.8em 1em;
+    margin: 0.5em;
+    /* Adjusted margin */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-edit .back-button {
+    padding: 0.5em;
+    margin: 0.5em;
+    /* Adjusted margin */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #405cf5;
+    color: white;
+}
+
+.user-edit .approve-button {
+    background-color: rgb(14, 165, 14);
+    color: white;
+}
+
+.user-edit .cancel-button {
+    background-color: rgb(238, 45, 45);
+    color: white;
+}
+
+.user-edit .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 10rem;
+    grid-row-gap: 10px;
+    width: 100%;
+}
+
+.user-edit .error-message{
+    color: red;
+    font-size: 14px;
+}
+
+.user-edit .approve-button:disabled,
+.user-edit .cancel-button:disabled {
+    background-color: gray;
+}
+
+/* Media query for tablets and larger screens */
+@media screen and (min-width: 768px) {
+
+    .user-edit .approve-button,
+    .user-edit .cancel-button {
+        padding: 0.6em 1.5em;
+        margin: 0.2em;
+    }
+
+    .user-edit .form-row {
+        flex-wrap: wrap;
+    }
+
+    .user-edit .form-heading h2 {
+        height: 5vh;
+        /* Change height for larger screens */
+    }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 767px) {
+
+    .user-edit .approve-button,
+    .user-edit .cancel-button {
+        width: 100%;
+        /* Make buttons full width */
+    }
+
+    .user-edit .form-heading h2 {
+        margin-bottom: 1.5vw;
+        min-width: 90vw;
+        height: 5vh;
+    }
+
+    .user-edit .form-row {
+        flex-direction: column;
+        gap: 1.5vw;
+        /* Increased gap for better spacing */
+    }
+
+    .user-edit .form-group {
+        width: 100%;
+    }
+
+    .user-edit input[type="text"] {
+        width: 100%;
+        /* Full width input */
+    }
+
+    .user-edit .form-container {
+        width: 100%;
+        font-size: small;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .user-edit .form-heading h2 {
+        margin-bottom: 1.5vw;
+        min-width: 90vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+
+    .user-edit .form-heading {
+        max-width: 90vw;
+    }
+
+    .user-edit .form-container {
+        width: 100%;
+        font-size: small;
+    }
+
+    .user-edit .approve-button,
+    .user-edit .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
+    }
+}
+
+@media screen and (max-width: 368px) {
+    .user-edit .form-heading h2 {
+        margin-bottom: 1.5vw;
+        height: 5vh;
+        padding-left: 2vh;
+        width: 50%;
+    }
+
+    .user-edit .form-heading {
+        max-width: 100%;
+    }
+
+    .user-edit .form-container {
+        width: 90%;
+        font-size: small;
+    }
+
+    .user-edit .approve-button,
+    .user-edit .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
+    }
+}

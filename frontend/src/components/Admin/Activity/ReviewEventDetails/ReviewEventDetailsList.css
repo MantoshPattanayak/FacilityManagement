@@ -1,50 +1,88 @@
-.specialevent-search_text_conatiner_outer {
+.ReviewEventRequest {
+    margin: 75px auto 10px auto;
+    width: 100%; /* Content width excluding AdminHeader and Footer */
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 50vh;
+    padding: 0 20px; /* Added padding for better spacing */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.ReviewEventRequest .table-heading {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: center;
+    font-size: 20px;
+}
+.ReviewEventRequest .table-heading h2 {
+    width: 100%;
+    align-items: center;
+    font-weight: bold;
+    height: 5vh;
+    display: flex;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+    padding-left: 2vh;
+    color: black;
+    min-width: 70vw;
 }
 
-.specialevent-form-heading {
-    margin-top: 0vh;
-    padding-bottom: 0px;
-}
-
-.specialevent-form-heading h2 {
-    width: 627px;
-    height: 48px;
-    font-size: 18px;
-}
-
-
-.specialevent-search_text_conatiner {
-    width: 627px;
+.ReviewEventRequest .search_text_conatiner {
+    margin-top: 15px;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
-    padding: 0;
-    padding-bottom: 12px;
+    align-items: center;
+    padding: 0 0 10px 0;
+    gap: 10px;
 }
 
-.specialevent-search_input_calender {
-    border: 1px solid rgba(0, 0, 0, 0.7);
-    border-radius: 8px;
+.ReviewEventRequest .search_input_field {
+    padding: 5px;
+    width: 25%;
+    border: 2px solid #c6c6c6;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    outline: #c6c6c6;
+}
+
+/* Style the input field border when it's focused */
+.ReviewEventRequest .search_input_field:focus {
+    border-color: #3e82ff;
+}
+
+/* Style the placeholder text */
+.ReviewEventRequest .search_input_field::placeholder {
+    color: #999;
+}
+
+
+.ReviewEventRequest .search_input_calender {
+    border: 2px solid #c6c6c6;
+    border-radius: 5px;
     padding: 4px;
 }
 
-.specialevent-search_input_field {
-    width: 24vw;
+.ReviewEventRequest .search_input_calender:focus {
+    border-color: #3e82ff;
+    outline: none;
 }
 
-.specialevent-eventdetails-tab {
+.ReviewEventRequest .eventdetails-tab {
     display: flex;
-    justify-content: space-evenly;
-    /* width: 625px; */
+    justify-content: flex-start;
+    width: 50%;
     gap: 40px;
     margin-bottom: 10px;
 }
 
-.specialevent-eventdetails-tab div {
+.ReviewEventRequest .eventdetails-tab div {
     font-size: 16px;
     font-weight: bold;
-    width: 100%;
+    width: 50%;
     border: 1px solid;
     border-radius: 8px;
     padding: 10px;
@@ -55,119 +93,129 @@
     border: 1px solid #00000031;
 }
 
-.specialevent-eventdetails-tab div:hover {
+.ReviewEventRequest .eventdetails-tab div:hover {
     cursor: pointer;
     background: #00B562;
     color: white;
 }
 
-.specialevent-eventdetails-tab .active {
+.ReviewEventRequest .eventdetails-tab .active {
     background: #00B562;
     color: white;
+    text-decoration: none;
 }
 
-.specialevent-eventdetails-cardsection {
+.ReviewEventRequest .eventdetails-cardsection {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     gap: 24px;
-    width: 630px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    height: 90vh;
+    width: 100%;
+    border: none;
+    max-height: 1000px;
+    height: fit-content;
     overflow-y: scroll;
 }
 
-.specialevent-eventdetails-carddetails {
-    /* border: 1px solid #B9B9B97D; */
-    width: 627px;
-    height: 144px;
+.ReviewEventRequest .eventdetails-carddetails {
+    width: 100%;
+    height: 30%;
+    border: 1px solid #c6c6c6;
     border-radius: 10px;
     padding: 12px;
     background: #E9E9E9;
     display: flex;
     gap: 10px;
     font-size: 16px;
+    justify-content: center;
+    align-items: center;
 }
 
-.specialevent-eventdetails-photo img {
-    width: 190px;
-    height: 120px;
+.ReviewEventRequest .eventdetails-photo {
+    width: 25%;
+    height: 100%;
 }
 
-.specialevent-eventdetails-details {
+/* .ReviewEventRequest .eventdetails-photo img {
+    width: 25%;
+    height: 100%;
+} */
+
+.ReviewEventRequest .eventdetails-details {
     width: 75%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
+    line-height: 1.5rem;
 }
 
-.specialevent-eventdetails-details-eventname {
+.ReviewEventRequest .eventdetails-details-eventname {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 16px;
 }
 
-.specialevent-eventdetails-details-eventAddress {
-    font-size: 14px;
+.ReviewEventRequest .eventdetails-details-eventAddress {
+    font-size: 16px;
 }
 
-.specialevent-eventdetails-details-eventTime {
-    font-size: 11px;
+.ReviewEventRequest .eventdetails-details-eventTime {
+    font-size: 16px;
 }
 
-.specialevent-eventdetails-eventbutton {
+.ReviewEventRequest .Event-Details-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
-    font-size: 11px;
+    font-size: 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     background-color: green;
     color: white;
-    width: 92px;
-    height: 21px
+    width: 20%;
+    height: 100%
 }
 
 @media screen and (max-width: 768px) {
-    .specialevent-eventdetails-tab {
-        width: 627px;
+    .ReviewEventRequest .eventdetails-tab {
+        width: 100%;
         display: flex;
         justify-content: space-between;
     }
 
-    .specialevent-eventdetails-cardsection {
+    .ReviewEventRequest .eventdetails-cardsection {
         gap: 20px;
     }
 
-    .specialevent-eventdetails-carddetails {
-        height: 150px;
+    .ReviewEventRequest .eventdetails-carddetails {
+        height: 30%;
         padding: 10px;
         font-size: 18px;
         line-height: 22px;
     }
 
-    .specialevent-search_text_conatiner {
+    .ReviewEventRequest .search_text_conatiner {
         justify-content: space-between;
         flex-direction: row;
         align-items: center;
     }
 
-    .specialevent-search_input_field {
+    .ReviewEventRequest .search_input_field {
         font-size: small;
         padding: 5px;
         margin-top: 6px;
     }
 
-    .specialevent-eventdetails-tab div {
+    .ReviewEventRequest .eventdetails-tab div {
         font-size: small;
         padding: 5px;
-        width: 22vw;
+        width: 100%;
     }
 
-    .specialevent-search_input_calender {
+    .ReviewEventRequest .search_input_calender {
         border: 1px solid rgba(0, 0, 0, 0.7);
         border-radius: 8px;
         font-size: small;
@@ -177,73 +225,62 @@
 }
 
 @media screen and (max-width: 575px) {
-    .specialevent-eventdetails-tab {
-        width: 90vw;
+    .ReviewEventRequest .eventdetails-tab {
+        width: 100%;
         gap: 20px;
     }
 
-
-    .specialevent-form-heading h2 {
-        width: 377px;
-        /* height: 38px; */
-        font-size: 14px;
-        margin-bottom: 1.5vw;
-        /* min-width: 90vw; */
-        height: 4vh;
-        padding-left: 1vh;
-    }
-
-    .specialevent-eventdetails-tab div {
+    .ReviewEventRequest .eventdetails-tab div {
         font-size: 9px;
         padding: 5px;
     }
 
-    .specialevent-eventdetails-cardsection {
+    .ReviewEventRequest .eventdetails-cardsection {
         gap: 20px;
     }
 
-    .specialevent-eventdetails-carddetails {
+    .ReviewEventRequest .eventdetails-carddetails {
         min-height: 80px;
         height: auto;
-        width: auto;
+        width: 100%;
         padding: 0px;
         font-size: 14px;
         line-height: 18px;
     }
 
-    .specialevent-eventdetails-photo img {
-        width: 150px;
+    .ReviewEventRequest .eventdetails-photo img {
+        width: 25%;
         height: 100%;
     }
 
-    .specialevent-eventdetails-details-eventname {
+    .ReviewEventRequest .eventdetails-details-eventname {
         font-weight: 600;
         font-size: 12px;
     }
 
-    .specialevent-eventdetails-details-eventAddress {
+    .ReviewEventRequest .eventdetails-details-eventAddress {
         font-weight: 300;
         font-size: 9px;
     }
 
-    .specialevent-eventdetails-details-eventTime {
+    .ReviewEventRequest .eventdetails-details-eventTime {
         font-size: 9px;
     }
 
-    .specialevent-eventdetails-eventbutton {
+    .ReviewEventRequest .eventdetails-eventbutton {
         padding-inline: 8px;
         font-size: xx-small;
         width: max-content;
     }
- 
-    .specialevent-search_text_conatiner {
+
+    .ReviewEventRequest .search_text_conatiner {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: end;
     }
 
-    .specialevent-search_input_calender {
+    .ReviewEventRequest .search_input_calender {
         border: 1px solid rgba(0, 0, 0, 0.7);
         border-radius: 5px;
         font-size: xx-small;
@@ -254,18 +291,18 @@
 }
 
 @media screen and (max-width: 300px) {
-    .specialevent-eventdetails-tab {
-        width: 70vw;
+    .ReviewEventRequest .eventdetails-tab {
+        width: 100%;
         gap: 20px;
     }
 
-    .specialevent-eventdetails-tab div {
+    .ReviewEventRequest .eventdetails-tab div {
         font-size: 11px;
         border-radius: 8px;
         padding: 4px;
     }
 
-    .specialevent-eventdetails-carddetails {
+    .ReviewEventRequest .eventdetails-carddetails {
         height: 100px;
         padding: 10px;
         font-size: 9px;

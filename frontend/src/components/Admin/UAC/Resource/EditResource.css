@@ -1,0 +1,68 @@
+.container-1 .header-role {
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+    height: auto;
+    padding-block: 2vh;
+}
+
+.container-1{
+    width: 94%;
+}
+
+.editResParent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.rectangle .roles {
+    display: flex;
+    font-size: large;
+    align-items: center;
+    justify-content: center;
+}
+
+.roles h1 {
+    padding-top: 0%;
+}
+
+.back-btn .btn {
+    padding: 6px 16px;
+}
+
+.EditResForm .form {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+}
+
+.input-fields {
+    /* margin-top: 14px;
+    justify-content: space-between;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite; */
+    width: 100%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #b1b1b1;
+    border-radius: 0.417vw;
+    background-color: #ECECEE;
+}
+
+.input-fields:focus{
+    border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
+}
+
+.EditResForm .buttons {
+    width: 14vw;
+    margin-left: 42%;
+}
+
+.EditResForm {
+    margin-bottom: 8vh;
+}

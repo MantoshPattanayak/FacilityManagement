@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: null
         },
+        facilityTypeId: {
+            type: DataTypes.INTEGER,
+            defaultValue: null
+        },
         sportsName: {
             type: DataTypes.INTEGER,
             defaultValue: null 
@@ -81,7 +85,22 @@ module.exports = (sequelize, DataTypes) => {
         bookingReference: {
             type: DataTypes.STRING(255),
             defaultValue: null
-        }
-    });
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal("CURRENT_TIMESTAMP")
+        },
+    }
+    ,
+    {
+        timestamps:false
+    }
+
+
+);
     return FacilityBookings
 }

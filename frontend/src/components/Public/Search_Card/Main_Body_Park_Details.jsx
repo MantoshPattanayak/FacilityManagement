@@ -1,9 +1,10 @@
 // Function of Main Container ---------------------------------------
-import Cardimg from "../../../assets/Card_img.png";
+import Cardimg from "../../../assets/Park_image.jpg";
+import sport_image2 from "../../../assets/Sport_image.jpg"
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faFilter, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 // Axios for Call the API --------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Common footer---------------------------- ----------------
@@ -12,9 +13,11 @@ import CommonFooter from "../../../common/CommonFooter";
 import Park_Logo from "../../../assets/Ground_logo.png";
 import MultiPark from "../../../assets/ama_bhoomi_multipurpose_grounds_logo-removebg-preview.png";
 import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png";
+import greenway from "../../../assets/Greenway.png"
+import blueway from "../../../assets/blueways.png"
 // Data Not available Icon ---------------------------------------------------------------
-import No_Data_icon from "../../../assets/No_Data_icon.png";
-import { useEffect, useState } from "react";
+import No_Data_icon from "../../../assets/No_Data.png";
+import { useEffect, useState, useRef } from "react";
 // Import here to encrptData ------------------------------------------
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
@@ -23,43 +26,56 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 // impport shimmerUi------------------------------------------
 import ShimmerUI from "./ShimmerUI";
+import { truncateName } from "../../../utils/utilityFunctions";
+import instance from "../../../../env";
 const Main_Body_Park_Details = () => {
+  const defaultLocation = {
+    latitude: 20.3010259,
+    longitude: 85.7380521
+  }
   // Use state ------------------------------------------------------------------
   const [DisPlayParkData, setDisPlayParkData] = useState([]);
   // const simmerUi Loader------------------------------------------------
-  const[IsLoding, setIsLoding] = useState(false);
+  const [IsLoding, setIsLoding] = useState(false);
   // useSate for search -----------------------------------------------------------
   const [givenReq, setGivenReq] = useState("");
   // State variable to track selected layout type ------------------------------
   const [layoutType, setLayoutType] = useState('grid');
 
-// here set the latitude and longitude --------------------------------------------
-  const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage?.getItem('location')) ? JSON.parse(sessionStorage?.getItem('location')) : {
-    latitude: 20.3010259,
-    longitude: 85.7380521
-  });
+  // here set the latitude and longitude --------------------------------------------
+  const [userLocation, setUserLocation] = useState(defaultLocation);
   // fetch facility type id --------------------------------------------------------
   let location = useLocation();
-  let facilityIdTypeFetch = decryptData(
-    new URLSearchParams(location.search).get("facilityTypeId")
-  );
   // for Faciltiy ----------------------------------------------------------------
-  const [facilityTypeId, setFacilityTypeId] = useState(1);
-  const [selectedTab, setSelectedTab] = useState('');
-  const tabList = ['Nearby', 'Popular', 'Free', 'Paid']
+  const [facilityTypeId, setFacilityTypeId] = useState();
+  const [selectedTab, setSelectedTab] = useState([]);
+  // , 'Free', 'Paid' (for now remove free and paid u can add if needed) 
+  const tabList = ['Nearby', 'Popular']; // ['Nearby', 'Popular', 'Free', 'Paid']
+  // for filter..........................................
+  const [filters, setFilters] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState({
+    Activity: new Array(),
+    Amenities: new Array(),
+    EventCategories: new Array(),
+    Services: new Array()
+  });
+
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
-// Function to handle layout change
-    const handleLayoutChange = (e) => {
-      setLayoutType(e.target.value);
-    };
+
+  // Function to handle layout change
+  const handleLayoutChange = (e) => {
+    setLayoutType(e.target.value);
+  };
+
   //Here (Post the data)----------------------------------------------------------------
   async function GetParkDetails() {
     try {
-       setIsLoding(true)
+      setIsLoding(true)
       let res = await axiosHttpClient("View_Park_Data", "post", {
         givenReq: givenReq,
         facilityTypeId: facilityTypeId,
+        selectedFilter
       });
       console.log("here Response of Park", res);
       setDisPlayParkData(res.data.data);
@@ -70,135 +86,211 @@ const Main_Body_Park_Details = () => {
     }
   }
 
+  //function to fetch filter options
+  async function fetchFilterOptions() {
+    try {
+      let res = await axiosHttpClient('VIEW_FILTER_OPTIONS_API', 'get');
+      console.log('response of filter api', res);
+      let filterOptions = {
+        Activity: res.data.fetchActivityMaster[0],
+        Amenities: res.data.fetchAmenitiesMaster[0],
+        EventCategories: res.data.fetchEventCategories[0],
+        Services: res.data.fetchServicesMaster[0]
+      }
+      setFilters(filterOptions);
+    }
+    catch (err) {
+      console.error(err);
+    }
+  }
+
+  //  function to set filter selection
+  function handleFilterSelection(e, id, filterType) {
+    e.preventDefault();
+    let filterSelected = JSON.parse(JSON.stringify(selectedFilter));
+    if (filterSelected[filterType].includes(id)) {
+      // console.log('id includes...', id);
+      filterSelected[filterType] = filterSelected[filterType].filter((data) => { return data != id });
+    }
+    else {
+      filterSelected[filterType].push(id);
+    }
+    setSelectedFilter(filterSelected);
+    return;
+  }
+
+  //function to clear all filter selection
+  function clearFilterSelection(e) {
+    // e.preventDefault();
+    setSelectedFilter({
+      Activity: [],
+      Amenities: [],
+      EventCategories: [],
+      Services: []
+    });
+    setIsFilterOpen(false);
+    return;
+  }
+
   // Function to handle selectedTab button click  ------------------------------
   const handleTabClick = (e, tab) => {
-    // Toggle game selection
-    if (selectedTab != tab) {
-      setSelectedTab(tab);
-      // if(tab == 'Nearby') {
-        getNearbyFacilities(e);
-      // }
-    }
-    else if(selectedTab == tab) {   // if same tab selected, then clear tab selection, and show default facility data
-      setSelectedTab('');
-      GetParkDetails();
-    } 
-    else {
-      // continue
+    if (selectedTab.includes(tab)) {
+      setSelectedTab(selectedTab.filter(t => t !== tab));
+    } else {
+      setSelectedTab([...selectedTab, tab]);
     }
     console.log('selectedTab', selectedTab);
   }
-// here set the userLocation -------------------------------------------------------
-  function setUserGeoLocation(location){
-    setUserLocation(location);
-    sessionStorage.setItem('location', JSON.stringify(location));
-    return;
-  }
-// filter the data (near by park) -----------------------------------------------------
-  async function getNearbyFacilities(e){
-    e?.preventDefault();
-    console.log('nearby facilities', userLocation);
+
+  // here set the userLocation -------------------------------------------------------
+  function setUserGeoLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserGeoLocation({
+          setUserLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           });
+          sessionStorage.setItem('location', JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }));
         },
         (error) => {
           console.error('Error getting location:', error);
-          setUserGeoLocation({
-            latitude: 20.3010259,
-            longitude: 85.7380521
-          });
+          // setUserLocation(defaultLocation);
+          // sessionStorage.setItem('location', JSON.stringify(location));
           // Handle error, e.g., display a message to the user
         }
       );
-
-      let bodyParams = {};
-      switch(selectedTab){    // ['Nearby', 'Popular', 'Free', 'Paid']
-        case 'Nearby':
-          bodyParams = {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-            facilityTypeId: facilityTypeId,
-            range: ''
-          }
-          break;
-        case 'Popular': bodyParams = {popular:1}; break;
-        case 'Free': bodyParams = {free:1}; break;
-        case 'Paid': bodyParams = {paid:1}; break;
-        default: break;
-      }
-
-      try{
-        setIsLoding(true)
-        let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
-        console.log(res.data.message, res.data.data);
-        setDisPlayParkData(res.data.data);
-        setIsLoding(false)
-      }
-      catch(error){
-        console.error(error);
-        toast.error('Location permission not granted.')
-        setIsLoding(false)
-      }
     } else {
       console.error('Geolocation is not supported by this browser');
+      toast.error('Location permission not granted.');
+    }
+    return;
+  }
+
+  // filter the data according to filter options -----------------------------------------------------
+  async function getNearbyFacilities() {
+    let bodyParams = {
+      facilityTypeId: facilityTypeId,
+      latitude: userLocation?.latitude || defaultLocation.latitude,
+      longitude: userLocation?.longitude || defaultLocation.longitude
+    };
+    console.log('body params before', bodyParams);
+
+    if (selectedTab.includes('Nearby')) {
+      console.log('first');
+      setUserGeoLocation();
+      bodyParams = {
+        ...bodyParams,
+        latitude: userLocation.latitude || defaultLocation.latitude,
+        longitude: userLocation.longitude || defaultLocation.latitude,
+        range: '',
+        selectedFilter
+      }
+    }
+    if (selectedTab.includes('Popular')) {
+      bodyParams = { ...bodyParams, popular: 1 };
+    }
+    if (selectedTab.includes('Free')) {
+      bodyParams = { ...bodyParams, free: 1 };
+    }
+    if (selectedTab.includes('Paid')) {
+      bodyParams = { ...bodyParams, paid: 1 };
+    }
+
+    console.log('body params after', bodyParams);
+
+    try {
+      setIsLoding(true)
+      let res = await axiosHttpClient('VIEW_NEARBY_PARKS_API', 'post', bodyParams);
+      console.log(res.data.message, res.data.data);
+      setDisPlayParkData(res.data.data);
+      setIsLoding(false)
+    }
+    catch (error) {
+      console.error(error);
       toast.error('Location permission not granted.')
- 
-      // Handle case where Geolocation API is not supported
+      setIsLoding(false)
     }
   }
 
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (e, typeid) => {
     setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
-    console.log("here type id, selectedTab", {typeid, selectedTab});
-    if(!selectedTab){
-      GetParkDetails();
-    }
-    else{
-      getNearbyFacilities(e);
-    }
+    console.log("here type id", { typeid });
   };
-  // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
+
+  // here Function to encryptDataid (Pass the Id)----------------------------------------------
   function encryptDataId(id) {
     let res = encryptData(id);
     return res;
   }
-  // Get the data for autoSuggestion  --------------------------------------------------------
-  // async function getAutoSuggest(){
-  //     try{
-  //         let res= await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get' ,null,  givenReq)
-  //            console.log("here Response of Auto  Suggest", res)
-  //     }
-  //     catch(err){
-  //         console.log("here error", err)
-  //     }
-  // }
-  // useEffect for Update the data (Call the Api) ------------------------------------------------
+
+  // on page load
   useEffect(() => {
-    if(selectedTab == '' || selectedTab == null){
-      console.log('facilityTypeId useeffect - tab not selected! call getParkDetails()');
+    let facilityIdTypeFetch = decryptData(new URLSearchParams(location.search).get("facilityTypeId"));
+    let givenReqFetch = new URLSearchParams(location.search).get("givenReq");
+    try {
+      let userLocation = JSON.parse(sessionStorage?.getItem('location'));
+      setUserLocation(userLocation);
+    }
+    catch (error) {
+      console.error('json parse error');
+      sessionStorage.setItem('location', JSON.stringify({}));
+    }
+    //api call to fetch filter options
+    fetchFilterOptions();
+    // on page load, if we have facilityTypeId from homepage, 
+    // then set facilityType or else set default facilityType to 1 (Parks)
+    if (facilityIdTypeFetch)
+      setFacilityTypeId(facilityIdTypeFetch);
+    else
+      setFacilityTypeId(1);
+
+    if (givenReqFetch)
+      setGivenReq(givenReqFetch);
+    else
+      setGivenReq('');
+  }, [])
+
+  // refresh page on searching, change in facility type or selecting filter options
+  useEffect(() => {
+    if (selectedTab.length > 0) {  //fetch facility details based on filter options
+      console.log(selectedTab.length)
+      getNearbyFacilities()
+    }
+    else { // fetch facility details based on selected facility type or searching value
       GetParkDetails();
     }
-    else{
-      getNearbyFacilities();
-      console.log('facilityTypeId useeffect - tab selected... not call getNearbyFacilities()');
-    }
-    // getAutoSuggest()
-  }, [givenReq, facilityTypeId]);
+    console.log('selectedFilter', selectedFilter);
+  }, [givenReq, facilityTypeId, selectedTab, selectedFilter]);
 
-  // useEffect(() => {
-  //   GetParkDetails();
-  // }, [])
 
+  // filter logic
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  //When Click on outside filter it will close............................................
+
+  const filterRef = useRef(null); // Ref for the filter dropdown
   useEffect(() => {
-    console.log('selectedTab useeffect - tab selected... not call getParkDetails()');
-  }, [userLocation, selectedTab]);
- 
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   //Return here------------------------------------------------------------------------------------------------------------
   return (
     <div className="main__body__park">
@@ -206,20 +298,19 @@ const Main_Body_Park_Details = () => {
       <PublicHeader />
       {/* Here Below of header set image ---------------------------------------------------- */}
       <div
-        className={`${
-          facilityTypeId === 1
-            ? "park-body-1"
-            : facilityTypeId === 2
+        className={`${(facilityTypeId == 1)
+          ? "park-body-1"
+          : (facilityTypeId == 2)
             ? "park-body-2"
-            : facilityTypeId === 3
-            ? "park-body-3"
-            : ""
-        }`}
+            : (facilityTypeId == 3)
+              ? "park-body-3"
+              : ""
+          }`}
       >
         <h1 className="name_park_img">
-          {facilityTypeId === 1 && "Parks"}
-          {facilityTypeId === 2 && "Sports"}
-          {facilityTypeId === 3 && "Multi-purpose Grounds"}
+          {(facilityTypeId == 1) && "Parks"}
+          {(facilityTypeId == 2) && "Playgrounds"}
+          {(facilityTypeId == 3) && "Multi-purpose Grounds"}
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}
@@ -247,7 +338,7 @@ const Main_Body_Park_Details = () => {
             onClick={(e) => handleParkLogoClick(e, 1)}
             className="image-button"
           >
-            <img className="h-14" src={Event_img} alt="Event" />
+            <img className="h-20" src={Event_img} alt="Event" />
             <span className="button-text">Park</span>
           </button>
 
@@ -256,8 +347,8 @@ const Main_Body_Park_Details = () => {
             onClick={(e) => handleParkLogoClick(e, 2)}
             className="image-button"
           >
-            <img className="h-14" src={Park_Logo} alt="Sports" />
-            <span className="button-text">Sports</span>
+            <img className="h-20" src={Park_Logo} alt="Sports" />
+            <span className="button-text">Playgrounds</span>
           </button>
 
           {/* Multipark */}
@@ -265,148 +356,274 @@ const Main_Body_Park_Details = () => {
             onClick={(e) => handleParkLogoClick(e, 3)}
             className="image-button"
           >
-            <img className="h-14" src={MultiPark} alt="Multipark" />
-            <span className="button-text">Multipark</span>
+            <img className="h-20" src={MultiPark} alt="Multipark" />
+            <span className="button-text1">Multipurpose <br></br> Grounds</span>
+          </button>
+          {/* waterway */}
+          <button
+            onClick={(e) => handleParkLogoClick(e, 4)}
+            className="image-button"
+          >
+            <img className="h-20" src={greenway} alt="Multipark" />
+            <span className="button-text">Greenways</span>
+          </button>
+          {/* blueway */}
+          <button
+            onClick={(e) => handleParkLogoClick(e, 5)}
+            className="image-button"
+          >
+            <img className="h-20" src={blueway} alt="Multipark" />
+            <span className="button-text">Blueways</span>
           </button>
         </span>
       </div>
       {/* Filter According to free, paid, NearBy, ------------------ */}
       <div className="Filter_grid">
-        <div className="filter_button">
+
+        {/* add filter option.............. */}
+        <div className="grid grid-cols-3 gap-x-2 items-center">
+          <div className="filter-container col-span-1">
+            <div className="filter_option" onClick={toggleFilter}>
+              <div className="filter-icon">
+                <FontAwesomeIcon icon={faFilter} />
+              </div>
+              <div className="text-filter">Filters</div>
+            </div>
+            {isFilterOpen && (
+              <div className="filter-dropdown grid grid-cols-3 gap-x-3" ref={filterRef} style={{width:"max-content"}}>
+                <div className="col-span-1">
+                  <b>Activities</b>
+                  {
+                    filters?.Activity?.length > 0 && filters.Activity.map((activity, index) => {
+                      if (selectedFilter.Activity.includes(activity.userActivityId)) {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={true} />
+                            {activity.userActivityName}
+                          </label>
+                        )
+                      }
+                      else {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, activity.userActivityId, 'Activity')} checked={false} />
+                            {activity.userActivityName}
+                          </label>
+                        )
+                      }
+                    })
+                  }
+                </div>
+                <div className="col-span-1">
+                  <b>Amenities</b>
+                  {
+                    filters?.Amenities?.length > 0 && filters.Amenities.map((amenity, index) => {
+                      if (selectedFilter.Amenities.includes(amenity.amenityId)) {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, amenity.amenityId, 'Amenities')} checked />
+                            {amenity.amenityName}
+                          </label>
+                        )
+                      }
+                      else {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, amenity.amenityId, 'Amenities')} />
+                            {amenity.amenityName}
+                          </label>
+                        )
+                      }
+                    })
+                  }
+                </div>
+                <div className="col-span-1">
+                  <b>Services</b>
+                  {
+                    filters?.Services?.length > 0 && filters.Services.map((service, index) => {
+                      if (selectedFilter.Services.includes(service.serviceId)) {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, service.serviceId, 'Services')} checked />
+                            {service.description}
+                          </label>
+                        )
+                      }
+                      else {
+                        return (
+                          <label>
+                            <input type="checkbox" name="boating" onChange={(e) => handleFilterSelection(e, service.serviceId, 'Services')} />
+                            {service.description}
+                          </label>
+                        )
+                      }
+                    })
+                  }
+                </div>
+                <div className="cursor-pointer" onClick={clearFilterSelection}>
+                  <FontAwesomeIcon icon={faTrashCan} /> Clear
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Other filter buttons and elements */}
+          <div className="filter_button col-span-2">
+            {
+              tabList?.length > 0 && tabList?.map((tab) => {
+                return (
+                  <button className={`button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
+                    {tab}
+                  </button>
+                )
+              })
+            }
+          </div>
+        </div>
+
+
+        {/* <div className="filter_button">
           {
             tabList?.length > 0 && tabList?.map((tab) => {
               return (
-                <button className={`button-59 ${selectedTab == tab ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => {handleTabClick(e, tab)}}>
+                <button className={`button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
                   {tab}
                 </button>
               )
             })
           }
-          {/* <button class="button-59" role="button" onClick={(e) => {getNearbyFacilities(e); handleTabClick()}}>
-            NearBy
-          </button>
-          <button class="button-59" role="button">
-            Popular
-          </button>
-          <button class="button-59" role="button">
-            Free
-          </button>
-          <button class="button-59" role="button">
-            Paid
-          </button> */}
+        </div> */}
+        <div className="gride_page">
+          <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
+            <option value="grid">Grid View</option>
+            <option value="list">List View</option>
+          </select>
         </div>
-        <div class="gride_page">
-        <select name="layout" id="layout" value={layoutType} onChange={handleLayoutChange}>
-           <option value="grid">Grid</option>
-            <option value="list">List</option>
-            
-        </select>
-       </div>
 
-              
+
       </div>
       {/* Heere Name of Park, sports dyamics ---------------------------------------- */}
       <span className="text_name_park">
-        <h1 className="name_park">
-          {facilityTypeId === 1 && "Parks"}
-          {facilityTypeId === 2 && "Sports"}
-          {facilityTypeId === 3 && "Multi-purpose Grounds"}
+        <h1 className="name_park1">
+          {(facilityTypeId == 1) && "Parks"}
+          {(facilityTypeId == 2) && "Playgrounds"}
+          {(facilityTypeId == 3) && "Multi-purpose Grounds"}
         </h1>
       </span>
 
       {/* Card Container Here -------------------------------------------- */}
 
-     
+
       <div className="card-container">
         {IsLoding ? (
           // Show shimmer loader while data is being fetched
           <ShimmerUI />
         ) : DisPlayParkData?.length > 0 ? (
-           // Conditional rendering based on layout type
-           layoutType === 'grid' ? (
-          DisPlayParkData?.map((item, index) => (
-            <Link
-              key={index}
-              to={{
-                pathname: "/Sub_Park_Details",
-                search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
-              }}
-            >
-              <div
-                className={`${
-                  item.facilityTypeId === 1
+          // Conditional rendering based on layout type
+          layoutType === 'grid' ? (
+            DisPlayParkData?.map((item, index) => (
+              <Link
+                key={index}
+                to={{
+                  pathname: "/Sub_Park_Details",
+                  search: `?facilityId=${encryptDataId(item.facilityId)}&action=view`,
+                }}
+              >
+                <div
+                  className={`${item.facilityTypeId === 1
                     ? "park-card-1"
                     : item.facilityTypeId === 2
-                    ? "park-card-2"
-                    : "park-card-3"
-                }`}
-              >
-                <img className="Card_img" src={Cardimg} alt="Park" />
-                <div className="card_text">
-                  <span className="Name_location">
-                    <h2 className="park_name">{item.facilityname}</h2>
-                    <h3 className="park_location">{item.address}</h3>
-                  </span>
-                  <span className="Avil_Dis">
-                    <button
-                      className={`Avilable ${
-                        item.status == "open" ? "text-green-500" : "text-red-500"
-                      }`}
-                    >
-                      {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
-                    </button>
-                    <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
-                  </span>
+                      ? "park-card-2"
+                      : "park-card-3"
+                    }`}
+                  title={item.facilityname}
+                >
+                  {/* <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" /> */}
+                  <img
+                    className="Card_img"
+                    src={item.url ? instance().baseURL + '/static' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image)}
+                    alt="Park"
+                    onError={(e) => {
+                      // Fallback to a default image if the provided URL fails
+                      e.target.onerror = null; // Prevents looping
+                      e.target.src = item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image;
+                      console.log('Image Source: ', item.url,item.url ? instance().baseURL + '/static' + item.url : (item.facilityTypeId === 1 ? Cardimg : item.facilityTypeId === 2 ? sport_image2 : park_image));
+                    }}
+                    
+                  />
+                  <div className="card_text">
+                    <span className="Name_location">
+                      <h2 className="park_name">{truncateName(item.facilityname, 25)}</h2>
+                      <h3 className="park_location">{truncateName(item.address, 25)}</h3>
+                    </span>
+                    <span className="Avil_Dis">
+                      <button
+                        className={`Avilable ${item.status == "open" ? "text-green-500" : "text-red-500"
+                          }`}
+                      >
+                        {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+                      </button>
+
+                      <h3 className="distance">{Number(item.distance?.toFixed(2)) || 10} km(s)</h3>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-        ))
-           ):(
+              </Link>
+            ))
+          ) : (
             // here Table data (Data in list)----------------------------------------------------------------
             <div className="table_Container1">
-            <table>
+              <table>
                 <thead>
-                    <tr>
-                        <th scope="col">Name of the Park</th>
-                        <th scope="col">Location</th>
-                        <th className="left">Details</th>
-                    </tr>
+                  <tr>
+                    <th scope="col " className="text-left" >Name </th>
+                    <th scope="col" className="text-left">Location</th>
+                    <th scope="col">Distance</th>
+                    <th scope="col">Park Status</th>
+                    <th className="left">Details</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
-                        <tr key={table_index}>
-                            <td data-label="Name">{table_item.facilityname}</td>
-                            <td data-label="Location">{table_item.address}</td>
-                            <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
-                                <Link
-                                    key={table_index}
-                                    to={{
-                                        pathname: "/Sub_Park_Details",
-                                        search: `?facilityId=${encryptDataId(table_item.facilityId)}&action=view`,
-                                    }}
-                                >
-                                    Details
-                                </Link>
-                            </td>
-                        </tr>
-                    ))}
+                  {DisPlayParkData?.length > 0 && DisPlayParkData.map((table_item, table_index) => (
+                    <tr key={table_index}>
+                      <td data-label="Name" className="text-left">{table_item.facilityname}</td>
+                      <td data-label="Location" className="text-left">{table_item.address}</td>
+                      <td data-label='Distance'>{Number(table_item.distance?.toFixed(2)) || 10} km(s)</td>
+                      <td data-label='Park Status' className={`Avilable ${table_item.status == "open" ? "text-green-500" : "text-red-500"}`}>{table_item.status?.charAt(0).toUpperCase() + table_item.status?.slice(1)}</td>
+                      <td className="left text-green-700 text-xl font-medium"> {/* Wrap Details within the <td> */}
+                        <Link
+                          key={table_index}
+                          to={{
+                            pathname: "/Sub_Park_Details",
+                            search: `?facilityId=${encryptDataId(table_item.facilityId)}`,
+                          }}
+                        >
+                          Details
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
-            </table>
-        </div>
-        
-           )
-      ) : (
-        // Show message if no data is available
-        <div className="no-data-message">
-          <img src={No_Data_icon} alt="No Data Found" />
-        </div>
-      )}
-     </div>
+              </table>
+            </div>
+
+          )
+        ) : (
+          // Show message if no data is available
+          <div className="no-data-message">
+            {/* <img src={No_Data_icon} alt="No Data Found" /> */}
+            {
+              facilityTypeId == 1 || facilityTypeId == 2 ?
+                <img src={No_Data_icon} alt="No Data Found" />
+                : <h1 className="Comming_son"><>Coming Soon...</></h1>
+            }
+          </div>
+        )}
+      </div>
 
 
 
-      <CommonFooter />
-      <ToastContainer/>
+
+      <ToastContainer />
     </div>
   );
 };

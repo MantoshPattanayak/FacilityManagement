@@ -40,6 +40,11 @@ const BookingHistory = sequelize.define('bookinghistory',{
         type: DataTypes.DATE // Define the column as DATE type
     }
 
-})
+}
+,
+{
+    timestamps:false
+}
+)
 return BookingHistory
 }

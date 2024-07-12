@@ -14,26 +14,36 @@ const QueryTypes = db.QueryTypes
 
 let dataload = async (req, res) => {
     try {
-       let userDataLoad = await sequelize.query(` select 
-        pu.privateUserId as userId,
-        pu.fullName as fullName,
-        pu.userName as userName,
-        pu.emailId as email,
-        pu.contactNo as contact,
-        rm.roleCode as Role,
-        sm.statusCode as status, 
-        gm.genderCode as gender 
-        from amabhoomi.privateusers pu 
-        inner join amabhoomi.rolemasters rm on rm.roleId=pu.roleId 
-        inner join amabhoomi.statusmasters sm on sm.statusId =pu.statusId 
-        left join amabhoomi.gendermasters gm on gm.genderId=pu.genderId
-        order by pu.privateUserId`);
+       let userDataLoad = await sequelize.query(`select 
+       um.userId,
+       um.fullName as fullName,
+       um.userName as userName,
+       um.emailId as email,
+       um.phoneNo as contact,
+       rm.roleCode as Role,
+       sm.statusCode as status, 
+       gm.genderCode as gender 
+       from amabhoomi.usermasters um 
+       inner join amabhoomi.rolemasters rm on rm.roleId=um.roleId 
+       inner join amabhoomi.statusmasters sm on sm.statusId =um.statusId 
+       left join amabhoomi.gendermasters gm on gm.genderId=um.genderId
+       order by um.userId`);
 
         if (userDataLoad.length > 0) {
-            let resourceData = await sequelize.query(`select rm.resourceId as parentID, rm.name as parent, rm.orderIn as parentOrder , rm2.resourceId as childID, rm2.name as child, rm2.orderIn as childOrder from amabhoomi.resourcemasters rm left join amabhoomi.resourcemasters rm2 on rm2.parentResourceId = rm.resourceId where rm.parentResourceId is null and rm.statusId = 1 order by parentOrder, childOrder`,
-            {type: Sequelize.QueryTypes.SELECT});
+            //menu items list fetch
+            let menuListItemQuery =
+                `select r.resourceId, r.name, r.parentResourceId, r.orderIn, r.path
+                from amabhoomi.resourcemasters r
+                where r.statusId = 1
+                order by r.orderIn`;
 
-            if (resourceData.length > 0) {
+            let menuListItems = await sequelize.query(menuListItemQuery, {
+                type: QueryTypes.SELECT
+            });
+
+            console.log('menuListItems', menuListItems);
+
+            if (menuListItems.length > 0) {
 
                 // let encryptUserDataLoad = userDataLoad.map(async(userData)=>({
                 //     ...userData,
@@ -49,11 +59,42 @@ let dataload = async (req, res) => {
                 //     parent:await encrypt(resource.parent),
                 //     child: await encrypt(resource.child)
                 // }))
+
+                let dataJSON = new Array();
+                //create parent data json without child data 
+                for (let i = 0; i < menuListItems.length; i++) {
+                    if (menuListItems[i].parentResourceId == null) {
+                        dataJSON.push({
+                            id: menuListItems[i].resourceId,
+                            name: menuListItems[i].name,
+                            orderIn: menuListItems[i].orderIn,
+                            path: menuListItems[i].path,
+                            children: new Array()
+                        })
+                    }
+                }
+                console.log('data json ---', dataJSON);
+
+                //push sub menu items data
+                for (let i = 0; i < menuListItems.length; i++) {
+                    if (menuListItems[i].parentResourceId !== null) {
+                        let parent = dataJSON.find(item => item.id == menuListItems[i].parentResourceId);
+                        console.log('parent', parent);
+                        parent.children.push({
+                            id: menuListItems[i].resourceId,
+                            name: menuListItems[i].name,
+                            orderIn: menuListItems[i].orderIn,
+                            path: menuListItems[i].path,
+                        })
+                    }
+                }
+                console.log('resources', dataJSON);
+
                 res.status(statusCode.SUCCESS.code).json({
                     message1: 'user data',
-                    userData: userDataLoad,
+                    userData: userDataLoad[0],
                     message2: 'resource data',
-                    resourceData: resourceData
+                    resourceData: dataJSON
                 });
             } else {
                 res.status(statusCode.NOTFOUND.code).json({ message2: 'resource data not found' });
@@ -73,17 +114,18 @@ let insertUserResource = async (req, res) => {
     try {
         let userId = req.body.userId;
         let status = req.body.status;
-        let user = req.user?.id||1;
-        let date = 'now()';
+        let user = req.user?.userId||1;
+        let date = new Date();
         let {resourceList} = req.body;
 
 
         // Check for duplicates in all resources
-        let duplicateCheckQuery = `
-            SELECT ur.userid, ur.resourceid, rm.name
-            FROM amabhoomi.userresources ur
-            INNER JOIN amabhoomi.resourcemasters rm ON ur.resourceId = rm.resourceId
-            WHERE ur.userId = :userId AND ur.resourceId IN(:resourceList)
+        let duplicateCheckQuery = ` 
+    SELECT ur.userId, ur.resourceId, rm.name
+    FROM amabhoomi.userresources ur
+    INNER JOIN amabhoomi.resourcemasters rm ON ur.resourceId = rm.resourceId
+    WHERE ur.userId = :userId AND ur.resourceId IN(:resourceList)
+
         `;
 
         let duplicateCheckResult = await sequelize.query(duplicateCheckQuery,  {
@@ -201,8 +243,8 @@ let viewUserResource = async (req, res) => {
         let query =
             `SELECT 
             ur.userResourceId,
-            pu.fullName,
-            pu.userName,
+            um.fullName,
+            um.userName,
             rm.name,
             rm.description,
             (
@@ -214,7 +256,7 @@ let viewUserResource = async (req, res) => {
             FROM 
             amabhoomi.userresources ur
             INNER JOIN 
-            amabhoomi.privateusers pu ON pu.privateUserId = ur.userId 
+            amabhoomi.usermasters um ON um.userId = ur.userId 
             INNER JOIN 
             amabhoomi.resourcemasters rm ON rm.resourceId = ur.resourceId
             LEFT JOIN
@@ -279,8 +321,8 @@ let autoSuggestionUserResource = async (req, res) => {
         let query =
             `SELECT 
             ur.userResourceId,
-            pu.fullName,
-            pu.userName,
+            um.fullName,
+            um.userName,
             rm.name,
             rm.description,
             (
@@ -292,7 +334,7 @@ let autoSuggestionUserResource = async (req, res) => {
             FROM 
             amabhoomi.userresources ur
             INNER JOIN 
-            amabhoomi.privateusers pu ON pu.privateUserId = ur.userId 
+            amabhoomi.usermasters um ON um.userId = ur.userId 
             INNER JOIN 
             amabhoomi.resourcemasters rm ON rm.resourceId = ur.resourceId
             LEFT JOIN

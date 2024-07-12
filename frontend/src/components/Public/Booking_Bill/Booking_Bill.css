@@ -1,0 +1,579 @@
+
+.Ticket_Mian_conatiner{
+    max-width: 400px;
+    margin: 20px auto;
+}
+.ticket {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+   
+    border: 1px dotted rgb(42, 42, 42);
+    margin-top: 150px;
+  }
+  
+  .ticket-header {
+    display: flex;
+    text-align: left;
+
+    gap: 10px;
+  }
+  .ticket-header h2 {
+   font-size: 17px;
+   font-weight: 600;
+   color:rgb(64, 71, 77);
+  }
+  .ticket-header p {
+    font-size: 15px;
+    font-weight: 500;
+    color:rgb(85, 92, 98);
+   }
+  .Share_icon{
+    display: flex;
+    justify-content: right;
+  }
+  .share-icon_font{
+    font-size: 28px;
+    color: rgb(38, 37, 37);
+
+  }
+ .share-icon_font:hover{
+
+  color: rgb(0, 0, 0);
+ }
+
+ .Line_one {
+    display: block;
+    width: 100%;
+    border-top: 1px solid rgb(93 104 114); 
+    padding-top: 5px; 
+  }
+ 
+
+  .Location_Park h1{
+    color:rgb(68, 74, 79);
+    font-weight: 500;
+  }
+
+  .Location_Park h2{
+   color: rgb(28, 28, 28);
+   font-weight: 600;
+  }
+
+  /* date and Time */
+  .Date_Time_tciket{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+  }
+
+  .Tciket_Date h1{
+    color:rgb(81, 85, 89);
+    font-weight: 500;
+  }
+  
+  .Tciket_Date h2{
+    color: rgb(28, 28, 28);
+    font-weight: 600;
+  }
+  .Ticekt_time h1{
+    color:rgb(80, 83, 86);
+    font-weight: 500;
+  }
+  .Ticekt_time h2{
+    color: rgb(28, 28, 28);
+    font-weight: 600;
+  }
+
+  .QR_IMAGE_ICON{
+    height: 12vh;
+  }
+
+  .Buttonn_e-ticket{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+  }
+
+
+  .button-379 {
+    background-color: #13aa52;
+    border: 1px solid #13aa52;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    outline: none;
+    outline: 0;
+    padding: 8px 15px;
+    text-align: center;
+  
+
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+
+  }
+  
+  .button-379:hover {
+    box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+    
+  }
+  
+@media (min-width: 768px) {
+    .button-379 {
+      padding: 10px 30px;
+    }
+  
+    /* here Reponsive code */
+  
+  }
+
+
+  .button-3791 {
+    background-color: #ffffff;
+    border: 1px solid #646262;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+    box-sizing: border-box;
+    color: #020202;
+    cursor: pointer;
+    font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    outline: none;
+    outline: 0;
+    padding: 8px 15px;
+    text-align: center;
+  
+
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+
+  }
+  
+  .button-3791:hover {
+    box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+    
+  }
+  
+  
+@media (min-width: 768px) {
+    .button-3791 {
+      padding: 10px 30px;
+    }
+  
+    /* here Reponsive code */
+  
+  }
+
+  .Name_Park h1{
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    color: #201f1f;
+  }
+
+
+
+  .share-popup {
+    display: flex;
+    gap: 20px;
+ 
+    padding: 10px;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
+    margin: 0px auto;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.social-media-icon_fa{
+  font-size: 40px;
+  color: #0866ff;
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+ 
+
+}
+.social-media-icon_fa_what:hover{
+  transform: scale(1.2);
+  color: #005df3;
+}
+.social-media-icon_what{
+  font-size: 40px;
+  color: #26c943;
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+.social-media-icon_what:hover{
+  transform: scale(1.2);
+  color: #00f32d;
+}
+.social-media-icon_insta{
+  font-size: 40px;
+  color: #de3362;
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+.social-media-icon_insta:hover{
+  transform: scale(1.2);
+  color: #de1349;
+}
+.social-media-icon_email {
+  font-size: 40px;
+  color: #000; /* Default color */
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.social-media-icon_email:hover {
+  color: #e5350d; /* Color on hover */
+  transform: scale(1.2); /* Slightly enlarge the icon on hover */
+}
+.social-media-icon_twitter{
+  color: #007bff;
+  font-size: 40px;
+
+  transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.social-media-icon_twitter:hover {
+    color: #007bff;
+    transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cancellationPolicyContainer .proceed-button:disabled {
+  cursor: not-allowed;
+  background-color: gray;
+}
+
+/* Extra small devices (phones, 0px and up) */
+@media (max-width: 575.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 6%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 85%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 3%;
+    line-height: 1.1rem;
+    min-height: 400px;
+    overflow-y: scroll;
+    word-wrap: break-word;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 11px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Small devices (small tablets and large phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 4%;
+    line-height: 1.3rem;
+    min-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 14px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 1.5rem;
+    min-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 2rem;
+    min-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:5%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 2rem;
+    min-height: 300px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}
+
+/* XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {
+  .cancellationPolicyContainer {
+    position: absolute;
+    z-index: 999;
+    top:10%;
+    left: 10%;
+    border: 1px solid #c6c6c6;
+    border-radius: 10px;
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 1;
+    background-color: aliceblue;
+    padding: 5%;
+    line-height: 2rem;
+    min-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .cancellationPolicyContainer .policyHeading {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .cancellationPolicyContainer li {
+    font-size: 16px;
+  }
+
+  .cancellationPolicyContainer .close-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+
+  .cancellationPolicyContainer .proceed-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #9c9a9a;
+    color: #ffffff;
+  }
+}

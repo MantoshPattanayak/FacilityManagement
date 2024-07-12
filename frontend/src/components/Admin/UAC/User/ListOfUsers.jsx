@@ -1,12 +1,12 @@
 import { faEye, faPenToSquare, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import AdminHeader from '../../../../common/AdminHeader';
-import Footer from '../../../../common/Footer';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { encryptData } from '../../../../utils/encryptData';
+import { useEffect, useState, useCallback } from 'react';
+import { decryptData, encryptData } from '../../../../utils/encryptData';
 import axiosHttpClient from '../../../../utils/axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import '../../../Admin/UAC/AccessControl/RoleResourceMapping/SearchDropdown.css';
+import './ListOfUsers.css';
 
 export default function ListOfUsers() {
 
@@ -14,30 +14,13 @@ export default function ListOfUsers() {
     let limit = 10;
     let page = 1;
 
-    let tableDummyData = [
-        { id: 1, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 2, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 3, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 4, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 5, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 6, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 7, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 8, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 9, name: 'ABC', number: '975XXXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 10, name: 'ABC', number: '975XXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 11, name: 'ABC', number: '975XXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-        { id: 12, name: 'ABC', number: '975XXXXXXXX', email: 'abc@gmail.com', role: 'abc', status: 'Active', actionList: false },
-    ];
-
     const [tableData, setTableData] = useState([]);
     const [searchOptions, setSearchOptions] = useState([]);
-    const [givenReq, setGivenReq] = useState();
+    const [givenReq, setGivenReq] = useState('');
 
-    async function fetchListOfUserData() {
+    async function fetchListOfUserData(givenReq = null) {
         try {
-            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post', {
-                limit: 50, page: 1
-            });
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post', {givenReq});
             setTableData(res.data.data);
             console.log(res.data.data);
         }
@@ -49,7 +32,7 @@ export default function ListOfUsers() {
     async function autoSuggest(givenReq) {
         try {
             let res = await axiosHttpClient('ADMIN_USER_AUTOSUGGEST_API', 'get', null, givenReq);
-            console.log(res.data.data);
+            console.log('auto suggest api response', res.data.data);
             setSearchOptions(res.data.data);
         }
         catch (error) {
@@ -57,14 +40,29 @@ export default function ListOfUsers() {
         }
     }
 
+    // function to manage API calls while user search input entry
+    function debounce(fn, delay){
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                fn(...args)
+            }, delay);
+        }
+    }
+
+    //Debounced fetchFacilityList function while searching
+    const debouncedFetchUserList = useCallback(debounce(fetchListOfUserData, 1000), []);
+
     useEffect(() => {
+        document.title = 'ADMIN | AMA BHOOMI';
         fetchListOfUserData();
     }, []);
 
     useEffect(() => {
-        if(givenReq != null)
-            autoSuggest(givenReq);
-    }, [givenReq]);
+        if (givenReq != null)
+            debouncedFetchUserList(givenReq);
+    }, [givenReq, debouncedFetchUserList]);
 
 
     function encryptDataId(id) {
@@ -73,7 +71,7 @@ export default function ListOfUsers() {
     }
 
     return (
-        <>
+        <div className='ListOfUsers'>
             <AdminHeader />
             <div className="Main_Conatiner_table">
                 <div className='table-heading'>
@@ -101,19 +99,19 @@ export default function ListOfUsers() {
                         </thead>
                         <tbody >
                             {
-                                tableData?.length > 0 && tableData?.map((data) => {
+                                tableData?.length > 0 && tableData?.map((data, index) => {
                                     return (
-                                        <tr key={data.privateUserId}>
-                                            <td data-label="Name">{data.fullName}</td>
-                                            <td data-label="Number">{data.contactNo}</td>
-                                            <td data-label="Email">{data.emailId}</td>
+                                        <tr key={index}>
+                                            <td data-label="Name">{data.fullName || 'NA'}</td>
+                                            <td data-label="Number">{decryptData(data.phoneNo) || 'NA'}</td>
+                                            <td data-label="Email">{decryptData(data.emailId) || 'NA'}</td>
                                             <td data-label="Role">{data.roleName}</td>
-                                            <td data-label="Status">{data.status}</td>
+                                            <td data-label="Status" className={data.statusId == 1 ? 'text-green-500' : 'text-red-500'}>{data.statusId == 1 ? 'Active' : 'Inactive'}</td>
                                             <td data-label="View">
                                                 <Link
                                                     to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=view`
+                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.userId))}&action=view`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faEye} />
@@ -123,7 +121,7 @@ export default function ListOfUsers() {
                                                 <Link
                                                     to={{
                                                         pathname: '/UAC/Users/Edit',
-                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.privateUserId))}&action=edit`
+                                                        search: `?userId=${encodeURIComponent(encryptDataId(data.userId))}&action=edit`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faPenToSquare} />
@@ -137,8 +135,7 @@ export default function ListOfUsers() {
                     </table>
                 </div>
             </div>
-            <Footer />
-        </>
+        </div>
     )
 }
 

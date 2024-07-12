@@ -1,66 +1,175 @@
+.About_Mian_conatiner{
+  height: 100vh;
+}
 .Child_about_container {
-    background-image: linear-gradient(10deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)), url('https://www.shutterstock.com/image-vector/street-workout-park-people-training-260nw-2124207332.jpg');
-    height: 28vh;
-    margin-top: 60px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 80px;
+  background-image: linear-gradient(10deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)), url('../../../assets/About_6.jpg');
+  height: 35vh;
+  margin-top: 60px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 80px;
 }
 
 .About {
-    font-size: 50px;
-    color: rgb(255, 255, 255);
-    font-weight: 600;
+  font-size: 50px;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
 }
 
 .About_div {
-    text-align: center;
+  text-align: center;
 }
 
 .About_heading {
-    font-size: 50px;
-    color: rgb(7, 7, 7);
-    position: relative;
-    font-weight: 600;
+  font-size: 36px;
+  color: rgb(67, 66, 66);
+  position: relative;
+  font-weight: 600;
+  font-style: italic;
 }
 
 .About_heading::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 49%;
-    width: 100px;
-    height: 4px;
-    background-color: #f7c409;
-    transform: translateX(-50%);
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 49%;
+  width: 100px;
+  height: 4px;
+  background-color: #f7c409;
+  transform: translateX(-50%);
 }
 
 .About_us_flex_conatiner {
-    display: flex;
-    flex-direction: column; /* Change to column for small screens */
-    align-items: center; /* Center items */
+display: flex;
+justify-content: space-evenly;
 }
 
 .About_us_text_details {
-    color: #212121;
-    font-size: 20px;
-    padding: 0 20px; /* Add padding to both sides for small screens */
-    text-align: center; /* Center text */
+  color: #212121;
+  font-size: 20px;
+
+
 }
 
 .About_us_img {
-    margin-top: 20px; /* Add margin for separation */
-    text-align: center; /* Center images */
+ display: flex;
+flex-direction: column;
+border: 1px solid rgb(5, 97, 2);
+background-color: #d0ffeb;
+width: 20%;
+
+
 }
+.Heading_text_button{
+  padding: 7px;
+  background-color: red;
+  margin: 3px;
+
+}
+
+
+
+
+/* CSS */
+.Button_About {
+  background-color: #FFFFFF;
+  border: 1px solid #222222;
+  border-radius: 8px;
+  box-sizing: border-box;
+  color: #404040;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 5px;
+  outline: none;
+  padding: 13px 23px;
+  position: relative;
+  text-align: start;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: color 0.3s ease, background-color 0.3s ease; /* Add transition */
+  user-select: none;
+  -webkit-user-select: none;
+  width: auto;
+}
+
+.Button_About:hover {
+  color: #FFFFFF; /* Change text color on hover */
+  background-color: #4CAF50; /* Change background color on hover */
+}
+
+.Button_About::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Add transition for the 3D effect */
+  transform: perspective(100px) rotateX(20deg) translateY(-4px); /* Apply initial transform */
+}
+
+.Button_About:hover::before {
+  transform: perspective(100px) rotateX(0deg) translateY(0); /* Apply transform on hover */
+}
+
+
+
+
+
+
+
+/* CSS */
+.button-37 {
+background-color: #13aa52;
+border: 1px solid #13aa52;
+
+box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+box-sizing: border-box;
+color: #fff;
+cursor: pointer;
+font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+font-size: 16px;
+font-weight: 400;
+outline: none;
+outline: 0;
+padding: 10px 25px;
+text-align: center;
+transform: translateY(0);
+transition: transform 150ms, box-shadow 150ms;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Media queries for responsiveness */
 @media screen and (min-width: 768px) {
-    .About_us_flex_conatiner {
-        flex-direction: row; /* Change back to row for larger screens */
-    }
+  .About_us_flex_conatiner {
+      flex-direction: row; /* Change back to row for larger screens */
+  }
 
-    .About_us_text_details {
-        padding: 0 30px; /* Increase padding for larger screens */
-    }
+  .About_us_text_details {
+      padding: 0 30px; /* Increase padding for larger screens */
+  }
 }

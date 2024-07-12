@@ -1,5 +1,9 @@
 /* CSS for CreateResource form and buttons */
 
+.container-1 {
+  margin-block: 16vh;
+}
+
 .back-btn {
   margin-top: 10px;
 }
@@ -16,8 +20,8 @@
   cursor: pointer;
 }
 
-.form {
-  width: 70vw;
+.CreateResParent .form {
+  width: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -51,12 +55,22 @@
 }
 
 .createresource-input-fields {
-  width: 100%;
+  /* width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
-  margin-top: 3px;
+  margin-top: 3px; */
+  width: 100%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #b1b1b1;
+    border-radius: 0.417vw;
+    background-color: #ECECEE;
+}
+.createresource-input-fields:focus {
+  border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
 }
 
 .checkbox {
@@ -69,7 +83,8 @@
 }
 
 .checkbox-input {
-  margin: 0 5px 0 0; /* Adjust margin around the checkbox */
+  margin: 0 5px 0 0;
+  /* Adjust margin around the checkbox */
 }
 
 .buttons {
@@ -94,7 +109,7 @@
 }
 
 .submit-btn {
-  background-color:  #00B562;
+  background-color: #00B562;
   color: white;
 }
 
@@ -102,20 +117,20 @@
 
 @media only screen and (max-width: 600px) {
   .form {
-      width: 100%;
+    width: 100%;
   }
 
   .fields {
-      width: 100%;
+    width: 100%;
   }
 
   .buttons {
-      flex-direction: column;
-      gap: 10px;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .reset-btn,
   .submit-btn {
-      width: 100%;
+    width: 100%;
   }
 }

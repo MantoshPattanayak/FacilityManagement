@@ -1,0 +1,55 @@
+/* Disclaimer Container */
+.disclaimer-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+ 
+    overflow: hidden;
+    position: relative;
+}
+
+/* Disclaimer Title */
+.disclaimer-title {
+    text-align: center;
+    color: #333;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: slideInTitle 1s ease forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes slideInTitle {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Disclaimer Content */
+.disclaimer-content {
+    opacity: 0;
+    animation: fadeInContent 1s ease forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Disclaimer Footer */
+
+

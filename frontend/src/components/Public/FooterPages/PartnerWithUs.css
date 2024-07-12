@@ -1,0 +1,196 @@
+.Child_PatnerUs_Conatiner{
+margin-top: 30px;
+
+}
+.Patnerwithus_Image_Conatiner{
+    display: flex;
+    justify-content: space-evenly;
+    background-color: rgb(140, 207, 155);
+    padding: 40px;
+}
+.text_patner{
+    padding: 40px;
+}
+.Join{
+    font-size: 60px;
+    font-weight: 400;
+}
+.Patner_Network{
+    font-size: 50px;
+    font-weight: 700;
+}
+
+.Join_Now_Button{
+    display: flex;
+    justify-content:center ;
+    padding: 20px;
+}
+
+/* CSS */
+.button-38 {
+  background-color: #029102;
+  border: 0;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #111827;
+  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 20%;
+}
+
+.button-38:hover {
+  background-color: rgb(5, 96, 0);
+}
+
+.button-38:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.button-38:focus-visible {
+  box-shadow: none;
+}
+
+.Patnerwitus_text_conatiner{
+    display: flex;
+   
+justify-content: space-around;
+    padding: 20px;
+}
+.Image_how_work_text{
+   margin-top: 80px;
+}
+.How{
+    font-size: 48px;
+    color: #2b2b2b;
+    font-weight: 500;
+}
+.work{
+    font-size: 40px;
+    font-weight: 700;
+}
+
+/* Become */
+.Become_Patner{
+    padding: 40px;
+    border-bottom: 1px solid green;
+  
+}
+.become_patner_text{
+    text-align: center;
+    font-size: 50px;
+    font-weight: 600;
+    padding: 20px;
+    color: #2b2b2b;
+  
+}
+.Become_p_tag{
+    text-align: center;
+    font-size: 15px;
+}
+.Req_Partner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    border-bottom: 1px solid gray;
+
+
+}
+
+.interested {
+    text-align: center;
+    font-size: 42px;
+    font-weight: 500;
+    color: #3a3a3b;
+    margin-bottom: 20px; /* Add margin for spacing */
+}
+
+
+
+.Form_Container {
+    max-width: 600px; /* Adjust width as needed */
+    width: 100%;
+}
+.partner-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.partner-form label {
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.partner-form input,
+.partner-form textarea {
+    /* margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%; */
+    width: 100%;
+    height: 100%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #b1b1b1;
+    border-radius: 0.417vw;
+    background-color: #ECECEE;
+}
+
+.partner-form input:focus{
+    border: 2px solid #405cf5; /* Change border color and thickness on focus */
+    outline: none; /* Remove default outline */
+}
+
+
+.Patner_submit_button{
+    display: flex;
+    justify-content: center;
+}
+.partner-form button {
+    padding: 10px;
+    background-color: #176bfb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    width: 50%;
+
+}
+
+.partner-form button:hover {
+    background-color: #0144b7;
+}
+
+@media (max-width: 600px) {
+    .Req_Partner {
+        padding: 15px;
+    }
+
+    .partner-form input,
+    .partner-form textarea {
+        font-size: 14px;
+    }
+
+    .partner-form button {
+        font-size: 14px;
+    }
+}
+
+

@@ -4,43 +4,56 @@ const db = require('../../../models')
 const bcrypt = require('bcrypt')
 const { decrypt } = require('../../../middlewares/decryption.middlewares')
 const { encrypt } = require('../../../middlewares/encryption.middlewares')
-const eventMasters = db.eventmasters;
+const eventMasters = db.eventActivities;
+const sendEmail = require('../../../utils/generateEmail');
+const mailToken = require('../../../middlewares/mailToken.middlewares');
+const hosteventdetails = db.hosteventdetails;
 
 let viewList = async (req, res) => {
     try {
         console.log('entry viewList');
-        let givenReq = req.body.givenReq ? req.body.givenReq : null; // Convert givenReq to lowercase
+        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null; // Convert givenReq to lowercase
         let limit = req.body.page_size ? req.body.page_size : 500;
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
         let statusInput = req.body.statusCode ? req.body.statusCode : null;
 
+        console.log("statusInput", statusInput);
+
         let fetchEventListQuery = `
-        select e.eventId, e.eventName as eventTitle, f.address, e.createdOn, s.statusCode from 
+        select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address, f2.code as facilityType, e.createdDt as requestDate, s.statusCode as requestStatus from 
         amabhoomi.eventactivities e
-        inner join amabhoomi.hosteventdetails h on e.eventId = h.eventId
-        inner join amabhoomi.facilities f on f.facilityId = e.facilityMasterId
-        inner join amabhoomi.statusmasters s on s.statusId = e.status
-        where s.statusCode = :statusInput`;
+        left join amabhoomi.hosteventdetails h on e.eventId = h.eventId
+        inner join amabhoomi.facilities f on f.facilityId = e.facilityId
+        inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityId
+        left join amabhoomi.statusmasters s on s.statusId = e.statusId and s.parentStatusCode = 'HOSTING_STATUS'
+        where s.statusCode = :statusInput
+        or s.statusCode IS NULL`;
 
         let viewEventListData = await sequelize.query(fetchEventListQuery, {
             type: Sequelize.QueryTypes.SELECT,
             replacements: { statusInput }
         })
 
+        console.log("viewEventListData", viewEventListData);
+
         let matchedData = viewEventListData;
 
         if (givenReq) {
             matchedData = viewEventListData.filter((allData) =>
-                allData.activityName.includes(givenReq) ||
-                allData.address.includes(givenReq) ||
-                allData.statusCode.includes(givenReq)
+                allData.eventName?.toLowerCase().includes(givenReq) ||
+                allData.facilityname?.toLowerCase().includes(givenReq) ||
+                allData.address?.toLowerCase().includes(givenReq) ||
+                allData.facilityType?.toLowerCase().includes(givenReq) ||
+                allData.requestStatus?.toLowerCase().includes(givenReq)
             )
         }
 
         let paginatedUserResources = matchedData.slice(offset, limit + offset);
 
-        if (viewEventListData.length > 0) {
+        console.log('paginatedUserResources', paginatedUserResources);
+
+        if (paginatedUserResources.length > 0) {
             return res.status(statusCode.SUCCESS.code).send({ message: 'Events list Data', data: paginatedUserResources });
         }
         else
@@ -55,13 +68,13 @@ let viewId = async (req, res) => {
     try {
         let eventId = req.params.eventId;
 
-        let fetchEventListQuery = `select e.eventId, e.eventName as eventTitle, e.eventCategory, e.locationName, e.eventStartTime, e.eventEndTime,
-        e.ticketSalesEnabled, e.ticketPrice, e.descriptionOfEvent, e.eventImagePath, e.additionalFilesPath, e.additionalDetails,
+        let fetchEventListQuery = `select e.eventId, e.eventName as eventTitle, e.locationName, e.eventStartTime, e.eventEndTime,
+        e.ticketSalesEnabled, e.ticketPrice, e.descriptionOfEvent, e.eventImagePath, e.additionalFilePath, e.additionalDetails,
         h.organisationName,h.organisationAddress, h.pancardNumber, h.firstName, h.lastName, h.phoneNo, h.emailId
         from amabhoomi.eventactivities e
         inner join amabhoomi.hosteventdetails h on e.eventId = h.eventId
-        inner join amabhoomi.facilities f on f.facilityId = e.facilityMasterId
-        inner join amabhoomi.statusmasters s on s.statusId = e.status
+        inner join amabhoomi.facilities f on f.facilityId = e.facilityId 
+        inner join amabhoomi.statusmasters s on s.statusId = e.statusId 
         where e.eventId = :eventId`;
 
         let viewEventData = await sequelize.query(fetchEventListQuery, {
@@ -84,6 +97,9 @@ let performAction = async (req, res) => {
     try {
         let eventId = req.params.eventId;
         let action = req.body.action;
+        let reasonForRejection = req.body.reasonForRejection;
+
+        console.log({ eventId, action });
 
         let fetchStatusMasterListQuery = `select statusId, statusCode, description, parentStatusCode from amabhoomi.statusmasters s
         where parentStatusCode = 'HOSTING_STATUS'`;
@@ -100,7 +116,9 @@ let performAction = async (req, res) => {
                 (status) => { return status.statusCode == 'APPROVED' }
         );
 
-        let [updateCount, updateTheStatusOfEvent] = await eventMasters.update({ status: statusId }, {
+        console.log('statusId', statusId);
+
+        let [updateCount] = await eventMasters.update({ statusId: parseInt(statusId) }, {
             where: {
                 eventId: eventId
             }
@@ -138,6 +156,47 @@ let performAction = async (req, res) => {
 
         console.log('updateAction', updateCount);
 
+        // fetch event host details
+        let fetchHostDetails = await hosteventdetails.findOne({
+            where: {
+                eventId: eventId
+            }
+        });
+
+        console.log('host event details', fetchHostDetails);
+
+        // send mail notification to the user for host event request
+        let firstField = fetchHostDetails?.emailId;
+        let secondField = fetchHostDetails?.phoneNo || '';
+        let token = await mailToken({firstField, secondField});
+        let messageBody = null;
+
+        if(action == 0){    // if host event request is rejected
+            messageBody = `
+                Hello Sir/Madam,
+                Your request for hosting an event is rejected due to the following mentioned reasons:<br/>
+                ${reasonForRejection}<br/>
+
+                Thank you for using AMA BHOOMI.
+            `;
+        }
+        else if(action == 1){   //if host event request is approved
+            messageBody = `Hello Sir/Madam,
+            Your request for hosting an event is approved. Please do the required payment<br/>
+            Thank you for using AMA BHOOMI.`
+        }
+
+        try {
+            await sendEmail({
+                emailId: `${fetchHostDetails?.emailId}`,
+                subject: "Event host request rejected",
+                html: `<p>${messageBody}</p>`
+            })
+        }
+        catch(error){
+            console.error('Not able to send the email currently!', error);
+        }
+
         if(updateCount > 0) {
             res.status(statusCode.SUCCESS.code).send({
                 message: (action == 0) ? 'Event host request is rejected.' : 'Event host request is approved.'
@@ -154,8 +213,18 @@ let performAction = async (req, res) => {
     }
 }
 
+let modifyAction = async (req, res) => {
+    try {
+
+    }
+    catch(error){
+
+    }
+}
+
 module.exports = {
     viewList,
     viewId,
-    performAction
+    performAction,
+    modifyAction
 }

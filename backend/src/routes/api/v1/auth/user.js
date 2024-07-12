@@ -5,6 +5,7 @@ const router = express.Router();
 
 const api_version = process.env.API_VERSION
 const authController = require('../../../../controllers/'+api_version+'/auth/user.controllers');
+let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 
 // Route for initiating Google OAuth authentication
 // router.get('/google',
@@ -38,5 +39,9 @@ router.post('/verifyOTP',authController.verifyOTPHandlerWithGenerateToken)
 router.post('/publicLogin',authController.publicLogin)
 router.post('/sendEmailToUser',authController.sendEmailToUser)
 router.post('/verifyEmail',authController.verifyEmail)
+router.put('/forgotPassword',authController.forgotPassword)
+router.post('/privateLogin',authController.privateLogin)
+router.post('/logout',authenticateToken, authController.logout)
+router.post('/admin-dashboard', authenticateToken, authController.adminDashboard)
 
 module.exports = router

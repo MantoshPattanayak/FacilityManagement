@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const Bookmarks = sequelize.define('publicUserBookmarks', {
+    const Bookmarks = sequelize.define('publicuserbookmarks', {
         bookmarkId: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
         deletedOn: {
             type: DataTypes.DATE // Define the column as DATE type
         }
-    })
+    }
+    ,
+{
+    timestamps:false
+}
+)
     return Bookmarks
 }

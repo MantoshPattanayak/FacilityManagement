@@ -57,14 +57,14 @@ const createResource = async (req, res) => {
         name: name,
         description: description,
         hasSubMenu: hasSubMenu,
-        icon: icon,
-        iconId: iconId,
-        iconType: iconType,
+        icon: icon || null,
+        iconId: iconId || null,
+        iconType: iconType || null,
         orderIn: orderIn,
         path: path,
-        statusId: status,
-        remarks: remarks,
-        parentResourceId:parentResourceId
+        statusId: status || 1,
+        remarks: remarks || null,
+        parentResourceId:parentResourceId || null
       });
       if (createResource) {
         return res.status(statusCode.SUCCESS.code).json({

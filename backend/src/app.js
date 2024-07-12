@@ -8,11 +8,12 @@ const port = process.env.PORT || 7100;
 const cors = require("cors");
 var cookieParser = require("cookie-parser");
 let api_version = process.env.API_VERSION;
-
+const uploadDir = process.env.UPLOAD_DIR;
 const {
   requestLogger,
   errorLogger,
 } = require("./middlewares/logger.middlewares");
+const statusCode = require("./utils/statusCode");
 
 // const authRoutes= require('./routes/api/'+api_version+'/auth/user')
 
@@ -48,6 +49,8 @@ const hosteventdetailsroute = require("./routes/api/" +
 const reviewEventBookingRoute = require("./routes/api/" +
   api_version +
   "/activity/reviewEventBooking");
+const faqRoute = require("./routes/api/" + api_version + "/activity/faq");
+
 const publicUser = require("./routes/api/" + api_version + "/auth/public_user");
 
 const razorPayPayment = require("./routes/api/" +
@@ -58,9 +61,26 @@ const languageContent = require("./routes/api/" +
   api_version +
   "/configuration/languageContent");
 const publicNotifications = require("./routes/api/" +
-api_version +
-"/activity/publicnotifications");
+  api_version +
+  "/activity/publicnotifications");
+const reports = require("./routes/api/" + api_version + "/reports/reports");
+//promotion
+const promotionRoute = require('./routes/api/' + api_version + '/activity/promotion')
 
+// grievance
+const grievance = require('./routes/api/' + api_version + '/activity/grievance');
+
+const facilityRegistration = require('./routes/api/'+ api_version + '/mdm/registration')
+
+const tariffRoute = require(`./routes/api/`+api_version+`/mdm/tariff`)
+
+const services = require('./routes/api/' + api_version + '/mdm/services')
+
+const amenities = require('./routes/api/' + api_version + '/mdm/amenities')
+
+const inventories = require('./routes/api/' + api_version + '/mdm/inventory')
+
+const eventcategories = require('./routes/api/' + api_version + '/mdm/eventcategories')
 console.log(port, "port");
 
 app.use(
@@ -69,6 +89,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use('/static', express.static(uploadDir));
 
 app.use(express.json({ limit: "20mb" }));
 // app.use(passport.initialize());
@@ -111,11 +133,37 @@ app.use("/languageContent", languageContent);
 
 //activity routes
 app.use("/reviewEvents", reviewEventBookingRoute);
-app.use('/publicNotifications', publicNotifications);
+// app.use("/grievance",grievanceRoute)
+app.use("/faq", faqRoute);
+app.use("/publicNotifications", publicNotifications);
+app.use("/reports", reports);
+app.use('/grievance', grievance);
+app.use('/adminFacility',facilityRegistration)
+//promotion
+app.use("/promotion", promotionRoute)
 
+// tariff
+app.use("/tariffData",tariffRoute)
+//services-master
+app.use('/services', services)
+//amenities-master
+app.use('/amenities', amenities)
+//inventories-master
+app.use('/inventories', inventories)
+//event-categories
+app.use('/eventcategories', eventcategories)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
+app.use("/static", express.static(uploadDir));
+
+app.use((err,req,res,next)=>{
+  if(err){
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:"something went wrong"
+    })
+  }
+})
 module.exports = {
   app,
 };

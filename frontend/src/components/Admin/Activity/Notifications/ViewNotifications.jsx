@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import axiosHttpClient from "../../../../utils/axios";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,6 +8,19 @@ import AdminHeader from "../../../../common/AdminHeader";
 import CommonFooter from "../../../../common/CommonFooter";
 import "../../../../common/CommonTable.css";
 import "./ViewNotifications.css";
+=======
+import React, { useEffect, useState } from 'react';
+import axiosHttpClient from '../../../../utils/axios';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { formatDate } from '../../../../utils/utilityFunctions';
+import AdminHeader from '../../../../common/AdminHeader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
+import '../../../../common/CommonTable.css';
+import './ViewNotifications.css';
+import { encryptData } from '../../../../utils/encryptData';
+>>>>>>> master
 
 export default function ViewNotifications() {
   const navigate = useNavigate();
@@ -41,6 +55,7 @@ export default function ViewNotifications() {
   return (
     <div>
       <AdminHeader />
+<<<<<<< HEAD
       <div className="ViewNotifications-Container">
         <div className="table-heading">
           <h2 className="table-heading">View Notifications</h2>
@@ -60,6 +75,16 @@ export default function ViewNotifications() {
             placeholder="Search..."
             onChange={(e) => setGivenReq(e.target.value)}
           />
+=======
+      <div className="ViewNotifications">
+        <div className='table-heading'>
+          <h2 className="">View Notifications</h2>
+        </div>
+
+        <div className="search_text_conatiner">
+          <button className='search_field_button' onClick={() => navigate('/Activity/AddNewNotification')}><FontAwesomeIcon icon={faPlus} /> Add new notification</button>
+          <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+>>>>>>> master
           {/* <SearchDropdown /> */}
         </div>
 
@@ -72,8 +97,8 @@ export default function ViewNotifications() {
                 <th scope="col">Valid From</th>
                 <th scope="col">Valid To</th>
                 {/* <th scope="col">Status</th> */}
-                {/* <th scope="col">View</th> */}
-                {/* <th scope="col">Edit</th> */}
+                <th scope="col">View</th>
+                <th scope="col">Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -81,6 +106,7 @@ export default function ViewNotifications() {
                 tableData?.map((data) => {
                   return (
                     <tr key={data.publicNotificationsId}>
+<<<<<<< HEAD
                       <td data-label="Title">
                         {data.publicNotificationsTitle}
                       </td>
@@ -94,10 +120,17 @@ export default function ViewNotifications() {
                         {formatDate(data.validToDate)}
                       </td>
                       {/* <td data-label="View">
+=======
+                      <td data-label="Title">{data.publicNotificationsTitle}</td>
+                      <td data-label="Content">{data.publicNotificationsContent}</td>
+                      <td data-label="Valid From">{formatDate(data.validFromDate)}</td>
+                      <td data-label="Valid To">{formatDate(data.validToDate)}</td>
+                      <td data-label="View">
+>>>>>>> master
                         <Link
                           to={{
-                            pathname: '/UAC/Users/Edit',
-                            search: `?userId=${encodeURIComponent(encryptData(data.privateUserId))}&action=view`
+                            pathname: '/Activity/EditNotification',
+                            search: `?notificationId=${encodeURIComponent(encryptData(data.publicNotificationsId))}&action=view`
                           }}
                         >
                           <FontAwesomeIcon icon={faEye} />
@@ -106,13 +139,13 @@ export default function ViewNotifications() {
                       <td data-label="Edit">
                         <Link
                           to={{
-                            pathname: '/UAC/Users/Edit',
-                            search: `?userId=${encodeURIComponent(encryptData(data.privateUserId))}&action=edit`
+                            pathname: '/Activity/EditNotification',
+                            search: `?notificationId=${encodeURIComponent(encryptData(data.publicNotificationsId))}&action=edit`
                           }}
                         >
                           <FontAwesomeIcon icon={faPenToSquare} />
                         </Link>
-                      </td> */}
+                      </td>
                     </tr>
                   );
                 })}
@@ -120,7 +153,12 @@ export default function ViewNotifications() {
           </table>
         </div>
       </div>
+<<<<<<< HEAD
       <CommonFooter />
     </div>
   );
+=======
+    </>
+  )
+>>>>>>> master
 }
