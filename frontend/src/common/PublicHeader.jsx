@@ -54,6 +54,7 @@ export default function PublicHeader() {
     try {
       let res = await axiosHttpClient('View_Card_UserId', 'get');
       setGetCardCount(res.data);
+      console.log("total number of cart", res)
     } catch (err) {
       console.log(err);
     }

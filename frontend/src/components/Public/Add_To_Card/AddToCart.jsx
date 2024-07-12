@@ -25,10 +25,13 @@ import No_item_cart from "../../../assets/No_items_to_cart.png"
 import { useSelector } from "react-redux";
 import RazorpayButton from "../../../common/RazorpayButton";
 import { formatDate } from "../../../utils/utilityFunctions";
+import park_image from "../../../assets/park.jpg"
 
 const AddToCart = () => {
     // here useState for Get the data -----------------------------------------------
     const [GetViewCradData, setGetViewCradData] = useState([])
+    //
+    const[GetPriceData, setGetPriceData]=useState([])
     // here Put (Delete the Cart) ----------------------------------------------------
     // Read the data (useing Selector ) ------------------------------------
     const languageContent = useSelector((state) => state.language.languageContent);
@@ -61,11 +64,13 @@ const AddToCart = () => {
             let res = await axiosHttpClient('View_Card_UserId', 'get',)
             console.log("here Response of View Card Data", res.data.data)
             setGetViewCradData(res.data.data)
+            setGetPriceData(res.data.data)
 
             let totalAmount = 0;
-            for(let i = 0; i < res.data.data.length; i++) {
+            for (let i = 0; i < res.data.data.length; i++) {
                 console.log("facilityPreference", res.data.data[i].facilityPreference);
                 totalAmount += parseFloat(res.data.data[i].facilityPreference.price);
+
             }
             setTotalAmount(totalAmount);
             console.log("totalAmount", totalAmount);
@@ -86,63 +91,73 @@ const AddToCart = () => {
     return (
         <div className="Add_to_Card_Main_conatiner9">
             <PublicHeader />
+
             <div className="Add_To_Card_Child_conatiner9">
-                <div className="Add_Card_Box9">
-                    <div className="Card9">
-                        <h1 className="card_text9">Cart</h1>
-                    </div>
-                    {GetViewCradData.length > 0 ? (
-                        <div className="card_item_conatiner9" >
-                            {GetViewCradData.map((cardItem) => (
-                                <div className="p-5" key={cardItem.cartItemId}>
-                                    <div className="card_item_conatiner_heading9">
-                                        <h1 className="text_heading9">{cardItem.facilityTypeName}</h1>
-                                        <button onClick={(e) => UpdateCart(e, cardItem.cartItemId)}> <h1 className="icon9" > <FontAwesomeIcon icon={faTrash} className="delete-icon22" /></h1></button>
-                                    </div>
-                                    <div className="Cont_card9">
-                                        <span className="Location_Name_icon9">
-                                            <h1 className="Location_text9"><FontAwesomeIcon icon={faMapMarkerAlt} className="location-icon" /></h1>
-                                            <h1 className="Location_text9">{cardItem.facilityName}</h1>
-                                        </span>
-                                        <div className="date_time_people_conatiner9">
-                                            <span className="date_time_text_icon9">
-                                                <h1 className="Location_text9"><FontAwesomeIcon icon={faCalendarAlt} className="date-icon" /></h1>
-                                                <h1 className="Location_text9">{formatDate(cardItem.facilityPreference.bookingDate)} </h1>
-                                            </span>
-                                            <span className="date_time_text_icon9">
-                                                <h1 className="Location_text9"><FontAwesomeIcon icon={faClock} className="time-icon" /></h1>
-                                                <h1 className="Location_text9">{cardItem.facilityPreference.startTime} </h1>
-                                            </span>
-                                            <span className="date_time_text_icon9">
-                                                <h1 className="Location_text9"> <FontAwesomeIcon icon={faUsers} className="people-icon" /></h1>
-                                                <h1 className="Location_text9">{(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit} players joined</h1>
-                                            </span>
-                                        </div>
-                                        <div className="Money_name_icon9">
-                                            <h1 className="Location_text9"><FontAwesomeIcon icon={faIndianRupeeSign} />&nbsp;{cardItem.facilityPreference.price ? parseFloat(cardItem.facilityPreference.price).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
-                                        </div>
-                                    </div>
+                <div className="Show_Cart_Details_save_latter">
+                    <div className="Cart_details_container" >
+                        {GetViewCradData.length > 0 && GetViewCradData.map((cardItem => (
+                            <div className="Cart_details" key={cardItem.cartItemId}>
+                                <div className="image_section">
+                                    <img className="park_image_cart" src={park_image}></img>
                                 </div>
-                            ))}
-                            {/*------------------------------------ Payment Button --------------------------------------------- */}
-                            <div className="Button_pay9">
+                                <div className="text_contant_details_cart">
+                                    <span className="park_name_date">
+                                        <h1>{cardItem.facilityTypeName}</h1>
+                                        <h1 className="park_Booking_Date">{formatDate(cardItem.facilityPreference.bookingDate)}</h1>
+                                    </span>
+                                    <span className="Details_cart_details">
+                                        <h1>{cardItem.facilityName}</h1>
+
+                                        <h1>Total Members : {(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit}</h1>
+
+                                        <h1>₹{cardItem.facilityPreference.price ? parseFloat(cardItem.facilityPreference.price).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                    </span>
+                                    <span className="Save_remove_button">
+                                        <button className="Save_Remove_Button">SAVE FOR LATER</button>
+                                        <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId)}>REMOVE</button>
+                                    </span>
+
+                                </div>
+
+                            </div>
+                        )))}
+                        <div className="Pay_Now_Buttton">
+                            <button >
                                 <RazorpayButton
                                     amount={totalAmount}
                                     currency={"INR"}
                                     description={"Book now"}
-                                    // onSuccess={handlePaymentSuccess}
-                                    // onFailure={handlePaymentFailure}
+                                // onSuccess={handlePaymentSuccess}
+                                // onFailure={handlePaymentFailure}
                                 />
-                            </div>
+                            </button>
                         </div>
-                    ) : (
-                        <div className="No_item_in_cart">
-                            <img src={No_item_cart}></img>
-                        </div>
-                    )
-                    }
+                    </div>
+                    <div className="Save_latter_conatiner">
+                        <h1>Save for later</h1>
+                    </div>
+                </div>
+
+               
+                <div className="Booking_Bill_Price">
+                    <h1 className="parice_detials">PRICE DETAILS</h1>
+                    <span className="price_bill">
+                        <h1>Price</h1>
+                        <h1>₹ {totalAmount} </h1>
+                    </span>
+                    <span className="price_bill1">
+                        <h1>Total items</h1>
+                        <h1>76</h1>
+                    </span>
+                    <span className="price_bill3">
+                        <h1>Total Amount</h1>
+                        <h1>₹ {totalAmount} </h1>
+                    </span>
                 </div>
             </div>
+
+
+
             <ToastContainer />
         </div>
     )

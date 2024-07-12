@@ -596,7 +596,8 @@ padding-bottom: 20px;
     /* margin-left: 0px; */
 }
 
-.notice2-container span {
+.notice2-container
+.what_new{
     position: relative;
     display: inline-block;
     flex-shrink: 0;
@@ -620,6 +621,14 @@ padding-bottom: 20px;
     overflow: hidden;
 }
 
+.button-container22{
+   
+}
+.Play_pause_icon{
+    font-size:30px;
+    padding-right: 40px;
+  
+}
 
 /* ------Event details card-------------------------------------------------------------------- */
 .EventContainerlanding {
