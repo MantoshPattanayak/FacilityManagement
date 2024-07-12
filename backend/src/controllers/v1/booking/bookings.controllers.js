@@ -27,6 +27,7 @@ const checkForCancellation = require("../../../utils/bookingCancellation");
 let eventactivites = db.eventActivities
 let file = db.file;
 let fileAttachment = db.fileattachment
+let hostBooking = db.hosteventbookings
 let parkBookingTestForPark = async (req, res) => {
     try {
         /**
@@ -1177,9 +1178,11 @@ let generatePDF = async({ title, bookingRef, location, date, time, cost, totalMe
 let generateQRCode = async(req,res)=>{
     try {
         let {bookingId,entityTypeId} = req.body
+        console.log({bookingId,entityTypeId});
+        
+        let fetchBookingDetails;
         let statusId = 1;
-        let entityType
-        let filePurpose = 'ticketBooking'
+        let entityType;
         if(entityTypeId==1 ||entityTypeId==2 || entityTypeId==3 ){
             entityType = "facilityBooking"
         }
@@ -1207,25 +1210,53 @@ let generateQRCode = async(req,res)=>{
         })
         console.log('fetch facility', fetchFacilityId)
         let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
-
+        console.log(1)
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
-
-        let fetchBookingDetails = await facilitybookings.findOne({
+        console.log(2)
+        if(entityTypeId==1 || entityTypeId ==2 || entityTypeId==3 || entityTypeId ==4 || entityTypeId == 5){
+            fetchBookingDetails = await facilitybookings.findOne({
             
-            where:{
-               [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
-            },
-            include:[
-                {
-                    model:facilities
-                }
-            ]
+                where:{
+                   [Op.and]:[{ facilityBookingId:bookingId},{statusId:statusId}]
+                },
+                include:[
+                    {
+                        model:facilities
+                    }
+                ]
+            })
+        }
+      
+        else if(entityTypeId ==6){
+            fetchBookingDetails = await sequelize.query(`select f.*,e2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join eventbookings e2 on e2.eventId =e.eventId 
+            where e2.eventBookingId= ? and e2.statusId = ? `,
+        {
+            type:QueryTypes.SELECT,
+            replacements:[bookingId,statusId]
         })
-        console.log('all data',bookingId,filePurpose,entityType,statusId)
 
-        let fetchPdfImage = await sequelize.query(`select url, entityType from amabhoomi.files f inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
+        }
+        
+        else if(entityTypeId ==7){
+            fetchBookingDetails = await sequelize.query(`select f.*, h2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join hosteventdetails h on h.eventId = e.eventId 
+             inner join hostbookings h2 on h2.hostId = h.hostId where h2.hostBookingId= ? and h2.statusId = ? `,
+            {
+                type:QueryTypes.SELECT,
+                replacements:[bookingId,statusId]
+            })
+
+        }
+        console.log(3, {bookingId,filePurpose,entityType,statusId});
+        let fetchPdfImage = await sequelize.query(`
+            select url, entityType from amabhoomi.files f 
+            inner join amabhoomi.fileattachments fa on f.fileId = fa.fileId 
+            where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`
+            ,{replacements:[bookingId,filePurpose,entityType,statusId],type:QueryTypes.SELECT})
+        console.log(4)
         fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
+        console.log(5)
         fetchBookingDetails.dataValues.url = fetchPdfImage[0].url
+        console.log(6)
         console.log('fetchPdfImage', fetchPdfImage)
         
         return res.status(statusCode.SUCCESS.code).json({

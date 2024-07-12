@@ -919,8 +919,104 @@ const facilityFilterOption = async (req, res) => {
 
 let findOverallSearch = async (req,res)=>{
     try {
-        let givenReq = req.body.givenReq ? req.body.givenReq : null;
-        let findTheGivenReq = await sequelize.query(``)
+        let givenReq = req.params.givenReq ? req.params.givenReq : null;
+        console.log('givenReq',givenReq)
+        givenReq = givenReq.toLowerCase();
+        let findFacilityData = await sequelize.query(`select f.facilityname, f.address  from amabhoomi.facilities f`,{type:QueryTypes.SELECT});
+        let findFacilityActivity = await sequelize.query(`select u.userActivityName,f3.facilityId from amabhoomi.facilityactivities f3 inner join useractivitymasters u on u.userActivityId = f3.activityId 
+    `,{type:QueryTypes.SELECT})
+        let findServiceFacility = await sequelize.query(`select s.code,s2.facilityId from amabhoomi.servicefacilities s2 inner join services s on s.serviceId = s2.serviceId 
+    `,{type:QueryTypes.SELECT})
+        let findFacilityEvents = await sequelize.query(`select e.locationName, e.eventName,f4.facilityId from amabhoomi.facilityevents f4 inner join eventactivities e on f4.eventCategoryId  = e.eventCategoryId
+    `,{type:QueryTypes.SELECT})
+        let findFacilityAmenities = await sequelize.query(`select a.amenityName,f5.facilityId from amabhoomi.facilityamenities f5 inner join amenitymasters a on  f5.amenityId = a.amenityId 
+    `,{type:QueryTypes.SELECT})
+        let findAllInventoryFacility = await sequelize.query(`select i2.code, i.facilityId from amabhoomi.inventoryfacilities i inner join inventorymasters i2 on i.equipmentId = i2.equipmentId 
+    `,{type:QueryTypes.SELECT})
+        
+        // Determine which queries have results
+        const matchingFacilityIds = new Set();
+        if(findFacilityActivity.length>0){
+            console.log('inside facilityActivity')
+            findFacilityActivity.forEach(row => {
+                console.log('row.userActivityName.toLowerCase()',row.userActivityName.toLowerCase().includes(givenReq))
+                if(row.userActivityName!=null && row.userActivityName.toLowerCase().includes(givenReq) ){
+                     matchingFacilityIds.add(row.facilityId)
+                }
+            });
+        }
+        if(findServiceFacility.length>0){
+            console.log('inside service')
+
+            findServiceFacility.forEach(row => {
+                if(row.code!=null && row.code.toLowerCase().includes(givenReq) ){
+                matchingFacilityIds.add(row.facilityId)
+        }});
+        }
+        if(findFacilityEvents.length>0){
+            console.log('inside events')
+            findFacilityEvents.forEach(row =>{
+                if(row.locationName!=null && row.locationName.toLowerCase().includes(givenReq) || row.eventName!=null && row.eventName.toLowerCase().includes(givenReq)){
+                matchingFacilityIds.add(row.facilityId)
+           }});
+        }
+        if(findFacilityAmenities.length>0){
+            console.log('inside amenities')
+            findFacilityAmenities.forEach(row => {
+                if(row.amenityName!=null && row.amenityName.toLowerCase().includes(givenReq) ){
+                matchingFacilityIds.add(row.facilityId)
+        }});
+        }   
+        if(findAllInventoryFacility.length>0){
+            console.log('inside inventory')
+
+            findAllInventoryFacility.forEach(row => {
+                if(row.code!=null && row.code.toLowerCase().includes(givenReq) ){
+                matchingFacilityIds.add(row.facilityId)
+           }});
+        }
+       if(findFacilityData.length>0){
+        console.log('inside facility')
+
+        findFacilityData.forEach(row => {
+            console.log(row.facilityname,'findfacilitydata')
+            if(row.facilityname != null && row.facilityname.toLowerCase().includes(givenReq) ||row.address != null &&row.address.toLowerCase().includes(givenReq)){
+            matchingFacilityIds.add(row.facilityId)
+       }});
+
+       }
+       
+       console.log('near set conversion to array ')
+        // Convert Set to array of facilityIds
+        const facilityIds = Array.from(matchingFacilityIds);
+
+        // Fetch facility data based on matched facilityIds
+        const facilities = await sequelize.query(`
+            SELECT f.* 
+            FROM amabhoomi.facilities f
+            WHERE facilityId IN (:facilityIds)
+        `, {
+            replacements: { facilityIds },
+            type: Sequelize.QueryTypes.SELECT
+        });
+        if(facilities.length>0){
+            let findPark = facilities.filter(result=>result.facilityTypeId==1)
+            let findPlayground = facilities.filter(result=>result.facilityTypeId==2)
+            let findMultiPurposeGround = facilities.filter(result=>result.facilityTypeId==3)
+            return res.status(stausCode.SUCCESS.code).json({
+                message:"Here is the overall search data",
+                parkData:findPark,
+                playgroundData:findPlayground,
+                multipurposeData:findMultiPurposeGround
+            })
+        }
+        else{
+            return res.status(stausCode.BAD_REQUEST.code).json({
+               message: "No data available"
+            })
+        }
+       
+      
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message

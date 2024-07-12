@@ -124,7 +124,7 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
+
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
