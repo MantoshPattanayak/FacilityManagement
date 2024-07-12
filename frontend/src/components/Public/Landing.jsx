@@ -1,7 +1,7 @@
 import "./Landing.css";
 import gif from "../../assets/newImg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileLines, faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faFileLines, faLocationDot, faSearch,faPlay, faPause, faStop } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import axiosHttpClient from "../../utils/axios";
@@ -72,6 +72,7 @@ import {
 } from "../../utils/utilityFunctions.js";
 // import for slider
 
+
 import TourGuide from "../../common/TourGuide.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { manageTourGuide } from "../../utils/authSlice.jsx";
@@ -124,11 +125,26 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
+  
 
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
   let dispatch = useDispatch();
+
+
+  const marqueeRef = useRef(null);
+  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
+
+  const handleTogglePlayPause = () => {
+    if (isMarqueePaused) {
+      marqueeRef.current.start();
+    } else {
+      marqueeRef.current.stop();
+    }
+    setIsMarqueePaused(!isMarqueePaused);
+  };
+
   const [exploreNewActivities, setExploreNewActivities] = useState([
     {
       game: "Tennis",
@@ -913,32 +929,47 @@ const Landing = () => {
       {/* -----Whats New Section------------------------------------------- */}
 
       <div className="notice2">
-        <div class="notice2-container">
-          <span>Whats New</span>
-          <marquee behavior="scroll" direction="left">
-            <div className={`flex`}>
-              {notifications.map((notification) => {
-                const createdAtDate = new Date(notification.createdAt);
-                const currentDate = new Date();
-                const diffInDays = Math.round(
-                  (currentDate - createdAtDate) / (1000 * 3600 * 24)
-                );
-                return (
-                  <p className="notce2para">
-                    {diffInDays <= 100 ? <p className="New_text"> New </p> : ""}
-                    {/* {diffInDays <= 7 ? <img src={gif} alt="New notification" /> : null} */}
-                    {notification.publicNotificationsContent}&nbsp;
-                    {
-                      notification.url && <a href={instance().baseURL + '/static' + notification.url}>
-                        <FontAwesomeIcon icon={faFileLines} />
-                      </a>} &nbsp; &nbsp;
-                  </p>
-                );
-              })}
-            </div>
-          </marquee>
-        </div>
+      <div className="notice2-container">
+        <button className="what_new">Whats New</button>
+        <marquee
+          className="marquee"
+          behavior="scroll"
+          direction="left"
+          scrollamount={isMarqueePaused ? "0" : "6"} // Adjust scroll speed here
+          ref={marqueeRef}
+        >
+          <div className="flex marquee-content">
+            {notifications.map((notification) => {
+              const createdAtDate = new Date(notification.createdAt);
+              const currentDate = new Date();
+              const diffInDays = Math.round((currentDate - createdAtDate) / (1000 * 3600 * 24));
+
+              return (
+                <p className="notce2para" key={notification.id}>
+                  {diffInDays <= 100 && <span className="New_text"> New </span>}
+                  {/* Conditionally render gif */}
+                  {/* {diffInDays <= 7 && <img src={gif} alt="New notification" />} */}
+                  {notification.publicNotificationsContent}&nbsp;
+                  {notification.url && 
+                    <a href={instance().baseURL + '/static' + notification.url}>
+                      <FontAwesomeIcon icon={faFileLines} />
+                    </a>
+                  }
+                  &nbsp;&nbsp;
+                </p>
+              );
+            })}
+          </div>
+        </marquee>
       </div>
+      <div className="button-container22">
+        {isMarqueePaused ? (
+          <button className="Play_pause_icon"  onClick={handleTogglePlayPause}><FontAwesomeIcon icon={faPlay} /></button>
+        ) : (
+          <button  className="Play_pause_icon" onClick={handleTogglePlayPause}><FontAwesomeIcon icon={faPause} /></button>
+        )}
+      </div>
+    </div>
 
       {/* ------Event details card-------------------------------------------------------------------- */}
 
