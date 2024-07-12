@@ -1,9 +1,9 @@
-let fs = require('fs')
+let fs = require('fs-extra')
 const db = require('../models')
 const file = db.file;
 const fileAttachment = db.fileattachment
 const path = require('path')
-let  imageUpdate = async (imageData,subDir,insertionData,userId,errors)=>{
+let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,transaction,oldFilePath)=>{
     // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
@@ -43,6 +43,8 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors)=>{
 
             uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}.${fileExtension}`;
 
+            await fs.remove(`${imageFileDir}/${oldFilePath}`);
+
             fs.writeFileSync(uploadFilePath, uploadImageFileBuffer);
             uploadFilePath2 = `/${subDir}/${insertionData.id}${insertionData.name}.${fileExtension}`;
             console.log(uploadFilePath2,"upload file path2 43")
@@ -59,7 +61,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors)=>{
             },
        { where:{
             fileId:insertionData.fileId
-        }});
+        },transaction});
             console.log('createFile', createFile)
             if (createFileCount==0) {
                 await transaction.rollback()
@@ -76,7 +78,9 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors)=>{
               },
            { where:{
                 fileId:insertionData.fileId
-            }});
+            },
+            transaction}
+          );
 
               if (createFileAttachmentCount==0) {
                 return errors.push(`Failed to create file attachment for facility file at index ${i}`);
