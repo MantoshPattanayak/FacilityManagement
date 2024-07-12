@@ -610,6 +610,8 @@ const Sub_Park_Details = () => {
           closePopup={closePopup}
           facilityId={encryptDataId(FacilitiesData[0]?.facilityId)}
           facilityName={FacilitiesData[0]?.facilityName}
+          operatingHoursFrom = {FacilitiesData[0]?.operatingHoursFrom}
+          operatingHoursTo = {FacilitiesData[0]?.operatingHoursTo}
         />
       )}
     </div>
