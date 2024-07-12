@@ -816,7 +816,12 @@ let addToCart = async (req, res) => {
             //     duration:duration,
             //     price:price
             // }
-            let momentEndTime = calculateEndTime(facilityPreference.startTime, facilityPreference.duration)
+            // totalMembers: formData.facilityPreference.playersLimit,
+            //         bookingDate: formData.facilityPreference.bookingDate,
+            //         startTime: formData.facilityPreference.startTime,
+            //         durationInHours: formData.facilityPreference.durationInHours,
+            //         amount: formData.facilityPreference.playersLimit * formData.facilityPreference.playersLimit,
+            let momentEndTime = calculateEndTime(facilityPreference.startTime, facilityPreference.durationInHours)
 
             // let checkIsItemAlreadyExist = await cartItem.findOne({
             //     where:{
@@ -846,8 +851,8 @@ let addToCart = async (req, res) => {
                         sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.bookingDate') = :bookingDate`),
                         {
                             [Op.or]: [
-                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') >= :startTime`),
-                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startTime') <= :endTime`)
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startDate') >= :startTime`),
+                                sequelize.literal(`JSON_EXTRACT(facilityPreference, '$.startDate') <= :endTime`)
                             ]
                         }
                     ]
