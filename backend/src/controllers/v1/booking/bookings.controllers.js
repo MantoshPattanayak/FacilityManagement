@@ -1236,7 +1236,7 @@ let generateQRCode = async (req, res) => {
     try {
         let {bookingId,entityTypeId} = req.body
         console.log({bookingId,entityTypeId});
-        
+        let filePurpose = 'ticketBooking'
         let fetchBookingDetails;
         let statusId = 1;
         let entityType;
