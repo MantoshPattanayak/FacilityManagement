@@ -17,8 +17,9 @@ const {Op} = require('sequelize')
 let user = db.usermaster
 let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 const createHosteventdetails = async (req, res) => {
+  let transaction;
   try {
-
+    transaction = await sequelize.transaction();
     let userId = req.user?.userId || 1;
     let createdDt = new Date();
     let updatedDt = new Date();
@@ -28,7 +29,8 @@ const createHosteventdetails = async (req, res) => {
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
-      }
+      },
+      transaction
     })
 
     let createHosteventdetails;
@@ -76,7 +78,8 @@ console.log("here Reponse of Host event", req.body)
       {  
         where:{
           [Op.and]: [{userId:userId},{statusId:statusId}]     
-            }
+            },
+            transaction
           }
       )
       createBankDetails = await bankDetails.create({
@@ -89,13 +92,15 @@ console.log("here Reponse of Host event", req.body)
         updatedBy:userId,
         updatedDt:updatedDt,
         createdDt:createdDt
-      })
+      },
+    transaction)
     }
     else if(checkIfEntityExist){
       let findTheBankDetails = await bankDetails.findOne({
         where:{
           [Op.and]:[{createdBy:userId},{statusId:statusId}]
-        }
+        },
+        transaction
       })
       if(findTheBankDetails){
         let bankDetailsObject={};
@@ -117,7 +122,8 @@ console.log("here Reponse of Host event", req.body)
         let updateTheBankDetails  = await bankDetails.update(bankDetailsObject,{
           where:{
             [Op.and]:[{statusId:statusId},{createdBy:createdBy}]
-          }
+          },
+          transaction
         })
 
 
@@ -133,7 +139,8 @@ console.log("here Reponse of Host event", req.body)
         updatedBy:userId,
         updatedDt:updatedDt,
         createdDt:createdDt
-      })
+      },
+    transaction)
       }
 
     }
@@ -156,7 +163,8 @@ console.log("here Reponse of Host event", req.body)
       updatedDt:updatedDt,
       createdBy:userId,
       updatedBy:userId
-    })
+    },
+  transaction)
     if(createEventActivities){
       // then insert to host event tables
         createHosteventdetails = await hosteventdetails.create({
@@ -179,7 +187,7 @@ console.log("here Reponse of Host event", req.body)
           updatedBy:userId,
           createdDt:createdDt,
           updatedDt:updatedDt
-        });
+        },transaction);
         
     // Image upload work
     let entityType = 'events'
