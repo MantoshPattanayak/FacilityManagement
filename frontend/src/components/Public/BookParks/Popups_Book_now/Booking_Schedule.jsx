@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
-import { faXmark, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import "./Booking_Schedule.css";
-import Book_Now from "../Book_Now";
+import { useNavigate } from "react-router-dom";
+import {
+  faXmark,
+  faMinus,
+  faPlus,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import { decryptData, encryptData } from "../../../../utils/encryptData";
+import "./Booking_Schedule.css";
+
 const Booking_Schedule = ({
   closePopup,
   formData,
@@ -13,18 +19,13 @@ const Booking_Schedule = ({
   seniorCitizen,
   adults,
 }) => {
-  console.log("Received data in Booking_Schedule:", {
-    formData,
-    totalMembers,
-    children,
-    seniorCitizen,
-    adults,
-  });
-  const [sendData, setsendData] = useState(false);
   const navigate = useNavigate();
   const [bookingData, setBookingData] = useState({
     bookingDate: formData.bookingDate,
-    startTime: formData.startTime,
+    // startTime: moment(formData.operatingHoursFrom, "HH:mm:ss").format("HH:mm"),
+    startTime: parseInt(formData.operatingHoursFrom.split(":")[0], 10),
+    endTime: parseInt(formData.operatingHoursTo.split(":")[0], 10),
+    // endTime: moment(formData.operatingHoursTo, "HH:mm:ss").format("HH:mm"),
     durationInHours: formData.durationInHours,
     totalMembers: totalMembers,
     children: children,
@@ -40,7 +41,43 @@ const Booking_Schedule = ({
     priceBook: formData.priceBook,
   });
 
-  let facilityId = decryptData(bookingData.facilityId);
+  console.log(
+    "qwertyuiopsdfghjkl",
+    bookingData.startTime,
+    "---",
+    bookingData.endTime
+  );
+
+  const [bookingDate, setBookingDate] = useState(formData.bookingDate);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedHour, setSelectedHour] = useState(moment().hour());
+  const [selectedMinute, setSelectedMinute] = useState(moment().minute());
+  const [currentTime, setCurrentTime] = useState(moment().format("HH:mm"));
+  const [hourChanged, setHourChanged] = useState(false);
+  const [minuteChnged, setMinuteChanged] = useState(moment().format(false));
+
+
+  // Update current time every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(moment().format("HH:mm"));
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Update bookingData when bookingDate changes
+  useEffect(() => {
+    setBookingData((prevData) => ({
+      ...prevData,
+      bookingDate: bookingDate,
+    }));
+  }, [bookingDate]);
+
+  const handleDateClick = (date) => {
+    setBookingDate(date);
+    setShowDatePicker(false);
+  };
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -64,64 +101,185 @@ const Booking_Schedule = ({
     }));
   };
 
-  // function handleBookingData(e) {
-  //   e.preventDefault(); 
-  //   navigate(
-  //     `/BookParks/Book_Now?d=${encodeURIComponent(
-  //       encryptData(JSON.stringify(bookingData))
-  //     )}&facilityId=${encryptData(facilityId)}`
-  //   );   
-  // }
+  const handleClockIconClick = () => {
+    setShowTimePicker(true);
+  };
 
-  function handleBookingData(e) {
-    // e.preventDefault();
-    // navigate(
-    //   `/BookParks/Book_Now?d=${encodeURIComponent(
-    //     encryptData(JSON.stringify(bookingData))
-    //   )}&facilityId=${encryptData(facilityId)}`
-    // );
+  // const handleHourSelect = (hour) => {
+  //   setSelectedHour(hour);
+  //   setShowTimePicker(false);
+  //   setBookingData((prevData) => ({
+  //     ...prevData,
+  //     startTime: moment().hour(hour).minute(selectedMinute).format("HH:mm"),
+  //   }));
+  // };
+
+  // const handleMinuteSelect = (minute) => {
+  //   setSelectedMinute(minute);
+  //   setShowTimePicker(false);
+  //   setBookingData((prevData) => ({
+  //     ...prevData,
+  //     startTime: moment().hour(selectedHour).minute(minute).format("HH:mm"),
+  //   }));
+  // };
+
+  const handleHourSelect = (hour) => {
+    setSelectedHour(hour);
+    setHourChanged(true)
+    if (minuteChnged) {
+      setBookingData((prevData) => ({
+        ...prevData,
+        startTime: moment().hour(hour).minute(selectedMinute).format("HH:mm"),
+      }));
+      setShowTimePicker(false);
+    }
+  };
+
+  const handleMinuteSelect = (minute) => {
+    setSelectedMinute(minute);
+    setMinuteChanged(true)
+    if (hourChanged) {
+      setBookingData((prevData) => ({
+        ...prevData,
+        startTime: moment().hour(selectedHour).minute(minute).format("HH:mm"),
+      }));
+      setShowTimePicker(false);
+    }
+  };
+
+  const handleBookingData = (e) => {
     e.preventDefault();
     const encryptedData = encryptData(JSON.stringify(bookingData));
-    const encryptedFacilityId = encryptData(facilityId);
-    console.log("Encoded data being sent:", { encryptedData, encryptedFacilityId });
+    const encryptedFacilityId = encryptData(bookingData.facilityId);
     navigate(
-      `/BookParks/Book_Now?d=${encodeURIComponent(encryptedData)}&facilityId=${encodeURIComponent(encryptedFacilityId)}`
+      `/BookParks/Book_Now?d=${encodeURIComponent(
+        encryptedData
+      )}&facilityId=${encodeURIComponent(encryptedFacilityId)}`
     );
-  }
+  };
 
   const formatTime = (time) => {
-    const [hours, minutes] = time.split(':');
-    return `${hours}:${minutes}`;
-  }
+    return moment(time, "HH:mm").format("HH:mm");
+  };
+
+  console.log("start time and end time2", bookingData.startTime, "---", bookingData.endTime);
+
+  const renderHours = () => {
+    const hours = [];
+    for (
+      let hour = bookingData.startTime;
+      hour < bookingData.endTime;
+      hour++
+    ) {
+      hours.push(
+        <li key={hour} onClick={() => handleHourSelect(hour)}>
+          {hour < 10 ? `0${hour}` : hour}
+        </li>
+      );
+    }
+    return hours;
+  };
+
+  const renderMinutes = () => {
+    const minutes = [];
+    for (let minute = 0; minute < 60; minute += 10) {
+      minutes.push(
+        <li key={minute} onClick={() => handleMinuteSelect(minute)}>
+          {minute < 10 ? `0${minute}` : minute}
+        </li>
+      );
+    }
+    return minutes;
+  };
+
+  const toggleDatePicker = () => {
+    setShowDatePicker(!showDatePicker);
+  };
+
+  const toggleTimePicker = () => {
+    setShowTimePicker(!showTimePicker);
+  };
+
+  const handleDurationChange = (e) => {
+    const { name, value } = e.target;
+    setBookingData((prevData) => ({
+      ...prevData,
+      [name]: parseInt(value),
+    }));
+  };
+
+  const renderNext10Days = () => {
+    const dates = [];
+    for (let i = 0; i < 10; i++) {
+      dates.push(moment().add(i, "days").format("YYYY-MM-DD"));
+    }
+    return dates.map((date) => (
+      <div
+        className="DateItem"
+        key={date}
+        onClick={() => handleDateClick(date)}
+      >
+        {date}
+      </div>
+    ));
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="booking-schedule-popup">
         <div className="popup-header">
-          <button className="icon-close" onClick={()=>closePopup(false)}>
+          <button className="icon-close" onClick={() => closePopup(false)}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
         <div className="booking-details">
-          <label htmlFor="bookingDate">Booking Date:</label>
-          <input
-            type="date"
-            id="bookingDate"
-            name="bookingDate"
-            value={bookingData.bookingDate}
-            onChange={handleChangeInput}
-            className="custom-input"
-          />
+          <div className="wrapper">
+            <label htmlFor="bookingDate">Booking Date:</label>
+            <input
+              type="text"
+              id="bookingDate"
+              name="bookingDate"
+              value={bookingDate}
+              onFocus={() => setShowDatePicker(true)}
+              onChange={handleChangeInput}
+              className="input-field"
+            />
+            {showDatePicker && (
+              <div className="DatePickerContainer">{renderNext10Days()}</div>
+            )}
+          </div>
 
           <label htmlFor="startTime">Start Time:</label>
-          <input
-            type="time"
-            id="startTime"
-            name="startTime"
-            value={formatTime(bookingData.startTime)}
-            onChange={handleChangeInput}
-            className="custom-input"
-          />
+          <div className="time-input-container">
+            <input
+              type="text"
+              id="startTime"
+              name="startTime"
+              value={formatTime(bookingData.startTime)}
+              onChange={handleChangeInput}
+              className="custom-input"
+              onClick={toggleTimePicker}
+            />
+            <button
+              className="clock-icon"
+              onClick={handleClockIconClick}
+              title="Set current or opening time"
+            >
+              <FontAwesomeIcon icon={faClock} />
+            </button>
+            {showTimePicker && (
+              <div className="time-picker-dropdown">
+                <div className="column">
+                  <h3>Hours</h3>
+                  <ul>{renderHours()}</ul>
+                </div>
+                <div className="column">
+                  <h3>Minutes</h3>
+                  <ul>{renderMinutes()}</ul>
+                </div>
+              </div>
+            )}
+          </div>
 
           <label htmlFor="durationInHours">Duration (Hours):</label>
           <div className="duration-container">
@@ -137,7 +295,7 @@ const Booking_Schedule = ({
               id="durationInHours"
               name="durationInHours"
               value={bookingData.durationInHours}
-              onChange={handleChangeInput}
+              onChange={handleDurationChange}
               className="custom-input"
               min="0"
             />
@@ -148,18 +306,15 @@ const Booking_Schedule = ({
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
+
           <div className="popup-footer">
-            <button className="cancel-button" onClick={()=>closePopup(false)}>Cancel</button>
+            <button className="cancel-button" onClick={() => closePopup(false)}>
+              Cancel
+            </button>
             <button className="next-button" onClick={handleBookingData}>
               Next
             </button>
           </div>
-          {/* {sendData && (
-          <Book_Now
-            closePopup={() => setsendData(false)}
-            bookingData={bookingData}
-          />
-        )} */}
         </div>
       </div>
     </div>

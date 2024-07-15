@@ -7,7 +7,7 @@ import Activity_Preference_popup from "./Activity_Preference_popup";
 import { encryptData } from "../../../../utils/encryptData";
 import { Link, useNavigate} from "react-router-dom";
 
-const Visiting_People = ({ closePopup, facilityId, facilityName }) => {
+const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursFrom, operatingHoursTo }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     totalMembers: 0,
@@ -20,6 +20,8 @@ const Visiting_People = ({ closePopup, facilityId, facilityName }) => {
     bookingDate: new Date().toISOString().split("T")[0],
     startTime: new Date().toTimeString().split(" ")[0],
     durationInHours: 0,
+    operatingHoursFrom:operatingHoursFrom,
+    operatingHoursTo:operatingHoursTo,
     facilityId: decryptData(
       new URLSearchParams(location.search).get("facilityId")
     ),

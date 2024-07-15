@@ -1,181 +1,170 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f1f3f6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main container */
+.Add_to_Card_Main_conatiner9 {
+  padding: 20px;
+}
+
+/* Child container */
 .Add_To_Card_Child_conatiner9 {
-  /* display: flex;
+  display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: calc(100vh - 60vh - 100px);
-  padding-block: 100px; */
-
-  height: auto;
+  column-gap: 1rem;
+  margin: 5vh auto;
   padding: 3rem 5rem;
-  display: flex;
-  min-height: 100vh;
-  column-gap: 4rem;
-  margin-block: 5vh;
-  justify-content: center;
-
+  max-width: 1200px;
 }
 
-.Card9 {
-
-  background-color: #008000;
-  padding: 10px;
-}
-
-.card_text9 {
-  font-size: 25px;
-  color: #fff;
-  font-weight: 600;
-  font-variant: unset;
-  font-style: normal;
-}
-
-.Add_Card_Box9 {
-  background-color: #fff;
-  width: 840px;
-  border: 1px solid rgb(221, 222, 221);
-}
-
-.card_item_conatiner9 {
-  padding: 20px;
-
-
-
-}
-
-.Cont_card9 {
-  box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 2px;
-  background-color: #fffefe;
-
-}
-
-.card_item_conatiner_heading9 {
-  display: flex;
-  justify-content: space-between;
-  background-color: #545D66;
-  padding: 10px;
-  box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 2px;
-}
-
-.text_heading9 {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-
-
-}
-
-.icon9 {
-  color: #fff;
-  font-size: 20px;
-}
-
-.Location_Name_icon9 {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-}
-
-.Location_text9 {
-  font-size: 20px;
-  color: #3b4842;
-
-}
-
-.date_time_people_conatiner9 {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-}
-
-.date_time_text_icon9 {
-  display: flex;
-  gap: 10px;
-}
-
-.Money_name_icon9 {
-  padding: 20px;
-  display: flex;
-  gap: 20px;
-}
-
-.money_icon_text9 {
-  font-size: 15px;
-  color: #4ECB71;
-}
-
-/* Button Pay */
-.Button_pay9 {
-  padding: 30px;
-  display: flex;
-  justify-content: center;
-}
-
-/* CSS */
-.button-379 {
-  background-color: #13aa52;
-  border: 1px solid #13aa52;
-  border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  outline: none;
-  outline: 0;
-  padding: 10px 25px;
-  text-align: center;
-
-  transform: translateY(0);
-  transition: transform 150ms, box-shadow 150ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
+/* Cart details and save later section */
+.Show_Cart_Details_save_latter {
   width: 60%;
 }
 
-.button-379:hover {
-  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
-  transform: translateY(-2px);
-}
-
-
-@media (min-width: 1230px) {
-
-  .Add_To_Card_Child_conatiner9{
-    height: auto;
-  padding: 3rem 5rem;
+/* Individual cart detail box */
+.Cart_details {
   display: flex;
-  min-height: 100vh;
-  column-gap: 4rem;
-  margin-block: 5vh;
+  gap: 20px;
+  border: 1px solid rgb(224, 224, 224);
+  margin-bottom: 20px;
+
+
+}
+
+.Cart_details_container {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  background-color: white;
+
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+
+.park_image_cart {
+  height: 190px;
+  width: 170px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.text_contant_details_cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.park_name_date {
+  display: flex;
+  gap: 50px;
+
+}
+
+.park_Booking_Date {
+  font-size: 14px;
+  color: #757575;
+}
+
+.Details_cart_details h1 {
+  font-size: 16px;
+  color: #212121;
+  margin: 5px 0;
+}
+
+/* Save later container */
+.Save_latter_conatiner {
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.Save_latter_conatiner h1 {
+  font-size: 16px;
+  color: #2874f0;
+}
+
+.Save_remove_button {
+  display: flex;
+  gap: 50px;
+}
+
+.Save_Remove_Button {
+  font-size: 17px;
+  font-weight: 600;
+  color: #3d3d3d;
+}
+
+.Save_Remove_Button:hover {
+  color: green;
+}
+
+/* Booking bill price container */
+.Booking_Bill_Price {
+  width: 30%;
+  height: 25vh;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.parice_detials {
+  font-size: 20px;
+  font-weight: 600;
+  color: #3d3d3d;
+  border-bottom: 1px solid rgb(172, 172, 172);
+}
+.price_bill{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  padding-bottom: 10px;
+}
+.price_bill h1{
+font-size: 17px;
+
+}
+.price_bill1{
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 2px dotted gray;
+}
+.price_bill1 h1{
+  font-size: 17px;
+}
+.price_bill3{
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px dotted gray;
+}
+.price_bill3 h1{
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.no-item-in-cart {
+  display: flex;
   justify-content: center;
-
-  }
-
-  .Location_text9 {
-    font-size: 14px;
-  }
-  .card_item_conatiner_heading9 {
-    width: 50vw;
-  }
-  .Cont_card9{
-    width: 50vw;
-  }
-  .Add_Card_Box9{
-    width: auto;
-  }
-}
-.delete-icon22{
-  color: #fff;
+  align-items: center;
+  height: 300px;
 }
 
-@media (min-width: 768px) {
-  .button-379 {
-    padding: 10px 30px;
-  }
+.no-item-in-cart img {
+  max-width: 100%;
+  height: auto;
+}
 
-  /* here Reponsive code */
-/* Response this page (😆) */
+
+.Pay_Now_Buttton{
+  display: flex;
+  justify-content: right;
 }
