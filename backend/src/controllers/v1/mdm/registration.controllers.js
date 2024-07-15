@@ -115,7 +115,22 @@ const registerFacility = async (req, res) => {
       ownersAddress,
       lastName,
       facilityisownedbBDA)
-
+      console.log('check if the data is exist or not')
+     let checkIfTheFacilityAlreadyExist = await facilities.findOne({
+      where:{
+        [Op.and]:[{statusId:statusId},                    
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('facilityname')), 'LIKE', facilityName.toLowerCase()),
+          ,{facilityTypeId:facilityType}]
+      },
+      transaction
+     })
+     console.log('check if the facility data is present or not', checkIfTheFacilityAlreadyExist)
+     if(checkIfTheFacilityAlreadyExist){
+      console.log('This data already exist')
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:`This facility is already exist`
+      })
+     }
      let findIfTheOwnershipDetailsExist = await ownershipDetails.findOne({
       where:{
         [Op.and]:[{[Op.or]:[{phoneNo:phoneNumber},{emailId:emailAdress}]},{statusId:statusId}]},
@@ -237,11 +252,12 @@ const registerFacility = async (req, res) => {
           
 
       if(amenity) {
-         
-        amenity.forEach(async(amenity)=>{
+         console.log('amenity', amenity)
+        for(let amenityData of amenity){
+          console.log(createFacilities.facilityId, 'create facilityid view', amenity)
             let createAmenities = await amenityFacility.create( { 
               facilityId:createFacilities.facilityId,
-              amenityId:amenity,
+              amenityId:amenityData,
               statusId:statusId,
               createdBy:userId,
               createdDt:new Date(),
@@ -251,6 +267,7 @@ const registerFacility = async (req, res) => {
             },
             {transaction}
             )
+            console.log('amenity insert result',createAmenities)
             if(!createAmenities){
               await transaction.rollback();
               return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -258,16 +275,16 @@ const registerFacility = async (req, res) => {
               })
             }
 
-          })
+          }
           
       
       }
   
   if(service) { 
-    service.forEach(async(service)=>{
+   for(let serviceData of service){
       let createServices = await serviceFacility.create( { 
         facilityId:createFacilities.facilityId,
-        serviceId:service,
+        serviceId:serviceData,
         statusId:statusId,
         createdBy:userId,
         createdDt:new Date(),
@@ -288,14 +305,14 @@ const registerFacility = async (req, res) => {
      
 
   
-    })
+    }
     
   }
     // // Here add event categories
     if(eventCategory){
       console.log(eventCategory, 'eventData')
-      eventCategory.forEach(async(eventData)=>{
-        let createEventCategoryDetails = await facilityEvent.create({
+      for(let eventData of eventCategory){
+          let createEventCategoryDetails = await facilityEvent.create({
           eventCategoryId:eventData,
           createdBy:userId,
           updatedBy:userId,
@@ -311,12 +328,12 @@ const registerFacility = async (req, res) => {
             message:"Something went wrong"
           })
         }
-      })
+      }
     }
     // add games 
     if(game){
-      game.forEach(async(eachGame)=>{
-        let createGameDetails = await facilityAcitivities.create({
+      for (let eachGame of game){
+          let createGameDetails = await facilityAcitivities.create({
           facilityId:createFacilities.facilityId,
           activityId:eachGame,
           facilityTypeId:createFacilities.facilityTypeId,
@@ -333,13 +350,13 @@ const registerFacility = async (req, res) => {
             message:"Something went wrong"
           })
         }
-      })
+      }
     }
 
     // after all of these let add the park inventory details
     // here the park inventory data should look like this : {inventory:{}, inventory:{}}
     if(parkInventory){
-      parkInventory.forEach(async(inventory)=>{
+      for(let inventory of parkInventory){
         let createInventory = await inventoryFacilities.create({
           facilityId:createFacilities.facilityId,
           equipmentId:inventory.equipmentId,
@@ -358,7 +375,7 @@ const registerFacility = async (req, res) => {
         }
       }
     
-    )
+    
     }
     // if everything is successfull, then do commit the transaction here
     await transaction.commit()

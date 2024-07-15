@@ -194,7 +194,7 @@ let updateTariff = async (req, res) => {
         let userId = req.user.userId;
         transaction = await sequelize.transaction();
         let { facilityTariffData } = req.body;
-        console.log('facilityTariffData Update', facilityTariffData);
+        console.log('facilityTariffData Update', req.body);
         let statusId = 1;
         let updateDataForTariff = {};
 
@@ -204,7 +204,7 @@ let updateTariff = async (req, res) => {
             });
         }
 
-        for (const eachTariffObject of facilityTariffData) {
+        for (let eachTariffObject of facilityTariffData) {
             let findFacilityTariffMaster = await tariffmaster.findOne({
                 where:{
                     tariffMasterId:eachTariffObject.tariffMasterId
