@@ -105,7 +105,13 @@ const Book_Now_Sport = () => {
         let modifiedFormData = {
             ...formData
         };
-       
+        /**
+         * playersLimit: 1,
+            sports: "",
+            startTime: "",
+            endTime: "",
+            bookingDate: "",
+         */
         console.log("formData handleSubmitAndProceed", modifiedFormData);
         const validationError = validation(modifiedFormData);
         let facilityPreference = {
