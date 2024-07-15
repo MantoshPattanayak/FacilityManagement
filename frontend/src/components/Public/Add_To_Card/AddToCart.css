@@ -37,10 +37,10 @@ body {
 
 .Cart_details_container {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  padding: 10px;
   background-color: white;
 
-  margin-bottom: 20px;
+
   border-radius: 4px;
 }
 
@@ -77,18 +77,20 @@ body {
 
 /* Save later container */
 .Save_latter_conatiner {
-  padding: 1rem;
+
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  text-align: center;
-  cursor: pointer;
+  
+
+}
+.Save_for_later_text{
+text-align: center;
+font-size: 20px;
+font-weight: 600;
+
 }
 
-.Save_latter_conatiner h1 {
-  font-size: 16px;
-  color: #2874f0;
-}
+
 
 .Save_remove_button {
   display: flex;
@@ -167,4 +169,14 @@ font-size: 17px;
 .Pay_Now_Buttton{
   display: flex;
   justify-content: right;
+ box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 5px;
+ height: 5vh;
+
+}
+.image_missing{
+  height: 30vh;
+}
+.mssing_cart_image{
+  display: flex;
+  justify-content: center;
 }

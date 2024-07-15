@@ -135,7 +135,7 @@ const Sub_Park_Details = () => {
       function setOperatingDaysFromRes(res) {
         let operatingDaysFromRes = [];
         if (res.data.facilitiesData[0].sun == 1) {
-          operatingDaysFromRes.push("Sun");
+          operatingDaysFromRes.push("Ssu");
         }
         if (res.data.facilitiesData[0].mon == 1) {
           operatingDaysFromRes.push("Mon");
