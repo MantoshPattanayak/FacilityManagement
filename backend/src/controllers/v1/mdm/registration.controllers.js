@@ -85,6 +85,7 @@ const registerFacility = async (req, res) => {
     } = req.body;
     console.log("here facility Req ", req.body)
 
+
     helpNumber = helpNumber ? helpNumber : null
     let createFacilities;
     let findOwnerId;
@@ -234,7 +235,7 @@ const registerFacility = async (req, res) => {
           }
         }
         if(arrayFacilityImage.length>0){
-          const errors = [];
+          let errors = [];
           let subDir = "facilityImageList"
           let filePurpose = "multipleFacilityImage"
           for (let i = 0; i < arrayFacilityImage.length; i++) {
