@@ -915,6 +915,19 @@ let viewCartByUserId = async (req, res) => {
                     type: sequelize.QueryTypes.SELECT,
                     replacements: [findCartIdByUserId.cartId]
             });
+            // save for later
+            let findCartItemsWRTCartIdSaveForLater = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName, f3.url as imageUrl
+                from amabhoomi.cartitems c 
+                left join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  
+                inner join amabhoomi.facilities f on f.facilityId = c.entityId
+                inner join amabhoomi.fileattachments f2 on f2.entityId = f.facilityId and f2.entityType = 'facilities' and f2.filePurpose = 'singleFacilityImage'
+                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
+                where c.statusId = 22 and c.cartId = ?`,
+                {
+                    type: sequelize.QueryTypes.SELECT,
+                    replacements: [findCartIdByUserId.cartId]
+            });
+            // 
 
             // cart details for event booking only
 
@@ -950,14 +963,19 @@ let viewCartByUserId = async (req, res) => {
                 cartItem.imageUrl = encodeURI(cartItem.imageUrl);
                 return cartItem;
             })
+            findCartItemsWRTCartIdSaveForLater = findCartItemsWRTCartId.map((cartItem) => {
+                cartItem.imageUrl = encodeURI(cartItem.imageUrl);
+                return cartItem;
+            })
             console.log(findCartItemsWRTCartId, 'findCartIdByUserId')
-            if (findCartIdByUserId.length <= 0) {
+            if (findCartIdByUserId.length <= 0 && findCartItemsWRTCartIdSaveForLater<=0) {
                 return res.status(statusCode.BAD_REQUEST.code).json({
                     message: "Not a single item is associated with the cart"
                 })
             }
             return res.status(statusCode.SUCCESS.code).json({
-                message: "These are the cart items", data: findCartItemsWRTCartId, count: findCartItemsWRTCartId.length
+                message: "These are the cart items", data: findCartItemsWRTCartId, count: findCartItemsWRTCartId.length,
+                saveForLater: findCartItemsWRTCartIdSaveForLater
             })
 
         }
