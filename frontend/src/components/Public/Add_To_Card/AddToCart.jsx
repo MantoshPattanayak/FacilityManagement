@@ -81,7 +81,7 @@ const AddToCart = () => {
             let totalAmount = 0;
             for (let i = 0; i < res.data.data.length; i++) {
                 console.log("facilityPreference", res.data.data[i].facilityPreference);
-                totalAmount += parseFloat(res.data.data[i].facilityPreference.price);
+                totalAmount += parseFloat(res.data.data[i].facilityPreference.amount);
             }
             setTotalAmount(totalAmount);
             console.log("totalAmount", totalAmount);
@@ -128,7 +128,7 @@ const AddToCart = () => {
                                             <h1>{cardItem.facilityName}</h1>
                                             <h1>Total Members : {(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit}</h1>
                                             <h1>Time: {formatTime(cardItem.facilityPreference.startTime) + '-' + (formatTime(cardItem.facilityPreference.endTime) || '') } </h1>
-                                            <h1>₹{cardItem.facilityPreference.price ? parseFloat(cardItem.facilityPreference.price).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                            <h1>₹{cardItem.facilityPreference.amount ? parseFloat(cardItem.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                         </span>
                                         <span className="Save_remove_button">
                                             <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'SAVED_FOR_LATER')}>SAVE FOR LATER</button>
@@ -179,7 +179,7 @@ const AddToCart = () => {
                                                 <h1>{Item.facilityName}</h1>
                                                 <h1>Total Members : {(Item.facilityPreference.totalMembers) || Item.facilityPreference.playersLimit}</h1>
                                                 <h1>Time: {formatTime(Item.facilityPreference.startTime) + '-' + (formatTime(Item.facilityPreference.endTime) || '') } </h1>
-                                                <h1>₹{Item.facilityPreference.price ? parseFloat(Item.facilityPreference.price).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                                <h1>₹{Item.facilityPreference.amount ? parseFloat(Item.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                             </span>
                                             <span className="Save_remove_button">
                                                 <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, Item.cartItemId, 'IN_CART')}>MOVE TO CART</button>
