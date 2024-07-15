@@ -975,7 +975,7 @@ let viewCartByUserId = async (req, res) => {
             }
             return res.status(statusCode.SUCCESS.code).json({
                 message: "These are the cart items", data: findCartItemsWRTCartId, count: findCartItemsWRTCartId.length,
-                saveForLater: findCartItemsWRTCartIdSaveForLater
+                saveForLater: findCartItemsWRTCartIdSaveForLater, saveForLaterCount: findCartItemsWRTCartIdSaveForLater.length
             })
 
         }
