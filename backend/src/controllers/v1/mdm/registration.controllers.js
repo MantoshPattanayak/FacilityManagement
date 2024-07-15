@@ -81,9 +81,11 @@ const registerFacility = async (req, res) => {
       emailAdress,
       ownerPanCard,
       ownersAddress,
+      helpNumber
     } = req.body;
     console.log("here facility Req ", req.body)
 
+    helpNumber = helpNumber ? helpNumber : null
     let createFacilities;
     let findOwnerId;
      console.log("here Req", 
@@ -192,6 +194,7 @@ const registerFacility = async (req, res) => {
       otherAmenities:otherAmenities,
       otherEventCategory:othereventCategory,
       otherGames:othergame,
+      helpNumber:helpNumber,
       otherServices:otherServices,
       ownershipDetailId:findOwnerId,
       createdDt:createdDt,
