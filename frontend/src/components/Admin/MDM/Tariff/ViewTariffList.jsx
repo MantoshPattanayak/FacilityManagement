@@ -81,7 +81,7 @@ const ViewTariffList = () => {
                                     return (
                                         <tr key={data.index}>
                                             <td data-label="Sl No.">{index + 1}</td>
-                                            <td data-label="Facility Name">{data.facilityname}</td>
+                                            <td data-label="Facility Name">{data.facilityName}</td>
                                             <td data-label="Address">{data.tariffType}</td>
                                             {data.tariffCheck == 0 ? (
                                                 <td data-label="View">

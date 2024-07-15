@@ -90,7 +90,14 @@ const AddToCart = () => {
             console.log("here Error of View Card Data", err)
         }
     }
-
+    function formatTime(time24) {
+        if (!time24) return;
+        const [hours, minutes] = time24.split(":").map(Number);
+        const period = hours >= 12 ? "PM" : "AM";
+        const hours12 = hours % 12 || 12;
+        return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
+      }
+    
     // Update / call Api --------------------------------
     useEffect(() => {
         GetViewCardData()
@@ -120,6 +127,7 @@ const AddToCart = () => {
                                         <span className="Details_cart_details">
                                             <h1>{cardItem.facilityName}</h1>
                                             <h1>Total Members : {(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit}</h1>
+                                            <h1>Time: {formatTime(cardItem.facilityPreference.startTime) + '-' + (formatTime(cardItem.facilityPreference.endTime) || '') } </h1>
                                             <h1>₹{cardItem.facilityPreference.price ? parseFloat(cardItem.facilityPreference.price).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                         </span>
                                         <span className="Save_remove_button">
@@ -170,6 +178,7 @@ const AddToCart = () => {
                                             <span className="Details_cart_details">
                                                 <h1>{Item.facilityName}</h1>
                                                 <h1>Total Members : {(Item.facilityPreference.totalMembers) || Item.facilityPreference.playersLimit}</h1>
+                                                <h1>Time: {formatTime(Item.facilityPreference.startTime) + '-' + (formatTime(Item.facilityPreference.endTime) || '') } </h1>
                                                 <h1>₹{Item.facilityPreference.price ? parseFloat(Item.facilityPreference.price).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                             </span>
                                             <span className="Save_remove_button">
