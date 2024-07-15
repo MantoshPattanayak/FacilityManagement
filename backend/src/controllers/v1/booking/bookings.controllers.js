@@ -1000,7 +1000,7 @@ let viewCartByUserId = async (req, res) => {
 // update the cart items
 let updateCart = async (req, res) => {
     try {
-
+        console.log('req.body', req.body)
         let userId = req.user?.userId || 1
         let cartItemId = req.body.cartItemId
         let statusId;
@@ -1236,7 +1236,7 @@ let generateQRCode = async (req, res) => {
     try {
         let {bookingId,entityTypeId} = req.body
         console.log({bookingId,entityTypeId});
-        
+        let filePurpose = 'ticketBooking'
         let fetchBookingDetails;
         let statusId = 1;
         let entityType;
