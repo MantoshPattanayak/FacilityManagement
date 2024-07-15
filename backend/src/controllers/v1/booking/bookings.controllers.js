@@ -893,6 +893,7 @@ let addToCart = async (req, res) => {
 let viewCartByUserId = async (req, res) => {
     try {
         const userId = req.user?.userId || 1
+        console.log(userId,'userId')
 
         let findCartIdByUserId = await cart.findOne({
             where: {
@@ -983,7 +984,7 @@ let updateCart = async (req, res) => {
     try {
 
         let userId = req.user?.userId || 1
-        let cartItemId = req.params.cartItemId
+        let cartItemId = req.body.cartItemId
         let statusId;
         let action = req.body.action || 'IN_CART'; // IN_CART, SAVED_FOR_LATER, REMOVED
 
