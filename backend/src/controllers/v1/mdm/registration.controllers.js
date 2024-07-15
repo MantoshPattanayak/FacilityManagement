@@ -45,7 +45,8 @@ const registerFacility = async (req, res) => {
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
-      }
+      },
+      transaction
     })
 
     let {
@@ -117,7 +118,8 @@ const registerFacility = async (req, res) => {
 
      let findIfTheOwnershipDetailsExist = await ownershipDetails.findOne({
       where:{
-        [Op.and]:[{[Op.or]:[{phoneNo:phoneNumber},{emailId:emailAdress}]},{statusId:statusId}]}
+        [Op.and]:[{[Op.or]:[{phoneNo:phoneNumber},{emailId:emailAdress}]},{statusId:statusId}]},
+        transaction
      })
      if(findIfTheOwnershipDetailsExist){
       console.log('if owners detail exist', 89)
@@ -139,7 +141,7 @@ const registerFacility = async (req, res) => {
         createdBy:userId,
         updatedBy:userId
       },
-    transaction)
+    {transaction})
 
       if(createOwnershipDetails){
         findOwnerId = createOwnershipDetails.ownershipDetailId
@@ -181,7 +183,8 @@ const registerFacility = async (req, res) => {
       updatedDt:updatedDt,
       createdBy:userId,
       updatedBy:userId
-    })
+    },
+  {transaction})
 
     if(createFacilities) {
 
@@ -201,6 +204,7 @@ const registerFacility = async (req, res) => {
           let subDir = "facilityImages"
           let filePurpose = "singleFacilityImage"
           console.log('163 line facility image')
+          
           let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, 1, transaction)
           console.log( uploadSingleFacilityImage,'165 line facility image')
           if(errors.length>0){
@@ -245,7 +249,7 @@ const registerFacility = async (req, res) => {
               updatedDt:new Date()
 
             },
-            transaction
+            {transaction}
             )
             if(!createAmenities){
               await transaction.rollback();
@@ -272,8 +276,8 @@ const registerFacility = async (req, res) => {
 
         
       },
-      transaction
-
+      {transaction
+}
       )
       if(!createServices){
         await transaction.rollback();
@@ -299,7 +303,7 @@ const registerFacility = async (req, res) => {
           updatedDt:updatedDt,
           facilityId:createFacilities.facilityId,
           statusId:statusId
-        },transaction
+        },{transaction}
       )
         if(!createEventCategoryDetails){
           await transaction.rollback();
@@ -321,7 +325,7 @@ const registerFacility = async (req, res) => {
           updatedBy:userId,
           createdDt:createdDt,
           updatedDt:updatedDt
-        },transaction
+        },{transaction}
       )
         if(!createGameDetails){
           await transaction.rollback();
@@ -345,7 +349,7 @@ const registerFacility = async (req, res) => {
           createdDt:new Date(),
           updatedBy:userId,
           updatedDt:new Date()
-        }, transaction)
+        }, {transaction})
         if(!createInventory){
           await transaction.rollback();
           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -490,7 +494,15 @@ const getFacilityWrtId = async(req,res)=>{
       { replacements:[facilityId,statusId],
        type:QueryTypes.SELECT}
      )
+     findSingleImage.map(eachData=>{
+      eachData.url = encodeURI(eachData.url)
+      return eachData
+     })
 
+     findMultipleImages.map(eachData=>{
+      eachData.url = encodeURI(eachData.url)
+      return eachData
+     })
      let findOwnerDetails = await sequelize.query(`
       select o.ownershipDetailId,o.firstName,o.lastName,o.phoneNo as phoneNumber,
       o.emailId as emailAddress, o.ownerPanCardNumber as ownerPanCard,o.ownerAddress as ownersAddress,
