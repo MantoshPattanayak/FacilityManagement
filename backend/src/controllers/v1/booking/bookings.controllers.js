@@ -963,7 +963,7 @@ let viewCartByUserId = async (req, res) => {
                 cartItem.imageUrl = encodeURI(cartItem.imageUrl);
                 return cartItem;
             })
-            findCartItemsWRTCartIdSaveForLater = findCartItemsWRTCartId.map((cartItem) => {
+            findCartItemsWRTCartIdSaveForLater = findCartItemsWRTCartIdSaveForLater.map((cartItem) => {
                 cartItem.imageUrl = encodeURI(cartItem.imageUrl);
                 return cartItem;
             })
