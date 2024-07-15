@@ -113,8 +113,8 @@ const AddToCart = () => {
                 <div className="Show_Cart_Details_save_latter">
                     {/* Cart Details Section */}
                     <div className="Cart_details_container">
-                        {GetViewCradData.length > 0 ? (
-                            GetViewCradData.map((cardItem) => (
+                        {GetViewCradData?.length > 0 ? (
+                            GetViewCradData?.map((cardItem) => (
                                 <div className="Cart_details" key={cardItem.cartItemId}>
                                     <div className="image_section">
                                         <img className="park_image_cart" src={`${instance().baseURL}/static${cardItem.imageUrl}`} alt="No image" />
@@ -164,8 +164,8 @@ const AddToCart = () => {
                     <div className="Save_latter_conatiner">
                         <h1 className="Save_for_later_text">Save for later   </h1>
                         <div className="Cart_details_container">
-                            {saveForLaterData.length > 0 ? (
-                                saveForLaterData.map((Item) => (
+                            {saveForLaterData?.length > 0 ? (
+                                saveForLaterData?.map((Item) => (
                                     <div className="Cart_details" key={Item.cartItemId}>
                                         <div className="image_section">
                                             <img className="park_image_cart" src={`${instance().baseURL}/static${Item.imageUrl}`} alt="No image" />
