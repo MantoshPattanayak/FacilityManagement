@@ -133,6 +133,9 @@ const api = {
    FETCH_RAZORPAY_API_KEY: '/razorPayPayment/getRazorpayApiKeys', //get
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 
+
+   /// here footer pages api like contact with us, pathner with us...etc
+   contact_with_us_api:'/grievance/contactUs'
 }
 
 export default api;

@@ -46,6 +46,7 @@ const AddToCart = () => {
         e.preventDefault();
         console.log('cartItemId', cartItemId);
         if (!cartItemId || !action) return;
+       
         try {
             let res = await axiosHttpClient('Update_Card', 'put', {
                 cartItemId: cartItemId,
@@ -55,8 +56,8 @@ const AddToCart = () => {
             console.log("Update Cart", res);
             if (action === 'REMOVED') {
                 toast.success(' Cart has been removed successfully.');
-            } else if (action === 'SAVED_FOR_LATER, REMOVED') {
-                toast.success(' Cart has been saved  for latersuccessfully.');
+            } else if (action === 'SAVED_FOR_LATER') {
+                toast.success(' Cart has been saved  for later successfully.');
             } else if (action === 'IN_CART') {
                 toast.success(' Cart has been moved successfully.');
             }
@@ -111,6 +112,9 @@ const AddToCart = () => {
             <PublicHeader />
             <div className="Add_To_Card_Child_conatiner9">
                 <div className="Show_Cart_Details_save_latter">
+                    <div className="Cart_details_container1">
+                        <h1 className="cart_items_text">Cart items</h1>
+                    </div>
                     {/* Cart Details Section */}
                     <div className="Cart_details_container">
                         {GetViewCradData?.length > 0 ? (
@@ -121,14 +125,14 @@ const AddToCart = () => {
                                     </div>
                                     <div className="text_contant_details_cart">
                                         <span className="park_name_date">
-                                            <h1>{cardItem.facilityTypeName}</h1>
+                                            <h1 className="Park_name_cart">{cardItem.facilityTypeName}</h1>
                                             <h1 className="park_Booking_Date">{formatDate(cardItem.facilityPreference.bookingDate)}</h1>
                                         </span>
                                         <span className="Details_cart_details">
-                                            <h1>{cardItem.facilityName}</h1>
-                                            <h1>Total Members : {(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit}</h1>
-                                            <h1>Time: {formatTime(cardItem.facilityPreference.startTime) + '-' + (formatTime(cardItem.facilityPreference.endTime) || '')} </h1>
-                                            <h1>₹{cardItem.facilityPreference.amount ? parseFloat(cardItem.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                            <h1 className="facility_name_cart">{cardItem.facilityName}</h1>
+                                            <p className="p_tag_text">Total Members : {(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit}</p>
+                                            <p className="p_tag_text">Time: {formatTime(cardItem.facilityPreference.startTime) + '-' + (formatTime(cardItem.facilityPreference.endTime) || '')} </p>
+                                            <h1 className="cart_amount">₹ {cardItem.facilityPreference.amount ? parseFloat(cardItem.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                         </span>
                                         <span className="Save_remove_button">
                                             <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'SAVED_FOR_LATER')}>SAVE FOR LATER</button>
@@ -171,16 +175,16 @@ const AddToCart = () => {
                                             <img className="park_image_cart" src={`${instance().baseURL}/static${Item.imageUrl}`} alt="No image" />
                                         </div>
                                         <div className="text_contant_details_cart">
-                                            <span className="park_name_date">
-                                                <h1>{Item.facilityTypeName}</h1>
-                                                <h1 className="park_Booking_Date">{formatDate(Item.facilityPreference.bookingDate)}</h1>
-                                            </span>
-                                            <span className="Details_cart_details">
-                                                <h1>{Item.facilityName}</h1>
-                                                <h1>Total Members : {(Item.facilityPreference.totalMembers) || Item.facilityPreference.playersLimit}</h1>
-                                                <h1>Time: {formatTime(Item.facilityPreference.startTime) + '-' + (formatTime(Item.facilityPreference.endTime) || '')} </h1>
-                                                <h1>₹{Item.facilityPreference.amount ? parseFloat(Item.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
-                                            </span>
+                                        <span className="park_name_date">
+                                            <h1 className="Park_name_cart">{Item.facilityTypeName}</h1>
+                                            <h1 className="park_Booking_Date">{formatDate(Item.facilityPreference.bookingDate)}</h1>
+                                        </span>
+                                        <span className="Details_cart_details">
+                                            <h1 className="facility_name_cart">{Item.facilityName}</h1>
+                                            <p className="p_tag_text">Total Members : {(Item.facilityPreference.totalMembers) || Item.facilityPreference.playersLimit}</p>
+                                            <p className="p_tag_text">Time: {formatTime(Item.facilityPreference.startTime) + '-' + (formatTime(Item.facilityPreference.endTime) || '')} </p>
+                                            <h1 className="cart_amount">₹ {Item.facilityPreference.amount ? parseFloat(Item.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                        </span>
                                             <span className="Save_remove_button">
                                                 <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, Item.cartItemId, 'IN_CART')}>MOVE TO CART</button>
                                                 <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, Item.cartItemId, 'REMOVED')}>REMOVE</button>
@@ -196,23 +200,32 @@ const AddToCart = () => {
                 </div>
 
                 {/* Price Details Section */}
-                <div className="Booking_Bill_Price">
-                    <h1 className="parice_detials">PRICE DETAILS</h1>
-                    <span className="price_bill">
-                        <h1>Price</h1>
-                        <h1>₹ {totalAmount || 0} </h1>
-                    </span>
-                    <span className="price_bill1">
-                        <h1>Total items</h1>
-                        {GetCountItem.count > 0 && (
-                            <h1>{GetCountItem.count}</h1>
-                        )}
-                    </span>
-                    <span className="price_bill3">
-                        <h1>Total Amount</h1>
-                        <h1>₹ {totalAmount || 0} </h1>
-                    </span>
+
+
+                <div className="Booking_Bill_Mian_Conatiner">
+                    <div className="Booking_Bill_Price">
+                        <h1 className="parice_detials">PRICE DETAILS</h1>
+                        <span className="price_bill">
+                            <h1>Price</h1>
+                            <h1>₹ {totalAmount || 0} </h1>
+                        </span>
+                        <span className="price_bill1">
+                            <h1>Total items</h1>
+                            {GetCountItem.count > 0 && (
+                                <h1>{GetCountItem.count}</h1>
+                            )}
+                        </span>
+                        <span className="price_bill3">
+                            <h1>Total Amount</h1>
+                            <h1>₹ {totalAmount || 0} </h1>
+                        </span>
+
+                    </div>
+                    <h1 className="Safe_text">Safe and Secure Payments.Easy returns.100% Authentic products.</h1>
+
                 </div>
+
+
             </div>
 
             {/* Toast Notifications */}
