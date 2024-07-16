@@ -438,6 +438,74 @@ let contactRequest = async (req,res)=>{
       })
     }
   }
+
+// view feedback list - start
+let viewFeedbackList = async (req, res) => {
+    try {
+        let givenReq = req.body.givenReq ? req.body.toLowerCase() : null;
+        let fetchFeedbackList = await feedbacks.findAll();
+
+        let matchedData = fetchFeedbackList;
+        if(givenReq) {
+            matchedData = matchedData.filter((data) => {
+                return data.name.toLowerCase().includes(givenReq) ||
+                data.mobile.includes(givenReq) ||
+                data.email.toLowerCase().includes(givenReq) ||
+                data.subject.toLowerCase().includes(givenReq) ||
+                data.feedback.toLowerCase().includes(givenReq)
+            });
+        }
+
+        if(fetchFeedbackList.length > 0) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'Feedback list',
+                data: matchedData
+            })
+        }
+        else {
+            res.status(statusCode.NOTFOUND.code).json({
+
+            })
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+// view feedback list - end
+
+// view feedback details by id - start
+let viewFeedbackById = async (req, res) => {
+    try {
+        let feedbackId = req.params.feedbackId;
+        let fetchFeedbackDetailsById = await feedbacks.findOne({
+            where: {
+                feedbackId: feedbackId
+            }
+        });
+
+        if(fetchFeedbackDetailsById.length > 0) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'Feedback list',
+                data: fetchFeedbackDetailsById
+            })
+        }
+        else {
+            res.status(statusCode.NOTFOUND.code).json({
+                message: "No data found"
+            })
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+// view feedback details by id - end
+
 module.exports = {
     addGrievance,
     viewGrievanceList,
@@ -446,5 +514,6 @@ module.exports = {
     fetchInitialData,
     actionTaken,
     contactRequest,
-    
+    viewFeedbackList,
+    viewFeedbackById
 }
