@@ -943,9 +943,17 @@ let findOverallSearch = async (req,res)=>{
         range = range ? range : 20; 
         let getNearByData=[];
         let eventQuery;
+        let facilityFilePurpose = 'singleFacilityImage'
+        let facilityEntityType = 'facilities'
+        let eventFilePurpose = 'Event Image'
+        let eventEntityType = 'events'
         console.log('givenReq',givenReq)
         givenReq = givenReq.toLowerCase();
-        let findFacilityData = await sequelize.query(`select f.facilityname, f.address  from amabhoomi.facilities f`,{type:QueryTypes.SELECT});
+        let findFacilityData = await sequelize.query(`select f.facilityname, f.address from amabhoomi.facilities f `,{type:QueryTypes.SELECT
+        },
+            
+        );
+        console.log('232')
         let findFacilityActivity = await sequelize.query(`select u.userActivityName,f3.facilityId from amabhoomi.facilityactivities f3 inner join useractivitymasters u on u.userActivityId = f3.activityId 
     `,{type:QueryTypes.SELECT})
         let findServiceFacility = await sequelize.query(`select s.code,s2.facilityId from amabhoomi.servicefacilities s2 inner join services s on s.serviceId = s2.serviceId 
@@ -1015,16 +1023,22 @@ let findOverallSearch = async (req,res)=>{
 
         // Fetch facility data based on matched facilityIds
         const facilities = await sequelize.query(`
-            SELECT f.* 
-            FROM amabhoomi.facilities f
-            WHERE facilityId IN (:facilityIds)
+            SELECT f.*,fl.url as imageURL
+            FROM amabhoomi.facilities f  
+            inner join fileattachments fa on fa.entityId = f.facilityId 
+            inner join files fl on fa.fileId = fl.fileId 
+            where facilityId IN (:facilityIds) and fa.filePurpose = :filePurpose and fa.entityType = :entityType
+             
         `, {
-            replacements: { facilityIds },
+            replacements: { facilityIds,
+                filePurpose:facilityFilePurpose,
+                entityType:facilityEntityType
+             },
             type: Sequelize.QueryTypes.SELECT
         });
         if(facilities.length>0){
             for (const data of facilities) {
-                console.log('data',facilities,'fetchFacilitiesData')
+                console.log('data',data,'fetchFacilitiesData')
                 let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
                 if (distance <= range) {
                     console.log('distance', distance)
@@ -1037,9 +1051,12 @@ let findOverallSearch = async (req,res)=>{
             let facilityIds = getNearByData.map(id => id.facilityId);
             if(facilityIds.length>0){
                 console.log('inside facilityIds',facilityIds)
-                eventQuery = await sequelize.query(`select * from amabhoomi.eventactivities where facilityId in (:facilityIds) `,{
+                eventQuery = await sequelize.query(`select e.*, fl.url from amabhoomi.eventactivities e inner join fileattachments fa on fa.entityId = e.eventId inner join files fl on fa.fileId = fl.fileId where e.facilityId in (:facilityIds) and fa.filePurpose = :filePurpose and fa.entityType = :entityType `,{
                     type:QueryTypes.SELECT,
-                    replacements:{facilityIds}
+                    replacements:{facilityIds,
+                        filePurpose:eventFilePurpose,
+                        entityType:eventEntityType
+                    }
                 })
                 console.log(eventQuery,'data')
             }
