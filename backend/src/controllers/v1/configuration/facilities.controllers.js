@@ -96,7 +96,14 @@ function encodeUrls(facilitiesArray) {
         // Check if the facility object has a "url" property
         if (facility.url) {
             // Encode the URL
-            facility.url = facility.url.split('/').map(encodeURIComponent).join('/');
+            facility.url = facility.url.split('/').map(segment=>{
+                if(segment.includes(';')){
+                    return segment
+                }
+                else{
+                    return encodeURIComponent(segment)
+                }
+            }).join('/');
 
             // facility.url = encodeURIComponent(facility.url);
         }
@@ -273,8 +280,10 @@ const viewParkById = async (req,res)=>{
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-            end as status, address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,fl.url 
-            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? and ft.filePurpose = ? `
+            end as status,ft.filePurpose,address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,group_concat(fl.url separator  ';') as url
+            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? and ft.filePurpose = ?
+      
+       `
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
             replacements:[new Date(), facilityId,multipleFacilityImage]

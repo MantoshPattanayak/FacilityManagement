@@ -55,9 +55,10 @@ const Bokking_Bill = () => {
         try {
             let res = await axiosHttpClient('VIEW_TICKET_BILL_API', 'post', {
                 bookingId: bookingId
+                
             });
 
-            console.log("here Response of Generate Pdf", res);
+            console.log("here Response of Generate Pdf", res, bookingId);
 
             const content = document.querySelector('.ticket');
             const date = new Date();

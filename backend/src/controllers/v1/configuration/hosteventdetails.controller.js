@@ -17,8 +17,9 @@ const {Op} = require('sequelize')
 let user = db.usermaster
 let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 const createHosteventdetails = async (req, res) => {
+  let transaction;
   try {
-
+    transaction = await sequelize.transaction();
     let userId = req.user?.userId || 1;
     let createdDt = new Date();
     let updatedDt = new Date();
@@ -28,7 +29,8 @@ const createHosteventdetails = async (req, res) => {
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
-      }
+      },
+      transaction
     })
 
     let createHosteventdetails;
@@ -69,14 +71,16 @@ console.log("here Reponse of Host event", req.body)
     let checkIfEntityExist = await usermasters.findOne({
       where:{
        [Op.and]: [{userId:userId},{statusId:statusId},{isEntity:isEntity}]
-      }
+      },
+     transaction
     })
     if(!checkIfEntityExist){
       let [updateIsEntityInUserMaster] = await usermasters.update({isEntity:isEntity},
       {  
         where:{
           [Op.and]: [{userId:userId},{statusId:statusId}]     
-            }
+            },
+            transaction
           }
       )
       createBankDetails = await bankDetails.create({
@@ -89,13 +93,15 @@ console.log("here Reponse of Host event", req.body)
         updatedBy:userId,
         updatedDt:updatedDt,
         createdDt:createdDt
-      })
+      },
+   { transaction})
     }
     else if(checkIfEntityExist){
       let findTheBankDetails = await bankDetails.findOne({
         where:{
           [Op.and]:[{createdBy:userId},{statusId:statusId}]
-        }
+        },
+        transaction
       })
       if(findTheBankDetails){
         let bankDetailsObject={};
@@ -117,7 +123,8 @@ console.log("here Reponse of Host event", req.body)
         let updateTheBankDetails  = await bankDetails.update(bankDetailsObject,{
           where:{
             [Op.and]:[{statusId:statusId},{createdBy:createdBy}]
-          }
+          },
+          transaction
         })
 
 
@@ -133,7 +140,8 @@ console.log("here Reponse of Host event", req.body)
         updatedBy:userId,
         updatedDt:updatedDt,
         createdDt:createdDt
-      })
+      },
+    {transaction})
       }
 
     }
@@ -156,7 +164,8 @@ console.log("here Reponse of Host event", req.body)
       updatedDt:updatedDt,
       createdBy:userId,
       updatedBy:userId
-    })
+    },
+  {transaction})
     if(createEventActivities){
       // then insert to host event tables
         createHosteventdetails = await hosteventdetails.create({
@@ -179,7 +188,7 @@ console.log("here Reponse of Host event", req.body)
           updatedBy:userId,
           createdDt:createdDt,
           updatedDt:updatedDt
-        });
+        },{transaction});
         
     // Image upload work
     let entityType = 'events'
@@ -193,7 +202,7 @@ console.log("here Reponse of Host event", req.body)
         let subDir = "eventDir"
         let filePurpose = "Event Image"
         console.log('326 line event image')
-        let uploadSingleEventImage = await imageUpload(uploadEventImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+        let uploadSingleEventImage = await imageUpload(uploadEventImage,entityType,subDir,filePurpose,insertionData,userId,errors,1,transaction)
         console.log( uploadSingleEventImage,'328 line event image')
         if(errors.length>0){
           if(errors.some(error => error.includes("something went wrong"))){
@@ -208,7 +217,7 @@ console.log("here Reponse of Host event", req.body)
         let filePurpose = "Event additional file"
         for (let i = 0; i < additionalFiles.length; i++) {
           const additionalFile = additionalFiles[i];
-          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors)
+          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors,i,transaction)
         }
         if(errors.length>0){
           if(errors.some(error => error.includes("something went wrong"))){

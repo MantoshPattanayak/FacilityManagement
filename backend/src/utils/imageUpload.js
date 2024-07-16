@@ -7,6 +7,8 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
     // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
+      console.log('image upload function entry')
+        console.log(entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber,'these are all parameters in upload image function')
         let createdDt = new Date();
         let updatedDt = new Date();
         let uploadFilePath = null;
@@ -16,7 +18,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
         console.log('base 64 image file line 10')
         const mimeMatch = imageData.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
         const mime = mimeMatch ? mimeMatch[1] : null;
-        console.log(mime, mimeMatch,'mime match')
+        // console.log(mime, mimeMatch,'mime match')
         if ([
           "image/jpeg",
           "image/png",
@@ -28,7 +30,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
 
           // convert base 64 to buffer for image or document or set to null if not present
           const uploadImageFileBuffer = imageData ? Buffer.from(base64ImageFile, "base64") : null;
-          console.log(uploadImageFileBuffer,'25 upload image file buffer')
+          // console.log(uploadImageFileBuffer,'25 upload image file buffer')
           if (uploadImageFileBuffer) {
             console.log('27',path.join(uploadDir, subDir))
             const imageFileDir = path.join(uploadDir, subDir);
@@ -50,6 +52,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
             let fileType = mime ? mime.split("/")[0] : 'unknown';
             console.log(fileName,fileType,"file path2 46")
             // insert to file table and file attachment table
+            console.log(fileName,fileType, uploadFilePath2, 'create file data parameters')
             let createFile = await file.create({
               fileName: fileName,
               fileType: fileType,
@@ -60,7 +63,8 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
               createdBy:userId,
               updatedBy:userId
             },
-          transaction);
+            {transaction}
+          );
             console.log('createFile', createFile)
             if (!createFile) {
               return errors.push(`Failed to create file  for facility file at index ${i}`);
@@ -74,7 +78,8 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
                 statusId: 1,
                 filePurpose: filePurpose
               },
-            transaction);
+              {transaction}
+            );
 
               if (!createFileAttachment) {
                 return errors.push(`Failed to create file attachment for facility file at index ${i}`);

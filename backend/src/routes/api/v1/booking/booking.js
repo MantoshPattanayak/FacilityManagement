@@ -13,7 +13,7 @@ router.post('/addToCart',authenticateToken,booking.addToCart)
 
 router.get('/viewCartByUserId',authenticateToken,booking.viewCartByUserId)
 
-router.put('/updateCart/:cartItemId',authenticateToken,booking.updateCart)
+router.put('/updateCart',authenticateToken,booking.updateCart)
 
 router.get('/viewCartItemsWRTCartItemId/:cartItemId',authenticateToken,booking.viewCartItemsWRTCartItemId)
 

@@ -68,7 +68,7 @@ const Sub_Park_Details = () => {
   const [currentIndex1, setCurrentIndex1] = useState(0);
 
   useEffect(() => { }, [facilityId]);
-
+  // Book Mark Funcation ----------------------------------------
   async function handleBookmarkStatus(e) {
     e.preventDefault();
     if (!isUserLoggedIn) {
@@ -110,32 +110,24 @@ const Sub_Park_Details = () => {
 
   async function getSub_park_details() {
     try {
-      let res = await axiosHttpClient(
-        "View_By_ParkId",
-        "get",
-        null,
-        facilityId
-      );
-
+      let res = await axiosHttpClient("View_By_ParkId", "get", null, facilityId);
+  
       setServiceData(res.data.serviceData);
       setAmenitiesData(res.data.amenitiesData);
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
       setOperatingDaysFromRes(res);
+  
+      // Set images data
       if (res.data.facilitiesData.length > 0) {
-        let imagesData = res.data.facilitiesData.map((facility) => {
-          return facility.url || null
-        });
-        console.log("Images data", imagesData);
+        let imagesData = res.data.facilitiesData[0].url.split(";").filter(url => url.trim() !== "");
         setImagesList(imagesData);
       }
-
-      console.log("response of fetch facility details", res.data.facilitiesData);
-
+  
       function setOperatingDaysFromRes(res) {
         let operatingDaysFromRes = [];
         if (res.data.facilitiesData[0].sun == 1) {
-          operatingDaysFromRes.push("Sun");
+          operatingDaysFromRes.push("Ssu");
         }
         if (res.data.facilitiesData[0].mon == 1) {
           operatingDaysFromRes.push("Mon");
@@ -161,6 +153,7 @@ const Sub_Park_Details = () => {
       console.log("Error fetching park details", err);
     }
   }
+  
 
   async function getUserBookmarks() {
     if (isUserLoggedIn) {
@@ -610,8 +603,8 @@ const Sub_Park_Details = () => {
           closePopup={closePopup}
           facilityId={encryptDataId(FacilitiesData[0]?.facilityId)}
           facilityName={FacilitiesData[0]?.facilityName}
-          operatingHoursFrom = {FacilitiesData[0]?.operatingHoursFrom}
-          operatingHoursTo = {FacilitiesData[0]?.operatingHoursTo}
+          operatingHoursFrom={FacilitiesData[0]?.operatingHoursFrom}
+          operatingHoursTo={FacilitiesData[0]?.operatingHoursTo}
         />
       )}
     </div>
