@@ -81,6 +81,8 @@ const amenities = require('./routes/api/' + api_version + '/mdm/amenities')
 const inventories = require('./routes/api/' + api_version + '/mdm/inventory')
 
 const eventcategories = require('./routes/api/' + api_version + '/mdm/eventcategories')
+
+const facilityType = require('./routes/api/' + api_version + '/mdm/facilitytype')
 console.log(port, "port");
 
 app.use(
@@ -152,6 +154,8 @@ app.use('/amenities', amenities)
 app.use('/inventories', inventories)
 //event-categories
 app.use('/eventcategories', eventcategories)
+//facility-type master
+app.use('/facilitytype', facilityType)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 

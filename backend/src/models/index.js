@@ -131,6 +131,9 @@ db1.bankdetails = require('./bankdetail.models')(sequelize,DataTypes)
 // user departments linking table
 db1.userdepartments = require('./userdepartment.models')(sequelize, DataTypes)
 db1.contactrequests = require('./contactus.models')(sequelize,DataTypes)
+// partner with us
+db1.partnerwithus = require('./partner.models')(sequelize,DataTypes)
+// end partner with us
 // join operations start
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})

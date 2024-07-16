@@ -11,7 +11,7 @@ const fs = require('fs');
 const imageUpload = require('../../../utils/imageUpload');
 let { generateOtp,veriftyOtp } = require("../../../utils/generateandVerifyOtp");
 let {Op} =require('sequelize')
-
+let partnerUs = db.partnerwithus
 // insert grievance - start
 const addGrievance = async (req, res) => {
     try {
@@ -353,58 +353,84 @@ const createFeedback = async (req, res) => {
 //create feedback -end 
 
 let contactRequest = async (req,res)=>{
-    let transaction;
+ 
     try {
-        transaction = await sequelize.transaction();
       let updatedDt = new Date();
       let createdDt = new Date();
       let unauthorizedStatusId = 19;
-      let {fullName,mobileNo,emailId,message} = req.body
+      let {fullName,mobileNo,emailId,message,patner} = req.body
 
-      let findIfTheMobileNoExistAlready = await contactUs.findOne({
-        where:{
-            [Op.and]:[{mobileNo:mobileNo},{statusId:unauthorizedStatusId}]
-        }
-      })
-      if(findIfTheMobileNoExistAlready){
-        return res.status(statusCode.BAD_REQUEST.code).json({message:"One request is already opened with the given mobile number"})
-      }
-      let contactRequestData ={
-        fullName:fullName,
-        mobileNo:mobileNo,
-        emailId:emailId,
-        statusId:unauthorizedStatusId,
-        message:message,
-        updatedDt:updatedDt,
-        createdDt:createdDt                       
-      };
-
-      //   insert into contact request table
-       let createContactRequest = await contactUs.create(contactRequestData,{ transaction, returning: true  })
-       console.log('near 384 line')
-       if(createContactRequest){
-        let sendOtp = await generateOtp(mobileNo);
-        console.log('send otp',sendOtp)
-        if(sendOtp?.error){
-            await transaction.rollback();
-            if(sendOtp?.error== 'Something went wrong '){
+     if(patner ==0){
+        let contactRequestData ={
+            fullName:fullName,
+            mobileNo:mobileNo,
+            emailId:emailId,
+            statusId:unauthorizedStatusId,
+            message:message,
+            updatedDt:updatedDt,
+            createdDt:createdDt                       
+          };
+          let createContactRequest = await contactUs.create(contactRequestData)
+          console.log('near 384 line')
+          if(!createContactRequest){
                 return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                    message:err.message
-                })
-            }
-            return res.status(statusCode.BAD_REQUEST.code).json({
                 message:err.message
             })
-           
-        }
-        await transaction.commit(); // If everything goes well, will do the commit here
-        return res.status(statusCode.CREATED.code).json({
-            message:"Your request is submitted sucessfully. Kindly verify your mobile number"
+          }
+          return res.status(statusCode.CREATED.code).json({
+            message:"Your request is submitted sucessfully"
            })
-       }
-       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:err.message
-      })
+   
+     }
+     if(patner ==1){
+        let partnerRequestData ={
+            fullName:fullName,
+            mobileNo:mobileNo,
+            emailId:emailId,
+            statusId:unauthorizedStatusId,
+            message:message,
+            updatedDt:updatedDt,
+            createdDt:createdDt                       
+          };
+          let createPartner = await partnerUs.create(partnerRequestData)
+          console.log('near 384 line')
+          if(!createPartner){
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:err.message
+            })
+          }
+          return res.status(statusCode.CREATED.code).json({
+            message:"Your request is submitted sucessfully"
+           })
+   
+     }
+      
+
+      //   insert into contact request table
+      
+    //    if(createContactRequest){
+    //     let sendOtp = await generateOtp(mobileNo);
+    //     console.log('send otp',sendOtp)
+    //     if(sendOtp?.error){
+    //         await transaction.rollback();
+    //         if(sendOtp?.error== 'Something went wrong '){
+    //             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+    //                 message:err.message
+    //             })
+    //         }
+    //         return res.status(statusCode.BAD_REQUEST.code).json({
+    //             message:err.message
+    //         })
+           
+    //     }
+    //     await transaction.commit(); // If everything goes well, will do the commit here
+    //     return res.status(statusCode.CREATED.code).json({
+    //         message:"Your request is submitted sucessfully. Kindly verify your mobile number"
+    //        })
+    //    }
+    //    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+    //     message:err.message
+    //   })
     } catch (err) {
         if(transaction) await transaction.rollback();
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -412,6 +438,74 @@ let contactRequest = async (req,res)=>{
       })
     }
   }
+
+// view feedback list - start
+let viewFeedbackList = async (req, res) => {
+    try {
+        let givenReq = req.body.givenReq ? req.body.toLowerCase() : null;
+        let fetchFeedbackList = await feedbacks.findAll();
+
+        let matchedData = fetchFeedbackList;
+        if(givenReq) {
+            matchedData = matchedData.filter((data) => {
+                return data.name.toLowerCase().includes(givenReq) ||
+                data.mobile.includes(givenReq) ||
+                data.email.toLowerCase().includes(givenReq) ||
+                data.subject.toLowerCase().includes(givenReq) ||
+                data.feedback.toLowerCase().includes(givenReq)
+            });
+        }
+
+        if(fetchFeedbackList.length > 0) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'Feedback list',
+                data: matchedData
+            })
+        }
+        else {
+            res.status(statusCode.NOTFOUND.code).json({
+
+            })
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+// view feedback list - end
+
+// view feedback details by id - start
+let viewFeedbackById = async (req, res) => {
+    try {
+        let feedbackId = req.params.feedbackId;
+        let fetchFeedbackDetailsById = await feedbacks.findOne({
+            where: {
+                feedbackId: feedbackId
+            }
+        });
+
+        if(fetchFeedbackDetailsById.length > 0) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: 'Feedback list',
+                data: fetchFeedbackDetailsById
+            })
+        }
+        else {
+            res.status(statusCode.NOTFOUND.code).json({
+                message: "No data found"
+            })
+        }
+    }
+    catch(error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+// view feedback details by id - end
+
 module.exports = {
     addGrievance,
     viewGrievanceList,
@@ -419,5 +513,7 @@ module.exports = {
     createFeedback,
     fetchInitialData,
     actionTaken,
-    contactRequest
+    contactRequest,
+    viewFeedbackList,
+    viewFeedbackById
 }
