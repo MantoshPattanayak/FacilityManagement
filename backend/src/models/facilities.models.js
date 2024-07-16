@@ -9,7 +9,7 @@ module.exports = (sequelize,DataTypes)=>{
             primaryKey:true
         },
         facilityname:{
-            type:DataTypes.STRING(255)
+            type:DataTypes.TEXT
         },
         ownership:{
             type:DataTypes.STRING(50)
