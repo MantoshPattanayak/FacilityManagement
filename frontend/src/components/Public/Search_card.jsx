@@ -93,7 +93,7 @@ function Search_Card() {
           <Slider {...settings}>
             {parkData.map((d, index) => (
               <div className="park-card" key={d.name}>
-                {/* <Link
+                <Link
                   key={d.name}
                   to={{
                     pathname: "/Sub_Park_Details",
@@ -102,7 +102,7 @@ function Search_Card() {
                     )}&action=view`,
                   }}
                   className="park-card"
-                ></Link> */}
+                ></Link>
                 <img className="Card_img" src={image} alt="Park" />
                 <div className="card_text">
                   <span className="Name_location">
@@ -127,7 +127,7 @@ function Search_Card() {
         </div>
         <div className="mt-20">
           <Slider {...settings}>
-            {playGroundData.map((d) => (
+            {playGroundData?.map((d, index) => (
               <div className="park-card" key={d.name}>
                 <img className="Card_img" src={image} alt="Park" />
                 <div className="card_text">
