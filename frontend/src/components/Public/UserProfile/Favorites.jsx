@@ -291,9 +291,9 @@ const Favorites = () => {
 
                                                     <div className='eventdetails-details-eventname' title={bookmark.name}>{truncateName(bookmark.name, 25)}</div>
                                                     <div className='eventdetails-details-eventAddress' title={bookmark.address}>{truncateName(bookmark.address, 25)}</div>
-                                                    <div className='flex justify-between eventdetails-details-eventTime'>
+                                                    {/* <div className='flex justify-between eventdetails-details-eventTime'>
                                                         <div>Bookmarked on {formatDate(bookmark.bookmarkDate)}</div>
-                                                    </div>
+                                                    </div> */}
 
                                                     <div className='event-details'>
                                                         {

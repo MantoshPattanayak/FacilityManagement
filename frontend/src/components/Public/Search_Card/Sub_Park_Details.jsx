@@ -117,7 +117,7 @@ const Sub_Park_Details = () => {
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
       setOperatingDaysFromRes(res);
-  
+      console.log('facility details data fetch', res.data);
       // Set images data
       if (res.data.facilitiesData.length > 0) {
         let imagesData = res.data.facilitiesData[0].url.split(";").filter(url => url.trim() !== "");
@@ -127,7 +127,7 @@ const Sub_Park_Details = () => {
       function setOperatingDaysFromRes(res) {
         let operatingDaysFromRes = [];
         if (res.data.facilitiesData[0].sun == 1) {
-          operatingDaysFromRes.push("Ssu");
+          operatingDaysFromRes.push("Sun");
         }
         if (res.data.facilitiesData[0].mon == 1) {
           operatingDaysFromRes.push("Mon");
