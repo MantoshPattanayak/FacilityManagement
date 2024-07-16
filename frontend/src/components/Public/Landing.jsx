@@ -1,9 +1,21 @@
 import "./Landing.css";
 import gif from "../../assets/newImg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileLines, faLocationDot, faSearch,faPlay, faPause, faStop } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileLines,
+  faLocationDot,
+  faSearch,
+  faPlay,
+  faPause,
+  faStop,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 import axiosHttpClient from "../../utils/axios";
 import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
@@ -47,7 +59,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import anan_image from "../../assets/Anan_vihar.jpg";
 // Import Image for Current event--------------------
-import No_Current_Event_img from "../../assets/No_Current_Event_Data.png"
+import No_Current_Event_img from "../../assets/No_Current_Event_Data.png";
 // here import Park Image
 
 import PublicHeader from "../../common/PublicHeader.jsx";
@@ -71,7 +83,6 @@ import {
   formatTime,
 } from "../../utils/utilityFunctions.js";
 // import for slider
-
 
 import TourGuide from "../../common/TourGuide.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -103,7 +114,9 @@ const responsive = {
 
 const Landing = () => {
   const [runTour, setRunTour] = useState(false);
-  const [showTour, setShowTour] = useState(localStorage.getItem('tourGuide') || 'true');
+  const [showTour, setShowTour] = useState(
+    localStorage.getItem("tourGuide") || "true"
+  );
   const [mapdata, setmapdata] = useState([]);
   const [selectedParkId, setSelectedParkId] = useState(null);
   const [selectedLocationDetails, setSelectedLocationDetails] = useState(null);
@@ -125,13 +138,11 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
-  
 
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
   let dispatch = useDispatch();
-
 
   const marqueeRef = useRef(null);
   const [isMarqueePaused, setIsMarqueePaused] = useState(false);
@@ -175,8 +186,6 @@ const Landing = () => {
       imgENAbg: yoga_bg,
     },
   ]);
-
-
 
   const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
@@ -267,10 +276,9 @@ const Landing = () => {
     setUserGeoLocation();
     document.title = "AMA BHOOMI";
     setRunTour(true);
-    console.log('showTour', showTour);
+    console.log("showTour", showTour);
   }, []);
   // here error ------------
-
 
   function handleInputFacility(e, facilityId) {
     e.preventDefault();
@@ -365,7 +373,6 @@ const Landing = () => {
 
   // }, [userLocation, distanceRange, facilityTypeId]);
 
-
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
 
   useEffect(() => {
@@ -430,8 +437,6 @@ const Landing = () => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
 
-
-
   // To handle search input field in landing page..............
 
   const handleSearch = () => {
@@ -444,8 +449,7 @@ const Landing = () => {
     if (e.key === "Enter") {
       handleSearch();
     }
-  }
-
+  };
 
   // handleGameClick ------------------------------------------------
 
@@ -466,7 +470,6 @@ const Landing = () => {
       setCurrentInnerImage(yoga_1);
     }
   };
-
 
   //Gallery section
 
@@ -504,7 +507,6 @@ const Landing = () => {
       desc: `BDA Colony Park, Sundarpada`,
     },
   ];
-
 
   const nextImage = () => {
     if (currentIndex < images.length - 3) {
@@ -585,15 +587,13 @@ const Landing = () => {
   const styles = getStyles();
   const handleJoyrideCallback = (data) => {
     const { status, action } = data;
-    if (status === 'finished' || action === 'skip') {
+    if (status === "finished" || action === "skip") {
       // Save the state to local storage to prevent the tour from showing again
       dispatch(manageTourGuide({ tourGuide: false }));
       setRunTour(false);
       setShowTour(false);
     }
   };
-
-
 
   return (
     <div className="landingcontainer">
@@ -617,22 +617,29 @@ const Landing = () => {
               Explore, Book and Enjoy Open Spaces{" "}
             </h2>
             <div className="input-wrapper">
-              <input
-                ref={searchInputRef}
-                className="search-bar"
-                type="text"
-                name="search"
-                placeholder="Search by Name and Location"
-                value={inputFacility}
-                autoComplete="off"
-                onChange={handleInputFacility}
-                onKeyDown={handleKeyDown}
-              />
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                className="input-icon"
-                onClick={handleSearch}
-              />
+              <div className="search-bar-wrapper">
+                <input
+                  ref={searchInputRef}
+                  className="search-bar"
+                  type="text"
+                  name="search"
+                  placeholder="Search by Name and Location"
+                  value={inputFacility}
+                  autoComplete="off"
+                  onChange={handleInputFacility}
+                  onKeyDown={handleKeyDown}
+                />
+                <div className="search-icon">
+                  <FontAwesomeIcon icon={faSearch} className="os-icon" />
+                </div>
+              </div>
+              <div className="search-bar-arrow">
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className="input-icon"
+                  onClick={handleSearch}
+                />
+              </div>
             </div>
             {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
@@ -648,9 +655,9 @@ const Landing = () => {
                       onClick={(e) =>
                         navigate(
                           "/Sub_Park_Details" +
-                          `?facilityId=${encryptDataId(
-                            suggestion.facilityId
-                          )}`
+                            `?facilityId=${encryptDataId(
+                              suggestion.facilityId
+                            )}`
                         )
                       }
                     >
@@ -929,47 +936,57 @@ const Landing = () => {
       {/* -----Whats New Section------------------------------------------- */}
 
       <div className="notice2">
-      <div className="notice2-container">
-        <button className="what_new">Whats New</button>
-        <marquee
-          className="marquee"
-          behavior="scroll"
-          direction="left"
-          scrollamount={isMarqueePaused ? "0" : "6"} // Adjust scroll speed here
-          ref={marqueeRef}
-        >
-          <div className="flex marquee-content">
-            {notifications.map((notification) => {
-              const createdAtDate = new Date(notification.createdAt);
-              const currentDate = new Date();
-              const diffInDays = Math.round((currentDate - createdAtDate) / (1000 * 3600 * 24));
+        <div className="notice2-container">
+          <button className="what_new">Whats New</button>
+          <marquee
+            className="marquee"
+            behavior="scroll"
+            direction="left"
+            scrollamount={isMarqueePaused ? "0" : "6"} // Adjust scroll speed here
+            ref={marqueeRef}
+          >
+            <div className="flex marquee-content">
+              {notifications.map((notification) => {
+                const createdAtDate = new Date(notification.createdAt);
+                const currentDate = new Date();
+                const diffInDays = Math.round(
+                  (currentDate - createdAtDate) / (1000 * 3600 * 24)
+                );
 
-              return (
-                <p className="notce2para" key={notification.id}>
-                  {diffInDays <= 100 && <span className="New_text"> New </span>}
-                  {/* Conditionally render gif */}
-                  {/* {diffInDays <= 7 && <img src={gif} alt="New notification" />} */}
-                  {notification.publicNotificationsContent}&nbsp;
-                  {notification.url && 
-                    <a href={instance().baseURL + '/static' + notification.url}>
-                      <FontAwesomeIcon icon={faFileLines} />
-                    </a>
-                  }
-                  &nbsp;&nbsp;
-                </p>
-              );
-            })}
-          </div>
-        </marquee>
+                return (
+                  <p className="notce2para" key={notification.id}>
+                    {diffInDays <= 100 && (
+                      <span className="New_text"> New </span>
+                    )}
+                    {/* Conditionally render gif */}
+                    {/* {diffInDays <= 7 && <img src={gif} alt="New notification" />} */}
+                    {notification.publicNotificationsContent}&nbsp;
+                    {notification.url && (
+                      <a
+                        href={instance().baseURL + "/static" + notification.url}
+                      >
+                        <FontAwesomeIcon icon={faFileLines} />
+                      </a>
+                    )}
+                    &nbsp;&nbsp;
+                  </p>
+                );
+              })}
+            </div>
+          </marquee>
+        </div>
+        <div className="button-container22">
+          {isMarqueePaused ? (
+            <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
+              <FontAwesomeIcon icon={faPlay} />
+            </button>
+          ) : (
+            <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
+              <FontAwesomeIcon icon={faPause} />
+            </button>
+          )}
+        </div>
       </div>
-      <div className="button-container22">
-        {isMarqueePaused ? (
-          <button className="Play_pause_icon"  onClick={handleTogglePlayPause}><FontAwesomeIcon icon={faPlay} /></button>
-        ) : (
-          <button  className="Play_pause_icon" onClick={handleTogglePlayPause}><FontAwesomeIcon icon={faPause} /></button>
-        )}
-      </div>
-    </div>
 
       {/* ------Event details card-------------------------------------------------------------------- */}
 
@@ -1007,7 +1024,10 @@ const Landing = () => {
                     <Link
                       key={index}
                       className="carousel-slide2"
-                      to={"/events-details?eventId=" + `${encryptData(event.eventId)}`}
+                      to={
+                        "/events-details?eventId=" +
+                        `${encryptData(event.eventId)}`
+                      }
                     >
                       <img
                         className="Yoga_image2"
@@ -1044,7 +1064,10 @@ const Landing = () => {
             </>
           ) : (
             <div className="no-data-message_Current_event1">
-              <img className="Current_Event_image" src={No_Current_Event_img}></img>
+              <img
+                className="Current_Event_image"
+                src={No_Current_Event_img}
+              ></img>
             </div>
           )}
         </div>
@@ -1069,8 +1092,9 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${selectedActivity === index ? "selected" : ""
-                  }`}
+                className={`activity ${
+                  selectedActivity === index ? "selected" : ""
+                }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
@@ -1097,9 +1121,9 @@ const Landing = () => {
                               onClick={(e) => {
                                 navigate(
                                   "/Sub_Park_Details" +
-                                  `?facilityId=${encryptDataId(
-                                    park.facilityId
-                                  )}`
+                                    `?facilityId=${encryptDataId(
+                                      park.facilityId
+                                    )}`
                                 );
                               }}
                             >
@@ -1119,8 +1143,6 @@ const Landing = () => {
         </div>
       </div>
 
-
-
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
 
       <div className="galleryOuter">
@@ -1130,7 +1152,7 @@ const Landing = () => {
             <h1>Gallery</h1>
           </div>
           <div className="viewMoreGallery">
-            <Link to={'/View_Gallery/Image_Gallery'}>View All</Link>
+            <Link to={"/View_Gallery/Image_Gallery"}>View All</Link>
             <FontAwesomeIcon icon={faArrowRight} />
           </div>
         </div>
@@ -1182,7 +1204,9 @@ const Landing = () => {
       </div>
 
       {/* <div className="footer"></div> */}
-      {(showTour == 'true') && <TourGuide run={runTour} callback={handleJoyrideCallback} />}
+      {showTour == "true" && (
+        <TourGuide run={runTour} callback={handleJoyrideCallback} />
+      )}
     </div>
   );
 };

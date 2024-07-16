@@ -1,26 +1,25 @@
 html,
 body {
-    height: 100%;
-    margin: 0;
-    /* Remove default margin */
-    padding: 0;
-    /* Remove default padding */
+  height: 100%;
+  margin: 0;
+  /* Remove default margin */
+  padding: 0;
+  /* Remove default padding */
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 * {
-    box-sizing: border-box;
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-
+  box-sizing: border-box;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .landingcontainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* .header {
@@ -44,70 +43,69 @@ body {
 
 /* Add this CSS */
 .iconPlayApple {
-    position: fixed;
-    top: 40vh;
-    /* Adjust this value as needed */
-    right: 10px;
-    /* Adjust this value as needed */
-    z-index: 1000;
-    /* Ensure it is above other content */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  position: fixed;
+  top: 40vh;
+  /* Adjust this value as needed */
+  right: 10px;
+  /* Adjust this value as needed */
+  z-index: 1000;
+  /* Ensure it is above other content */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 
-    background-color: white;
-    padding: 10px;
-    border-radius: 16px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 16px;
 }
 
-
 .iconPlayApple img {
-    margin: 0 5px;
-    /* Add some space between icons */
-    width: 40px;
-    /* Adjust the width of the icons */
-    height: auto;
-    /* Maintain aspect ratio */
+  margin: 0 5px;
+  /* Add some space between icons */
+  width: 40px;
+  /* Adjust the width of the icons */
+  height: auto;
+  /* Maintain aspect ratio */
 }
 
 .adImg {
-    height: 20vh;
-    padding: 40px;
+  height: 20vh;
+  padding: 40px;
 }
 
 .header nav ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    /* Align the navigation to the right */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  /* Align the navigation to the right */
 }
 
 .header nav ul li {
-    display: inline-block;
-    margin-right: 20px;
+  display: inline-block;
+  margin-right: 20px;
 }
 
 .header nav ul li:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .header nav ul li a {
-    color: #fff;
-    text-decoration: none;
+  color: #fff;
+  text-decoration: none;
 }
 
 .login-button {
-    width: 80px;
-    height: 34px;
-    background-color: #3AB757;
-    color: white;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 80px;
+  height: 34px;
+  background-color: #3ab757;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* .bg-img {
@@ -124,323 +122,354 @@ body {
 } */
 
 .abBgButton {
-    /* display: flex;
+  /* display: flex;
     width: 100%;
     justify-content: end;
     gap: 0.5vw;
     margin-top: 5vh; */
-    display: flex;
-    width: 100%;
-    justify-content: end;
-    align-items: flex-end;
-    gap: 0.5vw;
-    margin-top: 5vh;
-    padding-right: 2vw;
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  align-items: flex-end;
+  gap: 0.5vw;
+  margin-top: 5vh;
+  padding-right: 2vw;
 }
 
 .abBgButton svg {
-    height: auto;
-    width: 2vw;
-    color: #CCD1D5;
+  height: auto;
+  width: 2vw;
+  color: #ccd1d5;
 }
 
 /*----------------- Landing Page contant -----------------------------------------------------------------------*/
 
 .landing-page_contant {
-    display: flex;
-    flex-direction: column;
-    margin-top: 54px;
-    margin-bottom: 68px;
-
+  display: flex;
+  flex-direction: column;
+  margin-top: 54px;
+  margin-bottom: 68px;
 }
 
 .Search-Conatiner {
-    height: 420px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 50px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 50px;
 }
 
 .Search-Conatiner h1 {
-    font-weight: bold;
-    font-size: 50px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #1bc33f;
+  font-weight: bold;
+  font-size: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1bc33f;
 }
 
 .Search-Conatiner p {
-    color: white;
-    font-size: 20px;
-    font-weight: 400;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
 }
 
 .Search-Conatiner h2 {
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .typing-animation {
-    overflow: hidden;
-    white-space: nowrap;
+  overflow: hidden;
+  white-space: nowrap;
 
-    animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
+  animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
 }
 
 @keyframes typing {
-    from {
-        width: 0;
-    }
+  from {
+    width: 0;
+  }
 
-    to {
-        width: 100%;
-    }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
 
-    from,
-    to {
-        border-color: transparent;
-    }
-
-    50% {
-        border-color: #000;
-    }
+  50% {
+    border-color: #000;
+  }
 }
-
 
 .search-bar {
-    width: 441px;
-    height: 32px;
-    border: 1px solid white;
-    background: transparent;
-    color: white;
-    border-radius: 12px;
-    padding: 20px;
-    position: relative;
-    /*auto-sugegst*/
+  /* width: 441px; */
+  width: 26vw;
+  height: 32px;
+  /* border: 1px solid white; */
+  background: transparent;
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  /*auto-sugegst*/
 }
+.input-wrapper{
+    display: flex;
+}
+/* starts.................... */
+.search-bar-wrapper {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid white;
+    align-items: center;
+    width: fit-content;
+    padding-inline: 1vw;
+    border-radius: 12px;
+  }
+  
+  .search-bar {
+    /* width: 100%; */
+    padding-right: 30px; /* Adjust according to the size of the icon */
+  }
+  .search-icon svg{
+    color: white;
+  }
+  
+  /* .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 18px;
+  } */
+  
+  /* ends............................ */
+
+  .search-bar {
+    outline: none; /* Remove the default focus outline */
+    
+  }
+  
+  .search-bar:focus {
+    border-color: initial; /* Retain the same border color when focused */
+    box-shadow: none; /* Remove any default box-shadow */
+  }
 
 /* auto-suggest section - start*/
 .suggestions {
-    border: 1px solid #ccc;
-    border-radius: 0px 0px 10px 10px;
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    position: absolute;
-    width: 30%;
-    background-color: #fff;
-    z-index: 99;
-    list-style-type: none;
+  border: 1px solid #ccc;
+  border-radius: 0px 0px 10px 10px;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  width: 30%;
+  background-color: #fff;
+  z-index: 99;
+  list-style-type: none;
 }
 
 .suggestions li {
-    padding: 8px;
-    cursor: pointer;
-    font-size: 16px;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .suggestions li.active {
-    background-color: #007bff;
-    color: white;
+  background-color: #007bff;
+  color: white;
 }
 
 .suggestions li:hover {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 
 /* auto-suggest section - end*/
 
 .view-map-button {
-    padding: 5px;
-    border: 1px solid white;
-    background: transparent;
-    width: 100px;
-    color: white;
-    border-radius: 10px;
+  padding: 5px;
+  border: 1px solid white;
+  background: transparent;
+  width: 100px;
+  color: white;
+  border-radius: 10px;
 }
 
 /* ----------Logo sticker------------------------------------------------------------------------ */
 
 .logo-section {
-    background-color: #002009fa;
-    width: 100vw;
-    height: 130px;
+  background-color: #002009fa;
+  width: 100vw;
+  height: 130px;
 }
 
 .iconLogo img {
-    width: 100px;
-    height: auto;
-
+  width: 100px;
+  height: auto;
 }
 
 .logo-section {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 44px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 44px;
 }
 
 .logos {
-    width: 700px;
-    height: 130px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  width: 700px;
+  height: 130px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .iconLogo {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    align-items: center;
-    color: white;
-    transform: translateY(-7%);
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  color: white;
+  transform: translateY(-7%);
+  cursor: pointer;
 }
-
-
-
-
 
 /* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/
 
 .map-parentContainer {
-    width: 94%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* background-color: yellow; */
+  width: 94%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: yellow; */
 }
-
 
 /* --------//google map ------------------------------------------------------------------------------- */
 .map-container2 {
-    width: 66%;
-    /* padding: 40px; */
+  width: 66%;
+  /* padding: 40px; */
 }
 
 .map-icons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 15vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 15vh;
 }
 
 .icon1 {
-    margin: 10px;
-    position: relative;
+  margin: 10px;
+  position: relative;
 }
 
 .icon1_button {
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .text1 {
-    position: absolute;
-    top: 95%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+  position: absolute;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 
-    color: #013409;
-    padding: 0px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: 700;
-    /* margin-left: 20px; */
+  color: #013409;
+  padding: 0px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  /* margin-left: 20px; */
 }
 
 .text2 {
-    position: absolute;
-    top: 110%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 
-    color: #013409;
-    padding: 0px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: 700;
-    /* margin-left: 20px; */
+  color: #013409;
+  padding: 0px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  /* margin-left: 20px; */
 }
 
 .clicked-text-icon {
-    position: absolute;
-    /* top: 60%;
+  position: absolute;
+  /* top: 60%;
     left: 20%; */
-    top: 57%;
-    left: -8%;
+  top: 57%;
+  left: -8%;
 
-    color: #013409;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: 700;
-    /* margin-top: 35px; */
+  color: #013409;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  /* margin-top: 35px; */
 }
 
 .clicked-text-icon3 {
-    position: absolute;
-    top: 61%;
-    left: 22%;
-    color: #013409;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: 700;
+  position: absolute;
+  top: 61%;
+  left: 22%;
+  color: #013409;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .icon1 img {
-    height: 8vh;
-    /* background-color: palegoldenrod; */
+  height: 8vh;
+  /* background-color: palegoldenrod; */
 }
 
 .icon1:hover h2 {
-    opacity: 1;
+  opacity: 1;
 }
 
 .map-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 0.5px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.5px solid #eeeeee;
 }
 
 .mapSearchButton input {
-    border: 1px solid rgb(2, 54, 145);
-    /* width: 264px; */
-    width: 300px;
-    height: 43px;
-    padding: 12px;
-
+  border: 1px solid rgb(2, 54, 145);
+  /* width: 264px; */
+  width: 300px;
+  height: 43px;
+  padding: 12px;
 }
 
 .mapSearchButton button {
-    padding: 10px 20px;
-    background-color: #016694;
-    color: white;
-    border: none;
+  padding: 10px 20px;
+  background-color: #016694;
+  color: white;
+  border: none;
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .mapSearchButton button:hover {
-    background-color: #003a69;
-    border: 1px solid rgb(0, 33, 91);
+  background-color: #003a69;
+  border: 1px solid rgb(0, 33, 91);
 }
 
 .mapSearchButton {
-    display: flex;
-
+  display: flex;
 }
 
 /* .EventDetailsCardSec_outer {
@@ -460,397 +489,380 @@ padding-bottom: 20px;
 } */
 
 .eventCard {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    width: auto;
-    margin: 4px;
-    border-radius: 8px;
-    background-color: rgba(224, 248, 229, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: auto;
+  margin: 4px;
+  border-radius: 8px;
+  background-color: rgba(224, 248, 229, 1);
 }
 
 .eventCard_Img {
-    width: 17vw;
-    border-radius: 8px;
+  width: 17vw;
+  border-radius: 8px;
 }
 
 .eventCardTitle {
-    width: 17vw;
-    font-weight: bolder;
-    font-size: 18px;
-    color: black;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  width: 17vw;
+  font-weight: bolder;
+  font-size: 18px;
+  color: black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .eventCardLocation {
-    display: flex;
-    width: 17vw;
-    align-items: center;
-    justify-content: space-between;
-    padding-block: 1vh;
+  display: flex;
+  width: 17vw;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1vh;
 }
 
 .eventCardLocation svg {
-    height: 12px;
+  height: 12px;
 }
 
 .eventCardLocation h1 {
-    width: 16vw;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
+  width: 16vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
 }
 
 .eventCard_Date_Time {
-    display: flex;
-    justify-content: space-between;
-    width: 17vw;
-    font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  width: 17vw;
+  font-size: 12px;
 }
 
 .eventCard_time {
-    display: flex;
+  display: flex;
 }
-
-
 
 /* --------Facilities Near me----------------------------------------------------- */
 
-
 .nearByFacilities {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    /* background-color:red; */
-    /* width: 346px; */
-    width: 28%;
-    height: 344px;
-    margin: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* background-color:red; */
+  /* width: 346px; */
+  width: 28%;
+  height: 344px;
+  margin: 16px;
 }
 
 .nearByFacilities-heading {
-    display: flex;
-    /* justify-content: space-between; */
-    display: flex;
-    justify-content: space-between;
-    width: 256px;
+  display: flex;
+  /* justify-content: space-between; */
+  display: flex;
+  justify-content: space-between;
+  width: 256px;
 }
 
 .nearByFacilities-heading h1 {
-    font-weight: 700;
-    font-size: large;
-    width: 178px;
-    margin-bottom: 12px;
+  font-weight: 700;
+  font-size: large;
+  width: 178px;
+  margin-bottom: 12px;
 }
 
 .nearByFacilities-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 60px;
+  display: flex;
+  justify-content: space-between;
+  width: 60px;
 }
 
 .nearByFacilities-heading button {
-    padding: 4px;
-    border: 1px solid gainsboro;
-    margin-inline: 4px;
-    font-size: 14px;
-    border-radius: 4px;
-    height: 28px;
+  padding: 4px;
+  border: 1px solid gainsboro;
+  margin-inline: 4px;
+  font-size: 14px;
+  border-radius: 4px;
+  height: 28px;
 }
 
 .map-facilities {
-    display: flex;
-    align-items: center;
-    width: fit-content;
-    font-size: 14px;
-    padding-inline: 12px;
-    height: 24px;
-    border-radius: 7px;
-    background-color: #CCD1D5;
-    box-flex-group: #CCD1D5;
-    border: 1px solid #CCD1D5;
-    margin-block: 12px;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-size: 14px;
+  padding-inline: 12px;
+  height: 24px;
+  border-radius: 7px;
+  background-color: #ccd1d5;
+  box-flex-group: #ccd1d5;
+  border: 1px solid #ccd1d5;
+  margin-block: 12px;
 }
-
 
 /* -----Whats New Section------------------------------------------- */
 
 .notice2 {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-block: 28px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block: 28px;
 }
 
 .notice2-container {
-    width: 94%;
-    background: #eee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* margin-right: 50px; */
-    /* margin-left: 0px; */
+  width: 94%;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin-right: 50px; */
+  /* margin-left: 0px; */
 }
 
-.notice2-container
-.what_new{
-    position: relative;
-    display: inline-block;
-    flex-shrink: 0;
-    padding: 8px 20px;
-    background: rgb(6, 63, 113);
-    color: #fff;
-    overflow: hidden;
-    /* clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); */
+.notice2-container .what_new {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  padding: 8px 20px;
+  background: rgb(6, 63, 113);
+  color: #fff;
+  overflow: hidden;
+  /* clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); */
 }
 
 .notce2para {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .marquee-content {
-    width: calc(100% - 120px);
-    /* Adjust width to fit the remaining space after considering the span's width */
-    white-space: nowrap;
-    overflow: hidden;
+  width: calc(100% - 120px);
+  /* Adjust width to fit the remaining space after considering the span's width */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.button-container22{
-   
-}
-.Play_pause_icon{
-    font-size:30px;
-    padding-right: 40px;
-  
+
+.Play_pause_icon {
+  font-size: 30px;
+  padding-right: 40px;
 }
 
 /* ------Event details card-------------------------------------------------------------------- */
 .EventContainerlanding {
-    width: 100%;
-    margin: 4vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  margin: 4vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .EventContainerTitle {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 4px;
-    padding: 3vw;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  padding: 3vw;
 }
 
 .EventContainerTitle h1 {
-    font-size: 28px;
-    color: #2A2D32;
+  font-size: 28px;
+  color: #2a2d32;
 }
 
 /* Carousel-specific styles */
 .carousel {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .carousel-container {
-    overflow: hidden;
-    width: 100%;
+  overflow: hidden;
+  width: 100%;
 }
 
 .carousel-images {
-    display: flex;
-    transition: transform 0.5s ease;
+  display: flex;
+  transition: transform 0.5s ease;
 }
 
 .carousel-slide2 {
-    /* flex-shrink: 0;
+  /* flex-shrink: 0;
     width: 22vw;
     margin: 10px; */
 
-    flex-shrink: 0;
-    width: 20vw;
-    /* height: 42vh; */
-    height: 98%;
-    background: rgba(224, 248, 229, 1);
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    border-radius: 12px;
+  flex-shrink: 0;
+  width: 20vw;
+  /* height: 42vh; */
+  height: 98%;
+  background: rgba(224, 248, 229, 1);
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 12px;
 }
 
 .carousel-slide2:hover {
-    transform: scale(1.1);
-    /* Pop up effect */
-    z-index: 10;
-    /* Bring the hovered card to the front */
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+  /* Pop up effect */
+  z-index: 10;
+  /* Bring the hovered card to the front */
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-
 .Yoga_image2 {
-    /* width: 59vh;
+  /* width: 59vh;
     height: 24vh; */
 
-    width: 18vw;
-    height: auto;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+  width: 18vw;
+  height: auto;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .carousel-slide-text {
-    padding: 10px;
-    background-color: rgba(224, 248, 229, 1);
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    align-items: flex-start;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+  padding: 10px;
+  background-color: rgba(224, 248, 229, 1);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .Name_yoga2 {
-    font-size: 16px;
-    color: #019f13;
-    font-weight: 600;
-    width: 18vw;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+  font-size: 16px;
+  color: #019f13;
+  font-weight: 600;
+  width: 18vw;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .carousel-slide-location {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-block: 1vh;
-    gap: 4px;
-    padding-left: 2px;
-    width: auto;
-    max-width: 20vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1vh;
+  gap: 4px;
+  padding-left: 2px;
+  width: auto;
+  max-width: 20vw;
 }
 
 .carousel-slide-location svg {
-    height: 12px;
+  height: 12px;
 }
 
 .carousel-slide-location h1 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
 }
 
 .Yoga_date_time2 {
-    width: 18vw;
-    display: flex;
-    justify-content: space-between;
-    /* padding: 2px; */
+  width: 18vw;
+  display: flex;
+  justify-content: space-between;
+  /* padding: 2px; */
 }
 
 .Yoga_date2 {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
 }
 
 .Yoga_time2 {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
 }
 
 .carousel-button2 {
-    background-color: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .carousel-button2.left {
-    margin-right: auto;
+  margin-right: auto;
 }
 
 .carousel-button2.right {
-    margin-left: auto;
+  margin-left: auto;
 }
-
-
 
 /* // --------------Explore new Activities------------------------------------------------------------- */
 
-
-
 .exploreNewAct-Parent-Container {
-    width: 100%;
-    height: 70vh;
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: relative;
+  width: 100%;
+  height: 70vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
 }
 
 .exploreNewAct-outer {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 8vw;
-    gap: 6vw;
-
-
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 8vw;
+  gap: 6vw;
 }
 
 .badminton_img {
-    height: 20vh;
+  height: 20vh;
 }
 
 .image-secondDiv {
-    /* background-image:linear-gradient(rgba(0, 0, 0, 0.2)), url(../../assets/explore\ new\ activity\ badminton.png); */
+  /* background-image:linear-gradient(rgba(0, 0, 0, 0.2)), url(../../assets/explore\ new\ activity\ badminton.png); */
 
-    position: relative;
-    /* Ensure positioning relative to this div */
-    width: 100%;
-    /* Adjust as needed */
-    height: 30vh;
-    /* Adjust as needed */
+  position: relative;
+  /* Ensure positioning relative to this div */
+  width: 100%;
+  /* Adjust as needed */
+  height: 30vh;
+  /* Adjust as needed */
 
-    background-size: cover;
-    /* Adjust as needed */
-    background-position: center;
-    /* Adjust as needed */
-    background-repeat: no-repeat;
-    /* Adjust as needed */
-
+  background-size: cover;
+  /* Adjust as needed */
+  background-position: center;
+  /* Adjust as needed */
+  background-repeat: no-repeat;
+  /* Adjust as needed */
 }
 
 .parkList {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    /* border: 1px solid #ccc; */
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  /* border: 1px solid #ccc; */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-
 .newActivites button {
-    width: 100vw;
+  width: 100vw;
 
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    background-color: #858484;
-    color: white;
-    border-radius: 8px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-color: #858484;
+  color: white;
+  border-radius: 8px;
 }
 
 /* .exploreNewAct-Parent-Container {
@@ -864,112 +876,111 @@ padding-bottom: 20px;
 } */
 
 .exploreNewAct-Parent-Container img {
-    width: 100%;
-    height: 738px;
+  width: 100%;
+  height: 738px;
 }
 
 /* Header */
 .whiteHeader {
-    width: 6px;
-    height: 49px;
-    border-radius: 4px;
-    background-color: white;
+  width: 6px;
+  height: 49px;
+  border-radius: 4px;
+  background-color: white;
 }
 
 .exploreNewAct-Header h1 {
-    font-size: 28px;
-    color: white
+  font-size: 28px;
+  color: white;
 }
 
 .exploreNewAct-Header {
-    display: flex;
-    margin-inline: 5vw;
-    margin-block: 2vh;
-    align-items: center;
-    gap: 1vw;
+  display: flex;
+  margin-inline: 5vw;
+  margin-block: 2vh;
+  align-items: center;
+  gap: 1vw;
 }
 
 .activity {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    padding: 4px;
-    padding-inline: 8vw;
-    padding-block: 1vh;
-    border-radius: 7px;
-    justify-content: center;
-    width: 91px;
-    background-color: hsl(0, 0%, 52%, 0.5);
-    color: white;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 4px;
+  padding-inline: 8vw;
+  padding-block: 1vh;
+  border-radius: 7px;
+  justify-content: center;
+  width: 91px;
+  background-color: hsl(0, 0%, 52%, 0.5);
+  color: white;
 }
 
 /* Selected activity */
 .activity.selected {
-    background-color: white;
-    color: black;
-    font-weight: 600;
+  background-color: white;
+  color: black;
+  font-weight: 600;
 }
 
 .parkList p {
-    margin: 5px 0;
-    border-radius: 12px;
-    border-radius: 14px;
-    width: 300px;
-    color: rgba(255, 255, 255, 0.818);
+  margin: 5px 0;
+  border-radius: 12px;
+  border-radius: 14px;
+  width: 300px;
+  color: rgba(255, 255, 255, 0.818);
 }
 
 .parkItem {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 
 .parkItem button {
-    font-size: 12px;
-    height: 24px;
-    width: 73px;
-    background-color: white;
-    color: black;
+  font-size: 12px;
+  height: 24px;
+  width: 73px;
+  background-color: white;
+  color: black;
 }
 
 .parkItem svg {
-    color: white;
+  color: white;
 }
 
 .image-secondDiv img {
-    width: 662px;
+  width: 662px;
 }
 
 /* experiment */
 .image-secondDiv {
-    position: relative;
-    width: 100%;
-    /* Adjust as needed */
-    height: 300px;
-    /* Adjust as needed */
+  position: relative;
+  width: 100%;
+  /* Adjust as needed */
+  height: 300px;
+  /* Adjust as needed */
 }
 
 .image-secondDiv img {
-    width: 100%;
-    /* Ensure the image fills its container */
-    height: 100%;
-    /* Ensure the image fills its container */
-    object-fit: cover;
-    /* Adjust as needed */
+  width: 100%;
+  /* Ensure the image fills its container */
+  height: 100%;
+  /* Ensure the image fills its container */
+  object-fit: cover;
+  /* Adjust as needed */
 }
 
 .exploreNewAct-secondDiv {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 62%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 62%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 
 /*----------------------------------- Gallery section------------------------------------------------------------------------------------------------------- */
 /* .gallery-slider-event{
@@ -986,330 +997,324 @@ margin-top: 20px;
 } */
 
 .galleryOuter {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3vh;
-    margin-block: 10vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vh;
+  margin-block: 10vh;
 }
 
-
-
 .EventDetailsCardSec {
-    width: 100%;
+  width: 100%;
 }
 
 .galleryTitle {
-    /* width: 94%; */
-    width: 91%;
-    display: flex;
+  /* width: 94%; */
+  width: 91%;
+  display: flex;
 
-    align-items: center;
-    justify-content: space-between;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .galleryTitleLeft {
-    display: flex;
-    gap: 1vw;
+  display: flex;
+  gap: 1vw;
 }
 
 .viewMoreGallery {
-    display: flex;
-    gap: 2px;
-    background-color: #3AB757;
-    color: white;
-    padding: 6px;
-    align-items: center;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
+  display: flex;
+  gap: 2px;
+  background-color: #3ab757;
+  color: white;
+  padding: 6px;
+  align-items: center;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .galleryTitle h1 {
-    font-size: 28px;
-    color: #2A2D32;
+  font-size: 28px;
+  color: #2a2d32;
 }
 
 .greenHeader {
-    width: 6px;
-    height: 49px;
-    border-radius: 4px;
-    background-color: #3AB757;
+  width: 6px;
+  height: 49px;
+  border-radius: 4px;
+  background-color: #3ab757;
 }
 
 .gallerySlider svg {
-    color: #2A2D32;
+  color: #2a2d32;
 }
 
 .carousel-slide3 {
-    max-width: 284px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  max-width: 284px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-    flex: 0 0 60%;
+  flex: 0 0 60%;
 
-    width: 20%;
+  width: 20%;
 
-    height: 100%;
+  height: 100%;
 
-    scroll-snap-align: start;
+  scroll-snap-align: start;
 
-    width: 5vw;
-    height: auto;
-    padding-block: 10px;
+  width: 5vw;
+  height: auto;
+  padding-block: 10px;
 
-    align-items: center;
-    margin: 0 5px;
-    transition: background-color 0.3s ease;
+  align-items: center;
+  margin: 0 5px;
+  transition: background-color 0.3s ease;
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 9;
-    opacity: 100;
-    visibility: visible;
-    transition: all 0.35s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.65);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 9;
+  opacity: 100;
+  visibility: visible;
+  transition: all 0.35s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.65);
 }
 
 .carousel-slide3 .overlay {
-    position: relative;
+  position: relative;
 }
 
 .carousel-slide3 .overlay::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .carousel-slide3:hover .overlay::after {
-    opacity: 1;
+  opacity: 1;
 }
 
 .overlay-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .carousel-slide3:hover .overlay-text {
-    opacity: 1;
+  opacity: 1;
 }
 
 .Gallery_image {
-    width: 284px;
-    height: 200px;
-    border-radius: 8px;
+  width: 284px;
+  height: 200px;
+  border-radius: 8px;
 }
 
-
-
-
 .carousel-slide3 {
-    position: relative;
-    width: 100%;
-    height: auto;
+  position: relative;
+  width: 100%;
+  height: auto;
 }
 
 .overlay {
-    position: relative;
-    width: 150%;
-    height: 100%;
-    border-radius: 20px;
+  position: relative;
+  width: 150%;
+  height: 100%;
+  border-radius: 20px;
 }
 
 .Gallery_image {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 20px;
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
 }
 
 .overlay-text {
-    position: absolute;
-    bottom: 10px;
-    /* Adjust as needed */
-    left: 120px;
-    /* Adjust as needed */
-    color: rgb(14, 14, 14);
-    font-size: 16px;
-    background-color: rgba(249, 248, 248, 0.5);
-    /* Semi-transparent background */
-    padding: 5px 10px;
-    border-radius: 5px;
+  position: absolute;
+  bottom: 10px;
+  /* Adjust as needed */
+  left: 120px;
+  /* Adjust as needed */
+  color: rgb(14, 14, 14);
+  font-size: 16px;
+  background-color: rgba(249, 248, 248, 0.5);
+  /* Semi-transparent background */
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 #advertise-img {
-    width: 95vw;
+  width: 95vw;
 }
 
 .avatisement-Border {
-    margin-top: 100px;
+  margin-top: 100px;
 }
-
 
 /* ------New Css */
 
 .carousel {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 90vw;
-    /* 90% of the viewport width */
-    margin: 0 auto;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 90vw;
+  /* 90% of the viewport width */
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .carousel-container {
-    overflow: hidden;
-    width: 100%;
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
+  overflow: hidden;
+  width: 100%;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .carousel-images {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    width: 100%;
-    /* Adjust to ensure all images fit */
-    gap: 20px;
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+  /* Adjust to ensure all images fit */
+  gap: 20px;
 }
 
 .carousel-image {
-    width: calc(100% / 4);
-    /* Show 3 images at a time */
-    flex-shrink: 0;
-    /* margin-inline: 5px; */
+  width: calc(100% / 4);
+  /* Show 3 images at a time */
+  flex-shrink: 0;
+  /* margin-inline: 5px; */
 }
 
 .carousel-button2 {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #ffffff;
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 2rem;
-    height: 2rem;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 5px;
-    z-index: 10;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #ffffff;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
+  z-index: 10;
 }
 
 .carousel-button2.left {
-    left: 10px;
+  left: 10px;
 }
 
 .carousel-button2.right {
-    right: 10px;
+  right: 10px;
 }
 
 /* New 2 */
 .carousel-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    width: 100%;
-    height: auto;
-    padding: 20px;
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .carousel-container::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, and Opera */
+  display: none;
+  /* Chrome, Safari, and Opera */
 }
 
 .carousel-button2 {
-    background-color: rgb(0, 0, 0, 0.64);
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
+  background-color: rgb(0, 0, 0, 0.64);
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
 }
 
 .carousel-images {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    width: 220vw;
-    height: auto;
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 220vw;
+  height: auto;
 }
 
 .carousel-image-container {
-    position: relative;
-    width: max-content;
-    height: 300px;
-    /* Set a fixed height for the images */
-    scroll-snap-align: start;
-    overflow: hidden;
-    margin: 0 10px;
-    /* Add some spacing between the images */
-    display: flex;
-    align-items: center;
+  position: relative;
+  width: max-content;
+  height: 300px;
+  /* Set a fixed height for the images */
+  scroll-snap-align: start;
+  overflow: hidden;
+  margin: 0 10px;
+  /* Add some spacing between the images */
+  display: flex;
+  align-items: center;
 }
 
 .carousel-image {
-    /* width: 100%;
+  /* width: 100%;
     height: 100%; */
-    width: auto;
-    height: auto;
-    object-fit: cover;
-    /* Ensure images cover the container while maintaining aspect ratio */
-    transition: transform 0.3s ease;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  /* Ensure images cover the container while maintaining aspect ratio */
+  transition: transform 0.3s ease;
 }
 
 .carousel-image-container:hover .carousel-image {
-    transform: scale(1.1);
-    /* Slight zoom effect */
+  transform: scale(1.1);
+  /* Slight zoom effect */
 }
 
 .carousel-image-container .description {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 10px;
-    border-radius: 5px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
 }
 
 .carousel-image-container:hover .description {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* -----------  Advertisement section */
@@ -1317,46 +1322,46 @@ margin-top: 20px;
 /* AdCarousel.css */
 
 .avatisement-Border2 {
-    max-width: 90vw;
-    margin: 0 auto;
-    /* Centers the container */
-    overflow-x: hidden;
-    overflow: hidden;
-    position: relative;
-    /* overflow-x: hidden; */
+  max-width: 90vw;
+  margin: 0 auto;
+  /* Centers the container */
+  overflow-x: hidden;
+  overflow: hidden;
+  position: relative;
+  /* overflow-x: hidden; */
 }
 
 .avatisement-Content2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 50vh;
-    /* Adjust height as needed */
-    overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50vh;
+  /* Adjust height as needed */
+  overflow: hidden;
 }
 
 .advertisement-Scroll2 {
-    display: flex;
-    width: 100%;
-    margin-bottom: 12vh;
-    animation: scroll 20s linear infinite;
+  display: flex;
+  width: 100%;
+  margin-bottom: 12vh;
+  animation: scroll 20s linear infinite;
 }
 
 .advertisement-Image {
-    width: auto;
-    height: 50vh;
-    padding: 20px;
+  width: auto;
+  height: 50vh;
+  padding: 20px;
 }
 
 @keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
+  0% {
+    transform: translateX(0);
+  }
 
-    100% {
-        transform: translateX(-100%);
-    }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 /* .advertisement-Scroll:hover {
@@ -1364,103 +1369,98 @@ margin-top: 20px;
 } */
 
 .avatisement-Border2:hover .advertisement-Scroll2 {
-    animation-play-state: paused;
-    cursor: pointer;
+  animation-play-state: paused;
+  cursor: pointer;
 }
-
 
 /* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
 
 @media screen and (min-width: 1401px) {
-    .image-secondDiv img {
-        height: 100%;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 20;
-          }
+  .image-secondDiv img {
+    height: 100%;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 20;
+  }
 }
 
 @media screen and (max-width: 1400px) {
+  .Search-Conatiner {
+    height: auto;
+    gap: 2vh;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 12;
+  }
 
-    .Search-Conatiner {
-        height: auto;
-        gap: 2vh;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 12;
-          }
+  /*---- event card section----*/
+  .carousel-slide2 {
+    /* height: 39vh; */
+    height: 96%;
+  }
 
-    /*---- event card section----*/
-    .carousel-slide2 {
-        /* height: 39vh; */
-        height: 96%;
-    }
+  .exploreNewAct-Parent-Container {
+    height: 55vh;
+  }
 
-    .exploreNewAct-Parent-Container {
-        height: 55vh;
-    }
+  .advertisement-Image {
+    height: 50vh;
+  }
 
-    .advertisement-Image {
-        height: 50vh;
-    }
+  .galleryOuter {
+    gap: 0vh;
+    margin-block: 4vh;
+  }
 
-    .galleryOuter {
-        gap: 0vh;
-        margin-block: 4vh;
-    }
+  .avatisement-Content2 {
+    height: auto;
+  }
 
-    .avatisement-Content2 {
-        height: auto;
-    }
-
-    .advertisement-Scroll2 {
-        margin-bottom: 6vh;
-    }
-
+  .advertisement-Scroll2 {
+    margin-bottom: 6vh;
+  }
 }
 
-
 @media screen and (max-width: 1200px) {
+  .Search-Conatiner {
+    height: auto;
+    gap: 2vh;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 2;
+  }
 
-    .Search-Conatiner {
-        height: auto;
-        gap: 2vh;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 2;
-          }
+  .bg-img {
+    height: 50vh;
+  }
 
-    .bg-img {
-        height: 50vh;
-    }
+  .icon1 img {
+    height: auto;
+    width: auto;
+  }
 
-    .icon1 img {
-        height: auto;
-        width: auto;
-    }
+  .Yoga_image2 {
+    height: auto;
+  }
 
-    .Yoga_image2 {
-        height: auto;
-    }
+  .carousel-images {
+    width: auto;
+    height: auto;
+  }
 
-    .carousel-images {
-        width: auto;
-        height: auto;
-    }
+  /* --------Facilities Near me----------------------- */
 
-    /* --------Facilities Near me----------------------- */
+  .nearByFacilities-heading {
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
 
-    .nearByFacilities-heading {
-        flex-direction: column;
-        margin-bottom: 16px;
-    }
+  /* ------Event details card------------------------ */
 
-    /* ------Event details card------------------------ */
-
-    /* .carousel-slide2 {
+  /* .carousel-slide2 {
     padding-block: 4px;
     border-radius: 8px;
     border: 1px solid rgb(1, 129, 16);
@@ -1484,892 +1484,856 @@ margin-top: 20px;
     margin-inline: 4px;
 } */
 
-
-    /*------------ Explore new activities----------- */
-    .exploreNewAct-Parent-Container {
-        height: 100%;
-    }
+  /*------------ Explore new activities----------- */
+  .exploreNewAct-Parent-Container {
+    height: 100%;
+  }
 }
 
-
 @media screen and (min-width: 1200px) {
-
-    /*---- suggestion section----*/
-    .suggestions {
-        top: 520px;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 2;
-          }
+  /*---- suggestion section----*/
+  .suggestions {
+    top: 520px;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 2;
+  }
 }
 
 @media screen and (max-width: 1200px) {
+  .bg-img {
+    height: 50vh;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 2;
+  }
+  /* header-content  Fonnt size-------------- */
+  .header nav ul li a {
+    font-size: 12px;
+    font-family: "Roboto";
+  }
 
-    .bg-img {
-        height: 50vh;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 2;
-          }
-    /* header-content  Fonnt size-------------- */
-    .header nav ul li a {
-        font-size: 12px;
-        font-family: 'Roboto';
-    }
+  /* landing-page_contant ------------------- */
 
-    /* landing-page_contant ------------------- */
+  .landing-page_contant {
+    width: 94%;
+    margin-top: 16px;
+    margin-bottom: 28px;
+    align-items: flex-start;
+  }
 
-    .landing-page_contant {
-        width: 94%;
-        margin-top: 16px;
-        margin-bottom: 28px;
-        align-items: flex-start;
-    }
+  .Search-Conatiner h1 {
+    font-size: 32px;
+    font-family: "Roboto";
+  }
 
+  .Search-Conatiner p {
+    font-size: 14px;
+  }
 
-    .Search-Conatiner h1 {
-        font-size: 32px;
-        font-family: 'Roboto';
-    }
+  .Search-Conatiner h2 {
+    font-size: 18px;
+    font-family: "Roboto";
+  }
 
-    .Search-Conatiner p {
-        font-size: 14px;
-    }
+  .search-bar {
+    width: 306px;
+    height: 32px;
+    border-radius: 8px;
+    padding: 18px;
+    font-size: 12px;
+  }
 
-    .Search-Conatiner h2 {
-        font-size: 18px;
-        font-family: 'Roboto';
-    }
+  .view-map-button {
+    padding: 6px;
+    width: 84px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
 
-    .search-bar {
-        width: 306px;
-        height: 32px;
-        border-radius: 8px;
-        padding: 18px;
-        font-size: 12px;
-    }
+  .Search-Conatiner {
+    /* height: 350px; */
+    height: auto;
+    gap: 2vh;
+  }
 
-    .view-map-button {
-        padding: 6px;
-        width: 84px;
-        border-radius: 8px;
-        font-size: 12px;
-    }
+  /*---- suggestion section----*/
+  .suggestions {
+    /* top: 417px; */
+    top: 326px;
+  }
 
-    .Search-Conatiner {
-        /* height: 350px; */
-        height: auto;
-        gap: 2vh;
-    }
+  /* --Logo sticker---------------------------------- */
+  .logos {
+    height: 100px;
+  }
 
-    /*---- suggestion section----*/
-    .suggestions {
-        /* top: 417px; */
-        top: 326px;
-    }
+  .icon img {
+    height: 60px;
+    width: auto;
+  }
 
-    /* --Logo sticker---------------------------------- */
-    .logos {
-        height: 100px;
-    }
+  .icon1 img {
+    height: auto;
+    width: 32px;
+  }
 
-    .icon img {
-        height: 60px;
-        width: auto;
-    }
+  .iconLogo h2 {
+    font-size: 12px;
+  }
 
-    .icon1 img {
-        height: auto;
-        width: 32px;
-    }
+  /* ----google map------------------------------- */
+  .map-icons img {
+    height: 32px;
+  }
 
-    .iconLogo h2 {
-        font-size: 12px;
-    }
+  .map-icons {
+    height: 4vh;
+  }
 
-    /* ----google map------------------------------- */
-    .map-icons img {
-        height: 32px;
-    }
+  .mapSearchButton button {
+    padding: 3px 10px;
+  }
 
-    .map-icons {
-        height: 4vh;
-    }
+  .mapSearchButton input {
+    border: 1px solid gray;
+    width: 206px;
+    height: 32px;
+    font-size: 10px;
+    padding: 8px;
+    border-radius: 6px;
+  }
 
-    .mapSearchButton button {
-        padding: 3px 10px;
-    }
+  .mapSearchButton button svg {
+    height: 12px;
+    width: 12px;
+  }
 
-    .mapSearchButton input {
-        border: 1px solid gray;
-        width: 206px;
-        height: 32px;
-        font-size: 10px;
-        padding: 8px;
-        border-radius: 6px;
-    }
+  /* -----Facilities Near me------------------------------------------------------- */
+  .nearByFacilities-heading button {
+    font-size: 10px;
+  }
 
-    .mapSearchButton button svg {
-        height: 12px;
-        width: 12px;
-    }
+  .map-facilities {
+    height: 20px;
+  }
 
-    /* -----Facilities Near me------------------------------------------------------- */
-    .nearByFacilities-heading button {
-        font-size: 10px;
-    }
+  .map-facilities p {
+    font-size: 10px;
+    font-family: "Roboto";
+  }
 
-    .map-facilities {
-        height: 20px;
-    }
+  /* Logo section ------------------*/
 
-    .map-facilities p {
-        font-size: 10px;
-        font-family: 'Roboto';
-    }
+  .logo-section {
+    align-items: center;
+    height: 110px;
+  }
 
-    /* Logo section ------------------*/
-
-    .logo-section {
-        align-items: center;
-        height: 110px;
-    }
-
-
-    /* ------Event details card---------------------------------------------------- */
-    /* .Name_yoga {
+  /* ------Event details card---------------------------------------------------- */
+  /* .Name_yoga {
         width: 135px;
         font-size: 14px;
     } */
 
-    .Name_yoga2 {
-        font-size: 14px;
-        font-weight: 600;
-        width: 22vw;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
+  .Name_yoga2 {
+    font-size: 14px;
+    font-weight: 600;
+    width: 22vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-    /* .Yoga_image {
+  /* .Yoga_image {
         width: 156px;
         height: 104px;
     } */
 
-    .Yoga_image2 {
-        width: 23vw;
-        height: auto;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-    }
+  .Yoga_image2 {
+    width: 23vw;
+    height: auto;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
 
-    .Yoga_date_time2 {
-        width: 23vw;
-    }
+  .Yoga_date_time2 {
+    width: 23vw;
+  }
 
-    .Yoga_date {
-        font-size: 8px;
-        font-weight: 500;
-    }
+  .Yoga_date {
+    font-size: 8px;
+    font-weight: 500;
+  }
 
-    .Yoga_time {
-        font-size: 8px;
-        font-weight: 500;
-    }
+  .Yoga_time {
+    font-size: 8px;
+    font-weight: 500;
+  }
 
-    .carousel-slide-location {
-        margin-inline: 3px;
-        width: 23vw;
-    }
+  .carousel-slide-location {
+    margin-inline: 3px;
+    width: 23vw;
+  }
 
-    .carousel-slide-location svg {
-        height: 10px;
-    }
+  .carousel-slide-location svg {
+    height: 10px;
+  }
 
-    .carousel-slide-location h1 {
-        width: 21vw;
-        font-size: 8px;
-    }
+  .carousel-slide-location h1 {
+    width: 21vw;
+    font-size: 8px;
+  }
 
-    .carousel-slide-text {
-        width: 26vw;
-        display: flex;
-        align-items: flex-start;
-        gap: 0px;
-    }
+  .carousel-slide-text {
+    width: 26vw;
+    display: flex;
+    align-items: flex-start;
+    gap: 0px;
+  }
 
-    .carousel-slide2 {
-        /* width: 26vw;
+  .carousel-slide2 {
+    /* width: 26vw;
         height: auto; */
-        width: 26vw;
-        /* height: 43vh; */
-        height: 94%;
-        padding-top: 9px;
-    }
+    width: 26vw;
+    /* height: 43vh; */
+    height: 94%;
+    padding-top: 9px;
+  }
 
+  /* ---------Current events ------ */
 
-    /* ---------Current events ------ */
-
-    /* .carousel-slide2 {
+  /* .carousel-slide2 {
         width: 26vw;
         height: 22vh;
         padding-top: 9px;
     } */
 
-    .Yoga_image2 {
-        width: 25vw;
-        height: auto;
-        padding: 10px;
-    }
+  .Yoga_image2 {
+    width: 25vw;
+    height: auto;
+    padding: 10px;
+  }
 
-    /* {------------ Explore new activities-----------} */
+  /* {------------ Explore new activities-----------} */
 
+  .exploreNewAct-outer {
+    padding-left: 12vw;
+    gap: 6vw;
+  }
 
-    .exploreNewAct-outer {
-        padding-left: 12vw;
-        gap: 6vw;
-    }
-
-    .exploreNewAct-secondDiv {
-        width: 94%;
-    }
+  .exploreNewAct-secondDiv {
+    width: 94%;
+  }
 }
-
-
-
-
 
 @media screen and (max-width: 875px) {
+  .landing-page_contant {
+    align-items: flex-start;
+    margin-left: -12vw;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 6;
+  }
 
-    .landing-page_contant {
-        align-items: flex-start;
-        margin-left: -12vw;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 6;
-          }
+  .Search-Conatiner {
+    /* height: 36vh; */
+    height: 42vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
 
-    .Search-Conatiner {
-        /* height: 36vh; */
-        height: 42vh;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
+  .suggestions {
+    top: 53vh;
+    width: auto;
+  }
 
-    .suggestions {
-        top: 53vh;
-        width: auto;
-    }
+  /* {----------Logo sticker------------------------------------------------------------------------} */
 
-    /* {----------Logo sticker------------------------------------------------------------------------} */
+  .iconLogo h2 {
+    font-size: 7px;
+  }
 
-    .iconLogo h2 {
-        font-size: 7px;
-    }
+  .logo-section {
+    height: 11vh;
+  }
 
-    .logo-section {
-        height: 11vh;
-    }
+  /* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
+  .map-parentContainer {
+    flex-direction: column;
+  }
 
-    /* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
-    .map-parentContainer {
-        flex-direction: column;
-    }
+  .map-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 
-    .map-bar {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
+  .map-container2 {
+    width: 88%;
+  }
 
-    .map-container2 {
-        width: 88%;
-    }
+  .mapSearchButton input {
+    width: 308px;
+  }
 
-    .mapSearchButton input {
-        width: 308px;
-    }
+  /* --------- Facilities ner me */
 
+  .nearByFacilities-heading {
+    display: flex;
+    flex-direction: row;
+    width: 288px;
+  }
 
-    /* --------- Facilities ner me */
+  .nearByFacilities-heading h1 {
+    font-weight: 600;
+    font-size: 16px;
+  }
 
-    .nearByFacilities-heading {
-        display: flex;
-        flex-direction: row;
-        width: 288px;
-    }
+  .nearByFacilities {
+    width: 88%;
+  }
 
-    .nearByFacilities-heading h1 {
-        font-weight: 600;
-        font-size: 16px;
-    }
+  .facililiy-list-map {
+    height: 180px;
+    overflow-y: auto;
+  }
 
-    .nearByFacilities {
-        width: 88%;
-    }
+  .nearByFacilities {
+    height: 246px;
+  }
 
-    .facililiy-list-map {
-        height: 180px;
-        overflow-y: auto;
-    }
+  /*------------ Current events-------------------------------- */
+  .EventContainerTitle h1 {
+    font-size: 18px;
+  }
 
-    .nearByFacilities {
-        height: 246px;
-    }
+  .carousel-slide2 {
+    width: 44vw;
+    height: auto;
+    padding-top: 12px;
+  }
 
-    /*------------ Current events-------------------------------- */
-    .EventContainerTitle h1 {
-        font-size: 18px;
-    }
+  .Name_yoga2 {
+    font-size: 12px;
+    font-weight: 600;
+    width: 40vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-    .carousel-slide2 {
-        width: 44vw;
-        height: auto;
-        padding-top: 12px;
-    }
+  .Yoga_image2 {
+    width: 38vw;
+  }
 
-    .Name_yoga2 {
-        font-size: 12px;
-        font-weight: 600;
-        width: 40vw;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
+  .carousel-slide-text {
+    width: 44vw;
+  }
 
-    .Yoga_image2 {
-        width: 38vw;
-    }
+  .Yoga_date_time2 {
+    flex-direction: column;
+    gap: 4px;
+  }
 
-    .carousel-slide-text {
-        width: 44vw;
-    }
+  .carousel-slide-location {
+    width: 37vw;
+  }
 
-    .Yoga_date_time2 {
-        flex-direction: column;
-        gap: 4px;
-    }
+  .carousel-slide-location h1 {
+    width: 32vw;
+  }
 
-    .carousel-slide-location {
-        width: 37vw;
-    }
+  /* Explore new Activities */
 
-    .carousel-slide-location h1 {
-        width: 32vw;
-    }
+  .activity {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 7px;
+    padding: 5px;
+    font-size: 8px;
+    border-radius: 8vw;
+    justify-content: center;
+    width: 91px;
+    background-color: hsl(0, 0%, 52%, 0.5);
+    color: white;
+  }
 
+  .exploreNewAct-outer {
+    padding-left: 22px;
+    gap: 24px;
+  }
 
-    /* Explore new Activities */
+  .parkItem button {
+    font-size: 9px;
+    height: 16px;
+    width: 50px;
+    background-color: white;
+    border-radius: 4px;
+    color: black;
+  }
 
-    .activity {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 7px;
-        padding: 5px;
-        font-size: 8px;
-        border-radius: 8vw;
-        justify-content: center;
-        width: 91px;
-        background-color: hsl(0, 0%, 52%, 0.5);
-        color: white;
-    }
+  .parkList p {
+    margin: 5px 0;
+    font-size: 10px;
+    width: 160px;
+    color: rgba(255, 255, 255, 0.818);
+  }
 
-    .exploreNewAct-outer {
-        padding-left: 22px;
-        gap: 24px;
-    }
+  .whiteHeader {
+    width: 4px;
+    height: 26px;
+  }
 
-    .parkItem button {
-        font-size: 9px;
-        height: 16px;
-        width: 50px;
-        background-color: white;
-        border-radius: 4px;
-        color: black;
-    }
+  .exploreNewAct-Header h1 {
+    font-size: 18px;
+  }
 
-    .parkList p {
-        margin: 5px 0;
-        font-size: 10px;
-        width: 160px;
-        color: rgba(255, 255, 255, 0.818);
-    }
+  .carousel-image-container {
+    margin: 0 0px;
+  }
 
-    .whiteHeader {
-        width: 4px;
-        height: 26px;
-    }
+  .galleryTitle h1 {
+    font-size: 18px;
+  }
 
-    .exploreNewAct-Header h1 {
-        font-size: 18px;
-    }
+  .greenHeader {
+    width: 4px;
+    height: 26px;
+  }
 
-    .carousel-image-container {
-        margin: 0 0px;
-    }
+  .parkList {
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+  }
 
-    .galleryTitle h1 {
-        font-size: 18px;
-    }
+  /*------------- Gallery------- */
 
-    .greenHeader {
-        width: 4px;
-        height: 26px;
-    }
+  .galleryOuter {
+    margin-block: 4vh;
+  }
 
-    .parkList {
-        height: auto;
-        max-height: 200px;
-        overflow-y: auto;
-    }
+  /* -----Advtisement-------- */
 
+  .avatisement-Border {
+    margin-top: 0vh;
+  }
 
-    /*------------- Gallery------- */
+  /*auto-suggest section css*/
+  .autosuggest {
+    width: 100%;
+    max-width: none;
+  }
 
-
-    .galleryOuter {
-        margin-block: 4vh;
-    }
-
-    /* -----Advtisement-------- */
-
-
-    .avatisement-Border {
-        margin-top: 0vh;
-    }
-
-
-    /*auto-suggest section css*/
-    .autosuggest {
-        width: 100%;
-        max-width: none;
-    }
-
-    .suggestions li {
-        padding: 6px;
-        font-size: 14px;
-    }
+  .suggestions li {
+    padding: 6px;
+    font-size: 14px;
+  }
 }
-
 
 @media screen and (max-width: 575px) {
+  .landingcontainer {
+    overflow-x: auto;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 2;
+  }
+  .landing-page_contant {
+    align-items: flex-end;
+    /* margin-left: 2vw; */
+    margin-left: 2%;
+  }
 
-    .landingcontainer {
-        overflow-x: auto;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 2;
-          }
-    .landing-page_contant {
-        align-items: flex-end;
-        /* margin-left: 2vw; */
-        margin-left: 2%;
-    }
+  .Search-Conatiner {
+    /* height: 42vh; */
+    /* height: 60vh; */
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: auto;
+    gap: 2vh;
+  }
 
-    .Search-Conatiner {
-        /* height: 42vh; */
-        /* height: 60vh; */
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        height: auto;
-        gap: 2vh;
-    }
+  .suggestions {
+    width: auto;
+    top: 58vh;
+  }
 
-    .suggestions {
-        width: auto;
-        top: 58vh;
-    }
+  /* {----------Logo sticker------------------------------------------------------------------------} */
 
+  .iconLogo h2 {
+    font-size: 7px;
+  }
 
-    /* {----------Logo sticker------------------------------------------------------------------------} */
+  .logo-section {
+    height: 11vh;
+  }
 
-    .iconLogo h2 {
-        font-size: 7px;
-    }
+  /* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
+  .map-parentContainer {
+    flex-direction: column;
+  }
 
-    .logo-section {
-        height: 11vh;
-    }
+  .map-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 
-    /* {-------------GOOGLE MAP Container----------------------------------------------------------------------------} */
-    .map-parentContainer {
-        flex-direction: column;
-    }
+  .map-container2 {
+    width: 88%;
+  }
 
-    .map-bar {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
+  .mapSearchButton input {
+    width: 308px;
+  }
 
-    .map-container2 {
-        width: 88%;
-    }
+  /* --------- Facilities ner me */
 
-    .mapSearchButton input {
-        width: 308px;
-    }
+  .nearByFacilities-heading {
+    display: flex;
+    flex-direction: row;
+    width: 288px;
+  }
 
+  .nearByFacilities-heading h1 {
+    font-weight: 600;
+    font-size: 16px;
+  }
 
-    /* --------- Facilities ner me */
+  .nearByFacilities {
+    width: 88%;
+  }
 
-    .nearByFacilities-heading {
-        display: flex;
-        flex-direction: row;
-        width: 288px;
-    }
+  .facililiy-list-map {
+    height: 180px;
+    overflow-y: auto;
+  }
 
-    .nearByFacilities-heading h1 {
-        font-weight: 600;
-        font-size: 16px;
-    }
+  .nearByFacilities {
+    height: 246px;
+  }
 
-    .nearByFacilities {
-        width: 88%;
-    }
+  /*------------ Current events-------------------------------- */
+  .EventContainerTitle h1 {
+    font-size: 18px;
+  }
 
-    .facililiy-list-map {
-        height: 180px;
-        overflow-y: auto;
-    }
+  .carousel-slide2 {
+    width: 44vw;
+    height: auto;
+    padding-top: 12px;
+  }
 
-    .nearByFacilities {
-        height: 246px;
-    }
+  .Name_yoga2 {
+    font-size: 12px;
+    font-weight: 600;
+    width: 40vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-    /*------------ Current events-------------------------------- */
-    .EventContainerTitle h1 {
-        font-size: 18px;
-    }
+  .Yoga_image2 {
+    width: 38vw;
+  }
 
-    .carousel-slide2 {
-        width: 44vw;
-        height: auto;
-        padding-top: 12px;
-    }
+  .carousel-slide-text {
+    width: 44vw;
+  }
 
-    .Name_yoga2 {
-        font-size: 12px;
-        font-weight: 600;
-        width: 40vw;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
+  .Yoga_date_time2 {
+    flex-direction: column;
+    gap: 4px;
+  }
 
-    .Yoga_image2 {
-        width: 38vw;
-    }
+  .carousel-slide-location {
+    width: 37vw;
+  }
 
-    .carousel-slide-text {
-        width: 44vw;
-    }
+  .carousel-slide-location h1 {
+    width: 32vw;
+  }
 
-    .Yoga_date_time2 {
-        flex-direction: column;
-        gap: 4px;
-    }
+  /* Explore new Activities */
 
-    .carousel-slide-location {
-        width: 37vw;
-    }
+  .activity {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 7px;
+    padding: 5px;
+    font-size: 8px;
+    border-radius: 8vw;
+    justify-content: center;
+    width: 91px;
+    background-color: hsl(0, 0%, 52%, 0.5);
+    color: white;
+  }
 
-    .carousel-slide-location h1 {
-        width: 32vw;
-    }
+  .exploreNewAct-outer {
+    padding-left: 22px;
+    gap: 24px;
+  }
 
+  .parkItem button {
+    font-size: 9px;
+    height: 16px;
+    width: 50px;
+    background-color: white;
+    border-radius: 4px;
+    color: black;
+  }
 
-    /* Explore new Activities */
+  .parkList p {
+    margin: 5px 0;
+    font-size: 10px;
+    width: 160px;
+    color: rgba(255, 255, 255, 0.818);
+  }
 
-    .activity {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 7px;
-        padding: 5px;
-        font-size: 8px;
-        border-radius: 8vw;
-        justify-content: center;
-        width: 91px;
-        background-color: hsl(0, 0%, 52%, 0.5);
-        color: white;
-    }
+  .whiteHeader {
+    width: 4px;
+    height: 26px;
+  }
 
-    .exploreNewAct-outer {
-        padding-left: 22px;
-        gap: 24px;
-    }
+  .exploreNewAct-Header h1 {
+    font-size: 18px;
+  }
 
-    .parkItem button {
-        font-size: 9px;
-        height: 16px;
-        width: 50px;
-        background-color: white;
-        border-radius: 4px;
-        color: black;
-    }
+  .carousel-image-container {
+    margin: 0 0px;
+  }
 
-    .parkList p {
-        margin: 5px 0;
-        font-size: 10px;
-        width: 160px;
-        color: rgba(255, 255, 255, 0.818);
-    }
+  .galleryTitle h1 {
+    font-size: 18px;
+  }
 
-    .whiteHeader {
-        width: 4px;
-        height: 26px;
-    }
+  .greenHeader {
+    width: 4px;
+    height: 26px;
+  }
 
-    .exploreNewAct-Header h1 {
-        font-size: 18px;
-    }
+  .parkList {
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+  }
 
-    .carousel-image-container {
-        margin: 0 0px;
-    }
+  /*------------- Gallery------- */
 
-    .galleryTitle h1 {
-        font-size: 18px;
-    }
+  .galleryOuter {
+    margin-block: 4vh;
+  }
 
-    .greenHeader {
-        width: 4px;
-        height: 26px;
-    }
+  /* -----Advtisement-------- */
 
-    .parkList {
-        height: auto;
-        max-height: 200px;
-        overflow-y: auto;
-    }
+  .avatisement-Border {
+    margin-top: 0vh;
+  }
 
+  /*auto-suggest section css*/
+  .autosuggest {
+    width: 100%;
+    max-width: none;
+  }
 
-    /*------------- Gallery------- */
+  .suggestions li {
+    padding: 6px;
+    font-size: 14px;
+  }
 
-
-    .galleryOuter {
-        margin-block: 4vh;
-    }
-
-    /* -----Advtisement-------- */
-
-
-    .avatisement-Border {
-        margin-top: 0vh;
-    }
-
-
-    /*auto-suggest section css*/
-    .autosuggest {
-        width: 100%;
-        max-width: none;
-    }
-
-    .suggestions li {
-        padding: 6px;
-        font-size: 14px;
-    }
-
-    .input-icon{
-        font-size: 10px;
-    }
+  .input-icon {
+    font-size: 10px;
+  }
 }
 
-
-
 @media screen and (max-width: 430px) {
+  .landingcontainer {
+    overflow-x: auto;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 0;
+  }
 
-    .landingcontainer {
-        overflow-x: auto;
-    }
-    .Current_Event_image{
-        align-items: center;
-          margin-left: 0;
-          }
+  .Search-Conatiner {
+    height: auto;
+    gap: 2vh;
+    padding: 13px;
+  }
 
-    .Search-Conatiner {
-        height: auto;
-        gap: 2vh;
-        padding: 13px;
-    }
+  .bg-img {
+    height: 40vh;
+  }
 
-    .bg-img {
-        height: 40vh;
-    }
-
-    /* .abBgButton {
+  /* .abBgButton {
         margin-left: 67vw;
     } */
 
-    .landing-page_contant {
-        margin-top: 0px;
-    }
+  .landing-page_contant {
+    margin-top: 0px;
+  }
 
-    .Search-Conatiner h1 {
-        font-size: 28px;
-    }
+  .Search-Conatiner h1 {
+    font-size: 28px;
+  }
 
-    .Search-Conatiner p {
-        font-size: 12px;
-    }
+  .Search-Conatiner p {
+    font-size: 12px;
+  }
 
-    .Search-Conatiner h2 {
-        font-size: 16px;
-    }
+  .Search-Conatiner h2 {
+    font-size: 16px;
+  }
 
-    .search-bar {
-        padding: 16px;
-        font-size: 10px;
-    }
+  .search-bar {
+    padding: 16px;
+    font-size: 10px;
+  }
 
-    /* ----------Logo sticker---------------------------------------- */
+  /* ----------Logo sticker---------------------------------------- */
 
-    .iconLogo h2 {
-        font-size: 6px;
-    }
+  .iconLogo h2 {
+    font-size: 6px;
+  }
 
-    .iconLogo img {
-        height: 54px;
-    }
+  .iconLogo img {
+    height: 54px;
+  }
 
-    .logos {
-        height: 81px;
-    }
+  .logos {
+    height: 81px;
+  }
 
-    /* ----------GOOGLE MAP Container-------------------------- */
+  /* ----------GOOGLE MAP Container-------------------------- */
 
-    .mapSearchButton input {
-        width: 265px;
-    }
+  .mapSearchButton input {
+    width: 265px;
+  }
 
-    .nearByFacilities-heading h1 {
-        font-weight: 500;
-        font-size: 14px;
-        width: 130px;
-    }
+  .nearByFacilities-heading h1 {
+    font-weight: 500;
+    font-size: 14px;
+    width: 130px;
+  }
 
-    .nearByFacilities-heading {
-        width: 250px;
-        gap: 16vw;
-    }
+  .nearByFacilities-heading {
+    width: 250px;
+    gap: 16vw;
+  }
 
-    .nearByFacilities-heading {
-        margin-bottom: 2px;
-    }
+  .nearByFacilities-heading {
+    margin-bottom: 2px;
+  }
 
-    /*---- suggestion section----*/
-    .suggestions {
-        top: 326px;
-        width: 66%
-    }
+  /*---- suggestion section----*/
+  .suggestions {
+    top: 326px;
+    width: 66%;
+  }
 
+  /* --------------------Event details card----------------- */
 
-    /* --------------------Event details card----------------- */
+  .Yoga_date_time2 {
+    width: 36vw;
+  }
 
-    .Yoga_date_time2 {
-        width: 36vw;
-    }
+  /* ---------Explore new activities---------------- */
 
-    /* ---------Explore new activities---------------- */
+  .exploreNewAct-outer {
+    padding-left: 16px;
+  }
 
-    .exploreNewAct-outer {
-        padding-left: 16px;
-    }
+  /* ---------Gallery------------- */
+  .carousel-image {
+    height: 212px;
+  }
 
-    /* ---------Gallery------------- */
-    .carousel-image {
-        height: 212px;
-    }
-
-    .carousel-image-container {
-        height: 260px;
-    }
+  .carousel-image-container {
+    height: 260px;
+  }
 }
 
 @media screen and (max-width: 400px) {
-    .suggestions {
-        /* top: 317px; */
-        top: 56vh;
-        width: 75%;
-    }
-    .Current_Event_image{
-        align-items: center;
-        margin-left: 2;
-          }
+  .suggestions {
+    /* top: 317px; */
+    top: 56vh;
+    width: 75%;
+  }
+  .Current_Event_image {
+    align-items: center;
+    margin-left: 2;
+  }
 
-    .Search-Conatiner {
-        height: 42vh;
-    }
+  .Search-Conatiner {
+    height: 42vh;
+  }
 
-    /* Landing page */
-    .landingcontainer {
-        width: 122vw;
-    }
+  /* Landing page */
+  .landingcontainer {
+    width: 122vw;
+  }
 
-    .landing-page_contant {
-        align-items: flex-start;
-        margin-left: -13%;
-    }
+  .landing-page_contant {
+    align-items: flex-start;
+    margin-left: -13%;
+  }
 
-    .bg-img {
-        width: 122vw;
-    }
+  .bg-img {
+    width: 122vw;
+  }
 
-    .logo-section {
-        width: 122vw;
-    }
-
+  .logo-section {
+    width: 122vw;
+  }
 }
 
 .avatisement-Image {
-    height: 40vh;
-    padding: 20px;
+  height: 40vh;
+  padding: 20px;
 }
 
 .avatisement-Content {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 /* notice (New) */
 .New_text {
-    background: #121FCF;
-    background: linear-gradient(to right, #121FCF 16%, #CF1512 0%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 900;
-    margin-top: -10px;
-    transform: rotate(-4deg);
-    font-size: 15px;
-
+  background: #121fcf;
+  background: linear-gradient(to right, #121fcf 16%, #cf1512 0%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  margin-top: -10px;
+  transform: rotate(-4deg);
+  font-size: 15px;
 }
 
 /* search input field */
 .input-wrapper {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .search-bar {
-    padding-right: 30px; 
-  }
-  
-  .input-icon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
- 
-  }
-  
+  position: relative;
+  /* display: inline-block; */
+}
 
-  .Current_Event_image{
-align-items: center;
-margin-left: 450px;
-  }
+.search-bar {
+  padding-right: 30px;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+}
+
+.Current_Event_image {
+  align-items: center;
+  margin-left: 450px;
+}
