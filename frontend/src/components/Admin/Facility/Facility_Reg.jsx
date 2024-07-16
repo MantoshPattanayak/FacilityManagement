@@ -580,9 +580,11 @@ const Facility_Reg = () => {
         }
         if (!value.address) {
             err.address = "Please Enter the address";
-        } else if (!Addition_Infromateion.test(value.address)) {
-            err.address = 'Please Enter a vaild Address'
-        } else if (!space_block.test(value.address)) {
+        } 
+        // else if (!Addition_Infromateion.test(value.address)) {
+        //     err.address = 'Please Enter a vaild Address'
+        // }
+         else if (!space_block.test(value.address)) {
             err.address = 'Do not use spaces at beginning'
         }
         if (!value.pin) {
@@ -661,9 +663,9 @@ const Facility_Reg = () => {
         if (!value.additionalDetails) {
             err.additionalDetails = "Please Enter the Additional Details"
         }
-        if (!Addition_Infromateion.test(value.additionalDetails)) {
-            err.additionalDetails = "Please Enter a vaild Additional Details"
-        }
+        // if (!Addition_Infromateion.test(value.additionalDetails)) {
+        //     err.additionalDetails = "Please Enter a vaild Additional Details"
+        // }
         if (!space_block.test(value.additionalDetails)) {
             err.additionalDetails = "Do not use spaces at beginning"
         }
