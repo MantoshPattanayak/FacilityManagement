@@ -1228,7 +1228,7 @@ let bookmarkingAddAction = async (req, res) => {
       console.log(2)
       if (existingUserBookmark?.bookmarkId) {
         const [bookmarkUpdate] = await bookmarks.update(
-          { statusId: 1 },
+          { statusId: 1, updatedOn: new Date(), updatedBy: userId },
           { where: { bookmarkId: existingUserBookmark.bookmarkId } }
         );
 
@@ -1358,12 +1358,11 @@ let viewBookmarksListForUser = async (req, res) => {
       inner join amabhoomi.facilities f on p.facilityId = f.facilityId
       inner join amabhoomi.statusmasters s on s.statusId = p.statusId and s.parentStatusCode = 'RECORD_STATUS'
       inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityTypeId
-      left join amabhoomi.fileattachments f3 on f3.entityId = f.facilityId and f3.entityType = 'facilities'
+      left join amabhoomi.fileattachments f3 on f3.entityId = f.facilityId and f3.entityType = 'facilities' and f3.filePurpose = 'singleFacilityImage'
       left join amabhoomi.files f4 on f3.fileId = f4.fileId
-      where p.publicUserId = ?
-      AND (? IS NULL OR CAST(p.createdOn as DATE) >= CAST(? as DATE))
-      AND (? IS NULL OR cast(p.createdOn as DATE) <= CAST(? as DATE))
+      where p.publicUserId = 9
       and s.statusCode = 'ACTIVE'
+      group by p.bookmarkId, f.facilityId, f.facilityname, f.address, p.publicUserId, f2.description, f2.facilitytypeId, p.createdOn, f4.url, s.statusCode
     `;
 
     let fetchBookmarkListForEventsQuery = `

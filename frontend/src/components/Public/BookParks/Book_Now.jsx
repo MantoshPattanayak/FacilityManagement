@@ -70,9 +70,7 @@ const Book_Now = () => {
   //   priceBook: 0,
   // });
 
-  let facilityId = decryptData(
-    new URLSearchParams(location.search).get("facilityId")
-  );
+  let facilityId = decryptData(formData.facilityId);
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
