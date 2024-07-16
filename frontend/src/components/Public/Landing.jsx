@@ -428,9 +428,9 @@ const Landing = () => {
     fecthMapData();
   }, [givenReq, facilityTypeId, showTour]);
 
-  //refresh on user input to show suggestions of facilities
+  // refresh on user input to show suggestions of facilities
   useEffect(() => {
-    if (inputFacility) fetchAutoSuggestData();
+    if (inputFacility) console.log("inputFacility", inputFacility);
   }, [inputFacility]);
 
   //-------------for event Cards---------------------------------------
@@ -641,7 +641,7 @@ const Landing = () => {
                 />
               </div>
             </div>
-            {suggestions?.length > 0 && inputFacility && (
+            {/* {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
                 {suggestions.length > 0 ? (
                   suggestions.map((suggestion, index) => (
@@ -668,7 +668,7 @@ const Landing = () => {
                   <li>No suggestions available</li>
                 )}
               </ul>
-            )}
+            )} */}
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
