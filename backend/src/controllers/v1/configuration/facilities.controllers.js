@@ -675,7 +675,8 @@ function convertImagesToBase64(dataArray) {
 const nearByDataInMap = async (req, res) => {
     try {
         let { latitude, longitude, facilityTypeId, range, popular, free, paid, order,selectedFilter } = req.body;
-
+        let filePurpose = 'singleFacilityImage'
+        let entityType = 'facilities'
         // Default range is set to 20 if not provided
         range = range ? range : 20;
 
@@ -782,21 +783,22 @@ const nearByDataInMap = async (req, res) => {
             console.log('24')
             if (filterConditions.length > 0 && !facilityTypeId) {
                 console.log('filter condn', filterConditions)
-                fetchFacilitiesQuery += ` WHERE ${filterConditions.join(' AND ')}`;
+                fetchFacilitiesQuery += ` WHERE fa.filePurpose = ? and fa.entityType=? and ${filterConditions.join(' AND ')}`;
                 console.log('facility')
-              
+                replacements.push(filePurpose,entityType);
+
             }
             if (facilityTypeId) {
-                console.log('25')
+                console.log('791')
 
-                fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
+                fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? and fa.filePurpose = ? and fa.entityType=?`;
             
                 if (filterConditions.length) {
                     // Add selected filter conditions
                     fetchFacilitiesQuery += ` AND ${filterConditions.join(' AND ')}`;
                 }
             
-                replacements.push(facilityTypeId);
+                replacements.push(facilityTypeId,filePurpose,entityType);
 
             }
         }
@@ -814,12 +816,20 @@ const nearByDataInMap = async (req, res) => {
         // }
 
         if (facilityTypeId && !selectedFilter) {
-            console.log('25')
+            console.log('818')
 
-            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=?`;
-            replacements.push(facilityTypeId);
+            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? and fa.filePurpose = ? and fa.entityType=?`;
+            replacements.push(facilityTypeId,filePurpose,entityType);
 
         }
+        if (!facilityTypeId && !selectedFilter) {
+            console.log('826')
+
+            fetchFacilitiesQuery += ` WHERE fa.filePurpose = ? and fa.entityType=?`;
+            replacements.push(filePurpose,entityType);
+
+        }
+        
 
         // Group by facilityId
         fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
