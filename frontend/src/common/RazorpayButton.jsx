@@ -74,8 +74,8 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
 
   return (
     <>
-      <button className="submit-and-proceed-button" onClick={checkoutHandler} disabled={isDisabled}>
-        <FontAwesomeIcon icon={faCreditCard} />&nbsp; Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(amount).toFixed(2)}
+      <button className="approve-button" onClick={checkoutHandler} disabled={isDisabled}>
+        <FontAwesomeIcon icon={faCreditCard} />&nbsp; Pay Now &nbsp;<FontAwesomeIcon icon={faIndianRupeeSign} />{parseFloat(amount).toFixed(2)}
       </button>
       <ToastContainer />
     </>

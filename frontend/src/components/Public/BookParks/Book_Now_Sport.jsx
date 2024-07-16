@@ -18,6 +18,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import "./Book_Now_Sport.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
+import RazorpayButton from "../../../common/RazorpayButton";
 const Book_Now_Sport = () => {
     // UseSate for post data -------------------------------------
     const [formData, setFormData] = useState({
@@ -79,22 +80,46 @@ const Book_Now_Sport = () => {
     async function HandleAddtoCart() {
         try {
             // Prepare request body
-            const requestBody = {
-                entityId: formData.entityId,
-                entityTypeId: formData.entityTypeId,
-                facilityPreference: formData.facilityPreference
-
+            let modifiedFormData = {
+                ...formData
             };
-            let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
-            toast.success('Added to cart successfully.', {
-                autoClose: 3000, // Toast timer duration in milliseconds
-                onClose: () => {
-                    // Navigate to another page after toast timer completes
-                    setTimeout(() => {
-                        navigate('/cart-details');
-                    }, 1000); // Wait 1 second after toast timer completes before navigating
-                }
-            });
+            /**
+             * playersLimit: 1,
+                sports: "",
+                startTime: "",
+                endTime: "",
+                bookingDate: "",
+             */
+            console.log("formData handleSubmitAndProceed", modifiedFormData);
+            const validationError = validation(modifiedFormData);
+            let facilityPreference = {
+                totalMembers: modifiedFormData.facilityPreference.playersLimit,
+                amount: amount * modifiedFormData.facilityPreference.playersLimit,
+                bookingDate: modifiedFormData.facilityPreference.bookingDate,
+                startTime: modifiedFormData.facilityPreference.startTime,
+                endTime: modifiedFormData.facilityPreference.endTime,
+                sports: modifiedFormData.facilityPreference.sports
+            };
+            console.log("facilityPreference", facilityPreference);
+            if (Object.keys(validationError).length <= 0) {
+                let res = await axiosHttpClient("Add_to_Cart", "post", {
+                    entityId: modifiedFormData.entityId,
+                    entityTypeId: modifiedFormData.entityTypeId,
+                    facilityPreference,
+                });
+                toast.success('Added to cart successfully.', {
+                    autoClose: 3000, // Toast timer duration in milliseconds
+                    onClose: () => {
+                        // Navigate to another page after toast timer completes
+                        setTimeout(() => {
+                            navigate('/cart-details');
+                        }, 1000); // Wait 1 second after toast timer completes before navigating
+                    }
+                });
+            }
+            else {
+                toast.error("Please fill the required data.");
+            }
         } catch (err) {
             console.error("here Error of Sport Booking", err);
             toast.error('Add to Cart failed.Try agin')
@@ -105,23 +130,18 @@ const Book_Now_Sport = () => {
         let modifiedFormData = {
             ...formData
         };
-        /**
-         * playersLimit: 1,
-            sports: "",
-            startTime: "",
-            endTime: "",
-            bookingDate: "",
-         */
+
         console.log("formData handleSubmitAndProceed", modifiedFormData);
         const validationError = validation(modifiedFormData);
         let facilityPreference = {
-            playerLimit: modifiedFormData.facilityPreference.playersLimit,
+            totalMembers: modifiedFormData.facilityPreference.playersLimit,
             amount: amount * modifiedFormData.facilityPreference.playersLimit,
             bookingDate: modifiedFormData.facilityPreference.bookingDate,
             startTime: modifiedFormData.facilityPreference.startTime,
             endTime: modifiedFormData.facilityPreference.endTime,
             sports: modifiedFormData.facilityPreference.sports
         };
+        console.log("facilityPreference", facilityPreference);
         if (Object.keys(validationError).length == 0) {
             try {
                 let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
@@ -135,7 +155,7 @@ const Book_Now_Sport = () => {
                     onClose: () => {
                         // Navigate to another page after toast timer completes
                         setTimeout(() => {
-                            navigate(`/profile/booking-details/ticket?bookingId=${encryptData(res.data.data.facilityBookingId)}`);
+                            navigate(`/profile/booking-details`);
                         }, 1000); // Wait 1 second after toast timer completes before navigating
                     },
                 });
@@ -177,6 +197,20 @@ const Book_Now_Sport = () => {
             console.error("here Error of get sport types in dropdown");
         }
     }
+
+    // function to handle payment success
+    const handlePaymentSuccess = (response) => {
+        console.log("Book park payment success", response);
+        handleSubmitAndProceed();
+    };
+
+    //function handle payment failure and notify user
+    const handlePaymentFailure = (response) => {
+        console.log("Book park payment failure", response);
+        toast.dismiss();
+        toast.error(response.description);
+    };
+
     // useEffect for Update the data (Call Api) ------------------------
     useEffect(() => {
         let facilityId = decryptData(
@@ -231,14 +265,14 @@ const Book_Now_Sport = () => {
                                     name="sports"
                                     value={formData.facilityPreference.sports}
                                     onChange={handleChangeInput} >
-                                        <option value="">Select</option>
-                                        {
-                                            sportsList?.length > 0 && sportsList.map((sports) => {
-                                                return(
-                                                    <option value={sports.userActivityId}>{sports.userActivityName}</option>
-                                                )
-                                            })
-                                        }
+                                    <option value="">Select</option>
+                                    {
+                                        sportsList?.length > 0 && sportsList.map((sports) => {
+                                            return (
+                                                <option value={sports.userActivityId}>{sports.userActivityName}</option>
+                                            )
+                                        })
+                                    }
                                 </select>
                             </div>
                             <div class="formGroup">
@@ -320,22 +354,25 @@ const Book_Now_Sport = () => {
                                 </div>
                             </div> */}
                             <div class="formGroup">
-                                <span class="fieldName">Price</span>
+                                <span class="fieldName">Amount</span>
                                 <FontAwesomeIcon icon={faIndianRupeeSign} /><h1 className="price_Sport">&nbsp; {amount * formData.facilityPreference.playersLimit}/-</h1>
                             </div>
                         </form>
                     </div>
                     <div className="Button_Conatiner_Sport">
-                        <button type="submit" class="Add_to_Cart"
+                        <button type="submit" class="approve-button"
                             onClick={HandleAddtoCart}
                         >
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        <button type="submit" class="Proceed_to_Payment" onClick={handleSubmitAndProceed}>
-                            <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                            Book now
-                        </button>
+                        <RazorpayButton
+                            amount={amount * formData.facilityPreference.playersLimit}
+                            currency={"INR"}
+                            description={"Pay now"}
+                            onSuccess={handlePaymentSuccess}
+                            onFailure={handlePaymentFailure}
+                        />
                     </div>
                 </div>
             </div>
