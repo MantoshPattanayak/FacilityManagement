@@ -14,6 +14,7 @@ let facilitiesActivities = db.facilityactivities
 let userActivity = db.useractivitymasters;
 let facilityTariff = db.facilitytariff
 let userBookmark = db.bookmarks
+let eventActivities = db.eventActivities
 const fs = require('fs');
 
 
@@ -938,7 +939,10 @@ const facilityFilterOption = async (req, res) => {
 
 let findOverallSearch = async (req,res)=>{
     try {
-        let givenReq = req.params.givenReq ? req.params.givenReq : null;
+        let {latitude,longitude, range,givenReq} = req.body
+        range = range ? range : 20; 
+        let getNearByData=[];
+        let eventQuery;
         console.log('givenReq',givenReq)
         givenReq = givenReq.toLowerCase();
         let findFacilityData = await sequelize.query(`select f.facilityname, f.address  from amabhoomi.facilities f`,{type:QueryTypes.SELECT});
@@ -1019,14 +1023,36 @@ let findOverallSearch = async (req,res)=>{
             type: Sequelize.QueryTypes.SELECT
         });
         if(facilities.length>0){
-            let findPark = facilities.filter(result=>result.facilityTypeId==1)
-            let findPlayground = facilities.filter(result=>result.facilityTypeId==2)
-            let findMultiPurposeGround = facilities.filter(result=>result.facilityTypeId==3)
+            for (const data of facilities) {
+                console.log('data',facilities,'fetchFacilitiesData')
+                let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
+                if (distance <= range) {
+                    console.log('distance', distance)
+                    getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
+                        sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.imageURL
+                    });
+                }
+                // console.log(getNearByData,'getNearByData')
+            }
+            let facilityIds = getNearByData.map(id => id.facilityId);
+            if(facilityIds.length>0){
+                console.log('inside facilityIds',facilityIds)
+                eventQuery = await sequelize.query(`select * from amabhoomi.eventactivities where facilityId in (:facilityIds) `,{
+                    type:QueryTypes.SELECT,
+                    replacements:{facilityIds}
+                })
+                console.log(eventQuery,'data')
+            }
+            let findPark = getNearByData.filter(result=>result.facilityTypeId==1)
+            let findPlayground = getNearByData.filter(result=>result.facilityTypeId==2)
+            let findMultiPurposeGround = getNearByData.filter(result=>result.facilityTypeId==3)
+            
             return res.status(stausCode.SUCCESS.code).json({
                 message:"Here is the overall search data",
                 parkData:findPark,
                 playgroundData:findPlayground,
-                multipurposeData:findMultiPurposeGround
+                multipurposeData:findMultiPurposeGround,
+                eventData:eventQuery
             })
         }
         else{
