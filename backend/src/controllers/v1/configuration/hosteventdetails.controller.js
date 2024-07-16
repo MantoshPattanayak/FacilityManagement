@@ -71,7 +71,8 @@ console.log("here Reponse of Host event", req.body)
     let checkIfEntityExist = await usermasters.findOne({
       where:{
        [Op.and]: [{userId:userId},{statusId:statusId},{isEntity:isEntity}]
-      }
+      },
+     transaction
     })
     if(!checkIfEntityExist){
       let [updateIsEntityInUserMaster] = await usermasters.update({isEntity:isEntity},
@@ -93,7 +94,7 @@ console.log("here Reponse of Host event", req.body)
         updatedDt:updatedDt,
         createdDt:createdDt
       },
-    transaction)
+   { transaction})
     }
     else if(checkIfEntityExist){
       let findTheBankDetails = await bankDetails.findOne({
@@ -140,7 +141,7 @@ console.log("here Reponse of Host event", req.body)
         updatedDt:updatedDt,
         createdDt:createdDt
       },
-    transaction)
+    {transaction})
       }
 
     }
@@ -164,7 +165,7 @@ console.log("here Reponse of Host event", req.body)
       createdBy:userId,
       updatedBy:userId
     },
-  transaction)
+  {transaction})
     if(createEventActivities){
       // then insert to host event tables
         createHosteventdetails = await hosteventdetails.create({
@@ -187,7 +188,7 @@ console.log("here Reponse of Host event", req.body)
           updatedBy:userId,
           createdDt:createdDt,
           updatedDt:updatedDt
-        },transaction);
+        },{transaction});
         
     // Image upload work
     let entityType = 'events'
@@ -201,7 +202,7 @@ console.log("here Reponse of Host event", req.body)
         let subDir = "eventDir"
         let filePurpose = "Event Image"
         console.log('326 line event image')
-        let uploadSingleEventImage = await imageUpload(uploadEventImage,entityType,subDir,filePurpose,insertionData,userId,errors)
+        let uploadSingleEventImage = await imageUpload(uploadEventImage,entityType,subDir,filePurpose,insertionData,userId,errors,1,transaction)
         console.log( uploadSingleEventImage,'328 line event image')
         if(errors.length>0){
           if(errors.some(error => error.includes("something went wrong"))){
@@ -216,7 +217,7 @@ console.log("here Reponse of Host event", req.body)
         let filePurpose = "Event additional file"
         for (let i = 0; i < additionalFiles.length; i++) {
           const additionalFile = additionalFiles[i];
-          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors)
+          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors,i,transaction)
         }
         if(errors.length>0){
           if(errors.some(error => error.includes("something went wrong"))){
