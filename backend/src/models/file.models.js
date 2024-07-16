@@ -7,7 +7,7 @@ module.exports = (sequelize,DataTypes)=>{
             primaryKey:true
         },
         fileName:{
-            type:DataTypes.STRING(80),
+            type:DataTypes.TEXT,
 
         },
         fileType:{
