@@ -1022,61 +1022,69 @@ let findOverallSearch = async (req,res)=>{
         const facilityIds = Array.from(matchingFacilityIds);
 
         // Fetch facility data based on matched facilityIds
-        const facilities = await sequelize.query(`
-            SELECT f.*,fl.url as imageURL
-            FROM amabhoomi.facilities f  
-            inner join fileattachments fa on fa.entityId = f.facilityId 
-            inner join files fl on fa.fileId = fl.fileId 
-            where facilityId IN (:facilityIds) and fa.filePurpose = :filePurpose and fa.entityType = :entityType
-             
-        `, {
-            replacements: { facilityIds,
-                filePurpose:facilityFilePurpose,
-                entityType:facilityEntityType
-             },
-            type: Sequelize.QueryTypes.SELECT
-        });
-        if(facilities.length>0){
-            for (const data of facilities) {
-                console.log('data',data,'fetchFacilitiesData')
-                let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
-                if (distance <= range) {
-                    console.log('distance', distance)
-                    getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
-                        sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.imageURL
-                    });
-                }
-                // console.log(getNearByData,'getNearByData')
-            }
-            let facilityIds = getNearByData.map(id => id.facilityId);
-            if(facilityIds.length>0){
-                console.log('inside facilityIds',facilityIds)
-                eventQuery = await sequelize.query(`select e.*, fl.url from amabhoomi.eventactivities e inner join fileattachments fa on fa.entityId = e.eventId inner join files fl on fa.fileId = fl.fileId where e.facilityId in (:facilityIds) and fa.filePurpose = :filePurpose and fa.entityType = :entityType `,{
-                    type:QueryTypes.SELECT,
-                    replacements:{facilityIds,
-                        filePurpose:eventFilePurpose,
-                        entityType:eventEntityType
+        if(facilityIds.length>0){
+            const facilities = await sequelize.query(`
+                SELECT f.*,fl.url as imageURL
+                FROM amabhoomi.facilities f  
+                inner join fileattachments fa on fa.entityId = f.facilityId 
+                inner join files fl on fa.fileId = fl.fileId 
+                where facilityId IN (:facilityIds) and fa.filePurpose = :filePurpose and fa.entityType = :entityType
+                 
+            `, {
+                replacements: { facilityIds,
+                    filePurpose:facilityFilePurpose,
+                    entityType:facilityEntityType
+                 },
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if(facilities.length>0){
+                for (const data of facilities) {
+                    console.log('data',data,'fetchFacilitiesData')
+                    let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
+                    if (distance <= range) {
+                        console.log('distance', distance)
+                        getNearByData.push({ facilityname: data.facilityname, distance, ownership: data.ownership, facilityTypeId:data.facilityTypeId,scheme:data.scheme,areaAcres:data.areaAcres, latitude:data.latitude,longitude:data.longitude,address:data.address, statusId:data.statusId,facilityId:data.facilityId,operatingHoursFrom:data.operatingHoursFrom,operatingHoursTo:data.operatingHoursTo,status:data.status,
+                            sun:data.sun,mon:data.mon, tue:data.tue, wed:data.wed, thu: data.thu, fri:data.fri, sat:data.sat, url:data.imageURL
+                        });
                     }
+                    // console.log(getNearByData,'getNearByData')
+                }
+                let facilityIdsAfterNearByData = getNearByData.map(id => id.facilityId);
+                if(facilityIdsAfterNearByData.length>0){
+                    console.log('inside facilityIds',facilityIds)
+                    eventQuery = await sequelize.query(`select e.*, fl.url from amabhoomi.eventactivities e inner join fileattachments fa on fa.entityId = e.eventId inner join files fl on fa.fileId = fl.fileId where e.facilityId in (:facilityIdsAfterNearByData) and fa.filePurpose = :filePurpose and fa.entityType = :entityType `,{
+                        type:QueryTypes.SELECT,
+                        replacements:{facilityIdsAfterNearByData,
+                            filePurpose:eventFilePurpose,
+                            entityType:eventEntityType
+                        }
+                    })
+                    console.log(eventQuery,'data')
+                }
+                let findPark = getNearByData.filter(result=>result.facilityTypeId==1)
+                let findPlayground = getNearByData.filter(result=>result.facilityTypeId==2)
+                let findMultiPurposeGround = getNearByData.filter(result=>result.facilityTypeId==3)
+                
+                return res.status(stausCode.SUCCESS.code).json({
+                    message:"Here is the overall search data",
+                    parkData:findPark,
+                    playgroundData:findPlayground,
+                    multipurposeData:findMultiPurposeGround,
+                    eventData:eventQuery
                 })
-                console.log(eventQuery,'data')
             }
-            let findPark = getNearByData.filter(result=>result.facilityTypeId==1)
-            let findPlayground = getNearByData.filter(result=>result.facilityTypeId==2)
-            let findMultiPurposeGround = getNearByData.filter(result=>result.facilityTypeId==3)
-            
-            return res.status(stausCode.SUCCESS.code).json({
-                message:"Here is the overall search data",
-                parkData:findPark,
-                playgroundData:findPlayground,
-                multipurposeData:findMultiPurposeGround,
-                eventData:eventQuery
-            })
+            else{
+                return res.status(stausCode.BAD_REQUEST.code).json({
+                   message: "No data available"
+                })
+            }
         }
         else{
             return res.status(stausCode.BAD_REQUEST.code).json({
                message: "No data available"
             })
         }
+       
        
       
     } catch (err) {
