@@ -43,6 +43,7 @@
   
   .mt-20 {
     margin-top: 20px; 
+    width: 50vw;
   }
   
   .custom-card {
@@ -164,3 +165,6 @@
     }
   }
   
+  .slick-track {
+    display: flex !important;
+  }
