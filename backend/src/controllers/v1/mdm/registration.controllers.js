@@ -240,7 +240,7 @@ const registerFacility = async (req, res) => {
           let filePurpose = "multipleFacilityImage"
           for (let i = 0; i < arrayFacilityImage.length; i++) {
             let eachFacilityImage = arrayFacilityImage[i]
-            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, i, transaction)
+            let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, i+1, transaction)
           }
           if(errors.length>0){
             await transaction.rollback();
