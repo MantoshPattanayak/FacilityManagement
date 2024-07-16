@@ -18,7 +18,7 @@ router.post('/nearByDataInMap',facilities.nearByDataInMap)
 
 router.get('/filterList', facilities.facilityFilterOption)
 
-router.get('/findOverallSearch/:givenReq', facilities.findOverallSearch)
+router.post('/findOverallSearch', facilities.findOverallSearch)
 
 
 module.exports = router
