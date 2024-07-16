@@ -30,7 +30,7 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.DOUBLE
         },
         address:{
-            type:DataTypes.STRING(255)
+            type:DataTypes.TEXT
         },
         statusId:{
             type:DataTypes.INTEGER
@@ -66,7 +66,7 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.INTEGER
         },
         additionalDetails:{
-            type:DataTypes.STRING(255)
+            type:DataTypes.TEXT
         },
         otherGames:{
             type:DataTypes.STRING(255)
