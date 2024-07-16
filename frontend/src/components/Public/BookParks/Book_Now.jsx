@@ -187,12 +187,12 @@ const Book_Now = () => {
       try {
         const facilityPreference = {
           totalMembers: modifiedFormData.totalMembers,
+          amount: formData.amount * modifiedFormData.adults,
           activityPreference: modifiedFormData.activityPreference,
           otherActivities: modifiedFormData.otherActivities,
           bookingDate: modifiedFormData.bookingDate,
           startTime: modifiedFormData.startTime,
-          duration: modifiedFormData.durationInHours,
-          price: formData.amount * modifiedFormData.adults,
+          durationInHours: modifiedFormData.durationInHours,
         };
 
         const requestBody = {
