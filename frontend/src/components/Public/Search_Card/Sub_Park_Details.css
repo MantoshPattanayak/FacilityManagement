@@ -450,6 +450,10 @@ align-items: center;
     font-weight: 600;
 }
 
+.back_button{
+  height: max-content;
+}
+
 @media (min-width: 1230px) {
 
     .text-park {

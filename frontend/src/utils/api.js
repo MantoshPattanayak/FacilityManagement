@@ -9,7 +9,7 @@ const api = {
    PUBLIC_SIGNUP_VERIFY_OTP_API: '/auth/verifyOTP ',   // post - encryptOtp
    PRIVATE_LOGIN_VERIFY_OTP_API: '/userDetails/verifyOTPHandlerWithGenerateTokenForAdmin',   //post  encryptMobile  encryptOtp
    MAP_DISPLAY_DATA: '/mapData/displayMapData',
-   overall_search_map_data:'/mapData/findOverallSearch',  // overall search data ----- method-- get method parma giveReq
+   OVERALL_SEARCH_DATA_API:'/mapData/findOverallSearch',  // overall search data ----- method-- get method parma giveReq
    MAP_SEARCH: '/mapData/searchParkFacilities',
    PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post
    PROFILE_DATA_UPDATE_API: '/publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
