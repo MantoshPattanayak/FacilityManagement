@@ -297,43 +297,43 @@ let createUser = async (req, res) => {
 
       console.log("12",newUser);
 
-      // let firstField = decrypt(encryptemailId);
-      // let secondField = decrypt(encryptMobileNumber)
-      // let Token = await mailToken({ firstField, secondField })
-      // let verifyUrl = process.env.VERIFY_URL + `?token=${Token}`
+      let firstField = decrypt(encryptemailId);
+      let secondField = decrypt(encryptMobileNumber)
+      let Token = await mailToken({ firstField, secondField })
+      let verifyUrl = process.env.VERIFY_URL + `?token=${Token}`
 
 
 
-      // message = `Please verify your emailId.<br><br>
-      //   This is your emailId <b>${firstField}</b><br>
-      //   This is your password <b>${sentPassword}</b><br>
-      //   Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
-      //   <button style=" background-color: #4CAF50; border: none;
-      //    color: white;
-      //    padding: 15px 32px;
-      //    text-align: center;
-      //    text-decoration: none;
-      //    display: inline-block;
-      //    font-size: 16px;">Verify Email</button> </a>
-      //    </br></br>
-      //    This link is valid for 10 mins only  `;
+      message = `Please verify your emailId.<br><br>
+        This is your emailId <b>${firstField}</b><br>
+        This is your password <b>${sentPassword}</b><br>
+        Please use the below link to verify the email address</br></br><a href=${verifyUrl}>
+        <button style=" background-color: #4CAF50; border: none;
+         color: white;
+         padding: 15px 32px;
+         text-align: center;
+         text-decoration: none;
+         display: inline-block;
+         font-size: 16px;">Verify Email</button> </a>
+         </br></br>
+         This link is valid for 10 mins only  `;
 
 
-      // try {
-      //   await sendEmail({
-      //     email: `${firstField}`,
-      //     subject: "please verify the email for your amabhoomi user creation",
-      //     html: `<p>${message}</p>`
-      //   }
-      //   )
+      try {
+        await sendEmail({
+          email: `${firstField}`,
+          subject: "please verify the email for your amabhoomi user creation",
+          html: `<p>${message}</p>`
+        }
+        )
 
         return res
           .status(statusCode.SUCCESS.code)
           .json({ message: "User created successfully  and mail is sent and please verify the mail " });
-      // }
-      // catch (err) {
-      //   return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: "user created but mail not sent" })
-      // }
+      }
+      catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: "user created but mail not sent" })
+      }
 
     }
   } catch (err) {

@@ -19,6 +19,7 @@ let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 const createHosteventdetails = async (req, res) => {
   let transaction;
   try {
+    console.log('req  body for event hosting', req.body)
     transaction = await sequelize.transaction();
     let userId = req.user?.userId || 1;
     let createdDt = new Date();
@@ -36,9 +37,6 @@ const createHosteventdetails = async (req, res) => {
     let createHosteventdetails;
     let createBankDetails;
     let createEventActivities;
-    let createHostBooking;
-    let createFileData;
-    let createFileAttachmentData;
     let entityType = 'events'
     let isEntity  = 1 ; // if the user comes first time then put this isEntity value or else put zero
     const {
@@ -62,10 +60,12 @@ const createHosteventdetails = async (req, res) => {
       eventStartDate,
       eventEndDate,
       descriptionOfEvent,
-      isTicketSalesEnabled,
-      ticketPrice,
+      ticketsold,
+      price,
       uploadEventImage,
       additionalFiles,
+      transactionId,
+      numberofTicket
     } = req.body;
 console.log("here Reponse of Host event", req.body)
     let checkIfEntityExist = await usermasters.findOne({
@@ -83,6 +83,12 @@ console.log("here Reponse of Host event", req.body)
             transaction
           }
       )
+      if(updateIsEntityInUserMaster==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong`
+        })
+      }
       createBankDetails = await bankDetails.create({
         beneficiaryName:beneficiaryName,
         accountNumber:await encrypt(accountNumber),
@@ -95,6 +101,15 @@ console.log("here Reponse of Host event", req.body)
         createdDt:createdDt
       },
    { transaction})
+
+    if(!createBankDetails){
+
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+
+    }
     }
     else if(checkIfEntityExist){
       let findTheBankDetails = await bankDetails.findOne({
@@ -120,14 +135,24 @@ console.log("here Reponse of Host event", req.body)
         if(findTheBankDetails.bankIfscCode!=bankIFSC){
           bankDetailsObject.bankIfscCode = bankIFSC
         }
-        let updateTheBankDetails  = await bankDetails.update(bankDetailsObject,{
-          where:{
-            [Op.and]:[{statusId:statusId},{createdBy:createdBy}]
-          },
-          transaction
-        })
-
-
+        if(Object.keys(bankDetailsObject).length>0){
+          bankDetailsObject.updatedBy = userId
+          bankDetailsObject.updatedDt = updatedDt
+          let [updateTheBankDetails]  = await bankDetails.update(bankDetailsObject,{
+            where:{
+              [Op.and]:[{statusId:statusId},{createdBy:createdBy}]
+            },
+            transaction
+          })
+          if(updateTheBankDetails==0){
+            await transaction.rollback();
+          
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+        }
+        }
+       
       }
       else{
         createBankDetails = await bankDetails.create({
@@ -142,6 +167,14 @@ console.log("here Reponse of Host event", req.body)
         createdDt:createdDt
       },
     {transaction})
+    if(!createBankDetails){
+
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+
+    }
       }
 
     }
@@ -158,8 +191,9 @@ console.log("here Reponse of Host event", req.body)
       eventStartTime:(eventStartDate.slice(11,-1)),
       eventEndTime:(eventEndDate.slice(11,-1)),
       descriptionOfEvent:descriptionOfEvent,
-      ticketSalesEnabled:isTicketSalesEnabled,
-      ticketPrice:ticketPrice,
+      ticketSalesEnabled:ticketsold,
+      ticketPrice:price,
+      numberofTickets:numberofTicket,
       createdDt:createdDt,
       updatedDt:updatedDt,
       createdBy:userId,
@@ -188,10 +222,15 @@ console.log("here Reponse of Host event", req.body)
           updatedBy:userId,
           createdDt:createdDt,
           updatedDt:updatedDt
-        },{transaction});
+        },{transaction,returning:true});
         
+        if(!createHosteventdetails){
+          await transaction.rollback();
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+        }
     // Image upload work
-    let entityType = 'events'
     let serverError = 'something went wrong'
     let insertionData = {
      id:createEventActivities.eventId,
@@ -205,6 +244,7 @@ console.log("here Reponse of Host event", req.body)
         let uploadSingleEventImage = await imageUpload(uploadEventImage,entityType,subDir,filePurpose,insertionData,userId,errors,1,transaction)
         console.log( uploadSingleEventImage,'328 line event image')
         if(errors.length>0){
+          await transaction.rollback();
           if(errors.some(error => error.includes("something went wrong"))){
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
           }
@@ -217,9 +257,10 @@ console.log("here Reponse of Host event", req.body)
         let filePurpose = "Event additional file"
         for (let i = 0; i < additionalFiles.length; i++) {
           const additionalFile = additionalFiles[i];
-          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors,i,transaction)
+          let uploadAdditionFile = await imageUpload(additionalFile,entityType,subDir,filePurpose,insertionData,userId,errors,i+1,transaction)
         }
         if(errors.length>0){
+          await transaction.rollback();
           if(errors.some(error => error.includes("something went wrong"))){
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
           }
@@ -228,20 +269,25 @@ console.log("here Reponse of Host event", req.body)
 
       }
 
-    
+    console.log(createHosteventdetails);
+    if (createHosteventdetails) {
+      // insert to host booking 
+      // insert one transaction id after the payment getting successfull
 
-    //first insert to transaction 
-    // second insert to the host booking 
-    // Then verify the email of user
-
-    // let insertToTransactions
-
-    // let insertToHostBooking = await hostbooking.create({
-    //   hostId: createHosteventdetails.hostId,
-    //   transactionId:
-    // })
-
-    // for email verification
+      let hostBookingData = {
+        hostId:createHosteventdetails.hostId,
+        bookingDate:eventDate,
+        startDate:eventStartDate,
+        endDate:eventEndDate,
+        statusId:statusId,
+        createdBy:createdBy,
+        updatedBy: updatedBy,
+        createdOn:createdDt,
+        updatedOn:updatedDt
+        
+      }
+      if(hostBookingData){
+        // for email verification
     // let firstField = emailId;
     // let secondField = phoneNo
     // let Token = await mailToken({firstField,secondField})
@@ -266,28 +312,39 @@ console.log("here Reponse of Host event", req.body)
     //       }
     //       )
     //   } catch (err) {
+    //       await transaction.rollback();
     //       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
     //   }
 
-    console.log(createHosteventdetails);
-    if (createHosteventdetails) {
-      return res.status(statusCode.SUCCESS.code).json({
-        message: "Host Event created successfully",
+        await transaction.commit();
+        return res.status(statusCode.SUCCESS.code).json({
+          message: "Host Event created successfully",
+        });
+      }
+    
+      await transaction.rollback();
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: "Host Event is not created",
       });
     }
-    return res.status(statusCode.BAD_REQUEST.code).json({
-      message: "Host Event is not created",
-    });
+    
+    await transaction.rollback();
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message: "Host Event is not created",
+      });
+  
 
     }
     else
     {
+      await transaction.rollback();
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:"Something went wrong"
       })
     }
 
   } catch (error) {
+    if(transaction) await transaction.rollback();
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });

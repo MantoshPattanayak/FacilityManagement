@@ -41,6 +41,9 @@ module.exports =(sequelize,DataTypes)=>{
         additionalFilePath:{
             type:DataTypes.STRING(255)
         },
+        numberOfTickets:{
+            type:DataTypes.INTEGER
+        },
         statusId:{
             type:DataTypes.INTEGER
         },
