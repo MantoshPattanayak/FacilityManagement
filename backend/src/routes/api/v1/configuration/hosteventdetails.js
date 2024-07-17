@@ -6,12 +6,10 @@ let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 const hosteventdetails = require("../../../../controllers/" +
   api_version +
   "/configuration/hosteventdetails.controller");
-router.post("/createHosteventdetails",eventUpload.fields([
-  { name: 'eventImage', maxCount: 1 },
-  { name: 'additionalFile', maxCount: Infinity }]),authenticateToken, hosteventdetails.createHosteventdetails);
+router.post("/createHosteventdetails",authenticateToken, hosteventdetails.createHosteventdetails);
 
 router.get("/bankService",authenticateToken, hosteventdetails.bankService);
-router.get("/eventDropdown", authenticateToken,hosteventdetails.eventDropdownData);
+router.post("/eventDropdown", authenticateToken,hosteventdetails.eventDropdownData);
 router.get("/findEventHostDetailsData", hosteventdetails.findEventHostDetailsData);
 
 

@@ -21,10 +21,10 @@ module.exports =(sequelize,DataTypes)=>{
             type:DataTypes.DATEONLY
         },
         eventStartTime:{
-            type:DataTypes.TIME
+            type:DataTypes.DATE
         },
         eventEndTime:{
-            type:DataTypes.TIME
+            type:DataTypes.DATE
         },
         descriptionOfEvent:{
             type:DataTypes.TEXT('medium')
