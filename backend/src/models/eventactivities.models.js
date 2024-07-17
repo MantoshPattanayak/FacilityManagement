@@ -60,7 +60,7 @@ module.exports =(sequelize,DataTypes)=>{
         createdDt:{
             type:DataTypes.DATE
         },
-        upadatedDt:{
+        updatedDt:{
             type:DataTypes.DATE
         }
     },
