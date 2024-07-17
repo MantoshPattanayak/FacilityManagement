@@ -57,6 +57,12 @@ const Advertising_with_us = () => {
                             <label htmlFor="duration">Duration (hours)</label>
                             <input type="number" id="duration" name="duration" min="1" max="24" step="1" placeholder="Enter duration (1-24)" />
                         </div>
+                        <div class="Form_Field_contact">
+    <label for="imageUpload">Upload Image</label>
+    <input type="file" class="Upload_ad_image" id="imageUpload" name="imageUpload" accept="image/*" />
+</div>
+
+
                         <div className="Form_Field_contact">
                             <label htmlFor="message">Message</label>
                             <textarea id="message" name="message"
@@ -66,10 +72,7 @@ const Advertising_with_us = () => {
                             ></textarea>
                             {/* {showError.message && <div className="error text-red-800">{showError.message}</div>} */}
                         </div>
-                        <div className="Form_Field_contact">
-                            <label htmlFor="duration">Upload image</label>
-                            <input type="upload" id="duration" name="duration" min="1" max="24" step="1" placeholder="Enter duration (1-24)" />
-                        </div>
+
                         <button className="button-3" role="button">Submit</button>
                         {/* <ToastContainer /> */}
                     </form>

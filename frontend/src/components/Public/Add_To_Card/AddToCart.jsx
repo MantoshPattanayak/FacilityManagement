@@ -221,7 +221,7 @@ const AddToCart = () => {
                         </span>
 
                     </div>
-                    <h1 className="Safe_text">Safe and Secure Payments.Easy returns.100% Authentic products.</h1>
+                    <h1 className="Safe_text">Safe and Secure Payments.Easy returns.</h1>
 
                 </div>
 
