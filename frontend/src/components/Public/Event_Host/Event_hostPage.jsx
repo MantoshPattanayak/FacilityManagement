@@ -631,8 +631,8 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Start Event Date <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="date" id="input1" className="input_padding" placeholder="Please Enter Phone Number"
+                                        <label htmlFor="input1">Start Event Time & Date  <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="datetime-local" id="input1" className="input_padding" placeholder="Please Enter Phone Number"
                                             name="startEventDate"
                                             value={formData.startEventDate}
                                             onChange={handleChange}
@@ -640,8 +640,8 @@ const Event_hostPage = () => {
                                         {formErrors.startEventDate && <p className="error text-red-700">{formErrors.startEventDate}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">End Event Date <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="date" id="input2" className="input_padding" placeholder="Please Enter Email Address"
+                                        <label htmlFor="input2">End Event Time & Date <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="datetime-local" id="input2" className="input_padding" placeholder="Please Enter Email Address"
                                             name="endEventDate"
                                             value={formData.endEventDate}
                                             onChange={handleChange}

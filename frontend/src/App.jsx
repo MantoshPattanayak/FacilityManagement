@@ -95,6 +95,7 @@ import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
 import EventDetailsPage from './components/Admin/Activity/ReviewEventDetails/EventDetailsPage'
 // import Conact Us Page-------------------------
 import ContactUs from "./components/Public/FooterPages/ContactUs";
+import Advertising_with_us from "./components/Public/FooterPages/Advertising_with_us";
 // Terms and Condition ----------------------------------------
 import Terms_ConditionPage from "./components/Public/FooterPages/Terms_ConditionPage";
 import Disclaimer from "./components/Public/FooterPages/Disclaimer";
@@ -325,6 +326,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Grievance />
+                  </ProtectedRoute>
+                }
+              />
+                <Route
+                path="/Advertising_with_us"
+                element={
+                  <ProtectedRoute>
+                    <Advertising_with_us />
                   </ProtectedRoute>
                 }
               />
