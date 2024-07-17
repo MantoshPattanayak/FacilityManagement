@@ -676,8 +676,8 @@ const Event_hostPage = () => {
                                             onChange={handleChange}
                                         >
                                             <option value="" disabled selected hidden>Select Bank Name</option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
 
                                         </select>
                                         {formErrors.ticketsold && <p className="error text-red-700">{formErrors.ticketsold}</p>}
