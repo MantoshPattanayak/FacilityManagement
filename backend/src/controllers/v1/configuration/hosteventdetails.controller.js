@@ -5,7 +5,7 @@ const sequelize = db.sequelize;
 const hosteventdetails = db.hosteventdetails;
 const Sequelize = db.Sequelize;
 const bankDetails = db.bankdetails;
-const hostbooking = db.hostbookings
+const hostbooking = db.hosteventbookings
 const eventactivites = db.eventActivities
 let usermasters = db.usermaster
 const file = db.file;
@@ -52,14 +52,14 @@ const createHosteventdetails = async (req, res) => {
       bankName,
       bankIFSC,
       accountNumber,
-      eventCategoryId,
+      eventCategory,
       eventTitle,
       facilityId,
-      locationName,
+      locationofEvent,
       eventDate,
       startEventDate,
       endEventDate,
-      descriptionOfEvent,
+      descriptionofEvent,
       ticketsold,
       price,
       uploadEventImage,
@@ -185,15 +185,15 @@ console.log("here Reponse of Host event", req.body)
     createEventActivities = await eventactivites.create({
       facilityId:facilityId,
       eventName:eventTitle,
-      eventCategoryId:eventCategoryId,
-      locationName:locationName,
+      eventCategoryId:eventCategory,
+      locationName:locationofEvent,
       eventDate:eventDate,
       eventStartTime:startEventDate,
       eventEndTime:endEventDate,
-      descriptionOfEvent:descriptionOfEvent,
+      descriptionOfEvent:descriptionofEvent,
       ticketSalesEnabled:ticketsold,
       ticketPrice:price,
-      numberofTickets:numberofTicket,
+      numberOfTickets:numberofTicket,
       createdDt:createdDt,
       updatedDt:updatedDt,
       createdBy:userId,
@@ -206,17 +206,17 @@ console.log("here Reponse of Host event", req.body)
           eventId: createEventActivities.eventId,
           firstName: firstName,
           lastName: lastName,
-          organisationPanCardNumber: organisationPanCardNumber,
+          pancardNumber: organisationPanCardNumber,
           emailId: emailId,
           phoneNo: phoneNo,
           userId: userId,
           organisationName: organisationName,
-          category: eventCategoryId,
+          category: eventCategory,
           organisationAddress: organisationAddress,
           eventDate: eventDate,
-          eventStartTime: eventStartDate,
-          eventEndDate: eventEndDate,
-          Description: descriptionOfEvent,
+          eventStartTime: startEventDate,
+          eventEndDate: endEventDate,
+          Description: descriptionofEvent,
           statusId: statusId,
           createdBy:userId,
           updatedBy:userId,
@@ -274,18 +274,19 @@ console.log("here Reponse of Host event", req.body)
       // insert to host booking 
       // insert one transaction id after the payment getting successfull
 
-      let hostBookingData = {
+      let hostBookingData = await hostbooking.create({
         hostId:createHosteventdetails.hostId,
         bookingDate:eventDate,
-        startDate:eventStartDate,
-        endDate:eventEndDate,
+        startDate:startEventDate,
+        endDate:endEventDate,
         statusId:statusId,
         createdBy:userId,
         updatedBy: userId,
         createdOn:createdDt,
         updatedOn:updatedDt
         
-      }
+      },{transaction})
+      console.log(hostBookingData, 'host booking data ')
       if(hostBookingData){
         // for email verification
     // let firstField = emailId;
