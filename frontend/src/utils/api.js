@@ -129,6 +129,11 @@ const api = {
    CREATE_NEW_EVENTCATEGORY_API: '/eventcategories/createEventCategory', //post eventCategoryName, description
    VIEW_EVENTCATEGORY_BY_ID_API: '/eventcategories/viewEventCategoryById', //get :eventCategoryId
    UPDATE_EVENTCATEGORY_API: '/eventcategories/updateEventCategory', //put eventCategoryName, description, eventCategoryId, statusId
+   // FACILITY TYPE MASTER (MDM)
+   VIEW_FACILITYTYPE_LIST_API: '/facilitytype/viewFacilityTypeList', //post givenReq
+   CREATE_NEW_FACILITYTYPE_API: '/facilitytype/createFacilityType', //post code, description
+   VIEW_FACILITYTYPE_BY_ID_API: '/facilitytype/viewFacilityTypeById', //get :facilityTypeId
+   UPDATE_FACILITYTYPE_API: '/facilitytype/updateFacilityType', //put code, description, facilityTypeId, statusId
    // PAYMENT
    FETCH_RAZORPAY_API_KEY: '/razorPayPayment/getRazorpayApiKeys', //get
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount

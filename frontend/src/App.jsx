@@ -116,6 +116,9 @@ import EditInventory from "./components/Admin/MDM/InventoryMaster/EditInventory"
 import ViewEventCategoriesList from "./components/Admin/MDM/EventCategoriesMaster/ViewEventCategoriesList";
 import CreateEventCategory from "./components/Admin/MDM/EventCategoriesMaster/CreateEventCategory";
 import EditEventCategory from "./components/Admin/MDM/EventCategoriesMaster/EditEventCategory";
+import ViewFacilityTypeList from "./components/Admin/MDM/FacilityTypeMaster/ViewFacilityTypeList";
+import CreateFacilityType from "./components/Admin/MDM/FacilityTypeMaster/CreateFacilityType";
+import EditFacilityType from "./components/Admin/MDM/FacilityTypeMaster/EditFacilityType";
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -643,6 +646,9 @@ function App() {
               <Route path="/mdm/view-eventcategories" element={<ProtectedRoute><ViewEventCategoriesList /></ProtectedRoute>} />
               <Route path="/mdm/create-eventcategories" element={<ProtectedRoute><CreateEventCategory /></ProtectedRoute>} />
               <Route path="/mdm/edit-eventcategories" element={<ProtectedRoute><EditEventCategory /></ProtectedRoute>} />
+              <Route path="/mdm/view-facility-type-list" element={<ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute>} />
+              <Route path="/mdm/create-facility-type-list" element={<ProtectedRoute><CreateFacilityType /></ProtectedRoute>} />
+              <Route path="/mdm/edit-facility-type-list" element={<ProtectedRoute><EditFacilityType /></ProtectedRoute>} />
             </Routes>
             {/* <Footer /> */}
             <CommonFooter1 />

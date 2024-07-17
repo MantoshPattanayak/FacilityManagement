@@ -91,12 +91,12 @@ let createFacilityType = async (req, res) => {
 
 let viewFacilityTypeById = async (req, res) => {
     try {
-        let facilityTypeById = req.params.facilityTypeById;
-        console.log('facilityTypeById', facilityTypeById);
+        let facilityTypeId = req.params.facilityTypeId;
+        console.log('facilityTypeById', facilityTypeId);
 
         let fetchFacilityTypeDetailsById = await facilityTypeMaster.findOne({
             where: {
-                facilityTypeById: facilityTypeById
+                facilitytypeId: facilityTypeId
             }
         });
 
@@ -130,14 +130,14 @@ let viewFacilityTypeById = async (req, res) => {
 
 let updateFacilityType = async (req, res) => {
     try {
-        let { code, description, facilityTypeById, statusId } = req.body;
+        let { code, description, facilityTypeId, statusId } = req.body;
         let paramsForUpdate = new Array();
         let userId = req.user.userId;
 
         //fetch previously saved details
         let fetchFacilityTypeDetailsById = await facilityTypeMaster.findOne({
             where: {
-                facilityTypeById: facilityTypeById
+                facilitytypeId: facilityTypeId
             }
         });
 
@@ -179,7 +179,7 @@ let updateFacilityType = async (req, res) => {
             paramsForUpdate,
             {
                 where: {
-                    facilityTypeById: facilityTypeById
+                    facilitytypeId: facilitytypeId
                 }
             }
         );
