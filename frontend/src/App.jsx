@@ -518,7 +518,7 @@ function App() {
               />
               {/* Admin Traiff Page */}
               <Route
-                path="/TariffDetails"
+                path="/mdm/TariffDetails"
                 element={
                   <ProtectedRoute>
                     <TariffDetails />
@@ -529,7 +529,7 @@ function App() {
 
 
               <Route
-                path="/ViewTariffList"
+                path="/mdm/ViewTariffList"
                 element={
                   <ProtectedRoute>
                     <ViewTariffList />
@@ -537,7 +537,7 @@ function App() {
                 }
               />
               <Route
-                path="/Tariff_View_Details"
+                path="/mdm/Tariff_View_Details"
                 element={
                   <ProtectedRoute>
                     <Tariff_View_Details />
