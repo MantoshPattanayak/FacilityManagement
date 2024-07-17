@@ -12,12 +12,18 @@ router.get('/initial-data', grievanceController.fetchInitialData);      // no us
 // view grievance list
 router.post('/viewgrievancelist', authenticateToken, grievanceController.viewGrievanceList);
 // view grievance by id
-router.get('/viewgrievance/:grievanceId', authenticateToken,grievanceController.viewGrievanceById);
+router.post('/viewgrievance/:grievanceId', authenticateToken,grievanceController.viewGrievanceById);
 //action taken against grievance
 router.post('/action-grievance',authenticateToken, grievanceController.actionTaken);
 // create feedack
-router.post("/createFeedback", grievanceController.createFeedback); 
+router.post("/createFeedback", grievanceController.createFeedback);
 
+//view feedback list - start
+router.post("/viewfeedbacklist", authenticateToken, grievanceController.viewFeedbackList);
+//view feedback list - end
+// view feedback by id - start
+router.get("/viewfeedback/:feedbackId", authenticateToken, grievanceController.viewFeedbackById);
+// view feedback by id - end
 router.post("/createFeedback", grievanceController.createFeedback); 
 
 router.post("/contactUs",grievanceController.contactRequest)

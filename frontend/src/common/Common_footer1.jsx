@@ -45,11 +45,15 @@ const CommonFooter1 = () => {
             <ul className="Ul_contact_partner">
               <li>
 
+                <Link to="/Advertising_with_us">Advertising with us</Link>
+              </li>
+              <li>
+
                 <Link to="/ContactUs">Contact Us</Link>
               </li>
               <li>
                 <Link to='/Partnerwithus'>Partner with us</Link>
-                
+
               </li>
               <li>
                 <Link to="/grievance-feedback-form">Grievance</Link>
@@ -60,9 +64,9 @@ const CommonFooter1 = () => {
             </ul>
             <div className="term_condtion_conatiner">
               <Link to='/Disclaimer'><p>Disclaimer</p></Link>
-              
-              <Link to='/Privacy_Policy'> <p>Privacy Policy</p></Link> 
-             <Link to='/Terms_ConditionPage'><p> Terms & Condtitions</p></Link>
+
+              <Link to='/Privacy_Policy'> <p>Privacy Policy</p></Link>
+              <Link to='/Terms_ConditionPage'><p> Terms & Condtitions</p></Link>
             </div>
 
             <div className="Socail_media">

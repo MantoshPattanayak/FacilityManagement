@@ -1,10 +1,3 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f1f3f6;
-  margin: 0;
-  padding: 0;
-}
-
 /* Main container */
 .Add_to_Card_Main_conatiner9 {
   padding: 20px;
@@ -18,11 +11,13 @@ body {
   margin: 5vh auto;
   padding: 3rem 5rem;
   max-width: 1200px;
+
 }
 
 /* Cart details and save later section */
 .Show_Cart_Details_save_latter {
   width: 60%;
+
 }
 
 /* Individual cart detail box */
@@ -36,20 +31,34 @@ body {
 }
 
 .Cart_details_container {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  background-color: white;
+
+  padding: 8px;
+  background-color: rgb(249, 249, 249);
 
 
   border-radius: 4px;
 }
 
+.Cart_details_container1 {
+  height: 5vh;
+
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
 .park_image_cart {
-  height: 190px;
+  height: 170px;
   width: 170px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 10px;
+}
+
+.cart_items_text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
+  text-shadow: #333333 5px;
+  padding: 8px;
 }
 
 .text_contant_details_cart {
@@ -80,13 +89,14 @@ body {
 
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
+  margin-top: 40px;
 
 }
-.Save_for_later_text{
-text-align: center;
-font-size: 20px;
-font-weight: 600;
+
+.Save_for_later_text {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
 
 }
 
@@ -108,47 +118,77 @@ font-weight: 600;
 }
 
 /* Booking bill price container */
-.Booking_Bill_Price {
-  width: 30%;
+.Booking_Bill_Mian_Conatiner{
+  width: 35%;
   height: 25vh;
-  background-color: white;
-  padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+
+}
+.Park_name_cart{
+font-weight: 600;
+color: #1c1c1c;
+}
+.facility_name_cart{
+  font-weight: 600;
+  color: #2c2c2c;
+}
+.cart_amount{
+  font-weight: 600;
+  color: #1c1c1c;
+  
+}
+.p_tag_text{
+  font-size: 15px;
 }
 
+
+.Booking_Bill_Price {
+  background-color: white;
+  padding: 10px;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.Safe_text{
+  color: #585757;
+  font-weight: 600;
+}
 .parice_detials {
   font-size: 20px;
   font-weight: 600;
   color: #3d3d3d;
   border-bottom: 1px solid rgb(172, 172, 172);
 }
-.price_bill{
+
+.price_bill {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2px;
   padding-bottom: 10px;
 }
-.price_bill h1{
-font-size: 17px;
+
+.price_bill h1 {
+  font-size: 17px;
 
 }
-.price_bill1{
+
+.price_bill1 {
   display: flex;
   justify-content: space-between;
   padding-bottom: 20px;
   border-bottom: 2px dotted gray;
 }
-.price_bill1 h1{
+
+.price_bill1 h1 {
   font-size: 17px;
 }
-.price_bill3{
+
+.price_bill3 {
   display: flex;
   justify-content: space-between;
   padding-bottom: 20px;
   border-bottom: 1px dotted gray;
 }
-.price_bill3 h1{
+
+.price_bill3 h1 {
   font-size: 20px;
   font-weight: 600;
 }
@@ -166,17 +206,21 @@ font-size: 17px;
 }
 
 
-.Pay_Now_Buttton{
+.Pay_Now_Buttton {
   display: flex;
   justify-content: right;
- box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 5px;
- height: 5vh;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -10px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  height: 8vh;
+  border-top: 1px solid rgb(225, 224, 224);
 
 }
-.image_missing{
+
+.image_missing {
   height: 30vh;
+
 }
-.mssing_cart_image{
+
+.mssing_cart_image {
   display: flex;
   justify-content: center;
 }

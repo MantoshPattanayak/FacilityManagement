@@ -1,27 +1,26 @@
 module.exports = (sequelize, DataTypes) => {
-    let Feedback = sequelize.define('feedback', {
+    let Feedback = sequelize.define('feedbacks', {
         feedbackId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
             primaryKey: true
         },
-        name:      {
+        name: {
             type: DataTypes.STRING(25),
             allowNull: true
         },
-        mobile:   {
+        mobile: {
             type: DataTypes.STRING(25),
             allowNull: false
         },
-        email:    {
+        email: {
             type: DataTypes.STRING(50),
             allowNull: true,
             charset: 'utf8mb4',
             collate: 'utf8mb4_0900_ai_ci'
-
         },
-        subject:  {
+        subject: {
             type: DataTypes.STRING(50),
             allowNull: false
         },
@@ -33,18 +32,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
         },
         createdBy: {
-            type: DataTypes.DATE,
+            type: DataTypes.INTEGER,
         },
         updateBy: {
-            type: DataTypes.DATE,
+            type: DataTypes.INTEGER,
         },
         updatedOn: {
-            type: DataTypes.DATE,
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-        },
-        updatedAt: {
             type: DataTypes.DATE,
         },
         deleteBy: {

@@ -95,6 +95,7 @@ import Facility_ViewList from "./components/Admin/Facility/Facility_ViewList";
 import EventDetailsPage from './components/Admin/Activity/ReviewEventDetails/EventDetailsPage'
 // import Conact Us Page-------------------------
 import ContactUs from "./components/Public/FooterPages/ContactUs";
+import Advertising_with_us from "./components/Public/FooterPages/Advertising_with_us";
 // Terms and Condition ----------------------------------------
 import Terms_ConditionPage from "./components/Public/FooterPages/Terms_ConditionPage";
 import Disclaimer from "./components/Public/FooterPages/Disclaimer";
@@ -328,6 +329,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+                <Route
+                path="/Advertising_with_us"
+                element={
+                  <ProtectedRoute>
+                    <Advertising_with_us />
+                  </ProtectedRoute>
+                }
+              />
               {/* Activity - Grievance END */}
               {/* ADMIN SECTION - UAC*/}
               <Route
@@ -518,7 +527,7 @@ function App() {
               />
               {/* Admin Traiff Page */}
               <Route
-                path="/TariffDetails"
+                path="/mdm/TariffDetails"
                 element={
                   <ProtectedRoute>
                     <TariffDetails />
@@ -529,7 +538,7 @@ function App() {
 
 
               <Route
-                path="/ViewTariffList"
+                path="/mdm/ViewTariffList"
                 element={
                   <ProtectedRoute>
                     <ViewTariffList />
@@ -537,7 +546,7 @@ function App() {
                 }
               />
               <Route
-                path="/Tariff_View_Details"
+                path="/mdm/Tariff_View_Details"
                 element={
                   <ProtectedRoute>
                     <Tariff_View_Details />
