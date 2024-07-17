@@ -1,68 +1,289 @@
-.container-1 .header-role {
-    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
-    height: auto;
-    padding-block: 2vh;
-}
-
-.container-1{
-    width: 94%;
-}
-
-.editResParent{
+.EditNewResourceContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-
-.rectangle .roles {
+    /* Converted from 20px to 2vh */
+    max-width: 100%;
+    width: 100%;
+    /* Changed to vw, and adjusted for centering */
+    margin: 0 auto;
+    /* Center the container */
+    margin-top: 10vh;
+    background-color: #F7F7F7;
+    overflow-y: auto;
+  }
+  
+  .EditNewResourceContainer .form-heading {
+    padding: 2.5vw;
     display: flex;
-    font-size: large;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.roles h1 {
-    padding-top: 0%;
-}
-
-.back-btn .btn {
-    padding: 6px 16px;
-}
-
-.EditResForm .form {
-    width: auto;
+    width: 100%;
+    /* Converted from 20px to 2.5vw */
+  }
+  
+  .EditNewResourceContainer .form-heading h2 {
+    margin-bottom: 1.5vw;
+    /* Converted from 10px to 1.5vw */
+    /* min-width: 5vw; */
+    width: 100%;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+  }
+  
+  
+  .EditNewResourceContainer .form-row {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 1vw;
+    max-width: 100%;
+    width: 84vw;
+    justify-content: space-between;
+    padding-inline: 1vw;
+  }
+  
+  .EditNewResourceContainer .form-group {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2vh;
-}
-
-.input-fields {
-    /* margin-top: 14px;
-    justify-content: space-between;
+    line-height: 1.5;
+  }
+  
+  .EditNewResourceContainer .form-heading label {
+    margin-bottom: 0.5vw;
+    /* Converted from 5px to 0.5vw */
+    color: #595959;
+    font-weight: bold;
+  }
+  
+  .EditNewResourceContainer .form-heading select {
+    width: 24vw;
+    height: 100%;
     padding: 0.625vw;
-    border: 0.0833vw solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 0.417vw;
-    background-color: ghostwhite; */
+    background-color: ghostwhite;
+  
+  }
+  
+  .EditNewResourceContainer .form-heading input[type="text"], 
+  .EditNewResourceContainer .form-heading input[type="number"],
+  .EditNewResourceContainer .form-heading input[type='date'],
+  .EditNewResourceContainer .form-heading select {
     width: 100%;
     height: 100%;
     padding: 0.625vw;
-    border: 0.0833vw solid #b1b1b1;
+    border: 2px solid #c6c6c6;
     border-radius: 0.417vw;
-    background-color: #ECECEE;
-}
-
-.input-fields:focus{
-    border: 2px solid #405cf5; /* Change border color and thickness on focus */
-    outline: none; /* Remove default outline */
-}
-
-.EditResForm .buttons {
-    width: 14vw;
-    margin-left: 42%;
-}
-
-.EditResForm {
-    margin-bottom: 8vh;
-}
+    background-color: white;
+  }
+  
+  .EditNewResourceContainer .form-heading input[type="checkbox"] {
+    height: 30%;
+    padding: 0.325vw;
+    border: 2px solid #c6c6c6;
+    border-radius: 0.417vw;
+    background-color: white;
+  }
+  
+  .EditNewResourceContainer .form-heading input:focus, .EditNewResourceContainer .form-heading select:focus {
+    border: 2px solid #405cf5;
+    outline: none;
+  }
+  
+  .EditNewResourceContainer .form-heading input[type="button"] {
+    width: 25%;
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .EditNewResourceContainer .form-heading .div-border {
+    padding: 0.625vw;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+  }
+  
+  .EditNewResourceContainer .form-heading input[type="text"]:disabled,
+  .EditNewResourceContainer .form-heading textarea:disabled {
+    background-color: rgb(241, 241, 241);
+  }
+  
+  .EditNewResourceContainer textarea {
+    padding: 0.625vw;
+    border: 2px solid #ccc;
+    border-radius: 0.417vw;
+    background-color: white;
+  }
+  
+  .EditNewResourceContainer textarea:focus {
+    border: 2px solid #405cf5;
+    outline: none;
+  }
+  
+  .EditNewResourceContainer .buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    padding-left: 0;
+    width: 100%;
+  }
+  
+  .EditNewResourceContainer .approve-button,
+  .EditNewResourceContainer .cancel-button {
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .EditNewResourceContainer .back-button {
+    padding: 0.5em;
+    margin: 0.5em;
+    /* Adjusted margin */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #176BFB;
+    color: white;
+  }
+  
+  .EditNewResourceContainer .approve-button {
+    background-color: #176BFB;
+    color: white;
+  }
+  
+  .EditNewResourceContainer .cancel-button {
+    background-color: #c6c6c6;
+    color: white;
+  }
+  
+  .EditNewResourceContainer .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 10rem;
+    grid-row-gap: 10px;
+    width: 100%;
+  }
+  
+  .EditNewResourceContainer .error-message {
+    color: red;
+    font-size: 14px;
+  }
+  
+  .EditNewResourceContainer .approve-button:disabled,
+  .EditNewResourceContainer .cancel-button:disabled {
+    background-color: gray;
+  }
+  
+  /* Media query for tablets and larger screens */
+  @media screen and (min-width: 768px) {
+  
+    .EditNewResourceContainer .approve-button,
+    .EditNewResourceContainer .cancel-button {
+        padding: 0.6em 1.5em;
+        margin: 0.2em;
+    }
+    .EditNewResourceContainer .form-row {
+        flex-wrap: wrap;
+    }
+  
+    .EditNewResourceContainer .form-heading h2 {
+        height: 5vh;
+        /* Change height for larger screens */
+    }
+  }
+  
+  /* Media query for smaller screens */
+  @media screen and (max-width: 767px) {
+  
+    .EditNewResourceContainer .approve-button,
+    .EditNewResourceContainer .cancel-button {
+        width: 100%;
+        /* Make buttons full width */
+    }
+  
+    .EditNewResourceContainer .form-row {
+        flex-direction: column;
+        gap: 1.5vw;
+        /* Increased gap for better spacing */
+    }
+  
+    .EditNewResourceContainer .form-group {
+        width: 100%;
+    }
+  
+    .EditNewResourceContainer input[type="text"] {
+        width: 100%;
+    }
+  
+    .EditNewResourceContainer {
+        width: 100%;
+        font-size: small;
+    }
+  }
+  
+  @media screen and (max-width: 575px) {
+    .EditNewResourceContainer .form-heading h2 {
+        margin-bottom: 1.5vw;
+        min-width: 90vw;
+        height: 5vh;
+        padding-left: 2vh;
+    }
+  
+    .EditNewResourceContainer .form-heading {
+        max-width: 90vw;
+    }
+  
+    .EditNewResourceContainer {
+        width: 100%;
+        font-size: small;
+    }
+  
+    .EditNewResourceContainer .approve-button,
+    .EditNewResourceContainer .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
+    }
+  
+    .EditNewResourceContainer label {
+        font-size: 12px;
+    }
+  }
+  
+  @media screen and (max-width: 368px) {
+    .EditNewResourceContainer .form-heading h2 {
+        margin-bottom: 1.5vw;
+        height: 5vh;
+        padding-left: 2vh;
+        width: 50%;
+    }
+  
+    .EditNewResourceContainer .form-heading {
+        max-width: 100%;
+    }
+  
+    .EditNewResourceContainer {
+        width: 90%;
+        font-size: small;
+    }
+  
+    .EditNewResourceContainer .approve-button,
+    .EditNewResourceContainer .cancel-button {
+        padding: 9px 10px;
+        margin: 0.5em;
+    }
+  }

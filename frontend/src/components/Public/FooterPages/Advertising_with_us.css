@@ -21,3 +21,47 @@
     font-weight: bold;
 }
 
+.Form_Field_contact {
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.Upload_ad_image {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #555;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.Upload_ad_image:hover,
+.Upload_ad_image:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.Upload_ad_image::file-selector-button {
+    display: inline-block;
+    background-color: #d4dbe2;
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.Upload_ad_image::file-selector-button:hover {
+    background-color: #afb8c1;
+}
