@@ -83,7 +83,7 @@ const Facility_Edit_View = () => {
         emailAdress: "",
         ownerPanCard: "",
         ownership: "",
-        ownersAddress: "",
+        ownersAddress1: "",
         fileNames: {  // New state to store file names ----------------------
             facilityImageOne: "",
             facilityArrayOfImages: []
@@ -242,7 +242,7 @@ const Facility_Edit_View = () => {
     };
 
 
-    // Function to handle form submission
+    // Function to handle form submission  Edit Page ---------
     async function HandleSubmitFacility(e) {
         e.preventDefault();
         toast.dismiss();
@@ -280,9 +280,9 @@ const Facility_Edit_View = () => {
                 emailAdress: PostFacilityData.emailAdress || null,
                 ownerPanCard: PostFacilityData.ownerPanCard || null,
                 ownership: PostFacilityData.ownership || null,
-                ownersAddress: PostFacilityData.ownersAddress || null
+                ownersAddress: PostFacilityData.ownersAddress1 || null
             };
-            let res = await axiosHttpClient("Facility_Reg_Api", "post", payloadfacilityData);
+            let res = await axiosHttpClient("Facility_Update_Api", "put", payloadfacilityData);
             console.log("Response of Post the data of Facility", res);
             toast.success('Facility registration has been done successfully.', {
                 autoClose: 2000,
