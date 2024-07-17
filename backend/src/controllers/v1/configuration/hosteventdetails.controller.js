@@ -188,8 +188,8 @@ console.log("here Reponse of Host event", req.body)
       eventCategoryId:eventCategoryId,
       locationName:locationName,
       eventDate:eventDate,
-      eventStartTime:(eventStartDate.slice(11,-1)),
-      eventEndTime:(eventEndDate.slice(11,-1)),
+      eventStartTime:new Date(eventStartDate),
+      eventEndTime:new Date(eventEndDate),
       descriptionOfEvent:descriptionOfEvent,
       ticketSalesEnabled:ticketsold,
       ticketPrice:price,
@@ -280,8 +280,8 @@ console.log("here Reponse of Host event", req.body)
         startDate:eventStartDate,
         endDate:eventEndDate,
         statusId:statusId,
-        createdBy:createdBy,
-        updatedBy: updatedBy,
+        createdBy:userId,
+        updatedBy: userId,
         createdOn:createdDt,
         updatedOn:updatedDt
         
@@ -376,13 +376,29 @@ const bankService = async (req, res) => {
 
 const eventDropdownData = async (req, res) => {
   try {
-    let findEventCategory =
-      await sequelize.query(`select eventCategoryId,eventName, eventType from
-    amabhoomi.eventcategorymasters`);
+    let { facilityId }=req.body;
+    let findEventCategoryQuery = `select e.facilityId,em.eventCategoryId,em.eventCategoryName,f.facilityTypeId,f.facilityname ,em.eventCategoryId,f.address  from amabhoomi.facilityevents   e inner join eventcategorymasters em on e.eventCategoryId = em.eventCategoryId 
+        inner join facilities f on f.facilityId = e.facilityId`
+        if(facilityId){
+            findEventCategoryQuery +=` where e.facilityId = ?`
+            let findEventCategory =
+            await sequelize.query(findEventCategoryQuery,{
+            replacements:[facilityId],
+            type:QueryTypes.SELECT
+      });
 
     return res
       .status(statusCode.SUCCESS.code)
-      .json({ message: "Event Category data", data: findEventCategory[0] });
+      .json({ message: "Event Category data", data: findEventCategory });
+        }
+
+         let findEventCategory =
+      await sequelize.query(findEventCategoryQuery,{type:QueryTypes.SELECT});
+
+    return res
+      .status(statusCode.SUCCESS.code)
+      .json({ message: "Event Category data", data: findEventCategory });
+    
   } catch (err) {
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)

@@ -1137,35 +1137,52 @@ let privateLogin = async(req,res)=>{
 
             }
             let {accessToken, refreshToken, options} = tokenGenerationAndSessionStatus
-          
-            //menu items list fetch
-        //     let menuListItemQuery = `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path from publicuser pu inner join roleresource rr on rr.roleId = pu.roleId
-        //     inner join resourcemaster rm on rm.resourceId = rr.resourceId and rr.statusId =1 
-        //     where pu.publicUserId = :userId and rr.statusId =1 and rm.statusId =1 
-        //     order by rm.orderIn`
-
-        //     let menuListItems = await sequelize.query(menuListItemQuery,{
-        //       replacements:{
-        //         userId:isUserExist.userId
-        //       },
-        //       type: QueryTypes.SELECT
-        //     })
- 
-
-        // let dataJSON = new Array();
-        // //create parent data json without child data 
-        // for (let i = 0; i < menuListItems.length; i++) {
-        //     if (menuListItems[i].parentResourceId === null) {
-        //         dataJSON.push({
-        //             id: menuListItems[i].resourceId,
-        //             name: menuListItems[i].name,
-        //             orderIn: menuListItems[i].orderIn,
-        //             path: menuListItems[i].path,
-        //             children: new Array()
-        //         })
-        //     }
-        // }
-        
+          //menu items list fetch
+          let menuListItemQuery = 
+          `select rr.resourceId, rm.name,rr.parentResourceId,rm.orderIn, rm.path 
+            from amabhoomi.usermasters pu 
+            inner join amabhoomi.roleresources rr on rr.roleId = pu.roleId
+            inner join amabhoomi.resourcemasters rm on rm.resourceId = rr.resourceId and rr.statusId =1 
+            where pu.userId = :userId and rr.statusId =1 and rm.statusId =1 
+            order by rm.orderIn`;
+  
+          let menuListItems = await sequelize.query(menuListItemQuery, {
+            replacements: {
+              userId: isUserExist.userId
+            },
+            type: QueryTypes.SELECT
+          })
+  
+          console.log('menuListItems', menuListItems);
+  
+          let dataJSON = new Array();
+          //create parent data json without child data 
+          for (let i = 0; i < menuListItems.length; i++) {
+            if (menuListItems[i].parentResourceId == null) {
+              dataJSON.push({
+                id: menuListItems[i].resourceId,
+                name: menuListItems[i].name,
+                orderIn: menuListItems[i].orderIn,
+                path: menuListItems[i].path,
+                children: new Array()
+              })
+            }
+          }
+          console.log('data json ---', dataJSON);
+          //push sub menu items data
+          for(let i = 0; i < menuListItems.length; i++){
+            if(menuListItems[i].parentResourceId !== null){
+              let parent = dataJSON.find(item => item.id == menuListItems[i].parentResourceId);
+              console.log('parent', parent);
+              parent.children.push({
+                id: menuListItems[i].resourceId,
+                name: menuListItems[i].name,
+                orderIn: menuListItems[i].orderIn,
+                path: menuListItems[i].path,
+              })
+            }
+          }
+  
         // Set the access token in an HTTP-only cookie named 'accessToken'
         res.cookie('accessToken', accessToken,options);
 
@@ -1176,7 +1193,7 @@ let privateLogin = async(req,res)=>{
 
         return res.status(statusCode.SUCCESS.code)
         .header('Authorization', `Bearer ${accessToken}`)
-        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken,  }); //menuItems: dataJSON
+        .json({ message: 'logged in', username: isUserExist.userName, fullname: isUserExist.fullName, email: isUserExist.emailId, role: isUserExist.roleId, accessToken: accessToken, refreshToken:refreshToken, menuItems: dataJSON}); 
           }
 
           else{
