@@ -57,8 +57,8 @@ const createHosteventdetails = async (req, res) => {
       facilityId,
       locationName,
       eventDate,
-      eventStartDate,
-      eventEndDate,
+      startEventDate,
+      endEventDate,
       descriptionOfEvent,
       ticketsold,
       price,
@@ -90,11 +90,11 @@ console.log("here Reponse of Host event", req.body)
         })
       }
       createBankDetails = await bankDetails.create({
-        beneficiaryName:beneficiaryName,
+        beneficiaryName:encrypt(beneficiaryName),
         accountNumber:await encrypt(accountNumber),
-        accountType:accountType,
-        bankName:bankName,
-        bankIfscCode:bankIFSC,
+        accountType:await encrypt(accountType),
+        bankName:encrypt(bankName),
+        bankIfscCode:encrypt(bankIFSC),
         createdBy:userId,
         updatedBy:userId,
         updatedDt:updatedDt,
@@ -188,8 +188,8 @@ console.log("here Reponse of Host event", req.body)
       eventCategoryId:eventCategoryId,
       locationName:locationName,
       eventDate:eventDate,
-      eventStartTime:new Date(eventStartDate),
-      eventEndTime:new Date(eventEndDate),
+      eventStartTime:startEventDate,
+      eventEndTime:endEventDate,
       descriptionOfEvent:descriptionOfEvent,
       ticketSalesEnabled:ticketsold,
       ticketPrice:price,
@@ -377,27 +377,34 @@ const bankService = async (req, res) => {
 const eventDropdownData = async (req, res) => {
   try {
     let { facilityId }=req.body;
-    let findEventCategoryQuery = `select e.facilityId,em.eventCategoryId,em.eventCategoryName,f.facilityTypeId,f.facilityname ,em.eventCategoryId,f.address  from amabhoomi.facilityevents   e inner join eventcategorymasters em on e.eventCategoryId = em.eventCategoryId 
-        inner join facilities f on f.facilityId = e.facilityId`
+    let findEventCategoryQuery = `select e.facilityId,em.eventCategoryId,em.eventCategoryName,em.eventCategoryId  from amabhoomi.facilityevents   e inner join eventcategorymasters em on e.eventCategoryId = em.eventCategoryId 
+        `
+        let findFacilityDetails = `select facilityname,facilityId,facilityTypeId,address from amabhoomi.facilities`
         if(facilityId){
             findEventCategoryQuery +=` where e.facilityId = ?`
             let findEventCategory =
             await sequelize.query(findEventCategoryQuery,{
             replacements:[facilityId],
             type:QueryTypes.SELECT
-      });
+          });
 
+        findFacilityDetails += ` where facilityId = ?`
+        let facilityDetails = await sequelize.query(findFacilityDetails,{
+          replacements:[facilityId],
+          type:QueryTypes.SELECT
+          });
     return res
       .status(statusCode.SUCCESS.code)
-      .json({ message: "Event Category data", data: findEventCategory });
+      .json({ message: "Event Category data", data: findEventCategory, facilityData:facilityDetails });
         }
 
-         let findEventCategory =
-      await sequelize.query(findEventCategoryQuery,{type:QueryTypes.SELECT});
+         let findEventCategory = await sequelize.query(findEventCategoryQuery,{type:QueryTypes.SELECT});
+
+        let facilityDetails = await sequelize.query(findFacilityDetails,{type:QueryTypes.SELECT}); 
 
     return res
       .status(statusCode.SUCCESS.code)
-      .json({ message: "Event Category data", data: findEventCategory });
+      .json({ message: "Event Category data", data: findEventCategory, faciltyData:facilityDetails });
     
   } catch (err) {
     return res
