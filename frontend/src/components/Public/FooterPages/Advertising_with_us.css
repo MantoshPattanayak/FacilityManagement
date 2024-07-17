@@ -1,0 +1,23 @@
+.Child_conatiner_advertising{
+  margin-top: 3%;
+  height: 35vh;
+  background-color: rgb(140, 207, 155);
+ 
+ 
+ 
+}
+.Child_conatiner_advertising_set_image_content{
+    display: flex;
+    justify-content: space-evenly;
+    padding: 60px;
+
+    
+}
+.ads_image{
+    height: 25vh;
+}
+.Adv_text{
+    font-size: 55px;
+    font-weight: bold;
+}
+
