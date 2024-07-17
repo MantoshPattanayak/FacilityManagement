@@ -1,136 +1,289 @@
-/* CSS for CreateResource form and buttons */
-
-.container-1 {
-  margin-block: 16vh;
+.CreateNewResourceContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Converted from 20px to 2vh */
+  max-width: 100%;
+  width: 100%;
+  /* Changed to vw, and adjusted for centering */
+  margin: 0 auto;
+  /* Center the container */
+  margin-top: 10vh;
+  background-color: #F7F7F7;
+  overflow-y: auto;
 }
 
-.back-btn {
-  margin-top: 10px;
+.CreateNewResourceContainer .form-heading {
+  padding: 2.5vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* Converted from 20px to 2.5vw */
 }
 
-.btn {
-  background-color: #2ec157;
-  border-radius: 10px;
-  color: white;
-  padding: 8px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+.CreateNewResourceContainer .form-heading h2 {
+  margin-bottom: 1.5vw;
+  /* Converted from 10px to 1.5vw */
+  /* min-width: 5vw; */
+  width: 100%;
+  background-color: green;
+  color: black;
+  font-weight: bold;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  padding-left: 2vh;
+  background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+
+.CreateNewResourceContainer .form-row {
+  display: flex;
+  gap: 1vw;
+  margin-bottom: 1vw;
+  max-width: 100%;
+  width: 84vw;
+  justify-content: space-between;
+  padding-inline: 1vw;
+}
+
+.CreateNewResourceContainer .form-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+.CreateNewResourceContainer .form-heading label {
+  margin-bottom: 0.5vw;
+  /* Converted from 5px to 0.5vw */
+  color: #595959;
+  font-weight: bold;
+}
+
+.CreateNewResourceContainer .form-heading select {
+  width: 24vw;
+  height: 100%;
+  padding: 0.625vw;
+  border: 2px solid #ccc;
+  border-radius: 0.417vw;
+  background-color: ghostwhite;
+
+}
+
+.CreateNewResourceContainer .form-heading input[type="text"], 
+.CreateNewResourceContainer .form-heading input[type="number"],
+.CreateNewResourceContainer .form-heading input[type='date'],
+.CreateNewResourceContainer .form-heading select {
+  width: 100%;
+  height: 100%;
+  padding: 0.625vw;
+  border: 2px solid #c6c6c6;
+  border-radius: 0.417vw;
+  background-color: white;
+}
+
+.CreateNewResourceContainer .form-heading input[type="checkbox"] {
+  height: 30%;
+  padding: 0.325vw;
+  border: 2px solid #c6c6c6;
+  border-radius: 0.417vw;
+  background-color: white;
+}
+
+.CreateNewResourceContainer .form-heading input:focus, .CreateNewResourceContainer .form-heading select:focus {
+  border: 2px solid #405cf5;
+  outline: none;
+}
+
+.CreateNewResourceContainer .form-heading input[type="button"] {
+  width: 25%;
+  padding: 0.625vw;
+  border: 0.0833vw solid #ccc;
+  border-radius: 0.417vw;
+  background-color: white;
   cursor: pointer;
 }
 
-.CreateResParent .form {
-  width: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.form-select-parent-resource {
-  /* width: 24vw; */
-  /* Converted from 100px to 8.33vw */
+.CreateNewResourceContainer .form-heading .div-border {
   padding: 0.625vw;
-  /* Converted from 5px to 0.625vw */
   border: 0.0833vw solid #ccc;
-  /* Converted from 1px to 0.0833vw */
   border-radius: 0.417vw;
-  /* Converted from 5px to 0.417vw */
   background-color: ghostwhite;
 }
 
-.fields {
-  flex: 1;
-  min-width: 365px;
+.CreateNewResourceContainer .form-heading input[type="text"]:disabled,
+.CreateNewResourceContainer .form-heading textarea:disabled {
+  background-color: rgb(241, 241, 241);
+}
+
+.CreateNewResourceContainer textarea {
+  padding: 0.625vw;
+  border: 2px solid #ccc;
+  border-radius: 0.417vw;
+  background-color: white;
+}
+
+.CreateNewResourceContainer textarea:focus {
+  border: 2px solid #405cf5;
+  outline: none;
+}
+
+.CreateNewResourceContainer .buttons-container {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.title {
-  margin-bottom: 0;
-}
-
-.createresource-input-fields {
-  /* width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  margin-top: 3px; */
+  justify-content: flex-end;
+  margin-top: 10px;
+  padding-left: 0;
   width: 100%;
-    height: 100%;
-    padding: 0.625vw;
-    border: 0.0833vw solid #b1b1b1;
-    border-radius: 0.417vw;
-    background-color: #ECECEE;
-}
-.createresource-input-fields:focus {
-  border: 2px solid #405cf5; /* Change border color and thickness on focus */
-    outline: none; /* Remove default outline */
 }
 
-.checkbox {
-  display: flex;
-  align-items: center;
-}
-
-.checkbox-label {
-  margin-left: 5px;
-}
-
-.checkbox-input {
-  margin: 0 5px 0 0;
-  /* Adjust margin around the checkbox */
-}
-
-.buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.reset-btn,
-.submit-btn {
-  flex: 1;
-  text-align: center;
+.CreateNewResourceContainer .approve-button,
+.CreateNewResourceContainer .cancel-button {
   padding: 10px;
+  color: white;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
-.reset-btn {
-  background-color: #ccc;
-  color: #333;
-  margin-right: 10px;
-}
-
-.submit-btn {
-  background-color: #00B562;
+.CreateNewResourceContainer .back-button {
+  padding: 0.5em;
+  margin: 0.5em;
+  /* Adjusted margin */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #176BFB;
   color: white;
 }
 
-/* Responsive CSS */
+.CreateNewResourceContainer .approve-button {
+  background-color: #176BFB;
+  color: white;
+}
 
-@media only screen and (max-width: 600px) {
-  .form {
-    width: 100%;
+.CreateNewResourceContainer .cancel-button {
+  background-color: #c6c6c6;
+  color: white;
+}
+
+.CreateNewResourceContainer .form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 10rem;
+  grid-row-gap: 10px;
+  width: 100%;
+}
+
+.CreateNewResourceContainer .error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.CreateNewResourceContainer .approve-button:disabled,
+.CreateNewResourceContainer .cancel-button:disabled {
+  background-color: gray;
+}
+
+/* Media query for tablets and larger screens */
+@media screen and (min-width: 768px) {
+
+  .CreateNewResourceContainer .approve-button,
+  .CreateNewResourceContainer .cancel-button {
+      padding: 0.6em 1.5em;
+      margin: 0.2em;
+  }
+  .CreateNewResourceContainer .form-row {
+      flex-wrap: wrap;
   }
 
-  .fields {
-    width: 100%;
+  .CreateNewResourceContainer .form-heading h2 {
+      height: 5vh;
+      /* Change height for larger screens */
+  }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 767px) {
+
+  .CreateNewResourceContainer .approve-button,
+  .CreateNewResourceContainer .cancel-button {
+      width: 100%;
+      /* Make buttons full width */
   }
 
-  .buttons {
-    flex-direction: column;
-    gap: 10px;
+  .CreateNewResourceContainer .form-row {
+      flex-direction: column;
+      gap: 1.5vw;
+      /* Increased gap for better spacing */
   }
 
-  .reset-btn,
-  .submit-btn {
-    width: 100%;
+  .CreateNewResourceContainer .form-group {
+      width: 100%;
+  }
+
+  .CreateNewResourceContainer input[type="text"] {
+      width: 100%;
+  }
+
+  .CreateNewResourceContainer {
+      width: 100%;
+      font-size: small;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .CreateNewResourceContainer .form-heading h2 {
+      margin-bottom: 1.5vw;
+      min-width: 90vw;
+      height: 5vh;
+      padding-left: 2vh;
+  }
+
+  .CreateNewResourceContainer .form-heading {
+      max-width: 90vw;
+  }
+
+  .CreateNewResourceContainer {
+      width: 100%;
+      font-size: small;
+  }
+
+  .CreateNewResourceContainer .approve-button,
+  .CreateNewResourceContainer .cancel-button {
+      padding: 9px 10px;
+      margin: 0.5em;
+  }
+
+  .CreateNewResourceContainer label {
+      font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 368px) {
+  .CreateNewResourceContainer .form-heading h2 {
+      margin-bottom: 1.5vw;
+      height: 5vh;
+      padding-left: 2vh;
+      width: 50%;
+  }
+
+  .CreateNewResourceContainer .form-heading {
+      max-width: 100%;
+  }
+
+  .CreateNewResourceContainer {
+      width: 90%;
+      font-size: small;
+  }
+
+  .CreateNewResourceContainer .approve-button,
+  .CreateNewResourceContainer .cancel-button {
+      padding: 9px 10px;
+      margin: 0.5em;
   }
 }

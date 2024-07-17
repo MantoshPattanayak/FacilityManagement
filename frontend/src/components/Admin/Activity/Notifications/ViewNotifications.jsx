@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axiosHttpClient from "../../../../utils/axios";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ export default function ViewNotifications() {
   const [tableData, setTableData] = useState([]);
 
   // function to fetch notifications list data
-  let fetchNotificationsList = async () => {
+  let fetchNotificationsList = async (givenReq) => {
     try {
       let res = await axiosHttpClient("VIEW_NOTIFICATIONS_LIST_API", "post", {
         givenReq: givenReq,
@@ -36,13 +36,29 @@ export default function ViewNotifications() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchNotificationsList();
-  // }, []);
+  // function to manage API calls while user search input entry
+  function debounce(fn, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args)
+      }, delay);
+    }
+  }
+
+  //Debounced fetchFacilityList function while searching
+  const debouncedFetchNotificationsList = useCallback(debounce(fetchNotificationsList, 1000), []);
 
   useEffect(() => {
+    document.title = 'ADMIN | AMA BHOOMI';
     fetchNotificationsList();
-  }, [givenReq]);
+  }, []);
+
+  useEffect(() => {
+    if (givenReq != null)
+      debouncedFetchNotificationsList(givenReq);
+  }, [givenReq, debouncedFetchNotificationsList]);
 
   return (
     <div>

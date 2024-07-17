@@ -195,12 +195,15 @@ ORDER BY
 
   console.log(showAllResources,'all resources')
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
+    console.log("Given req", givenReq);
     if (givenReq) {
       showAllResources = showAllResources.filter(
-        (resourceData) =>
-          resourceData.resourceId.includes(givenReq) ||
-          resourceData.name.toLowerCase().includes(givenReq)
-      );
+        (resourceData) => {
+          return resourceData.name?.toLowerCase().includes(givenReq) ||
+          resourceData.description?.toLowerCase().includes(givenReq) ||
+          resourceData.parentResourceName?.toLowerCase().includes(givenReq) ||
+          resourceData.status?.toLowerCase().includes(givenReq)
+      });
     }
     let paginatedshowAllResources = showAllResources.slice(
       offset,
