@@ -253,7 +253,7 @@ console.log("here Reponse of Host event", req.body)
     }
       if(additionalFiles.length > 0){
         const errors = [];
-        let subDir = "eventDir"
+        let subDir = "eventSubDir"
         let filePurpose = "Event additional file"
         for (let i = 0; i < additionalFiles.length; i++) {
           const additionalFile = additionalFiles[i];
@@ -273,13 +273,13 @@ console.log("here Reponse of Host event", req.body)
     if (createHosteventdetails) {
       // insert to host booking 
       // insert one transaction id after the payment getting successfull
-
+      let hostStatus = 10
       let hostBookingData = await hostbooking.create({
         hostId:createHosteventdetails.hostId,
         bookingDate:eventDate,
         startDate:startEventDate,
         endDate:endEventDate,
-        statusId:statusId,
+        statusId:hostStatus,
         createdBy:userId,
         updatedBy: userId,
         createdOn:createdDt,
