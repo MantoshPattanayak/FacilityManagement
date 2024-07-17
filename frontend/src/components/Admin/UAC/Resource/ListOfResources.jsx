@@ -1,21 +1,22 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import React, { useCallback, useEffect, useState } from "react";
+import axiosHttpClient from "../../../../utils/axios";
+import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
+import { formatDate } from "../../../../utils/utilityFunctions";
+import AdminHeader from "../../../../common/AdminHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./ListOfResources.css";
 import { encryptData } from "../../../../utils/encryptData";
 
-// here import axios for fetch the data from api
-import axiosHttpClient from "../../../../utils/axios";
-
-export default function ListOfResources() {
+export default function ViewNotifications() {
   let navigate = useNavigate();
   const [ListOfResources, setListofResources] = useState([]);
+  const [givenReq, setGivenReq] = useState('');
   // here call api ( Get the data from api) -----------------------------------
-  async function GetListOfResources() {
+  async function GetListOfResources(givenReq = null) {
     try {
-      let res = await axiosHttpClient("RESOURCE_VIEWLIST_API", "post");
+      let res = await axiosHttpClient("RESOURCE_VIEWLIST_API", "post", {givenReq});
       console.log("here Response get data ", res);
       setListofResources(res.data.Resource);
     } catch (err) {
@@ -23,121 +24,119 @@ export default function ListOfResources() {
     }
   }
 
-  // use useEffect for Update data ----------------------------------------------
+  // function to encrypt data
+  function encryptDataId(data) {
+    return encryptData(data);
+  }
+
+  // function to manage API calls while user search input entry
+  function debounce(fn, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args)
+      }, delay);
+    }
+  }
+
+  //Debounced fetchFacilityList function while searching
+  const debouncedFetchResourcesList = useCallback(debounce(GetListOfResources, 1000), []);
 
   useEffect(() => {
+    document.title = 'ADMIN | AMA BHOOMI';
     GetListOfResources();
   }, []);
 
-  // encryptid--------------------------------------------------------------
-  function encryptDataId(id) {
-    let res = encryptData(id);
-    return res;
-  }
+  useEffect(() => {
+    if (givenReq != null)
+      debouncedFetchResourcesList(givenReq);
+  }, [givenReq, debouncedFetchResourcesList]);
 
   return (
-    <div className="CreateResParent">
-      <div className="container">
-        {/* HEADER CREATION FOR RESOURCE LIST */}
-        <div className="header-role">
-          <div className="rectangle"></div>
-          <div className="roles">
-            <h1>
-              <b> Resource List</b>
-            </h1>
-          </div>
+    <div>
+      <AdminHeader />
+      <div className="ListOfResources">
+        <div className="table-heading">
+          <h2 className="">View Resources</h2>
         </div>
-        {/* SEARCH CONTAINER AND Create new Resource BUTTON */}
-        <div className="container-size">
-          <div className="search_text_conatiner">
-            <button
-              className="create-role-btn"
-              onClick={() => navigate("/UAC/Resources/CreateResource")}
-            >
-              Create new Resource
-            </button>
-            <input
-              type="text"
-              className="search_input_field"
-              placeholder="Search..."
-              id="myInput"
-              // value={searchTerm}
-              // onChange={handleSearchChange}
-            />
-          </div>
 
-          {/* TABLE CREATION */}
-          <div className="table_Container">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Resource Name</th>
-                  <th scope="col">Parent Resource Name</th>
-                  <th scope="col">Path</th>
-                  <th scope="col">order</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">View</th>
-                  <th scope="col">Update</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ListOfResources?.length > 0 &&
-                  ListOfResources.map((item, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>{item.name}</td>
-                        <td>{item.parentResourceName}</td>
-                        <td>{item.path}</td>
-                        <td>{item.order}</td>
-                        <td
-                          className={`text-left ${
-                            item.status === "ACTIVE"
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }`}
+        <div className="search_text_conatiner">
+          <button
+            className="search_field_button"
+            onClick={() => navigate("/UAC/Resources/CreateResource")}
+          >
+            <FontAwesomeIcon icon={faPlus} /> Create new Resource
+          </button>
+          <input
+            type="text"
+            className="search_input_field"
+            value={givenReq}
+            placeholder="Search..."
+            onChange={(e) => setGivenReq(e.target.value)}
+          />
+          {/* <SearchDropdown /> */}
+        </div>
+
+        <div className="table_Container">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Resource Name</th>
+                <th scope="col">Parent Resource Name</th>
+                <th scope="col">Path</th>
+                <th scope="col">order</th>
+                <th scope="col">Status</th>
+                <th scope="col">View</th>
+                <th scope="col">Update</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ListOfResources?.length > 0 &&
+                ListOfResources?.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td data-label='Resource Name'>{item.name}</td>
+                      <td data-label="Parent Resource Name">{item.parentResourceName || "NA"}</td>
+                      <td data-label="Path">{item.path || 'NA'}</td>
+                      <td data-label="Order">{item.order}</td>
+                      <td
+                        data-label="Status"                        
+                      >
+                        <p className={`text-left ${item.status === "ACTIVE"
+                            ? "text-green-500"
+                            : "text-red-500"
+                          }`}>{item.status}</p>
+                      </td>
+                      <td data-label="View">
+                        <Link
+                          to={{
+                            pathname: "/UAC/Resources/EditDisplayResource",
+                            search: `?resourceId=${encryptDataId(
+                              item.resourceId
+                            )}&action=view`,
+                          }}
                         >
-                          {item.status}
-                        </td>
-                        <td>
-                          <Link
-                            to={{
-                              pathname: "/UAC/Resources/EditDisplayResource",
-                              search: `?resourceId=${encryptDataId(
-                                item.resourceId
-                              )}&action=view`,
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faEye} />
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            to={{
-                              pathname: "/UAC/Resources/EditDisplayResource",
-                              search: `?resourceId=${encryptDataId(
-                                item.resourceId
-                              )}&action=edit`,
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="pagination">
-            <button onClick={() => handlePageChange("start")}>Start</button>
-            <button onClick={() => handlePageChange("previous")}>
-              Previous
-            </button>
-            <button onClick={() => handlePageChange("next")}>Next</button>
-            <button onClick={() => handlePageChange("last")}>Last</button>
-          </div>
+                          <FontAwesomeIcon icon={faEye} />
+                        </Link>
+                      </td>
+                      <td data-label="Edit">
+                        <Link
+                          to={{
+                            pathname: "/UAC/Resources/EditDisplayResource",
+                            search: `?resourceId=${encryptDataId(
+                              item.resourceId
+                            )}&action=edit`,
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPenToSquare} />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
