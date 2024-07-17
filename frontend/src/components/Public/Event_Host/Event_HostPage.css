@@ -42,7 +42,7 @@
     width: 45%;
     display: flex;
     flex-direction: column;
-    height: 65px;
+
     justify-content: flex-start;
 }
 .HostEvent_Group label {
@@ -247,4 +247,31 @@
 }
 .img_verify_text_container{
     display: flex;
+}
+
+.HostEvent_Group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 90;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
 }
