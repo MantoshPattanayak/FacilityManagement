@@ -10,6 +10,7 @@ import { decryptData, encryptData } from "../../../../utils/encryptData";
 import axiosHttpClient from "../../../../utils/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./ViewFeedbackList.css";
+// import "../Grievance/ViewGrievanceList.css"
 import { formatDate } from "../../../../utils/utilityFunctions";
 
 export default function ViewFeedbackList() {
@@ -27,7 +28,9 @@ export default function ViewFeedbackList() {
       });
       console.log("here Respons of userData", res);
       if (Array.isArray(res.data.data)) {
-        setTableData(res.data.data);
+        // Sort the data by createdOn date in descending order
+        const sortedData = res.data.data.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
+        setTableData(sortedData);
       } else {
         console.error("Fetched data is not an array:", res.data.data);
       }
@@ -35,6 +38,8 @@ export default function ViewFeedbackList() {
       console.error(error);
     }
   }
+
+
 
   // function to manage API calls while user search input entry
   function debounce(fn, delay) {
@@ -81,7 +86,7 @@ export default function ViewFeedbackList() {
       <div className="ViewFeedbackList">
         <div className="Main_Conatiner_table">
           <div className="table-heading">
-            <h2 className="">List of FeedBack</h2>
+            <h2 className="">List of Feedback</h2>
           </div>
 
           <div className="search_text_conatiner">

@@ -170,7 +170,7 @@ const GrievanceForm = () => {
     if (isSubmitted) {
       validateFeedback();
     }
-  }, [user.phoneNo, user.emailId, user.filepath, user.captchaInput]);
+  }, [user.mobile, user.email, user.filepath, user.captchaInput]);
 
   const validateFeedback = () => {
     const isValidMobileTemp = /^\d{10}$/.test(user.phoneNo);
@@ -392,9 +392,9 @@ const GrievanceForm = () => {
 
 const FeedbackForm = () => {
   const [user, setUser] = useState({
-    fullname: "",
-    emailId: "",
-    phoneNo: "",
+    name: "",
+    email: "",
+    mobile: "",
     subject: "",
     statusId: "",
     feedback: "",
@@ -449,6 +449,7 @@ const FeedbackForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
+    console.log(validateFeedback())
     if (validateFeedback()) {
       handleSubmitForm();
       console.log("Form submitted successfully");
@@ -464,8 +465,8 @@ const FeedbackForm = () => {
             type="text"
             id="nameInput"
             placeholder="Enter Name"
-            value={user.fullname}
-            onChange={(event) => handleInputChange(event, "fullname")}
+            value={user.name}
+            onChange={(event) => handleInputChange(event, "name")}
           />
         </div>
         <div className="form-group">
@@ -489,7 +490,7 @@ const FeedbackForm = () => {
             placeholder="Enter mobile Number"
             value={mobileNumber}
             onChange={(event) => {
-              handleInputChange(event, "phoneNo");
+              handleInputChange(event, "mobile");
               setMobileNumber(event.target.value);
             }}
             // onBlur={validateFeedback}
@@ -510,7 +511,7 @@ const FeedbackForm = () => {
             placeholder="Enter Email"
             value={email}
             onChange={(event) => {
-              handleInputChange(event, "emailId");
+              handleInputChange(event, "email");
               setEmail(event.target.value);
             }}
             onBlur={validateFeedback}
