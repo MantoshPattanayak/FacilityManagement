@@ -6,7 +6,7 @@ let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 
 router.post("/viewFacilityTypeList", authenticateToken, facilityTypes.viewFacilityTypeList);
 router.post("/createFacilityType", authenticateToken, facilityTypes.createFacilityType);
-router.get("/viewFacilityTypeById/:equipmentId", authenticateToken, facilityTypes.viewFacilityTypeById);
+router.get("/viewFacilityTypeById/:facilityTypeId", authenticateToken, facilityTypes.viewFacilityTypeById);
 router.put("/updateFacilityType", authenticateToken, facilityTypes.updateFacilityType);
 
 module.exports = router;

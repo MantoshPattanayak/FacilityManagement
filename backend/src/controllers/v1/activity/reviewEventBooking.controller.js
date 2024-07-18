@@ -8,6 +8,7 @@ const eventMasters = db.eventActivities;
 const sendEmail = require('../../../utils/generateEmail');
 const mailToken = require('../../../middlewares/mailToken.middlewares');
 const hosteventdetails = db.hosteventdetails;
+const hostBookings = db.hosteventbookings;
 
 let viewList = async (req, res) => {
     try {
@@ -21,12 +22,15 @@ let viewList = async (req, res) => {
         console.log("statusInput", statusInput);
 
         let fetchEventListQuery = `
-        select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address, f2.code as facilityType, e.createdDt as requestDate, s.statusCode as requestStatus from 
-        amabhoomi.eventactivities e
+        select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address, f2.code as facilityType, 
+        e.createdDt as requestDate, s.statusCode as requestStatus, f3.url as eventMainImage
+        from  amabhoomi.eventactivities e
         left join amabhoomi.hosteventdetails h on e.eventId = h.eventId
         inner join amabhoomi.facilities f on f.facilityId = e.facilityId
         inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityId
         left join amabhoomi.statusmasters s on s.statusId = e.statusId and s.parentStatusCode = 'HOSTING_STATUS'
+        left join amabhoomi.fileattachments fa on fa.entityId = e.eventId and fa.entityType = 'events' and fa.filePurpose = 'Event Image'
+        left join amabhoomi.files f3 on f3.fileId = fa.fileId
         where s.statusCode = :statusInput
         or s.statusCode IS NULL`;
 
@@ -68,22 +72,43 @@ let viewId = async (req, res) => {
     try {
         let eventId = req.params.eventId;
 
-        let fetchEventListQuery = `select e.eventId, e.eventName as eventTitle, e.locationName, e.eventStartTime, e.eventEndTime,
-        e.ticketSalesEnabled, e.ticketPrice, e.descriptionOfEvent, e.eventImagePath, e.additionalFilePath, e.additionalDetails,
+        let fetchEventListQuery = `
+        select e.eventId, e.eventName as eventTitle, ecm.eventCategoryName, e.facilityId, f.facilityname, f.facilityTypeId, f2.code as facilityType,
+        e.locationName, e.eventStartTime, e.eventEndTime, e.ticketSalesEnabled, e.numberOfTickets, e.ticketPrice, 
+        e.descriptionOfEvent, e.eventImagePath, e.additionalFilePath, e.additionalDetails, f3.url as eventMainImage,
         h.organisationName,h.organisationAddress, h.pancardNumber, h.firstName, h.lastName, h.phoneNo, h.emailId
         from amabhoomi.eventactivities e
         inner join amabhoomi.hosteventdetails h on e.eventId = h.eventId
         inner join amabhoomi.facilities f on f.facilityId = e.facilityId 
-        inner join amabhoomi.statusmasters s on s.statusId = e.statusId 
+        inner join amabhoomi.statusmasters s on s.statusId = e.statusId
+        inner join amabhoomi.eventcategorymasters ecm on ecm.eventCategoryId = e.eventCategoryId
+        inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityTypeId
+        inner join amabhoomi.fileattachments fa on fa.entityId = e.eventId and fa.entityType = 'events' and fa.filePurpose = 'Event Image'
+        inner join amabhoomi.files f3 on f3.fileId = fa.fileId
         where e.eventId = :eventId`;
+
+        let fetchEventAdditionalImages = `
+        select group_concat(f2.url separator ',') as file from
+        amabhoomi.fileattachments f
+        inner join amabhoomi.files f2 on f.fileId = f2.fileId and f.entityType = 'events' and f.filePurpose = 'Event additional file'
+        where f.entityId = :eventId
+        `;
 
         let viewEventData = await sequelize.query(fetchEventListQuery, {
             type: Sequelize.QueryTypes.SELECT,
             replacements: { eventId }
         });
 
+        let viewEventAdditionalImages = await sequelize.query(fetchEventAdditionalImages, {
+            type: Sequelize.QueryTypes.SELECT,
+            replacements: { eventId }
+        });
+
         if (viewEventData.length > 0) {
-            return res.status(statusCode.SUCCESS.code).send({ message: 'Event Detail Data', data: viewEventData });
+            return res.status(statusCode.SUCCESS.code).send({
+                message: 'Event Detail Data',
+                viewEventData, viewEventAdditionalImages
+            });
         }
         else
             return res.status(statusCode.NOTFOUND.code).send({ message: 'Event Detail Data not found' });
@@ -96,12 +121,14 @@ let viewId = async (req, res) => {
 let performAction = async (req, res) => {
     try {
         let eventId = req.params.eventId;
-        let action = req.body.action;
-        let reasonForRejection = req.body.reasonForRejection;
+        let userId = req.user.userId;
+        let { action, subject, messageBody } = req.body;    //APPROVE   REJECT     MODIFY
 
-        console.log({ eventId, action });
+        console.log({ action, subject, messageBody });
 
-        let fetchStatusMasterListQuery = `select statusId, statusCode, description, parentStatusCode from amabhoomi.statusmasters s
+        let fetchStatusMasterListQuery = `
+        select statusId, statusCode, description, parentStatusCode 
+        from amabhoomi.statusmasters s
         where parentStatusCode = 'HOSTING_STATUS'`;
 
         let statusMasterData = await sequelize.query(fetchStatusMasterListQuery, {
@@ -110,106 +137,66 @@ let performAction = async (req, res) => {
 
         console.log('statusMasterData', statusMasterData);
 
-        let statusId = (action == 0) ? statusMasterData.filter(
-            (status) => { return status.statusCode == 'REJECTED' }) : 
-            fetchStatusMasterListQuery.filter(
-                (status) => { return status.statusCode == 'APPROVED' }
-        );
-
+        // set statusId according to action input
+        let statusId = (action == "REJECT") ? statusMasterData.filter((status) => { return status.statusCode == 'REJECTED' })[0].statusId
+            : (action == "APPROVE") ? statusMasterData.filter((status) => { return status.statusCode == 'APPROVED' })[0].statusId
+                : (action == "MODIFY") ? statusMasterData.filter((status) => { return status.statusCode == 'APPROVED' })[0].statusId 
+                    : NULL;
         console.log('statusId', statusId);
 
-        let [updateCount] = await eventMasters.update({ statusId: parseInt(statusId) }, {
-            where: {
-                eventId: eventId
-            }
-        });
-
-        // Perform update operation within a transaction
-        // let updateAction = await sequelize.transaction(async (transaction) => {
-        //     try {
-        //         // Update operation
-        //         let [updateCount, updateTheStatusOfEvent] = await eventMasters.update({ status: statusId }, {
-        //             where: {
-        //                 eventId: eventId
-        //             }
-        //         });
-
-        //         console.log('Number of rows updated:', updateCount);
-
-        //         // Explicitly throw an error to simulate a failure condition
-        //         // Uncomment this line to simulate an error
-        //         // throw new Error('Simulated error');
-
-        //         // If no error occurred, commit the transaction
-        //         await transaction.commit();
-
-        //         console.log('Transaction committed successfully');
-        //     } catch (error) {
-        //         console.error('Error occurred:', error);
-
-        //         // If an error occurred, rollback the transaction
-        //         await transaction.rollback();
-
-        //         console.log('Transaction rolled back!!');
-        //     }
-        // });
-
-        console.log('updateAction', updateCount);
-
-        // fetch event host details
-        let fetchHostDetails = await hosteventdetails.findOne({
-            where: {
-                eventId: eventId
-            }
-        });
-
-        console.log('host event details', fetchHostDetails);
-
-        // send mail notification to the user for host event request
-        let firstField = fetchHostDetails?.emailId;
-        let secondField = fetchHostDetails?.phoneNo || '';
-        let token = await mailToken({firstField, secondField});
-        let messageBody = null;
-
-        if(action == 0){    // if host event request is rejected
-            messageBody = `
-                Hello Sir/Madam,
-                Your request for hosting an event is rejected due to the following mentioned reasons:<br/>
-                ${reasonForRejection}<br/>
-
-                Thank you for using AMA BHOOMI.
-            `;
-        }
-        else if(action == 1){   //if host event request is approved
-            messageBody = `Hello Sir/Madam,
-            Your request for hosting an event is approved. Please do the required payment<br/>
-            Thank you for using AMA BHOOMI.`
-        }
-
-        try {
-            await sendEmail({
-                emailId: `${fetchHostDetails?.emailId}`,
-                subject: "Event host request rejected",
-                html: `<p>${messageBody}</p>`
+        if (!statusId) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message: 'status properly not set!!'
             })
         }
-        catch(error){
-            console.error('Not able to send the email currently!', error);
-        }
 
-        if(updateCount > 0) {
-            res.status(statusCode.SUCCESS.code).send({
-                message: (action == 0) ? 'Event host request is rejected.' : 'Event host request is approved.'
-            });
-        }
-        else {
-            res.status(statusCode.BAD_REQUEST.code).send({
-                message: 'No action taken.'
-            });
+        //fetch host details by eventId
+        let fetchHostId = await hosteventdetails.findOne({
+            where: {
+                eventId: eventId
+            }
+        });
+        console.log("fetchHostId");
+
+        // call function based on action input
+        actionForEventHostRequest(fetchHostId.dataValues.hostId, statusId)
+
+        // function to approve event host request
+        async function actionForEventHostRequest(hostId, statusId) {
+            console.log("actionForEventHostRequest", {hostId, statusId})
+            try {
+                let transaction = await sequelize.transaction();
+                let [updateCount] = await hostBookings.update({ statusId: statusId, updatedDt: new Date(), updatedBy: userId }, {
+                    where: {
+                        hostId: hostId
+                    }
+                }, { transaction, returning: true });
+
+                // await sendEmail({
+                //     email: `${fetchHostId.dataValues.emailId}`,
+                //     subject: `${subject}`,
+                //     html: `<p>${message}</p>`
+                // }); //if successfully updated, send mail to the user
+                console.log("send mail to user error: ");
+                await transaction.commit();
+                res.status(statusCode.SUCCESS.code).json({
+                    message: (action == "APPROVE") ? "Event host request is approved!"
+                        : (action == "REJECT") ? "Event host request is rejected!"
+                            : (action == "MODIFY") ? "Event host request is approved with modification!"
+                                : ""
+                });
+            }
+            catch (error) {
+                if (transaction) await transaction.rollback();
+                console.error('error at actionForEventHostRequest function:', error);
+                res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                    message: 'Event Host Request perform action failed!',
+                });
+            }
         }
     }
     catch (error) {
-        res.status(statusCode.BAD_REQUEST.code).send({ message: error.message });
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).send({ message: error.message });
     }
 }
 
@@ -217,7 +204,7 @@ let modifyAction = async (req, res) => {
     try {
 
     }
-    catch(error){
+    catch (error) {
 
     }
 }
