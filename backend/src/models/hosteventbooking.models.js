@@ -29,7 +29,7 @@ module.exports = (sequelize,DataTypes)=>{
         paymentStatus:{
             type:DataTypes.STRING(255)
         },
-        bookingRefernce:{
+        bookingReferenceNumber:{
             type:DataTypes.STRING(80)
         },
         createdBy:{

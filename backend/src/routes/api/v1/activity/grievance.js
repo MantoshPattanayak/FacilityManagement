@@ -27,5 +27,13 @@ router.get("/viewfeedback/:feedbackId", authenticateToken, grievanceController.v
 router.post("/createFeedback", grievanceController.createFeedback); 
 
 router.post("/contactUs",grievanceController.contactRequest)
+// advertisement
+
+router.post("/advertisementTariffInsert",grievanceController.advertisementTariffInsert)
+
+router.post("/advertisementMasterInsert",grievanceController.advertisementMasterInsert)
+
+
+// advertisement
 
 module.exports = router;

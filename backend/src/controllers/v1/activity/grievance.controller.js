@@ -12,6 +12,9 @@ const imageUpload = require('../../../utils/imageUpload');
 let { generateOtp,veriftyOtp } = require("../../../utils/generateandVerifyOtp");
 let {Op} =require('sequelize')
 let partnerUs = db.partnerwithus
+let advertisementTariff = db.advertisementTariff
+let advertisementdetail = db.advertisementDetails
+let advertisementMasters = db.advertisementMasters
 // insert grievance - start
 const addGrievance = async (req, res) => {
     try {
@@ -519,7 +522,134 @@ let viewFeedbackById = async (req, res) => {
 
 
 // advertisement api
+// create advertisement tariff 
 
+let advertisementTariffInsert = async (req,res)=>{
+    try {
+        let {advertisementTypeId, duration, amount} = req.body
+        let statusId =1; 
+        let createdDt = new Date();
+        let updatedDt = new Date();
+        
+        let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
+            where:{
+                [Op.and]:[{statusId:statusId},{duration},{amount:amount},{advertisementTypeId:advertisementTypeId}]
+            }
+        })
+
+        if(checkIfThisAdvertisementTariffExist){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:`This tariff is already exist. Please deactivate the existing tariff to set a new one`
+            })
+        }
+        let createTariffData={
+            statusId:statusId,
+            advertisementTypeId:advertisementTypeId,
+            duration:duration,
+            amount:amount,
+            updatedDt:updatedDt,
+            createdDt:createdDt,
+            updatedBy:userId,
+            createdBy:userId
+        }
+
+        let createTariff = await advertisementTariff.create(createTariffData)
+        if(!createTariff){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:`Something went wrong`
+            })
+        }
+        return res.status(statusCode.SUCCESS.code).json(`Created successfully`)
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+let advertisementMasterInsert = async (req,res)=>{
+    try {
+        let {advertisementType, description} = req.body
+        let statusId =1; 
+        let createdDt = new Date();
+        let updatedDt = new Date();
+        
+        let checkIfThisAdvertisementExist = await advertisementMasters.findOne({
+            where:{
+                [Op.and]:[{statusId:statusId},{advertisementType:advertisementType}]
+            }
+        })
+
+        if(checkIfThisAdvertisementExist){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:`This advertisement type is  already exist.`
+            })
+        }
+        let createData={
+            statusId:statusId,
+            advertisementType:advertisementType,
+            description:description,
+            updatedDt:updatedDt,
+            createdDt:createdDt,
+            updatedBy:userId,
+            createdBy:userId
+        }
+
+        let createAdvertisement = await advertisementMasters.create(createData)
+        if(!createAdvertisement){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:`Something went wrong`
+            })
+        }
+        return res.status(statusCode.SUCCESS.code).json(`Created successfully`)
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+// let advertisementDetailInsert = async (req,res)=>{
+//     try {
+//         let {advertisementId, startDate,endDate,advertisementName, amount} = req.body
+//         let statusId = 10; //pending 
+//         let createdDt = new Date();
+//         let updatedDt = new Date();
+        
+//         let checkIfThisAdvertisementExist = await advertisementMasters.findOne({
+//             where:{
+//                 [Op.and]:[{statusId:statusId},{advertisementType:advertisementType}]
+//             }
+//         })
+
+//         if(checkIfThisAdvertisementExist){
+//             return res.status(statusCode.BAD_REQUEST.code).json({
+//                 message:`This advertisement type is  already exist.`
+//             })
+//         }
+//         let createData={
+//             statusId:statusId,
+//             advertisementType:advertisementType,
+//             description:description,
+//             updatedDt:updatedDt,
+//             createdDt:createdDt,
+//             updatedBy:userId,
+//             createdBy:userId
+//         }
+
+//         let createAdvertisement = await advertisementMasters.create(createData)
+//         if(!createAdvertisement){
+//             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+//                 message:`Something went wrong`
+//             })
+//         }
+//         return res.status(statusCode.SUCCESS.code).json(`Created successfully`)
+//     } catch (err) {
+//         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+//             message:err.message
+//         })
+//     }
+// }
 //  advertisement api end
 module.exports = {
     addGrievance,
@@ -530,5 +660,7 @@ module.exports = {
     actionTaken,
     contactRequest,
     viewFeedbackList,
-    viewFeedbackById
+    viewFeedbackById,
+    advertisementTariffInsert,
+    advertisementMasterInsert
 }
