@@ -25,8 +25,8 @@ const createHosteventdetails = async (req, res) => {
     let createdDt = new Date();
     let updatedDt = new Date();
     let statusId = 1;
-
-
+    let hostStatus = 10
+    let checkStatusIfExist = [10,11]
     findTheRoleFromTheUserId = await user.findOne({
       where:{
         [Op.and]:[{userId:userId},{statusId:statusId}]
@@ -74,6 +74,30 @@ console.log("here Reponse of Host event", req.body)
       },
      transaction
     })
+    console.log('before check booking ')
+    // check if any event is gonna happen in same  date or not
+    // let checkHostBooking = await hostbooking.findOne({
+    //   where:{[Op.and]:[{statusId:{[Op.or]:[hostStatus,confirmedStatus]}},{facilityId:facilityId}]},
+    //   transaction
+    // })
+    let checkHostBooking = await sequelize.query(`select * from amabhoomi.hostbookings where statusId in (:checkStatusIfExist) and facilityId=:facilityId and bookingDate = :eventDate and startDate <= :startEventDate and endDate>= :startEventDate`,{
+      replacements:{
+        checkStatusIfExist,
+        facilityId:facilityId,
+        eventDate:eventDate,
+        startEventDate:startEventDate,
+        endEventDate:startEventDate
+      },
+      type:QueryTypes.SELECT})
+
+    console.log(checkHostBooking,'check host booking if exist or not')
+    if(checkHostBooking){
+      console.log(2343,'inside host booking check if the event is already there for same day')
+      await transaction.rollback();
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:`This date is already booked for other events`
+      })
+    }
     if(!checkIfEntityExist){
       let [updateIsEntityInUserMaster] = await usermasters.update({isEntity:isEntity},
       {  
@@ -271,9 +295,9 @@ console.log("here Reponse of Host event", req.body)
 
     console.log(createHosteventdetails);
     if (createHosteventdetails) {
+      
       // insert to host booking 
       // insert one transaction id after the payment getting successfull
-      let hostStatus = 10
       let hostBookingData = await hostbooking.create({
         hostId:createHosteventdetails.hostId,
         bookingDate:eventDate,
@@ -282,8 +306,9 @@ console.log("here Reponse of Host event", req.body)
         statusId:hostStatus,
         createdBy:userId,
         updatedBy: userId,
-        createdOn:createdDt,
-        updatedOn:updatedDt
+        createdDt:createdDt,
+        updatedDt:updatedDt,
+        facilityId:facilityId
         
       },{transaction})
       console.log(hostBookingData, 'host booking data ')

@@ -506,6 +506,10 @@ let viewFeedbackById = async (req, res) => {
 }
 // view feedback details by id - end
 
+
+// advertisement api
+
+//  advertisement api end
 module.exports = {
     addGrievance,
     viewGrievanceList,
