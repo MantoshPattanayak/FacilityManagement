@@ -7,6 +7,7 @@ import { encryptData } from '../../../../utils/encryptData';
 import axiosHttpClient from '../../../../utils/axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback } from 'react';
+import './ViewTariffList.css';
 // here Funcation of view Tariff Details -------------------------------------------------
 const ViewTariffList = () => {
     let navigate = useNavigate();
@@ -14,7 +15,7 @@ const ViewTariffList = () => {
     const [searchOptions, setSearchOptions] = useState([]);
     const [givenReq, setGivenReq] = useState();
     // API call to fetch list of registered facilities -------------------------
-    async function fetchFacilityList(givenReq = null) {
+    async function fetchTariffList(givenReq = null) {
         try {
             let res = await axiosHttpClient('View_Tariff_List_Api', 'post', {
                 givenReq: givenReq,
@@ -42,53 +43,54 @@ const ViewTariffList = () => {
             }, delay);
         };
     }
-    //Debounced fetchFacilityList function while searching -------------------------
-    const debouncedFetchFacilityList = useCallback(debounce(fetchFacilityList, 1000), []);
+    //Debounced fetchTariffList function while searching -------------------------
+    const debouncedFetchTariffList = useCallback(debounce(fetchTariffList, 1000), []);
     // on page load, fetch data and set title --------------------------------------
     useEffect(() => {
         document.title = 'ADMIN | AMA BHOOMI';
-        fetchFacilityList();
+        fetchTariffList();
     }, []);
     // on search input, call fetch data function-------------------------------------
     useEffect(() => {
         if (givenReq != null)
-            debouncedFetchFacilityList(givenReq);
-    }, [givenReq, debouncedFetchFacilityList]);
+            debouncedFetchTariffList(givenReq);
+    }, [givenReq, debouncedFetchTariffList]);
     return (
-        <div className='ListOfUsers1'>
+        <div className=''>
             <AdminHeader />
-            <div className="Main_Conatiner_table">
+            <div className="ListOfTariffs">
                 <div className='table-heading'>
-                    <h2 className="table-heading">List of Tariff Details</h2>
+                    <h2 className="">List of Tariff Details</h2>
                 </div>
                 <div className="search_text_conatiner">
                     <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
-
                 </div>
-                <div className="table_Container">
-                    <table >
-                        <thead>
-                            <th scope="col">Sl No.</th>
-                            <th scope="col">Facility Name</th>
-                            <th scope="col">Facility Type</th>
-                            <th scope="col">Create</th>
-                            <th scope="col">Update</th>
-                            <th scope="col">View</th>
+                <div className="table_container">
+                    <table>
+                        <thead className='overflow-hidden'>
+                            {/* <th scope="col">Sl No.</th> */}
+                            <tr>
+                                <th scope="col">Facility Name</th>
+                                <th scope="col">Tariff Type</th>
+                                <th scope="col">Create</th>
+                                <th scope="col">Update</th>
+                                <th scope="col">View</th>
+                            </tr>
                         </thead>
-                        <tbody >
+                        <tbody className='overflow-y-scroll max-h-[600px]'>
                             {
                                 tableData?.length > 0 && tableData?.map((data, index) => {
                                     return (
                                         <tr key={data.index}>
-                                            <td data-label="Sl No.">{index + 1}</td>
+                                            {/* <td data-label="Sl No.">{index + 1}</td> */}
                                             <td data-label="Facility Name">{data.facilityName}</td>
                                             <td data-label="Address">{data.tariffType}</td>
                                             {data.tariffCheck == 0 ? (
                                                 <td data-label="View">
                                                     <Link
                                                         to={{
-                                                            
-                                                            pathname: '/TariffDetails',
+
+                                                            pathname: '/mdm/TariffDetails',
                                                             search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&action=view`
                                                         }}
                                                     >
@@ -105,7 +107,7 @@ const ViewTariffList = () => {
                                                 <td data-label="Update">
                                                     <Link
                                                         to={{
-                                                            pathname: '/Tariff_View_Details',
+                                                            pathname: '/mdm/Tariff_View_Details',
                                                             search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}
                                                              &entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=Edit`
                                                         }}
@@ -122,7 +124,7 @@ const ViewTariffList = () => {
                                                 <td data-label="View">
                                                     <Link
                                                         to={{
-                                                            pathname: '/Tariff_View_Details',
+                                                            pathname: '/mdm/Tariff_View_Details',
                                                             search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=View`
                                                         }}
                                                         title='View'

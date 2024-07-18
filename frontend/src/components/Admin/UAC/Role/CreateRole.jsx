@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Role/CreateRole.css';
+import './CreateRole.css';
 import Footer from '../../../../common/Footer';
 import axiosHttpClient from '../../../../utils/axios';
 import AdminHeader from '../../../../common/AdminHeader';
@@ -7,6 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { dataLength } from '../../../../utils/regexExpAndDataLength';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 const CreateRole = () => {
   const [postRoleData, setPostRoleData] = useState({
@@ -68,23 +70,21 @@ const CreateRole = () => {
   return (
     <div>
       <AdminHeader />
-      <div className='role-container-1'>
-        <div className='table-heading'>
-          <h2 className="table-heading">Create new Role</h2>
-        </div>
-
-        <div className="flex justify-end w-full">
-          <button className="btn" onClick={() => navigate('/UAC/Role/ListOfRoles')}>Back</button>
-        </div>
-        {/* Input fields */}
-        <div>
-          <div className="flex flex-col gap-y-5">
-            <div className="form-group">
+      <div className='CreateNewRoleContainer'>
+        <div className='form-heading'>
+          <h2 className="">Create new Role</h2>
+          <div className="flex justify-end w-full">
+            <button className="back-button" onClick={() => navigate('/UAC/Role/ListOfRoles')}>
+            <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-x-5">
+            <div className="form-group col-span-1">
               <label htmlFor="input2">Role name<span className='text-red-500'>*</span></label>
               <input type="text" name='roleName' value={postRoleData.roleName} placeholder="Enter role name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} />
               {errors.roleName && <p className='error-message'>{errors.roleName}</p>}
             </div>
-            <div className="form-group">
+            <div className="form-group col-span-1">
               <label htmlFor="input3">Role code <i>(In uppercase without space)</i><span className='text-red-500'>*</span></label>
               <input type="text" name='roleCode' value={postRoleData.roleCode} placeholder="Enter role code" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} />
               {errors.roleCode && <p className='error-message'>{errors.roleCode}</p>}
@@ -95,7 +95,6 @@ const CreateRole = () => {
             <button type='button' className="cancel-button" onClick={(e) => setPostRoleData({ roleName: "", roleCode: "" })}>Cancel</button>
           </div>
         </div>
-        <ToastContainer />
       </div>
     </div>
   );
