@@ -560,6 +560,7 @@ const getFacilityWrtId = async(req,res)=>{
 const updateFacility = async(req,res)=>{
   let transaction;
   try {
+    console.log("Here Response", req.body)
     let statusId =1;
     let userId = req.user.userId;
     let createdDt = new Date();

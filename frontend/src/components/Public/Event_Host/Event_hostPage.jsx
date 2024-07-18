@@ -15,10 +15,16 @@ const Event_hostPage = () => {
     const [currentStep, setCurrentStep] = useState(1);
     // here set the error -------------------------------------------
     const [formErrors, setformErrors] = useState({});
-    const [IsSubmit, setIsSubmit] = useState(false);
+
     // here get the Bank Name in drop down ---------------------------------
     const [GetbankName, setGetbankName] = useState([])
     const [EventType, setEventType] = useState([])
+    const [GetFacility, setGetFacility] = useState([])
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredOptions, setFilteredOptions] = useState([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [filteredEventTypes, setFilteredEventTypes] = useState([]);
+
     // here useState for post the data -----------------------
     const [formData, setFormData] = useState({
         organisationName: "",
@@ -50,7 +56,9 @@ const Event_hostPage = () => {
             data: null,
             name: ""
         },
-        additionalFiles: new Array()
+        additionalFiles: new Array(),
+        facilityId: null
+
     });
 
     // handler for target the Name of Input field -------------------------------------------------
@@ -65,12 +73,12 @@ const Event_hostPage = () => {
                     const reader = new FileReader();
 
                     reader.onloadend = () => {
-                        setFormData({ 
-                            ...formData, 
+                        setFormData({
+                            ...formData,
                             [name]: {
                                 data: reader.result,
                                 name: file.name
-                            } 
+                            }
                         });
                     };
 
@@ -97,7 +105,7 @@ const Event_hostPage = () => {
                         const reader = new FileReader();
                         reader.onloadend = () => {
                             filesData.push({
-                                data:reader.result,
+                                data: reader.result,
                                 name: file.name
                             });
                             // If all files are read, update form data
@@ -130,6 +138,7 @@ const Event_hostPage = () => {
         const validationErrors = validation(formData);
         const validationErrors1 = Step_2_Validation(formData)
         setformErrors(validationErrors);
+        setformErrors(validationErrors1);
         if (Object.keys(validationErrors).length === 0 && Object.keys(validationErrors1).length === 0) {
             try {
                 let res = await axiosHttpClient('Create_Host_event', 'post', {
@@ -160,7 +169,8 @@ const Event_hostPage = () => {
                     numberofTicket: formData.numberofTicket,
                     price: formData.price,
                     uploadEventImage: formData.uploadEventImage.data || null,
-                    additionalFiles: formData.additionalFiles.map((file) => { return file.data }) || null
+                    additionalFiles: formData.additionalFiles.map((file) => { return file.data }) || null,
+                    facilityId: formData.facilityId
                 });
                 console.log(res);
                 toast.success('Host Event created successfully.');
@@ -174,9 +184,6 @@ const Event_hostPage = () => {
             setformErrors(validationErrors1)
         }
     }
-
-
-
 
     // here Prev and next page ---------------------------------------------------------------------
     const nextStep = (e) => {
@@ -199,6 +206,7 @@ const Event_hostPage = () => {
         // Perform validation before moving to the next step
         const validationErrors1 = Step_2_Validation(formData);
         setformErrors(validationErrors1);
+        console.log("here vaildation error", validationErrors1)
         if (Object.keys(validationErrors1).length === 0) {
             // If there are no validation errors, move to the next step
             setCurrentStep(currentStep + 1);
@@ -344,10 +352,10 @@ const Event_hostPage = () => {
         } else if (!space_block.test(value.descriptionofEvent)) {
             err.descriptionofEvent = "Do not use spaces at beginning"
         }
-        if (!value.ticketsold) {
-            err.ticketsold = "Ticket Sold is Required"
+        if (!value.uploadEventImage) {
+            err.uploadEventImage = "Upload Event Image is required"
         }
-        if (!value.ticketsold || value.ticketsold == 'Yes') {
+        if (value.ticketsold === '1') {
             if (!value.numberofTicket) {
                 err.numberofTicket = "Number of Ticket is Required"
             } else if (!price_regex.test(value.numberofTicket)) {
@@ -363,19 +371,60 @@ const Event_hostPage = () => {
                 err.price = "Do not use spaces at beginning"
             }
         }
-        if (!value.uploadEventImage) {
-            err.uploadEventImage = "Upload Event Image is required"
-        }
+
+
         return err;
     }
+    /// here set the initail data of facility Type --------------------------------
+    async function GetFacilityType() {
+        try {
+            let res = await axiosHttpClient('Get_initail_Data_Facility_Type', 'post', {
+
+            })
+            console.log("here Response of get facilityn type data", res)
+            setGetFacility(res.data.faciltyData)
+            setEventType(res.data.data)
+        }
+        catch (err) {
+            console.log(" here Response of err", err)
+        }
+    }
+    // search fun ---------------------------
+    useEffect(() => {
+        if (searchTerm === '') {
+            setFilteredOptions(GetFacility);
+        } else {
+            setFilteredOptions(
+                GetFacility.filter((facility) =>
+                    facility.facilityname.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+            );
+        }
+    }, [searchTerm, GetFacility]);
+    // here change input of facility Type --------------------
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+        setIsDropdownOpen(true);
+    };
+    // here set the handleOption   and  Set both facilityId and facilityName in form data
+    const handleOptionSelect = (facilityId, facilityname) => {
+        setFormData({ ...formData, facilityId, facilityName: facilityname }); 
+        setSearchTerm(facilityname);
+        setIsDropdownOpen(false);
+        filterEventTypes(facilityId);
+    };
+     // filter the  Event Type accoding to facilityId-------------------
+    const filterEventTypes = (facilityId) => {
+        const filtered = EventType.filter(event => event.facilityId === facilityId);
+        setFilteredEventTypes(filtered);
+    };
 
     // here Get the Bank deatils In drop down -------------------------------------------------------
     async function GetBankDetails() {
         try {
             let res = await axiosHttpClient('Bank_details_Api', 'get')
-            console.log('here Response', res)
+            console.log('here Response of get initial ', res)
             setGetbankName(res.data.bankServiceData)
-            setEventType(res.data.eventCategoryData)
         }
         catch (err) {
             console.log("here err", err)
@@ -384,6 +433,7 @@ const Event_hostPage = () => {
     // here Call/Update the data --------------------------------------------------------------------
     useEffect(() => {
         GetBankDetails()
+        GetFacilityType()
     }, [formErrors])
 
 
@@ -603,31 +653,64 @@ const Event_hostPage = () => {
                                         {formErrors.locationofEvent && <p className="error text-red-700">{formErrors.locationofEvent}</p>}
                                     </div>
                                 </div>
-
                                 {/* Two more similar rows for Heading 1 */}
                             </div>
                             <div className="HostEvent_Heading">
 
-                                <div className="HostEvent_Group">
-                                    <label htmlFor="input2">Event Category<span className="text-red-600 font-bold text-xl">*</span></label>
-                                    <select id="input2"
-                                        name="eventCategory"
-                                        className="input_padding"
-                                        value={formData.eventCategory}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" disabled selected hidden>Select Event Category</option>
-                                        {EventType?.length > 0 && EventType?.map((event, index) => {
-                                            return (
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="searchableDropdown">Facility Name
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            id="searchableDropdown"
+                                            name="facilityId"
+                                            className="input_padding22"
+
+                                            value={searchTerm}
+                                            onChange={handleInputChange}
+                                            onClick={() => setIsDropdownOpen(true)}
+                                            placeholder="Select Facility"
+                                        />
+                                        {isDropdownOpen && (
+                                            <ul className="dropdown-menu">
+                                                {filteredOptions.length > 0 ? (
+                                                    filteredOptions.map((event, index) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => handleOptionSelect(event.facilityId, event.facilityname)}
+                                                            className="dropdown-item"
+                                                        >
+                                                            {event.facilityname}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="dropdown-item">No results found</li>
+                                                )}
+                                            </ul>
+                                        )}
+                                        {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
+                                    </div>
+
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input2">Event Category<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <select id="input2"
+                                            name="eventCategory"
+                                            className="input_padding"
+                                            value={formData.eventCategory}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled selected hidden>Select Event Category</option>
+                                            {filteredEventTypes.length > 0 && filteredEventTypes.map((event, index) => (
                                                 <option key={index} value={event.eventCategoryId}>
                                                     {event.eventCategoryName}
                                                 </option>
-                                            )
+                                            ))}
 
-                                        })}
+                                        </select>
+                                        {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
+                                    </div>
 
-                                    </select>
-                                    {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
@@ -932,12 +1015,24 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Bank Name*</label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Beneficiary Name" name="beneficiaryName"
-                                            value={formData.bankName}
+                                        <label htmlFor="input2">Bank Name <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <select id="input2" className="input_padding" name="bankName"
                                             disabled
-                                        />
+                                            value={formData.bankName}
+                                        >
+                                            <option value="" disabled selected hidden>Select Bank Name</option>
+                                            {GetbankName?.length > 0 && GetbankName?.map((Bankname, index) => {
+                                                return (
+                                                    <option key={index} value={Bankname.id}>
+                                                        {Bankname.bankName}
 
+                                                    </option>
+                                                )
+
+                                            })}
+
+                                        </select>
+                                        {formErrors.bankName && <p className="error text-red-700">{formErrors.bankName}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Account Number*</label>
@@ -1013,36 +1108,83 @@ const Event_hostPage = () => {
                             </div>
                             <div className="HostEvent_Heading">
 
-                                <div className="HostEvent_Group">
-                                    <label htmlFor="input2">Event Category*</label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Organization/Individual Address"
-                                        name="locationofEvent"
-                                        value={formData.eventCategory}
-                                        disabled
+                                <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="searchableDropdown">Facility Name
+                                            <span className="text-red-600 font-bold text-xl">*</span>
+                                        </label>
+                                        <input
+                                            id="searchableDropdown"
+                                            name="eventCategory"
+                                            className="input_padding22"
+                                            value={searchTerm}
+                                            disabled
+                                            onClick={() => setIsDropdownOpen(true)}
+                                            placeholder="Select Facility"
+                                        />
+                                        {isDropdownOpen && (
+                                            <ul className="dropdown-menu">
+                                                {filteredOptions.length > 0 ? (
+                                                    filteredOptions.map((event, index) => (
+                                                        <li
+                                                            key={index}
+                                                            onClick={() => handleOptionSelect(event.facilityId, event.facilityname)}
+                                                            className="dropdown-item"
+                                                        >
+                                                            {event.facilityname}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="dropdown-item">No results found</li>
+                                                )}
+                                            </ul>
+                                        )}
+                                        {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
+                                    </div>
 
-                                    />
+
+
+
+
+
+                                    <div className="HostEvent_Group">
+                                        <label htmlFor="input2">Event Category<span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <select id="input2"
+                                            name="eventCategory"
+                                            className="input_padding"
+                                            value={formData.eventCategory}
+                                            disabled
+                                        >
+                                            <option value="" disabled selected hidden>Select Event Category</option>
+                                            {filteredEventTypes.length > 0 && filteredEventTypes.map((event, index) => (
+                                                <option key={index} value={event.eventCategoryId}>
+                                                    {event.eventCategoryName}
+                                                </option>
+                                            ))}
+
+                                        </select>
+                                        {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
+                                    </div>
 
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Start Event Date</label>
-                                        <input type="date" id="input1" className="input_padding" placeholder="Phone Number"
+                                        <label htmlFor="input1">Start Event Time & Date  <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="datetime-local" id="input1" className="input_padding" placeholder="Please Enter Phone Number"
                                             name="startEventDate"
                                             value={formData.startEventDate}
                                             disabled
-
                                         />
-
+                                        {formErrors.startEventDate && <p className="error text-red-700">{formErrors.startEventDate}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">End Event Date</label>
-                                        <input type="date" id="input2" className="input_padding" placeholder="Email Address"
+                                        <label htmlFor="input2">End Event Time & Date <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="datetime-local" id="input2" className="input_padding" placeholder="Please Enter Email Address"
                                             name="endEventDate"
                                             value={formData.endEventDate}
                                             disabled
-
                                         />
-
+                                        {formErrors.endEventDate && <p className="error text-red-700">{formErrors.endEventDate}</p>}
                                     </div>
 
                                 </div>
@@ -1119,7 +1261,7 @@ const Event_hostPage = () => {
                                     <label htmlFor="input1">Upload any Additional Files</label>
                                     <input type="text" id="input1" className="input_padding" placeholder="Additional files"
                                         name="additionalFiles"
-                                        value={[...formData.additionalFiles.map((file) => { return file.name})].toString()}
+                                        value={[...formData.additionalFiles.map((file) => { return file.name })].toString()}
                                         disabled
 
                                     />
@@ -1138,9 +1280,9 @@ const Event_hostPage = () => {
             </div>
             {/* ---------------------------------------------------here Toast Libary-------------------------------------- */}
             <ToastContainer />
-         
+
         </div>
-         
+
     );
 };
 
