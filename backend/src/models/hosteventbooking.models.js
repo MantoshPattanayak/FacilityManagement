@@ -12,7 +12,7 @@ module.exports = (sequelize,DataTypes)=>{
             type:DataTypes.INTEGER
         },
         bookingDate:{
-            type:DataTypes.DATE
+            type:DataTypes.DATEONLY
         },
         startDate:{
             type:DataTypes.DATE
