@@ -41,6 +41,20 @@ const AddToCart = () => {
         (data) => data.languageResourceKey === "publicHeaderHome"
     );
     const [totalAmount, setTotalAmount] = useState(0.00);
+    const [refresh, setRefresh] = useState(false);
+    const [toastId, setToastId] = useState(null);
+
+    const notify = (message) => {
+      if (!toast.isActive(toastId)) {
+        const id = toast.success(message, {
+            onClose: () => {
+                toast.dismiss(toastId);
+            }
+        });
+        setToastId(id);
+      }
+    };
+
     // Delete the Cart ----------------------------------------
     async function UpdateCart(e, cartItemId, action) {
         e.preventDefault();
@@ -54,19 +68,23 @@ const AddToCart = () => {
 
             });
             console.log("Update Cart", res);
+            setRefresh(prevState => !prevState);
             if (action === 'REMOVED') {
-                toast.success(' Cart has been removed successfully.');
+                // toast.dismiss();
+                notify(' Cart item has been removed successfully.');
             } else if (action === 'SAVED_FOR_LATER') {
-                toast.success(' Cart has been saved  for later successfully.');
+                // toast.dismiss();
+                notify(' Cart item has been saved for later successfully.');
             } else if (action === 'IN_CART') {
-                toast.success(' Cart has been moved successfully.');
+                // toast.dismiss();
+                notify('Item has been moved to cart successfully.');
             }
-
-            GetViewCardData(res.data)
+            // GetViewCardData(res.data)
         }
         catch (err) {
             console.log("Update Error", err);
-            toast.error(' Unable to remove cart. Please try again.');
+            // toast.dismiss();
+            notify('Unable to remove cart. Please try again.');
         }
     }
     //    here Get data funcation ------------------------------------------------------
@@ -104,7 +122,7 @@ const AddToCart = () => {
         GetViewCardData()
     }, []);
 
-
+    useEffect(() => { GetViewCardData() }, [refresh]);
 
     // ---------------------------------------------here Return funcatin --------------------------------------------------
     return (
@@ -198,10 +216,7 @@ const AddToCart = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* Price Details Section */}
-
-
                 <div className="Booking_Bill_Mian_Conatiner">
                     <div className="Booking_Bill_Price">
                         <h1 className="parice_detials">PRICE DETAILS</h1>
@@ -224,12 +239,9 @@ const AddToCart = () => {
                     <h1 className="Safe_text">Safe and Secure Payments.Easy returns.</h1>
 
                 </div>
-
-
             </div>
-
             {/* Toast Notifications */}
-            <ToastContainer />
+            {/* <ToastContainer /> */}
         </div>
 
 

@@ -119,6 +119,7 @@ import EditEventCategory from "./components/Admin/MDM/EventCategoriesMaster/Edit
 import ViewFacilityTypeList from "./components/Admin/MDM/FacilityTypeMaster/ViewFacilityTypeList";
 import CreateFacilityType from "./components/Admin/MDM/FacilityTypeMaster/CreateFacilityType";
 import EditFacilityType from "./components/Admin/MDM/FacilityTypeMaster/EditFacilityType";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -653,6 +654,7 @@ function App() {
             {/* <Footer /> */}
             <CommonFooter1 />
           </div>
+          <ToastContainer />
         </BrowserRouter>
       </Provider>
     </>
