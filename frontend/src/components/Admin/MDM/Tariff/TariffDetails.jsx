@@ -106,7 +106,7 @@ const TariffDetails = () => {
         autoClose: 2000,
         onClose: () => {
           setTimeout(() => {
-            navigate('/ViewTariffList');
+            navigate('/mdm/ViewTariffList');
           }, 1000);
         }
       });

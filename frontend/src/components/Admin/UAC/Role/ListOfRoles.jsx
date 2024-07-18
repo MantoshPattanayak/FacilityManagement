@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import AdminHeader from '../../../../common/AdminHeader';
-import "../../../../common/CommonTable.css"
 import "./ListOfRoles.css"
 import axiosHttpClient from '../../../../utils/axios';
 // icon using fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptData } from '../../../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
@@ -81,15 +80,16 @@ const ListOfRoles = () => {
 
 
   return (
-    <div className="ListOfRoles">
+    <div>
       <AdminHeader />
-      <ToastContainer />
-      <div className='Main_Conatiner_table'>
+      <div className='ListOfRoles'>
         <div className='table-heading'>
-          <h2 className="table-heading">View Roles</h2>
+          <h2 className="">View Roles</h2>
         </div>
         <div className="search_text_conatiner">
-          <button className='create-role-btn' onClick={() => navigate('/UAC/Role/CreateRole')}>Create new Role</button>
+          <button className='search_field_button' onClick={() => navigate('/UAC/Role/CreateRole')}>
+          <FontAwesomeIcon icon={faPlus} /> Create new Role
+          </button>
           <input
             type="text"
             className="search_input_field"
