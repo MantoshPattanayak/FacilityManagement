@@ -48,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         isWhatsappNumber: {
             type: DataTypes.TINYINT,
+        },
+        feedbackReferenceNumber: {
+            type: DataTypes.STRING(255)
         }
     },
         {

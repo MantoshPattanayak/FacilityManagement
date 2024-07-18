@@ -1,0 +1,23 @@
+table th, table td  {
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+    background-color:transparent;
+}
+
+.table_Container{
+    overflow-y: hidden;
+    max-height: fit-content;
+    width: 94%;
+    margin-bottom: 10vh;
+}
+
+.table-heading h2{
+    width: 94vw;
+    align-items: center;
+}
+
+.search_text_conatiner{
+    justify-content: start;
+}
