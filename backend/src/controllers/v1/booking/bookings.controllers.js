@@ -903,6 +903,7 @@ let viewCartByUserId = async (req, res) => {
         console.log('findCartIdByUserId', findCartIdByUserId);
         if (findCartIdByUserId) {
             console.log(findCartIdByUserId.cartId, 'cartId')
+            
             // cart details for facilities booking only
             let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName, f3.url as imageUrl
                 from amabhoomi.cartitems c 
@@ -910,10 +911,19 @@ let viewCartByUserId = async (req, res) => {
                 inner join amabhoomi.facilities f on f.facilityId = c.entityId
                 inner join amabhoomi.fileattachments f2 on f2.entityId = f.facilityId and f2.entityType = 'facilities' and f2.filePurpose = 'singleFacilityImage'
                 inner join amabhoomi.files f3 on f3.fileId = f2.fileId
-                where c.statusId = 21 and c.cartId = ?`,
+                where c.statusId = 21 and c.cartId = ? and c.entityTypeId !=6
+                UNION
+                select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, em.eventCategoryName as facilityTypeName, e.eventName as facilityName, f3.url as imageUrl
+                from amabhoomi.cartitems c 
+                inner join amabhoomi.eventactivities e on e.eventId = c.entityId 
+                inner join amabhoomi.eventcategorymasters em on em.eventCategoryId = e.eventCategoryId 
+                inner join amabhoomi.fileattachments f2 on f2.entityId = e.eventId and f2.entityType = 'events' and f2.filePurpose = 'Event Image'
+                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
+                where c.statusId = 21 and c.cartId = ? and c.entityTypeId = 6
+                `,
                 {
                     type: sequelize.QueryTypes.SELECT,
-                    replacements: [findCartIdByUserId.cartId]
+                    replacements: [findCartIdByUserId.cartId, findCartIdByUserId.cartId]
             });
             // save for later
             let findCartItemsWRTCartIdSaveForLater = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName, f3.url as imageUrl
@@ -922,10 +932,18 @@ let viewCartByUserId = async (req, res) => {
                 inner join amabhoomi.facilities f on f.facilityId = c.entityId
                 inner join amabhoomi.fileattachments f2 on f2.entityId = f.facilityId and f2.entityType = 'facilities' and f2.filePurpose = 'singleFacilityImage'
                 inner join amabhoomi.files f3 on f3.fileId = f2.fileId
-                where c.statusId = 22 and c.cartId = ?`,
+                where c.statusId = 22 and c.cartId = ?
+                UNION
+                 select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, em.eventCategoryName as facilityTypeName, e.eventName as facilityName, f3.url as imageUrl
+                from amabhoomi.cartitems c 
+                inner join amabhoomi.eventactivities e on e.eventId = c.entityId 
+                inner join amabhoomi.eventcategorymasters em on em.eventCategoryId = e.eventCategoryId 
+                inner join amabhoomi.fileattachments f2 on f2.entityId = e.eventId and f2.entityType = 'events' and f2.filePurpose = 'Event Image'
+                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
+                where c.statusId = 22 and c.cartId = ? and c.entityTypeId = 6`,
                 {
                     type: sequelize.QueryTypes.SELECT,
-                    replacements: [findCartIdByUserId.cartId]
+                    replacements: [findCartIdByUserId.cartId,findCartIdByUserId.cartId]
             });
             // 
 
