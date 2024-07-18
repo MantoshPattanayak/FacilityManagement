@@ -327,6 +327,14 @@ const createFeedback = async (req, res) => {
             feedback,
             isWhatsappNumber
         } = req.body;
+        console.log({
+            name,
+            mobile,
+            email,
+            subject,
+            feedback,
+            isWhatsappNumber
+        })
         createFeedback = await feedbacks.create({
             name: name,
             mobile: mobile,
