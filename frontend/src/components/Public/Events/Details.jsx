@@ -34,6 +34,7 @@ import {
 import PublicHeader from "../../../common/PublicHeader";
 // import images here
 import amabhoomi from '../../../assets/Anand_park.jpg';
+import instance from '../../../../env';
 
 
 export default function Details() {
@@ -55,6 +56,9 @@ export default function Details() {
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
+  // For image Carousel............
+  const [images, setImages] = useState([Park_img, amabhoomi, Park_img, amabhoomi, Park_img]);
+  const [currentIndex1, setCurrentIndex1] = useState(0);
 
   // Here Get the data of Sub_park_details------------------------------------------
   async function getEventDetailData() {
@@ -67,8 +71,10 @@ export default function Details() {
         eventId
       );
 
-      console.log("Response of event details", res);
+      console.log("Response of event details", res.data.eventActivityDetails);
       setEventDetailsData(res.data.eventActivityDetails);
+      console.log("event additional images", res.data.eventActivityDetails.eventAdditionalImages.split(';'))
+      setImages(res.data.eventActivityDetails.eventAdditionalImages.split(';'));
     } catch (err) {
       console.log("here Error", err);
     }
@@ -128,9 +134,6 @@ export default function Details() {
 
     return `${day}-${month}-${year}`;
   }
-  // For image Carousel............
-  const images = [Park_img, amabhoomi, Park_img, amabhoomi, Park_img];
-  const [currentIndex1, setCurrentIndex1] = useState(0);
 
   const handlePrev = () => {
     setCurrentIndex1(currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1);
@@ -164,7 +167,10 @@ export default function Details() {
         <div className="carousel-container1">
           <div className="carousel1">
             {/* <img className="event-Park_image" src={Park_img}></img> */}
-            <img src={images[currentIndex1]} alt={`Slide ${currentIndex1 + 1}`} />
+            <img 
+              src={instance().baseURL + "/static" + images[currentIndex1]}
+              alt={`Slide ${currentIndex1 + 1}`} 
+            />
           </div>
           <button className="carousel1-button1 left1" onClick={handlePrev}>
             &lt;
@@ -177,16 +183,16 @@ export default function Details() {
 
         <div className="event-Map_container">
           <span className="event-time_status grid grid-rows-2 grid-cols-3">
-            <h1 className="event-time_text col-span-3">Event date: {formatDate(eventDetailsData?.eventDate)}</h1>
-            <span className='col-start-1 col-span-3 grid grid-cols-3 items-center'>
-              <h1 className="event-time_text col-span-2">
+            <h1 className="event-time_text col-span-3">Event start date: {formatDate(eventDetailsData?.eventStartTime?.split("T")[0])} {formatTime(eventDetailsData?.eventStartTime)}</h1>
+            <h1 className="event-time_text col-span-3">Event end date: {formatDate(eventDetailsData?.eventEndTime?.split("T")[0])} {formatTime(eventDetailsData?.eventEndTime)}</h1>
+            <span className='event-time_text col-start-1 col-span-3 items-start'>
+              {/* <h1 className="event-time_text col-span-3">
                 {" "}
-                Timing : {formatTime(
-                  eventDetailsData?.eventStartTime
-                )} - {formatTime(eventDetailsData?.eventEndTime)}
-              </h1>
+                Timing : {formatDate(eventDetailsData?.eventStartTime?.split("T")[0])} {formatTime(eventDetailsData?.eventStartTime)}&nbsp; 
+                - {formatDate(eventDetailsData?.eventEndTime?.split("T")[0])} {formatTime(eventDetailsData?.eventEndTime)}
+              </h1> */}
               <button
-                className={`event-Open_Button ${eventDetailsData?.status == "ACTIVE"
+                className={`event-Open_Button col-span-1 ${eventDetailsData?.status == "ACTIVE"
                   ? "event-open"
                   : "event-closed"
                   }`}

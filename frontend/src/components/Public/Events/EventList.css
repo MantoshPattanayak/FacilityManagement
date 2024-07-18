@@ -134,7 +134,7 @@
 }
 
 .event-Search_input:focus {
-    border-color: #029c3d;
+    border-color: #176BFB;
     outline: none;
 }
 
@@ -143,6 +143,15 @@
     padding: 10px;
     margin-left: 90px;
     display: flex;
+    justify-content: space-between;
+}
+
+.Filter_grid {
+    /* padding: 10px; */
+    margin-left: 99px;
+    margin-right: 35px;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -335,5 +344,13 @@ select:focus {
         justify-content: flex-start;
         padding: 8px;
         margin-left: 60px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .event-Filter_grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
     }
 }
