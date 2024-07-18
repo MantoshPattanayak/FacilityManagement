@@ -183,10 +183,10 @@ const Book_Event = () => {
     }
 
     // Here Get the data of sport details------------------------------------------
-    async function getEventDetails(facilityId) {
-        console.log("get event details", facilityId);
+    async function getEventDetails(eventId) {
+        console.log("get event details", eventId);
         try {
-            let res = await axiosHttpClient("VIEW_EVENT_BY_ID_API", "get", {}, facilityId);
+            let res = await axiosHttpClient("VIEW_EVENT_BY_ID_API", "get", {}, eventId);
 
             console.log("response of facility fetch api", res);
             console.log('duration', res.data.eventActivityDetails.eventEndTime, res.data.eventActivityDetails.eventStartTime)
@@ -194,11 +194,11 @@ const Book_Event = () => {
             setFormData({
                 ...formData,
                 ["entityTypeId"]: 6,
-                ["facilityId"]: res.data.eventActivityDetails.eventId,
+                ["eventId"]: res.data.eventActivityDetails.eventId,
                 ["entityId"]: res.data.eventActivityDetails.eventId,
                 ["facilityPreference"]: {
                     playersLimit: 1,
-                    startTime: res.data.eventActivityDetails.eventStartTime,
+                    startTime: res.data.eventActivityDetails.eventStartTime.split("T")[1].replace("Z", ''),
                     durationInHours: calculateTimeDifferenceinHours(res.data.eventActivityDetails.eventStartTime, res.data.eventActivityDetails.eventEndTime),
                     bookingDate: res.data.eventActivityDetails.eventDate,
                     price: res.data.eventActivityDetails.ticketPrice
@@ -210,11 +210,11 @@ const Book_Event = () => {
     }
     // useEffect for Update the data (Call Api) ------------------------
     useEffect(() => {
-        let facilityId = decryptData(
+        let eventId = decryptData(
             new URLSearchParams(location.search).get("eventId")
         );
-        console.log("facilityId", facilityId);
-        getEventDetails(facilityId);
+        console.log("facilityId", eventId);
+        getEventDetails(eventId);
     }, []);
 
     // here Validation fun--------------------------------------------

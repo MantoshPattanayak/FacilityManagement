@@ -319,6 +319,7 @@ let actionTaken = async (req, res) => {
 const createFeedback = async (req, res) => {
     try {
         let createFeedback;
+        let userId = req.user.userId;
         const {
             name,
             mobile,
@@ -333,7 +334,9 @@ const createFeedback = async (req, res) => {
             email: email,
             subject: subject,
             feedback: feedback,
-            isWhatsappNumber: isWhatsappNumber
+            isWhatsappNumber: isWhatsappNumber,
+            createdOn: new Date(),
+            createdBy: userId
         });
         if (createFeedback) {
             return res.status(statusCode.SUCCESS.code).json({

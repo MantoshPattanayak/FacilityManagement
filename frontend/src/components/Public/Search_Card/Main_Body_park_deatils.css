@@ -215,7 +215,7 @@
 
 /* Highlight border color on focus */
 .Search_input:focus {
-    border-color: #029c3d;
+    border-color: #176BFB;
     /* Change border color on focus */
     outline: none;
     /* Remove default focus outline */

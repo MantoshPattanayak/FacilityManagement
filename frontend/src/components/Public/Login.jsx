@@ -28,6 +28,7 @@ const Login = () => {
     new URLSearchParams(location.search).get("redirect")
   );
   const facilityId = new URLSearchParams(location.search).get("facilityId");
+  const eventId = new URLSearchParams(location.search).get("eventId");
   const [otpGenerated, setOtpGenerated] = useState(false);
   console.log("redirect", redirect);
   const [timer, setTimer] = useState(0); // Initial timer value in seconds
@@ -71,7 +72,7 @@ const Login = () => {
         });
         console.log("user Login Response", res);
         // Dispatch login success action with tokens and user data -------------------
-        if(res.data.decideSignUpOrLogin == 1){
+        if (res.data.decideSignUpOrLogin == 1) {
           dispatch(loginSuccess({
             accessToken: res.data.accessToken,
             refreshToken: res.data.refreshToken,
@@ -80,9 +81,13 @@ const Login = () => {
           }));
           toast.success("Login successfully.");
           // sessionStorage.setItem("isUserLoggedIn", 1);
-          redirect ? navigate(redirect + `?facilityId=${facilityId}`) : navigate('/');
+          redirect ?
+            facilityId ? navigate(redirect + `?facilityId=${facilityId}`)
+              : eventId ? navigate(redirect + `?eventId=${eventId}`)
+                : navigate('/')
+            : navigate('/');
         }
-        else{
+        else {
           toast.error('User does not exist. Kindly signup first!');
         }
       } catch (err) {
@@ -192,7 +197,7 @@ const Login = () => {
             </div>)
           }
 
-          { (otpGenerated == false) ?      //if otp is not generated then show send otp button
+          {(otpGenerated == false) ?      //if otp is not generated then show send otp button
             (
               <div className="otp-btn" onClick={handleGenerateOTP}>
                 <button className="sendotp-btn" type="submit">
@@ -212,21 +217,21 @@ const Login = () => {
 
           {
             (otpGenerated == true) ?
-            ( (timer === 0) ?(
-              <div className="otp-btn" onClick={handleGenerateOTP}>
-                <button className="sendotp-btn" type="submit">
-                  Resend OTP
-                </button>
-              </div>
-              ):
-              (
-                <div className="otp-btn bg-gray-400 cursor-not-allowed">
-                  <p>Resend OTP in {timer} seconds.</p>
+              ((timer === 0) ? (
+                <div className="otp-btn" onClick={handleGenerateOTP}>
+                  <button className="sendotp-btn" type="submit">
+                    Resend OTP
+                  </button>
                 </div>
+              ) :
+                (
+                  <div className="otp-btn bg-gray-400 cursor-not-allowed">
+                    <p>Resend OTP in {timer} seconds.</p>
+                  </div>
+                )
               )
-            )
-            :
-            ''
+              :
+              ''
           }
 
           <div className="login-options">

@@ -44,6 +44,10 @@ const truncateName = (name, maxLength) => {
 };
 
 function calculateTimeDifferenceinHours(startTime, endTime) {
+    if(startTime.toString().includes('T') && endTime.toString().includes("T")){ //if datetime as input params then modify as time
+        startTime = startTime.split('T')[1].replace("Z", '');
+        endTime = endTime.split("T")[1].replace("Z", '');
+    }
     const [startHours, startMinutes, StartSeconds] = startTime.split(":").map(Number);
     const [endHours, endMinutes, endSeconds] = endTime.split(":").map(Number);
     const startDate = new Date();
