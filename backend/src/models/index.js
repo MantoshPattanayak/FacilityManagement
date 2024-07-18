@@ -133,6 +133,11 @@ db1.userdepartments = require('./userdepartment.models')(sequelize, DataTypes)
 db1.contactrequests = require('./contactus.models')(sequelize,DataTypes)
 // partner with us
 db1.partnerwithus = require('./partner.models')(sequelize,DataTypes)
+// advertisement details start
+db1.advertisementTariff = require('./advertisementtariffmaster.models')(sequelize,DataTypes)
+db1.advertisementDetails = require('./advertisementdetails.models')(sequelize,DataTypes)
+db1.advertisementMasters = require('./advertisementtype.models')(sequelize,DataTypes)
+// advertisement details end
 // end partner with us
 // join operations start
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
