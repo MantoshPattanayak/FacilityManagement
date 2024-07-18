@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import AppLogo from "../assets/ama-bhoomi_logo.png";
 import "../components/Public/Landing";
-import '../common/AdminHeader.css';
+import "../common/AdminHeader.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPowerOff, faUser, faBars, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPowerOff,
+  faUser,
+  faBars,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../utils/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setLanguage, setLanguageContent } from "../utils/languageSlice";
@@ -21,7 +26,9 @@ export default function AdminHeader() {
   // const language = useSelector((state) => state.language.language);
   // const languageContent = useSelector((state) => state.language.languageContent);
   // const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
-  const isAdminLoggedIn = useSelector((state) => state.auth.isAdminLoggedIn) || sessionStorage?.getItem("isAdminLoggedIn");
+  const isAdminLoggedIn =
+    useSelector((state) => state.auth.isAdminLoggedIn) ||
+    sessionStorage?.getItem("isAdminLoggedIn");
   const [menuData, setMenuData] = useState([]);
   let accessRoutes = useSelector((state) => state.auth.accessRoutes);
 
@@ -50,24 +57,23 @@ export default function AdminHeader() {
 
   async function handleLogout(e) {
     // async function logOutAPI() {
-      try {
-        let res = await axiosHttpClient('LOGOUT_API', 'post');
-        console.log(res.data);
-        toast.success('Logged out successfully!!');
-        dispatch(Logout());
-        setRefresh(prevState => !prevState);
-        sessionStorage.clear();
-        localStorage.clear();
-      }
-      catch (error) {
-        console.error(error);
-      }
+    try {
+      let res = await axiosHttpClient("LOGOUT_API", "post");
+      console.log(res.data);
+      toast.success("Logged out successfully!!");
+      dispatch(Logout());
+      setRefresh((prevState) => !prevState);
+      sessionStorage.clear();
+      localStorage.clear();
+    } catch (error) {
+      console.error(error);
+    }
     // }
     // logOutAPI();
   }
 
   function handleMenuToggle() {
-    setShowMediaIcon(prevState => !prevState);
+    setShowMediaIcon((prevState) => !prevState);
   }
 
   const renderSubMenu = (children) => {
@@ -91,36 +97,68 @@ export default function AdminHeader() {
     setMenuData(accessRoutes || JSON.parse(sessionStorage.getItem('accessRoutes')));
   }, [])
 
+  // useEffect(() => {
+  //   let storedRoutes = sessionStorage.getItem("accessRoutes");
+  //   if (!storedRoutes) {
+  //     setMenuData(accessRoutes || JSON.parse(storedRoutes));
+  //   } else {
+  //     setMenuData(accessRoutes);
+  //   }
+  // }, [refresh]);
+
+  // useEffect(() => {
+  //   let storedRoutes = sessionStorage.getItem("accessRoutes");
+  //   if (!storedRoutes) {
+  //     setMenuData(accessRoutes || JSON.parse(storedRoutes));
+  //   } else {
+  //     setMenuData(accessRoutes);
+  //   }
+  // }, []);
+
   return (
     <header className="header-admin" id="header-public">
       {/* <ToastContainer /> */}
       <div className="header-content">
         <div className="logo-ama-boomi">
-          <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
+          <img
+            src={AppLogo}
+            alt="App Logo"
+            className="h-[100%] top-0 absolute"
+          />
         </div>
         <div className="navbar-2">
-          <ul className={showMediaIcon ? "menu_links mobile_menu_links show" : "menu_links"} >
-            {isAdminLoggedIn == 1 && menuData?.length > 0 && menuData?.map((menuItem) => {
-              if (menuItem.name === "Dashboard" && menuItem.children.length > 0) {
-                return menuItem.children.map((child) => (
-                  <li key={child.id}>
-                    <Link to={child.path}>Dashboard</Link>
-                  </li>
-                ));
-              } else {
-                return (
-                  <li
-                    key={menuItem.id}
-                    className="menu-item"
-                    onMouseEnter={() => setHoveredMenu(menuItem.id)}
-                    onMouseLeave={() => setHoveredMenu(null)}
-                  >
-                    <Link to={menuItem.path || "#"}>{menuItem.name}</Link>
-                    {hoveredMenu === menuItem.id && renderSubMenu(menuItem.children)}
-                  </li>
-                );
-              }
-            })}
+          <ul
+            className={
+              showMediaIcon ? "menu_links mobile_menu_links show" : "menu_links"
+            }
+          >
+            {isAdminLoggedIn == 1 &&
+              menuData?.length > 0 &&
+              menuData?.map((menuItem) => {
+                if (
+                  menuItem.name === "Dashboard" &&
+                  menuItem.children.length > 0
+                ) {
+                  return menuItem.children.map((child) => (
+                    <li key={child.id}>
+                      <Link to={child.path}>Dashboard</Link>
+                    </li>
+                  ));
+                } else {
+                  return (
+                    <li
+                      key={menuItem.id}
+                      className="menu-item"
+                      onMouseEnter={() => setHoveredMenu(menuItem.id)}
+                      onMouseLeave={() => setHoveredMenu(null)}
+                    >
+                      <Link to={menuItem.path || "#"}>{menuItem.name}</Link>
+                      {hoveredMenu === menuItem.id &&
+                        renderSubMenu(menuItem.children)}
+                    </li>
+                  );
+                }
+              })}
             {/* {isAdminLoggedIn == 1 ? (
               <li>
                 <Link to={'/Profile'}>
@@ -146,7 +184,7 @@ export default function AdminHeader() {
             )} */}
             {isAdminLoggedIn == 1 && (
               <li>
-                <Link onClick={handleLogout} to={'/admin-login'}>
+                <Link onClick={handleLogout} to={"/admin-login"}>
                   <FontAwesomeIcon icon={faPowerOff}></FontAwesomeIcon> &nbsp;
                 </Link>
               </li>
