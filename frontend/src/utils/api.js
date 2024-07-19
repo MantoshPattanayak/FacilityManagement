@@ -145,6 +145,8 @@ const api = {
    //GALLERY ADMIN
    ADD_NEW_GALLERY_DATA_API: '/gallery/insertNewGalleryRecord',   //post description, fileAttachment: {name: '', data: ''}
    FETCH_GALLERY_LIST_DATA_API: '/gallery/fetchGalleryList',   //post page_size, page_number
+   FETCH_GALLERY_DATA_BY_ID_API: '/gallery/fetchGalleryById',  //get :galleryId
+   UPDATE_GALLERY_DATA_API: '/gallery/updateGalleryRecord', //put :galleryId --- description, fileAttachment: {name: '', data: ''}
    /// here footer pages api like contact with us, pathner with us...etc
    contact_with_us_api:'/grievance/contactUs'
 }
