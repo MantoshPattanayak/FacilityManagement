@@ -142,7 +142,9 @@ const api = {
    FETCH_RAZORPAY_API_KEY: '/razorPayPayment/getRazorpayApiKeys', //get
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 
-
+   //GALLERY ADMIN
+   ADD_NEW_GALLERY_DATA_API: '/gallery/insertNewGalleryRecord',   //post description, fileAttachment: {name: '', data: ''}
+   FETCH_GALLERY_LIST_DATA_API: '/gallery/fetchGalleryList',   //post page_size, page_number
    /// here footer pages api like contact with us, pathner with us...etc
    contact_with_us_api:'/grievance/contactUs'
 }
