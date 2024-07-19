@@ -1,6 +1,6 @@
 module.exports =(sequelize, DataTypes)=>{
     let advertisementtariff = sequelize.define('advertisementtariffmaster',{
-        advertisementId:{
+        advertisementTariffId:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
             primaryKey:true
@@ -8,8 +8,14 @@ module.exports =(sequelize, DataTypes)=>{
         advertisementTypeId:{
             type:DataTypes.INTEGER
         },
-        duration:{
+        durationOption:{
             type:DataTypes.STRING
+        },
+        minDuration:{
+            type:DataTypes.INTEGER
+        },
+        maxDuration:{
+            type:DataTypes.INTEGER
         },
         amount:{
             type:DataTypes.DOUBLE

@@ -208,7 +208,7 @@ db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 db1.faq.sync({
-  alter: false,
+  alter:false,
 });
 
 module.exports = db1;

@@ -1,6 +1,8 @@
-const { sequelize, Sequelize } = require("../../../models");
 const statusCode = require("../../../utils/statusCode");
 const db = require("../../../models");
+let sequelize = db.sequelize;
+let Sequelize = db.Sequelize
+const QueryTypes = db.QueryTypes;
 const grievanceMasters = db.grievancemasters;
 const statusMasters = db.statusmaster;
 let contactUs = db.contactrequests
@@ -526,14 +528,15 @@ let viewFeedbackById = async (req, res) => {
 
 let advertisementTariffInsert = async (req,res)=>{
     try {
-        let {advertisementTypeId, duration, amount} = req.body
+        let {advertisementTypeId, durationOption, amount, minDuration, maxDuration} = req.body
         let statusId =1; 
+        let userId = req.user.userId
         let createdDt = new Date();
         let updatedDt = new Date();
         
         let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
             where:{
-                [Op.and]:[{statusId:statusId},{duration},{amount:amount},{advertisementTypeId:advertisementTypeId}]
+                [Op.and]:[{statusId:statusId},{durationOption:durationOption},{amount:amount},{advertisementTypeId:advertisementTypeId},{minduration:{[Op.lte]:[minDuration]}},{maxDuration:{[Op.gte]:[minDuration]}}]
             }
         })
 
@@ -545,8 +548,10 @@ let advertisementTariffInsert = async (req,res)=>{
         let createTariffData={
             statusId:statusId,
             advertisementTypeId:advertisementTypeId,
-            duration:duration,
+            durationOption:durationOption,
             amount:amount,
+            minDuration:minDuration,
+            maxDuration:maxDuration,
             updatedDt:updatedDt,
             createdDt:createdDt,
             updatedBy:userId,
@@ -559,7 +564,7 @@ let advertisementTariffInsert = async (req,res)=>{
                 message:`Something went wrong`
             })
         }
-        return res.status(statusCode.SUCCESS.code).json(`Created successfully`)
+        return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
@@ -569,14 +574,18 @@ let advertisementTariffInsert = async (req,res)=>{
 
 let advertisementMasterInsert = async (req,res)=>{
     try {
-        let {advertisementType, description} = req.body
+        console.log('12')
+        let {advertisementType, description,durationOption} = req.body
         let statusId =1; 
+        let userId = req.user.userId
+        console.log('userid',userId)
+        durationOption=durationOption.join(',')
         let createdDt = new Date();
         let updatedDt = new Date();
         
         let checkIfThisAdvertisementExist = await advertisementMasters.findOne({
             where:{
-                [Op.and]:[{statusId:statusId},{advertisementType:advertisementType}]
+                [Op.and]:[{statusId:statusId},{[Op.and]:[sequelize.where(sequelize.fn('LOWER',sequelize.col('advertisementType')),advertisementType.toLowerCase())]}]
             }
         })
 
@@ -592,7 +601,8 @@ let advertisementMasterInsert = async (req,res)=>{
             updatedDt:updatedDt,
             createdDt:createdDt,
             updatedBy:userId,
-            createdBy:userId
+            createdBy:userId,
+            durationOption:durationOption
         }
 
         let createAdvertisement = await advertisementMasters.create(createData)
@@ -601,7 +611,344 @@ let advertisementMasterInsert = async (req,res)=>{
                 message:`Something went wrong`
             })
         }
-        return res.status(statusCode.SUCCESS.code).json(`Created successfully`)
+        return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+let updateAdvertisementInsert = async (req,res)=>{
+    try {
+        console.log('12')
+
+        let {advertisementType, description,durationOption,advertisementTypeId,statusId} = req.body
+        let userId = req.user.userId
+        console.log('userid',userId)
+
+        let updatedDt = new Date();
+        let findAdvertisementTypeId = await advertisementMasters.findOne({
+            where:{
+                advertisementTypeId:advertisementTypeId
+            }
+        })
+        if(!findAdvertisementTypeId){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:`Something went wrong`
+            })
+        }
+        let updateAdvertisementMasterData = {}
+        if(findAdvertisementTypeId.advertisementType!=advertisementType){
+            let checkIfThisAdvertisementExist = await advertisementMasters.findOne({
+                where:{
+                    [Op.and]:[{statusId:statusId},{[Op.and]:[sequelize.where(sequelize.fn('LOWER',sequelize.col('advertisementType')),advertisementType.toLowerCase())]}]
+                }
+            })
+    
+            if(checkIfThisAdvertisementExist){
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message:`This advertisement type is  already exist.`
+                })
+            }
+
+            updateAdvertisementMasterData.advertisementType = advertisementType
+        }
+        if(findAdvertisementTypeId.description!=description){
+            updateAdvertisementMasterData.description = description
+
+        }
+        if(findAdvertisementTypeId.durationOption != durationOption){
+            durationOption=durationOption.join(',')
+            updateAdvertisementMasterData.durationOption = durationOption
+        }
+        if(findAdvertisementTypeId.statusId != statusId){
+            updateAdvertisementMasterData.statusId = statusId
+        }
+       
+      
+
+       
+        if(Object.keys(updateAdvertisementMasterData).length>0){
+            updateAdvertisementMasterData.updatedBy = userId;
+            updateAdvertisementMasterData.updatedDt = updatedDt;
+            console.log(updateAdvertisementMasterData,'data variable of advertisement')
+            let [updateAdvertisement] = await advertisementMasters.update(updateAdvertisementMasterData,{
+                where:{
+                    advertisementTypeId:advertisementTypeId
+                }
+            })
+            if(updateAdvertisement>0){
+                return res.status(statusCode.SUCCESS.code).json({
+                    message:`Data updated successfully `
+                })
+            }
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:`Something went wrong`
+            })
+          
+        }
+        return res.status(statusCode.BAD_REQUEST.code).json({
+            message:`Data is not updated`
+        })
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+let viewAdvertisementMaster = async (req,res)=>{
+    try {
+        console.log('all data')
+        let givenReq = req.body.givenReq ? req.body.givenReq : null; // Convert givenReq to lowercase
+        let limit = req.body.page_size ? req.body.page_size : 500;
+  
+        let page = req.body.page_number ? req.body.page_number : 1;
+        let offset = (page - 1) * limit;
+        let filteredData
+        let statusId =1
+        let viewAdvertisementMaster = await advertisementMasters.findAll({
+            where:{
+               statusId:statusId
+            }
+        })
+
+        if(givenReq){ 
+            givenReq = givenReq.toLowerCase(); 
+            filteredData = viewAdvertisementMaster.filter((eachData)=>
+                eachData.advertisementType.toLowerCase().includes(givenReq)
+            )
+        }
+        else{
+            filteredData = viewAdvertisementMaster
+        }
+        let paginatedData = filteredData.slice(offset, offset + limit);
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message:`Advertisement master data`,
+            data:paginatedData
+        })
+        }
+       
+     catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+let viewAdvertisementTariffData = async (req,res)=>{
+    try {
+        console.log('all data')
+        let givenReq = req.body.givenReq ? req.body.givenReq : null; // Convert givenReq to lowercase
+        let limit = req.body.page_size ? req.body.page_size : 500;
+  
+        let page = req.body.page_number ? req.body.page_number : 1;
+        let offset = (page - 1) * limit;
+        let filteredData
+        let statusId =1
+        let viewAdvertisementMaster = await sequelize.query(
+            `SELECT am.advertisementTypeId, am.advertisementType, am.description, 
+                    atm.durationOption, atm.minDuration, atm.maxDuration, atm.advertisementTariffId 
+             FROM amabhoomi.advertisementtypemasters am
+             INNER JOIN advertisementtariffmasters atm ON atm.advertisementTypeId = am.advertisementTypeId
+             where atm.statusId = ? and am.statusId = ?`,{
+                type:QueryTypes.SELECT,
+                replacements:[statusId, statusId]
+             }
+           
+        );
+        
+        if(givenReq){ 
+            givenReq = givenReq.toLowerCase(); 
+            filteredData = viewAdvertisementMaster.filter((eachData)=>
+                eachData.advertisementType.toLowerCase().includes(givenReq)
+            )
+        }
+        else{
+            filteredData = viewAdvertisementMaster
+        }
+        let paginatedData = filteredData.slice(offset, offset + limit);
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message:`Advertisement tariff data`,
+            data:paginatedData
+        })
+        }
+       
+     catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+let updateAdvertisementTariffData = async (req,res)=>{
+
+    try {
+        let {advertisementTariffId,advertisementTypeId, durationOption, amount, minDuration, maxDuration,statusId}=req.body
+
+       console.log('req body', req.body)
+        let userId = req.user.userId
+        let updateAdvertisementDataVariable={};
+        let updatedDt = new Date();
+        let findTheAdvertisementTariffData = await advertisementTariff.findOne({
+            where:{
+                advertisementTariffId:advertisementTariffId
+            }
+        })
+        if(!findTheAdvertisementTariffData){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:'Something went wrong'
+            })
+        }
+        if(advertisementTypeId && findTheAdvertisementTariffData.advertisementTypeId != advertisementTypeId){
+            let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
+                where:{
+                    [Op.and]:[{statusId:statusId},{durationOption:durationOption},{amount:amount},{advertisementTypeId:advertisementTypeId},{minduration:{[Op.lte]:[minDuration]}},{maxDuration:{[Op.gte]:[minDuration]}}]
+                }
+            })
+            if(checkIfThisAdvertisementTariffExist){
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message:`This tariff is already exist. Please deactivate the existing tariff to set a new one`
+                })
+            }
+            updateAdvertisementDataVariable.advertisementTypeId = advertisementTypeId
+        }
+        if(durationOption && findTheAdvertisementTariffData.durationOption != durationOption){
+
+            let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
+                where:{
+                    [Op.and]:[{statusId:statusId},{durationOption:durationOption},{amount:amount},{advertisementTypeId:advertisementTypeId},{minduration:{[Op.lte]:[minDuration]}},{maxDuration:{[Op.gte]:[minDuration]}}]
+                }
+            })
+            if(checkIfThisAdvertisementTariffExist){
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message:`This tariff is already exist. Please deactivate the existing tariff to set a new one`
+                })
+            }
+            updateAdvertisementDataVariable.durationOption = durationOption
+            console.log('duration option ',updateAdvertisementDataVariable.durationOption )
+
+        }
+        if(minDuration && findTheAdvertisementTariffData.minDuration != minDuration){
+            console.log('minduration inside')
+            let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
+                where:{
+                    [Op.and]:[{statusId:statusId},{durationOption:durationOption},{amount:amount},{advertisementTypeId:advertisementTypeId},{minduration:{[Op.lte]:[minDuration]}},{maxDuration:{[Op.gte]:[minDuration]}}]
+                }
+            })
+            if(checkIfThisAdvertisementTariffExist){
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message:`This tariff is already exist. Please deactivate the existing tariff to set a new one`
+                })
+            }
+            updateAdvertisementDataVariable.minDuration = minDuration
+
+        }
+        if(maxDuration && findTheAdvertisementTariffData.maxDuration != maxDuration ){
+            updateAdvertisementDataVariable.maxDuration = maxDuration
+
+        }
+
+        if(statusId && findTheAdvertisementTariffData.statusId != statusId ){
+            updateAdvertisementDataVariable.statusId = statusId
+
+        }
+     
+
+        if(Object.keys(updateAdvertisementDataVariable).length>0){
+            updateAdvertisementDataVariable.updatedBy = userId;
+            updateAdvertisementDataVariable.updatedDt = updatedDt
+            console.log('update tariff data variable', updateAdvertisementDataVariable)
+            let [updateTariff] = await advertisementTariff.update(updateAdvertisementDataVariable,{
+                where:{
+                    advertisementTariffId:advertisementTariffId
+                }
+            })
+            if(updateTariff>0){
+                return res.status(statusCode.SUCCESS.code).json({message:`Data  updated successfully`})
+            }
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:`Something went wrong`
+            })
+        }
+        return res.status(statusCode.BAD_REQUEST.code).json({
+            message:`Data not updated`
+        })
+      
+       
+    } catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+
+let insertToAdvertisementDetails = async (req,res)=>{
+    try {
+        console.log('all data')
+        let givenReq = req.body.givenReq ? req.body.givenReq : null; // Convert givenReq to lowercase
+        let filteredData
+        let userId = req.user.userId
+        let statusId =1
+        let viewAdvertisementMaster = await advertisementMasters.findAll({
+            where:{
+               statusId:statusId
+            }
+        })
+
+        if(givenReq){ 
+            givenReq = givenReq.toLowerCase(); 
+            filteredData = viewAdvertisementMaster.filter((eachData)=>
+                eachData.advertisementType.toLowerCase().includes(givenReq)
+            )
+        }
+        else{
+            filteredData = viewAdvertisementMaster
+        }
+        let paginatedData = filteredData.slice(offset, offset + limit);
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message:`Advertisement master data`,
+            data:paginatedData
+        })
+        }
+       
+     catch (err) {
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:err.message
+        })
+    }
+}
+
+let initialTariffDropdownData = async(req,res)=>{
+    try {
+        let {advertisementTypeId}= req.body
+        let statusId = 1;
+
+        let findAllDropDownData = ["day","month","week","campaign","issue","post"]
+           
+        
+        if(advertisementTypeId){
+            let findTheDropdown = await advertisementMasters.findOne({
+                where:{
+                    [Op.and]:[{statusId:statusId},{advertisementTypeId:advertisementTypeId}]
+                }
+            })
+            if(!findTheDropdown){
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                    message:'Something went wrong'
+                })
+            }
+            findAllDropDownData = findTheDropdown.durationOption.split(',')
+        }
+        return res.status(statusCode.SUCCESS.code).json({
+            message:"These are all dropdown data",
+            data: findAllDropDownData
+        })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
@@ -662,5 +1009,10 @@ module.exports = {
     viewFeedbackList,
     viewFeedbackById,
     advertisementTariffInsert,
-    advertisementMasterInsert
+    advertisementMasterInsert,
+    viewAdvertisementMaster,
+    viewAdvertisementTariffData,
+    updateAdvertisementTariffData,
+    updateAdvertisementInsert,
+    initialTariffDropdownData
 }

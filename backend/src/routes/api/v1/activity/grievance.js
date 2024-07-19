@@ -29,10 +29,20 @@ router.post("/createFeedback", grievanceController.createFeedback);
 router.post("/contactUs",grievanceController.contactRequest)
 // advertisement
 
-router.post("/advertisementTariffInsert",grievanceController.advertisementTariffInsert)
+router.post("/advertisementTariffInsert",authenticateToken,grievanceController.advertisementTariffInsert)
 
-router.post("/advertisementMasterInsert",grievanceController.advertisementMasterInsert)
+router.post("/advertisementMasterInsert", authenticateToken,grievanceController.advertisementMasterInsert)
 
+router.post("/viewAdvertisementMaster", authenticateToken,grievanceController.viewAdvertisementMaster)
+
+router.post("/viewAdvertisementTariffData", authenticateToken,grievanceController.viewAdvertisementTariffData)
+
+
+router.put("/updateAdvertisementTariffData", authenticateToken, grievanceController.updateAdvertisementTariffData)
+
+router.put("/updateAdvertisementInsert", authenticateToken, grievanceController.updateAdvertisementInsert)
+
+router.post("/initialTariffDropdownData", authenticateToken, grievanceController.initialTariffDropdownData)
 
 // advertisement
 
