@@ -399,13 +399,12 @@ const homePage = async (req, res) => {
         from amabhoomi.publicnotifications p
         left join fileattachments fa on p.publicNotificationsId = fa.entityId and fa.entityType = 'publicNotification'
         left join files f on f.fileId = fa.fileId and f.statusId = 1
-        where p.validFromDate <= ?
-        and p.validToDate >= ?
+        where p.validToDate >= ?
         `;
 
     let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
       type: Sequelize.QueryTypes.SELECT,
-      replacements: [new Date(), new Date()]
+      replacements: [new Date()]
     })
 
     let facilityActivitiesFetchQuery = `
