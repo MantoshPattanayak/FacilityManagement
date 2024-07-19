@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import axiosHttpClient from "../../../../utils/axios"; 
+import axiosHttpClient from "../../../../utils/axios";
 import { toast } from "react-toastify";
-import { dataLength } from "../../../../utils/regexExpAndDataLength"; 
+import { dataLength } from "../../../../utils/regexExpAndDataLength";
 
 export default function CreateNewGallery() {
   const initialData = {
@@ -43,9 +43,7 @@ export default function CreateNewGallery() {
     data.append("fileAttachment", formData.file);
 
     try {
-      let res = await axiosHttpClient("ADD_NEW_GALLERY_DATA_API", "post", {
-        
-      });
+      let res = await axiosHttpClient("ADD_NEW_GALLERY_DATA_API", "post", {});
       console.log("here is the Response of posted data", res);
       if (res.status === 200) {
         // Ensure success status code is checked
@@ -53,7 +51,7 @@ export default function CreateNewGallery() {
           onClose: () => {
             setFormSubmitted(true); // Update the form submission status
           },
-          autoClose: 3000, 
+          autoClose: 3000,
         });
       }
     } catch (error) {
