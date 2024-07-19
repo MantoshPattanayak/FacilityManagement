@@ -82,7 +82,11 @@ let fetchGalleryList = async (req, res) => {
 
         res.status(statusCode.SUCCESS.code).json({
             message: "Gallery details",
-            data: paginatedFetchGalleryRecords.map((gallery) => {return {...gallery, ['url']: encodeURIComponent(gallery.url)}})
+            data: paginatedFetchGalleryRecords[0].map((gallery) => {
+                return {
+                    ...gallery, 
+                    ['url']: encodeURIComponent(gallery.url)
+                }})
         })
     }
     catch(error) {
