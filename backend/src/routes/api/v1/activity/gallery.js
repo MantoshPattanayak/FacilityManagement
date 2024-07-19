@@ -6,7 +6,7 @@ const authenticationToken = require('../../../../middlewares/authToken.middlewar
 
 router.post("/insertNewGalleryRecord", authenticationToken, galleryController.insertNewGalleryRecord);
 router.post("/fetchGalleryList", galleryController.fetchGalleryList);
-router.put("/updateGalleryRecord", authenticationToken, galleryController.updateGalleryRecord);
-router.get("/fetchGalleryList/:galleryId", authenticationToken, galleryController.fetchGalleryById);
+router.put("/updateGalleryRecord/:galleryId", authenticationToken, galleryController.updateGalleryRecord);
+router.get("/fetchGalleryById/:galleryId", authenticationToken, galleryController.fetchGalleryById);
 
 module.exports = router;
