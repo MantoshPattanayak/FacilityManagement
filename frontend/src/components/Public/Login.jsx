@@ -186,7 +186,7 @@ const Login = () => {
                 <label htmlFor="">Enter OTP</label>
               </div>
               <input
-                className="input-field"
+                className="input-field focus:border-[#176BFB]"
                 name="otp"
                 type="password"
                 placeholder="Enter OTP"
