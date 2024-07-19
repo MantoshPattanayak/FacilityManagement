@@ -407,97 +407,50 @@ let viewTariff = async (req,res)=>{
         //     });
         // }
 
-         findViewTariff = await sequelize.query(`  SELECT 
-
-    f.facilityname AS facilityName,
-
-    f.facilityId,
-
-    f.facilityTypeId,
-
-    fa.id AS entityId, -- Map the primary key of facilityactivities to entityId
-
-    CASE 
-
-        WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
-
-        WHEN fa.id IS NOT NULL THEN 'ACTIVITIES'
-
-        WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
-
-        ELSE ''
-
-    END AS tariffType,
-
-    tt.code AS tariffTypeCode,
-
-    CASE
-
-        WHEN fa.id IS NOT NULL AND f.facilityTypeId != 2 THEN 1
-
-        WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 2
-
-        WHEN fe.facilityEventId IS NOT NULL THEN 3
-
-        ELSE NULL
-
-    END AS tariffTypeId,
-
-    CASE
-
-        WHEN EXISTS (
-
-            SELECT 1
-
-            FROM tarifftypes tt2
-
-            JOIN tariffmasters tm2 ON tm2.tariffTypeId = tt2.tariffTypeId
-
-            WHERE tt2.code = 
-
-                CASE
-
-                    WHEN fa.id IS NOT NULL AND f.facilityTypeId = 2 THEN 'SPORTS'
-
-                    WHEN fa.id IS NOT NULL THEN 'ACTIVITIES'
-
-                    WHEN fe.facilityEventId IS NOT NULL THEN 'HOST_EVENT'
-
-                    ELSE NULL
-
-                END
-
-            AND tm2.facilityId = f.facilityId
-
-        ) THEN 1
-
-        ELSE 0
-
-    END AS tariffCheck
-
-FROM 
-
-    facilities f
-
-LEFT JOIN 
-
-    facilityactivities fa ON f.facilityId = fa.facilityId
-
-LEFT JOIN 
-
-    facilityevents fe ON f.facilityId = fe.facilityId
-
-LEFT JOIN 
-
-    tariffmasters tm ON f.facilityId = tm.facilityId
-
-LEFT JOIN 
-
-    tarifftypes tt ON tm.tariffTypeId = tt.tariffTypeId
-
-GROUP BY 
-
-    f.facilityname, f.facilityId, f.facilityTypeId, fa.id, tt.code, fa.id, fe.facilityEventId;
+         findViewTariff = await sequelize.query(`  select query.* from
+        (
+        SELECT f.facilityName, f.facilityId, 'ACTIVITIES' AS tariffType,
+            uam.userActivityId AS activitiesEventId, uam.userActivityName AS activitiesEventName,
+            CASE
+            WHEN EXISTS (SELECT 1 FROM tarifftypes tt
+                    JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
+                    WHERE tt.code = 'ACTIVITIES' AND tm.facilityId = f.facilityId
+                ) THEN 1
+                ELSE 0
+            END AS tariffCheck
+        FROM facilities f
+        LEFT JOIN
+            facilityactivities fa ON f.facilityId = fa.facilityId
+        LEFT JOIN
+            useractivitymasters uam ON fa.activityId = uam.userActivityId
+        WHERE
+            fa.id IS NOT NULL
+        union all
+        SELECT
+            f.facilityname AS facilityName,
+            f.facilityId,
+            'HOST_EVENT' AS tariffType,
+            ecm.eventCategoryId as activitiesEventId,
+            ecm.eventCategoryName AS activitiesEventName,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM tarifftypes tt
+                    JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
+                    WHERE tt.code = 'HOST_EVENT'
+                    AND tm.facilityId = f.facilityId
+                ) THEN 1
+                ELSE 0
+            END AS tariffCheck
+        FROM
+            facilities f
+        LEFT JOIN
+            facilityevents fe ON f.facilityId = fe.facilityId
+        LEFT JOIN
+            eventcategorymasters ecm ON fe.eventCategoryId = ecm.eventCategoryId
+        WHERE
+            fe.facilityEventId IS NOT null
+        ) query
 
 
 `,{

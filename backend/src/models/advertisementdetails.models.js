@@ -5,9 +5,6 @@ module.exports =(sequelize, DataTypes)=>{
             autoIncrement:true,
             primaryKey:true
         },
-        advertisementTariffId:{
-            type:DataTypes.INTEGER
-        },
         advertisementTypeId:{
             type:DataTypes.INTEGER
         },

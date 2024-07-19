@@ -889,35 +889,44 @@ let updateAdvertisementTariffData = async (req,res)=>{
 
 let insertToAdvertisementDetails = async (req,res)=>{
     try {
-        console.log('all data')
-        let givenReq = req.body.givenReq ? req.body.givenReq : null; // Convert givenReq to lowercase
-        let filteredData
+        let {advertisementTypeId, durationOption, minDuration, maxDuration} = req.body
+        let statusId =1; 
         let userId = req.user.userId
-        let statusId =1
-        let viewAdvertisementMaster = await advertisementMasters.findAll({
+        let createdDt = new Date();
+        let updatedDt = new Date();
+        
+        let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
             where:{
-               statusId:statusId
+                [Op.and]:[{statusId:statusId},{durationOption:durationOption},{amount:amount},{advertisementTypeId:advertisementTypeId},{minduration:{[Op.lte]:[minDuration]}},{maxDuration:{[Op.gte]:[minDuration]}}]
             }
         })
 
-        if(givenReq){ 
-            givenReq = givenReq.toLowerCase(); 
-            filteredData = viewAdvertisementMaster.filter((eachData)=>
-                eachData.advertisementType.toLowerCase().includes(givenReq)
-            )
+        if(checkIfThisAdvertisementTariffExist){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message:`This tariff is already exist. Please deactivate the existing tariff to set a new one`
+            })
         }
-        else{
-            filteredData = viewAdvertisementMaster
+        let createTariffData={
+            statusId:statusId,
+            advertisementTypeId:advertisementTypeId,
+            durationOption:durationOption,
+            amount:amount,
+            minDuration:minDuration,
+            maxDuration:maxDuration,
+            updatedDt:updatedDt,
+            createdDt:createdDt,
+            updatedBy:userId,
+            createdBy:userId
         }
-        let paginatedData = filteredData.slice(offset, offset + limit);
 
-        return res.status(statusCode.SUCCESS.code).json({
-            message:`Advertisement master data`,
-            data:paginatedData
-        })
+        let createTariff = await advertisementTariff.create(createTariffData)
+        if(!createTariff){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:`Something went wrong`
+            })
         }
-       
-     catch (err) {
+        return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
+    } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -956,47 +965,7 @@ let initialTariffDropdownData = async(req,res)=>{
     }
 }
 
-// let advertisementDetailInsert = async (req,res)=>{
-//     try {
-//         let {advertisementId, startDate,endDate,advertisementName, amount} = req.body
-//         let statusId = 10; //pending 
-//         let createdDt = new Date();
-//         let updatedDt = new Date();
-        
-//         let checkIfThisAdvertisementExist = await advertisementMasters.findOne({
-//             where:{
-//                 [Op.and]:[{statusId:statusId},{advertisementType:advertisementType}]
-//             }
-//         })
 
-//         if(checkIfThisAdvertisementExist){
-//             return res.status(statusCode.BAD_REQUEST.code).json({
-//                 message:`This advertisement type is  already exist.`
-//             })
-//         }
-//         let createData={
-//             statusId:statusId,
-//             advertisementType:advertisementType,
-//             description:description,
-//             updatedDt:updatedDt,
-//             createdDt:createdDt,
-//             updatedBy:userId,
-//             createdBy:userId
-//         }
-
-//         let createAdvertisement = await advertisementMasters.create(createData)
-//         if(!createAdvertisement){
-//             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-//                 message:`Something went wrong`
-//             })
-//         }
-//         return res.status(statusCode.SUCCESS.code).json(`Created successfully`)
-//     } catch (err) {
-//         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-//             message:err.message
-//         })
-//     }
-// }
 //  advertisement api end
 module.exports = {
     addGrievance,
@@ -1014,5 +983,5 @@ module.exports = {
     viewAdvertisementTariffData,
     updateAdvertisementTariffData,
     updateAdvertisementInsert,
-    initialTariffDropdownData
+    initialTariffDropdownData,
 }
