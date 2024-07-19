@@ -122,7 +122,6 @@ const AdminLogin = () => {
 
   return (
     <div className="Main_container_Login">
-      <AdminHeader />
 
       <div className="signup-container">
         <div className="flex justify-center">

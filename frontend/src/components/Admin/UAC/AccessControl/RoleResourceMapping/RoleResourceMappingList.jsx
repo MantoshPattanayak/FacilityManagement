@@ -19,10 +19,14 @@ const RoleResourceMappingList = () => {
     try {
       let res = await axiosHttpClient("ROLE_RESOURCE_VIEW_API", "get");
       setTableData(res.data.data);
+      console.log(res.data.data);
+
     } catch (error) {
       console.error(error);
     }
+    console.log("object", tableData)
   }
+
 
   useEffect(() => {
     fetchRoleResourceMappingListData();
@@ -39,10 +43,10 @@ const RoleResourceMappingList = () => {
           </div>
         </div>
 
-        <div className="search_text_conatiner">
+        <div className="search_text_conatiner2">
           <button
             className="search_field_button"
-            onClick={() => navigate("/UAC/RoleResource/Create")}
+            onClick={() => navigate("/UAC/RoleResource/CreateRoleResourceMapping")}
           >
             Create new role-resource mapping
           </button>
@@ -93,7 +97,7 @@ const RoleResourceMappingList = () => {
                       <td data-label="View">
                         <Link
                           to={{
-                            pathname: "/UAC/RoleResource/Edit",
+                            pathname: "/UAC/RoleResource/EditRoleResourceMapping",
                             search: `?roleResourceId=${encryptData(
                               data.roleResourceId
                             )}&action=view`,
@@ -105,7 +109,8 @@ const RoleResourceMappingList = () => {
                       <td data-label="Edit">
                         <Link
                           to={{
-                            pathname: "/UAC/RoleResource/Edit",
+                            // pathname: "/UAC/RoleResource/Edit",
+                            pathname: "/UAC/RoleResource/EditRoleResourceMapping",
                             search: `?roleResourceId=${encryptData(
                               data.roleResourceId
                             )}&action=edit`,

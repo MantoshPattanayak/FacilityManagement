@@ -91,7 +91,7 @@ export default function EditUser() {
     try {
       let res = await axiosHttpClient("ADMIN_USER_INITIALDATA_API", "get");
 
-      console.log(res.data);
+      console.log("ADMIN_USER_INITIALDATA_API",res.data.Role);
       setRoleList(res.data.Role);
     } catch (error) {
       console.error(error);

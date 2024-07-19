@@ -13,6 +13,7 @@
 
 .search_text_conatiner {
     width: 94vw;
+    justify-content: space-between;
 }
 
 .table_Container {
@@ -25,4 +26,25 @@
 
 .Inactive-status-rrml {
     color: red;
+}
+
+.rrmlTh td{
+    border-left: none;
+    border-right: none;
+}
+
+
+
+.rrmlTh th{
+    color: black;
+    background-color: white;
+    position: sticky;
+}
+
+.search_text_conatiner2 {
+    display: flex;
+    justify-content: space-between;
+    width: 94vw;
+    padding: 10px;
+    
 }
