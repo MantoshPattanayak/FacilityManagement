@@ -28,7 +28,7 @@ const Book_Now = () => {
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
   const [isDisabled, setIsDisabled] = useState(true);
   const [formData, setFormData] = useState({});
-  // const [amount1, setAmount1] = useState([10]);
+  const [amount1, setAmount1] = useState([10]);
   const navigate = useNavigate();
 
   useEffect(() => {
