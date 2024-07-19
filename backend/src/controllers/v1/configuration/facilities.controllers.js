@@ -291,14 +291,13 @@ const viewParkById = async (req,res)=>{
         })
 
         let fetchEventDetailsQuery = `
-            select e.eventName, e.eventCategoryId, e.locationName, e.eventDate, e.eventStartTime,
-            s.statusCode, e.eventEndTime, e.descriptionOfEvent,fl.url,fat.filePurpose ,fat.entityType
-            from amabhoomi.eventactivities e
-            inner join amabhoomi.statusmasters s on e.statusId = s.statusId
-     		inner join amabhoomi.fileattachments fat on fat.entityId  = e.eventId
-     		inner join amabhoomi.files fl on fl.fileId  = fat.fileId
-            where fat.filePurpose = 'Event Image' and fat.entityType = 'events' 
-            and facilityId=? and ticketSalesEnabled =1`;
+        select e.eventName, e.eventCategoryId, e.locationName, e.eventDate, e.eventStartTime,
+        s.statusCode, e.eventEndTime, e.descriptionOfEvent,fl.url,fat.filePurpose ,fat.entityType
+        from amabhoomi.eventactivities e
+        inner join amabhoomi.statusmasters s on e.statusId = s.statusId
+        left join amabhoomi.fileattachments fat on fat.entityId  = e.eventId and fat.filePurpose = 'Event Image' and fat.entityType = 'events' 
+        left join amabhoomi.files fl on fl.fileId  = fat.fileId
+        and facilityId=?`;
 
         let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
             {

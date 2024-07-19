@@ -60,6 +60,7 @@ import "react-multi-carousel/lib/styles.css";
 import anan_image from "../../assets/Anan_vihar.jpg";
 // Import Image for Current event--------------------
 import No_Current_Event_img from "../../assets/No_Current_Event_Data.png";
+import No_data_nearBy from "../../assets/Near_Data_No_Found.png"
 // here import Park Image
 
 import PublicHeader from "../../common/PublicHeader.jsx";
@@ -138,6 +139,8 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
+// here Gallery Image -------------------------------
+const[GalleryImage, setGalleryImage]=useState([])
 
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
@@ -262,6 +265,7 @@ const Landing = () => {
       console.log("Here is the Landing Page API data", resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
+      setGalleryImage(resLanding.data.galleryData)
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
       );
@@ -367,9 +371,9 @@ const Landing = () => {
 
   // here nearBy data -----------------------
   // useEffect(() => {
-  //  if(userLocation && distanceRange && facilityTypeId){
-  //   getNearbyFacilities();
-  //  }
+  //   if (userLocation && distanceRange && facilityTypeId) {
+  //     getNearbyFacilities();
+  //   }
 
   // }, [userLocation, distanceRange, facilityTypeId]);
 
@@ -407,7 +411,6 @@ const Landing = () => {
     setSelectedLocationDetails(location); // Set selected location details
     console.log(location);
   };
-
   const [selectedButton, setSelectedButton] = useState(null);
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (typeid) => {
@@ -422,7 +425,6 @@ const Landing = () => {
     let res = encryptData(id);
     return res;
   }
-
   // here Update the data-----------------------------------------------
   useEffect(() => {
     fecthMapData();
@@ -452,7 +454,6 @@ const Landing = () => {
   };
 
   // handleGameClick ------------------------------------------------
-
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
 
@@ -473,40 +474,6 @@ const Landing = () => {
 
   //Gallery section
 
-  const images = [
-    {
-      img: galleryImg1,
-      desc: `Anant Vihar Park,Phase-3, DDC Park, Pokhariput`,
-    },
-    {
-      img: galleryImg2,
-      desc: `BDA Children's Park`,
-    },
-    {
-      img: galleryImg3,
-      desc: `Disabled Friendly Park, Saheed Nagar`,
-    },
-    {
-      img: galleryImg4,
-      desc: `Kelucharan Park-5`,
-    },
-    {
-      img: galleryImg5,
-      desc: `Madhusudan Park`,
-    },
-    {
-      img: galleryImg6,
-      desc: `Mukharjee Park`,
-    },
-    {
-      img: galleryImg7,
-      desc: `Prachi Park, Damana`,
-    },
-    {
-      img: galleryImg8,
-      desc: `BDA Colony Park, Sundarpada`,
-    },
-  ];
 
   const nextImage = () => {
     if (currentIndex < images.length - 3) {
@@ -521,7 +488,7 @@ const Landing = () => {
 
   const [currentIndex1, setCurrentIndex1] = useState(0);
   const nextImage1 = () => {
-    if (currentIndex1 < images.length - 3) {
+    if (currentIndex1 < GalleryImage.length - 3) {
       setCurrentIndex1(currentIndex1 + 1);
     }
   };
@@ -788,7 +755,7 @@ const Landing = () => {
                 >
                   <img src={greenway} alt="" />
                   {selectedButton === 4 ? (
-                    <h2 className="clicked-text-icon">Greenways</h2>
+                    <h2 className="clicked-text-icon_blue">Greenways</h2>
                   ) : (
                     <h2 className="text1">Greenways</h2>
                   )}
@@ -804,7 +771,7 @@ const Landing = () => {
                   </div>
                   {selectedButton === 5 ? (
                     <div>
-                      <h2 className="clicked-text-icon">Blueways</h2>
+                      <h2 className="clicked-text-icon_blue">Blueways</h2>
                     </div>
                   ) : (
                     <div>
@@ -873,6 +840,7 @@ const Landing = () => {
               )}
             </GoogleMap>
           </LoadScript>
+          
         </section>
 
         {/* --------Facilities Near me----------------------------------------------------- */}
@@ -925,7 +893,9 @@ const Landing = () => {
                 );
               })
             ) : facilityTypeId != 1 || facilityTypeId != 2 ? (
-              <div>Coming soon.</div>
+              <div className="No_Data_image_conatiner">
+                <img className="No_Data_image" src={No_data_nearBy}></img>
+              </div>
             ) : (
               <div>No data</div>
             )}
@@ -1092,9 +1062,8 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${
-                  selectedActivity === index ? "selected" : ""
-                }`}
+                className={`activity ${selectedActivity === index ? "selected" : ""
+                  }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
@@ -1121,9 +1090,9 @@ const Landing = () => {
                               onClick={(e) => {
                                 navigate(
                                   "/Sub_Park_Details" +
-                                    `?facilityId=${encryptDataId(
-                                      park.facilityId
-                                    )}`
+                                  `?facilityId=${encryptDataId(
+                                    park.facilityId
+                                  )}`
                                 );
                               }}
                             >
@@ -1167,16 +1136,21 @@ const Landing = () => {
               // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
               style={{ transform: `translateX(-${currentIndex1 * 420}px)` }} // Adjust transform value
             >
-              {images.map((image, index) => (
-                <div key={index} className="carousel-image-container">
-                  <img
-                    src={image.img}
-                    alt={`carousel-img-${index}`}
-                    className="carousel-image"
-                  />
-                  <div className="description">{image.desc}</div>
-                </div>
-              ))}
+             {GalleryImage.map((item, index) => {
+                        const imageUrl = `${instance().baseURL}/static${item.url}`;
+                        console.log('Image URL:', imageUrl); // Log the image URL to the console
+                        return (
+                            <div key={index} className="carousel-image-container">
+                                <img
+                                    src={imageUrl}
+                                    alt={`carousel-img${index}`}
+                                    className="carousel-image"
+                                    // Hide broken images
+                                />
+                                <div className="description">{item.description}</div>
+                            </div>
+                        );
+                    })}
             </div>
           </div>
           <button className="carousel-button2 right" onClick={nextImage1}>
