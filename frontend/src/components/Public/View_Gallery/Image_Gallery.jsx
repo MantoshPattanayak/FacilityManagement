@@ -1,62 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Image_Gallery.css';
 import PublicHeader from "../../../common/PublicHeader";
-import galleryImg1 from "../../../assets/Gallery_Anant Vihar Park,Phase-3,DDC Park_Pokhariput.jpg";
-import galleryImg2 from "../../../assets/Gallery_BDA Children's Park.jpg";
-import galleryImg3 from "../../../assets/Gallery_Disabled Friendly Park_Saheed Nagar.jpg";
-import galleryImg4 from "../../../assets/Gallery_Kelucharan_Park-5.jpg";
-import galleryImg5 from "../../../assets/Gallery_Madhusudan_Park.jpg";
-import galleryImg6 from "../../../assets/Gallery_Mukharjee_Park.jpg";
-import galleryImg7 from "../../../assets/Gallery_Prachi Park_Damana.jpg";
-import galleryImg8 from "../../../assets/Gallery_Sundarpada_BDA Colony Park.jpg";
+
+import axiosHttpClient from '../../../utils/axios';
+import instance from '../../../../env';
 
 const Image_Gallery = () => {
-  const images = [
-    {
-      img: galleryImg1,
-      desc: `Anant Vihar Park,Phase-3, DDC Park, Pokhariput`,
-    },
-    {
-      img: galleryImg2,
-      desc: `BDA Children's Park`,
-    },
-    {
-      img: galleryImg3,
-      desc: `Disabled Friendly Park, Saheed Nagar`,
-    },
-    {
-      img: galleryImg4,
-      desc: `Kelucharan Park-5`,
-    },
-    {
-      img: galleryImg5,
-      desc: `Madhusudan Park`,
-    },
-    {
-      img: galleryImg6,
-      desc: `Mukharjee Park`,
-    },
-    {
-      img: galleryImg7,
-      desc: `Prachi Park, Damana`,
-    },
-    {
-      img: galleryImg8,
-      desc: `BDA Colony Park, Sundarpada`,
-    },
-  ];
-
+  const[GetGalleryData, setGetGalleryData]=useState([])
+  // here call the Api (Fetch the data ) ---------------------
+  async function GetViewPakData() {
+    try {
+      let res = await axiosHttpClient('FETCH_GALLERY_LIST_DATA_API', 'post')
+      console.log("Here Response of Gallery", res)
+      setGetGalleryData(res.data.data)
+    }
+    catch (err) {
+      console.log("here error Response of Gallery", err)
+    }
+  }
+  // here call api ----------------
+  useEffect(() => {
+    GetViewPakData()
+  }, [])
   return (
     <>
-    <PublicHeader/>
-    <div className="image-gallery">
-      {images.map((image, index) => (
-        <div key={index} className="image-container">
-          <img src={image.img} className="gallery-image" alt="Park" />
-          <div className="description">{image.desc}</div>
-        </div>
-      ))}
-    </div>
+      <PublicHeader />
+      <div className="image-gallery">
+        {GetGalleryData.map((image, index) => (
+          <div key={index} className="image-container">
+            <img src={`${instance().baseURL}/static${image.url}`} className="gallery-image" alt="Park" />
+            <div className="description">{image.description}</div>
+          </div>
+        ))}
+      </div>
     </>
   );
 }

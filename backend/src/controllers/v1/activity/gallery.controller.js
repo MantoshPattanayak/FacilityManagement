@@ -85,7 +85,7 @@ let fetchGalleryList = async (req, res) => {
             data: paginatedFetchGalleryRecords[0].map((gallery) => {
                 return {
                     ...gallery, 
-                    ['url']: encodeURIComponent(gallery.url)
+                    ['url']: encodeURI(gallery.url)
                 }})
         })
     }

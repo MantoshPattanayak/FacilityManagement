@@ -54,13 +54,13 @@ const Advertising_with_us = () => {
                             />
                         </div>
                         <div className="Form_Field_contact">
-                            <label htmlFor="duration">Duration (hours)</label>
-                            <input type="number" id="duration" name="duration" min="1" max="24" step="1" placeholder="Enter duration (1-24)" />
+                            <label htmlFor="duration">Duration (Days)</label>
+                            <input type="number" id="duration" name="duration" min="1" max="30" step="1" placeholder="Enter duration (1-24)" />
                         </div>
                         <div class="Form_Field_contact">
-    <label for="imageUpload">Upload Image</label>
-    <input type="file" class="Upload_ad_image" id="imageUpload" name="imageUpload" accept="image/*" />
-</div>
+                            <label for="imageUpload">Upload Image</label>
+                            <input type="file" class="Upload_ad_image" id="imageUpload" name="imageUpload" accept="image/*" />
+                        </div>
 
 
                         <div className="Form_Field_contact">
