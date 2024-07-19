@@ -51,3 +51,8 @@ align-items: center;
 .no-account a:hover {
     text-decoration: underline;
 }
+
+.input-field:focus {
+    border: 2px solid #405cf5;
+    outline: none;
+}

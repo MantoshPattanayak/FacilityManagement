@@ -406,10 +406,9 @@ body {
 
 .clicked-text-icon {
   position: absolute;
-  /* top: 60%;
-    left: 20%; */
-  top: 57%;
-  left: -8%;
+
+  top: 70%;
+  left: 0%;
 
   color: #013409;
   padding: 10px;
@@ -418,11 +417,23 @@ body {
   font-weight: 700;
   /* margin-top: 35px; */
 }
+.clicked-text-icon_blue{
+  position: absolute;
+
+  top: 70%;
+  left: 15%;
+
+  color: #013409;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
 
 .clicked-text-icon3 {
   position: absolute;
-  top: 61%;
-  left: 22%;
+  top: 70%;
+  left: 20%;
   color: #013409;
   padding: 10px;
   border-radius: 5px;
@@ -2336,4 +2347,9 @@ margin-top: 20px;
 .Current_Event_image {
   align-items: center;
   margin-left: 450px;
+}
+
+
+.No_Data_image{
+  height: 30vh;
 }
