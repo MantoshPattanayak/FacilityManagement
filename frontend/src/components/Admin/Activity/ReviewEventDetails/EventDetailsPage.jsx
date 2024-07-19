@@ -20,7 +20,9 @@ export default function EventDetailsPage() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [action, setAction] = useState('');
     // error msg -----------------------------------
+    const [subjectError, setSubjectError] = useState('');
     const [messageBodyError, setMessageBodyError] = useState('');
+
     // viewEventAdditionalImages by id --------------
     const [viewEventAdditionalImages, setViewEventAdditionalImages] = useState([])
     const [subjectMessage, setsubjectMessage] = useState({
@@ -42,11 +44,11 @@ export default function EventDetailsPage() {
     // here Approve and Reject Api -----------------------
     const Approved_RejectEvent = async (e) => {
         e.preventDefault();
-        const validationErrors = validation(subjectMessage);
-        setsubjectMessage(validationErrors)
-        if (validationErrors.some(err => Object.keys(err).length > 0)) {
-            return; // Prevent submission if there are errors
-          }
+        const errors = validation(subjectMessage);
+        if (Object.keys(errors).length > 0) {
+            // If there are errors, return early
+            return;
+        }
         try {
             let res = await axiosHttpClient("REVIEW_EVENTS_PERFORM_APPROVE_REJECT_API", 'put',
                 {
@@ -66,6 +68,10 @@ export default function EventDetailsPage() {
             toast.err("Event action faild. Try agin.!")
         }
     }
+    // here Open Image on new tabe------------------------
+    const openImageInNewTab = (imageUrl) => {
+        window.open(imageUrl, '_blank');
+    };
     /// here in Open Module set the action  and set------
     const openModal = (actionType) => {
         setAction(actionType);
@@ -99,22 +105,23 @@ export default function EventDetailsPage() {
     }
     // here Validation of sub and message during  take action ------------
     const validation = (value) => {
-        const err = {}
+        const errors = {};
         const space_block = /^[^\s][^\n\r]*$/;
         if (!value.subject) {
-            err.subject = "Subject is Required"
-        }else if(!space_block.test(value.subject)){
-            err.subject = " Do not use spaces at beginning"
+            errors.subject = "Subject is required";
+        } else if (!space_block.test(value.subject)) {
+            errors.subject = "Do not use spaces at the beginning";
         }
         if (!value.messageBody) {
-            err.messageBody = "Message is Required"
-        }else if(!space_block.test(value.messageBody)){
-            err.messageBody="Do not use spaces at beginning"
+            errors.messageBody = "Message is required";
+        } else if (!space_block.test(value.messageBody)) {
+            errors.messageBody = "Do not use spaces at the beginning";
         }
-        setMessageBodyError(err)
-        return err;
-    }
+        setSubjectError(errors.subject || '');
+        setMessageBodyError(errors.messageBody || '');
 
+        return errors;
+    };
     // useEffect for Call the api/Update Data ---
     useEffect(() => {
         Approved_RejectEvent()
@@ -190,13 +197,17 @@ export default function EventDetailsPage() {
                             <label htmlFor="input1">Uploaded Documents</label>
                             <div className='div-border'>
                                 <div className="flex justify-between">
-                                    <div><FontAwesomeIcon icon={faImage} /> {GetViewEventData.eventMainImage}</div>
-                                    <div><button className='text-blue-600'>View</button></div>
+                                    <div><FontAwesomeIcon icon={faImage} /> {GetViewEventData.eventMainImage}
+                                        <button className='text-blue-600 ml-10'  onClick={() => openImageInNewTab(GetViewEventData.eventMainImage)}>View</button>
+                                    </div>
+
                                 </div>
                                 {viewEventAdditionalImages.length > 0 && viewEventAdditionalImages.map((item, index) => (
                                     <div className="flex justify-between" key={index}>
-                                        <div><FontAwesomeIcon icon={faImage} /> {item.file}</div>
-                                        <div><button className='text-blue-600'>View</button></div>
+                                        <div><FontAwesomeIcon icon={faImage} /> {item.file}
+                                            <button className='text-blue-600 ml-10' onClick={() => openImageInNewTab(item.file)}>View</button>
+                                        </div>
+
                                     </div>
                                 ))}
                             </div>
@@ -274,18 +285,19 @@ export default function EventDetailsPage() {
                                         name='subject'
                                         value={subjectMessage.subject}
                                         onChange={(e) => setsubjectMessage({ ...subjectMessage, subject: e.target.value })}
-                                    
+
                                     />
-                                      {!subjectMessage.subject && <p className="error">Subject is Required.</p>}
+                                    {subjectError && <span className="error-message">{subjectError}</span>}
                                 </div>
                                 <div className=''>
                                     <label>Message:</label>
                                     <textarea
                                         value={subjectMessage.messageBody}
                                         onChange={(e) => setsubjectMessage({ ...subjectMessage, messageBody: e.target.value })}
-                                       
+
                                     ></textarea>
-                                      {!subjectMessage.messageBody && <p className="error">Message is Required.</p>}
+                                    {messageBodyError && <span className="error-message">{messageBodyError}</span>}
+
                                 </div>
                                 <div className="buttons-container21">
                                     <button className="approve-button" type="submit">Submit</button>
