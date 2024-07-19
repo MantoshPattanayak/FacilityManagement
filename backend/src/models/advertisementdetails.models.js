@@ -11,6 +11,9 @@ module.exports =(sequelize, DataTypes)=>{
         advertisementName:{
             type:DataTypes.STRING
         },
+        message:{
+            type:DataTypes.TEXT
+        },
         startDate:{
             type:DataTypes.DATE
         },
