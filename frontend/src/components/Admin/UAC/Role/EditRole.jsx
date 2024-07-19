@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 // here Header and footer import ---------------------------------
 import AdminHeader from '../../../../common/AdminHeader';
-import Footer from '../../../../common/Footer';
 // import axios for call Api ------------------------------
 import axiosHttpClient from '../../../../utils/axios';
 // Import Navigate and Crypto -----------------------------------
@@ -11,10 +10,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { dataLength } from '../../../../utils/regexExpAndDataLength';
+import './CreateRole.css';
+import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 const EditRole = () => {
 
   // here post and get the data----------------------
-  const [roleData, setRoleData] = useState({ roleId:'', roleName: '', roleCode: '', roleCodeStatus: '' });
+  const [roleData, setRoleData] = useState({ roleId: '', roleName: '', roleCode: '', roleCodeStatus: '' });
   // here set error (show ) using useState--------------------
   const [Showerror, setShowerror] = useState([])
   const [IsSubmit, setIsSubmit] = useState(false)
@@ -111,7 +114,7 @@ const EditRole = () => {
   }
 
   //here api post (edit Role) -----------------------------------
-  async function handleSumbit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const errors = validate(roleData);
     setErrors(errors);
@@ -170,33 +173,31 @@ const EditRole = () => {
   return (
     <div>
       <AdminHeader />
-      <div className='role-container-1'>
-        <div className='table-heading'>
+      <div className='CreateNewRoleContainer'>
+        <div className='form-heading'>
           {
-            action == 'view' && <h2 className="table-heading">View Role</h2>
+            action == 'view' && <h2 className="">View Role</h2>
           }
           {
-            action == 'edit' && <h2 className="table-heading">Edit Role</h2>
+            action == 'edit' && <h2 className="">Edit Role</h2>
           }
-        </div>
-
-        <div className="flex justify-end w-full">
-          <button className="btn" onClick={() => navigate('/UAC/Role/ListOfRoles')}>Back</button>
-        </div>
-        {/* Input fields */}
-        <div>
-          <div className="flex flex-col gap-4">
-            <div className="form-group">
+          <div className="flex justify-end w-full">
+            <button className="back-button" onClick={() => navigate('/UAC/Role/ListOfRoles')}>
+              <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-x-11">
+            <div className="form-group col-span-1">
               <label htmlFor="input2">Role name<span className='text-red-500'>*</span></label>
               <input type="text" name='roleName' value={roleData.roleName} placeholder="Enter role name" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? 1 : 0} />
               {errors.roleName && <p className='error-message'>{errors.roleName}</p>}
             </div>
-            <div className="form-group">
+            <div className="form-group col-span-1">
               <label htmlFor="input3">Role code <i>(In uppercase without space)</i><span className='text-red-500'>*</span></label>
               <input type="text" name='roleCode' value={roleData.roleCode} placeholder="Enter role code" autoComplete='off' maxLength={dataLength.NAME} onChange={handleChange} disabled={action == 'view' ? 1 : 0} />
               {errors.roleCode && <p className='error-message'>{errors.roleCode}</p>}
             </div>
-            <div className="form-group">
+            <div className="form-group col-span-1">
               <label htmlFor="input3">Role Status<span className='text-red-500'>*</span></label>
               <select name='roleCodeStatus' value={roleData.roleCodeStatus} onChange={handleChange} disabled={action == 'view' ? 1 : 0}>
                 <option value=''>Select</option>
@@ -216,7 +217,6 @@ const EditRole = () => {
             )
           }
         </div>
-        <ToastContainer />
       </div>
     </div>
   )

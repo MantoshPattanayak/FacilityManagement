@@ -61,7 +61,7 @@ const api = {
    ROLE_RESOURCE_VIEW_API: '/roleResource/viewRoleResource',   //get
    ROLE_RESOURCE_AUTOSUGGEST_API: '/roleResource/autoSuggestionRoleResource',    //get /roleResource/autoSuggestionRoleResource/:givenReq
    ROLE_RESOURCE_UPDATE_API: '/roleResource/updateRoleResource',   //put   /roleResource/updateRoleResource/:id
-   ROLE_RESOURCE_VIEW_BY_ID_API: '/roleResource/',   //get   /roleResource/viewId/:id
+   ROLE_RESOURCE_VIEW_BY_ID_API: '/roleResource/viewId',   //get   /roleResource/viewId/:id
    //Review Event Booking
    REVIEW_EVENTS_VIEWLIST_API: '/reviewEvents/viewList',   //post
    REVIEW_EVENTS_VIEW_BY_ID_API: '/reviewEvents/viewId',   //get /reviewEvents/viewId/id
@@ -142,7 +142,11 @@ const api = {
    FETCH_RAZORPAY_API_KEY: '/razorPayPayment/getRazorpayApiKeys', //get
    CREATE_RAZORPAY_ORDER_API: '/razorPayPayment/checkout',    // post amount
    RAZORPAY_PAYMENT_VERIFICATION: '/razorPayPayment/paymentVerification',  //post 
-
+   //GALLERY ADMIN
+   ADD_NEW_GALLERY_DATA_API: '/gallery/insertNewGalleryRecord',   //post description, fileAttachment: {name: '', data: ''}
+   FETCH_GALLERY_LIST_DATA_API: '/gallery/fetchGalleryList',   //post page_size, page_number
+   FETCH_GALLERY_DATA_BY_ID_API: '/gallery/fetchGalleryById',  //get :galleryId
+   UPDATE_GALLERY_DATA_API: '/gallery/updateGalleryRecord', //put :galleryId --- description, fileAttachment: {name: '', data: ''}
    /// here footer pages api like contact with us, pathner with us...etc
    contact_with_us_api:'/grievance/contactUs'
 }

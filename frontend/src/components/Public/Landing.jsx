@@ -1010,7 +1010,7 @@ const Landing = () => {
         {/* .........Card section scroll using carousel ..........*/}
 
         <div className="carousel">
-          {eventNameLanding.length > 1 ? (
+          {eventNameLanding.length > 0 ? (
             <>
               <button className="carousel-button2 left" onClick={prevImage}>
                 &lt;

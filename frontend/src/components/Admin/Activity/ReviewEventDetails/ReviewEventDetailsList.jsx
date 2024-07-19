@@ -11,6 +11,7 @@ import axiosHttpClient from "../../../../utils/axios";
 // Import  Crypto js for entry and decrpty the data -----------------------------------
 // import { decryptData, encryptData } from "../../../utils/encryptData";
 import { decryptData, encryptData } from "../../../../utils/encryptData";
+import instance from "../../../../../env";
 export default function ReviewEventDetailsList() {
   const tabList = [
     {
@@ -41,7 +42,7 @@ export default function ReviewEventDetailsList() {
     try {
       let res = await axiosHttpClient(
         "REVIEW_EVENTS_VIEWLIST_API",
-        "post", { statusCode: tabList.filter((data) => { return data.active == true})[0].statusInput }
+        "post", { statusCode: tabList.filter((data) => { return data.active == true })[0].statusInput }
       );
       console.log("Get data of ResourceEvent", res);
       setEventDetails(res.data.data);
@@ -54,17 +55,6 @@ export default function ReviewEventDetailsList() {
     GetDisplayReviewEvents();
   }, []);
 
-  //fetch data of event details
-  // const fetchInitialData = async () => {
-  //   console.log("fetchInitialData called");
-  //   try {
-  //     let res = await axiosHttpClient("REVIEW_EVENTS_VIEWLIST_API", "post");
-  //     console.log("Review event initial data fetch response", res);
-  //     // setEventDetails(res.data);
-  //   } catch (error) {
-  //     console.log("error in fetching data", error);
-  //   }
-  // };
 
   useEffect(() => {
     console.log("useEffect triggered");
@@ -122,7 +112,13 @@ export default function ReviewEventDetailsList() {
       // setEventDetails(); // Reset to all events if no date selected
     }
   }, [selectedDate]);
-
+  function formatTime(time24) {
+    if (!time24) return;
+    const [hours, minutes] = time24.split(":").map(Number);
+    const period = hours >= 12 ? "PM" : "AM";
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
+  }
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value); // Update selected date on change
   };
@@ -181,28 +177,31 @@ export default function ReviewEventDetailsList() {
               return (
                 <div className="eventdetails-carddetails">
                   <div className="eventdetails-photo">
-                    <img src={eventPhoto} />
+                    <img src={event.eventMainImage ? instance().baseURL + '/static/' + event.eventMainImage : eventPhoto} className='border rounded-md' alt='photo' />
                   </div>
                   <div className="eventdetails-details">
                     <div className="eventdetails-details-eventname">
                       {event.eventName}
                     </div>
                     <div className="eventdetails-details-eventAddress">
-                      {event.eventAddress || 'NA'}
+                      {event.address || 'NA'}
                     </div>
                     <div className="flex eventdetails-details-eventTime">
-                      <div>Booking for {event.bookedTiming || 'NA'}</div>
+
+                      <div> Booked  at :   {formatTime(event.eventEndTime || 'NA')}</div>
                       <div>
                         <FontAwesomeIcon icon={faClock} />{" "}
-                        {event.createdDate?.substring(0, 10) || 'NA'}
+                        {event.requestDate?.substring(0, 10) || 'NA'}
                       </div>
                     </div>
+
+
                     <div>
                       <Link
                         key={index}
                         to={{
                           pathname: "/Activity/EventDetailsPage",
-                          search: `?viewId=${encryptDataId(event.eventId)}`,
+                          search: `?eventId=${encryptDataId(event.eventId)}`,
                         }}
                         className="Event-Details-btn"
                       >

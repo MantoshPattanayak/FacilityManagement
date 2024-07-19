@@ -1,149 +1,289 @@
-.role-container-1 {
-  /* box-sizing: border-box;
-  width: 70vw;
-  margin-left: 15%; */
-  width: 70vw;
-  margin: 75px auto 75px auto;
+.CreateNewRoleContainer {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  /* min-height: 100vh; */
-  padding: 0 20px;
-  box-sizing: border-box;
+  /* Converted from 20px to 2vh */
+  max-width: 100%;
+  width: 100%;
+  /* Changed to vw, and adjusted for centering */
+  margin: 0 auto;
+  /* Center the container */
+  margin-top: 10vh;
+  background-color: #F7F7F7;
+  overflow-y: auto;
 }
-/* Common header used in every page start*/
-.role-container-1 .header-role {
-  /* padding-left: 10px; */
-  /* margin-left: 10vw; */
+
+.CreateNewRoleContainer .form-heading {
+  padding: 2.5vw;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.role-container-1 .table-heading {
-  /* padding-left: 10px; */
-  /* margin-left: 10vw; */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.role-container-1 .btn {
-  background-color: #2ec157;
-  border-radius: 10px;
-  color: white;
-  padding: 8px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-@media screen and (max-width: 1000px ) {
-  .role-container-1 .header-role{
-    margin-top: 15%;
-  }
-}
-@media screen and (max-width: 660px ) {
-  .role-container-1 .header-role{
-    margin-top: 20%;
-  }
-}
-@media screen and (max-width: 500px ) {
-  .role-container-1 .header-role{
-    margin-top: 30%;
-  }
-}
-/* Common header used in every page END*/
-
-.role-container-1 .rectangle {
-  height: 100%;
-  width: 10px;
-  border-radius: 10px;
-  background-color: #16bd2d;
-}
-
-.role-container-1 .roles h1 {
   align-items: center;
-  display: flex;
   justify-content: center;
-  padding-top: 7%;
-  margin-left: 5px;
-  
+  width: 100%;
+  /* Converted from 20px to 2.5vw */
 }
 
-.role-container-1 .input-fields {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 50px;
-}
-
-.role-container-1 .input-field {
-  margin-right: 18px;
-  display: flex;
-  align-items: center;
-}
-
-.role-container-1 .input-field label {
-  margin-right: 10px;
-}
-
-.role-container-1 .input-field input {
-  margin-top: 10px;
-  border: 1px solid;
-  border-radius: 5px;
-}
-
-.role-container-1 .buttons {
-  margin-top: 50px;
-  display: flex;
-  justify-content:space-between;
-  align-items: center;
-}
-
-.role-container-1 .cancel-btn button {
-  border: 1px solid #ddd;
-  background-color: #f2f2f2;
+.CreateNewRoleContainer .form-heading h2 {
+  margin-bottom: 1.5vw;
+  /* Converted from 10px to 1.5vw */
+  /* min-width: 5vw; */
+  width: 100%;
+  background-color: green;
   color: black;
-  padding: 8px 16px;
-  text-decoration: none;
+  font-weight: bold;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  padding-left: 2vh;
+  background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+
+.CreateNewRoleContainer .form-row {
+  display: flex;
+  gap: 1vw;
+  margin-bottom: 1vw;
+  max-width: 100%;
+  width: 84vw;
+  justify-content: space-between;
+  padding-inline: 1vw;
+}
+
+.CreateNewRoleContainer .form-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+.CreateNewRoleContainer .form-heading label {
+  margin-bottom: 0.5vw;
+  /* Converted from 5px to 0.5vw */
+  color: #595959;
+  font-weight: bold;
+}
+
+.CreateNewRoleContainer .form-heading select {
+  width: 24vw;
+  height: 100%;
+  padding: 0.625vw;
+  border: 2px solid #ccc;
+  border-radius: 0.417vw;
+  background-color: ghostwhite;
+
+}
+
+.CreateNewRoleContainer .form-heading input[type="text"], 
+.CreateNewRoleContainer .form-heading input[type="number"],
+.CreateNewRoleContainer .form-heading input[type='date'],
+.CreateNewRoleContainer .form-heading select {
+  width: 100%;
+  height: 100%;
+  padding: 0.625vw;
+  border: 2px solid #c6c6c6;
+  border-radius: 0.417vw;
+  background-color: white;
+}
+
+.CreateNewRoleContainer .form-heading input[type="checkbox"] {
+  height: 30%;
+  padding: 0.325vw;
+  border: 2px solid #c6c6c6;
+  border-radius: 0.417vw;
+  background-color: white;
+}
+
+.CreateNewRoleContainer .form-heading input:focus, .CreateNewRoleContainer .form-heading select:focus {
+  border: 2px solid #405cf5;
+  outline: none;
+}
+
+.CreateNewRoleContainer .form-heading input[type="button"] {
+  width: 25%;
+  padding: 0.625vw;
+  border: 0.0833vw solid #ccc;
+  border-radius: 0.417vw;
+  background-color: white;
   cursor: pointer;
-  margin: 0 5px;
-  border-radius: 5px;
 }
 
-.role-container-1 .role-container-1 .create-btn button {
-  border: 1px solid #ddd;
-  background-color: #00B562;
-  color: #fff;
-  padding: 8px 16px;
-  text-decoration: none;
+.CreateNewRoleContainer .form-heading .div-border {
+  padding: 0.625vw;
+  border: 0.0833vw solid #ccc;
+  border-radius: 0.417vw;
+  background-color: ghostwhite;
+}
+
+.CreateNewRoleContainer .form-heading input[type="text"]:disabled,
+.CreateNewRoleContainer .form-heading textarea:disabled {
+  background-color: rgb(241, 241, 241);
+}
+
+.CreateNewRoleContainer textarea {
+  padding: 0.625vw;
+  border: 2px solid #ccc;
+  border-radius: 0.417vw;
+  background-color: white;
+}
+
+.CreateNewRoleContainer textarea:focus {
+  border: 2px solid #405cf5;
+  outline: none;
+}
+
+.CreateNewRoleContainer .buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  padding-left: 0;
+  width: 100%;
+}
+
+.CreateNewRoleContainer .approve-button,
+.CreateNewRoleContainer .cancel-button {
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 0 5px;
-  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
-.role-container-1 input[type="text"],
-.role-container-1 input[type="date"],
-.role-container-1 select {
-    width: 100%;
-    height: 100%;
-    padding: 0.625vw;
-    border: 0.0833vw solid #b1b1b1;
-    border-radius: 0.417vw;
-    background-color: #ECECEE;
+.CreateNewRoleContainer .back-button {
+  padding: 0.5em;
+  margin: 0.5em;
+  /* Adjusted margin */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #176BFB;
+  color: white;
 }
 
-.role-container-1 input[type="text"]:focus,
-.role-container-1 input[type="date"]:focus,
-.role-container-1 select:focus {
-    border: 2px solid #405cf5; /* Change border color and thickness on focus */
-    outline: none; /* Remove default outline */
+.CreateNewRoleContainer .approve-button {
+  background-color: #176BFB;
+  color: white;
 }
 
+.CreateNewRoleContainer .cancel-button {
+  background-color: #c6c6c6;
+  color: white;
+}
+
+.CreateNewRoleContainer .form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 10rem;
+  grid-row-gap: 10px;
+  width: 100%;
+}
+
+.CreateNewRoleContainer .error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.CreateNewRoleContainer .approve-button:disabled,
+.CreateNewRoleContainer .cancel-button:disabled {
+  background-color: gray;
+}
+
+/* Media query for tablets and larger screens */
+@media screen and (min-width: 768px) {
+
+  .CreateNewRoleContainer .approve-button,
+  .CreateNewRoleContainer .cancel-button {
+      padding: 0.6em 1.5em;
+      margin: 0.2em;
+  }
+  .CreateNewRoleContainer .form-row {
+      flex-wrap: wrap;
+  }
+
+  .CreateNewRoleContainer .form-heading h2 {
+      height: 5vh;
+      /* Change height for larger screens */
+  }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 767px) {
+
+  .CreateNewRoleContainer .approve-button,
+  .CreateNewRoleContainer .cancel-button {
+      width: 100%;
+      /* Make buttons full width */
+  }
+
+  .CreateNewRoleContainer .form-row {
+      flex-direction: column;
+      gap: 1.5vw;
+      /* Increased gap for better spacing */
+  }
+
+  .CreateNewRoleContainer .form-group {
+      width: 100%;
+  }
+
+  .CreateNewRoleContainer input[type="text"] {
+      width: 100%;
+  }
+
+  .CreateNewRoleContainer {
+      width: 100%;
+      font-size: small;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .CreateNewRoleContainer .form-heading h2 {
+      margin-bottom: 1.5vw;
+      min-width: 90vw;
+      height: 5vh;
+      padding-left: 2vh;
+  }
+
+  .CreateNewRoleContainer .form-heading {
+      max-width: 90vw;
+  }
+
+  .CreateNewRoleContainer {
+      width: 100%;
+      font-size: small;
+  }
+
+  .CreateNewRoleContainer .approve-button,
+  .CreateNewRoleContainer .cancel-button {
+      padding: 9px 10px;
+      margin: 0.5em;
+  }
+
+  .CreateNewRoleContainer label {
+      font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 368px) {
+  .CreateNewRoleContainer .form-heading h2 {
+      margin-bottom: 1.5vw;
+      height: 5vh;
+      padding-left: 2vh;
+      width: 50%;
+  }
+
+  .CreateNewRoleContainer .form-heading {
+      max-width: 100%;
+  }
+
+  .CreateNewRoleContainer {
+      width: 90%;
+      font-size: small;
+  }
+
+  .CreateNewRoleContainer .approve-button,
+  .CreateNewRoleContainer .cancel-button {
+      padding: 9px 10px;
+      margin: 0.5em;
+  }
+}

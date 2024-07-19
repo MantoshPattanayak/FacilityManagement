@@ -22,7 +22,7 @@ let viewList = async (req, res) => {
         console.log("statusInput", statusInput);
 
         let fetchEventListQuery = `
-        select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address, f2.code as facilityType, 
+        select e.eventId, e.eventName, f.facilityId, f.facilityname, f.address,e.eventDate, e.eventStartTime, e.eventEndTime, f2.code as facilityType, 
         e.createdDt as requestDate, s.statusCode as requestStatus, f3.url as eventMainImage
         from  amabhoomi.eventactivities e
         left join amabhoomi.hosteventdetails h on e.eventId = h.eventId
@@ -74,7 +74,7 @@ let viewId = async (req, res) => {
 
         let fetchEventListQuery = `
         select e.eventId, e.eventName as eventTitle, ecm.eventCategoryName, e.facilityId, f.facilityname, f.facilityTypeId, f2.code as facilityType,
-        e.locationName, e.eventStartTime, e.eventEndTime, e.ticketSalesEnabled, e.numberOfTickets, e.ticketPrice, 
+        e.locationName, e.eventDate, e.eventStartTime, e.eventEndTime, e.ticketSalesEnabled, e.numberOfTickets, e.ticketPrice, 
         e.descriptionOfEvent, e.eventImagePath, e.additionalFilePath, e.additionalDetails, f3.url as eventMainImage,
         h.organisationName,h.organisationAddress, h.pancardNumber, h.firstName, h.lastName, h.phoneNo, h.emailId
         from amabhoomi.eventactivities e

@@ -399,13 +399,12 @@ const homePage = async (req, res) => {
         from amabhoomi.publicnotifications p
         left join fileattachments fa on p.publicNotificationsId = fa.entityId and fa.entityType = 'publicNotification'
         left join files f on f.fileId = fa.fileId and f.statusId = 1
-        where p.validFromDate <= ?
-        and p.validToDate >= ?
+        where p.validToDate >= ?
         `;
 
     let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
       type: Sequelize.QueryTypes.SELECT,
-      replacements: [new Date(), new Date()]
+      replacements: [new Date()]
     })
 
     let facilityActivitiesFetchQuery = `
@@ -417,6 +416,18 @@ const homePage = async (req, res) => {
 
     let facilityActivitiesData = await sequelize.query(facilityActivitiesFetchQuery);
 
+    let fetchGalleryListQuery = `
+      select g.galleryId, g.description, g.startDate, g.endDate, s.statusCode, f2.fileName, f2.url
+      from gallerydetails g
+      inner join fileattachments f on g.galleryId = f.entityId and f.entityType = 'galleryImage' and f.filePurpose = 'galleryImage'
+      inner join files f2 on f.fileId = f2.fileId
+      inner join statusmasters s on s.statusId = g.statusId and s.parentStatusCode = 'RECORD_STATUS'
+      where s.statusCode = 'ACTIVE'
+      limit 10;
+    `;
+
+    let fetchGalleryListData = await sequelize.query(fetchGalleryListQuery);
+
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,
@@ -424,7 +435,8 @@ const homePage = async (req, res) => {
       amenityDetails: fetchAllAmenities[0],
       servicesDetails: fetchAllServices[0],
       notificationsList:viewNotificationsListQueryData,
-      exploreActivities: facilityActivitiesData[0]
+      exploreActivities: facilityActivitiesData[0],
+      galleryData: fetchGalleryListData[0].map((gallery) => {return {...gallery, ['url']: encodeURIComponent(gallery.url)}})
     });
   } catch (err) {
     return res

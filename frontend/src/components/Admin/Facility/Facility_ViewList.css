@@ -1,47 +1,69 @@
-/* ListOfUsers.css */
-
-/* General styles */
-.ListOfUsers1 {
+.ListOfFacilities {
+    margin: 60px auto 10px auto;
+    width: 100%; /* Content width excluding AdminHeader and Footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding: 0 20px; /* Added padding for better spacing */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+  
+  /* .ListOfFacilities {
     display: flex;
     font-size: large;
-}
-
-.ListOfUsers1 .search_text_conatiner {
+  } */
+  
+  .ListOfFacilities .search_text_conatiner {
     margin-top: 15px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.ListOfUsers1 .search_input_field {
-    border: 0.0833vw solid #b1b1b1;
-    width: 30%;
-    border-radius: 15px;
+    padding: 0 0 10px 0;
+  }
+  
+  .ListOfFacilities .search_input_field {
+    padding: 5px;
+    width: 30vh;
+    border: 2px solid #c6c6c6;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    outline: #c6c6c6;
+  }
+  
+  /* Style the input field border when it's focused */
+  .ListOfFacilities .search_input_field:focus {
+    border-color: #3e82ff;
+  }
+  
+  /* Style the placeholder text */
+  .ListOfFacilities .search_input_field::placeholder {
+    color: #999;
+  }
+  
+  .ListOfFacilities .search_field_button {
+    border: 1px solid #00000033;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 16px;
+    padding: 15px;
     padding: 10px;
-    margin-right: 10px;
-}
-
-.ListOfUsers1 .create-role-btn {
-    background-color: #fdfdfd;
-    border: 1px solid black;
-    border-radius: 10px;
-    color: rgb(75, 73, 73);
-    padding: 10px 25px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-}
-
-.ListOfUsers1 .create-role-btn:hover {
-    background-color: #c6c6c6;
-    transition: 0.5s;
-}
-
-/* Table styles */
-.ListOfUsers1 .Main_Conatiner_table {
-    width: 70vw;
+    background-color: #176BFB;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .ListOfFacilities .search_field_button:hover {
+    background-color: #0144B7;
+  }
+  
+  /* Table styles */
+  .ListOfFacilities .Main_Conatiner_table {
+    width: 100%;
     margin: 75px auto 75px auto;
     display: flex;
     flex-direction: column;
@@ -50,107 +72,101 @@
     /* min-height: 100vh; */
     padding: 0 20px;
     box-sizing: border-box;
-}
-
-.ListOfUsers1 .table-heading {
+  }
+  
+  .ListOfFacilities .table-heading {
     /* padding-left: 10px; */
     /* margin-left: 10vw; */
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-}
-
-.ListOfUsers1 .table_Container {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+  
+  .ListOfFacilities .table-heading h2{
+    width: 100%;
+    align-items: center;
+    font-weight: bold;
+    height: 5vh;
+    display: flex;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+    padding-left: 2vh;
+    color: black;
+    min-width: 70vw;
+  }
+  
+  .ListOfFacilities .table_Container {
     overflow-y: auto;
-    max-height: 700px;
+    max-height: 600px;
     width: 100%;
     /* Ensure table container takes full width */
-
-}
-
-.ListOfUsers1 .search_text_conatiner {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px;
-}
-
-.ListOfUsers1 .search_input_field {
-    padding: 5px;
-    width: 30vh;
-    border: 1px solid #3a3b3a;
+  }
+  
+  .ListOfFacilities table {
+    /* border: 1px solid #c6c6c6; */
+    border-collapse: separate;
     border-radius: 5px;
-    transition: border-color 0.3s;
-}
-
-/* Style the input field border when it's focused */
-.ListOfUsers1 .search_input_field:focus {
-    border-color: #363736;
-}
-
-/* Style the placeholder text */
-.ListOfUsers1 .search_input_field::placeholder {
-    color: #999;
-    font-style: italic;
-}
-
-.ListOfUsers1 .search_input_field:focus {
-    width: 35vh;
-}
-
-.ListOfUsers1 table {
-    border: 1px solid #ccc;
-    border-collapse: collapse;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid #c6c6c6;
     margin: 0;
     padding: 0;
     width: 100%;
     table-layout: fixed;
-}
-
-.ListOfUsers1 table caption {
-    font-size: 1.5em;
-    margin: .5em 0 .75em;
-}
-
-.ListOfUsers1 table tr {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    padding: .35em;
-}
-
-.ListOfUsers1 table th,
-.ListOfUsers1 table td {
-    padding: .625em;
-    text-align: center;
-}
-
-.ListOfUsers1 table th {
-    font-size: 11px;
+  }
+  
+  .ListOfFacilities table thead {
+    border-top: none;
+  }
+  
+  .ListOfFacilities table th {
+    font-size: .85em;
     letter-spacing: .1em;
     text-transform: uppercase;
     position: sticky;
     top: 0;
-
-    color: #f8f8f8;
-}
-
-.ListOfUsers1 tbody tr:nth-child(odd) {
-    background-color: #ffffff;
-}
-
-.ListOfUsers1 tbody tr:nth-child(even) {
-    background-color: #f0f0f0;
-}
-
-/* Pagination styles */
-.ListOfUsers1 .pagination {
+    background-color: white; /*#3e82ff*/
+    color: black;
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .ListOfFacilities table tr {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #c6c6c6;
+    padding: .35em;
+  }
+  
+  .ListOfFacilities table tr:last-child {
+    border-bottom: none;
+  }
+  
+  .ListOfFacilities table td {
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+  }
+  
+  
+  /* .ListOfFacilities tbody tr:nth-child(even) {
+    background-color: #c6c6c6;
+  } */
+  
+  /* Pagination styles */
+  .ListOfFacilities .pagination {
     margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.ListOfUsers1 .pagination button {
+  }
+  
+  .ListOfFacilities .pagination button {
     padding: 8px 16px;
     margin: 0 5px;
     border: 1px solid #ddd;
@@ -159,80 +175,125 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.ListOfUsers1 .pagination button:hover {
+  }
+  
+  .ListOfFacilities .pagination button:hover {
     background-color: #ddd;
-}
-
-.ListOfUsers1 .pagination button:disabled {
+  }
+  
+  .ListOfFacilities .pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-.ListOfUsers1 .pagination button.active {
+  }
+  
+  .ListOfFacilities .pagination button.active {
     background-color: #00b562;
     color: white;
     border: 1px solid #00b562;
-}
-
-/* Media queries */
-@media screen and (max-width: 768px) {
-    .ListOfUsers1 {
+  }
+  
+  /* only to set table column width for larger screen */
+  @media screen and (min-width: 893px) {
+    .ListOfFacilities table td:nth-child(1), .ListOfFacilities table tr > th:nth-child(1) {
+        width: 20%;
+    }
+    
+    .ListOfFacilities table td:nth-child(2), .ListOfFacilities table tr > th:nth-child(2) {
+        width: 16%;
+    }
+    
+    .ListOfFacilities table td:nth-child(n+3), .ListOfFacilities table tr > th:nth-child(n+3) {
+        width: 16%;
+    }
+    
+    .ListOfFacilities tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+  }
+  
+  @media screen and (max-width:1150px) {
+    .ListOfFacilities {
+        margin: 50px auto 10px auto;
+    }
+  }
+  
+  @media screen and (max-width:993px) {
+    .ListOfFacilities {
+        margin: 80px auto 10px auto;
+    }
+  }
+  
+  
+  /* Media queries */
+  @media screen and (max-width: 768px) {
+    .ListOfFacilities {
+        flex-direction: column;
+        align-items: center;
+        margin: 50px auto 10px auto;
+    }
+  
+    .ListOfFacilities .search_text_conatiner {
         flex-direction: column;
         align-items: center;
     }
-
-    .ListOfUsers1 .search_text_conatiner {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .ListOfUsers1 .search_input_field {
+  
+    .ListOfFacilities .search_input_field {
         width: 100%;
         margin-right: 0;
         margin-bottom: 10px;
     }
-
-    .ListOfUsers1 .create-role-btn {
+  
+    .ListOfFacilities .search_field_button {
+        margin-bottom: 20px;
+    }
+  
+    .ListOfFacilities .create-role-btn {
         width: 100%;
         margin-right: 0;
         margin-bottom: 10px;
     }
-
-    .ListOfUsers1.Main_Conatiner_table {
+  
+    .ListOfFacilities .Main_Conatiner_table {
         width: 90%;
         padding: 0 10px;
         /* Adjusted padding for smaller screens */
     }
-
-    .ListOfUsers1 .table_Container {
+  
+    .ListOfFacilities .table_Container {
         overflow-x: auto;
         /* Added horizontal scroll for small screens */
         max-width: 100%;
     }
-
-    .ListOfUsers1.pagination {
+  
+    .ListOfFacilities .pagination {
         flex-direction: column;
         align-items: center;
     }
-
-    .ListOfUsers1 .pagination button {
+  
+    .ListOfFacilities .pagination button {
         margin: 5px;
     }
-}
-
-@media screen and (max-width: 576px) {
-    .ListOfUsers1 .search_input_field {
+  }
+  
+  @media screen and (max-width: 576px) {
+    .ListOfFacilities {
+        margin: 50px auto 10px auto;
+    }
+  
+    .ListOfFacilities .search_input_field {
         width: 100%;
     }
-
-    .ListOfUsers1 table th,
-    .ListOfUsers1 table td {
+  
+    .ListOfFacilities table th,
+    .ListOfFacilities table td {
         padding: .5em;
     }
-
-    .ListOfUsers1 table caption {
+  
+    .ListOfFacilities table caption {
         font-size: 1.3em;
     }
-}
+  
+    .ListOfFacilities .search_field_button {
+        margin-bottom: 20px;
+    }
+  }
