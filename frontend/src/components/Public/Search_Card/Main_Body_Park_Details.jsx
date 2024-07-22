@@ -537,7 +537,9 @@ const Main_Body_Park_Details = () => {
                     ? "park-card-1"
                     : item.facilityTypeId === 2
                       ? "park-card-2"
-                      : "park-card-3"
+                      :  item.facilityTypeId === 4
+                      ? "park-card-4":
+                      "park-card-3"
                     }`}
                   title={item.facilityname}
                 >
