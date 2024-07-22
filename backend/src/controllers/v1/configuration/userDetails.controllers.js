@@ -980,7 +980,7 @@ let viewBookings = async (req, res) => {
       fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategoryId, 
       ecm.eventCategoryName, f2.facilityname, e.locationName as location, e.eventDate, 
       fb.bookingDate, s.statusCode, fb.bookingDate, 
-      'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdOn as createdDate
+      'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdDt as createdDate
     from amabhoomi.hostbookings fb
     inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
     inner join amabhoomi.eventactivities e on e.eventId = f.eventId

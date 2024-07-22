@@ -72,18 +72,18 @@ const AdminDashboard = () => {
                     }
                 ]
             } */
-           setGraphData({
-                labels: [...response.data.specificFacilityBookingData.map((data) => {return data.bookingMonthName})],
-                    datasets: [
-                        {
-                            label: 'Facility bookings',
-                            data: [...response.data.specificFacilityBookingData.map((data) => {return data.bookingCount})],
-                            backgroundColor: 'rgb(143, 158, 215)',
-                            borderColor: 'grey',
-                            borderWidth: 1,
-                        }
+            setGraphData({
+                labels: [...response.data.specificFacilityBookingData.map((data) => { return data.bookingMonthName })],
+                datasets: [
+                    {
+                        label: 'Facility bookings',
+                        data: [...response.data.specificFacilityBookingData.map((data) => { return data.bookingCount })],
+                        backgroundColor: 'rgb(143, 158, 215)',
+                        borderColor: 'grey',
+                        borderWidth: 1,
+                    }
                 ]
-           })
+            })
         }
         catch (error) {
             console.error('Error fetching dashboard data', error);
@@ -239,51 +239,30 @@ const AdminDashboard = () => {
 
                 {/* Activities */}
                 <div className="activity-container">
-
                     <div className="popular-activity h-fit">
-                        <h2 className='popular-activity-text'>Popular Activities</h2><br />
-                        {
-                            adminDashboardData.popularActivities?.length > 0 && adminDashboardData.popularActivities?.map((activity, index) => {
-                                if(index < 8){
-                                    return (
-                                        <div className="games" key={index}>
-                                            <p>{activity.userActivityName}</p>
-                                            {/* <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span> */}
-                                            <span>{index == 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
-                                            <h4>{activity.activityCount} bookings </h4> 
-                                        </div>
-                                    )
-                                }
-                            })
-                        }
-                        <br /><br />
-                        {/* <hr />
-                        <div className="vew-leaderboard">
-                            <a href="#">View full Leaderboard <FontAwesomeIcon icon={faAngleRight} /></a>
-                        </div> */}
+                        <h2 className='popular-activity-text'>Popular Activities</h2>
+                        {adminDashboardData.popularActivities?.length > 0 &&
+                            adminDashboardData.popularActivities.slice(0, 8).map((activity, index) => (
+                                <div className="games" key={index}>
+                                    <p>{activity.userActivityName}</p>
+                                    <span>{index === 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
+                                    <h4>{activity.activityCount} bookings</h4>
+                                </div>
+                            ))}
                     </div>
-
                     <div className="popular-facility h-fit">
-                        <h2 className='popular-activity-text'>Popular Facilities</h2><br />
-                        {adminDashboardData.popularFacilities?.length > 0 && adminDashboardData.popularFacilities?.map((facility, index) => {
-                            if(index < 8){
-                                return (
-                                    <div className="games" key={index}>
-                                        <p>{facility.facilityname}</p>
-                                        {/* <span>12<FontAwesomeIcon icon={faCaretUp} className='up' /></span> */}
-                                        <span>{index == 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
-                                        <h4>{facility.bookingscount} bookings</h4>
-                                    </div>
-                                )
-                            }
-                        })}
-                        <br /><br />
-                        {/* <hr />
-                        <div className="vew-leaderboard">
-                            <a href="#">View full Leaderboard <FontAwesomeIcon icon={faAngleRight} /></a>
-                        </div> */}
+                        <h2 className='popular-activity-text'>Popular Facilities</h2>
+                        {adminDashboardData.popularFacilities?.length > 0 &&
+                            adminDashboardData.popularFacilities.slice(0, 8).map((facility, index) => (
+                                <div className="games" key={index}>
+                                    <p>{facility.facilityname}</p>
+                                    <span>{index === 0 ? <FontAwesomeIcon icon={faTrophy} /> : index + 1}</span>
+                                    <h4>{facility.bookingscount} bookings</h4>
+                                </div>
+                            ))}
                     </div>
                 </div>
+
 
                 {/* pie chart for activity per user */}
 

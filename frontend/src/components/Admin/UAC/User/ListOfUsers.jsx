@@ -20,7 +20,7 @@ export default function ListOfUsers() {
 
     async function fetchListOfUserData(givenReq = null) {
         try {
-            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post', {givenReq});
+            let res = await axiosHttpClient('ADMIN_USER_VIEW_API', 'post', { givenReq });
             setTableData(res.data.data);
             console.log(res.data.data);
         }
@@ -41,7 +41,7 @@ export default function ListOfUsers() {
     }
 
     // function to manage API calls while user search input entry
-    function debounce(fn, delay){
+    function debounce(fn, delay) {
         let timeoutId;
         return function (...args) {
             clearTimeout(timeoutId);
@@ -71,12 +71,13 @@ export default function ListOfUsers() {
     }
 
     return (
-        <div className='ListOfUsers'>
+        <div >
             <AdminHeader />
-            <div className="Main_Conatiner_table">
-                <div className='table-heading'>
-                    <h2 className="table-heading">List of Users</h2>
+            <div className="ListOfResources">
+                <div className="table-heading">
+                    <h2 className="">List of Users</h2>
                 </div>
+            
 
                 <div className="search_text_conatiner">
                     <button className='search_field_button' onClick={() => navigate('/UAC/Users/Create')}>Create new user</button>
@@ -138,6 +139,16 @@ export default function ListOfUsers() {
         </div>
     )
 }
+
+
+
+
+
+
+
+
+
+
 
 
 const SearchDropdown = () => {
