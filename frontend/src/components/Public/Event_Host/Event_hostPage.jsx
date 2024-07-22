@@ -758,7 +758,7 @@ const Event_hostPage = () => {
                                             value={formData.ticketsold}
                                             onChange={handleChange}
                                         >
-                                            <option value="" disabled selected hidden>Select Bank Name</option>
+                                            <option value="" disabled selected hidden> there be ticket sold</option>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
 
