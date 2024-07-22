@@ -304,13 +304,15 @@ const Main_Body_Park_Details = () => {
             ? "park-body-2"
             : (facilityTypeId == 3)
               ? "park-body-3"
-              : ""
+              : (facilityTypeId == 4)
+              ? "park-body-4":''
           }`}
       >
         <h1 className="name_park_img">
           {(facilityTypeId == 1) && "Parks"}
           {(facilityTypeId == 2) && "Playgrounds"}
           {(facilityTypeId == 3) && "Multi-purpose Grounds"}
+          {(facilityTypeId == 4) && "Blueways"}
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}
@@ -359,22 +361,23 @@ const Main_Body_Park_Details = () => {
             <img className="h-20" src={MultiPark} alt="Multipark" />
             <span className="button-text1">Multipurpose <br></br> Grounds</span>
           </button>
-          {/* waterway */}
-          <button
+           {/* blueway */}
+           <button
             onClick={(e) => handleParkLogoClick(e, 4)}
-            className="image-button"
-          >
-            <img className="h-20" src={greenway} alt="Multipark" />
-            <span className="button-text">Greenways</span>
-          </button>
-          {/* blueway */}
-          <button
-            onClick={(e) => handleParkLogoClick(e, 5)}
             className="image-button"
           >
             <img className="h-20" src={blueway} alt="Multipark" />
             <span className="button-text">Blueways</span>
           </button>
+          {/* waterway */}
+          <button
+            onClick={(e) => handleParkLogoClick(e, 5)}
+            className="image-button"
+          >
+            <img className="h-20" src={greenway} alt="Multipark" />
+            <span className="button-text">Greenways</span>
+          </button>
+         
         </span>
       </div>
       {/* Filter According to free, paid, NearBy, ------------------ */}
@@ -507,6 +510,7 @@ const Main_Body_Park_Details = () => {
           {(facilityTypeId == 1) && "Parks"}
           {(facilityTypeId == 2) && "Playgrounds"}
           {(facilityTypeId == 3) && "Multi-purpose Grounds"}
+          {(facilityTypeId == 4) && "Blueways"}
         </h1>
       </span>
 
