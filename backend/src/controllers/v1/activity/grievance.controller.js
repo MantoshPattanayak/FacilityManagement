@@ -891,8 +891,10 @@ let updateAdvertisementTariffData = async (req,res)=>{
 let insertToAdvertisementDetails = async (req,res)=>{
     let transaction;
     try {
-        transaction = sequelize.transaction();
+        transaction = await sequelize.transaction();
         let {advertisementTypeId, advertisementName, message, startDate, endDate, amount,advertisementImage} = req.body
+        console.log(req.body,'req.body')
+        
         let statusId = 10; 
         let userId = req.user.userId
         let createdDt = new Date();
@@ -915,6 +917,7 @@ let insertToAdvertisementDetails = async (req,res)=>{
         }
 
         let createTariff = await advertisementdetail.create(createTariffData,{transaction})
+        console.log('create tariff', createTariff)
         if(!createTariff){
             await transaction.rollback();
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -950,12 +953,16 @@ let insertToAdvertisementDetails = async (req,res)=>{
         })
     }
 }
+
+
+
+
 let actionForAdvertisement = async (req,res)=>{
     try {
-        let {advertisementTariffDetailId,statusId}=req.body
+        let {advertisementDetailId,statusId}=req.body
         let [performTheAction] = await advertisementdetail.update({statusId:statusId},
             {where:{
-                advertisementTariffDetailId:advertisementTariffDetailId
+                advertisementDetailId:advertisementDetailId
             }}
         )
         if(performTheAction==0){
@@ -968,7 +975,6 @@ let actionForAdvertisement = async (req,res)=>{
             message:`Data successfully updated`
         })
     } catch (err) {
-        if(transaction) await transaction.rollback()
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                 message:err.message
             })
@@ -988,35 +994,46 @@ let initialTariffDropdownData = async(req,res)=>{
             endDate = new Date(endDate);
             let difference = endDate.getTime() - startDate.getTime();
             let days = Math.round(difference/(1000*60*60*24));
-            let findTheTariffType = await sequelize.query(`select * from amabhoomi.advertismenttariffmasters where advertisementTypeId = ? and statusId =?`,{
+            console.log('days',days)
+            let findTheTariffType = await sequelize.query(`select * from amabhoomi.advertisementtariffmasters where advertisementTypeId = ? and statusId =?`,{
                 type:QueryTypes.SELECT,
                 replacements:[advertisementTypeId, statusId]
             })
            let amountCheck =  findTheTariffType.filter((eachData)=>{
                 if(eachData.durationOption==='day'){
-                   return amount = Math.ceil(days*eachData.amount)
+                    console.log('eachdata amount',eachData.amount*days)
+                   return eachData.amount = Math.ceil(days*eachData.amount)
                 }
                 else if(eachData.durationOption ==='week'){
-                   return amount = Math.ceil((days/7)*eachData.amount)
+                   return eachData.amount = Math.ceil((days/7)*eachData.amount)
                 }
                 else if(eachData.durationOption ==='month'){
-                   return amount = Math.ceil((days/30)*eachData.amount)
+                   return eachData.amount = Math.ceil((days/30)*eachData.amount)
                 }
                 else if(eachData.durationOption ==='campaign'){
-                    return amount = eachData.amount
+                    return eachData.amount = eachData.amount
                 }
                 else if(eachData.durationOption ==='issue'){
-                  return  amount = eachData.amount
+                  return  eachData.amount = eachData.amount
                 }
                 else if(eachData.durationOption ==='post'){
-                return amount = eachData.amount
+                return eachData.amount = eachData.amount
                 }
             })
 
             if(amountCheck.length>1){
-                amount = Math.min(...amountCheck)
+                // console.log('amountcheck1',amountCheck.amount)
+                let amounts = amountCheck.map(item => item.amount);
+                console.log('amountchecks',amounts)
+                amount = Math.min(...amounts)
+                console.log('amount',amount)
+                return res.status(statusCode.SUCCESS.code).json({
+                    message:`Here is the amount`,
+                    data:amount
+                })
             }
-            amount = amountCheck[0]
+            console.log('amountcheck value',amount,amountCheck,typeof(amountCheck))
+            amount = amountCheck[0].amount
             return res.status(statusCode.SUCCESS.code).json({
                 message:`Here is the amount`,
                 data:amount
@@ -1046,7 +1063,6 @@ let initialTariffDropdownData = async(req,res)=>{
         })
     }
 }
-
 
 //  advertisement api end
 module.exports = {
