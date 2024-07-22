@@ -17,6 +17,7 @@ let partnerUs = db.partnerwithus
 let advertisementTariff = db.advertisementTariff
 let advertisementdetail = db.advertisementDetails
 let advertisementMasters = db.advertisementMasters
+
 // insert grievance - start
 const addGrievance = async (req, res) => {
     try {
@@ -888,58 +889,156 @@ let updateAdvertisementTariffData = async (req,res)=>{
 
 
 let insertToAdvertisementDetails = async (req,res)=>{
+    let transaction;
     try {
-        let {advertisementTypeId, durationOption, minDuration, maxDuration} = req.body
-        let statusId =1; 
+        transaction = await sequelize.transaction();
+        let {advertisementTypeId, advertisementName, message, startDate, endDate, amount,advertisementImage} = req.body
+        console.log(req.body,'req.body')
+        
+        let statusId = 10; 
         let userId = req.user.userId
         let createdDt = new Date();
         let updatedDt = new Date();
         
-        let checkIfThisAdvertisementTariffExist = await advertisementTariff.findOne({
-            where:{
-                [Op.and]:[{statusId:statusId},{durationOption:durationOption},{amount:amount},{advertisementTypeId:advertisementTypeId},{minduration:{[Op.lte]:[minDuration]}},{maxDuration:{[Op.gte]:[minDuration]}}]
-            }
-        })
 
-        if(checkIfThisAdvertisementTariffExist){
-            return res.status(statusCode.BAD_REQUEST.code).json({
-                message:`This tariff is already exist. Please deactivate the existing tariff to set a new one`
-            })
-        }
+      
         let createTariffData={
             statusId:statusId,
             advertisementTypeId:advertisementTypeId,
-            durationOption:durationOption,
+            advertisementName:advertisementName,
             amount:amount,
-            minDuration:minDuration,
-            maxDuration:maxDuration,
+            message:message,
+            startDate:startDate,
+            endDate:endDate,
             updatedDt:updatedDt,
             createdDt:createdDt,
             updatedBy:userId,
             createdBy:userId
         }
 
-        let createTariff = await advertisementTariff.create(createTariffData)
+        let createTariff = await advertisementdetail.create(createTariffData,{transaction})
+        console.log('create tariff', createTariff)
         if(!createTariff){
+            await transaction.rollback();
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                 message:`Something went wrong`
             })
         }
+        if(advertisementImage){
+            let insertionData = {
+                id:createTariff.advertisementDetailId,
+                name:createTariff.advertisementName,
+               }
+              // create the data
+              let entityType = 'advertisement'
+              let errors = [];
+              let subDir = "advertisementDir"
+              let filePurpose = "advertisementImages"
+              let uploadSingleAdvertisementImage = await imageUpload(advertisementImage,entityType,subDir,filePurpose,insertionData,userId,errors, 1, transaction)
+              console.log( uploadSingleAdvertisementImage,'165 line facility image')
+              if(errors.length>0){
+                await transaction.rollback();
+                if(errors.some(error => error.includes("something went wrong"))){
+                  return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+                }
+                return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+              }
+        }
+        
         return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
     } catch (err) {
+        if(transaction) await transaction.rollback()
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
     }
 }
 
+
+
+
+let actionForAdvertisement = async (req,res)=>{
+    try {
+        let {advertisementDetailId,statusId}=req.body
+        let [performTheAction] = await advertisementdetail.update({statusId:statusId},
+            {where:{
+                advertisementDetailId:advertisementDetailId
+            }}
+        )
+        if(performTheAction==0){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:err.message
+            })
+        }
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message:`Data successfully updated`
+        })
+    } catch (err) {
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message:err.message
+            })
+    }
+}
+
 let initialTariffDropdownData = async(req,res)=>{
     try {
-        let {advertisementTypeId}= req.body
+        let {advertisementTypeId,startDate,endDate}= req.body
         let statusId = 1;
 
         let findAllDropDownData = ["day","month","week","campaign","issue","post"]
-           
+           if(startDate && endDate && advertisementTypeId ){
+            let amount = 0;
+            // calculate the amount
+            startDate = new Date(startDate);
+            endDate = new Date(endDate);
+            let difference = endDate.getTime() - startDate.getTime();
+            let days = Math.round(difference/(1000*60*60*24));
+            console.log('days',days)
+            let findTheTariffType = await sequelize.query(`select * from amabhoomi.advertisementtariffmasters where advertisementTypeId = ? and statusId =?`,{
+                type:QueryTypes.SELECT,
+                replacements:[advertisementTypeId, statusId]
+            })
+           let amountCheck =  findTheTariffType.filter((eachData)=>{
+                if(eachData.durationOption==='day'){
+                    console.log('eachdata amount',eachData.amount*days)
+                   return eachData.amount = Math.ceil(days*eachData.amount)
+                }
+                else if(eachData.durationOption ==='week'){
+                   return eachData.amount = Math.ceil((days/7)*eachData.amount)
+                }
+                else if(eachData.durationOption ==='month'){
+                   return eachData.amount = Math.ceil((days/30)*eachData.amount)
+                }
+                else if(eachData.durationOption ==='campaign'){
+                    return eachData.amount = eachData.amount
+                }
+                else if(eachData.durationOption ==='issue'){
+                  return  eachData.amount = eachData.amount
+                }
+                else if(eachData.durationOption ==='post'){
+                return eachData.amount = eachData.amount
+                }
+            })
+
+            if(amountCheck.length>1){
+                // console.log('amountcheck1',amountCheck.amount)
+                let amounts = amountCheck.map(item => item.amount);
+                console.log('amountchecks',amounts)
+                amount = Math.min(...amounts)
+                console.log('amount',amount)
+                return res.status(statusCode.SUCCESS.code).json({
+                    message:`Here is the amount`,
+                    data:amount
+                })
+            }
+            console.log('amountcheck value',amount,amountCheck,typeof(amountCheck))
+            amount = amountCheck[0].amount
+            return res.status(statusCode.SUCCESS.code).json({
+                message:`Here is the amount`,
+                data:amount
+            })
+           }
         
         if(advertisementTypeId){
             let findTheDropdown = await advertisementMasters.findOne({
@@ -965,7 +1064,6 @@ let initialTariffDropdownData = async(req,res)=>{
     }
 }
 
-
 //  advertisement api end
 module.exports = {
     addGrievance,
@@ -984,4 +1082,7 @@ module.exports = {
     updateAdvertisementTariffData,
     updateAdvertisementInsert,
     initialTariffDropdownData,
+    insertToAdvertisementDetails,
+    actionForAdvertisement
+    
 }
