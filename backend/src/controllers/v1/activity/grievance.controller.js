@@ -20,7 +20,10 @@ let advertisementMasters = db.advertisementMasters
 
 // insert grievance - start
 const addGrievance = async (req, res) => {
+    let transaction;
     try {
+        transaction = await sequelize.transaction();
+        let userId = req.user.userId
         let createGrievance;
         const {
             fullname,
@@ -40,69 +43,93 @@ const addGrievance = async (req, res) => {
             details: details,
             statusId: statusId,
             isWhatsappNumber: isWhatsappNumber
-        });
-        if (filepath) {
-            let filepathPath = null
-            let filepathPath2 = null
-            const uploadDir = process.env.UPLOAD_DIR
-            const base64filepath = filepath ? filepath.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
-            const mimeMatch = filepath.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
-            const mime = mimeMatch ? mimeMatch[1] : null;
-
-            if ([
-                "image/jpeg",
-                "image/png",
-                "application/pdf",
-                "application/msword",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            ].includes(mime)) {
-                const filepathBuffer = filepath ? Buffer.from(base64filepath, "base64") : null;
-                if (filepathBuffer) {
-                    const eventDir = path.join(uploadDir, "filepath")
-
-                    if (!fs.existsSync(eventDir)) {
-                        fs.mkdirSync(eventDir, { recursive: true })
-                    }
-                    const fileExtension = mime ? mime.split("/")[1] : "txt";
-                    filepathPath = `${uploadDir}/eventDir/grievance.${createGrievance.grievanceMasterId}.${fileExtension}`
-                    fs.writeFileSync(filepathPath, uploadEventBuffer)
-                    filepathPath2 = `/eventDir/grievance.${createGrievance.grievanceMasterId}.${fileExtension}`
-                    let fileName = `grievance.${createGrievance.grievanceMasterId}.${fileExtension}`
-                    let fileType = mime ? mime.split("/")[0] : 'unknown'
-                    let createFile = await file.create({
-                        fileName: fileName,
-                        fileType: fileType,
-                        url: filepathPath2,
-                        statusId: 1,
-                        createdDt: now(),
-                        updatedDt: now()
-                    })
-
-                    if (!createFile) {
-                        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
-                    }
-                    let createFileAttachment = await fileAttachment.create({
-                        entityId: createGrievance.grievanceMasterId,
-                        entityType: entityType,
-                        fileId: createFile.fileId,
-                        statusId: 1,
-                        filePurpose: "Image"
-                    })
+        },{
+            transaction
+        }
+    );
+        if (filepath && createGrievance) {
+            let errors = [];
+            let entityType = 'grievances'
+            let subDir = "grievanceDir"
+            let filePurpose = "grievanceImage"
+            let insertionData = {
+                id:createGrievance.grievanceMasterId,
+                name:createGrievance.subject
+               }
+            let uploadGrievanceFile = await imageUpload(filepath,entityType,subDir,filePurpose,insertionData,userId,errors, 1, transaction)
+            if(errors.length>0){
+                await transaction.rollback();
+                if(errors.some(error => error.includes("something went wrong"))){
+                  return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
                 }
-            }
-            else {
-                return res.status(statusCode.BAD_REQUEST.code).json({ message: "Invalid File type for the image" })
-            }
+                return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+              }
+            // let filepathPath = null
+            // let filepathPath2 = null
+            // const uploadDir = process.env.UPLOAD_DIR
+            // const base64filepath = filepath ? filepath.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "") : null;
+            // const mimeMatch = filepath.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
+            // const mime = mimeMatch ? mimeMatch[1] : null;
+
+            // if ([
+            //     "image/jpeg",
+            //     "image/png",
+            //     "application/pdf",
+            //     "application/msword",
+            //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            // ].includes(mime)) {
+            //     const filepathBuffer = filepath ? Buffer.from(base64filepath, "base64") : null;
+            //     if (filepathBuffer) {
+            //         const eventDir = path.join(uploadDir, "filepath")
+
+            //         if (!fs.existsSync(eventDir)) {
+            //             fs.mkdirSync(eventDir, { recursive: true })
+            //         }
+            //         const fileExtension = mime ? mime.split("/")[1] : "txt";
+            //         filepathPath = `${uploadDir}/eventDir/grievance.${createGrievance.grievanceMasterId}.${fileExtension}`
+            //         fs.writeFileSync(filepathPath, uploadEventBuffer)
+            //         filepathPath2 = `/eventDir/grievance.${createGrievance.grievanceMasterId}.${fileExtension}`
+            //         let fileName = `grievance.${createGrievance.grievanceMasterId}.${fileExtension}`
+            //         let fileType = mime ? mime.split("/")[0] : 'unknown'
+            //         let createFile = await file.create({
+            //             fileName: fileName,
+            //             fileType: fileType,
+            //             url: filepathPath2,
+            //             statusId: 1,
+            //             createdDt: now(),
+            //             updatedDt: now()
+            //         })
+
+            //         if (!createFile) {
+            //             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
+            //         }
+            //         let createFileAttachment = await fileAttachment.create({
+            //             entityId: createGrievance.grievanceMasterId,
+            //             entityType: entityType,
+            //             fileId: createFile.fileId,
+            //             statusId: 1,
+            //             filePurpose: "Image"
+            //         })
+            //     }
+            // }
+            // else {
+            //     return res.status(statusCode.BAD_REQUEST.code).json({ message: "Invalid File type for the image" })
+            // }
         }
         if (createGrievance) {
+            await transaction.commit();
             return res.status(statusCode.SUCCESS.code).json({
                 message: "Grievance created successfully",
             });
         }
+        await transaction.rollback();
+
         return res.status(statusCode.BAD_REQUEST.code).json({
             message: "Grivance is not created",
         });
     } catch (error) {
+        if(transaction) await transaction.rollback();
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message,
         });
