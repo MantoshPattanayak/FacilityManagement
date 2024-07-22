@@ -106,6 +106,7 @@ const GrievanceForm = () => {
   // console.log("grievance categorylist 999", grievanceCategoryList);
 
   const handleSubmitForm = async () => {
+    validateFeedback();
     try {
       let res = await axiosHttpClient("USER_SUBMIT_GRIEVANCE_API", "post", {
         fullname: user.fullname,
@@ -228,11 +229,11 @@ const GrievanceForm = () => {
     document.getElementById("fileInput").click();
   };
 
-  useEffect(() => {
-    if (isSubmitted) {
-      validateFeedback();
-    }
-  }, [user.mobile, user.emailId, user.filepath, user.captchaInput]);
+  // useEffect(() => {
+  //   if (isSubmitted) {
+  //     validateFeedback();
+  //   }
+  // }, [user.mobile, user.emailId, user.filepath, user.captchaInput]);
 
   const validateFeedback = () => {
     const isValidMobileTemp = /^\d{10}$/.test(user.phoneNo);
