@@ -33,17 +33,35 @@ export default function CreateNewGallery() {
   };
 
   const handleSubmitForm = async () => {
+    if (!formData.file) {
+      toast.error("Please select a file to upload");
+      return;
+    }
     console.log("Form Data:", formData);
 
-    const data = new FormData();
-    data.append("facilityName", formData.facilityName);
-    data.append("description", formData.description);
-    data.append("status", formData.status);
-    data.append("path", formData.path);
-    data.append("fileAttachment", formData.file);
+    // const data = new FormData();
+    // data.append("facilityName", formData.facilityName);
+    // data.append("description", formData.description);
+    // data.append("status", formData.status);
+    // data.append("path", formData.path);
+    // data.append("fileAttachment", formData.file);
+    const uploadData = new FormData();
+    uploadData.append("file", formData.file);
 
     try {
-      let res = await axiosHttpClient("ADD_NEW_GALLERY_DATA_API", "post", {});
+      // Step 1: Upload the file to get the URL
+      const uploadResponse = await axios.post("/upload-file-api", uploadData);
+      const fileUrl = uploadResponse.data.fileUrl;
+
+      const data = {
+        facilityName: formData.facilityName,
+        description: formData.description,
+        fileUrl: fileUrl,
+      };
+
+      let res = await axiosHttpClient("ADD_NEW_GALLERY_DATA_API", "post", {
+        data,
+      });
       console.log("here is the Response of posted data", res);
       if (res.status === 200) {
         // Ensure success status code is checked
@@ -90,7 +108,6 @@ export default function CreateNewGallery() {
               maxLength={dataLength.STRING_VARCHAR_SHORT}
               onChange={handleChange}
             />
-            {/* {errors.name && <p className='error-message'>{errors.name}</p>} */}
           </div>
           <div className="form-group col-span-1">
             <label htmlFor="description">
@@ -105,9 +122,8 @@ export default function CreateNewGallery() {
               maxLength={dataLength.STRING_VARCHAR_SHORT}
               onChange={handleChange}
             />
-            {/* {errors.description && <p className='error-message'>{errors.description}</p>} */}
           </div>
-          <div className="form-group col-span-1">
+          {/* <div className="form-group col-span-1">
             <label htmlFor="status">
               Status<span className="text-red-500">*</span>
             </label>
@@ -120,9 +136,8 @@ export default function CreateNewGallery() {
               <option value="1">ACTIVE</option>
               <option value="2">INACTIVE</option>
             </select>
-            {/* {errors.parent && <p className='error-message'>{errors.parent}</p>} */}
-          </div>
-          <div className="form-group col-start-1 col-span-1">
+          </div> */}
+          {/* <div className="form-group col-start-1 col-span-1">
             <label htmlFor="path">
               Route Path<span className="text-red-500">*</span>
             </label>
@@ -135,8 +150,7 @@ export default function CreateNewGallery() {
               maxLength={dataLength.STRING_VARCHAR_SHORT}
               onChange={handleChange}
             />
-            {/* {errors.path && <p className='error-message'>{errors.path}</p>} */}
-          </div>
+          </div> */}
           <div className="form-group col-span-2">
             <label htmlFor="file">
               Upload File<span className="text-red-500">*</span>
@@ -147,7 +161,6 @@ export default function CreateNewGallery() {
               accept="image/*"
               onChange={handleChange}
             />
-            {/* {errors.file && <p className='error-message'>{errors.file}</p>} */}
           </div>
         </div>
         <div className="buttons-container">
