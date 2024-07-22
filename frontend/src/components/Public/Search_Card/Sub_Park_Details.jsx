@@ -262,6 +262,8 @@ const Sub_Park_Details = () => {
             ? "playground_header_image"
             : FacilitiesData[0]?.facilityTypeId === 3
             ? "MulitGroud"
+            : FacilitiesData[0]?.facilityTypeId === 4
+            ? "BlueWays"
             : ""
         }
       >
