@@ -355,8 +355,11 @@ const homePage = async (req, res) => {
       ea.eventId,
       ea.facilityId,
       f.facilityname,
+      f.latitude, 
+      f.longitude,
       ea.eventName, 
-      ea.eventCategoryId, 
+      ea.eventCategoryId,
+      ecm.eventCategoryName as eventCategory,
       ea.locationName, 
       ea.eventDate, 
       ea.eventStartTime,
@@ -368,16 +371,23 @@ const homePage = async (req, res) => {
       ea.additionalFilePath,
       TIME(CONVERT_TZ(CURRENT_TIME(), @@session.time_zone, 'SYSTEM')) as dbTime,
       CASE
-        WHEN CONCAT(ea.eventDate, ' ', ea.eventStartTime) >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
+        WHEN ea.eventStartTime >= CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') 
         THEN 'ACTIVE'
         ELSE 'CLOSED'
       END AS status,
-      ea.additionalDetails
-      FROM 
-      amabhoomi.eventactivities ea 
-      INNER JOIN amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
-      left join amabhoomi.facilities f on ea.facilityId = f.facilityId
-      where CONVERT_TZ(NOW(), @@session.time_zone, 'SYSTEM') <= CONVERT_TZ(ea.eventDate, @@session.time_zone, 'SYSTEM')
+      ea.additionalDetails,
+      f3.url as eventMainImage
+      , h.hostBookingId
+      FROM amabhoomi.eventactivities ea 
+      inner join amabhoomi.statusmasters sm ON sm.statusId = ea.statusId
+      inner JOIN amabhoomi.facilities f on ea.facilityId = f.facilityId
+      inner join amabhoomi.eventcategorymasters ecm on ea.eventCategoryId = ecm.eventCategoryId
+      inner join amabhoomi.fileattachments f2 on f2.entityId = ea.eventId and f2.entityType = 'events' and f2.filePurpose = 'Event Image'
+      inner join amabhoomi.files f3 on f3.fileId = f2.fileId
+      inner join amabhoomi.hosteventdetails hed on hed.eventId = ea.eventId
+      inner join amabhoomi.hostbookings h on hed.hostId = h.hostId
+      inner join amabhoomi.statusmasters s on s.statusId = h.statusId and s.parentStatusCode = "HOSTING_STATUS"
+      where s.statusCode = 'APPROVED'
       ORDER BY ea.eventDate DESC`;
 
     let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery);
@@ -431,7 +441,7 @@ const homePage = async (req, res) => {
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,
-      eventDetailsData: fetchEventDetailsData[0],
+      eventDetailsData: fetchEventDetailsData[0].map((event) => {return { ...event, ['eventMainImage']: encodeURI(event.eventMainImage)}}),
       amenityDetails: fetchAllAmenities[0],
       servicesDetails: fetchAllServices[0],
       notificationsList:viewNotificationsListQueryData,
