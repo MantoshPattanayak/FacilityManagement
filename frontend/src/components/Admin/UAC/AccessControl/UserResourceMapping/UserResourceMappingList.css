@@ -1,44 +1,299 @@
-.Main_Conatiner_table {
-  margin-top: 10vh;
-}
-
-.headingHeader11 {
-  max-width: 100%;
-  width: 94vw;
-  justify-content: flex-start;
-  background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
-  /* height: 32px; */
+.ListOfResources {
+  margin: 60px auto 10px auto;
+  width: 100%; /* Content width excluding AdminHeader and Footer */
   display: flex;
   flex-direction: column;
-  padding-block: 1vh;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  padding: 0 20px; /* Added padding for better spacing */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
-.heading11 {
-  width: 94vw;
+/* .ListOfResources {
   display: flex;
+  font-size: large;
+} */
+
+.ListOfResources .search_text_conatiner {
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 10px 0;
+}
+
+.ListOfResources .search_input_field {
+  padding: 5px;
+  width: 30vh;
+  border: 2px solid #c6c6c6;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+  outline: #c6c6c6;
+}
+
+/* Style the input field border when it's focused */
+.ListOfResources .search_input_field:focus {
+  border-color: #3e82ff;
+}
+
+/* Style the placeholder text */
+.ListOfResources .search_input_field::placeholder {
+  color: #999;
+}
+
+.ListOfResources .search_field_button {
+  border: 1px solid #00000033;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 16px;
+  padding: 15px;
+  padding: 10px;
+  background-color: #176BFB;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.ListOfResources .search_field_button:hover {
+  background-color: #0144B7;
+}
+
+/* Table styles */
+.ListOfResources .Main_Conatiner_table {
+  width: 100%;
+  margin: 75px auto 75px auto;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  text-align: center;
-  gap: 4px;
-  margin-left: 1vw;
+  /* min-height: 100vh; */
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-
-.table-heading h2 {
-  /* margin-bottom: 1.5vw; */
-  /* Converted from 10px to 1.5vw */
-  min-width: 70vw;
-  background-color: green;
-  color: black;
-  font-weight: bold;
-  height: 8vh;
+.ListOfResources .table-heading {
+  /* padding-left: 10px; */
+  /* margin-left: 10vw; */
+  width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  padding-left: 2vh;
-  background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+  justify-content: center;
+  font-size: 20px;
+  margin-top: 20px;
 }
 
-.search_text_conatiner {
+.ListOfResources .table-heading h2{
+  width: 100%;
+  align-items: center;
+  font-weight: bold;
+  height: 5vh;
   display: flex;
-  justify-content: end;
+  background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+  padding-left: 2vh;
+  color: black;
+  min-width: 70vw;
+}
+
+.ListOfResources .table_Container {
+  overflow-y: auto;
+  max-height: 600px;
+  width: 100%;
+  /* Ensure table container takes full width */
+}
+
+.ListOfResources table {
+  /* border: 1px solid #c6c6c6; */
+  border-collapse: separate;
+  border-radius: 5px;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid #c6c6c6;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.ListOfResources table thead {
+  border-top: none;
+}
+
+.ListOfResources table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  background-color: white; /*#3e82ff*/
+  color: black;
+  padding: .625em;
+  text-align: left;
+  border-left: none;
+  border-right: none;
+}
+
+.ListOfResources table tr {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #c6c6c6;
+  padding: .35em;
+}
+
+.ListOfResources table tr:last-child {
+  border-bottom: none;
+}
+
+.ListOfResources table td {
+  padding: .625em;
+  text-align: left;
+  border-left: none;
+  border-right: none;
+}
+
+
+/* .ListOfResources tbody tr:nth-child(even) {
+  background-color: #c6c6c6;
+} */
+
+/* Pagination styles */
+.ListOfResources .pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ListOfResources .pagination button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ListOfResources .pagination button:hover {
+  background-color: #ddd;
+}
+
+.ListOfResources .pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ListOfResources .pagination button.active {
+  background-color: #00b562;
+  color: white;
+  border: 1px solid #00b562;
+}
+
+/* only to set table column width for larger screen */
+@media screen and (min-width: 893px) {
+  .ListOfResources table td:nth-child(1), .ListOfResources table tr > th:nth-child(1) {
+      width: 15%;
+  }
+  
+  .ListOfResources table td:nth-child(2), .ListOfResources table tr > th:nth-child(2) {
+      width: 15%;
+  }
+  
+  .ListOfResources table td:nth-child(n+3), .ListOfResources table tr > th:nth-child(n+3) {
+      width: 15%;
+  }
+  
+  .ListOfResources tbody tr:nth-child(odd) {
+      background-color: #ffffff;
+  }
+}
+
+@media screen and (max-width:1150px) {
+  .ListOfResources {
+      margin: 50px auto 10px auto;
+  }
+}
+
+@media screen and (max-width:993px) {
+  .ListOfResources {
+      margin: 80px auto 10px auto;
+  }
+}
+
+
+/* Media queries */
+@media screen and (max-width: 768px) {
+  .ListOfResources {
+      flex-direction: column;
+      align-items: center;
+      margin: 50px auto 10px auto;
+  }
+
+  .ListOfResources .search_text_conatiner {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .ListOfResources .search_input_field {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+  }
+
+  .ListOfResources .search_field_button {
+      margin-bottom: 20px;
+  }
+
+  .ListOfResources .create-role-btn {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+  }
+
+  .ListOfResources .Main_Conatiner_table {
+      width: 90%;
+      padding: 0 10px;
+      /* Adjusted padding for smaller screens */
+  }
+
+  .ListOfResources .table_Container {
+      overflow-x: auto;
+      /* Added horizontal scroll for small screens */
+      max-width: 100%;
+  }
+
+  .ListOfResources .pagination {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .ListOfResources .pagination button {
+      margin: 5px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .ListOfResources {
+      margin: 50px auto 10px auto;
+  }
+
+  .ListOfResources .search_input_field {
+      width: 100%;
+  }
+
+  .ListOfResources table th,
+  .ListOfResources table td {
+      padding: .5em;
+  }
+
+  .ListOfResources table caption {
+      font-size: 1.3em;
+  }
+
+  .ListOfResources .search_field_button {
+      margin-bottom: 20px;
+  }
 }

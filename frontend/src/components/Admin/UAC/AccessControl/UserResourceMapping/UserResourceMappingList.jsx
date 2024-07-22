@@ -7,6 +7,7 @@ import { decryptData, encryptData } from "../../../../../utils/encryptData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, Link } from "react-router-dom";
+import AdminHeader from "../../../../../common/AdminHeader";
 
 // import "./UserResourceMappingList.css";
 const UserResourceMappingList = () => {
@@ -37,13 +38,14 @@ const UserResourceMappingList = () => {
 
   return (
     <div>
-      <div className="Main_Conatiner_table">
-        <div className="headingHeader11">
-          <div className="heading11">
-            <h1 className="heading-title">User resource mapping list</h1>
-          </div>
+      <div className="">
+        <AdminHeader/>
+     
+        <div className="ListOfResources">
+        <div className="table-heading">
+          <h2 className="">User resource mapping list</h2>
         </div>
-
+        
         <div className="search_text_conatiner">
           <input
             type="text"
@@ -109,8 +111,9 @@ const UserResourceMappingList = () => {
             </tbody>
           </table>
         </div>
+        </div>
       </div>
-      <Footer />
+   
     </div>
   );
 };
