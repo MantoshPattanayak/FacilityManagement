@@ -11,10 +11,14 @@ let user = db.usermaster
 let useractivitypreferencesModels = db.userActivityPreference
 const {Op} = require('sequelize')
 const updatepublic_user = async (req, res) => {
+  let transaction;
   try {
+    transaction = await sequelize.transaction();
     console.log('req body', req.body, req.user.userId)
     let statusId = 1;
     let userId = req.user.userId;
+    let updatedDt = new Date();
+    let createdDt = new Date();
     console.log(userId,'userId',req.user.userId)
     let {
       encryptTitle:title,
@@ -62,6 +66,7 @@ const updatepublic_user = async (req, res) => {
           transaction
         });
         if (existuserName) {
+          await transaction.rollback();
           return res
             .status(statusCode.CONFLICT.code)
             .json({ message: "User already exist same userName" });
@@ -106,13 +111,7 @@ const updatepublic_user = async (req, res) => {
         }
       params.emailId = emailId;
     }
-    let [updatepublicUserCount, updatepublicUserData] =
-      await user.update(params, {
-        where: {
-          [Op.and]: [{userId: userId},{statusId:statusId},]
-         },
-         transaction
-      });
+  
 
       console.log('update public user count', updatepublicUserCount)
 
@@ -127,49 +126,109 @@ const updatepublic_user = async (req, res) => {
           let fetchActivities = fetchUserActivities.map((data) => {
             return data.userActivityId;
           });
-      
+          console.log(fetchActivities,'fetchactivities')
           for (let activity of activities) {
             if (!fetchActivities.includes(activity)) {
-              await useractivitypreferencesModels.update(
+             let createActivity = await useractivitypreferencesModels.create(
                 {
-                  userId: userId,
                   userActivityId: activity,
+                  userId:userId,
+                  statusId:statusId,
+                  createdBy:userId,
+                  updatedBy:userId,
+                  updatedDt:updatedDt,
+                  createdDt:createdDt
                 },
-                { transaction }
+                {
+                  
+                  transaction
+                }
+            
               );
+              if(!createActivity){
+                await transaction.rollback();
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                  message: "Something went wrong",
+                });
+              }
             }
           }
       
           // Update status to 2 for removed activities
           for (let fetchActivity of fetchActivities) {
             if (!activities.includes(fetchActivity)) {
-              await useractivitypreferencesModels.update(
+              let updateActivities = await useractivitypreferencesModels.update(
                 { status: 2 },
-                { where: { userId: userId, userActivityId: fetchActivity }, transaction }
+                { 
+                  where: {
+                    [Op.and]: [{userId: userId}, 
+                    {userActivityId: fetchActivity}]
+                  }, 
+                  transaction 
+                }
               );
+              if(updateActivities==0){
+                await transaction.rollback();
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                  message: "Something went wrong",
+                });
+              }
             }
             
-            await transaction.commit();
-  
-            res.status(statusCode.SUCCESS.code).json({
-                message: 'User profile updated',
-            })
           }
         }
       
       if(profilePicture){
-      
+        if(profilePicture.fileId!=0){
+          let findThePreviousFilePath = await file.findOne({
+            where:{[Op.and]:[{statusId:statusId},{fileId:profilePicture.fileId}]},
+            transaction
+          })
+          let oldFilePath = findThePreviousFilePath?.url
+          let errors=[];
+          let insertionData = {
+           id:userId,
+           name:userName,
+           fileId:profilePicture.fileId
+          }
+             let subDir = "userDir"
+          //update the data
+          let updateSingleImage = await imageUpdate(profilePicture.data,subDir,insertionData,userId,errors,1,transaction,oldFilePath)
+          if(errors.length>0){
+
+            await transaction.rollback();
+
+            if(errors.some(error => error.includes("something went wrong"))){
+              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+            }
+            return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+          }
       }
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+    }
+    let [updatepublicUserCount, updatepublicUserData] =
+      await user.update(params, {
+        where: {
+          [Op.and]: [{userId: userId},{statusId:statusId},]
+        },
+        transaction
+      });
     if (updatepublicUserCount >= 1) {
+      await transaction.commit();
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
       });
     } else {
+      await transaction.rollback();
       return res.status(statusCode.BAD_REQUEST.code).json({
         message: "Not Updated ",
       });
     }
   } catch (error) {
+    if(transaction) await transaction.rollback();
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
       error: error.message,
@@ -229,11 +288,20 @@ const viewpublicUser = async (req, res) => {
     let userId = req.user?.userId || 1;
     let publicRole = 4
     let statusId = 1;
-    let showpublic_user = await user.findOne({
-      where: {
-       [Op.and]: [{ userId: userId},{statusId:statusId},{roleId:publicRole}]
-      },
-    });
+    let entityType = 'usermaster'
+    let filePurpose = 'User Image'
+    // let showpublic_user = await user.findOne({
+    //   where: {
+    //    [Op.and]: [{ userId: userId},{statusId:statusId},{roleId:publicRole}]
+    //   },
+    // });
+    
+    let showpublic_user = await sequelize.query(`select u*, fl.url, from amabhoomi.usermasters u inner join fileattachments f on u.userId = f.entityId  
+   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =?
+   `,{type:QueryTypes.SELECT,
+    replacements:[entityType,filePurpose,statusId,publicRole]
+   })
+    
 
     console.log('show public user', showpublic_user)
     // let decryptUser = showpublic_user.map((encryptData)=>({
