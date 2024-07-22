@@ -370,12 +370,11 @@ const[GalleryImage, setGalleryImage]=useState([])
   }
 
   // here nearBy data -----------------------
-  // useEffect(() => {
-  //   if (userLocation && distanceRange && facilityTypeId) {
-  //     getNearbyFacilities();
-  //   }
-
-  // }, [userLocation, distanceRange, facilityTypeId]);
+  useEffect(() => {
+    if (userLocation && distanceRange && facilityTypeId) {
+      getNearbyFacilities();
+    }
+  }, [userLocation, distanceRange, facilityTypeId]);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
 
@@ -1001,7 +1000,11 @@ const[GalleryImage, setGalleryImage]=useState([])
                     >
                       <img
                         className="Yoga_image2"
-                        src={Yoga_img}
+                        src={event.eventMainImage ? instance().baseURL + '/static' + event.eventMainImage : Yoga_img}
+                        onError={(e) =>{
+                          e.target.onerror = null; // Prevents looping
+                          e.target.src = Yoga_img;
+                        }}
                         alt="Yoga Event"
                       ></img>
                       <div className="carousel-slide-text">

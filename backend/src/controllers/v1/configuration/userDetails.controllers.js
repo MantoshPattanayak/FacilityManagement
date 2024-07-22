@@ -980,7 +980,7 @@ let viewBookings = async (req, res) => {
       fb.hostBookingId as bookingId, f.hostId as Id, e.eventName as name, e.eventCategoryId, 
       ecm.eventCategoryName, f2.facilityname, e.locationName as location, e.eventDate, 
       fb.bookingDate, s.statusCode, fb.bookingDate, 
-      'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdOn as createdDate
+      'EVENT_HOST_REQUEST' as type, '7' as typeId, fb.createdDt as createdDate
     from amabhoomi.hostbookings fb
     inner join amabhoomi.hosteventdetails f on f.hostId = fb.hostId 
     inner join amabhoomi.eventactivities e on e.eventId = f.eventId
@@ -989,11 +989,11 @@ let viewBookings = async (req, res) => {
     inner join amabhoomi.eventcategorymasters ecm on ecm.eventCategoryId = e.eventCategoryId
     where fb.createdBy = ${userId}
     ${upcomingWhereCondition}
-    OR (${fromDate} IS NULL OR CAST(fb.createdOn as DATE) >= CAST(${fromDate} as DATE))
-    OR (${toDate} IS NULL OR CAST(fb.createdOn as DATE) <= CAST(${toDate} as DATE))
+    OR (${fromDate} IS NULL OR CAST(fb.createdDt as DATE) >= CAST(${fromDate} as DATE))
+    OR (${toDate} IS NULL OR CAST(fb.createdDt as DATE) <= CAST(${toDate} as DATE))
     OR (s.statusId IN (${bookingStatus}))
     OR (f2.facilityTypeId IN (${facilityTypeId}))
-    order by fb.createdOn ${sortingOrder}`;
+    order by fb.createdDt ${sortingOrder}`;
 
     if (tabName == "ALL_BOOKINGS") {
       console.log(11)

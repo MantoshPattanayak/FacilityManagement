@@ -38,7 +38,7 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
       currency: order.currency || currency,
       name: "AMA BHOOMI",
       description: description,
-      image: Logo,
+      // image: Logo,
       order_id: order.id,
       handler: async function (response) {
         try {

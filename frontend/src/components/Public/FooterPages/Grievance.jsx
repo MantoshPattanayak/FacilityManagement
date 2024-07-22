@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosHttpClient from "../../../utils/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
+
 const Grievance = () => {
   const [selectedForm, setSelectedForm] = useState("Grievance");
 
@@ -64,8 +65,12 @@ const GrievanceForm = () => {
     phoneNo: "",
     subject: "",
     details: "",
-    statusId: "",
+    statusId: 15,
     filepath: "",
+  //   filepath: {
+  //     name: '',
+  //     data: ''
+  // },
     category: "",
     isWhatsappNumber: false,
     grievanceCategoryId: "",
@@ -105,11 +110,18 @@ const GrievanceForm = () => {
 
   const handleSubmitForm = async () => {
     try {
-      let res = await axiosHttpClient(
-        "USER_SUBMIT_GRIEVANCE_API",
-        "post",
-        user
-      );
+      let res = await axiosHttpClient("USER_SUBMIT_GRIEVANCE_API", "post", {
+        fullname: user.fullname,
+        emailId: user.emailId,
+        phoneNo: user.phoneNo,
+        subject: user.subject,
+        details: user.subject,
+        statusId: user.statusId,
+        filepath: user.filepath.data,
+        category: user.category,
+        isWhatsappNumber: user.isWhatsappNumber,
+        grievanceCategoryId: user.grievanceCategoryId,
+      });
       console.log("here Grievance Response", res);
       toast.success("Form submitted successfully!");
     } catch (error) {
@@ -128,18 +140,54 @@ const GrievanceForm = () => {
     console.log("formData", user);
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        filepath: selectedFile.name,
-      }));
-      setFile(selectedFile);
+  // const handleFileChange = (e) => {
+  //   const selectedFile = e.target.files[0];
+  //   if (selectedFile) {
+  //     setUser((prevUser) => ({
+  //       ...prevUser,
+  //       filepath: selectedFile.name,
+  //     }));
+  //     setFile(selectedFile);
+  //     setIsValidFile(true);
+  //   } else {
+  //     setIsValidFile(false);
+  //   }
+  // };
+
+  let handleFileChange = (e) => {
+    let { name,value } = e.target;
+    if (name == "fileInput") {
+      console.log("entering into handleFileChange")
+      let file = e.target.files[0];
+      console.log("file attachment", file);
+      if (parseInt(file.size / 1024) <= 500) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setUser((prevUser) => ({
+            ...prevUser,
+            filepath: {
+              name: file.name,
+              data: reader.result,
+            },
+          }));
+        };
+        reader.onerror = () => {
+          console.error("Error reading file.");
+          toast.error("Error reading file.");
+        };
+      } else {
+        toast.dismiss();
+        toast.warning("Kindly choose a file with size less than 500 KB.");
+        return;
+      }
       setIsValidFile(true);
     } else {
+      console.log("existing into handleFileChange")
+      setUser({ ...user, [name]: value });
       setIsValidFile(false);
     }
+    console.log("formData", user);
   };
 
   const handleCaptchaRefresh = () => {
@@ -170,7 +218,7 @@ const GrievanceForm = () => {
     if (isSubmitted) {
       validateFeedback();
     }
-  }, [user.mobile, user.email, user.filepath, user.captchaInput]);
+  }, [user.mobile, user.emailId, user.filepath, user.captchaInput]);
 
   const validateFeedback = () => {
     const isValidMobileTemp = /^\d{10}$/.test(user.phoneNo);
@@ -342,7 +390,7 @@ const GrievanceForm = () => {
               placeholder="No photo uploaded"
               name="filepath"
               readOnly
-              value={user.filepath}
+              value={user.filepath.name}
             />
             <button type="button" onClick={handleButtonClick}>
               Upload
@@ -396,7 +444,7 @@ const FeedbackForm = () => {
     email: "",
     mobile: "",
     subject: "",
-    statusId: "",
+    statusId: 15,
     feedback: "",
     isWhatsappNumber: false,
   });
@@ -449,7 +497,7 @@ const FeedbackForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-    console.log(validateFeedback())
+    console.log(validateFeedback());
     if (validateFeedback()) {
       handleSubmitForm();
       console.log("Form submitted successfully");
