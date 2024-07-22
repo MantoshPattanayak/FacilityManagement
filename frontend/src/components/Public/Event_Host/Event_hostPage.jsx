@@ -69,7 +69,7 @@ const Event_hostPage = () => {
             case "uploadEventImage":
                 let file = files[0];
                 console.log('file name', files);
-                if (parseInt(file.size / 1024) <= 200) {
+                if (parseInt(file.size / 1024) <= 200) {   
                     const reader = new FileReader();
 
                     reader.onloadend = () => {
