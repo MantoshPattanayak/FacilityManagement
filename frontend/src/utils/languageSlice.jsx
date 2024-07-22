@@ -16,6 +16,7 @@ const languageSlice = createSlice({
     },
     setLanguageContent(state, action) {
       state.languageContent = action.payload;
+      localStorage.setItem("languageContent", JSON.stringify(action.payload));
       state.isLanguageContentFetched = true;
     },
   },
