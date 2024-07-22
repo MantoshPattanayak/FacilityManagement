@@ -1,7 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./Grievance.css";
-import CommonFooter from "../../../common/CommonFooter";
-import CommonHeader from "../../../common/CommonHeader";
 import PublicHeader from "../../../common/PublicHeader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +17,6 @@ const Grievance = () => {
   return (
     <div>
       <PublicHeader />
-      <ToastContainer />
       <div className="grievenceForm">
         <div className="heading">
           <h2>{selectedForm} Form</h2>
@@ -109,6 +106,7 @@ const GrievanceForm = () => {
   // console.log("grievance categorylist 999", grievanceCategoryList);
 
   const handleSubmitForm = async () => {
+    validateFeedback();
     try {
       let res = await axiosHttpClient("USER_SUBMIT_GRIEVANCE_API", "post", {
         fullname: user.fullname,
@@ -124,6 +122,18 @@ const GrievanceForm = () => {
       });
       console.log("here Grievance Response", res);
       toast.success("Form submitted successfully!");
+      setUser({
+        fullname: "",
+        emailId: "",
+        phoneNo: "",
+        subject: "",
+        details: "",
+        statusId: 15,
+        filepath: "",
+        category: "",
+        isWhatsappNumber: false,
+        grievanceCategoryId: "",
+      });
     } catch (error) {
       console.error(error);
       toast.error("Form submission failed. Kindly try again!");
@@ -136,6 +146,11 @@ const GrievanceForm = () => {
     //   ...prevUser,
     //   [name]: type === "checkbox" ? checked : value,
     // }));
+    if(name == "isWhatsappNumber") {
+      setUser({ ...user, [name]: checked ? 1 : 0});
+      console.log("formData", user);
+      return;
+    }
     setUser({ ...user, [name]: value });
     console.log("formData", user);
   };
@@ -214,11 +229,11 @@ const GrievanceForm = () => {
     document.getElementById("fileInput").click();
   };
 
-  useEffect(() => {
-    if (isSubmitted) {
-      validateFeedback();
-    }
-  }, [user.mobile, user.emailId, user.filepath, user.captchaInput]);
+  // useEffect(() => {
+  //   if (isSubmitted) {
+  //     validateFeedback();
+  //   }
+  // }, [user.mobile, user.emailId, user.filepath, user.captchaInput]);
 
   const validateFeedback = () => {
     const isValidMobileTemp = /^\d{10}$/.test(user.phoneNo);
@@ -226,7 +241,7 @@ const GrievanceForm = () => {
     const isValidNameTemp = user.fullname.trim() !== "";
     const isValidSubjectTemp = user.subject.trim() !== "";
     const isValidGrievanceTemp = user.details.trim() !== "";
-    const isValidFileTemp = file !== null;
+    const isValidFileTemp = user.filepath !== null;
     const isValidCaptchaTemp = user.captchaInput === captcha;
     const isValidGrievanceCategory = user.grievanceCategoryId !== "";
 
@@ -255,7 +270,7 @@ const GrievanceForm = () => {
     e.preventDefault();
     if (validateFeedback()) {
       handleSubmitForm();
-      console.log("Form submitted successfully");
+      // console.log("Form submitted successfully");
     }
     setIsSubmitted(true);
   };
@@ -398,6 +413,7 @@ const GrievanceForm = () => {
             <input
               type="file"
               id="fileInput"
+              name="fileInput"
               accept="image/*"
               style={{ display: "none" }}
               onChange={handleFileChange}

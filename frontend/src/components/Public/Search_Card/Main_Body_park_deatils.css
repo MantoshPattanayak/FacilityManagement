@@ -16,6 +16,12 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
+.park-body-4 {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Blue_ways_photo.png");
+    height: 30vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 
 .park-body-2 {
     background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Sport.png");
@@ -116,7 +122,20 @@
     background-color: rgb(246, 245, 245);
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
-
+.park-card-4{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 8px;
+    width: calc(100% - 40px);
+    /* Adjust width for padding */
+    max-width: 300px;
+    /* Limit maximum width for better responsiveness */
+    padding: 8px;
+    gap: 14px;
+    margin: 20px;
+    border-radius: 18px;
+    background-color:rgb(238, 250, 254);
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
 .Card_img {
 
     border-radius: 15px;

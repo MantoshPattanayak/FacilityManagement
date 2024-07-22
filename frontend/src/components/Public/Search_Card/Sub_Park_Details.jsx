@@ -262,6 +262,8 @@ const Sub_Park_Details = () => {
             ? "playground_header_image"
             : FacilitiesData[0]?.facilityTypeId === 3
             ? "MulitGroud"
+            : FacilitiesData[0]?.facilityTypeId === 4
+            ? "BlueWays"
             : ""
         }
       >
@@ -587,7 +589,7 @@ const Sub_Park_Details = () => {
 
         <div className="Event_Available_main_conatiner">
           <h1 className="Service_text">Event Available</h1>
-          {EventAvailable.length > 0 ? (
+          {EventAvailable.length > 20 ? (
             <div className="carousel-container">
               <button
                 className="carousel-button left"
