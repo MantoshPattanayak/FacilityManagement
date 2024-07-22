@@ -8,6 +8,7 @@ const { decrypt } = require("../../../middlewares/decryption.middlewares");
 const { encrypt } = require("../../../middlewares/encryption.middlewares");
 const facilityType = db.facilitytype;
 let user = db.usermaster
+let useractivitypreferencesModels = db.userActivityPreference
 const {Op} = require('sequelize')
 const updatepublic_user = async (req, res) => {
   try {
@@ -42,7 +43,7 @@ const updatepublic_user = async (req, res) => {
       where: {
         userId: userId,
       },
-      
+      transaction
     });
     console.log('2323')
     if (findPublicuserWithTheGivenId.title != title && title) {
@@ -58,6 +59,7 @@ const updatepublic_user = async (req, res) => {
     } else if (findPublicuserWithTheGivenId.userName != userName && userName) {
         const existuserName = await user.findOne({
           where: { userName: userName, statusId:statusId,roleId:roleId},
+          transaction
         });
         if (existuserName) {
           return res
@@ -72,6 +74,7 @@ const updatepublic_user = async (req, res) => {
         where: { phoneNo: phoneNo,statusId:statusId, roleId:roleId },
       });
       if (existingphoneNo) {
+        await transaction.rollback();
         return res
           .status(statusCode.CONFLICT.code)
           .json({ message: "User already exist same phoneNo" });
@@ -80,8 +83,10 @@ const updatepublic_user = async (req, res) => {
     } else if (findPublicuserWithTheGivenId.altPhoneNo != altPhoneNo && altPhoneNo) {
         const existingaltPhoneNo = await user.findOne({
           where: { altPhoneNo: altPhoneNo, statusId:statusId, roleId:roleId },
+          transaction
         });
         if (existingaltPhoneNo) {
+          await transaction.rollback();
           return res
             .status(statusCode.CONFLICT.code)
             .json({ message: "User already exist same altPhoneNo" });
@@ -91,8 +96,10 @@ const updatepublic_user = async (req, res) => {
       
         const existingemailId = await user.findOne({
           where: { emailId: emailId ,statusId:statusId, roleId:roleId },
+          transaction
         });
         if (existingemailId) {
+          await transaction.rollback();
           return res.status(statusCode.CONFLICT.code).json({
             message: "User already exist with given emailId",
           });
@@ -104,20 +111,17 @@ const updatepublic_user = async (req, res) => {
         where: {
           [Op.and]: [{userId: userId},{statusId:statusId},]
          },
+         transaction
       });
 
       console.log('update public user count', updatepublicUserCount)
-      try {
-        let [updatepublicUserCount, updatepublicUserData] =
-          await user.update(params, {
-            where: { userId: userId },
-          });
-      
+
         if (activities) {
           let fetchUserActivities = await useractivitypreferencesModels.findAll({
             where: {
               userId: userId,
             },
+            transaction
           });
       
           let fetchActivities = fetchUserActivities.map((data) => {
@@ -131,7 +135,7 @@ const updatepublic_user = async (req, res) => {
                   userId: userId,
                   userActivityId: activity,
                 },
-                { transaction: t }
+                { transaction }
               );
             }
           }
@@ -141,7 +145,7 @@ const updatepublic_user = async (req, res) => {
             if (!activities.includes(fetchActivity)) {
               await useractivitypreferencesModels.update(
                 { status: 2 },
-                { where: { userId: userId, userActivityId: fetchActivity }, transaction: t }
+                { where: { userId: userId, userActivityId: fetchActivity }, transaction }
               );
             }
             
@@ -152,68 +156,9 @@ const updatepublic_user = async (req, res) => {
             })
           }
         }
-      } catch (error) {
-        if (transaction) await transaction.rollback();
-  
-        console.error('Error User profile not updated:', error);
-        res.status(statusCode.BAD_REQUEST.code).json({
-            message: 'user profile not updated!',
-            data: []
-        })
-      }
+      
       if(profilePicture){
-        let profilePicturePath = null;
-        let profilePicturePath2 = null;
-
-        let uploadDir = process.env.UPLOAD_DIR;
-        let base64UploadprofilePicture = profilePicture ? profilePicture.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, ""): null;
-        let mimeMatch = userImage.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/)
-        let mime = mimeMatch ? mimeMatch[1]: null;
-        if([
-          "image/jpeg",
-          "image/png",
-          "application/pdf",
-          "application/msword",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ].includes(mime)){
-          // convert base 64 to buffer 
-          let uploadImageBuffer = userImage ? Buffer.from(base64UploadprofilePicture,'base64') : null;
-          if(uploadImageBuffer){
-            const profilePictureDir = path.join(uploadDir,"profilePictureDir");
-            if(!fs.existsSync(profilePictureDir)){
-              fs.mkdirSync(profilePictureDir,{recursive:true})
-            }
-            let fileExtension = mime ? mime.split("/")[1] : "txt";
-            profilePicturePath = `${uploadDir}/profilePictureDir/${newUser.userId}.${fileExtension}`
-            fs.writeFileSync(profilePicturePath, uploadImageBuffer);
-            profilePicturePath2= `/userImageDir/${userName}.${fileExtension}`
-            let fileName = `${newUser.userName}${newUser.userId}.${fileExtension}`
-            let fileType = mime ? mime.split("/")[0]:'unknown'
-            // insert to file table and file attachment table
-            let updateFile = await file.update({
-              fileName:fileName,
-              fileType:fileType,
-              url:profilePicturePath2,
-              statusId:1,
-              createdDt:now(),
-              updatedDt:now()
-            })
-  
-            if(!updateFile){
-              return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
-            }
-            let updateFileAttachment = await fileAttachment.update({
-              entityId: newUser.userId,
-              entityType:'usermaster',
-              fileId:createFile.fileId,
-              statusId:1,
-              filePurpose:"Profile Picture"
-            })
-          }
-        }
-        else{
-          return res.status(statusCode.BAD_REQUEST.code).json({message:"Invalid File type for the event image"})
-        }
+      
       }
     if (updatepublicUserCount >= 1) {
       return res.status(statusCode.SUCCESS.code).json({
