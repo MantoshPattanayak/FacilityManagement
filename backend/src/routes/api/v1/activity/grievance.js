@@ -5,7 +5,7 @@ const grievanceController = require("../../../../controllers/" + api_version + "
 const {userUpload} = require("../../../../middlewares/multer.middleware");
 let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 //user submit grievance
-router.post('/submit-grievance', userUpload.fields([{ name: 'filepath', maxCount: 1 }]), grievanceController.addGrievance);
+router.post('/submit-grievance', authenticateToken, grievanceController.addGrievance);
 
 router.get('/initial-data', grievanceController.fetchInitialData);      // no use of authentication token
 
