@@ -44,6 +44,11 @@ router.put("/updateAdvertisementInsert", authenticateToken, grievanceController.
 
 router.post("/initialTariffDropdownData", authenticateToken, grievanceController.initialTariffDropdownData)
 
+router.post("/insertToAdvertisementDetails", authenticateToken, grievanceController.insertToAdvertisementDetails)
+
+router.put("/actionForAdvertisement", authenticateToken, grievanceController.actionForAdvertisement)
+
+
 // advertisement
 
 module.exports = router;

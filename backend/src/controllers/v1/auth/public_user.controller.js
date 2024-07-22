@@ -436,7 +436,7 @@ const homePage = async (req, res) => {
       servicesDetails: fetchAllServices[0],
       notificationsList:viewNotificationsListQueryData,
       exploreActivities: facilityActivitiesData[0],
-      galleryData: fetchGalleryListData[0].map((gallery) => {return {...gallery, ['url']: encodeURIComponent(gallery.url)}})
+      galleryData: fetchGalleryListData[0].map((gallery) => {return {...gallery, ['url']: encodeURI(gallery.url)}})
     });
   } catch (err) {
     return res
