@@ -955,7 +955,7 @@ let findOverallSearch = async (req,res)=>{
         let eventEntityType = 'events'
         console.log('givenReq',givenReq)
         givenReq = givenReq.toLowerCase();
-        let findFacilityData = await sequelize.query(`select f.facilityname, f.address from amabhoomi.facilities f `,{type:QueryTypes.SELECT
+        let findFacilityData = await sequelize.query(`select f.facilityId,f.facilityname, f.address from amabhoomi.facilities f `,{type:QueryTypes.SELECT
         },
             
         );
@@ -1016,11 +1016,11 @@ let findOverallSearch = async (req,res)=>{
         console.log('inside facility')
 
         findFacilityData.forEach(row => {
-            console.log(row.facilityname,'findfacilitydata')
+            console.log(row.facilityname,'findfacilitydata',row.facilityname.toLowerCase().includes(givenReq))
             if(row.facilityname != null && row.facilityname.toLowerCase().includes(givenReq) ||row.address != null &&row.address.toLowerCase().includes(givenReq)){
-            matchingFacilityIds.add(row.facilityId)
+                // console.log('facilityData121',row.facilityname,row.facilityId)
+                matchingFacilityIds.add(row.facilityId)
        }});
-
        }
        
        console.log('near set conversion to array ')
@@ -1070,12 +1070,15 @@ let findOverallSearch = async (req,res)=>{
                 let findPark = getNearByData.filter(result=>result.facilityTypeId==1)
                 let findPlayground = getNearByData.filter(result=>result.facilityTypeId==2)
                 let findMultiPurposeGround = getNearByData.filter(result=>result.facilityTypeId==3)
-                
+                let findBluewayData = getNearByData.filter(result=>result.facilityTypeId==4)
+                let findGreenwayData = getNearByData.filter(result=>result.facilityTypeId==5)
                 return res.status(stausCode.SUCCESS.code).json({
                     message:"Here is the overall search data",
                     parkData:findPark,
                     playgroundData:findPlayground,
                     multipurposeData:findMultiPurposeGround,
+                    bluewayData:findBluewayData,
+                    greenwayData:findGreenwayData,
                     eventData:eventQuery
                 })
             }
