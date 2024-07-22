@@ -12,7 +12,7 @@ import { setLanguage, setLanguageContent } from "../utils/languageSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function PublicHeader() {
   const [showMediaIcon, setShowMediaIcon] = useState(false);
@@ -22,25 +22,27 @@ export default function PublicHeader() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const language = useSelector((state) => state.language.language);
-  const languageContent = useSelector((state) => state.language.languageContent);
+  const language = useSelector((state) => state.language.language || localStorage.getItem("language"));
+  const languageContent = useSelector((state) => state.language.languageContent) || JSON.parse(localStorage.getItem("languageContent"));
   const isLanguageContentFetched = useSelector((state) => state.language.isLanguageContentFetched);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0);
-    if (!isLanguageContentFetched) {
+    // if (!isLanguageContentFetched) {
       getWebContent();
-    }
-  }, [isLanguageContentFetched, language]);
+    // }
+  }, [refresh]);
+
 
   async function getWebContent() {
     try {
       const res = await axiosHttpClient('LANGUAGE_RESOURCE_API', 'post', { language });
-      if (Array.isArray(res.data.languageContentResultData)) {
+      // if (Array.isArray(res.data.languageContentResultData)) {
         dispatch(setLanguageContent(res.data.languageContentResultData));
-      } else {
-        console.log('valid language content data:', res.data.languageContentResultData);
-      }
+      // } else {
+        console.log('valid language content data:', language, res.data.languageContentResultData);
+      // }
     } catch (error) {
       console.error('Error fetching language content:', error);
     }
@@ -61,6 +63,7 @@ export default function PublicHeader() {
   }
 
   useEffect(() => {
+    getWebContent();
     if(isUserLoggedIn)
       GetTotalNumberofCart();
   }, []);
@@ -68,7 +71,7 @@ export default function PublicHeader() {
   useEffect(() => {
     if(refreshOnLogOut)
       setIsUserLoggedIn(0);
-  }, [refreshOnLogOut])
+  }, [refreshOnLogOut]);
 
 
   function handleLogout(e) {
@@ -110,14 +113,14 @@ export default function PublicHeader() {
         <div className="navbar">
           <ul className={showMediaIcon ? "hidden menu_links mobile_menu_links show" : "hidden menu_links mobile_menu_links"}>
             <li>
-              {(language === 'EN') && <><button value={'OD'} onClick={() => setLanguageCode('OD')}>ଓଡ଼ିଆ</button> &nbsp; | </>}
-              {(language === 'OD') && <><button value={'EN'} onClick={() => setLanguageCode('EN')}>English</button> &nbsp; | </>}
+              {(language === 'EN') && <><button value={'OD'} onClick={() => {setLanguageCode('OD'); setRefresh(prevState => !prevState);}}>ଓଡ଼ିଆ</button> &nbsp; | </>}
+              {(language === 'OD') && <><button value={'EN'} onClick={() => {setLanguageCode('EN'); setRefresh(prevState => !prevState);}}>English</button> &nbsp; | </>}
             </li>
             <li>
-              <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey === 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
+              <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
             </li>
             <li>
-              <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey === 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
+              <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
             </li>
             <li>
               <Link to={'/faqs'}>FAQ</Link>
