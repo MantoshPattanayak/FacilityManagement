@@ -31,7 +31,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
           console.log(uploadImageFileBuffer,'25 upload image file buffer')
           if (uploadImageFileBuffer) {
             console.log('27',path.join(uploadDir, subDir))
-            const imageFileDir = path.join(uploadDir, subDir);
+            const imageFileDir = path.join(uploadDir);
             console.log(imageFileDir,'28 image file dir  image file buffer')
             // ensure the event image directory exists
             if (!fs.existsSync(imageFileDir)) {
@@ -43,9 +43,10 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
 
             uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
 
-            await fs.remove(`${imageFileDir}/${oldFilePath}`);
-
-            fs.writeFileSync(uploadFilePath, uploadImageFileBuffer);
+           let checkFileRemove = await fs.remove(`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`);
+           console.log('fs remove', checkFileRemove)
+           console.log(`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`);
+           fs.writeFileSync(uploadFilePath, uploadImageFileBuffer);
             uploadFilePath2 = `/${subDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
             console.log(uploadFilePath2,"upload file path2 43")
             let fileName = `${insertionData.id}${insertionData.name}.${fileExtension}`;

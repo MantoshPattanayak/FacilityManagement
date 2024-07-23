@@ -116,6 +116,7 @@ const updatepublic_user = async (req, res) => {
           let fetchUserActivities = await useractivitypreferencesModels.findAll({
             where: {
               userId: userId,
+              statusId:statusId
             },
             transaction
           });
