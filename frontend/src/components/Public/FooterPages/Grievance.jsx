@@ -133,6 +133,7 @@ const GrievanceForm = () => {
         category: "",
         isWhatsappNumber: false,
         grievanceCategoryId: "",
+        captchaInput: "",
       });
     } catch (error) {
       console.error(error);

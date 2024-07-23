@@ -35,6 +35,7 @@ const addGrievance = async (req, res) => {
             filepath,
             isWhatsappNumber
         } = req.body;
+      
         createGrievance = await grievanceMasters.create({
             fullname: fullname,
             emailId: emailId,
