@@ -50,7 +50,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
             console.log(uploadFilePath2,"upload file path2 43")
             let fileName = `${insertionData.id}${insertionData.name}.${fileExtension}`;
             let fileType = mime ? mime.split("/")[0] : 'unknown';
-            console.log(fileName,fileType,"file path2 46")
+            console.log(fileName,fileType,'insertion Data',insertionData,"file path2 46")
             // insert to file table and file attachment table
             let [createFileCount, createFileData] = await file.update({
               fileName: fileName,
@@ -62,29 +62,28 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
        { where:{
             fileId:insertionData.fileId
         },transaction});
-            console.log('createFile', createFile)
+            console.log('update file data', createFileCount)
             if (createFileCount==0) {
                 await transaction.rollback()
               return errors.push(`Failed to create file  for facility file at index ${i}`);
             } else {
-              console.log(insertionData,entityType,'createFile',createFile, 'file purpose', filePurpose,'insert to file attachment')
               // Insert into file attachment table
               let [createFileAttachmentCount, createFiileAttachmentData] = await fileAttachment.update({
                 entityId: insertionData.id,
-                entityType: entityType,
-                fileId: createFile.fileId,
                 statusId: 1,
-                filePurpose: filePurpose
+                updatedDt: updatedDt,
+                updatedBy:userId
               },
            { where:{
                 fileId:insertionData.fileId
             },
             transaction}
           );
-
+          console.log('create file attachment count', createFileAttachmentCount)
               if (createFileAttachmentCount==0) {
                 return errors.push(`Failed to create file attachment for facility file at index ${i}`);
               }
+              console.log('create file count',createFileAttachmentCount )
               return null;
             }
           }

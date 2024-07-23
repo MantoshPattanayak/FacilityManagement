@@ -8,6 +8,7 @@ let deviceLogin = db.device
 let otpCheck = db.otpDetails
 let QueryTypes = db.QueryTypes
 let userActivityPreference = db.userActivityPreference
+let imageUpload = require('../../../utils/imageUpload')
 // const admin = require('firebase-admin');
 const { sequelize,Sequelize } = require('../../../models')
 let jwt = require('jsonwebtoken');
@@ -512,13 +513,14 @@ let signUp = async (req,res)=>{
  try{
   transaction = await sequelize.transaction();
   console.log('1')
+  let roleId = 4; //user roleId
   console.log(req.body,'req.body')
     let statusId = 1;
-    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,encryptActivity:activities,isEmailVerified} = req.body;
+    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,encryptActivity:activities,isEmailVerified, location} = req.body;
 
-    if(activities){
-      activities = activities.map(decryptValue=>decrypt(decryptValue));
-    }
+    // if(activities){
+    //   activities = activities.map(decryptValue=>decrypt(decryptValue));
+    // }
 
     console.log(activities,"activities")
 
@@ -526,12 +528,14 @@ let signUp = async (req,res)=>{
     let createdDt = new Date();
     let updatedDt = new Date();
     if(!password && !firstName && !middleName && !lastName && !phoneNo && !userImage && !activities && language){
+      await transaction.rollback();
       return res.status(statusCode.BAD_REQUEST.code).json({
         message: `please provide all required data to set up the profile`
       })
     }
     if(email){
       if(isEmailVerified != 1){
+        await transaction.rollback();
         return res.status(statusCode.BAD_REQUEST.code).json({
           message: `Please verify the email first`
         })
@@ -560,6 +564,7 @@ let signUp = async (req,res)=>{
       console.log('password check',phoneNo)
 
       if(checkDuplicateMobile){
+        await transaction.rollback();
         return res.status(statusCode.CONFLICT.code).json({
           message:"This mobile is already allocated to existing user"
         })
@@ -586,7 +591,9 @@ let signUp = async (req,res)=>{
         password: hashedPassword,
         phoneNo: phoneNo,
         emailId: email,
+        roleId:roleId,
         language:language,
+        location:location,
         lastLogin:lastLogin, // Example of setting a default value
         statusId: 1, // Example of setting a default value
         createdDt: createdDt, // Set current timestamp for createdOn
@@ -652,7 +659,7 @@ let signUp = async (req,res)=>{
       if(userImage){
         let insertionData = {
           id:newUser.userId,
-          name:firstName
+          name:decrypt(firstName)
          }
         // create the data
         let entityType = 'usermaster'
