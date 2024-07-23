@@ -686,6 +686,7 @@ const nearByDataInMap = async (req, res) => {
         let entityType = 'facilities'
         // Default range is set to 20 if not provided
         range = range ? range : 20;
+        order = order ? order : 2;
 
         // Initialize query and replacements array
         let fetchFacilitiesQuery = '';
@@ -840,7 +841,7 @@ const nearByDataInMap = async (req, res) => {
 
         // Group by facilityId
         fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
-        console.log(fetchFacilitiesQuery,'fetchFacilitiesQuery')
+        // console.log(fetchFacilitiesQuery,'fetchFacilitiesQuery')
         // Sort order
         // if (order == 1) {
         //     // Ascending order
@@ -860,7 +861,7 @@ const nearByDataInMap = async (req, res) => {
         console.log('fetchFacilities',fetchFacilities)
                 let getNearByData = [];
         for (const data of fetchFacilities) {
-            console.log('data',fetchFacilities,'fetchFacilitiesData')
+            // console.log('data',fetchFacilities,'fetchFacilitiesData')
             let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
             if (distance <= range) {
                 console.log('distance', distance)
@@ -871,16 +872,19 @@ const nearByDataInMap = async (req, res) => {
             // console.log(getNearByData,'getNearByData')
         }
         // console.log('fetchFacilities', fetchFacilities[0])
+        console.log('getNearByData before ordering', getNearByData);
+        
         if(order == 1){
             console.log('order', 11)
             // ascending
             getNearByData.sort(function(a, b) {
                 // Convert names to lowercase for case-insensitive comparison
-                const nameA = a.facilityname.trim().toLowerCase();
-                const nameB = b.facilityname.trim().toLowerCase();
+                // const nameA = a.facilityname.trim().toLowerCase();
+                // const nameB = b.facilityname.trim().toLowerCase();
             
                 // Use localeCompare for case-insensitive string comparison
-                return nameA.localeCompare(nameB);
+                // return nameA.localeCompare(nameB);
+                return a.distance - b.distance;
             });
 
             console.log(getNearByData, 'getNearByData')
@@ -891,15 +895,16 @@ const nearByDataInMap = async (req, res) => {
             // descending
             getNearByData.sort(function(a, b) {
                 // Convert names to lowercase for case-insensitive comparison
-                const nameA = a.facilityname.trim().toLowerCase();
-                const nameB = b.facilityname.trim().toLowerCase();
+                // const nameA = a.facilityname.trim().toLowerCase();
+                // const nameB = b.facilityname.trim().toLowerCase();
             
             
                 // Use localeCompare for case-insensitive string comparison
-                return nameB.localeCompare(nameA);
+                // return nameB.localeCompare(nameA);
+                return a.distance - b.distance;
             });
         }
-        console.log('get near by data')
+        console.log('get near by data', getNearByData);
         // Construct response
         // const convertedData = convertImagesToBase64(getNearByData);
         const encodedFacilities = encodeUrls(getNearByData);
