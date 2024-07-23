@@ -139,8 +139,8 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
-// here Gallery Image -------------------------------
-const[GalleryImage, setGalleryImage]=useState([])
+  // here Gallery Image -------------------------------
+  const [GalleryImage, setGalleryImage] = useState([])
 
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
@@ -410,7 +410,7 @@ const[GalleryImage, setGalleryImage]=useState([])
     setSelectedLocationDetails(location); // Set selected location details
     console.log(location);
   };
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton, setSelectedButton] = useState(1);
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (typeid) => {
     setSelectedButton(typeid);
@@ -497,10 +497,9 @@ const[GalleryImage, setGalleryImage]=useState([])
     }
   };
 
-  // const [currentIndex, setCurrentIndex] = useState(0);
 
   //------- Advatisemant -----------
-  const ad = [adImg, ad1, ad2, ad3];
+  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3];
   // Home page image
   const getStyles = () => {
     const width = window.innerWidth;
@@ -599,13 +598,13 @@ const[GalleryImage, setGalleryImage]=useState([])
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </div>
               </div>
-              <div className="search-bar-arrow">
+              {/* <div className="search-bar-arrow">
                 <FontAwesomeIcon
                   icon={faArrowRight}
                   className="input-icon"
                   onClick={handleSearch}
                 />
-              </div>
+              </div> */}
             </div>
             {/* {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
@@ -684,7 +683,7 @@ const[GalleryImage, setGalleryImage]=useState([])
           >
             <div className="iconLogo">
               <img src={mp_ground_logo} alt="" />
-              <h2>Multipurpose</h2>
+              <h2>Multipurpose Grounds</h2>
               {/* <h2>Grounds</h2> */}
             </div>
           </Link>
@@ -750,10 +749,10 @@ const[GalleryImage, setGalleryImage]=useState([])
               <div className="icon1">
                 <button
                   className="icon1_button"
-                  onClick={() => handleParkLogoClick(4)}
+                  onClick={() => handleParkLogoClick(5)}
                 >
                   <img src={greenway} alt="" />
-                  {selectedButton === 4 ? (
+                  {selectedButton === 5 ? (
                     <h2 className="clicked-text-icon_blue">Greenways</h2>
                   ) : (
                     <h2 className="text1">Greenways</h2>
@@ -763,12 +762,12 @@ const[GalleryImage, setGalleryImage]=useState([])
               <div className="icon1">
                 <button
                   className="icon1_button"
-                  onClick={() => handleParkLogoClick(5)}
+                  onClick={() => handleParkLogoClick(4)}
                 >
                   <div>
                     <img src={Blueway} alt="" />
                   </div>
-                  {selectedButton === 5 ? (
+                  {selectedButton === 4 ? (
                     <div>
                       <h2 className="clicked-text-icon_blue">Blueways</h2>
                     </div>
@@ -781,6 +780,7 @@ const[GalleryImage, setGalleryImage]=useState([])
               </div>
             </div>
 
+            <div className="mapSearchContainer">
             <div className="mapSearchButton">
               <input
                 type="text"
@@ -789,10 +789,12 @@ const[GalleryImage, setGalleryImage]=useState([])
                 id="givenReq"
                 value={givenReq}
                 onChange={handleChange}
+                className="mapSearchInput"
               ></input>
-              <button type="button" onClick={fecthMapData}>
+              <button type="button" className="mapSearchSubmit" onClick={fecthMapData}>
                 <FontAwesomeIcon icon={faSearch} className="os-icon" />
               </button>
+              </div>
             </div>
           </div>
 
@@ -839,14 +841,30 @@ const[GalleryImage, setGalleryImage]=useState([])
               )}
             </GoogleMap>
           </LoadScript>
-          
+
         </section>
 
         {/* --------Facilities Near me----------------------------------------------------- */}
 
         <div className="nearByFacilities">
           <div className="nearByFacilities-heading">
-            <h1>Facilities Near Me</h1>
+
+            <h1>{selectedButton === 1 && (
+              <h1> Parks Near Me </h1>
+            )} </h1>
+            <h1>{selectedButton === 2 && (
+              <h1> PlayGround Near Me  </h1>
+            )} </h1>
+            <h1>{selectedButton === 3 && (
+              <h1> Multipurpose Grounds Near Me </h1>
+            )} </h1>
+            <h1>{selectedButton === 5 && (
+              <h1> Greenways  Near Me </h1>
+            )} </h1>
+            <h1>{selectedButton === 4 && (
+              <h1> Blueways Near Me </h1>
+            )} </h1>
+
             <div className="nearByFacilities-buttons">
               <button
                 type="button"
@@ -1001,7 +1019,7 @@ const[GalleryImage, setGalleryImage]=useState([])
                       <img
                         className="Yoga_image2"
                         src={event.eventMainImage ? instance().baseURL + '/static' + event.eventMainImage : Yoga_img}
-                        onError={(e) =>{
+                        onError={(e) => {
                           e.target.onerror = null; // Prevents looping
                           e.target.src = Yoga_img;
                         }}
@@ -1056,7 +1074,7 @@ const[GalleryImage, setGalleryImage]=useState([])
       >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-          <h1>Explore New Activities And Book</h1>
+          <h1>Explore And Book New Activities</h1>
         </div>
 
         <div className="exploreNewAct-outer">
@@ -1065,7 +1083,7 @@ const[GalleryImage, setGalleryImage]=useState([])
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${selectedActivity === index ? "selected" : ""
+                className={`activity  ${selectedActivity === index ? "selected" : ""
                   }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
@@ -1139,21 +1157,21 @@ const[GalleryImage, setGalleryImage]=useState([])
               // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
               style={{ transform: `translateX(-${currentIndex1 * 420}px)` }} // Adjust transform value
             >
-             {GalleryImage.map((item, index) => {
-                        const imageUrl = `${instance().baseURL}/static${item.url}`;
-                        console.log('Image URL:', imageUrl); // Log the image URL to the console
-                        return (
-                            <div key={index} className="carousel-image-container">
-                                <img
-                                    src={imageUrl}
-                                    alt={`carousel-img${index}`}
-                                    className="carousel-image"
-                                    // Hide broken images
-                                />
-                                <div className="description">{item.description}</div>
-                            </div>
-                        );
-                    })}
+              {GalleryImage.map((item, index) => {
+                const imageUrl = `${instance().baseURL}/static${item.url}`;
+                console.log('Image URL:', imageUrl); // Log the image URL to the console
+                return (
+                  <div key={index} className="carousel-image-container">
+                    <img
+                      src={imageUrl}
+                      alt={`carousel-img${index}`}
+                      className="carousel-image"
+                    // Hide broken images
+                    />
+                    <div className="description">{item.description}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
           <button className="carousel-button2 right" onClick={nextImage1}>
