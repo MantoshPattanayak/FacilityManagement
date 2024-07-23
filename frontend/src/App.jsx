@@ -70,6 +70,9 @@ import Book_Event from "./components/Public/BookParks/Book_Event";
 import PublicLoader from "./common/PublicLoader";
 // here Gallery
 import Image_Gallery from "./components/Public/View_Gallery/Image_Gallery";
+//Here gallery for admin
+import CreateNewGallery from "./components/Admin/Activity/Gallery/CreateNewGallery";
+import ViewGalleryList from "./components/Admin/Activity/Gallery/ViewGalleryList";
 // here Import Admin Page -----------------xxxx----------------------
 import TariffDetails from "./components/Admin/MDM/Tariff/TariffDetails";
 import ViewTariffList from "./components/Admin/MDM/Tariff/ViewTariffList";
@@ -342,6 +345,24 @@ function App() {
                 }
               />
               {/* Activity - Grievance END */}
+              <Route
+                path="/activity/gallery"
+                element={
+                  <ProtectedRoute>
+                    <CreateNewGallery />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/activity/ViewGalleryList"
+                element={
+                  <ProtectedRoute>
+                    <ViewGalleryList />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Activity Gallery Start */}
+              {/* Activity Gallery end */}
               {/* ADMIN SECTION - UAC*/}
               <Route
                 path="/UAC/Resource/ListOfResources"
