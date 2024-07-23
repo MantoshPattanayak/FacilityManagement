@@ -23,7 +23,7 @@ const addGrievance = async (req, res) => {
     let transaction;
     try {
         transaction = await sequelize.transaction();
-        let userId = req.user.userId
+        let userId = req.user.userId || null;
         let createGrievance;
         const {
             fullname,
@@ -35,6 +35,7 @@ const addGrievance = async (req, res) => {
             filepath,
             isWhatsappNumber
         } = req.body;
+      
         createGrievance = await grievanceMasters.create({
             fullname: fullname,
             emailId: emailId,
@@ -42,7 +43,9 @@ const addGrievance = async (req, res) => {
             subject: subject,
             details: details,
             statusId: statusId,
-            isWhatsappNumber: isWhatsappNumber
+            isWhatsappNumber: isWhatsappNumber,
+            createdOn: new Date(),
+            createdBy: userId
         },{
             transaction
         }
@@ -352,7 +355,8 @@ let actionTaken = async (req, res) => {
 const createFeedback = async (req, res) => {
     try {
         let createFeedback;
-        let userId = req.user.userId;
+        let userId = req.user?.userId ? req.user?.userId : null;
+        console.log(1)
         const {
             name,
             mobile,

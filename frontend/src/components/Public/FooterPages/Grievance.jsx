@@ -64,10 +64,10 @@ const GrievanceForm = () => {
     details: "",
     statusId: 15,
     filepath: "",
-  //   filepath: {
-  //     name: '',
-  //     data: ''
-  // },
+    //   filepath: {
+    //     name: '',
+    //     data: ''
+    // },
     category: "",
     isWhatsappNumber: false,
     grievanceCategoryId: "",
@@ -133,6 +133,7 @@ const GrievanceForm = () => {
         category: "",
         isWhatsappNumber: false,
         grievanceCategoryId: "",
+        captchaInput: "",
       });
     } catch (error) {
       console.error(error);
@@ -146,8 +147,8 @@ const GrievanceForm = () => {
     //   ...prevUser,
     //   [name]: type === "checkbox" ? checked : value,
     // }));
-    if(name == "isWhatsappNumber") {
-      setUser({ ...user, [name]: checked ? 1 : 0});
+    if (name == "isWhatsappNumber") {
+      setUser({ ...user, [name]: checked ? 1 : 0 });
       console.log("formData", user);
       return;
     }
@@ -170,9 +171,9 @@ const GrievanceForm = () => {
   // };
 
   let handleFileChange = (e) => {
-    let { name,value } = e.target;
+    let { name, value } = e.target;
     if (name == "fileInput") {
-      console.log("entering into handleFileChange")
+      console.log("entering into handleFileChange");
       let file = e.target.files[0];
       console.log("file attachment", file);
       if (parseInt(file.size / 1024) <= 500) {
@@ -198,7 +199,7 @@ const GrievanceForm = () => {
       }
       setIsValidFile(true);
     } else {
-      console.log("existing into handleFileChange")
+      console.log("existing into handleFileChange");
       setUser({ ...user, [name]: value });
       setIsValidFile(false);
     }
@@ -481,6 +482,15 @@ const FeedbackForm = () => {
       let res = await axiosHttpClient("USER_SUBMIT_FEEDBACK_API", "post", user);
       console.log("here Feedback Response", res);
       toast.success("Form submitted successfully!");
+      setUser({
+        name: "",
+        email: "",
+        mobile: "",
+        subject: "",
+        statusId: 15,
+        feedback: "",
+        isWhatsappNumber: false,
+      });
     } catch (error) {
       console.error(error);
       toast.error("Form submission failed. Kindly try again!");
@@ -552,7 +562,7 @@ const FeedbackForm = () => {
             type="text"
             id="mobileInput"
             placeholder="Enter mobile Number"
-            value={mobileNumber}
+            value={user.mobile}
             onChange={(event) => {
               handleInputChange(event, "mobile");
               setMobileNumber(event.target.value);
@@ -573,7 +583,7 @@ const FeedbackForm = () => {
             type="text"
             id="emailInput"
             placeholder="Enter Email"
-            value={email}
+            value={user.email}
             onChange={(event) => {
               handleInputChange(event, "email");
               setEmail(event.target.value);
@@ -614,6 +624,7 @@ const FeedbackForm = () => {
           Submit
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };
