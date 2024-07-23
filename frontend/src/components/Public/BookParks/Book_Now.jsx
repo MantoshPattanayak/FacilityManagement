@@ -246,11 +246,16 @@ const Book_Now = () => {
           facilityPreference,
         });
 
+        console.log("booking response", res.data.data);
+
+        let bookingId = res.data.data.facilityBookingId;
+        let entityTypeId = modifiedFormData.entityTypeId;
+
         toast.success("Park has been booked successfully.", {
-          autoClose: 3000,
+          autoClose: 2000,
           onClose: () => {
             setTimeout(() => {
-              navigate("/profile/booking-details");
+              navigate(`/profile/booking-details/ticket?bookingId=${encryptData(bookingId)}&typeId=${encryptData(entityTypeId)}`);
             }, 1000);
           },
         });

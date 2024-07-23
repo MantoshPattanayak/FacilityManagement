@@ -150,12 +150,15 @@ const Book_Now_Sport = () => {
                     facilityPreference,
                 });
                 console.log("submit and response", res);
+                let bookingId = res.data.data.facilityBookingId;
+                let entityTypeId = modifiedFormData.entityTypeId;
+                
                 toast.success("Playground has been booked successfully.", {
                     autoClose: 3000, // Toast timer duration in milliseconds
                     onClose: () => {
                         // Navigate to another page after toast timer completes
                         setTimeout(() => {
-                            navigate(`/profile/booking-details`);
+                            navigate(`/profile/booking-details/ticket?bookingId=${encryptData(bookingId)}&typeId=${encryptData(entityTypeId)}`);
                         }, 1000); // Wait 1 second after toast timer completes before navigating
                     },
                 });
