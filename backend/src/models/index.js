@@ -139,7 +139,7 @@ db1.advertisementDetails = require('./advertisementdetails.models')(sequelize,Da
 db1.advertisementMasters = require('./advertisementtype.models')(sequelize,DataTypes)
 db1.galleryDetails = require("./gallerydetails.models")(sequelize, DataTypes)
 db1.facilityStaffAllocation = require('./facilitystaffallocation.models')(sequelize, DataTypes)
-db1.facilityStaffAttendance = require("./staffattendance.models")(sequelize, DataTypes)
+db1.facilityStaffAttendance = require("./facilitystaffattendances.models")(sequelize, DataTypes)
 // advertisement details end
 // end partner with us
 // join operations start
@@ -211,7 +211,7 @@ db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 db1.facilityStaffAttendance.sync({
-  alter: true,
+  alter: false,
 });
 
 module.exports = db1;

@@ -49,7 +49,10 @@ module.exports =(sequelize,DataTypes)=>{
         },
         additionalDetails:{
             type:DataTypes.STRING(255)
-        },   
+        },
+        eventRegistrationNumber: {
+            type:DataTypes.STRING(255)
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },
