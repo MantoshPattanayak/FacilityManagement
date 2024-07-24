@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { encryptData } from "../../utils/encryptData.js";
 function Search_Card() {
   const location = useLocation();
-  const [givenReq, setGivenReq] = useState('');
+  const [givenReq, setGivenReq] = useState("");
   const [parkData, setParkData] = useState([]);
   const [playGroundData, setPlayGroundData] = useState([]);
   const [multipurposeData, setMultipurposeData] = useState([]);
@@ -21,11 +21,12 @@ function Search_Card() {
   const navigate = useNavigate();
   const defaultCenter = { latitude: 20.2961, longitude: 85.8245 };
   const [userLocation, setUserLocation] = useState(defaultCenter);
-  const [range, setRange] = useState(30)  // by default range is set to 30km radius to search data'
+  const [range, setRange] = useState(30); // by default range is set to 30km radius to search data'
 
+  
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 1,
     centerMode: true,
@@ -98,16 +99,19 @@ function Search_Card() {
   // function to search all facilities and events according to search query
   async function searchFacilityData(givenReq) {
     try {
-      let res = await axiosHttpClient(
-        "OVERALL_SEARCH_DATA_API",
-        "post",
-        { latitude: userLocation.latitude, longitude: userLocation.longitude, range, givenReq: givenReq }
-      );
+      let res = await axiosHttpClient("OVERALL_SEARCH_DATA_API", "post", {
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        range,
+        givenReq: givenReq,
+      });
       console.log("response of filter api", res.data);
       setParkData(res.data.parkData || []);
       setPlayGroundData(res.data.playgroundData || []);
       setMultipurposeData(res.data.multipurposeData || []);
       setEventsData(res.data.eventData || []);
+
+      console.log("total parks are  :", parkData.length);
     } catch (err) {
       console.error(err);
     }
@@ -130,10 +134,20 @@ function Search_Card() {
           <p>Parks</p>
         </div>
         <div className="mt-20">
-          {
-            parkData.length > 0 && <Slider {...settings}>
+          {parkData.length > 0 && (
+            <Slider {...settings}>
               {parkData?.map((d, index) => (
-                <div className="park-card" key={index + 1} onClick={(e) => { navigate(`/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`) }}>
+                <div
+                  className="park-card "
+                  key={index + 1}
+                  onClick={(e) => {
+                    navigate(
+                      `/Sub_Park_Details?facilityId=${encryptData(
+                        d.facilityId
+                      )}&action=view`
+                    );
+                  }}
+                >
                   <img className="Card_img" src={image} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
@@ -142,21 +156,21 @@ function Search_Card() {
                     </span>
                     <span className="Avil_Dis">
                       <button className="Available">Available</button>
-                      <h3 className="distance">{parseFloat(d.distance).toFixed(2)} km(s)</h3>
+                      <h3 className="distance">
+                        {parseFloat(d.distance).toFixed(2)} km(s)
+                      </h3>
                     </span>
                   </div>
                 </div>
               ))}
             </Slider>
-          }
-          {
-            parkData.length == 0 && (
-              <div className="no-data-message flex justify-center w-[100%]">
-                {/* Conditionally render based on some condition */}
-                <img src={No_Data_icon} alt="No Data Found" />
-              </div>
-            )
-          }
+          )}
+          {parkData.length == 0 && (
+            <div className="no-data-message flex justify-center w-[100%]">
+              {/* Conditionally render based on some condition */}
+              <img src={No_Data_icon} alt="No Data Found" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -166,10 +180,20 @@ function Search_Card() {
           <p>Play grounds</p>
         </div>
         <div className="mt-20">
-          {
-            playGroundData.length > 0 && <Slider {...settings}>
+          {playGroundData.length > 0 && (
+            <Slider {...settings}>
               {playGroundData?.map((d, index) => (
-                <div className="park-card" key={index + 1} onClick={(e) => { navigate(`/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`) }}>
+                <div
+                  className="park-card"
+                  key={index + 1}
+                  onClick={(e) => {
+                    navigate(
+                      `/Sub_Park_Details?facilityId=${encryptData(
+                        d.facilityId
+                      )}&action=view`
+                    );
+                  }}
+                >
                   <img className="Card_img" src={image} alt="Park" />
                   <div className="card_text">
                     <span className="Name_location">
@@ -184,15 +208,13 @@ function Search_Card() {
                 </div>
               ))}
             </Slider>
-          }
-          {
-            playGroundData.length == 0 && (
-              <div className="no-data-message flex justify-center w-[100%]">
-                {/* Conditionally render based on some condition */}
-                <img src={No_Data_icon} alt="No Data Found" />
-              </div>
-            )
-          }
+          )}
+          {playGroundData.length == 0 && (
+            <div className="no-data-message flex justify-center w-[100%]">
+              {/* Conditionally render based on some condition */}
+              <img src={No_Data_icon} alt="No Data Found" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -201,17 +223,29 @@ function Search_Card() {
         <div className="heading-text">
           <p>Multipurpose Ground</p>
         </div>
-        <div className="mt-20">{
-          multipurposeData.length > 0 ? (
+        <div className="mt-20">
+          {multipurposeData.length > 0 ? (
             <Slider {...settings}>
-              {multipurposeData.length > 0 && (
+              {multipurposeData.length > 0 &&
                 multipurposeData.map((d) => (
-                  <div className="park-card" key={index + 1} onClick={(e) => { navigate(`/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`) }}>
+                  <div
+                    className="park-card"
+                    key={index + 1}
+                    onClick={(e) => {
+                      navigate(
+                        `/Sub_Park_Details?facilityId=${encryptData(
+                          d.facilityId
+                        )}&action=view`
+                      );
+                    }}
+                  >
                     <img className="Card_img" src={image} alt="Park" />
                     <div className="card_text">
                       <span className="Name_location">
                         <h2 className="park_name">{d.name}</h2>
-                        <h3 className="park_location">Baramunda, Bhubaneswar</h3>
+                        <h3 className="park_location">
+                          Baramunda, Bhubaneswar
+                        </h3>
                       </span>
                       <span className="Avil_Dis">
                         <button className="Available">Available</button>
@@ -219,16 +253,14 @@ function Search_Card() {
                       </span>
                     </div>
                   </div>
-                ))
-              )}
+                ))}
             </Slider>
           ) : (
             <div className="no-data-message flex justify-center w-[100%]">
               {/* Conditionally render based on some condition */}
               <img src={No_Data_icon} alt="No Data Found" />
             </div>
-          )
-        }
+          )}
         </div>
       </div>
     </div>

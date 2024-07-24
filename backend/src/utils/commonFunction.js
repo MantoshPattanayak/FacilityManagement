@@ -11,6 +11,21 @@ let utilFunction = (fn)=>  async function(req,res,next){
     }
 }
 
+/**
+ * Converts Excel time serial number to time string (HH:MM:SS)
+ * @param {number} excelSerialNumber - Excel time serial number
+ * @returns {string} - Time string (HH:MM:SS)
+ */
+function excelSerialToTime(excelSerialNumber) {
+    const fractionalDay = excelSerialNumber - Math.floor(excelSerialNumber);
+    const totalSeconds = Math.round(86400 * fractionalDay);
+
+    const seconds = totalSeconds % 60;
+    const minutes = Math.floor(totalSeconds / 60) % 60;
+    const hours = Math.floor(totalSeconds / 3600);
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
 
 
 
@@ -24,4 +39,5 @@ let utilFunction = (fn)=>  async function(req,res,next){
 
 module.exports ={
     utilFunction
+    ,excelSerialToTime
 }
