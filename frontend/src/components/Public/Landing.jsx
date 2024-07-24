@@ -130,6 +130,7 @@ const Landing = () => {
   const [userLocation, setUserLocation] = useState(defaultCenter);
   const [nearbyParks, setNearbyParks] = useState([]);
   const [distanceRange, setDistanceRange] = useState(2);
+  const [activeButton, setActiveButton] = useState(2);
   const [currentIndex, setCurrentIndex] = useState(0);
   let randomKey = Math.random();
   let navigate = useNavigate();
@@ -137,16 +138,15 @@ const Landing = () => {
   const [inputFacility, setInputFacility] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
-
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
   // here Gallery Image -------------------------------
   const [GalleryImage, setGalleryImage] = useState([])
-
+  // set loader-------------------------------------------
+  const [loading, setLoading] = useState(false); // Add loading state
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
   let dispatch = useDispatch();
-
   const marqueeRef = useRef(null);
   const [isMarqueePaused, setIsMarqueePaused] = useState(false);
 
@@ -338,6 +338,7 @@ const Landing = () => {
   }
 
   async function getNearbyFacilities() {
+    setLoading(true); // Start loading
     let bodyParams = {
       facilityTypeId: facilityTypeId,
       latitude: userLocation?.latitude || defaultCenter?.lat,
@@ -366,10 +367,11 @@ const Landing = () => {
     } catch (error) {
       console.error(error);
       toast.error("Location permission not granted.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   }
-
-  // here nearBy data -----------------------
+  // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
     if (userLocation && distanceRange && facilityTypeId) {
       getNearbyFacilities();
@@ -703,7 +705,6 @@ const Landing = () => {
 
       <div className="map-parentContainer">
         {/* --------//google map ------------------------------------------------------------------------------- */}
-
         <section className="map-container2">
           <div className="map-bar">
             <div className="map-icons">
@@ -779,35 +780,35 @@ const Landing = () => {
                 </button>
               </div>
             </div>
-
             <div className="mapSearchContainer">
-            <div className="mapSearchButton">
-              <input
-                type="text"
-                placeholder="Please Enter the Location or Facility"
-                name="givenReq"
-                id="givenReq"
-                value={givenReq}
-                onChange={handleChange}
-                className="mapSearchInput"
-              ></input>
-              <button type="button" className="mapSearchSubmit" onClick={fecthMapData}>
-                <FontAwesomeIcon icon={faSearch} className="os-icon" />
-              </button>
+              <div className="mapSearchButton">
+                <input
+                  type="text"
+                  placeholder="Please Enter the Location or Facility"
+                  name="givenReq"
+                  id="givenReq"
+                  value={givenReq}
+                  onChange={handleChange}
+                  className="mapSearchInput"
+                />
+                <button type="button" className="mapSearchSubmit" onClick={fecthMapData}>
+                  <FontAwesomeIcon icon={faSearch} className="os-icon" />
+                </button>
               </div>
             </div>
           </div>
-
           <LoadScript googleMapsApiKey={apiKey}>
+
             <GoogleMap
               mapContainerStyle={{
-                height: "400px",
+                height: "450px",
                 width: "100%",
                 ...(isMobile && { height: "280px" }),
               }}
               center={defaultCenter}
-              zoom={12}
+              zoom={11}
             >
+
               {/* Render markers */}
               {mapdata.map((location, index) => (
                 <Marker
@@ -816,6 +817,7 @@ const Landing = () => {
                   onClick={() => handleMarkerClick(location.facilityId)} // Call handleMarkerClick function with parkId when marker is clicked
                 />
               ))}
+
 
               {/* Show InfoWindow for selected location */}
               {selectedLocationDetails && (
@@ -845,70 +847,51 @@ const Landing = () => {
         </section>
 
         {/* --------Facilities Near me----------------------------------------------------- */}
-
         <div className="nearByFacilities">
           <div className="nearByFacilities-heading">
-
-            <h1>{selectedButton === 1 && (
-              <h1> Parks Near Me </h1>
-            )} </h1>
-            <h1>{selectedButton === 2 && (
-              <h1> PlayGround Near Me  </h1>
-            )} </h1>
-            <h1>{selectedButton === 3 && (
-              <h1> Multipurpose Grounds Near Me </h1>
-            )} </h1>
-            <h1>{selectedButton === 5 && (
-              <h1> Greenways  Near Me </h1>
-            )} </h1>
-            <h1>{selectedButton === 4 && (
-              <h1> Blueways Near Me </h1>
-            )} </h1>
-
+            {selectedButton === 1 && <h1>Parks Near Me</h1>}
+            {selectedButton === 2 && <h1>PlayGround Near Me</h1>}
+            {selectedButton === 3 && <h1>Multipurpose Grounds Near Me</h1>}
+            {selectedButton === 5 && <h1>Greenways Near Me</h1>}
+            {selectedButton === 4 && <h1>Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
-              <button
-                type="button"
-                onClick={(e) => {
+              <button type="button"
+                className={activeButton === 2 ? 'active' : ''}
+                onClick={() => {
                   setDistanceRange(2);
-                }}
-              >
-                2km
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
+                  setActiveButton(2);
+                }}>2km</button>
+              <button type="button"
+                className={activeButton === 4 ? 'active' : ''}
+                onClick={() => {
                   setDistanceRange(4);
+                  setActiveButton(4);
                 }}
-              >
-                4km
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
+              >4km</button>
+              <button type="button"
+                className={activeButton === 6 ? 'active' : ''}
+                onClick={() => {
                   setDistanceRange(6);
-                }}
-              >
-                6km
-              </button>
+                  setActiveButton(6);
+                }}>6km</button>
             </div>
           </div>
-
-          <div className="facililiy-list-map overflow-y-scroll">
-            {nearbyParks?.length > 0 ? (
-              nearbyParks?.map((park, index) => {
-                return (
-                  <Link
-                    className="map-facilities hover:cursor-pointer"
-                    key={index}
-                    to={{
-                      pathname: "/Sub_Park_Details",
-                      search: `?facilityId=${encryptDataId(park.facilityId)}`,
-                    }}
-                  >
-                    <p>{park.facilityname}</p>
-                  </Link>
-                );
-              })
+          <div className="facility-list-map overflow-y-scroll">
+            {loading ? (
+              <div className="custom-loader"></div>
+            ) : nearbyParks?.length > 0 ? (
+              nearbyParks?.map((park, index) => (
+                <Link
+                  className="map-facilities hover:cursor-pointer"
+                  key={index}
+                  to={{
+                    pathname: "/Sub_Park_Details",
+                    search: `?facilityId=${encryptDataId(park.facilityId)}`,
+                  }}
+                >
+                  <p>{park.facilityname}</p>
+                </Link>
+              ))
             ) : facilityTypeId != 1 || facilityTypeId != 2 ? (
               <div className="No_Data_image_conatiner">
                 <img className="No_Data_image" src={No_data_nearBy}></img>
@@ -918,6 +901,7 @@ const Landing = () => {
             )}
           </div>
         </div>
+
       </div>
 
       {/* -----Whats New Section------------------------------------------- */}
@@ -978,11 +962,6 @@ const Landing = () => {
       {/* ------Event details card-------------------------------------------------------------------- */}
 
       <div className="EventContainerlanding">
-        {/* <div className="EventContainerTitle">
-          <div className="greenHeader"></div>
-          <h1>Current Events</h1>
-        </div> */}
-
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
@@ -1065,7 +1044,6 @@ const Landing = () => {
       </div>
 
       {/*------------ Explore new activities----------- */}
-
       <div
         className="exploreNewAct-Parent-Container"
         style={{
@@ -1076,7 +1054,6 @@ const Landing = () => {
           <div className="whiteHeader"></div>
           <h1>Explore And Book New Activities</h1>
         </div>
-
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
@@ -1132,9 +1109,7 @@ const Landing = () => {
           </div>
         </div>
       </div>
-
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
-
       <div className="galleryOuter">
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
@@ -1161,15 +1136,21 @@ const Landing = () => {
                 const imageUrl = `${instance().baseURL}/static${item.url}`;
                 console.log('Image URL:', imageUrl); // Log the image URL to the console
                 return (
-                  <div key={index} className="carousel-image-container">
-                    <img
-                      src={imageUrl}
-                      alt={`carousel-img${index}`}
-                      className="carousel-image"
-                    // Hide broken images
-                    />
+                  <div className="carousel-main_container">
+
+                    <div key={index} className="carousel-image-container">
+                      <img
+                        src={imageUrl}
+                        alt={`carousel-img${index}`}
+                        className="carousel-image_gallery"
+                      // Hide broken images
+                      />
+                        <div className="description">{item.description}</div>
+                     
+                    </div>
                     <div className="description">{item.description}</div>
                   </div>
+
                 );
               })}
             </div>
@@ -1179,11 +1160,15 @@ const Landing = () => {
           </button>
         </div>
       </div>
-
       {/* ------------advertisement section -------------------------------------------------------------------------------------*/}
 
       <div className="avatisement-Border2">
+        <div className="galleryTitleLeft">
+          <div className="greenHeader"></div>
+          <h1 className="text-3xl">Advertisement</h1>
+        </div>
         <div className="avatisement-Content2">
+
           {/* <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' /> */}
           <div className="advertisement-Scroll2">
             {ad.map((img, index) => (
@@ -1197,7 +1182,6 @@ const Landing = () => {
           </div>
         </div>
       </div>
-
       {/* <div className="footer"></div> */}
       {showTour == "true" && (
         <TourGuide run={runTour} callback={handleJoyrideCallback} />
