@@ -17,6 +17,7 @@ import sport_image from "../../../assets/sport_details_image.jpg";
 import Yoga_img from "../../../assets/Yoga_img.png";
 import Google_map from "../../../assets/Google_map.jpg";
 import correct_icon from "../../../assets/Correct_icon.png";
+import green_tick from "../../../assets/green_tick.svg";
 import Phone_icon from "../../../assets/Phone_icon.png";
 
 import axiosHttpClient from "../../../utils/axios";
@@ -41,7 +42,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
 import instance from "../../../../env";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
@@ -267,15 +268,28 @@ const Sub_Park_Details = () => {
             : ""
         }
       >
-        <h1 className="text-park">
-          {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
-        </h1>
-        <span className="Location_text_sub_manu">
-          <img className="location_icon" src={Location_icon}></img>
-          <h1 className="text_location">
-            {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}
-          </h1>
-        </span>
+        <div className="park_Name1">
+          <div className="park_Name2">
+            <h1 className="text-park">
+              {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
+            </h1>
+            <span className="Location_text_sub_manu">
+              <img className="location_icon" src={Location_icon}></img>
+              <h1 className="text_location">
+                {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}
+              </h1>
+            </span>
+          </div>
+          <div className="back_button">
+            <button
+              className="back_btn bg-[rgba(0,0,0,0.8)]"
+              onClick={() => navigate(-1)}
+            >
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="map_img_main_conatiner">
@@ -483,31 +497,33 @@ const Sub_Park_Details = () => {
             </button>
           </div>
         </Link> */}
-        <div className="back_button">
-            <button className="back_btn" onClick={()=>navigate(-1)}>
-              <FontAwesomeIcon icon={faArrowLeftLong} />
-              Back
-            </button>
-          </div>
+        {/* <div className="back_button">
+          <button className="back_btn" onClick={() => navigate(-1)}>
+            <FontAwesomeIcon icon={faArrowLeftLong} />
+            Back
+          </button>
+        </div> */}
       </div>
       <div className="other-contents">
         {/* -----------------------------services------------------------------------------ */}
         <div className="Service_Now_conatiner">
           <h1 className="Service_text">Services</h1>
-          {ServiceData?.length > 0 &&
-            ServiceData?.map((item, index) => (
-              <div className="Service_Avilable" key={index}>
-                <div className="service_item">
-                  {/* <img
-                    className="service_Avil_img"
-                    src={Park_img}
-                    alt="Parking"
-                  /> */}
+          <div className="service_container">
+            {ServiceData?.length > 0 &&
+              ServiceData?.map((item, index) => (
+                <div className="Service_Avilable" key={index}>
+                  <div className="service_item">
+                    <img
+                      className="Correct_icon"
+                      src={green_tick}
+                      alt={`Amenity icon ${index}`}
+                    />
 
-                  <p className="service_name">{item.code}</p>
+                    <p className="service_name">{item.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
 
         {/* --------------------------- Amenities ------------------------------------------*/}
@@ -525,7 +541,7 @@ const Sub_Park_Details = () => {
                 <span className="flex gap-2" key={index}>
                   <img
                     className="Correct_icon"
-                    src={correct_icon}
+                    src={green_tick}
                     alt={`Amenity icon ${index}`}
                   />
                   <h1 className="Amenities_name">{item.amenityName}</h1>
@@ -542,7 +558,7 @@ const Sub_Park_Details = () => {
           </h1>
         </div>
         {/* -------------------------Helpline Number ------------------------------------------ */}
-        <div className="Helpline_number_conatine">
+        {/* <div className="Helpline_number_conatine">
           <h1 className="Service_text">Helpline Number</h1>
           <div className="Contact_number">
             <img className="Phone_icon" src={Phone_icon}></img>
@@ -550,7 +566,19 @@ const Sub_Park_Details = () => {
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
             </h1>
           </div>
+        </div> */}
+        <div className="Helpline_number_conatine">
+          <h1 className="Service_text">Helpline Number</h1>
+          <div className="Contact_number">
+            {FacilitiesData?.[0]?.helpNumber && (
+              <>
+                <img className="Phone_icon" src={Phone_icon} alt="Phone Icon" />
+                <h1 className="Number">{FacilitiesData[0]?.helpNumber}</h1>
+              </>
+            )}
+          </div>
         </div>
+
         {/* -------------------------Event Available ----------------------------------------------------------- */}
         {/* <div className="Event_Available_main_conatiner">
           <h1 className="Service_text">Event Available</h1>
