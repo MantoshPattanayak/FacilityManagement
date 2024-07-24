@@ -311,7 +311,7 @@ const viewParkById = async (req,res)=>{
             })
         
 
-        let fetchServicesDataQuery = `select s.code from amabhoomi.services s inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.facilityId =? and sf.statusId =1`
+        let fetchServicesDataQuery = `select s.code, s.description from amabhoomi.services s inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.facilityId =? and sf.statusId =1`
         let fetchServicesDetailsData = await sequelize.query(fetchServicesDataQuery,
             {
                 replacements:[facilityId]

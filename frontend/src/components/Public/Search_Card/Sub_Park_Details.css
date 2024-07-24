@@ -28,6 +28,13 @@
   background-size: cover;
   background-repeat: no-repeat;
 }
+.park_Name1{
+  width: 100vw;
+    display: flex;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .text-park {
     padding-top: 90px;
     font-size: 42px;
@@ -35,6 +42,11 @@
     font-weight: 600;
     margin-left: 40px;
 
+}
+.back_button{
+  height: max-content;
+  margin-top: 10vh;
+  margin-right: 4vw;
 }
 
 .Location_text_sub_manu {
@@ -253,17 +265,25 @@ align-items: center;
 
 /* --------------------------------------------------- Service Conatiner start--------------------------------------------------- */
 .Service_Now_conatiner {
-    padding: 40px;
-    margin-top: 25px;
+    /* padding: 40px;
+    margin-top: 25px; */
+    padding-inline: 40px;
+    padding-block: 5px;
+    margin-top: 80px;
 }
 
 .Service_text {
     position: relative;
-    font-size: 30px;
+    /* font-size: 30px; */
+    font-size: 25px;
     font-weight: 600;
     color: #292929;
     display: inline-block;
     /* Ensure the text is displayed as a block */
+}
+.service_container{
+  display: flex;
+  gap: 30px;
 }
 
 .Service_text::after {
@@ -291,7 +311,9 @@ align-items: center;
 }
 
 .service_item {
-    text-align: center;
+  text-align: center;
+  display: flex;
+  gap: 6px;
 }
 
 .service_Avil_img {
@@ -311,15 +333,16 @@ align-items: center;
 
 .service_name {
 
-    font-size: 17px;
-
+    /* font-size: 17px; */
+    font-size: 16px;
     font-weight: 600;
-
 }
 
 /* --------------------------- Amenities ------------------------------------------*/
 .Amenities_Main_conatiner {
-    padding: 40px;
+    /* padding: 40px; */
+    padding-inline: 40px;
+    padding-block: 5px;
 }
 
 .Amenities-Data {
@@ -333,13 +356,16 @@ align-items: center;
 }
 
 .Amenities_name {
-    font-size: 20px;
+    /* font-size: 20px; */
+    font-size: 16px;
     font-weight: 500;
 }
 
 /* -----------------------------About here------------------------------------------- */
 .About_Conatiner {
-    padding: 40px;
+    /* padding: 40px; */
+    padding-inline: 40px;
+    padding-block: 5px;
 }
 
 .About_text {
@@ -347,11 +373,14 @@ align-items: center;
     font-weight: 500;
     color: #292929;
     padding: 10px;
+
 }
 
 /* -------------------------------Helpline Number ----------------------------------- */
 .Helpline_number_conatine {
-    padding: 40px;
+    /* padding: 40px; */
+    padding-inline: 40px;
+    padding-block: 5px;
 }
 
 .Contact_number {
@@ -371,7 +400,9 @@ align-items: center;
 
 /* --------------------------------------------Event Available ------------------------------------------------------------- */
 .Event_Available_main_conatiner {
-    padding: 40px;
+    /* padding: 40px; */
+    padding-inline: 40px;
+    padding-block: 5px;
 }
 
 .Sub_Park_Details {
@@ -456,10 +487,6 @@ align-items: center;
     font-weight: 600;
 }
 
-.back_button{
-  height: max-content;
-}
-
 @media (min-width: 1230px) {
 
     .text-park {
@@ -485,7 +512,8 @@ align-items: center;
     }
 
     .About_text {
-        font-size: 14px;
+        /* font-size: 14px; */
+        font-size: 16px;
     }
 
     .Number {
@@ -732,7 +760,8 @@ align-items: center;
   /* carousel css final........... */
   .carousel-container1 {
     position: relative;
-    width: 700px;
+    /* width: 700px; */
+    width: 68vw;
     /* margin: 0; */
   }
   

@@ -1,9 +1,18 @@
 /* Search_card.css */
 .w {
-    width: 75%;
+    /* width: 75%; */
+    width: 94vw;
     margin: auto;
     margin-top: 80px;
   }
+
+  /* .mt-20 .slick-slider .slick-list .slick-track{
+    transform: translate3d(0px, 0px, 0px);
+  } */
+  .slick-slider .slick-list .slick-track {
+    transform: translate3d(0px, 0px, 0px);
+  }
+  
   
   .m-auto {
     margin: auto; 
@@ -43,7 +52,8 @@
   
   .mt-20 {
     margin-top: 20px; 
-    width: 50vw;
+    /* width: 50vw; */
+    width: 94vw;
   }
   
   .custom-card {
@@ -165,6 +175,7 @@
     }
   }
   
-  .slick-track {
+  /* .slick-track {
     display: flex !important;
-  }
+    transform: translate3d(0px, 0px, 0px);
+  } */
