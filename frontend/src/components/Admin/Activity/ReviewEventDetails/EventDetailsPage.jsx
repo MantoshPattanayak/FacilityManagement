@@ -124,7 +124,6 @@ export default function EventDetailsPage() {
     };
     // useEffect for Call the api/Update Data ---
     useEffect(() => {
-        Approved_RejectEvent()
         GetEventDataById()
     }, [])
     return (
