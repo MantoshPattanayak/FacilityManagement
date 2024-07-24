@@ -1,6 +1,6 @@
 .activity_preference_popup{
-    height:400px;
-    width: 41vw;
+    height:500px;
+    width: 20%;
     margin-top: 20%;
     margin-bottom: 20%;
 }
@@ -26,7 +26,7 @@
   .games {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    
   }
   
   .game-btn {

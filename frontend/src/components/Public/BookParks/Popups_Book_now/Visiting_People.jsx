@@ -88,123 +88,118 @@ const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursF
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-      <div className="popup-overlay">
-        <div className="popup-content">
-          <div className="popup-header">
-            {/* <Link
-              to={`/Sub_Park_Details?facilityId=${encodeURIComponent(
-                encryptData(formData.facilityId)
-              )}`}
-            >
-              <button className="icon-close" onClick={closePopup}>
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </Link> */}
-            <button className="icon-close" onClick={(e) => closePopup(false)}>
-              <FontAwesomeIcon icon={faXmark} />
+    <div className="popup-overlay">
+      <div className="popup-content">
+        <div className="popup-header">
+          <button className="icon-close" onClick={(e) => closePopup(false)}>
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+        </div>
+        <div className="popup-body">
+          <h2 className="popup-title">{facilityName}</h2>
+          <div className="member-details">
+            <div className="member-row">
+              <label htmlFor="children">Children(0-12)</label>
+              <div className="increament_decrement_conatiner">
+                <button
+                type="button"
+                 className="decrement-button"
+                  onClick={() => handleDecrease("children")}
+                  disabled={formData.children <= 0}
+                >
+                  <FontAwesomeIcon icon={faMinus} />
+                </button>
+                <input
+                  type="text"
+                  id="children"
+                  name="children"
+                  value={formData.children}
+                  onChange={handleChangeInput}
+                  className="formInput_Add_member"
+                  min="0"
+                />
+                <button
+                  className="increment-button"
+                  onClick={() => handleIncrease("children")}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+              </div>
+            </div>
+            <div className="member-row">
+              <label htmlFor="adults">Adults(13-59)</label>
+              <div className="increament_decrement_conatiner">
+                <button
+                className="decrement-button"
+                  onClick={() => handleDecrease("adults")}
+                  disabled={formData.adults <= 0}
+                >
+                  <FontAwesomeIcon icon={faMinus} />
+                </button>
+                <input
+                  type="text"
+                  id="adults"
+                  name="adults"
+                  value={formData.adults}
+                  onChange={handleChangeInput}
+                  className="formInput_Add_member"
+                  min="0"
+                />
+                <button
+                type="button"
+                   className="increment-button"
+                  onClick={() => handleIncrease("adults")}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+              </div>
+            </div>
+            <div className="member-row">
+              <label htmlFor="seniorCitizen">Senior Citizen(60+)</label>
+              <div className="increament_decrement_conatiner">
+                <button
+                type="button"
+                  className="decrement-button"
+                  onClick={() => handleDecrease("seniorCitizen")}
+                  disabled={formData.seniorCitizen <= 0}
+                >
+                  <FontAwesomeIcon icon={faMinus} />
+                </button>
+                <input
+                  type="text"
+                  id="seniorCitizen"
+                  name="seniorCitizen"
+                  value={formData.seniorCitizen}
+                  onChange={handleChangeInput}
+                  className="formInput_Add_member"
+                  min="0"
+                />
+                <button
+                  className="increment-button"
+                  onClick={() => handleIncrease("seniorCitizen")}
+                >
+                    <    FontAwesomeIcon icon={faPlus} />
+                </button>
+              </div>
+            </div>
+  
+            
+          </div>
+  
+          <div className="popup-footer">
+            <button className="cancel-button" onClick={(e) => closePopup(false)}>
+              Cancel
+            </button>
+            <button className="next-button" onClick={handleNext}>
+              Next
             </button>
           </div>
-          <div className="popup-body">
-            <h2 className="popup-title">{facilityName}</h2>
-            <div className="member-details">
-              <div className="member-row">
-                <label htmlFor="children">Children (0-12):</label>
-                <div className="duration-container">
-                  <button
-                    className="duration-button"
-                    onClick={() => handleDecrease("children")}
-                    disabled={formData.children <= 0}
-                  >
-                    <FontAwesomeIcon icon={faMinus} />
-                  </button>
-                  <input
-                    type="text"
-                    id="children"
-                    name="children"
-                    value={formData.children}
-                    onChange={handleChangeInput}
-                    className="custom-input"
-                    min="0"
-                  />
-                  <button
-                    className="duration-button"
-                    onClick={() => handleIncrease("children")}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="member-row">
-                <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
-                <div className="duration-container">
-                  <button
-                    className="duration-button"
-                    onClick={() => handleDecrease("seniorCitizen")}
-                    disabled={formData.seniorCitizen <= 0}
-                  >
-                    <FontAwesomeIcon icon={faMinus} />
-                  </button>
-                  <input
-                    type="text"
-                    id="seniorCitizen"
-                    name="seniorCitizen"
-                    value={formData.seniorCitizen}
-                    onChange={handleChangeInput}
-                    className="custom-input"
-                    min="0"
-                  />
-                  <button
-                    className="duration-button"
-                    onClick={() => handleIncrease("seniorCitizen")}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="member-row">
-                <label htmlFor="adults">Adults (13-59):</label>
-                <div className="duration-container">
-                  <button
-                    className="duration-button"
-                    onClick={() => handleDecrease("adults")}
-                    disabled={formData.adults <= 0}
-                  >
-                    <FontAwesomeIcon icon={faMinus} />
-                  </button>
-                  <input
-                    type="text"
-                    id="adults"
-                    name="adults"
-                    value={formData.adults}
-                    onChange={handleChangeInput}
-                    className="custom-input"
-                    min="0"
-                  />
-                  <button
-                    className="duration-button"
-                    onClick={() => handleIncrease("adults")}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="popup-footer">
-              <button className="cancel-button" onClick={(e) => closePopup(false)}>
-                Cancel
-              </button>
-              <button className="next-button" onClick={handleNext}>
-                Next
-              </button>
-            </div>
-          </div>
         </div>
-        {showPeople && <Activity_Preference_popup closePopup={closePopup} formData={formData} />}
       </div>
+      {showPeople && <Activity_Preference_popup closePopup={closePopup} formData={formData} />}
     </div>
+  </div>
+  
   );
 };
 
