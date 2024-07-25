@@ -7,6 +7,7 @@ const QueryTypes = db.QueryTypes
 const Payment = db.payment
 let instance = require('../../../config/razorpay.config.js');
 let crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 
 const getRazorpayApiKeys = async (req, res) => {
   try {
@@ -29,23 +30,23 @@ const getRazorpayApiKeys = async (req, res) => {
   }
 }
 
-const checkout = async (req, res) => {
-  try {
-    const options = {
-      amount: Number(req.body.amount * 100),
-      currency: "INR",
-      payment_capture: '1', // Automatically capture the payment
-    };
-    const order = await instance.orders.create(options);
+// const checkout = async (req, res) => {
+//   try {
+//     const options = {
+//       amount: Number(req.body.amount * 100),
+//       currency: "INR",
+//       payment_capture: '1', // Automatically capture the payment
+//     };
+//     const order = await instance.orders.create(options);
 
-    res.status(200).json({
-      success: true,
-      order,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       order,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
 
 const paymentVerification = async (req, res) => {
   try {
@@ -122,50 +123,207 @@ const fetchPayment = async (req, res) => {
   }
 }
 
-const webhook = async (req, res) => {
-  const webhookSecret = 'YOUR_WEBHOOK_SECRET'; // Your webhook secret
+// const webhook = async (req, res) => {
+//   const webhookSecret = 'YOUR_WEBHOOK_SECRET'; // Your webhook secret
 
-  const crypto = require('crypto');
-  const hmac = crypto.createHmac('sha256', webhookSecret);
-  hmac.update(JSON.stringify(req.body));
-  const digest = hmac.digest('hex');
+//   const crypto = require('crypto');
+//   const hmac = crypto.createHmac('sha256', webhookSecret);
+//   hmac.update(JSON.stringify(req.body));
+//   const digest = hmac.digest('hex');
 
-  if (digest !== req.headers['x-razorpay-signature']) {
-    return res.status(400).send('Webhook Error: Invalid signature');
-  }
+//   if (digest !== req.headers['x-razorpay-signature']) {
+//     return res.status(400).send('Webhook Error: Invalid signature');
+//   }
 
-  // Webhook event payload
-  const { event, payload } = req.body;
+//   // Webhook event payload
+//   const { event, payload } = req.body;
 
+//   try {
+//     // Handle specific webhook events
+//     switch (event) {
+//       case 'payment.captured':
+//         // Payment successfully captured
+//         console.log('Payment Captured:', payload);
+//         // Implement your logic here (e.g., update database, send email)
+//         break;
+//       case 'payment.failed':
+//         // Payment failed
+//         console.log('Payment Failed:', payload);
+//         // Implement your logic here (e.g., notify user, handle retries)
+//         break;
+//       case 'refund.processed':
+//         // Refund processed
+//         console.log('Refund Processed:', payload);
+//         // Implement your logic here (e.g., update transaction status)
+//         break;
+//       // Handle other events as needed
+//       default:
+//         console.log(`Unhandled event: ${event}`);
+//     }
+
+//     res.status(200).json({ received: true });
+//   } catch (error) {
+//     console.error('Webhook Error:', error.message);
+//     res.status(500).json({ error: 'Webhook Error' });
+//   }
+// }
+
+
+const checkout =  async (req, res) => {
+  let transaction
   try {
-    // Handle specific webhook events
-    switch (event) {
-      case 'payment.captured':
-        // Payment successfully captured
-        console.log('Payment Captured:', payload);
-        // Implement your logic here (e.g., update database, send email)
-        break;
-      case 'payment.failed':
-        // Payment failed
-        console.log('Payment Failed:', payload);
-        // Implement your logic here (e.g., notify user, handle retries)
-        break;
-      case 'refund.processed':
-        // Refund processed
-        console.log('Refund Processed:', payload);
-        // Implement your logic here (e.g., update transaction status)
-        break;
-      // Handle other events as needed
-      default:
-        console.log(`Unhandled event: ${event}`);
-    }
 
-    res.status(200).json({ received: true });
+    transaction = await sequelize.transaction();
+    let createdDt = new Date();
+    let updatedDt = new Date();
+    
+    let pendingStatus = 10;
+    let customerId = req.user.userId
+    
+    const { amount } = req.body;
+ 
+
+    // Create new order with idempotency key
+    const options = {
+      amount: amount * 100, // amount in paise
+      currency: 'INR',
+      receipt: `receipt_${customerId}`,
+      payment_capture: 1,
+      notes:{
+        customer_id:customerId
+      }
+    };
+
+    const order = await instance.orders.create(options);
+
+    // Save transaction details 
+    const oneHour = 60 * 60 * 1000;
+    const expiresAt = new Date(Date.now() + oneHour);
+
+
+        // Check for existing transaction with the same order ID
+        const existingTransaction = await Payment.findOne({
+          where: { razorpay_order_id: order.id },
+          transaction
+        });
+    
+        if (existingTransaction) {
+          if (new Date() > existingTransaction.expiresAt) {
+            await transaction.rollback();
+            return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Transaction has expired. Please create a new order.' });
+          }
+          // If transaction already exists and is not expired, return the existing order details
+          return res.status(200).json({
+            message: 'Transaction already processed',
+            orderId: existingTransaction.razorpay_order_id,
+            status: existingTransaction.status
+          });
+        }
+    
+    let insertToPayment = await Payment.create({
+      razorpay_order_id: order.id,
+   // Payment id will be updated on webhook
+      status: pendingStatus,
+      expiresAt: expiresAt,
+      orderDate: createdDt,
+      createdDt:createdDt,
+      updatedDt:updatedDt,
+      createdBy:order.notes.customer_id,
+      updatedBy:order.notes.customer_id
+         
+    });
+
+    if(!insertToPayment){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+    }
+  
+    console.log('Transaction initiated and saved:', insertToPayment);
+
+    await transaction.commit();
+    return res.status(statusCode.SUCCESS.code).json({
+      message:`Order is created`,
+      order:order,
+      success:true
+    })
   } catch (error) {
-    console.error('Webhook Error:', error.message);
-    res.status(500).json({ error: 'Webhook Error' });
+    if(transaction) await transaction.rollback();
+    console.error('Error creating order with Razorpay:', error);
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
   }
 }
+
+// Verify the webhook signature
+const verifyWebhook = (req, res, next) => {
+  console.log('one')
+  let razorpaySecret = process.env.RAZORPAY_SECRET_WEBHOOK
+  console.log(razorpaySecret, 'razorpay secret')
+  const signature = req.headers['x-razorpay-signature'];
+  console.log('razorpaysig',razorpaySecret)
+
+  const shasum = crypto.createHmac('sha256', razorpaySecret);
+  shasum.update(JSON.stringify(req.body));
+  const digest = shasum.digest('hex');
+  console.log(digest,'digest','signature',signature)
+
+  if (digest === signature) {
+    next();
+  } else {
+    res.status(statusCode.BAD_REQUEST.code).json({message:'Invalid signature'});
+  }
+}
+
+let webhook =  async (req, res) => {
+  try {
+    console.log('2332')
+    const event = req.body.event;
+    const payload = req.body.payload;
+    
+    switch (event) {
+      case 'payment.success':
+        // Payment successfully captured
+        const capturedPaymentId = payload.payment.entity.id;
+        // Update payment status
+       
+        await Payment.update({ status: 'captured' }, { where: { razorpay_payment_id: capturedPaymentId } });
+
+        break;
+
+      case 'payment.failed':
+        // Payment failed
+        const failedPaymentId = payload.payment.entity.id;
+
+        // Update payment status
+        await Payment.update({ status: 'failed' }, { where: { razorpay_payment_id: failedPaymentId } });
+        break;
+
+ 
+
+
+      case 'payment.refunded':
+        // Payment refunded
+        const refundedPaymentId = payload.payment.entity.id;
+
+        // Update payment status
+        await Payment.update({ status: 'refunded' }, { where: { razorpay_payment_id: refundedPaymentId } });
+
+        break;
+
+      default:
+        console.log(`Unhandled event type: ${event}`);
+    }
+
+    res.status(statusCode.SUCCESS.code).json({message:'Event received'});
+  } catch (err) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`});
+  }
+
+
+  }
 
 
 module.exports = {
@@ -174,6 +332,7 @@ module.exports = {
   paymentVerification,
   fetchOrder,
   fetchPayment,
+  verifyWebhook,
   webhook
 }
 
