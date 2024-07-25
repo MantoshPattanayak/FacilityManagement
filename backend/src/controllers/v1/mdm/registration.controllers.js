@@ -703,7 +703,7 @@ const updateFacility = async(req,res)=>{
           }
              let subDir = "facilityImages"
           //update the data
-          let updateSingleFacilityImage = await imageUpdate(cardFacilityImage,subDir,insertionData,userId,errors,transaction,oldFilePath)
+          let updateSingleFacilityImage = await imageUpdate(cardFacilityImage,subDir,insertionData,userId,errors,1,transaction,oldFilePath)
           if(errors.length>0){
 
             await transaction.rollback();
@@ -725,7 +725,7 @@ const updateFacility = async(req,res)=>{
           let errors = [];
           let subDir = "facilityImages"
           let filePurpose = "singleFacilityImage"
-          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors,transaction)
+          let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors,1,transaction)
           console.log( uploadSingleFacilityImage,'165 line facility image')
           if(errors.length>0){
             await transaction.rollback();
@@ -740,6 +740,7 @@ const updateFacility = async(req,res)=>{
       }
       // facility array of images
         if(facilityImage?.facilityArrayOfImages.length>0){
+          let i = 0;
           for (let facilityArrayOfImage of facilityImage.facilityArrayOfImages){
             let multipleFacilityImage = facilityArrayOfImage?.data
             if(facilityArrayOfImage?.fileId!=0 && multipleFacilityImage){
@@ -755,7 +756,7 @@ const updateFacility = async(req,res)=>{
               }
               let subDir = "facilityImageList"
               //update the data
-              let updateSingleFacilityImage = await imageUpdate(multipleFacilityImage,subDir,insertionData,userId,errors,transaction,oldFilePath)
+              let updateSingleFacilityImage = await imageUpdate(multipleFacilityImage,subDir,insertionData,userId,errors,i+1,transaction,oldFilePath)
               if(errors.length>0){
                 await transaction.rollback();
 
@@ -799,7 +800,7 @@ const updateFacility = async(req,res)=>{
               let errors = [];
               let subDir = "facilityImageList"
               let filePurpose = "multipleFacilityImage"
-              let uploadSingleFacilityImage = await imageUpload(multipleFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors,transaction)
+              let uploadSingleFacilityImage = await imageUpload(multipleFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors,i+1,transaction)
               console.log( uploadSingleFacilityImage,'165 line facility image')
               if(errors.length>0){
 
@@ -814,6 +815,7 @@ const updateFacility = async(req,res)=>{
             }
               
             }
+            i +=1
           }
          
         }
