@@ -140,6 +140,49 @@
 
 
 
+/* Add these styles in your CSS file */
+.menu-item {
+  position: relative;
+  display: inline-block;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #003f12;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 4px;
+  min-width: 200px;
+  overflow: hidden;
+  border-top: 4px solid #007bff; /* Top line */
+}
+
+.menu-item:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.submenu li a {
+  color: #000; /* Black text */
+  text-decoration: none;
+}
+
+.submenu li a:hover {
+ font-size: 17px;
+}
+
+@media screen and (max-width: 780px) {
+  .submenu {
+    left: -10px;
+  }
+}
 
 
 
