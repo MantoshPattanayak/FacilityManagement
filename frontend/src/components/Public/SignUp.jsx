@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import '../Public/SignUp.css';
-import AdminHeader from '../../common/AdminHeader';
-import Footer from '../../common/Footer';
-import CommonFooter from '../../common/CommonFooter';
 import { RxCross1 } from 'react-icons/rx';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { regex, dataLength } from '../../utils/regexExpAndDataLength';
 import axiosHttpClient from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPersonRunning, faDumbbell, faPersonSwimming, faFootball, faVolleyball } from '@fortawesome/free-solid-svg-icons';
+import { faPersonRunning, faDumbbell, faPersonSwimming, faFootball, faVolleyball, faMap } from '@fortawesome/free-solid-svg-icons';
 import SuccessPopup from './SuccessPopup'; // Import the SuccessPopup component
 // EncrptData here --------------------------------------------------------
 import { encryptData } from '../../utils/encryptData';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import PublicHeader from '../../common/PublicHeader';
 import { Link } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from "../../utils/authSlice";
 
 const SignUp = () => {
     const [signup, setSignup] = useState(true);
@@ -29,8 +27,6 @@ const SignUp = () => {
     const [decideSignUpOrLogin, setDecideSignUpOrLogin] = useState('')
     const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for controlling the success popup
     const navigate = useNavigate();
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [signupData, setSignupData] = useState({
         firstName: "",
         middleName: "",
@@ -38,11 +34,20 @@ const SignUp = () => {
         email: "",
         language: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        profileImage: ""
     });
     const [timer, setTimer] = useState(60); // Initial timer value in seconds
     const [selectedActivities, setSelectedActivities] = useState([]);
     const [activityData, setActivityData] = useState([]);
+    const [errors, setErrors] = useState({
+        firstNameError: false,
+        lastNameError: false,
+        emailError: false,
+        languageError: false
+    });
+    const dispatch = useDispatch();
+
     // API call to fetch preferred activities data
     async function getActivitiesData() {
         try {
@@ -54,9 +59,7 @@ const SignUp = () => {
             console.log("there is an error ", err);
         }
     }
-    useEffect(() => {
-        getActivitiesData();
-    }, []);
+    useEffect(() => { getActivitiesData(); }, []);
 
     const handleActivityToggle = (e, activity) => {
         e.preventDefault();
@@ -70,11 +73,10 @@ const SignUp = () => {
         console.log('selectedActivities', selectedActivities);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // handle form submission with selectedActivities
-        console.log("Selected Activities:", selectedActivities);
-    };
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log("Selected Activities:", selectedActivities);
+    // };
 
 
     const handleChange = (e) => {
@@ -142,6 +144,7 @@ const SignUp = () => {
                 encryptMobile: encryptData(mobileNumber)
             });
             console.log('response after signup', res.data);
+            toast.success('An OTP is sent to your registered mobile number.')
             setSignup(false);
             setOTP(true);
             setTimer(60);
@@ -167,15 +170,23 @@ const SignUp = () => {
             });
             console.log('response after otp entry', res.data);
             setDecideSignUpOrLogin(res.data.decideSignUpOrLogin);
-            if (res.data.decideSignUpOrLogin == 1) {     //if user exists, then redirect to homepage
-                sessionStorage.setItem("isUserLoggedIn", 1);
+            // Dispatch login success action with tokens and user data -------------------
+            if (res.data.decideSignUpOrLogin == 1) {
+                dispatch(loginSuccess({
+                    accessToken: res.data.accessToken,
+                    refreshToken: res.data.refreshToken,
+                    user: res.data.user,
+                    sid: res.data.sid
+                }));
+                toast.success("Login successfully.");
+                // sessionStorage.setItem("isUserLoggedIn", 1);
                 navigate('/');
             }
             else {
                 sessionStorage.setItem("isUserLoggedIn", 0);
+                setOTP(false);
+                setProfile(true);
             }
-            setOTP(false);
-            setProfile(true);
         }
         catch (error) {
             console.error(error);
@@ -186,6 +197,7 @@ const SignUp = () => {
     // Function to handle profile setup
     async function handleProfile(e) {
         e?.preventDefault();
+        console.log("handleProfile");
         if (!validateForm()) {
             return; // Exit if form validation fails
         }
@@ -193,20 +205,20 @@ const SignUp = () => {
         try {
             const response = await axiosHttpClient('PUBLIC_SIGNUP_API', 'post', {
                 encryptFirstName: encryptData(signupData.firstName),
-                encryptMiddleName: encryptData(signupData.middleName),
                 encryptLastName: encryptData(signupData.lastName),
                 encryptEmail: encryptData(signupData.email),
-                encryptLanguage: encryptData(signupData.language),
-                encryptPassword: encryptData(signupData.password),
+                encryptLanguage: (signupData.language),
                 encryptPhoneNo: encryptData(mobileNumber),
                 isEmailVerified: 1,
-                encryptActivity: selectedActivities.map((activity) => { return encryptData(activity) })
+                encryptActivity: selectedActivities,
+                userImage: signupData.profileImage.data,
+                location: selectedDistance,
             });
             console.log('Response:', response.data);
             // Redirect to home page after successful registration
-            toast.success('Profile Setup done successfully.');
-            sessionStorage.setItem("isUserLoggedIn", 1);
-            navigate('/');
+            toast.success(response.data.message);
+            sessionStorage.setItem("isUserLoggedIn", 0);
+            navigate('/login-signup');
             setShowSuccessPopup(true); // Show the success popup
         } catch (error) {
             console.error('Error:', error);
@@ -217,34 +229,29 @@ const SignUp = () => {
 
     // PERFORM VALIDATION ON THE FORM
     const validateForm = () => {
-        const { firstName, lastName, email, password, confirmPassword } = signupData;
+        const { firstName, lastName, email, language } = signupData;
         // Check if fields are empty
-        if (!firstName || !lastName || !email || !password) {
+        if (!firstName || !lastName || !email) {
             toast.error('All fields are required');
             return false;
         }
         // Validate first name
-        if (!regex.NAME.test(firstName) || firstName.length > dataLength.NAME) {
+        if (!regex.NAME.test(firstName)) {
             toast.error('Invalid first name');
             return false;
         }
         // Validate last name
-        if (!regex.NAME.test(lastName) || lastName.length > dataLength.NAME) {
+        if (!regex.NAME.test(lastName)) {
             toast.error('Invalid last name');
             return false;
         }
         // Validate email
-        // if (!regex.EMAIL.test(email) || email.length > dataLength.EMAIL) {
-        //     toast.error('Invalid email');
-        //     return false;
-        // }
-        // Validate password
-        if (!regex.PASSWORD.test(password) || password.length > dataLength.PASSWORD) {
-            toast.error('Invalid password');
+        if (!regex.EMAIL.test(email)) {
+            toast.error('Invalid email');
             return false;
         }
-        if (password !== confirmPassword) {
-            toast.error('Passwords do not match');
+        if (language == '') {
+            toast.error('Select language');
             return false;
         }
         return true;
@@ -255,10 +262,48 @@ const SignUp = () => {
     const [selectedDistance, setSelectedDistance] = useState(null);
 
     // Function to handle distance selection
-    const handleDistanceSelect = (distance) => {
+    const handleDistanceSelect = (e, distance) => {
+        e.preventDefault();
         setSelectedDistance(distance);
         // You can perform additional actions here, such as sending notifications or updating state
     };
+
+    // function to handle file input
+    function fileHandler(e) {
+        let { name, value } = e.target;
+        if (name == 'profileImage') {
+            let file = e.target.files[0];
+            console.log('file attachment', file);
+            if (parseInt(file.size / 1024) <= 200) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = () => {
+                    setSignupData({
+                        ...signupData,
+                        ["profileImage"]: {
+                            name: file.name,
+                            data: reader.result
+                        }
+                    });
+                }
+            }
+            else {
+                toast.dismiss();
+                toast.warning('Kindly choose a file with size less than 500 KB.');
+                return;
+            }
+        }
+        console.log('signupData', signupData);
+    }
+
+    // function to select language
+    function handleButtonClick(e, language) {
+        setSignupData({
+            ...signupData,
+            ["language"]: language
+        });
+        console.log("language", signupData);
+    }
 
 
     return (
@@ -293,7 +338,6 @@ const SignUp = () => {
             }
 
             {/* Verify OTP section */}
-
             {
                 otp && (
                     <div className="signup-container">
@@ -316,15 +360,13 @@ const SignUp = () => {
                             </div>
                         </div>
                     </div>
-                )}
-
-
-
+                )
+            }
 
             {/* user profile setup */}
             {
                 profile && (
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleProfile}>
                         <div className="profile-setup-container">
                             <div className="context-profile">
                                 <div className="icon"><RxCross1 /></div>
@@ -333,9 +375,19 @@ const SignUp = () => {
                                 </div>
 
                                 <div className="profile-picture">
-                                    <div className="user-logo"><FaRegCircleUser /></div>
-                                    <label htmlFor="profile-image" className="add-image">Add Image</label>
-                                    <input id="profile-image" type="file" accept="image/*" className="input-image" />
+                                    <div className="user-logo">
+                                        {
+                                            signupData.profileImage.data ? <img src={signupData.profileImage.data} />
+                                                : <FaRegCircleUser />
+                                        }
+                                    </div>
+                                    <label htmlFor="profile-image" className="add-image">
+                                        {
+                                            signupData.profileImage.data ? <span onClick={(e) => setSignupData({ ...signupData, ["profileImage"]: { name: '', data: '' } })}>Remove Image</span> :
+                                                <span>Add Image <i>(Image size &lt; 200KB)</i></span>
+                                        }
+                                    </label>
+                                    <input id="profile-image" name='profileImage' type="file" accept="image/*" className="input-image" onChange={fileHandler} />
                                 </div>
 
 
@@ -385,7 +437,30 @@ const SignUp = () => {
                                         {signupData.emailError && <p className="error-message">Invalid email</p>} {/* Display error message */}
                                     </div>
 
-                                   
+                                    <div className="name-field">
+                                        <label htmlFor="">
+                                            Language
+                                        </label>
+                                        <div>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => handleButtonClick(e, "English")}
+                                                className={`language-button ${signupData.language === "English" ? "active" : ""}`}
+                                            >
+                                                English
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => handleButtonClick(e, "ଓଡ଼ିଆ")}
+                                                className={`language-button ${signupData.language === "ଓଡ଼ିଆ" ? "active" : ""}`}
+                                            >
+                                                ଓଡ଼ିଆ
+                                            </button>
+                                        </div>
+                                        {signupData.languageError && <p className="error-message">Select language</p>} {/* Display error message */}
+                                    </div>
+
+
 
                                 </div><br />
                                 {/* ...........Preferred Activity....................... */}
@@ -395,11 +470,21 @@ const SignUp = () => {
                                         {activityData?.length > 0 &&
                                             activityData.map((activity) => {
                                                 return (
-                                                    <button className='activity-btn'
+                                                    <button
+                                                        key={activity.userActivityId}
+                                                        className={`activity-btn ${selectedActivities.includes(activity.userActivityId)
+                                                            ? "selected"
+                                                            : ""
+                                                            }`}
                                                         onClick={(e) => handleActivityToggle(e, activity.userActivityId)}
                                                     >
-                                                        <span>{activity.userActivityName}</span>
+                                                        {activity.userActivityName}
                                                     </button>
+                                                    // <button className='activity-btn'
+                                                    //     onClick={(e) => handleActivityToggle(e, activity.userActivityId)}
+                                                    // >
+                                                    //     <span>{activity.userActivityName}</span>
+                                                    // </button>
 
                                                 )
                                             })
@@ -408,6 +493,28 @@ const SignUp = () => {
                                 </div><br />
                                 {/* ...... preffered area distance............ */}
                                 <div className="preffered-activity">
+                                    <label htmlFor="">
+                                        <span>Preferred Location</span>
+                                    </label>
+                                    <div className="distance-dropdown">
+                                        <div className="dropdown">
+                                            <button className="dropbtn">
+                                                <FontAwesomeIcon icon={faMap} /> &nbsp;
+                                                {selectedDistance ? `${selectedDistance}` : 'Select Location'}
+                                            </button>
+                                            <div className="dropdown-content">
+                                                <button onClick={(e) => handleDistanceSelect(e, "Patia")}>Patia</button>
+                                                <button onClick={(e) => handleDistanceSelect(e, "Chandrashekharpur")}>Chandrashekharpur</button>
+                                                <button onClick={(e) => handleDistanceSelect(e, "Damana")}>Damana</button>
+                                                <button onClick={(e) => handleDistanceSelect(e, "Jayadev Vihar")}>Jayadev Vihar</button>
+                                                <button onClick={(e) => handleDistanceSelect(e, "Saheed Nagar")}>Saheed Nagar</button>
+                                                <button onClick={(e) => handleDistanceSelect(e, "Madhusudan Nagar")}>Madhusudan Nagar</button>
+                                                <button onClick={(e) => handleDistanceSelect(e, "Nayapalli")}>Nayapalli</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*<div className="preffered-activity">
                                     <label htmlFor="">
                                         <span>Preferred Location</span>
                                         (Set Preferred Location Radius: Choose a radius (e.g., 10km or 15km) to receive notifications for all parks within that distance.)
@@ -424,12 +531,10 @@ const SignUp = () => {
                                                 <button onClick={() => handleDistanceSelect(15)}>15km</button>
                                                 <button onClick={() => handleDistanceSelect(20)}>20km</button>
                                                 <button onClick={() => handleDistanceSelect(25)}>25km</button>
-
-                                                {/* Add more options as needed */}
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*/}
 
 
                                 <div className="otp-btn" onClick={handleProfile}>
@@ -441,10 +546,7 @@ const SignUp = () => {
                 )
             }
             {showSuccessPopup && <SuccessPopup />}
-
-
-            <ToastContainer />
-        </div>
+        </div >
     )
 }
 
