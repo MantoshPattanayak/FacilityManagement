@@ -177,7 +177,7 @@ const checkout =  async (req, res) => {
     let createdDt = new Date();
     let updatedDt = new Date();
     
-    let pendingStatus = 10;
+    let pendingStatus = 25;
     let customerId = req.user.userId
     
     const { amount } = req.body;
@@ -279,26 +279,71 @@ const verifyWebhook = (req, res, next) => {
 
 let webhook =  async (req, res) => {
   try {
-    console.log('2332')
+    console.log('2332',req.body.payload)
+    let successStatus = 25;
+    let pendingStatus = 26;
+    let failureStatus = 27
+    let refundStatus = 28;
     const event = req.body.event;
     const payload = req.body.payload;
-    
-    switch (event) {
-      case 'payment.success':
-        // Payment successfully captured
-        const capturedPaymentId = payload.payment.entity.id;
-        // Update payment status
-       
-        await Payment.update({ status: 'captured' }, { where: { razorpay_payment_id: capturedPaymentId } });
+    console.log(req.body,'eventdetail')
+    console.log(req.body.payload.payment.entity.card, 'carddetails')
+    console.log(req.body,'inside eventdetail payload')
 
+    switch (event) {
+      
+      case 'payment.captured':
+        // Payment successfully captured
+        let capturedPaymentId = payload.payment.entity.id;
+        // Update payment status
+        let methodName =  payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity
+        let [updatePayment] = await Payment.update({ statusId: successStatus,
+          razorpay_payment_id:capturedPaymentId,
+          methodName:methodName,
+          description:payload.payment.entity.description,
+
+
+         }, { where: { razorpay_order_id:payload.payment.entity.order_id  } });
+         if(updatePayment>=1){
+          return res.status(statusCode.SUCCESS.code).json({
+            message:`Payment done`,
+            success: true
+
+          })
+        
+         }
+         else{
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+         }
+        
         break;
 
       case 'payment.failed':
         // Payment failed
-        const failedPaymentId = payload.payment.entity.id;
+        let failedPaymentId = payload.payment.entity.id;
 
         // Update payment status
-        await Payment.update({ status: 'failed' }, { where: { razorpay_payment_id: failedPaymentId } });
+        let methodNameFailure =   payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity ;
+        let [updatePaymentFailure] = await Payment.update({ statusId: failureStatus,
+          razorpay_payment_id:failedPaymentId,
+          methodName:methodNameFailure,
+          description:payload.payment.entity.description,
+
+
+         }, { where: { razorpay_order_id:payload.payment.entity.order_id  } });
+         if(updatePaymentFailure>=1){
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:`Payement Failure`
+          })
+        
+         }
+         else{
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+         }
         break;
 
  
@@ -306,18 +351,33 @@ let webhook =  async (req, res) => {
 
       case 'payment.refunded':
         // Payment refunded
-        const refundedPaymentId = payload.payment.entity.id;
+        let refundPaymentId = payload.payment.entity.id;
 
         // Update payment status
-        await Payment.update({ status: 'refunded' }, { where: { razorpay_payment_id: refundedPaymentId } });
+        let methodNameRefund =   payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity ;
+        let [updatePaymentRefund] = await Payment.update({ statusId: refundStatus,
+          razorpay_payment_id:refundPaymentId,
+          methodName:methodNameRefund,
+          description:payload.payment.entity.description,
 
-        break;
+
+         }, { where: { razorpay_order_id:payload.payment.entity.order_id  } });
+         if(updatePaymentFailure>=1){
+          return res.status(statusCode.SUCCESS.code).json({
+            message:`Refund done sucessfully`
+          })
+        
+         }
+         else{
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+         };
 
       default:
         console.log(`Unhandled event type: ${event}`);
     }
 
-    res.status(statusCode.SUCCESS.code).json({message:'Event received'});
   } catch (err) {
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`});
   }
