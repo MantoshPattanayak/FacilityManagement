@@ -176,6 +176,15 @@ app.use((err,req,res,next)=>{
     })
   }
 })
+
+
+const cleanupExpiredTransactions = async () => {
+  const now = new Date();
+  await Transaction.deleteMany({ expiresAt: { $lt: now }, status: 'pending' });
+};
+
+setInterval(cleanupExpiredTransactions, 60 * 60 * 1000); // Run cleanup every hour
+
 module.exports = {
   app,
 };

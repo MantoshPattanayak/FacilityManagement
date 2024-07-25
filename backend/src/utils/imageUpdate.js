@@ -3,7 +3,7 @@ const db = require('../models')
 const file = db.file;
 const fileAttachment = db.fileattachment
 const path = require('path')
-let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,transaction,oldFilePath)=>{
+let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNumber,transaction,oldFilePath)=>{
     // e.g.  sub dir = "facility Images"
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
@@ -31,7 +31,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,transacti
           console.log(uploadImageFileBuffer,'25 upload image file buffer')
           if (uploadImageFileBuffer) {
             console.log('27',path.join(uploadDir, subDir))
-            const imageFileDir = path.join(uploadDir, subDir);
+            const imageFileDir = path.join(uploadDir);
             console.log(imageFileDir,'28 image file dir  image file buffer')
             // ensure the event image directory exists
             if (!fs.existsSync(imageFileDir)) {
@@ -41,16 +41,17 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,transacti
             
             console.log(fileExtension,'34 file extension image file buffer')
 
-            uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}.${fileExtension}`;
+            uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
 
-            await fs.remove(`${imageFileDir}/${oldFilePath}`);
-
-            fs.writeFileSync(uploadFilePath, uploadImageFileBuffer);
-            uploadFilePath2 = `/${subDir}/${insertionData.id}${insertionData.name}.${fileExtension}`;
+           let checkFileRemove = await fs.remove(`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`);
+           console.log('fs remove', checkFileRemove)
+           console.log(`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`);
+           fs.writeFileSync(uploadFilePath, uploadImageFileBuffer);
+            uploadFilePath2 = `/${subDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
             console.log(uploadFilePath2,"upload file path2 43")
             let fileName = `${insertionData.id}${insertionData.name}.${fileExtension}`;
             let fileType = mime ? mime.split("/")[0] : 'unknown';
-            console.log(fileName,fileType,"file path2 46")
+            console.log(fileName,fileType,'insertion Data',insertionData,"file path2 46")
             // insert to file table and file attachment table
             let [createFileCount, createFileData] = await file.update({
               fileName: fileName,
@@ -62,29 +63,28 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,transacti
        { where:{
             fileId:insertionData.fileId
         },transaction});
-            console.log('createFile', createFile)
+            console.log('update file data', createFileCount)
             if (createFileCount==0) {
                 await transaction.rollback()
               return errors.push(`Failed to create file  for facility file at index ${i}`);
             } else {
-              console.log(insertionData,entityType,'createFile',createFile, 'file purpose', filePurpose,'insert to file attachment')
               // Insert into file attachment table
               let [createFileAttachmentCount, createFiileAttachmentData] = await fileAttachment.update({
                 entityId: insertionData.id,
-                entityType: entityType,
-                fileId: createFile.fileId,
                 statusId: 1,
-                filePurpose: filePurpose
+                updatedDt: updatedDt,
+                updatedBy:userId
               },
            { where:{
                 fileId:insertionData.fileId
             },
             transaction}
           );
-
+          console.log('create file attachment count', createFileAttachmentCount)
               if (createFileAttachmentCount==0) {
                 return errors.push(`Failed to create file attachment for facility file at index ${i}`);
               }
+              console.log('create file count',createFileAttachmentCount )
               return null;
             }
           }

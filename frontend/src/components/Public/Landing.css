@@ -182,7 +182,7 @@ body {
   overflow: hidden;
   white-space: nowrap;
 
-  animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
+  animation: typing 2s steps(40, end), blink-caret 2s step-end infinite;
 }
 
 @keyframes typing {
@@ -468,7 +468,7 @@ body {
 .mapSearchContainer {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 2px;
   /* Adjust as needed */
 }
 
@@ -852,10 +852,34 @@ body {
 }
 
 /* // --------------Explore new Activities------------------------------------------------------------- */
+.exploreNewAct-firstDiv{
+  height: 45vh;
+  width: 27%;
 
+
+  overflow-y: auto;
+
+}
+.exploreNewAct-firstDiv::-webkit-scrollbar {
+  width: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.exploreNewAct-firstDiv::-webkit-scrollbar-thumb {
+  background-color: #3c3c3c;
+  border-radius: 5px;
+}
+
+.exploreNewAct-firstDiv::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+.exploreNewAct-firstDiv::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.5);
+}
 .exploreNewAct-Parent-Container {
   width: 100%;
-  height: 70vh;
+  height: 75vh;
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
@@ -969,16 +993,18 @@ body {
 
 .activity {
   display: flex;
-  flex-wrap: wrap;
+
   margin-top: 10px;
   padding: 4px;
-  padding-inline: 8vw;
+
   padding-block: 1vh;
   border-radius: 7px;
   justify-content: center;
-  width: 91px;
+  width: 100%;
   background-color: hsl(0, 0%, 52%, 0.5);
   color: white;
+  text-align: center;
+
 }
 
 /* Selected activity */

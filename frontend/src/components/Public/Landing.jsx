@@ -41,7 +41,7 @@ import badminton from "../../assets/badminton_ENA.png";
 import badmintonBg from "../../assets/Explore_New_Activity_background.png";
 import cricket_bg from "../../assets/cricket_bg_ENA.jpg";
 import cricket_1 from "../../assets/cricket_ENA.jpg";
-import football_bg from "../../assets/football_bg_ENA.jpg";
+import football_bg from "../../assets/fotable2.jpg";
 import football_1 from "../../assets/football_ENA.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
 import yoga_1 from "../../assets/Yoga__ENA.jpg";
@@ -60,7 +60,7 @@ import "react-multi-carousel/lib/styles.css";
 import anan_image from "../../assets/Anan_vihar.jpg";
 // Import Image for Current event--------------------
 import No_Current_Event_img from "../../assets/No_Current_Event_Data.png";
-import No_data_nearBy from "../../assets/Near_Data_No_Found.png"
+import No_data_nearBy from "../../assets/Near_Data_No_Found.png";
 // here import Park Image
 
 import PublicHeader from "../../common/PublicHeader.jsx";
@@ -140,7 +140,7 @@ const Landing = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
   // here Gallery Image -------------------------------
-  const [GalleryImage, setGalleryImage] = useState([])
+  const [GalleryImage, setGalleryImage] = useState([]);
   // set loader-------------------------------------------
   const [loading, setLoading] = useState(false); // Add loading state
   // --------------Explore new Activities-------------------------------------------------------------
@@ -159,36 +159,7 @@ const Landing = () => {
     setIsMarqueePaused(!isMarqueePaused);
   };
 
-  const [exploreNewActivities, setExploreNewActivities] = useState([
-    {
-      game: "Tennis",
-      parks: ["Kalinga Stadium", "Saheed Nagar Sports Complex"],
-      imgENA: badminton,
-      imgENAbg: badmintonBg,
-    },
-    {
-      game: "Cricket",
-      parks: ["Ruchika High School, Unit - 6", "Saheed Nagar Sports Complex"],
-      imgENA: cricket_1,
-      imgENAbg: cricket_bg,
-    },
-    {
-      game: "Football",
-      parks: [
-        "Kalinga Stadium",
-        "Bhubaneswar Footbal Academy",
-        "BJB Nagar Field",
-      ],
-      imgENA: football_1,
-      imgENAbg: football_bg,
-    },
-    {
-      game: "Yoga",
-      parks: ["Buddha Jayanti Park", "Acharya Vihar Colony Park"],
-      imgENA: yoga_1,
-      imgENAbg: yoga_bg,
-    },
-  ]);
+  const [exploreNewActivities, setExploreNewActivities] = useState([]);
 
   const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
@@ -265,7 +236,7 @@ const Landing = () => {
       console.log("Here is the Landing Page API data", resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
-      setGalleryImage(resLanding.data.galleryData)
+      setGalleryImage(resLanding.data.galleryData);
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
       );
@@ -475,7 +446,6 @@ const Landing = () => {
 
   //Gallery section
 
-
   const nextImage = () => {
     if (currentIndex < images.length - 3) {
       setCurrentIndex(currentIndex + 1);
@@ -498,7 +468,6 @@ const Landing = () => {
       setCurrentIndex1(currentIndex1 - 1);
     }
   };
-
 
   //------- Advatisemant -----------
   const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3];
@@ -649,9 +618,7 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
       {/* ----------Logo sticker------------------------------------------------------------------------ */}
-
       <div className="logo-section">
         <div className="logos">
           <Link
@@ -700,9 +667,7 @@ const Landing = () => {
           </div>
         </div>
       </div>
-
-      {/* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/}
-
+      {/* ------------GOOGLE MAP Container----------------------------------------------------------------------------*/}
       <div className="map-parentContainer">
         {/* --------//google map ------------------------------------------------------------------------------- */}
         <section className="map-container2">
@@ -791,14 +756,17 @@ const Landing = () => {
                   onChange={handleChange}
                   className="mapSearchInput"
                 />
-                <button type="button" className="mapSearchSubmit" onClick={fecthMapData}>
+                <button
+                  type="button"
+                  className="mapSearchSubmit"
+                  onClick={fecthMapData}
+                >
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </button>
               </div>
             </div>
           </div>
           <LoadScript googleMapsApiKey={apiKey}>
-
             <GoogleMap
               mapContainerStyle={{
                 height: "450px",
@@ -808,7 +776,6 @@ const Landing = () => {
               center={defaultCenter}
               zoom={11}
             >
-
               {/* Render markers */}
               {mapdata.map((location, index) => (
                 <Marker
@@ -817,7 +784,6 @@ const Landing = () => {
                   onClick={() => handleMarkerClick(location.facilityId)} // Call handleMarkerClick function with parkId when marker is clicked
                 />
               ))}
-
 
               {/* Show InfoWindow for selected location */}
               {selectedLocationDetails && (
@@ -843,7 +809,6 @@ const Landing = () => {
               )}
             </GoogleMap>
           </LoadScript>
-
         </section>
 
         {/* --------Facilities Near me----------------------------------------------------- */}
@@ -855,25 +820,36 @@ const Landing = () => {
             {selectedButton === 5 && <h1>Greenways Near Me</h1>}
             {selectedButton === 4 && <h1>Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
-              <button type="button"
-                className={activeButton === 2 ? 'active' : ''}
+              <button
+                type="button"
+                className={activeButton === 2 ? "active" : ""}
                 onClick={() => {
                   setDistanceRange(2);
                   setActiveButton(2);
-                }}>2km</button>
-              <button type="button"
-                className={activeButton === 4 ? 'active' : ''}
+                }}
+              >
+                2km
+              </button>
+              <button
+                type="button"
+                className={activeButton === 4 ? "active" : ""}
                 onClick={() => {
                   setDistanceRange(4);
                   setActiveButton(4);
                 }}
-              >4km</button>
-              <button type="button"
-                className={activeButton === 6 ? 'active' : ''}
+              >
+                4km
+              </button>
+              <button
+                type="button"
+                className={activeButton === 6 ? "active" : ""}
                 onClick={() => {
                   setDistanceRange(6);
                   setActiveButton(6);
-                }}>6km</button>
+                }}
+              >
+                6km
+              </button>
             </div>
           </div>
           <div className="facility-list-map overflow-y-scroll">
@@ -901,11 +877,8 @@ const Landing = () => {
             )}
           </div>
         </div>
-
       </div>
-
       {/* -----Whats New Section------------------------------------------- */}
-
       <div className="notice2">
         <div className="notice2-container">
           <button className="what_new">Whats New</button>
@@ -958,19 +931,21 @@ const Landing = () => {
           )}
         </div>
       </div>
-
       {/* ------Event details card-------------------------------------------------------------------- */}
-
       <div className="EventContainerlanding">
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
             <h1>Current Events</h1>
           </div>
-          <button className="viewMoreGallery">
-            <Link to="/events">View All</Link>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
+          {eventNameLanding.length > 0 ? (
+            <button className="viewMoreGallery">
+              <Link to="/events">View All</Link>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
 
         {/* .........Card section scroll using carousel ..........*/}
@@ -997,7 +972,13 @@ const Landing = () => {
                     >
                       <img
                         className="Yoga_image2"
-                        src={event.eventMainImage ? instance().baseURL + '/static' + event.eventMainImage : Yoga_img}
+                        src={
+                          event.eventMainImage
+                            ? instance().baseURL +
+                            "/static" +
+                            event.eventMainImage
+                            : Yoga_img
+                        }
                         onError={(e) => {
                           e.target.onerror = null; // Prevents looping
                           e.target.src = Yoga_img;
@@ -1042,17 +1023,16 @@ const Landing = () => {
           )}
         </div>
       </div>
-
       {/*------------ Explore new activities----------- */}
       <div
         className="exploreNewAct-Parent-Container"
         style={{
-          backgroundImage: `linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${currentImage})`,
+          backgroundImage: `   linear-gradient(10deg, rgba(0, 0, 0, 1.6), rgba(0, 0, 0, 0.5)), url(${currentImage})`,
         }}
       >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-          <h1>Explore And Book New Activities</h1>
+            <h1>Explore And Book New Activities</h1>
         </div>
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
@@ -1116,10 +1096,14 @@ const Landing = () => {
             <div className="greenHeader"></div>
             <h1>Gallery</h1>
           </div>
-          <div className="viewMoreGallery">
-            <Link to={"/View_Gallery/Image_Gallery"}>View All</Link>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </div>
+          {GalleryImage.length > 0 ? (
+            <div className="viewMoreGallery">
+              <Link to={"/View_Gallery/Image_Gallery"}>View All</Link>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="carousel">
@@ -1134,10 +1118,9 @@ const Landing = () => {
             >
               {GalleryImage.map((item, index) => {
                 const imageUrl = `${instance().baseURL}/static${item.url}`;
-                console.log('Image URL:', imageUrl); // Log the image URL to the console
+                console.log("Image URL:", imageUrl); // Log the image URL to the console
                 return (
                   <div className="carousel-main_container">
-
                     <div key={index} className="carousel-image-container">
                       <img
                         src={imageUrl}
@@ -1145,12 +1128,10 @@ const Landing = () => {
                         className="carousel-image_gallery"
                       // Hide broken images
                       />
-                        <div className="description">{item.description}</div>
-                     
+                      <div className="description">{item.description}</div>
                     </div>
                     <div className="description">{item.description}</div>
                   </div>
-
                 );
               })}
             </div>
@@ -1168,7 +1149,6 @@ const Landing = () => {
           <h1 className="text-3xl">Advertisement</h1>
         </div>
         <div className="avatisement-Content2">
-
           {/* <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' /> */}
           <div className="advertisement-Scroll2">
             {ad.map((img, index) => (

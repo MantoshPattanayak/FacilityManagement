@@ -1,11 +1,15 @@
 module.exports = (sequelize,DataTypes)=>{
 
 const PaymentMethod = sequelize.define('paymentmethod',{
-    methodId : {
+    orderId : {
         type:DataTypes.INTEGER,
         autoIncrement:true,
         primaryKey:true
     },
+    orderDate:{
+        type:DataTypes.DATE
+    },
+
     methodName:{
         type:DataTypes.STRING(50)
     },
@@ -17,19 +21,28 @@ const PaymentMethod = sequelize.define('paymentmethod',{
     },
     razorpay_order_id: {
         type: DataTypes.STRING(255),
-        allowNull:false,
     },
     razorpay_payment_id: {
         type: DataTypes.STRING(255),
-        allowNull:false,
     },
     razorpay_signature: {
         type: DataTypes.STRING(255),
-        allowNull:false,
     },  
     status:{
         type: DataTypes.INTEGER // Define the column as DATE type
     },
+    createdBy:{
+        type:DataTypes.INTEGER
+    },
+    updatedBy:{
+        type:DataTypes.INTEGER
+    },
+    createdDt:{
+        type:DataTypes.DATE
+    },
+    updatedDt:{
+        type:DataTypes.DATE
+    }
 
 
 }
