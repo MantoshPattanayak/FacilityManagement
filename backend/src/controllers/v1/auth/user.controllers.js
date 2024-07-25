@@ -516,18 +516,20 @@ let signUp = async (req,res)=>{
   let roleId = 4; //user roleId
   console.log(req.body,'req.body')
     let statusId = 1;
-    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,encryptMiddleName:middleName,encryptLastName:lastName,encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,encryptActivity:activities,isEmailVerified, location} = req.body;
+    let {encryptEmail:email, encryptPassword:password,encryptFirstName:firstName,
+      encryptMiddleName:middleName,encryptLastName:lastName,
+      encryptPhoneNo:phoneNo,userImage,encryptLanguage:language,
+      encryptActivity:activities,isEmailVerified, location} = req.body;
 
     // if(activities){
     //   activities = activities.map(decryptValue=>decrypt(decryptValue));
     // }
-
     console.log(activities,"activities")
 
     console.log('req.body',req.body)
     let createdDt = new Date();
     let updatedDt = new Date();
-    if(!password && !firstName && !middleName && !lastName && !phoneNo && !userImage && !activities && language){
+    if(!firstName && !lastName && !phoneNo && !userImage && !activities && !language){
       await transaction.rollback();
       return res.status(statusCode.BAD_REQUEST.code).json({
         message: `please provide all required data to set up the profile`
@@ -546,7 +548,7 @@ let signUp = async (req,res)=>{
     // const decryptEmailId = decrypt(email);
     // const decryptPhoneNumber = decrypt(phoneNo);
  
-    password = decrypt(password)
+    // password = decrypt(password)
 
     let checkDuplicateMobile= await user.findOne({
         where:
@@ -577,7 +579,7 @@ let signUp = async (req,res)=>{
   
 
       // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // const hashedPassword = await bcrypt.hash(password, 10);
       // for uploading user image
       
 
@@ -588,7 +590,7 @@ let signUp = async (req,res)=>{
         middleName: middleName,
         lastName: lastName,
         userName: email,
-        password: hashedPassword,
+        // password: hashedPassword,
         phoneNo: phoneNo,
         emailId: email,
         roleId:roleId,
