@@ -160,6 +160,31 @@
     font-size: 18px;
     font-weight: 700;
   }
+
+
+  /* Css to override grallery  */
+  .carousel-images{
+    width: auto;
+  }
+  .park-card{
+    width: max-content;
+  }
+
+  .galleryTitleLeft2 {
+    display: flex;
+    gap: 1vw;
+}
+  .galleryTitleLeft2 h1{
+    font-size: 28px;
+    color: #2a2d32;
+}
+
+  .greenHeader2{
+    width: 6px;
+    height: 49px;
+    border-radius: 4px;
+    background-color: #3ab757;
+  }
   
   /* Responsive settings */
   @media screen and (max-width: 768px) {
