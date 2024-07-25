@@ -1,131 +1,4 @@
 
-/* .booking-shedule-popup {
-padding: 20px;
-background-color: #f9f9f9;
-height:400px;
-width: 41vw;
-margin-top: 20%;
-margin-bottom: 20%;
-} */
-/* 
-.fixed {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .booking-schedule-popup {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 90%;
-  }
-  
-  .popup-header {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .icon-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .booking-details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .custom-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .duration-container {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .duration-button {
-    background-color:  #007bff;
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .duration-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-
-  .wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 20px 0;
-  }
-  
-  .input-field {
-    padding: 10px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-align: center;
-  }
-  
-  .DatePickerContainer {
-    position: absolute;
-    border: 1px solid #ccc;
-    max-height: 200px;
-    overflow-y: auto;
-    width: 200px;
-    background: white;
-    z-index: 1000; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .DateItem {
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    background: white;
-    color: black;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .DateItem:hover {
-    background: #f0f0f0;
-  }
-  
-  .DateItem.selected {
-    background: #007BFF;
-    color: white;
-  }
-  
-  .DateItem.selected:hover {
-    background: #0056b3;
-  }
-  
-   */
-
-
-
-
-
    .fixed {
     position: fixed;
     inset: 0;
@@ -141,8 +14,8 @@ margin-bottom: 20%;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 90%;
+    width: 20%;
+ 
   }
   
   .popup-header {
@@ -161,7 +34,7 @@ margin-bottom: 20%;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 10px;
+   
   }
   
   .custom-input {
@@ -177,27 +50,15 @@ margin-bottom: 20%;
     gap: 5px;
   }
   
-  .duration-button {
-    background-color: #007bff;
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .duration-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
   
   .wrapper {
     position: relative;
     display: inline-block;
-    margin: 20px 0;
+    margin: 10px 0;
   }
   
   .input-field {
-    padding: 10px;
+  
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -289,4 +150,6 @@ margin-bottom: 20%;
   .time-picker-dropdown ul li:hover {
     background-color: #f0f0f0;
   }
+  
+
   

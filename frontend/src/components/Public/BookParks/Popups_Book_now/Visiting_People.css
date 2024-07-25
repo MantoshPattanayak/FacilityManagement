@@ -1,7 +1,7 @@
 .con{
     background-color: rgb(255, 255, 255);
     height:450px;
-    width: 40vw;
+    width: 20vw;
     border: 1px solid white;
     border-radius: 10px;
     margin-left: 30%;
@@ -17,111 +17,137 @@
     color: aliceblue;
 }
 .member-details{
-    margin-top: 30px;
+   margin-left: 15%
 }
 
 
 
-
-
 .popup-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .popup-content {
-    background-color: #fff;
-    border-radius: 10px;
-    width: 40vw;
-    padding: 20px;
-    position: relative;
-  }
-  
-  .popup-header {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .icon-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .popup-body {
-    padding: 20px 0;
-  }
-  
-  .popup-title {
-    margin-bottom: 35px;
-    font-size:larger;
-    font-weight: 500;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .member-details {
-    margin-top: 20px;
-  }
-  
-  .member-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-  
-  .label {
-    flex: 1;
-  }
-  
-  .duration-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 2;
-    padding: 10px;
-  }
-  
-  .duration-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .custom-input {
-    text-align: center;
-    width: 50px;
-    margin: 0 10px;
-  }
-  
-  .popup-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .cancel-button, .next-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .cancel-button {
-    background-color: #dc3545;
-  }
-  
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 20%;
+  padding: 10px;
+  position: relative;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.icon-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.popup-body {
+padding: 2%;
+}
+
+.popup-title {
+   font-size: 18px;
+ 
+  text-align: center;
+  font-weight: 600;
+ 
+}
+
+.member-details {
+  margin-top: 20px;
+}
+
+.member-row {
+  margin-bottom: 15px;
+}
+
+.member-row label {
+  display: block;
+  font-size: 15px;
+  color: rgb(57, 55, 55);
+}
+/* input filed (Increamenent and decreament */
+	
+.increament_decrement_conatiner {
+  position: relative;
+  display: inline-block;
+}
+
+.formInput_Add_member {
+  width: 220px; /* Adjust width as needed */
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.decrement-button,
+.increment-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.decrement-button {
+  left: 0;
+  padding: 5px;
+  border: 1px dotted rgb(182, 178, 178);
+  font-size: 20px;
+  font-weight: 900;
+}
+.decrement-button  :hover {
+  font-size: 21px;
+  font-weight: 900;
+  color: #007bff;
+}
+
+.increment-button {
+  right: 0;
+  padding: 5px;
+   
+  border: 1px dotted rgb(182, 178, 178);
+  font-size: 20px;
+  font-weight: 900;
+ 
+}
+.increment-button  :hover{
+  font-size: 21px;
+  font-weight: 900;
+  color: #007bff;
+}
+
+.custom-input {
+  text-align: center;
+  width: 50px;
+  margin: 0 10px;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-button, .next-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+}

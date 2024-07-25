@@ -85,6 +85,8 @@ const eventcategories = require('./routes/api/' + api_version + '/mdm/eventcateg
 const facilityType = require('./routes/api/' + api_version + '/mdm/facilitytype')
 
 const gallery = require('./routes/api/' + api_version + '/activity/gallery')
+
+const facilityStaff = require('./routes/api/' + api_version + '/mdm/facilitystaff')
 console.log(port, "port");
 
 app.use(
@@ -160,6 +162,8 @@ app.use('/eventcategories', eventcategories)
 app.use('/facilitytype', facilityType)
 // gallery details
 app.use('/gallery', gallery)
+// facility staff allocation
+app.use("/facilityStaff", facilityStaff)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 

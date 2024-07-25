@@ -306,6 +306,11 @@ const Booking_Schedule = ({
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
+   
+
+
+
+          
 
           <div className="popup-footer">
             <button className="cancel-button" onClick={() => closePopup(false)}>

@@ -305,7 +305,9 @@ const Main_Body_Park_Details = () => {
             : (facilityTypeId == 3)
               ? "park-body-3"
               : (facilityTypeId == 4)
-              ? "park-body-4":''
+              ? "park-body-4":
+              (facilityTypeId == 5)
+              ? "park-body-5":''
           }`}
       >
         <h1 className="name_park_img">
@@ -313,6 +315,7 @@ const Main_Body_Park_Details = () => {
           {(facilityTypeId == 2) && "Playgrounds"}
           {(facilityTypeId == 3) && "Multi-purpose Grounds"}
           {(facilityTypeId == 4) && "Blueways"}
+          {(facilityTypeId == 5) && "Greenways"}
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}
@@ -359,7 +362,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-20" src={MultiPark} alt="Multipark" />
-            <span className="button-text1">Multipurpose <br></br> Grounds</span>
+            <span className="button-text1">Multipurpose  Grounds</span>
           </button>
            {/* blueway */}
            <button
@@ -509,8 +512,9 @@ const Main_Body_Park_Details = () => {
         <h1 className="name_park1">
           {(facilityTypeId == 1) && "Parks"}
           {(facilityTypeId == 2) && "Playgrounds"}
-          {(facilityTypeId == 3) && "Multi-purpose Grounds"}
+          {(facilityTypeId == 3) && "Multipurpose Grounds"}
           {(facilityTypeId == 4) && "Blueways"}
+          {(facilityTypeId == 5) && "Greenways"}
         </h1>
       </span>
 
@@ -584,7 +588,7 @@ const Main_Body_Park_Details = () => {
                     <th scope="col " className="text-left" >Name </th>
                     <th scope="col" className="text-left">Location</th>
                     <th scope="col">Distance</th>
-                    <th scope="col">Park Status</th>
+                    <th scope="col">Status</th>
                     <th className="left">Details</th>
                   </tr>
                 </thead>

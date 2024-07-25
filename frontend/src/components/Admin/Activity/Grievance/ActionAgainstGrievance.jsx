@@ -45,7 +45,7 @@ export default function ActionAgainstGrievance() {
   //function to call API to fetch grievance details
   async function fetchGrievanceDetails() {
     try {
-      let res = await axiosHttpClient('ADMIN_VIEW_GRIEVANCE_BY_ID_API', 'get', null, grievanceId);
+      let res = await axiosHttpClient('ADMIN_VIEW_GRIEVANCE_BY_ID_API', 'post', null, grievanceId);
 
       console.log('response', res.data.grievanceDetails);
       setFormData(res.data.grievanceDetails);

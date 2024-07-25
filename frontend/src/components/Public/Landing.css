@@ -182,7 +182,7 @@ body {
   overflow: hidden;
   white-space: nowrap;
 
-  animation: typing 20s steps(40, end), blink-caret 5s step-end infinite;
+  animation: typing 2s steps(40, end), blink-caret 2s step-end infinite;
 }
 
 @keyframes typing {
@@ -196,6 +196,7 @@ body {
 }
 
 @keyframes blink-caret {
+
   from,
   to {
     border-color: transparent;
@@ -218,29 +219,33 @@ body {
   position: relative;
   /*auto-sugegst*/
 }
-.input-wrapper{
-    display: flex;
+
+.input-wrapper {
+  display: flex;
 }
+
 /* starts.................... */
 .search-bar-wrapper {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid white;
-    align-items: center;
-    width: fit-content;
-    padding-inline: 1vw;
-    border-radius: 12px;
-  }
-  
-  .search-bar {
-    /* width: 100%; */
-    padding-right: 30px; /* Adjust according to the size of the icon */
-  }
-  .search-icon svg{
-    color: white;
-  }
-  
-  /* .search-icon {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid white;
+  align-items: center;
+  width: fit-content;
+  padding-inline: 1vw;
+  border-radius: 12px;
+}
+
+.search-bar {
+  /* width: 100%; */
+  padding-right: 30px;
+  /* Adjust according to the size of the icon */
+}
+
+.search-icon svg {
+  color: white;
+}
+
+/* .search-icon {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -248,18 +253,20 @@ body {
     pointer-events: none;
     font-size: 18px;
   } */
-  
-  /* ends............................ */
 
-  .search-bar {
-    outline: none; /* Remove the default focus outline */
-    
-  }
-  
-  .search-bar:focus {
-    border-color: initial; /* Retain the same border color when focused */
-    box-shadow: none; /* Remove any default box-shadow */
-  }
+/* ends............................ */
+
+.search-bar {
+  outline: none;
+  /* Remove the default focus outline */
+}
+
+.search-bar:focus {
+  border-color: initial;
+  /* Retain the same border color when focused */
+  box-shadow: none;
+  /* Remove any default box-shadow */
+}
 
 /* auto-suggest section - start*/
 .suggestions {
@@ -341,7 +348,7 @@ body {
 /* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/
 
 .map-parentContainer {
-  width: 94%;
+  width: 91%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -417,7 +424,8 @@ body {
   font-weight: 700;
   /* margin-top: 35px; */
 }
-.clicked-text-icon_blue{
+
+.clicked-text-icon_blue {
   position: absolute;
 
   top: 70%;
@@ -433,7 +441,7 @@ body {
 .clicked-text-icon3 {
   position: absolute;
   top: 70%;
-  left: 20%;
+  left: 25%;
   color: #013409;
   padding: 10px;
   border-radius: 5px;
@@ -454,50 +462,58 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 0.5px solid #eeeeee;
 }
 
-.mapSearchButton input {
-  border: 1px solid rgb(2, 54, 145);
-  /* width: 264px; */
-  width: 300px;
-  height: 43px;
-  padding: 12px;
-}
-
-.mapSearchButton button {
-  padding: 10px 20px;
-  background-color: #016694;
-  color: white;
-  border: none;
-
-  cursor: pointer;
-}
-
-.mapSearchButton button:hover {
-  background-color: #003a69;
-  border: 1px solid rgb(0, 33, 91);
+/* search map */
+.mapSearchContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2px;
+  /* Adjust as needed */
 }
 
 .mapSearchButton {
   display: flex;
+  align-items: center;
+  background-color: #c8c8c8;
+  border: 1px solid #dcdcdc;
+  border-radius: 24px;
+  /* Rounded corners for a more modern look */
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Light shadow for depth */
+  max-width: 600px;
+  /* Optional: set a max-width for the search bar */
+  width: 100%;
+  /* Ensure it takes full width up to max-width */
 }
 
-/* .EventDetailsCardSec_outer {
-overflow-x: auto;
+.mapSearchInput {
+  flex: 1;
 
-} */
+  border: none;
+  padding: 12px 16px;
+  /* More padding for a more modern look */
+  font-size: 16px;
+  outline: none;
+  border-radius: 24px 0 0 24px;
+  /* Ensure rounded corners match the container */
+}
 
-/* .EventDetailsCardSec {
-display: flex;
-flex-wrap: nowrap;
+.mapSearchSubmit {
+  color: rgb(74, 73, 73);
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 0 24px 24px 0;
+  /* Ensure rounded corners match the container */
+}
 
-width: fit-content;
-
-margin: 0 auto;
-
-padding-bottom: 20px;
-} */
+.mapSearchSubmit:hover {
+  background-color: #c8c8c8;
+  /* Darker shade on hover */
+}
 
 .eventCard {
   display: flex;
@@ -570,17 +586,18 @@ padding-bottom: 20px;
 
 .nearByFacilities-heading {
   display: flex;
-  /* justify-content: space-between; */
-  display: flex;
   justify-content: space-between;
-  width: 256px;
+  width: 259px;
+  border-bottom: 1px solid #000;
+  /* Adjust color and thickness as needed */
 }
 
 .nearByFacilities-heading h1 {
   font-weight: 700;
-  font-size: large;
-  width: 178px;
-  margin-bottom: 12px;
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #2c2c2c;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .nearByFacilities-buttons {
@@ -590,12 +607,25 @@ padding-bottom: 20px;
 }
 
 .nearByFacilities-heading button {
-  padding: 4px;
+  padding: 6px;
   border: 1px solid gainsboro;
   margin-inline: 4px;
   font-size: 14px;
   border-radius: 4px;
-  height: 28px;
+  font-weight: 600;
+  height: 35px;
+  background-color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nearByFacilities-heading button:hover {
+  background-color: #02962f;
+  color: white;
+}
+
+.nearByFacilities-heading button.active {
+  background-color: #106329;
+  color: white;
 }
 
 .map-facilities {
@@ -623,7 +653,7 @@ padding-bottom: 20px;
 }
 
 .notice2-container {
-  width: 94%;
+  width: 90%;
   background: #eee;
   display: flex;
   justify-content: center;
@@ -647,6 +677,7 @@ padding-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 20px;
 }
 
 .marquee-content {
@@ -656,10 +687,8 @@ padding-bottom: 20px;
   overflow: hidden;
 }
 
-
 .Play_pause_icon {
   font-size: 30px;
-  padding-right: 40px;
 }
 
 /* ------Event details card-------------------------------------------------------------------- */
@@ -695,10 +724,17 @@ padding-bottom: 20px;
   overflow: hidden;
   width: 100%;
 }
+.carousel-main_container{
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 24px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0px;
 
-.carousel-images {
+}
+
+
+.carousel-image_gallery{
   display: flex;
   transition: transform 0.5s ease;
+   height: 25vh;
+
 }
 
 .carousel-slide2 {
@@ -816,10 +852,34 @@ padding-bottom: 20px;
 }
 
 /* // --------------Explore new Activities------------------------------------------------------------- */
+.exploreNewAct-firstDiv{
+  height: 45vh;
+  width: 27%;
 
+
+  overflow-y: auto;
+
+}
+.exploreNewAct-firstDiv::-webkit-scrollbar {
+  width: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.exploreNewAct-firstDiv::-webkit-scrollbar-thumb {
+  background-color: #3c3c3c;
+  border-radius: 5px;
+}
+
+.exploreNewAct-firstDiv::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+.exploreNewAct-firstDiv::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.5);
+}
 .exploreNewAct-Parent-Container {
   width: 100%;
-  height: 70vh;
+  height: 75vh;
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
@@ -859,10 +919,29 @@ padding-bottom: 20px;
 .parkList {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  /* border: 1px solid #ccc; */
   display: flex;
   flex-direction: column;
+  height: 30vh;
   gap: 6px;
+  overflow-y: auto;
+}
+
+.parkList::-webkit-scrollbar {
+  width: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.parkList::-webkit-scrollbar-thumb {
+  background-color: #3c3c3c;
+  border-radius: 5px;
+}
+
+.parkList::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+.parkList::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .newActivites button {
@@ -914,16 +993,18 @@ padding-bottom: 20px;
 
 .activity {
   display: flex;
-  flex-wrap: wrap;
+
   margin-top: 10px;
   padding: 4px;
-  padding-inline: 8vw;
+
   padding-block: 1vh;
   border-radius: 7px;
   justify-content: center;
-  width: 91px;
+  width: 100%;
   background-color: hsl(0, 0%, 52%, 0.5);
   color: white;
+  text-align: center;
+
 }
 
 /* Selected activity */
@@ -1333,7 +1414,7 @@ margin-top: 20px;
 /* AdCarousel.css */
 
 .avatisement-Border2 {
-  max-width: 90vw;
+  width: 89%;
   margin: 0 auto;
   /* Centers the container */
   overflow-x: hidden;
@@ -1348,6 +1429,7 @@ margin-top: 20px;
   align-items: center;
   width: 100%;
   height: 50vh;
+  margin-top: 40px;
   /* Adjust height as needed */
   overflow: hidden;
 }
@@ -1361,8 +1443,12 @@ margin-top: 20px;
 
 .advertisement-Image {
   width: auto;
-  height: 50vh;
+  height: 35vh;
   padding: 20px;
+  margin: 20px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 2px 0px 1px;
+
+ 
 }
 
 @keyframes scroll {
@@ -1390,6 +1476,7 @@ margin-top: 20px;
   .image-secondDiv img {
     height: 100%;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 20;
@@ -1401,6 +1488,7 @@ margin-top: 20px;
     height: auto;
     gap: 2vh;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 12;
@@ -1419,7 +1507,9 @@ margin-top: 20px;
   .advertisement-Image {
     height: 50vh;
   }
-
+.Ads_Name{
+  font-size: 40px;
+}
   .galleryOuter {
     gap: 0vh;
     margin-block: 4vh;
@@ -1439,6 +1529,7 @@ margin-top: 20px;
     height: auto;
     gap: 2vh;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
@@ -1502,10 +1593,12 @@ margin-top: 20px;
 }
 
 @media screen and (min-width: 1200px) {
+
   /*---- suggestion section----*/
   .suggestions {
     top: 520px;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
@@ -1516,10 +1609,12 @@ margin-top: 20px;
   .bg-img {
     height: 50vh;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
   }
+
   /* header-content  Fonnt size-------------- */
   .header nav ul li a {
     font-size: 12px;
@@ -1745,6 +1840,7 @@ margin-top: 20px;
     align-items: flex-start;
     margin-left: -12vw;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 6;
@@ -1951,10 +2047,12 @@ margin-top: 20px;
   .landingcontainer {
     overflow-x: auto;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
   }
+
   .landing-page_contant {
     align-items: flex-end;
     /* margin-left: 2vw; */
@@ -2168,6 +2266,7 @@ margin-top: 20px;
   .landingcontainer {
     overflow-x: auto;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 0;
@@ -2277,6 +2376,7 @@ margin-top: 20px;
     top: 56vh;
     width: 75%;
   }
+
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
@@ -2287,13 +2387,11 @@ margin-top: 20px;
   }
 
   /* Landing page */
-  .landingcontainer {
-    width: 122vw;
-  }
+ 
 
   .landing-page_contant {
     align-items: flex-start;
-    margin-left: -13%;
+ 
   }
 
   .bg-img {
@@ -2307,7 +2405,7 @@ margin-top: 20px;
 
 .avatisement-Image {
   height: 40vh;
-  padding: 20px;
+
 }
 
 .avatisement-Content {
@@ -2349,7 +2447,20 @@ margin-top: 20px;
   margin-left: 450px;
 }
 
-
-.No_Data_image{
+.No_Data_image {
   height: 30vh;
 }
+
+/* Loader */
+.custom-loader {
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  border:16px solid;
+  border-color:#EDE5E5;
+  border-right-color: #2A9C22;
+  animation:s2 1s infinite linear;
+  margin-left: 30%;
+  margin-top: 25%;
+}
+@keyframes s2 {to{transform: rotate(1turn)}}

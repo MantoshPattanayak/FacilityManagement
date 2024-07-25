@@ -41,7 +41,7 @@ import badminton from "../../assets/badminton_ENA.png";
 import badmintonBg from "../../assets/Explore_New_Activity_background.png";
 import cricket_bg from "../../assets/cricket_bg_ENA.jpg";
 import cricket_1 from "../../assets/cricket_ENA.jpg";
-import football_bg from "../../assets/football_bg_ENA.jpg";
+import football_bg from "../../assets/fotable2.jpg";
 import football_1 from "../../assets/football_ENA.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
 import yoga_1 from "../../assets/Yoga__ENA.jpg";
@@ -60,7 +60,7 @@ import "react-multi-carousel/lib/styles.css";
 import anan_image from "../../assets/Anan_vihar.jpg";
 // Import Image for Current event--------------------
 import No_Current_Event_img from "../../assets/No_Current_Event_Data.png";
-import No_data_nearBy from "../../assets/Near_Data_No_Found.png"
+import No_data_nearBy from "../../assets/Near_Data_No_Found.png";
 // here import Park Image
 
 import PublicHeader from "../../common/PublicHeader.jsx";
@@ -130,6 +130,7 @@ const Landing = () => {
   const [userLocation, setUserLocation] = useState(defaultCenter);
   const [nearbyParks, setNearbyParks] = useState([]);
   const [distanceRange, setDistanceRange] = useState(2);
+  const [activeButton, setActiveButton] = useState(2);
   const [currentIndex, setCurrentIndex] = useState(0);
   let randomKey = Math.random();
   let navigate = useNavigate();
@@ -137,16 +138,15 @@ const Landing = () => {
   const [inputFacility, setInputFacility] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
-
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
-// here Gallery Image -------------------------------
-const[GalleryImage, setGalleryImage]=useState([])
-
+  // here Gallery Image -------------------------------
+  const [GalleryImage, setGalleryImage] = useState([]);
+  // set loader-------------------------------------------
+  const [loading, setLoading] = useState(false); // Add loading state
   // --------------Explore new Activities-------------------------------------------------------------
   // State to keep track of the selected activity
   const [selectedActivity, setSelectedActivity] = useState(0);
   let dispatch = useDispatch();
-
   const marqueeRef = useRef(null);
   const [isMarqueePaused, setIsMarqueePaused] = useState(false);
 
@@ -159,36 +159,7 @@ const[GalleryImage, setGalleryImage]=useState([])
     setIsMarqueePaused(!isMarqueePaused);
   };
 
-  const [exploreNewActivities, setExploreNewActivities] = useState([
-    {
-      game: "Tennis",
-      parks: ["Kalinga Stadium", "Saheed Nagar Sports Complex"],
-      imgENA: badminton,
-      imgENAbg: badmintonBg,
-    },
-    {
-      game: "Cricket",
-      parks: ["Ruchika High School, Unit - 6", "Saheed Nagar Sports Complex"],
-      imgENA: cricket_1,
-      imgENAbg: cricket_bg,
-    },
-    {
-      game: "Football",
-      parks: [
-        "Kalinga Stadium",
-        "Bhubaneswar Footbal Academy",
-        "BJB Nagar Field",
-      ],
-      imgENA: football_1,
-      imgENAbg: football_bg,
-    },
-    {
-      game: "Yoga",
-      parks: ["Buddha Jayanti Park", "Acharya Vihar Colony Park"],
-      imgENA: yoga_1,
-      imgENAbg: yoga_bg,
-    },
-  ]);
+  const [exploreNewActivities, setExploreNewActivities] = useState([]);
 
   const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
@@ -265,7 +236,7 @@ const[GalleryImage, setGalleryImage]=useState([])
       console.log("Here is the Landing Page API data", resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
-      setGalleryImage(resLanding.data.galleryData)
+      setGalleryImage(resLanding.data.galleryData);
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
       );
@@ -338,6 +309,7 @@ const[GalleryImage, setGalleryImage]=useState([])
   }
 
   async function getNearbyFacilities() {
+    setLoading(true); // Start loading
     let bodyParams = {
       facilityTypeId: facilityTypeId,
       latitude: userLocation?.latitude || defaultCenter?.lat,
@@ -366,10 +338,11 @@ const[GalleryImage, setGalleryImage]=useState([])
     } catch (error) {
       console.error(error);
       toast.error("Location permission not granted.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   }
-
-  // here nearBy data -----------------------
+  // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
     if (userLocation && distanceRange && facilityTypeId) {
       getNearbyFacilities();
@@ -410,7 +383,7 @@ const[GalleryImage, setGalleryImage]=useState([])
     setSelectedLocationDetails(location); // Set selected location details
     console.log(location);
   };
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton, setSelectedButton] = useState(1);
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (typeid) => {
     setSelectedButton(typeid);
@@ -473,7 +446,6 @@ const[GalleryImage, setGalleryImage]=useState([])
 
   //Gallery section
 
-
   const nextImage = () => {
     if (currentIndex < images.length - 3) {
       setCurrentIndex(currentIndex + 1);
@@ -497,10 +469,8 @@ const[GalleryImage, setGalleryImage]=useState([])
     }
   };
 
-  // const [currentIndex, setCurrentIndex] = useState(0);
-
   //------- Advatisemant -----------
-  const ad = [adImg, ad1, ad2, ad3];
+  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3];
   // Home page image
   const getStyles = () => {
     const width = window.innerWidth;
@@ -599,13 +569,13 @@ const[GalleryImage, setGalleryImage]=useState([])
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </div>
               </div>
-              <div className="search-bar-arrow">
+              {/* <div className="search-bar-arrow">
                 <FontAwesomeIcon
                   icon={faArrowRight}
                   className="input-icon"
                   onClick={handleSearch}
                 />
-              </div>
+              </div> */}
             </div>
             {/* {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
@@ -648,9 +618,7 @@ const[GalleryImage, setGalleryImage]=useState([])
           </div>
         </div>
       </section>
-
       {/* ----------Logo sticker------------------------------------------------------------------------ */}
-
       <div className="logo-section">
         <div className="logos">
           <Link
@@ -684,7 +652,7 @@ const[GalleryImage, setGalleryImage]=useState([])
           >
             <div className="iconLogo">
               <img src={mp_ground_logo} alt="" />
-              <h2>Multipurpose</h2>
+              <h2>Multipurpose Grounds</h2>
               {/* <h2>Grounds</h2> */}
             </div>
           </Link>
@@ -699,12 +667,9 @@ const[GalleryImage, setGalleryImage]=useState([])
           </div>
         </div>
       </div>
-
-      {/* -------------GOOGLE MAP Container----------------------------------------------------------------------------*/}
-
+      {/* ------------GOOGLE MAP Container----------------------------------------------------------------------------*/}
       <div className="map-parentContainer">
         {/* --------//google map ------------------------------------------------------------------------------- */}
-
         <section className="map-container2">
           <div className="map-bar">
             <div className="map-icons">
@@ -750,10 +715,10 @@ const[GalleryImage, setGalleryImage]=useState([])
               <div className="icon1">
                 <button
                   className="icon1_button"
-                  onClick={() => handleParkLogoClick(4)}
+                  onClick={() => handleParkLogoClick(5)}
                 >
                   <img src={greenway} alt="" />
-                  {selectedButton === 4 ? (
+                  {selectedButton === 5 ? (
                     <h2 className="clicked-text-icon_blue">Greenways</h2>
                   ) : (
                     <h2 className="text1">Greenways</h2>
@@ -763,12 +728,12 @@ const[GalleryImage, setGalleryImage]=useState([])
               <div className="icon1">
                 <button
                   className="icon1_button"
-                  onClick={() => handleParkLogoClick(5)}
+                  onClick={() => handleParkLogoClick(4)}
                 >
                   <div>
                     <img src={Blueway} alt="" />
                   </div>
-                  {selectedButton === 5 ? (
+                  {selectedButton === 4 ? (
                     <div>
                       <h2 className="clicked-text-icon_blue">Blueways</h2>
                     </div>
@@ -780,31 +745,36 @@ const[GalleryImage, setGalleryImage]=useState([])
                 </button>
               </div>
             </div>
-
-            <div className="mapSearchButton">
-              <input
-                type="text"
-                placeholder="Please Enter the Location or Facility"
-                name="givenReq"
-                id="givenReq"
-                value={givenReq}
-                onChange={handleChange}
-              ></input>
-              <button type="button" onClick={fecthMapData}>
-                <FontAwesomeIcon icon={faSearch} className="os-icon" />
-              </button>
+            <div className="mapSearchContainer">
+              <div className="mapSearchButton">
+                <input
+                  type="text"
+                  placeholder="Please Enter the Location or Facility"
+                  name="givenReq"
+                  id="givenReq"
+                  value={givenReq}
+                  onChange={handleChange}
+                  className="mapSearchInput"
+                />
+                <button
+                  type="button"
+                  className="mapSearchSubmit"
+                  onClick={fecthMapData}
+                >
+                  <FontAwesomeIcon icon={faSearch} className="os-icon" />
+                </button>
+              </div>
             </div>
           </div>
-
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
               mapContainerStyle={{
-                height: "400px",
+                height: "450px",
                 width: "100%",
                 ...(isMobile && { height: "280px" }),
               }}
               center={defaultCenter}
-              zoom={12}
+              zoom={11}
             >
               {/* Render markers */}
               {mapdata.map((location, index) => (
@@ -839,58 +809,65 @@ const[GalleryImage, setGalleryImage]=useState([])
               )}
             </GoogleMap>
           </LoadScript>
-          
         </section>
 
         {/* --------Facilities Near me----------------------------------------------------- */}
-
         <div className="nearByFacilities">
           <div className="nearByFacilities-heading">
-            <h1>Facilities Near Me</h1>
+            {selectedButton === 1 && <h1>Parks Near Me</h1>}
+            {selectedButton === 2 && <h1>PlayGround Near Me</h1>}
+            {selectedButton === 3 && <h1>Multipurpose Grounds Near Me</h1>}
+            {selectedButton === 5 && <h1>Greenways Near Me</h1>}
+            {selectedButton === 4 && <h1>Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
               <button
                 type="button"
-                onClick={(e) => {
+                className={activeButton === 2 ? "active" : ""}
+                onClick={() => {
                   setDistanceRange(2);
+                  setActiveButton(2);
                 }}
               >
                 2km
               </button>
               <button
                 type="button"
-                onClick={(e) => {
+                className={activeButton === 4 ? "active" : ""}
+                onClick={() => {
                   setDistanceRange(4);
+                  setActiveButton(4);
                 }}
               >
                 4km
               </button>
               <button
                 type="button"
-                onClick={(e) => {
+                className={activeButton === 6 ? "active" : ""}
+                onClick={() => {
                   setDistanceRange(6);
+                  setActiveButton(6);
                 }}
               >
                 6km
               </button>
             </div>
           </div>
-
-          <div className="facililiy-list-map overflow-y-scroll">
-            {nearbyParks?.length > 0 ? (
-              nearbyParks?.map((park, index) => {
-                return (
-                  <Link
-                    className="map-facilities hover:cursor-pointer"
-                    key={index}
-                    to={{
-                      pathname: "/Sub_Park_Details",
-                      search: `?facilityId=${encryptDataId(park.facilityId)}`,
-                    }}
-                  >
-                    <p>{park.facilityname}</p>
-                  </Link>
-                );
-              })
+          <div className="facility-list-map overflow-y-scroll">
+            {loading ? (
+              <div className="custom-loader"></div>
+            ) : nearbyParks?.length > 0 ? (
+              nearbyParks?.map((park, index) => (
+                <Link
+                  className="map-facilities hover:cursor-pointer"
+                  key={index}
+                  to={{
+                    pathname: "/Sub_Park_Details",
+                    search: `?facilityId=${encryptDataId(park.facilityId)}`,
+                  }}
+                >
+                  <p>{park.facilityname}</p>
+                </Link>
+              ))
             ) : facilityTypeId != 1 || facilityTypeId != 2 ? (
               <div className="No_Data_image_conatiner">
                 <img className="No_Data_image" src={No_data_nearBy}></img>
@@ -901,9 +878,7 @@ const[GalleryImage, setGalleryImage]=useState([])
           </div>
         </div>
       </div>
-
       {/* -----Whats New Section------------------------------------------- */}
-
       <div className="notice2">
         <div className="notice2-container">
           <button className="what_new">Whats New</button>
@@ -956,24 +931,21 @@ const[GalleryImage, setGalleryImage]=useState([])
           )}
         </div>
       </div>
-
       {/* ------Event details card-------------------------------------------------------------------- */}
-
       <div className="EventContainerlanding">
-        {/* <div className="EventContainerTitle">
-          <div className="greenHeader"></div>
-          <h1>Current Events</h1>
-        </div> */}
-
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
             <h1>Current Events</h1>
           </div>
-          <button className="viewMoreGallery">
-            <Link to="/events">View All</Link>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
+          {eventNameLanding.length > 0 ? (
+            <button className="viewMoreGallery">
+              <Link to="/events">View All</Link>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
 
         {/* .........Card section scroll using carousel ..........*/}
@@ -1000,8 +972,14 @@ const[GalleryImage, setGalleryImage]=useState([])
                     >
                       <img
                         className="Yoga_image2"
-                        src={event.eventMainImage ? instance().baseURL + '/static' + event.eventMainImage : Yoga_img}
-                        onError={(e) =>{
+                        src={
+                          event.eventMainImage
+                            ? instance().baseURL +
+                            "/static" +
+                            event.eventMainImage
+                            : Yoga_img
+                        }
+                        onError={(e) => {
                           e.target.onerror = null; // Prevents looping
                           e.target.src = Yoga_img;
                         }}
@@ -1045,27 +1023,24 @@ const[GalleryImage, setGalleryImage]=useState([])
           )}
         </div>
       </div>
-
       {/*------------ Explore new activities----------- */}
-
       <div
         className="exploreNewAct-Parent-Container"
         style={{
-          backgroundImage: `linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${currentImage})`,
+          backgroundImage: `   linear-gradient(10deg, rgba(0, 0, 0, 1.6), rgba(0, 0, 0, 0.5)), url(${currentImage})`,
         }}
       >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-          <h1>Explore New Activities And Book</h1>
+            <h1>Explore And Book New Activities</h1>
         </div>
-
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity ${selectedActivity === index ? "selected" : ""
+                className={`activity  ${selectedActivity === index ? "selected" : ""
                   }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
@@ -1114,19 +1089,21 @@ const[GalleryImage, setGalleryImage]=useState([])
           </div>
         </div>
       </div>
-
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
-
       <div className="galleryOuter">
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
             <h1>Gallery</h1>
           </div>
-          <div className="viewMoreGallery">
-            <Link to={"/View_Gallery/Image_Gallery"}>View All</Link>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </div>
+          {GalleryImage.length > 0 ? (
+            <div className="viewMoreGallery">
+              <Link to={"/View_Gallery/Image_Gallery"}>View All</Link>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="carousel">
@@ -1139,21 +1116,24 @@ const[GalleryImage, setGalleryImage]=useState([])
               // style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
               style={{ transform: `translateX(-${currentIndex1 * 420}px)` }} // Adjust transform value
             >
-             {GalleryImage.map((item, index) => {
-                        const imageUrl = `${instance().baseURL}/static${item.url}`;
-                        console.log('Image URL:', imageUrl); // Log the image URL to the console
-                        return (
-                            <div key={index} className="carousel-image-container">
-                                <img
-                                    src={imageUrl}
-                                    alt={`carousel-img${index}`}
-                                    className="carousel-image"
-                                    // Hide broken images
-                                />
-                                <div className="description">{item.description}</div>
-                            </div>
-                        );
-                    })}
+              {GalleryImage.map((item, index) => {
+                const imageUrl = `${instance().baseURL}/static${item.url}`;
+                console.log("Image URL:", imageUrl); // Log the image URL to the console
+                return (
+                  <div className="carousel-main_container">
+                    <div key={index} className="carousel-image-container">
+                      <img
+                        src={imageUrl}
+                        alt={`carousel-img${index}`}
+                        className="carousel-image_gallery"
+                      // Hide broken images
+                      />
+                      <div className="description">{item.description}</div>
+                    </div>
+                    <div className="description">{item.description}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
           <button className="carousel-button2 right" onClick={nextImage1}>
@@ -1161,10 +1141,13 @@ const[GalleryImage, setGalleryImage]=useState([])
           </button>
         </div>
       </div>
-
       {/* ------------advertisement section -------------------------------------------------------------------------------------*/}
 
       <div className="avatisement-Border2">
+        <div className="galleryTitleLeft">
+          <div className="greenHeader"></div>
+          <h1 className="text-3xl">Advertisement</h1>
+        </div>
         <div className="avatisement-Content2">
           {/* <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' /> */}
           <div className="advertisement-Scroll2">
@@ -1179,7 +1162,6 @@ const[GalleryImage, setGalleryImage]=useState([])
           </div>
         </div>
       </div>
-
       {/* <div className="footer"></div> */}
       {showTour == "true" && (
         <TourGuide run={runTour} callback={handleJoyrideCallback} />
