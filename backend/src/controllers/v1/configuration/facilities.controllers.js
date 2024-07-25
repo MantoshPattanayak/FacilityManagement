@@ -1079,12 +1079,24 @@ let findOverallSearch = async (req,res)=>{
                 let findGreenwayData = getNearByData.filter(result=>result.facilityTypeId==5)
                 return res.status(stausCode.SUCCESS.code).json({
                     message:"Here is the overall search data",
-                    parkData:findPark,
-                    playgroundData:findPlayground,
-                    multipurposeData:findMultiPurposeGround,
-                    bluewayData:findBluewayData,
-                    greenwayData:findGreenwayData,
-                    eventData:eventQuery
+                    parkData: findPark.map((data) => {
+                        return { ...data, ["url"]: encodeURI(data.url) };
+                    }),
+                    playgroundData: findPlayground?.map((data) => {
+                        return { ...data, ["url"]: encodeURI(data.url) };
+                    }),
+                    multipurposeData: findMultiPurposeGround?.map((data) => {
+                        return { ...data, ["url"]: encodeURI(data.url) };
+                    }),
+                    bluewayData: findBluewayData?.map((data) => {
+                        return { ...data, ["url"]: encodeURI(data.url) };
+                    }),
+                    greenwayData: findGreenwayData?.map((data) => {
+                        return { ...data, ["url"]: encodeURI(data.url) };
+                    }),
+                    eventData: eventQuery?.map((data) => {
+                        return { ...data, ["url"]: encodeURI(data.url) };
+                    })
                 })
             }
             else{
