@@ -15,15 +15,15 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         attendanceDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: true,
         },
         checkInTime: {
-            type: DataTypes.DATE,
+            type: DataTypes.TIME,
             allowNull: true,
         },
         checkOutTime: {
-            type: DataTypes.DATE,
+            type: DataTypes.TIME,
             allowNull: true,
         },
         createdBy: {
