@@ -115,80 +115,84 @@ export default function PublicHeader() {
     setShowProfileMenu(false);
   };
   return (
-    <header className="header" id="header-public">
-      {/* <ToastContainer /> */}
-      <div className="header-content">
-        <div className="logo-ama-boomi">
-          <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
-        </div>
-        <div className="navbar">
-          <ul className={showMediaIcon ? "hidden menu_links mobile_menu_links show" : "hidden menu_links mobile_menu_links"}>
-            <li>
-              {(language === 'EN') && <><button value={'OD'} onClick={() => { setLanguageCode('OD'); setRefresh(prevState => !prevState); }}>ଓଡ଼ିଆ</button> &nbsp; | </>}
-              {(language === 'OD') && <><button value={'EN'} onClick={() => { setLanguageCode('EN'); setRefresh(prevState => !prevState); }}>English</button> &nbsp; | </>}
-            </li>
-            <li>
-              <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
-            </li>
-            <li>
-              <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
-            </li>
-            <li>
-              <Link to={'/faqs'}>FAQ</Link>
-            </li>
-            <li>
-              <Link to={'/facilities'}>FACILITIES</Link>
-            </li>
-            <li>
-              <Link to={'/events'}>EVENTS</Link>
-            </li>
-            {isUserLoggedIn == 1 && (
+    <div>
+      <header className="header" id="header-public">
+        {/* <ToastContainer /> */}
+        <div className="header-content">
+          <div className="logo-ama-boomi">
+            <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
+          </div>
+          <div className="navbar">
+            <ul className={showMediaIcon ? "hidden menu_links mobile_menu_links show" : "hidden menu_links mobile_menu_links"}>
               <li>
-                <Link to={'/Event_hostPage'}>HOST EVENT</Link>
+                {(language === 'EN') && <><button value={'OD'} onClick={() => { setLanguageCode('OD'); setRefresh(prevState => !prevState); }}>ଓଡ଼ିଆ</button> &nbsp; | </>}
+                {(language === 'OD') && <><button value={'EN'} onClick={() => { setLanguageCode('EN'); setRefresh(prevState => !prevState); }}>English</button> &nbsp; | </>}
               </li>
-            )}
-            {isUserLoggedIn == 1 ? (
-              <li className="menu-item" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <div style={{ cursor: 'pointer' }}>
-                  <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
-                </div>
-                {showProfileMenu && (
-                  <ul className="submenu">
-                    <li><Link to="/profile">My Profile</Link></li>
-                    <li><Link to="/profile/booking-details">Booking Details</Link></li>
-                    <li><Link to="/UserProfile/Favorites">Favorites</Link></li>
-                    {isUserLoggedIn == 1 && (
-                      <li>
-                        <Link onClick={handleLogout}>Logout</Link>
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </li>
-            ) : (
               <li>
-                <Link className="login-button" to="/login-signup">
-                  LOGIN
-                </Link>
+                <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
               </li>
-            )}
-            {isUserLoggedIn == 1 && (
               <li>
-                <Link className="relative flex items-center" to="/cart-details">
-                  {GetCardCount.count > 0 && (
-                    <span className="cart-count absolute left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1 rounded-full">{GetCardCount.count}</span>
-                  )}
-                  <span><FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> Cart</span>
-                </Link>
+                <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
               </li>
-            )}
+              <li>
+                <Link to={'/faqs'}>FAQ</Link>
+              </li>
+              <li>
+                <Link to={'/facilities'}>FACILITIES</Link>
+              </li>
+              <li>
+                <Link to={'/events'}>EVENTS</Link>
+              </li>
 
-          </ul>
-          <div className="hamburger-menu" onClick={handleMenuToggle}>
-            <FontAwesomeIcon icon={faBars} />
+              {isUserLoggedIn == 1 ? (
+                <li className="menu-item" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <div style={{ cursor: 'pointer' }}>
+                    <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
+                  </div>
+                  {showProfileMenu && (
+                    <ul className="submenu">
+                      <li><Link to="/profile">My Profile</Link></li>
+                      {isUserLoggedIn == 1 && (
+                        <li>
+                          <Link to={'/Event_hostPage'}> Host Event</Link>
+                        </li>
+                      )}
+                      <li><Link to="/profile/booking-details">Booking Details</Link></li>
+                      <li><Link to="/UserProfile/Favorites">Favorites</Link></li>
+                      {isUserLoggedIn == 1 && (
+                        <li>
+                          <Link onClick={handleLogout}>Logout</Link>
+                        </li>
+                      )}
+                    </ul>
+                  )}
+                </li>
+              ) : (
+                <li>
+                  <Link className="login-button" to="/login-signup">
+                    LOGIN
+                  </Link>
+                </li>
+              )}
+              {isUserLoggedIn == 1 && (
+                <li>
+                  <Link className="relative flex items-center" to="/cart-details">
+                    {GetCardCount.count > 0 && (
+                      <span className="cart-count absolute left-1 transform -translate-x-1/2 -top-5 bg-red-500 text-white text-xs font-semibold py-0.5 px-1 rounded-full">{GetCardCount.count}</span>
+                    )}
+                    <span><FontAwesomeIcon icon={faShoppingCart} className="cart-icon" size="lg" /> CART</span>
+                  </Link>
+                </li>
+              )}
+
+            </ul>
+            <div className="hamburger-menu" onClick={handleMenuToggle}>
+              <FontAwesomeIcon icon={faBars} />
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
+
   );
 }

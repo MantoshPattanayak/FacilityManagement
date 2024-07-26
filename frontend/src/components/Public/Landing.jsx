@@ -129,8 +129,8 @@ const Landing = () => {
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   const [userLocation, setUserLocation] = useState(defaultCenter);
   const [nearbyParks, setNearbyParks] = useState([]);
-  const [distanceRange, setDistanceRange] = useState(2);
-  const [activeButton, setActiveButton] = useState(2);
+  const [distanceRange, setDistanceRange] = useState(10);
+  const [activeButton, setActiveButton] = useState(10);
   const [currentIndex, setCurrentIndex] = useState(0);
   let randomKey = Math.random();
   let navigate = useNavigate();
@@ -261,21 +261,6 @@ const Landing = () => {
     setActiveSuggestionIndex(facilityId);
   }
 
-  // here Fetch the data -----------------------------------------------
-  async function fecthMapData() {
-    try {
-      let res = await axiosHttpClient("View_Park_Data", "post", {
-        givenReq: givenReq,
-        facilityTypeId: facilityTypeId,
-      });
-
-      console.log("here get data", res);
-      setmapdata(res.data.data);
-    } catch (err) {
-      console.log(" here error", err);
-    }
-  }
-
   // function to fetch user current location
   function setUserGeoLocation() {
     if (navigator.geolocation) {
@@ -307,17 +292,17 @@ const Landing = () => {
     }
     return;
   }
-
+  // here Get Near By data --------------------
   async function getNearbyFacilities() {
     setLoading(true); // Start loading
     let bodyParams = {
+      givenReq: givenReq,
       facilityTypeId: facilityTypeId,
       latitude: userLocation?.latitude || defaultCenter?.lat,
       longitude: userLocation?.longitude || defaultCenter?.lng,
       range: distanceRange,
     };
     console.log("body params", bodyParams);
-
     try {
       let res = await axiosHttpClient(
         "VIEW_NEARBY_PARKS_API",
@@ -335,6 +320,9 @@ const Landing = () => {
           return a.distance - b.distance;
         })
       );
+      setmapdata(res.data.data.sort((a, b) => {
+        return a.distance - b.distance;
+      }));
     } catch (error) {
       console.error(error);
       toast.error("Location permission not granted.");
@@ -389,7 +377,7 @@ const Landing = () => {
     setSelectedButton(typeid);
     setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
     console.log("here type id", typeid);
-    fecthMapData();
+    getNearbyFacilities();
   };
   // here Handle for encrpt the data------------------------------------------
   // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
@@ -399,7 +387,7 @@ const Landing = () => {
   }
   // here Update the data-----------------------------------------------
   useEffect(() => {
-    fecthMapData();
+  
   }, [givenReq, facilityTypeId, showTour]);
 
   // refresh on user input to show suggestions of facilities
@@ -443,9 +431,7 @@ const Landing = () => {
       setCurrentInnerImage(yoga_1);
     }
   };
-
   //Gallery section
-
   const nextImage = () => {
     if (currentIndex < images.length - 3) {
       setCurrentIndex(currentIndex + 1);
@@ -468,9 +454,10 @@ const Landing = () => {
       setCurrentIndex1(currentIndex1 - 1);
     }
   };
-
   //------- Advatisemant -----------
-  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3];
+  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,
+    ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3
+  ];
   // Home page image
   const getStyles = () => {
     const width = window.innerWidth;
@@ -759,7 +746,7 @@ const Landing = () => {
                 <button
                   type="button"
                   className="mapSearchSubmit"
-                  onClick={fecthMapData}
+                  onClick={getNearbyFacilities}
                 >
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </button>
@@ -822,33 +809,33 @@ const Landing = () => {
             <div className="nearByFacilities-buttons">
               <button
                 type="button"
-                className={activeButton === 2 ? "active" : ""}
+                className={activeButton === 10 ? "active" : ""}
                 onClick={() => {
-                  setDistanceRange(2);
-                  setActiveButton(2);
+                  setDistanceRange(10);
+                  setActiveButton(10);
                 }}
               >
-                2km
+                10km
               </button>
               <button
                 type="button"
-                className={activeButton === 4 ? "active" : ""}
+                className={activeButton === 20 ? "active" : ""}
                 onClick={() => {
-                  setDistanceRange(4);
-                  setActiveButton(4);
+                  setDistanceRange(20);
+                  setActiveButton(20);
                 }}
               >
-                4km
+                20km
               </button>
               <button
                 type="button"
-                className={activeButton === 6 ? "active" : ""}
+                className={activeButton === 40 ? "active" : ""}
                 onClick={() => {
-                  setDistanceRange(6);
-                  setActiveButton(6);
+                  setDistanceRange(40);
+                  setActiveButton(40);
                 }}
               >
-                6km
+                40km
               </button>
             </div>
           </div>
@@ -1032,7 +1019,7 @@ const Landing = () => {
       >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-            <h1>Explore And Book New Activities</h1>
+          <h1>Explore And Book New Activities</h1>
         </div>
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
