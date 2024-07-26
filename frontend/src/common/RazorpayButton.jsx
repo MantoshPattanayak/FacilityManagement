@@ -25,11 +25,11 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
     const {
       data: { key, secret },
     } = await axiosHttpClient("FETCH_RAZORPAY_API_KEY", "get");
-    console.log('apiKey', key);
+    // console.log('apiKey', key);
 
     // create RAZORPAY order
     const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { amount });
-    console.log("order", order);
+    // console.log("order", order);
 
     //proceed for RAZORPAY checkout
     const options = {
@@ -42,7 +42,7 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
       order_id: order.id,
       handler: async function (response) {
         try {
-          console.log('razorpay response', response);
+          // console.log('razorpay response', response);
           let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', response);
           // mantosh added code
           // let res = await fetch('https://c6c7-122-187-160-238.ngrok-free.app/razorPayPayment/webHook', {
@@ -54,7 +54,7 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
           // });
 
           // mantosh added code
-          console.log(res,'razorpayData');
+          // console.log(res,'razorpayData');
           onSuccess({ response, res });
         }
         catch (error) {
@@ -76,7 +76,7 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
     const razor = new window.Razorpay(options);
     razor.on('payment.failed', function (response) {
       toast.error("Payment failed. Try again!");
-      console.log('payment failed in razorpay button', response.error);
+      // console.log('payment failed in razorpay button', response.error);
       onFailure(response.error);
     })
     razor.open();
