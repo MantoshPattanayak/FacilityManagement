@@ -255,7 +255,11 @@ const Book_Now = () => {
           autoClose: 2000,
           onClose: () => {
             setTimeout(() => {
-              navigate(`/profile/booking-details/ticket?bookingId=${encryptData(bookingId)}&typeId=${encryptData(entityTypeId)}`);
+              navigate(
+                `/profile/booking-details/ticket?bookingId=${encryptData(
+                  bookingId
+                )}&typeId=${encryptData(entityTypeId)}`
+              );
             }, 1000);
           },
         });
@@ -314,7 +318,7 @@ const Book_Now = () => {
                 encryptData(formData.facilityId)
               )}`}
             >
-              <div className="back_button">
+              <div className="back_button2">
                 <button className="back_btn">
                   <FontAwesomeIcon icon={faArrowLeftLong} />
                   Back
@@ -324,83 +328,144 @@ const Book_Now = () => {
           </div>
 
           <div className="form_BookNow">
-            <div className="member-details">
-              <label htmlFor="children">Children (0-12):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("children")}
-                  disabled={formData.children <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="children"
-                  name="children"
-                  value={formData.children}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("children")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+            <div className="member-details2">
+              <div className="member-details-container">
+                <label htmlFor="children">Children (0-12):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("children")}
+                    disabled={formData.children <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="children"
+                    name="children"
+                    value={formData.children}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("children")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
               </div>
 
-              <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("seniorCitizen")}
-                  disabled={formData.seniorCitizen <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="text"
-                  id="seniorCitizen"
-                  name="seniorCitizen"
-                  value={formData.seniorCitizen}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("seniorCitizen")}
-                >
-                  <FontAwesomeIcon className="plus" icon={faPlus} />
-                </button>
+              <div className="member-details-container">
+                <label htmlFor="seniorCitizen">Senior Citizen (60+):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("seniorCitizen")}
+                    disabled={formData.seniorCitizen <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="seniorCitizen"
+                    name="seniorCitizen"
+                    value={formData.seniorCitizen}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("seniorCitizen")}
+                  >
+                    <FontAwesomeIcon className="plus" icon={faPlus} />
+                  </button>
+                </div>
               </div>
 
-              <label htmlFor="adults">Adults (13-59):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("adults")}
-                  disabled={formData.adults <= 0}
-                >
-                  <FontAwesomeIcon className="minus" icon={faMinus} />
-                </button>
+              <div className="member-details-container">
+                <label htmlFor="adults">Adults (13-59):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("adults")}
+                    disabled={formData.adults <= 0}
+                  >
+                    <FontAwesomeIcon className="minus" icon={faMinus} />
+                  </button>
+                  <input
+                    type="text"
+                    id="adults"
+                    name="adults"
+                    value={formData.adults}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("adults")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+
+            {/* booking details................................................... */}
+            <div className="booking-details">
+              <div className="booking-details-inside">
+                <label htmlFor="bookingDate">Booking Date:</label>
                 <input
-                  type="text"
-                  id="adults"
-                  name="adults"
-                  value={formData.adults}
+                  type="date"
+                  id="bookingDate"
+                  name="bookingDate"
+                  value={formData.bookingDate}
                   onChange={handleChangeInput}
                   className="custom-input"
-                  min="0"
                 />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("adults")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+              </div>
+              <div className="booking-details-inside">
+                <label htmlFor="startTime">Start Time:</label>
+                <input
+                  type="time"
+                  id="startTime"
+                  name="startTime"
+                  value={formData.startTime}
+                  onChange={handleChangeInput}
+                  className="custom-input"
+                />
+              </div>
+
+              <div className="member-details-container">
+                <label htmlFor="durationInHours">Duration (Hours):</label>
+                <div className="duration-container">
+                  <button
+                    className="duration-button"
+                    onClick={() => handleDecrease("durationInHours")}
+                    disabled={formData.durationInHours <= 0}
+                  >
+                    <FontAwesomeIcon icon={faMinus} />
+                  </button>
+                  <input
+                    type="number"
+                    id="durationInHours"
+                    name="durationInHours"
+                    value={formData.durationInHours}
+                    onChange={handleChangeInput}
+                    className="custom-input"
+                    min="0"
+                  />
+                  <button
+                    className="duration-button"
+                    onClick={() => handleIncrease("durationInHours")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -431,58 +496,9 @@ const Book_Now = () => {
                 name="otherActivities"
                 value={formData.otherActivities}
                 id="otherActivities"
-                className="input-field-otheractivities"
+                className="input-field-otheractivities2"
                 onChange={handleChangeInput}
               />
-            </div>
-
-            {/* booking details................................................... */}
-            <div className="booking-details">
-              <label htmlFor="bookingDate">Booking Date:</label>
-              <input
-                type="date"
-                id="bookingDate"
-                name="bookingDate"
-                value={formData.bookingDate}
-                onChange={handleChangeInput}
-                className="custom-input"
-              />
-
-              <label htmlFor="startTime">Start Time:</label>
-              <input
-                type="time"
-                id="startTime"
-                name="startTime"
-                value={formData.startTime}
-                onChange={handleChangeInput}
-                className="custom-input"
-              />
-
-              <label htmlFor="durationInHours">Duration (Hours):</label>
-              <div className="duration-container">
-                <button
-                  className="duration-button"
-                  onClick={() => handleDecrease("durationInHours")}
-                  disabled={formData.durationInHours <= 0}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <input
-                  type="number"
-                  id="durationInHours"
-                  name="durationInHours"
-                  value={formData.durationInHours}
-                  onChange={handleChangeInput}
-                  className="custom-input"
-                  min="0"
-                />
-                <button
-                  className="duration-button"
-                  onClick={() => handleIncrease("durationInHours")}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
-              </div>
             </div>
 
             <div className="priceBook">
@@ -495,7 +511,7 @@ const Book_Now = () => {
               </span>
             </div>
 
-            <div className="buttons-container">
+            <div className="buttons-container-bookNow">
               <button
                 className="add-to-cart-button"
                 onClick={handleAddtoCart}
