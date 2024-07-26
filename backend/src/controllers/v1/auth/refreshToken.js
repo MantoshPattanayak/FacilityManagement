@@ -1,16 +1,16 @@
 let statusCode = require('../../../utils/statusCode');
 let jwt = require('jsonwebtoken');
-dotenv.config();
 
 let refresh = async (req, res) => {
     try {
         // Retrieve access token and refresh token from cookies
-        const accessToken = req.cookies && req.cookies.accessToken;   
-        const refreshToken = req.cookies && req.cookies.refreshToken;   
+        const accessToken = req.headers['authorization'];   
+        const refreshToken = req.headers['refreshtoken'];   
         
         // Verify access token
         const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, { ignoreExpiration: true });
         console.log('Decoded access token:', decodedAccessToken);
+        userId, userName, emailId, roleId
         
         // Check if access token is expired
         if (decodedAccessToken.exp * 1000 <= Date.now()) {
@@ -27,9 +27,10 @@ let refresh = async (req, res) => {
             }
             // Use refresh token to generate new access token
             var newAccessToken = jwt.sign({ 
-                id: decodedRefreshToken.id, 
-                user_name: decodedRefreshToken.user_name, 
-                email_id: decodedRefreshToken.email_id 
+                userId: decodedRefreshToken.userId, 
+                userName: decodedRefreshToken.userName, 
+                emailId: decodedRefreshToken.emailId,
+                roleId: decodedRefreshToken.roleId
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1day' });
             console.log('New access token:', newAccessToken);
             
