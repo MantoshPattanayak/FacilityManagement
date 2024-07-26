@@ -34,15 +34,15 @@ const Book_Now = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const encryptedData = queryParams.get("d");
-    console.log("Encrypted Data: ", encryptedData);
+    // console.log("Encrypted Data: ", encryptedData);
     if (encryptedData) {
       try {
         const decryptedData = JSON.parse(decryptData(encryptedData));
-        console.log("Decrypted Data: ", decryptedData);
+        // console.log("Decrypted Data: ", decryptedData);
         setFormData(decryptedData);
         setSelectedGames(decryptedData.activityPreference); // Set selectedGames initially
       } catch (error) {
-        console.error("Error decrypting data", error);
+        // console.error("Error decrypting data", error);
       }
     }
   }, [location.search]);
@@ -81,20 +81,20 @@ const Book_Now = () => {
   }, [facilityId]);
 
   useEffect(() => {
-    console.log("Selected Games: ", selectedGames);
+    // console.log("Selected Games: ", selectedGames);
     if (selectedGames.length > 0) {
       setFormData((prevState) => ({
         ...prevState,
         ["activityPreference"]: selectedGames,
       }));
     }
-    console.log("Form Data: ", formData);
+    // console.log("Form Data: ", formData);
   }, [refresh, selectedGames]);
 
   async function getSub_park_details(facilityId) {
     try {
       let res = await axiosHttpClient("View_By_ParkId", "get", "", facilityId);
-      console.log("view park details", res.data.facilitiesData[0]);
+      // console.log("view park details", res.data.facilitiesData[0]);
       setFacilitiesData(res.data.facilitiesData[0]);
       setFormData((prevData) => ({
         ...prevData,
@@ -103,7 +103,7 @@ const Book_Now = () => {
         entityId: facilityId,
       }));
     } catch (err) {
-      console.error("Error fetching park data", err);
+      // console.error("Error fetching park data", err);
     }
   }
 
@@ -112,7 +112,7 @@ const Book_Now = () => {
       let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
       setActivityPreferenceData(res.data.data);
     } catch (err) {
-      console.error("Error fetching initial data", err);
+      // console.error("Error fetching initial data", err);
     }
   }
 
@@ -211,7 +211,7 @@ const Book_Now = () => {
           },
         });
       } catch (error) {
-        console.error("Error adding to cart", error);
+        // console.error("Error adding to cart", error);
         toast.error("Add to Cart failed. Try again.");
       }
     } else {
@@ -269,19 +269,19 @@ const Book_Now = () => {
   };
 
   const handlePaymentSuccess = (response) => {
-    console.log("Book park payment success", response);
+    // console.log("Book park payment success", response);
     handleSubmitAndProceed();
   };
 
   const handlePaymentFailure = (response) => {
-    console.log("Book park payment failure", response);
+    // console.log("Book park payment failure", response);
     toast.dismiss();
     toast.error(response.description);
   };
 
   const validateForm = (formData) => {
     let errors = {};
-    console.log("formData", formData.activityPreference, selectedGames);
+    // console.log("formData", formData.activityPreference, selectedGames);
     if (formData.totalMembers > 0 && formData.totalMembers <= 40)
       errors.totalMembers = "Please provide number of members between 0 and 40";
     if (!formData.bookingDate) errors.date = "Please provide date.";
@@ -290,7 +290,7 @@ const Book_Now = () => {
       errors.durationInHours = "Please provide duration.";
     if (formData.activityPreference.length < 1 || selectedGames.length < 1)
       errors.activityPreference = "Please select an activity.";
-    console.log(errors);
+    // console.log(errors);
     return Object.keys(errors).length === 0 ? false : true;
   };
 
