@@ -6,21 +6,27 @@
   margin-top: 5%;
 }
 
+.back_button2 {
+  height: max-content;
+  /* margin-top: 10vh; */
+  /* margin-right: 4vw; */
+}
+
 .park-container {
   background-color: #f7f7f7;
   padding: 20px;
   width: 40vw;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #c3c3c3;
 }
 
 .heading_BookNow {
   text-align: center;
   margin-bottom: 20px;
   display: flex;
-    justify-content: space-between;
+  justify-content: space-between;
 }
-
 
 .heading_BookNow h1 {
   font-size: 24px;
@@ -58,9 +64,19 @@
   background-color: #ddd;
 }
 
-.member-details,
+/* .member-details2,
 .booking-details {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+} */
+/* .member-details2{
+  margin-left:0%;
+} */
+
+.member-details-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 label {
@@ -84,14 +100,14 @@ label {
   background-color: #ECECEE; */
 }
 
-.custom-input:focus{
-  border: 2px solid #405cf5; 
-  outline: none; 
+.custom-input:focus {
+  border: 2px solid #405cf5;
+  outline: none;
 }
 
-.input-field-otheractivities:focus{
-  border: 2px solid #405cf5; 
-  outline: none; 
+.input-field-otheractivities:focus {
+  border: 2px solid #405cf5;
+  outline: none;
 }
 
 .duration-container {
@@ -100,7 +116,7 @@ label {
 }
 
 .duration-button {
-  display:flexbox;
+  display: flexbox;
   margin-bottom: 5px;
   padding: 8px;
   border: none;
@@ -108,10 +124,13 @@ label {
   cursor: pointer;
 }
 
-
-.buttons-container {
+.buttons-container-bookNow {
   display: flex;
+  /* width: 100%; */
+  width: 55vw;
   justify-content: space-between;
+  /* gap: 70px; */
+  margin-top: 60px;
 }
 
 .add-to-cart-button,
@@ -129,7 +148,6 @@ label {
   background-color: #ddd;
   cursor: not-allowed;
 }
-
 
 /* Activity preference........ */
 .activity-preference span {
@@ -154,12 +172,12 @@ label {
 
 /* Add hover effect */
 .game-btn:hover {
-  background-color: #3AB757;
+  background-color: #3ab757;
 }
 
 /* Add selected style */
 .game-btn.selected {
-  background-color: #3AB757;
+  background-color: #3ab757;
 }
 
 .other-activities {
@@ -167,10 +185,12 @@ label {
     padding: 8px; */
   width: 100%;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  flex-direction: row;
   margin-top: 10px;
   padding: 0px;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .other-activities label {
@@ -178,13 +198,18 @@ label {
   font-weight: 500;
 }
 
-.input-field-otheractivities {
-  width: 100%;
+.input-field-otheractivities2 {
+  /* width: 100%; */
+  width: 51.5%;
   height: 38px;
-  border: 1px solid black;
+  border: 1px solid #ddd;
   border-radius: 5px;
+  padding: 6px;
 }
-
+.input-field-otheractivities2:focus {
+  border: 2px solid #405cf5;
+  outline: none;
+}
 
 /* Price book............. */
 .priceBook {
@@ -206,16 +231,12 @@ label {
   justify-content: center;
 }
 
-
-
-
 /* Duration.............. */
 /* ----Duration----- */
 .input-container {
   position: relative;
   display: inline-block;
 }
-
 
 .icon {
   position: absolute;
@@ -270,7 +291,6 @@ label {
   width: 12vw;
 }
 
-
 .date input,
 .start-time input {
   width: calc(100% - 110px);
@@ -289,10 +309,7 @@ label {
   font-weight: 500;
 }
 
-
-
 .start-time label {
-
   font-size: large;
   font-weight: 500;
 }
@@ -308,4 +325,29 @@ label {
 .duration label {
   font-size: large;
   font-weight: 500;
+}
+
+/* New styles  */
+
+.booking-details-inside {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.booking-details-inside input {
+  width: 51.5%;
+  margin: 0px 0px;
+  padding: 5px;
+  height: 38px;
+}
+
+.form-heading input[type="text"],
+input[type="date"],
+select {
+  background-color: white;
+  border: 1px solid #ddd;
+  height: 38px;
+  padding: 6px;
 }
