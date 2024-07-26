@@ -52,6 +52,8 @@ const paymentVerification = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
+      let updatedDt = new Date();
+      let statusId = 27
     console.log(req.body);
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -64,28 +66,52 @@ const paymentVerification = async (req, res) => {
     const isAuthentic = expectedSignature === razorpay_signature;
 
     if (isAuthentic) {
-      const insertPayment = await Payment.create({
-        razorpay_order_id: razorpay_order_id,
-        razorpay_payment_id: razorpay_payment_id,
-        razorpay_signature: razorpay_signature
+      let paymentDetails = await instance.payments.fetch(razorpay_payment_id);
+      console.log('payment details',paymentDetails)
+      if(paymentDetails){
+        if(paymentDetails.captured){
+          statusId = 25
+        }
+        else{
+          statusId = 27
+        }
+        let [updatePayment] = await Payment.update({
+          razorpay_payment_id:paymentDetails.id,
+          razorpay_signature: razorpay_signature,
+          updatedDt:updatedDt,
+          updatedBy:paymentDetails.notes.customer_id,
+          statusId:statusId
+        },
+      {
+        where:{
+          razorpay_order_id: razorpay_order_id
+        }
       });
-      if (insertPayment) {
-        return res.status(200).json({
-          message: 'Payment done successfully',
-          success: true
-        });
+        if (updatePayment>=1) {
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: 'Payment done successfully',
+            success: true
+          });
+        } else {
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message: 'Payment Failed',
+            success: false
+          });
+        }
       } else {
-        return res.status(400).json({
-          message: 'Payment Failed',
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message: 'Something went wrong',
           success: false
         });
       }
-    } else {
-      return res.status(400).json({
-        message: 'Inavlaid payment request',
-        success: false
-      });
-    }
+      }
+      else{
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message: 'Inavlaid payment request',
+          success: false
+        });
+      }
+      
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -177,7 +203,7 @@ const checkout =  async (req, res) => {
     let createdDt = new Date();
     let updatedDt = new Date();
     
-    let pendingStatus = 25;
+    let pendingStatus = 26;
     let customerId = req.user.userId
     
     const { amount } = req.body;
@@ -216,14 +242,14 @@ const checkout =  async (req, res) => {
           return res.status(200).json({
             message: 'Transaction already processed',
             orderId: existingTransaction.razorpay_order_id,
-            status: existingTransaction.status
+            status: existingTransaction.statusId
           });
         }
     
     let insertToPayment = await Payment.create({
       razorpay_order_id: order.id,
    // Payment id will be updated on webhook
-      status: pendingStatus,
+      statusId: pendingStatus,
       expiresAt: expiresAt,
       orderDate: createdDt,
       createdDt:createdDt,
@@ -284,6 +310,7 @@ let webhook =  async (req, res) => {
     let pendingStatus = 26;
     let failureStatus = 27
     let refundStatus = 28;
+    let updatedDt = new Date();
     const event = req.body.event;
     const payload = req.body.payload;
     console.log(req.body,'eventdetail')
@@ -301,9 +328,14 @@ let webhook =  async (req, res) => {
           razorpay_payment_id:capturedPaymentId,
           methodName:methodName,
           description:payload.payment.entity.description,
-
-
-         }, { where: { razorpay_order_id:payload.payment.entity.order_id  } });
+          updatedBy:payload.payment.entity.notes.customer_id,
+          updatedDt:updatedDt
+         }, 
+         { where:
+           { razorpay_order_id:payload.payment.entity.order_id  
+           }
+           }
+          );
          if(updatePayment>=1){
           return res.status(statusCode.SUCCESS.code).json({
             message:`Payment done`,
@@ -326,14 +358,16 @@ let webhook =  async (req, res) => {
 
         // Update payment status
         let methodNameFailure =   payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity ;
-        let [updatePaymentFailure] = await Payment.update({ statusId: failureStatus,
+        let [updatePaymentFailure,updatePaymentFailureData] = await Payment.update({ statusId: failureStatus,
           razorpay_payment_id:failedPaymentId,
           methodName:methodNameFailure,
           description:payload.payment.entity.description,
-
+          updatedBy:payload.payment.entity.notes.customer_id,
+          updatedDt:updatedDt
 
          }, { where: { razorpay_order_id:payload.payment.entity.order_id  } });
          if(updatePaymentFailure>=1){
+          console.log(updatePaymentFailure,'update payment failure data',failureStatus)
           return res.status(statusCode.BAD_REQUEST.code).json({
             message:`Payement Failure`
           })
@@ -359,7 +393,8 @@ let webhook =  async (req, res) => {
           razorpay_payment_id:refundPaymentId,
           methodName:methodNameRefund,
           description:payload.payment.entity.description,
-
+          updatedBy:payload.payment.entity.notes.customer_id,
+          updatedDt:updatedDt
 
          }, { where: { razorpay_order_id:payload.payment.entity.order_id  } });
          if(updatePaymentFailure>=1){
