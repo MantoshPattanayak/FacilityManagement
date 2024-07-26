@@ -387,7 +387,7 @@ const Landing = () => {
   }
   // here Update the data-----------------------------------------------
   useEffect(() => {
-    getNearbyFacilities();
+  
   }, [givenReq, facilityTypeId, showTour]);
 
   // refresh on user input to show suggestions of facilities
