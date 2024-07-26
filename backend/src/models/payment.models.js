@@ -16,9 +16,6 @@ const PaymentMethod = sequelize.define('paymentmethod',{
     description:{
         type:DataTypes.STRING(255)
     },
-    isEnabled:{
-        type:DataTypes.BOOLEAN(80)
-    },
     razorpay_order_id: {
         type: DataTypes.STRING(255),
     },
@@ -28,7 +25,7 @@ const PaymentMethod = sequelize.define('paymentmethod',{
     razorpay_signature: {
         type: DataTypes.STRING(255),
     },  
-    status:{
+    statusId:{
         type: DataTypes.INTEGER // Define the column as DATE type
     },
     createdBy:{

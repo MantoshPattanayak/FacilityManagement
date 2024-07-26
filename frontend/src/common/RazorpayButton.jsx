@@ -44,7 +44,17 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
         try {
           console.log('razorpay response', response);
           let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', response);
-          console.log(res);
+          // mantosh added code
+          // let res = await fetch('https://c6c7-122-187-160-238.ngrok-free.app/razorPayPayment/webHook', {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          //   body: JSON.stringify(response),
+          // });
+
+          // mantosh added code
+          console.log(res,'razorpayData');
           onSuccess({ response, res });
         }
         catch (error) {
