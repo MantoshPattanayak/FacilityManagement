@@ -17,4 +17,7 @@ router.get('/payment/:paymentId', authenticateToken, razorPayPayment.fetchPaymen
 
 router.post('/webHook', razorPayPayment.verifyWebhook, razorPayPayment.webhook)
 
+router.get('/getDetailsWrtRazorpayOrderId',authenticateToken, razorPayPayment.getDetailsWrtRazorpayOrderId)
+
+
 module.exports = router

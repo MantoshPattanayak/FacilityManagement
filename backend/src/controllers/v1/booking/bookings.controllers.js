@@ -289,6 +289,7 @@ let parkBooking = async (req, res) => {
             entityTypeId,
             facilityPreference
         });
+        console.log('park booking data', req.body)
         let userId = req.user?.userId || 1;
         let statusId = 1;
         /**
@@ -472,7 +473,7 @@ let parkBooking = async (req, res) => {
 
                 console.error('Error creating user park booking:', error);
                 res.status(statusCode.BAD_REQUEST.code).json({
-                    message: 'Park booking failed!',
+                    message: 'Playground booking failed!',
                     data: []
                 })
             }
@@ -554,7 +555,7 @@ let parkBooking = async (req, res) => {
 
                 console.error('Error creating user park booking:', error);
                 res.status(statusCode.BAD_REQUEST.code).json({
-                    message: 'Park booking failed!',
+                    message: 'Events booking failed!',
                     data: []
                 })
             }
