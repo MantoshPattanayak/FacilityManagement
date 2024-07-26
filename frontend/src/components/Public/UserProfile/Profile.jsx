@@ -8,6 +8,7 @@ import {
   faEnvelope,
   faMobileScreenButton,
   faLocationDot,
+  faMap,
 } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
@@ -34,16 +35,29 @@ export default function Profile() {
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [errors, setErrors] = useState({}); //to show error message
   const [formData, setFormData] = useState({
+    userName: "",
     firstName: "",
+    middleName: "",
     lastName: "",
     phoneNo: "",
     emailId: "",
     language: "English",
     password: "",
-    userId: "",
+    publicUserId: "",
+    lastLogin: "",
+    fileId:""
   });
   const [activityData, setActivityData] = useState([]);
 
+  //handle Location....................................................
+  const [selectedDistance, setSelectedDistance] = useState("");
+  // Function to handle distance selection
+  const handleDistanceSelect = (e, distance) => {
+    e.preventDefault();
+    setSelectedDistance(distance);
+    // You can perform additional actions here, such as sending notifications or updating state
+  };
+  console.log("locaton is .....", selectedDistance);
   // API call to fetch preferred activities data
   async function getActivitiesData() {
     try {
@@ -124,7 +138,7 @@ export default function Profile() {
     if (!emailRegex.test(formData.emailId.trim())) {
       console.log("Invalid email format");
       // Show a warning message
-      // alert("Invalid email format.");
+      alert("Invalid email format.");
       // return false;
       newErrors.email = "Invalid email format.";
     }
@@ -146,9 +160,6 @@ export default function Profile() {
     // handle form submission with selectedActivities
     console.log("Selected Activities:", selectedActivities); // Log selected activities
 
-    // Log form data before updating
-    console.log("Form Data Before Update:", formData);
-
     try {
       let updatedFormData = { ...formData };
 
@@ -169,20 +180,37 @@ export default function Profile() {
         return;
       }
 
+      let profilePic = {
+        fileId: formData.fileId,
+        data: photoUrl.data
+      }
+
+      // Log form data before updating
+    console.log("Form Data Before Update:", formData);
+    console.log("profile photo Before Update:", profilePic);
+    console.log("location Before Update:", selectedDistance);
+    console.log("Activity Before Update:", selectedActivities.map((activity) => {
+      return (activity);
+    }));
+
       let response = await axiosHttpClient(
         "PROFILE_DATA_UPDATE_API",
         "put",
         {
-          publicUserId: formData.publicUserId,
+          // publicUserId: formData.publicUserId,
           firstName: encryptData(formData.firstName),
+          middleName: encryptData(formData.middleName),
           lastName: encryptData(formData.lastName),
           phoneNo: encryptData(formData.phoneNo),
+          profilePicture: profilePic,
           emailId: encryptData(formData.emailId),
-          language: encryptData(formData.language),
-          password: encryptData(formData.password),
           activityPreference: selectedActivities.map((activity) => {
-            return encryptData(activity);
+            return (activity);
           }),
+          language: formData.language,
+          location: selectedDistance,
+          // password: encryptData(formData.password),
+          // lastLogin: formData.lastLogin,
         },
         null
       );
@@ -190,11 +218,17 @@ export default function Profile() {
       // Log updated form data after successful update
       console.log("Updated Form Data:", {
         firstName: formData.firstName,
+        middleName: formData.middleName,
         lastName: formData.lastName,
         phoneNo: formData.phoneNo,
         emailId: formData.emailId,
         language: formData.language,
         password: formData.password,
+        profilePic: profilePic,
+        activityPreference: selectedActivities.map((activity) => {
+          return encryptData(activity);
+        }),
+        location: selectedDistance,
       });
 
       console.log("Update response:", response.data.data);
@@ -208,14 +242,38 @@ export default function Profile() {
   const [photoUrl, setPhotoUrl] = useState(null);
   const fileInputRef = useRef(null);
 
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {f
+  //       setPhotoUrl(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
+      if (parseInt(file.size / 1024) <= 500) {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          setPhotoUrl({
+            name: file.name,
+            data: reader.result,
+          });
+          console.log("Photo URL", {
+            name: file.name,
+            data: reader.result,
+          });
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        toast.dismiss();
+        toast.warning("Kindly choose a file with size less than 500 KB");
+      }
     }
   };
 
@@ -258,25 +316,37 @@ export default function Profile() {
       let res = await axiosHttpClient("PROFILE_DATA_VIEW_API", "post");
       console.log("response of fetch profile api", res.data);
 
-      let userName = decryptData(res.data.public_user.userName);
-      let firstName = decryptData(res.data.public_user.firstName);
-      let lastName = decryptData(res.data.public_user.lastName);
-      let phoneNo = decryptData(res.data.public_user.phoneNo);
-      let emailId = decryptData(res.data.public_user.emailId);
-      let language = decryptData(res.data.public_user.language);
-      let password = decryptData(res.data.public_user.password);
+      let userName = decryptData(res.data.public_user[0].userName);
+      let firstName = decryptData(res.data.public_user[0].firstName);
+      let middleName = decryptData(res.data.public_user[0].middleName);
+      let lastName = decryptData(res.data.public_user[0].lastName);
+      let phoneNo = decryptData(res.data.public_user[0].phoneNo);
+      let emailId = decryptData(res.data.public_user[0].emailId);
+      let language = res.data.public_user[0].language;
+      let password = decryptData(res.data.public_user[0].password);
+      let profileImg = res.data.public_user[0].url;
+      let publicUserId = res.data.public_user[0].userId;
+      let lastLogin = res.data.public_user[0].lastLogin;
+      let loc = res.data.public_user[0].location;
+      let fileId = res.data.public_user[0].fileId;
+      
 
       setFormData({
         userName: userName || "",
         firstName: firstName || "",
+        middleName: middleName || "",
         lastName: lastName || "",
         emailId: emailId || "",
         phoneNo: phoneNo || "",
         language: language || "English",
         password: password || "",
-        publicUserId: res.data.public_user.publicUserId,
+        publicUserId: publicUserId || 0,
+        lastLogin: lastLogin || "",
+        fileId: fileId || "",
       });
+      setSelectedDistance(loc); //set locatin from api
       setSelectedLanguage(language || "English");
+      setPhotoUrl(profileImg);
     } catch (error) {
       console.error(error);
       if (error.respone.status == 401) {
@@ -321,12 +391,13 @@ export default function Profile() {
     // }
   };
 
-  const handleButtonClick = (language) => {
+  const handleButtonClick = (e, language) => {
     setFormData((prevData) => ({
       ...prevData,
       language: language,
     }));
     setSelectedLanguage(language);
+    console.log("language", formData.language);
   };
 
   // on page load
@@ -402,7 +473,7 @@ export default function Profile() {
               <div className="profilePhoto" onClick={handleProfileClick}>
                 {photoUrl ? (
                   <img
-                    src={photoUrl}
+                    src={photoUrl.data}
                     alt="Uploaded"
                     style={{
                       width: "100px",
@@ -420,6 +491,7 @@ export default function Profile() {
                   ref={fileInputRef}
                   type="file"
                   id="photoInput"
+                  name="photoInput"
                   onChange={handleFileChange}
                   accept="image/*"
                   style={{ display: "none" }}
@@ -431,16 +503,6 @@ export default function Profile() {
                       style={{ color: "#a41e1e" }}
                     />
                   </button>
-                )}
-                {!photoUrl && (
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    id="photo"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    style={{ display: "none" }}
-                  />
                 )}
               </div>
 
@@ -461,6 +523,21 @@ export default function Profile() {
                 </div>
 
                 <div className="profile-formContainer_Inner">
+                  <label htmlFor="middleName">
+                    Middle Name<span className="required-asterisk"></span>
+                  </label>
+                  <input
+                    type="text"
+                    name="middleName"
+                    placeholder="Enter middle Name"
+                    value={formData.middleName}
+                    onChange={handleData}
+                  />
+
+                  {errors.name && <span className="error">{errors.name}</span>}
+                </div>
+
+                <div className="profile-formContainer_Inner">
                   <label htmlFor="lastName">
                     Last Name<span className="required-asterisk">*</span>
                   </label>
@@ -472,19 +549,6 @@ export default function Profile() {
                     onChange={handleData}
                   />
                   {errors.name && <span className="error">{errors.name}</span>}
-                </div>
-
-                <div className="profile-formContainer_Inner">
-                  <label htmlFor="aadhar">
-                    Aadhar Number<span className="required-asterisk">*</span>
-                  </label>
-                  <input
-                    type="aadhar"
-                    name="aadharId"
-                    placeholder="Enter Aadhar Number"
-                    value={1234567890}
-                    readOnly
-                  />
                 </div>
 
                 <div className="profile-formContainer_Inner">
@@ -539,18 +603,79 @@ export default function Profile() {
                   <div>
                     <button
                       type="button"
-                      onClick={() => handleButtonClick("English")}
+                      onClick={(e) => handleButtonClick(e, "English")}
                       className={selectedLanguage === "English" ? "active" : ""}
                     >
                       English
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleButtonClick("ଓଡ଼ିଆ")}
+                      onClick={(e) => handleButtonClick(e, "ଓଡ଼ିଆ")}
                       className={selectedLanguage === "ଓଡ଼ିଆ" ? "active" : ""}
                     >
                       ଓଡ଼ିଆ
                     </button>
+                  </div>
+                </div>
+
+                <div className="preffered-activity">
+                  <label htmlFor="">
+                    <span>Preferred Location</span>
+                  </label>
+                  <div className="distance-dropdown">
+                    <div className="dropdown">
+                      <button className="dropbtn">
+                        <FontAwesomeIcon icon={faMap} /> &nbsp;
+                        {selectedDistance
+                          ? `${selectedDistance}`
+                          : "Select Location"}
+                      </button>
+                      <div className="dropdown-content">
+                        <button
+                          onClick={(e) => handleDistanceSelect(e, "Patia")}
+                        >
+                          Patia
+                        </button>
+                        <button
+                          onClick={(e) =>
+                            handleDistanceSelect(e, "Chandrashekharpur")
+                          }
+                        >
+                          Chandrashekharpur
+                        </button>
+                        <button
+                          onClick={(e) => handleDistanceSelect(e, "Damana")}
+                        >
+                          Damana
+                        </button>
+                        <button
+                          onClick={(e) =>
+                            handleDistanceSelect(e, "Jayadev Vihar")
+                          }
+                        >
+                          Jayadev Vihar
+                        </button>
+                        <button
+                          onClick={(e) =>
+                            handleDistanceSelect(e, "Saheed Nagar")
+                          }
+                        >
+                          Saheed Nagar
+                        </button>
+                        <button
+                          onClick={(e) =>
+                            handleDistanceSelect(e, "Madhusudan Nagar")
+                          }
+                        >
+                          Madhusudan Nagar
+                        </button>
+                        <button
+                          onClick={(e) => handleDistanceSelect(e, "Nayapalli")}
+                        >
+                          Nayapalli
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -571,17 +696,6 @@ export default function Profile() {
                     </button>
 
                   </div>
-                </div> */}
-
-                {/* <div className="profile-formContainer_Inner">
-                  <label htmlFor="password">New Password</label>
-                  <input type="password" name='password' placeholder="Enter new Password" value={formData.password} onChange={handleData} />
-                </div>
-
-                <div className="profile-formContainer_Inner">
-                  <label htmlFor="NewPassword">Reenter New Password</label>
-                  <input type="password" placeholder="Reenter New Password" value={reenteredPassword} onChange={(e) => setReenteredPassword(e.target.value)} />
-                  {errors.password && <span className="error">{errors.password}</span>}
                 </div> */}
               </div>
 
