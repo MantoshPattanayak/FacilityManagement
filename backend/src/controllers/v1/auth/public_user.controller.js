@@ -178,9 +178,9 @@ const updatepublic_user = async (req, res) => {
             
           }
         }
-        console.log('near 176 line')
+        console.log('near 176 line','data',profilePicture,'profile data')
 
-      if(profilePicture){
+      if(Object.keys(profilePicture).length>0){
         if(profilePicture.fileId!=0){
           console.log('inside image part')
           let findThePreviousFilePath = await file.findOne({
@@ -215,13 +215,14 @@ const updatepublic_user = async (req, res) => {
       }
      
     }
-    console.log('outside profile update part')
+    console.log('outside profile update part',params)
 
     if(Object.keys(params).length>0){
       console.log('inside update part')
 
       params.updatedBy = userId;
       params.updatedDt = updatedDt;
+      console.log('near 225 line')
 
       let [updatepublicUserCount, updatepublicUserData] =
         await user.update(params, {
@@ -230,7 +231,9 @@ const updatepublic_user = async (req, res) => {
         },
         transaction
       });
+      console.log('near 233 line')
     if (updatepublicUserCount >= 1) {
+      console.log('data updated')
       await transaction.commit();
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
