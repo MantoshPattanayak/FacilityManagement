@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppLogo from "../assets/ama-bhoomi_logo.png";
-import "../components/Public/Landing";
+// import "../components/Public/Landing";
 import '../common/PublicHeader.css';
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -120,7 +120,9 @@ export default function PublicHeader() {
         {/* <ToastContainer /> */}
         <div className="header-content">
           <div className="logo-ama-boomi">
-            <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
+            <Link to={"/"}>
+              <img src={AppLogo} alt="App Logo" className="h-[100%] top-0 absolute" />
+            </Link>
           </div>
           <div className="navbar">
             <ul className={showMediaIcon ? "hidden menu_links mobile_menu_links show" : "hidden menu_links mobile_menu_links"}>
