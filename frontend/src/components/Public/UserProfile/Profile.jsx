@@ -46,9 +46,17 @@ export default function Profile() {
     password: "",
     publicUserId: "",
     lastLogin: "",
-    fileId:""
+    fileId: "",
   });
   const [activityData, setActivityData] = useState([]);
+
+  const [userUpdatedData, setUserUpdatedData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    emailId: "",
+    phoneNo: "",
+  });
 
   //handle Location....................................................
   const [selectedDistance, setSelectedDistance] = useState("");
@@ -182,19 +190,23 @@ export default function Profile() {
 
       let profilePic = {};
 
-      if(photoUrl.data != null){
-        profilePic = 
-          { fileId: formData.fileId, data: photoUrl.data }
-        
+      if (photoUrl != null) {
+        console.log("here data", photoUrl.data);
+        profilePic = { fileId: formData.fileId, data: photoUrl.data };
+      } else if(formData.fileId != null) {
+        profilePic = { fileId: formData.fileId };
       }
 
       // Log form data before updating
-    console.log("Form Data Before Update:", formData);
-    console.log("profile photo Before Update:", profilePic);
-    console.log("location Before Update:", selectedDistance);
-    console.log("Activity Before Update:", selectedActivities.map((activity) => {
-      return (activity);
-    }));
+      console.log("Form Data Before Update:", formData);
+      console.log("profile photo Before Update:", profilePic);
+      console.log("location Before Update:", selectedDistance);
+      console.log(
+        "Activity Before Update:",
+        selectedActivities.map((activity) => {
+          return activity;
+        })
+      );
 
       let response = await axiosHttpClient(
         "PROFILE_DATA_UPDATE_API",
@@ -207,9 +219,9 @@ export default function Profile() {
           encryptEmail: encryptData(formData.emailId),
           encryptPhoneNo: encryptData(formData.phoneNo),
           encryptActivities: selectedActivities.map((activity) => {
-            return (activity);
+            return activity;
           }),
-          isEmailVerified:isEmailVerified,
+          isEmailVerified: isEmailVerified,
           profilePicture: profilePic,
           encryptPrefredLocation: selectedDistance,
           encryptLanguagePreference: formData.language,
@@ -219,21 +231,30 @@ export default function Profile() {
 
       // Log updated form data after successful update
       console.log("Updated Form Data:", {
-        encryptFirstName: (formData.firstName),
-          encryptMiddleName: (formData.middleName),
-          encryptLastName: (formData.lastName),
-          encryptEmail: (formData.emailId),
-          encryptPhoneNo: (formData.phoneNo),
-          encryptActivities: selectedActivities.map((activity) => {
-            return (activity);
-          }),
-          isEmailVerified:isEmailVerified,
-          profilePicture: profilePic,
-          encryptPrefredLocation: selectedDistance,
-          encryptLanguagePreference: formData.language,
+        encryptFirstName: formData.firstName,
+        encryptMiddleName: formData.middleName,
+        encryptLastName: formData.lastName,
+        encryptEmail: formData.emailId,
+        encryptPhoneNo: formData.phoneNo,
+        encryptActivities: selectedActivities.map((activity) => {
+          return activity;
+        }),
+        isEmailVerified: isEmailVerified,
+        profilePicture: profilePic,
+        encryptPrefredLocation: selectedDistance,
+        encryptLanguagePreference: formData.language,
       });
 
-      console.log("Update response:", response.data.data);
+      setUserUpdatedData({
+        firstName: formData.firstName,
+        middleName: formData.middleName,
+        lastName: formData.lastName,
+        emailId: formData.emailId,
+        phoneNo: formData.phoneNo,
+      });
+
+      console.log("Update response:", response);
+      toast.success("Profile Updated successfully");
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -257,7 +278,7 @@ export default function Profile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (parseInt(file.size / 1024) <= 500) {
+      if (parseInt(file.size / 1024) <= 200) {
         const reader = new FileReader();
 
         reader.onloadend = () => {
@@ -331,7 +352,6 @@ export default function Profile() {
       let lastLogin = res.data.public_user[0].lastLogin;
       let loc = res.data.public_user[0].location;
       let fileId = res.data.public_user[0].fileId;
-      
 
       setFormData({
         userName: userName || "",
@@ -349,6 +369,14 @@ export default function Profile() {
       setSelectedDistance(loc); //set locatin from api
       setSelectedLanguage(language || "English");
       setPhotoUrl(profileImg);
+      handleFileChange(profileImg)
+      setUserUpdatedData({
+        firstName: firstName || "",
+        middleName: middleName || "",
+        lastName: lastName || "",
+        emailId: emailId || "",
+        phoneNo: phoneNo || "",
+      });
     } catch (error) {
       console.error(error);
       if (error.respone.status == 401) {
@@ -418,17 +446,23 @@ export default function Profile() {
               <div className="profile-about">
                 <div className="profile-about-icon">
                   <FontAwesomeIcon icon={faUser} />
-                  <p>{formData.firstName + " " + formData.lastName}</p>
+                  <p>
+                    {userUpdatedData.firstName +
+                      " " +
+                      userUpdatedData.middleName +
+                      " " +
+                      userUpdatedData.lastName}
+                  </p>
                 </div>
 
                 <div className="profile-about-icon">
                   <FontAwesomeIcon icon={faEnvelope} />
-                  <p>{formData.emailId}</p>
+                  <p>{userUpdatedData.emailId}</p>
                 </div>
 
                 <div className="profile-about-icon">
                   <FontAwesomeIcon icon={faMobileScreenButton} />
-                  <p>{formData.phoneNo}</p>
+                  <p>{userUpdatedData.phoneNo}</p>
                 </div>
               </div>
             </div>
@@ -481,12 +515,18 @@ export default function Profile() {
                       width: "100px",
                       height: "100px",
                       borderRadius: "50%",
+                      cursor: "pointer",
                     }}
+                    onClick={() => fileInputRef.current.click()}
+                    onChange={handleFileChange}
+                    accept="image/*"
                   />
                 ) : (
                   <div className="profileIcon">
                     <FontAwesomeIcon icon={faCircleUser} />
-                    <button>Add Photo</button>
+                    <button onClick={() => fileInputRef.current.click()}>
+                      Add Photo
+                    </button>
                   </div>
                 )}
                 <input
