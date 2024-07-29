@@ -9,7 +9,7 @@ import {
   faPause,
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef} from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -127,7 +127,7 @@ const Landing = () => {
   const [notifications, setNotifications] = useState([]);
   const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
-  const [userLocation, setUserLocation] = useState(defaultCenter);
+  const [userLocation, setUserLocation] = useState(defaultCenter || JSON.parse(sessionStorage.getItem("location")));
   const [nearbyParks, setNearbyParks] = useState([]);
   const [distanceRange, setDistanceRange] = useState(10);
   const [activeButton, setActiveButton] = useState(10);
@@ -332,6 +332,7 @@ const Landing = () => {
   }
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
+    console.log("userLocation, distanceRange, facilityTypeId", {userLocation, distanceRange, facilityTypeId})
     if (userLocation && distanceRange && facilityTypeId) {
       getNearbyFacilities();
     }
@@ -339,19 +340,19 @@ const Landing = () => {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 575px)");
+  // useEffect(() => {
+  //   const mediaQuery = window.matchMedia("(max-width: 575px)");
 
-    const handleMediaQueryChange = (e) => {
-      setIsMobile(e.matches);
-    };
+  //   const handleMediaQueryChange = (e) => {
+  //     setIsMobile(e.matches);
+  //   };
 
-    mediaQuery.addListener(handleMediaQueryChange);
+  //   mediaQuery.addListener(handleMediaQueryChange);
 
-    return () => {
-      mediaQuery.removeListener(handleMediaQueryChange);
-    };
-  }, []);
+  //   return () => {
+  //     mediaQuery.removeListener(handleMediaQueryChange);
+  //   };
+  // }, []);
 
   // Handle Chnage ----------------------------------------------------------------
   function handleChange(e) {
@@ -377,7 +378,7 @@ const Landing = () => {
     setSelectedButton(typeid);
     setFacilityTypeId(typeid); // Set facility ex typeid-1,typeid-2,typeid-3
     console.log("here type id", typeid);
-    getNearbyFacilities();
+    // getNearbyFacilities();
   };
   // here Handle for encrpt the data------------------------------------------
   // here Funcation to encrotDataid (Pass the Id)----------------------------------------------
@@ -1105,7 +1106,7 @@ const Landing = () => {
             >
               {GalleryImage.map((item, index) => {
                 const imageUrl = `${instance().baseURL}/static${item.url}`;
-                console.log("Image URL:", imageUrl); // Log the image URL to the console
+                // console.log("Image URL:", imageUrl); // Log the image URL to the console
                 return (
                   <div className="carousel-main_container">
                     <div key={index} className="carousel-image-container">
@@ -1156,5 +1157,5 @@ const Landing = () => {
     </div>
   );
 };
-
+ 
 export default Landing;
