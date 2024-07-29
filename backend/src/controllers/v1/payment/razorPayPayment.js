@@ -5,6 +5,8 @@ const { decrypt } = require('../../../middlewares/decryption.middlewares')
 const { encrypt } = require('../../../middlewares/encryption.middlewares')
 const QueryTypes = db.QueryTypes
 const Payment = db.payment
+let refundTable = db.refund
+let {Op} = require('sequelize')
 let instance = require('../../../config/razorpay.config.js');
 let crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
@@ -223,7 +225,7 @@ const checkout =  async (req, res) => {
     const order = await instance.orders.create(options);
 
     // Save transaction details 
-    const oneHour = 60 * 60 * 1000;
+    const oneHour = 24 * 60 * 60 * 1000;
     const expiresAt = new Date(Date.now() + oneHour);
 
 
@@ -250,6 +252,7 @@ const checkout =  async (req, res) => {
       razorpay_order_id: order.id,
    // Payment id will be updated on webhook
       statusId: pendingStatus,
+      amount:amount,
       expiresAt: expiresAt,
       orderDate: createdDt,
       createdDt:createdDt,
@@ -479,22 +482,72 @@ let getDetailsWrtRazorpayOrderId = async (req,res)=>{
   }
 }
 
-let initiateRefund = async  (paymentId, amount, notes)=> {
+
+
+
+let refundData = async (req,res)=>{
   try {
-      const refundOptions = {
-          payment_id: paymentId,
-          amount: amount * 100, // Amount in smallest currency unit (paise)
-          notes: notes
-      };
-      const response = await razorpay.payments.refund(refundOptions);
-      return response;
-  } catch (error) {
-      console.error('Error initiating refund:', error);
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:`Error initiating refund`
+    console.log('refund data')
+    let {paymentId, refundReason, amount}= req.body
+    let userId = req.user.userId;
+    let successStatusId = 25;
+    let refundStatusId = 28;
+    let notes = {
+      customer_id: userId,
+      reason:refundReason
+    }
+    
+
+    let refundOptions = {
+      payment_id : paymentId,
+      amount:amount * 100
+    }
+    let findTheOrderDetails = await Payment.findOne({
+      where:{[Op.and]:[{
+        razorpay_payment_id:paymentId},
+        {
+         statusId:successStatusId
+        }
+      ]
+    }
+    })
+    if(!findTheOrderDetails){
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:`Refund is not allowed `
       })
+    }
+
+    // check in the refund table if the payment Id already exist or not 
+    let findTheRefundDetails = await refundTable.findOne({
+      where:{
+        [Op.and]:
+        [{statusId:refundStatusId},{razorpay_payment_id:paymentId}]
+      }
+    })
+    if(findTheRefundDetails){
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:`This is already refunded`
+      })
+    }
+
+    console.log('before razorpayment response data 1')
+    let razorpayResponse = await instance.payments.refund(refundOptions)
+    
+    console.log(razorpayResponse,'razorpay response')
+
+    return res.status(statusCode.SUCCESS.code).json({
+      message:`Payment refunded successfully`
+    })
+
+  
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
   }
 }
+
+
 module.exports = {
   getRazorpayApiKeys,
   checkout,
@@ -503,6 +556,7 @@ module.exports = {
   fetchPayment,
   verifyWebhook,
   webhook,
-  getDetailsWrtRazorpayOrderId
+  getDetailsWrtRazorpayOrderId,
+  refundData
 }
 
