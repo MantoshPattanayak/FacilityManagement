@@ -11,7 +11,8 @@ let user = db.usermaster
 let file = db.file;
 let useractivitypreferencesModels = db.userActivityPreference
 const {Op} = require('sequelize')
-let imageUpdate = require('../../../utils/imageUpdate')
+let imageUpdate = require('../../../utils/imageUpdate');
+const fileattachmentModels = db.fileattachment;
 const updatepublic_user = async (req, res) => {
   let transaction;
   try {
@@ -19,6 +20,7 @@ const updatepublic_user = async (req, res) => {
     transaction = await sequelize.transaction();
     console.log('req body', req.body, req.user.userId)
     let statusId = 1;
+    let inActiveStatus= 2;
     let userId = req.user.userId;
     let updatedDt = new Date();
     let createdDt = new Date();
@@ -184,7 +186,8 @@ const updatepublic_user = async (req, res) => {
         console.log('near 176 line','data',profilePicture,'profile data')
 
       if(Object.keys(profilePicture).length>0){
-        if(profilePicture.fileId!=0){
+        console.log('profilePicture?.data',profilePicture?.data)
+        if(profilePicture.fileId!=0 && profilePicture?.data){
           console.log('inside image part')
           let findThePreviousFilePath = await file.findOne({
             where:{[Op.and]:[{statusId:statusId},{fileId:profilePicture.fileId}]},
@@ -211,6 +214,37 @@ const updatepublic_user = async (req, res) => {
           }
           imageUpdateVariable = 1;
       }
+      else if(profilePicture.fileId!=0){
+        console.log('inside file')
+        let inactiveTheFileId = await file.update({statusId:inActiveStatus},
+         { where:{
+            fileId:profilePicture.fileId
+          },
+        transaction}
+        )
+
+        console.log('fileid', inactiveTheFileId)
+        let inActiveTheFileInFileAttachmentTable = await fileattachmentModels.update({
+          statusId:inActiveStatus
+        },
+      {where:{
+        fileId:profilePicture.fileId
+      },
+      transaction
+    }
+    )
+    console.log('file update check',  inactiveTheFileId,'file attachemnt ' ,inActiveTheFileInFileAttachmentTable )
+    if(inactiveTheFileId.length == 0 || inActiveTheFileInFileAttachmentTable == 0){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+    }
+    else{
+      imageUpdateVariable = 1;
+    }
+
+      }
       else{
         await transaction.rollback();
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -235,7 +269,7 @@ const updatepublic_user = async (req, res) => {
         },
         transaction
       });
-      
+
     }
       console.log('near 233 line', createActivity)
     if (updatepublicUserCount >= 1 || imageUpdateVariable==1 || createActivity || updateActivities.length>=1) {
