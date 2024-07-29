@@ -34,6 +34,7 @@ export default function Profile() {
   const [reenteredPassword, setReenteredPassword] = useState("");
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [errors, setErrors] = useState({}); //to show error message
+  const [isEmailVerified, setIsEmailVerified] = useState(true); //to show valid email
   const [formData, setFormData] = useState({
     userName: "",
     firstName: "",
@@ -141,6 +142,7 @@ export default function Profile() {
       alert("Invalid email format.");
       // return false;
       newErrors.email = "Invalid email format.";
+      setIsEmailVerified(false);
     }
 
     // return true;
@@ -169,20 +171,21 @@ export default function Profile() {
       }
 
       // Check if the reentered password field is not empty and matches the new password
-      if (formData.password.trim() === "" && reenteredPassword.trim() === "") {
-        // No password change, proceed with updating other data
-      } else if (formData.password.trim() !== reenteredPassword.trim()) {
-        console.log("Passwords do not match");
-        // Show a warning message
-        alert(
-          "Passwords do not match. Please make sure your passwords match before updating."
-        );
-        return;
-      }
+      // if (formData.password.trim() === "" && reenteredPassword.trim() === "") {
+      // } else if (formData.password.trim() !== reenteredPassword.trim()) {
+      //   console.log("Passwords do not match");
+      //   alert(
+      //     "Passwords do not match. Please make sure your passwords match before updating."
+      //   );
+      //   return;
+      // }
 
-      let profilePic = {
-        fileId: formData.fileId,
-        data: photoUrl.data
+      let profilePic = [];
+
+      if(photoUrl.data != null){
+        profilePic = [
+          { fileId: formData.fileId, data: photoUrl.data }
+        ];
       }
 
       // Log form data before updating
@@ -198,37 +201,36 @@ export default function Profile() {
         "put",
         {
           // publicUserId: formData.publicUserId,
-          firstName: encryptData(formData.firstName),
-          middleName: encryptData(formData.middleName),
-          lastName: encryptData(formData.lastName),
-          phoneNo: encryptData(formData.phoneNo),
-          profilePicture: profilePic,
-          emailId: encryptData(formData.emailId),
-          activityPreference: selectedActivities.map((activity) => {
+          encryptFirstName: encryptData(formData.firstName),
+          encryptMiddleName: encryptData(formData.middleName),
+          encryptLastName: encryptData(formData.lastName),
+          encryptEmail: encryptData(formData.emailId),
+          encryptPhoneNo: encryptData(formData.phoneNo),
+          encryptActivities: selectedActivities.map((activity) => {
             return (activity);
           }),
-          language: formData.language,
-          location: selectedDistance,
-          // password: encryptData(formData.password),
-          // lastLogin: formData.lastLogin,
+          isEmailVerified:isEmailVerified,
+          profilePicture: profilePic,
+          encryptPrefredLocation: selectedDistance,
+          encryptLanguagePreference: formData.language,
         },
         null
       );
 
       // Log updated form data after successful update
       console.log("Updated Form Data:", {
-        firstName: formData.firstName,
-        middleName: formData.middleName,
-        lastName: formData.lastName,
-        phoneNo: formData.phoneNo,
-        emailId: formData.emailId,
-        language: formData.language,
-        password: formData.password,
-        profilePic: profilePic,
-        activityPreference: selectedActivities.map((activity) => {
-          return encryptData(activity);
-        }),
-        location: selectedDistance,
+        encryptFirstName: (formData.firstName),
+          encryptMiddleName: (formData.middleName),
+          encryptLastName: (formData.lastName),
+          encryptEmail: (formData.emailId),
+          encryptPhoneNo: (formData.phoneNo),
+          encryptActivities: selectedActivities.map((activity) => {
+            return (activity);
+          }),
+          isEmailVerified:isEmailVerified,
+          profilePicture: profilePic,
+          encryptPrefredLocation: selectedDistance,
+          encryptLanguagePreference: formData.language,
       });
 
       console.log("Update response:", response.data.data);
