@@ -214,6 +214,7 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
                 }
               }
             )
+            
             console.log(updateTheVerifiedValue,'update the verified value')
              // Check if the user exists in the database
              let isUserExist = await user.findOne({

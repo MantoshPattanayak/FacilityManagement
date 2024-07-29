@@ -15,6 +15,7 @@ let imageUpdate = require('../../../utils/imageUpdate')
 const updatepublic_user = async (req, res) => {
   let transaction;
   try {
+    console.log('232')
     transaction = await sequelize.transaction();
     console.log('req body', req.body, req.user.userId)
     let statusId = 1;
@@ -307,6 +308,7 @@ const viewpublicUser = async (req, res) => {
   try {
     console.log(21, req.user.userId)
     let userId = req.user?.userId || 1;
+ 
     let publicRole = 4 //role id for user
     let statusId = 1;
     let entityType = 'usermaster'
@@ -317,11 +319,21 @@ const viewpublicUser = async (req, res) => {
     //   },
     // });
     
-    let showpublic_user = await sequelize.query(`select u.*, fl.url,fl.fileId from amabhoomi.usermasters u inner join fileattachments f on u.userId = f.entityId  
-   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =? and u.userId = ?
+    
+    let showpublic_user = await sequelize.query(`select u.* from amabhoomi.usermasters u where u.statusId = ? and u.roleId =? and u.userId = ?
    `,{type:QueryTypes.SELECT,
-    replacements:[entityType,filePurpose,statusId,publicRole,userId]
+    replacements:[statusId,publicRole,userId]
    })
+  //  console.log('show public user', showpublic_user)
+   let findTheImageUrl = await sequelize.query(`select fl.url,fl.fileId from amabhoomi.usermasters u inner join fileattachments f on u.userId = f.entityId  
+   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =? and u.userId = ?`,
+   {type:QueryTypes.SELECT,
+    replacements:[entityType,filePurpose,statusId,publicRole,userId]})
+    
+    if(findTheImageUrl.length>0){
+      showpublic_user[0].url = findTheImageUrl[0].url;
+      showpublic_user[0].fileId = findTheImageUrl[0].fileId;
+    }
 
    let showActivities = await sequelize.query(`select um.userActivityId, um.userActivityName from amabhoomi.useractivitymasters um
     inner join amabhoomi.useractivitypreferences up on um.userActivityId = up.userActivityId where up.statusId=? and up.userId=? `,
