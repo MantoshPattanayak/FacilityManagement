@@ -239,8 +239,9 @@ const updatepublic_user = async (req, res) => {
     }
       console.log('near 233 line', createActivity)
     if (updatepublicUserCount >= 1 || imageUpdateVariable==1 || createActivity || updateActivities.length>=1) {
-      console.log('data updated')
+     
       await transaction.commit();
+      console.log('data updated')
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
       });
