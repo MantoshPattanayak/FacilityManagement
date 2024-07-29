@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { Logout } from "../../../utils/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import instance from "../../../../env";
 export default function Profile() {
   const dispatch = useDispatch(); // Initialize dispatch
   const navigate = useNavigate();
@@ -49,6 +50,8 @@ export default function Profile() {
     fileId: "",
   });
   const [activityData, setActivityData] = useState([]);
+
+  const [isPhotoUpdated, setIsPhotoUpdated] = useState(false);
 
   const [userUpdatedData, setUserUpdatedData] = useState({
     firstName: "",
@@ -190,10 +193,12 @@ export default function Profile() {
 
       let profilePic = {};
 
-      if (photoUrl != null) {
+      if (!isPhotoUpdated) {
+        profilePic = {};
+      } else if (photoUrl != null) {
         console.log("here data", photoUrl.data);
         profilePic = { fileId: formData.fileId, data: photoUrl.data };
-      } else if(formData.fileId != null) {
+      } else if (formData.fileId != null) {
         profilePic = { fileId: formData.fileId };
       }
 
@@ -262,7 +267,7 @@ export default function Profile() {
 
   //profile photo handler
 
-  const [photoUrl, setPhotoUrl] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState([]);
   const fileInputRef = useRef(null);
 
   // const handleFileChange = (e) => {
@@ -276,6 +281,7 @@ export default function Profile() {
   //   }
   // };
   const handleFileChange = (e) => {
+    setIsPhotoUpdated(true);
     const file = e.target.files[0];
     if (file) {
       if (parseInt(file.size / 1024) <= 200) {
@@ -337,7 +343,7 @@ export default function Profile() {
   async function fetchProfileDetails() {
     try {
       let res = await axiosHttpClient("PROFILE_DATA_VIEW_API", "post");
-      console.log("response of fetch profile api", res.data);
+      console.log("response of fetch profile api", res);
 
       let userName = decryptData(res.data.public_user[0].userName);
       let firstName = decryptData(res.data.public_user[0].firstName);
@@ -352,6 +358,7 @@ export default function Profile() {
       let lastLogin = res.data.public_user[0].lastLogin;
       let loc = res.data.public_user[0].location;
       let fileId = res.data.public_user[0].fileId;
+      console.log("here profile imsge", profileImg);
 
       setFormData({
         userName: userName || "",
@@ -369,7 +376,6 @@ export default function Profile() {
       setSelectedDistance(loc); //set locatin from api
       setSelectedLanguage(language || "English");
       setPhotoUrl(profileImg);
-      handleFileChange(profileImg)
       setUserUpdatedData({
         firstName: firstName || "",
         middleName: middleName || "",
@@ -509,7 +515,7 @@ export default function Profile() {
               <div className="profilePhoto" onClick={handleProfileClick}>
                 {photoUrl ? (
                   <img
-                    src={photoUrl.data}
+                    src={isPhotoUpdated? `${instance().baseURL}/static${photoUrl.data}` : `${instance().baseURL}/static${photoUrl}`}
                     alt="Uploaded"
                     style={{
                       width: "100px",
