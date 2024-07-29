@@ -23,8 +23,8 @@ const Booking_Schedule = ({
   const [bookingData, setBookingData] = useState({
     bookingDate: formData.bookingDate,
     // startTime: moment(formData.operatingHoursFrom, "HH:mm:ss").format("HH:mm"),
-    startTime: parseInt(formData.operatingHoursFrom.split(":")[0], 10),
-    endTime: parseInt(formData.operatingHoursTo.split(":")[0], 10),
+    startTime: formData.operatingHoursFrom.slice(0, 5),
+    endTime: formData.operatingHoursTo.slice(0, 5),
     // endTime: moment(formData.operatingHoursTo, "HH:mm:ss").format("HH:mm"),
     durationInHours: formData.durationInHours,
     totalMembers: totalMembers,
@@ -41,12 +41,12 @@ const Booking_Schedule = ({
     priceBook: formData.priceBook,
   });
 
-  console.log(
-    "qwertyuiopsdfghjkl",
-    bookingData.startTime,
-    "---",
-    bookingData.endTime
-  );
+  // console.log(
+  //   "qwertyuiopsdfghjkl",
+  //   bookingData.startTime,
+  //   "---",
+  //   bookingData.endTime
+  // );
 
   const [bookingDate, setBookingDate] = useState(formData.bookingDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -60,6 +60,7 @@ const Booking_Schedule = ({
 
   // Update current time every minute
   useEffect(() => {
+    // console.log("bookingData", bookingData);
     const interval = setInterval(() => {
       setCurrentTime(moment().format("HH:mm"));
     }, 60000);
@@ -162,7 +163,7 @@ const Booking_Schedule = ({
     return moment(time, "HH:mm").format("HH:mm");
   };
 
-  console.log("start time and end time2", bookingData.startTime, "---", bookingData.endTime);
+  // console.log("start time and end time2", bookingData.startTime, "---", bookingData.endTime);
 
   const renderHours = () => {
     const hours = [];

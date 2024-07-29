@@ -88,7 +88,7 @@ const paymentVerification = async (req, res) => {
         }
       });
         if (updatePayment>=1) {
-          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          return res.status(statusCode.SUCCESS.code).json({
             message: 'Payment done successfully',
             success: true
           });
@@ -107,7 +107,7 @@ const paymentVerification = async (req, res) => {
       }
       else{
         return res.status(statusCode.BAD_REQUEST.code).json({
-          message: 'Inavlaid payment request',
+          message: 'Invalid payment request',
           success: false
         });
       }
@@ -420,7 +420,81 @@ let webhook =  async (req, res) => {
 
   }
 
+let getDetailsWrtRazorpayOrderId = async (req,res)=>{
+  try {
+    let fetchOrderDetails = await sequelize.query(
+     ` SELECT * 
+      FROM amabhoomi.paymentmethods 
+      ORDER BY orderId DESC 
+      LIMIT 10;
+   `,
+     {
+      type:QueryTypes.SELECT
+     }
+    )
+    if(fetchOrderDetails.length==0){
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:"No data present"
+      })
+    }
+   let newData = fetchOrderDetails.map((eachData)=>{
 
+      // if(eachData.statusId == 25){
+      //   eachData.status = "Success"
+      // }
+      // else if(eachData.statusId == 26){
+      //   eachData.status = "Pending"
+
+      // }
+      // else if (eachData.statusId == 27){
+      //   eachData.status = "Failure"
+
+      // }
+      // else if (eachData.statusId == 28){
+      //   eachData.status = "Refund"
+
+      // }
+      // return eachData
+
+      return {
+        ...eachData, // Include all existing properties
+        status: eachData.statusId === 25 ? 'Success' :
+                eachData.statusId === 26 ? 'Pending' :
+                eachData.statusId === 27 ? 'Failure' :
+                eachData.statusId === 28 ? 'Refund' :
+                'Unknown'  // Default case if none of the statusId matches
+      };
+    
+    })
+    console.log('new data', newData)
+    return res.status(statusCode.SUCCESS.code).json({
+      message:'Order details',
+      orderData:newData
+    })
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+    
+  }
+}
+
+let initiateRefund = async  (paymentId, amount, notes)=> {
+  try {
+      const refundOptions = {
+          payment_id: paymentId,
+          amount: amount * 100, // Amount in smallest currency unit (paise)
+          notes: notes
+      };
+      const response = await razorpay.payments.refund(refundOptions);
+      return response;
+  } catch (error) {
+      console.error('Error initiating refund:', error);
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Error initiating refund`
+      })
+  }
+}
 module.exports = {
   getRazorpayApiKeys,
   checkout,
@@ -428,6 +502,7 @@ module.exports = {
   fetchOrder,
   fetchPayment,
   verifyWebhook,
-  webhook
+  webhook,
+  getDetailsWrtRazorpayOrderId
 }
 
