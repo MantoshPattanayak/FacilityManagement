@@ -38,7 +38,10 @@ const updatepublic_user = async (req, res) => {
     } = req.body;
 // console.log("Update Profile", req.body)
     console.log("profile Update", req.body)
-
+    let createActivity;
+    let imageUpdateVariable = 0;
+    let updateActivities;
+    let updatepublicUserCount;
     let params = {};
     let roleId =4;
     
@@ -112,7 +115,7 @@ const updatepublic_user = async (req, res) => {
       
     params.language = preferedLocation;
   }
-  console.log('near 113 line')
+  console.log('near 113 line',activities)
         if (activities) {
           let fetchUserActivities = await useractivitypreferencesModels.findAll({
             where: {
@@ -128,7 +131,7 @@ const updatepublic_user = async (req, res) => {
             console.log('activity',activity)
             if (!fetchActivities.includes(activity)) {
               console.log(activity,'activity')
-             let createActivity = await useractivitypreferencesModels.create(
+             createActivity = await useractivitypreferencesModels.create(
                 {
                   userActivityId: activity,
                   userId:userId,
@@ -157,7 +160,7 @@ const updatepublic_user = async (req, res) => {
           for (let fetchActivity of fetchActivities) {
             if (!activities.includes(fetchActivity)) {
               console.log(!activities.includes(fetchActivity),'fetchactivities',fetchActivity)
-              let [updateActivities] = await useractivitypreferencesModels.update(
+              updateActivities = await useractivitypreferencesModels.update(
                 { statusId: 2 },
                 { 
                   where: {
@@ -168,7 +171,7 @@ const updatepublic_user = async (req, res) => {
                 }
               );
               console.log('update activities', updateActivities)
-              if(updateActivities==0){
+              if(updateActivities.length==0){
                 await transaction.rollback();
                 return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                   message: "Something went wrong",
@@ -206,6 +209,7 @@ const updatepublic_user = async (req, res) => {
             }
             return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
           }
+          imageUpdateVariable = 1;
       }
       else{
         await transaction.rollback();
@@ -224,15 +228,17 @@ const updatepublic_user = async (req, res) => {
       params.updatedDt = updatedDt;
       console.log('near 225 line')
 
-      let [updatepublicUserCount, updatepublicUserData] =
+      updatepublicUserCount=
         await user.update(params, {
         where: {
           [Op.and]: [{userId: userId},{statusId:statusId},]
         },
         transaction
       });
-      console.log('near 233 line')
-    if (updatepublicUserCount >= 1) {
+      
+    }
+      console.log('near 233 line', createActivity)
+    if (updatepublicUserCount >= 1 || imageUpdateVariable==1 || createActivity || updateActivities.length>=1) {
       console.log('data updated')
       await transaction.commit();
       return res.status(statusCode.SUCCESS.code).json({
@@ -244,13 +250,8 @@ const updatepublic_user = async (req, res) => {
         message: "Data not Updated ",
       });
     }
-    }
-    else{
-      await transaction.rollback();
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message:'Data is not updated'
-      })
-    }
+    
+    
     
   } catch (error) {
     if(transaction) await transaction.rollback();
