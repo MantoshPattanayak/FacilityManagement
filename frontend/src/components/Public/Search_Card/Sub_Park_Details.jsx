@@ -557,27 +557,8 @@ const Sub_Park_Details = () => {
             {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
           </h1>
         </div>
-        {/* -------------------------Helpline Number ------------------------------------------ */}
-        {/* <div className="Helpline_number_conatine">
-          <h1 className="Service_text">Helpline Number</h1>
-          <div className="Contact_number">
-            <img className="Phone_icon" src={Phone_icon}></img>
-            <h1 className="Number">
-              {FacilitiesData?.length > 0 && FacilitiesData[0]?.helpNumber}
-            </h1>
-          </div>
-        </div> */}
-        <div className="Helpline_number_conatine">
-          <h1 className="Service_text">Helpline Number</h1>
-          <div className="Contact_number">
-            {FacilitiesData?.[0]?.helpNumber && (
-              <>
-                <img className="Phone_icon" src={Phone_icon} alt="Phone Icon" />
-                <h1 className="Number">{FacilitiesData[0]?.helpNumber}</h1>
-              </>
-            )}
-          </div>
-        </div>
+        
+      
 
         {/* -------------------------Event Available ----------------------------------------------------------- */}
         {/* <div className="Event_Available_main_conatiner">
@@ -617,7 +598,7 @@ const Sub_Park_Details = () => {
 
         <div className="Event_Available_main_conatiner">
           <h1 className="Service_text">Event Available</h1>
-          {EventAvailable.length > 20 ? (
+          {EventAvailable.length > 0 ? (
             <div className="carousel-container">
               <button
                 className="carousel-button left"
