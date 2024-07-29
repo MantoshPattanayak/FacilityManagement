@@ -15,6 +15,7 @@ let imageUpdate = require('../../../utils/imageUpdate')
 const updatepublic_user = async (req, res) => {
   let transaction;
   try {
+    console.log('232')
     transaction = await sequelize.transaction();
     console.log('req body', req.body, req.user.userId)
     let statusId = 1;
@@ -37,7 +38,10 @@ const updatepublic_user = async (req, res) => {
     } = req.body;
 // console.log("Update Profile", req.body)
     console.log("profile Update", req.body)
-
+    let createActivity;
+    let imageUpdateVariable = 0;
+    let updateActivities;
+    let updatepublicUserCount;
     let params = {};
     let roleId =4;
     
@@ -111,7 +115,7 @@ const updatepublic_user = async (req, res) => {
       
     params.language = preferedLocation;
   }
-  console.log('near 113 line')
+  console.log('near 113 line',activities)
         if (activities) {
           let fetchUserActivities = await useractivitypreferencesModels.findAll({
             where: {
@@ -127,7 +131,7 @@ const updatepublic_user = async (req, res) => {
             console.log('activity',activity)
             if (!fetchActivities.includes(activity)) {
               console.log(activity,'activity')
-             let createActivity = await useractivitypreferencesModels.create(
+             createActivity = await useractivitypreferencesModels.create(
                 {
                   userActivityId: activity,
                   userId:userId,
@@ -156,7 +160,7 @@ const updatepublic_user = async (req, res) => {
           for (let fetchActivity of fetchActivities) {
             if (!activities.includes(fetchActivity)) {
               console.log(!activities.includes(fetchActivity),'fetchactivities',fetchActivity)
-              let [updateActivities] = await useractivitypreferencesModels.update(
+              updateActivities = await useractivitypreferencesModels.update(
                 { statusId: 2 },
                 { 
                   where: {
@@ -167,7 +171,7 @@ const updatepublic_user = async (req, res) => {
                 }
               );
               console.log('update activities', updateActivities)
-              if(updateActivities==0){
+              if(updateActivities.length==0){
                 await transaction.rollback();
                 return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                   message: "Something went wrong",
@@ -177,9 +181,9 @@ const updatepublic_user = async (req, res) => {
             
           }
         }
-        console.log('near 176 line')
+        console.log('near 176 line','data',profilePicture,'profile data')
 
-      if(profilePicture){
+      if(Object.keys(profilePicture).length>0){
         if(profilePicture.fileId!=0){
           console.log('inside image part')
           let findThePreviousFilePath = await file.findOne({
@@ -205,6 +209,7 @@ const updatepublic_user = async (req, res) => {
             }
             return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
           }
+          imageUpdateVariable = 1;
       }
       else{
         await transaction.rollback();
@@ -214,22 +219,27 @@ const updatepublic_user = async (req, res) => {
       }
      
     }
-    console.log('outside profile update part')
+    console.log('outside profile update part',params)
 
     if(Object.keys(params).length>0){
       console.log('inside update part')
 
       params.updatedBy = userId;
       params.updatedDt = updatedDt;
+      console.log('near 225 line')
 
-      let [updatepublicUserCount, updatepublicUserData] =
+      updatepublicUserCount=
         await user.update(params, {
         where: {
           [Op.and]: [{userId: userId},{statusId:statusId},]
         },
         transaction
       });
-    if (updatepublicUserCount >= 1) {
+      
+    }
+      console.log('near 233 line', createActivity)
+    if (updatepublicUserCount >= 1 || imageUpdateVariable==1 || createActivity || updateActivities.length>=1) {
+      console.log('data updated')
       await transaction.commit();
       return res.status(statusCode.SUCCESS.code).json({
         message: "Updated Successfully",
@@ -240,13 +250,8 @@ const updatepublic_user = async (req, res) => {
         message: "Data not Updated ",
       });
     }
-    }
-    else{
-      await transaction.rollback();
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message:'Data is not updated'
-      })
-    }
+    
+    
     
   } catch (error) {
     if(transaction) await transaction.rollback();
@@ -307,6 +312,7 @@ const viewpublicUser = async (req, res) => {
   try {
     console.log(21, req.user.userId)
     let userId = req.user?.userId || 1;
+ 
     let publicRole = 4 //role id for user
     let statusId = 1;
     let entityType = 'usermaster'
@@ -317,11 +323,21 @@ const viewpublicUser = async (req, res) => {
     //   },
     // });
     
-    let showpublic_user = await sequelize.query(`select u.*, fl.url,fl.fileId from amabhoomi.usermasters u inner join fileattachments f on u.userId = f.entityId  
-   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =? and u.userId = ?
+    
+    let showpublic_user = await sequelize.query(`select u.* from amabhoomi.usermasters u where u.statusId = ? and u.roleId =? and u.userId = ?
    `,{type:QueryTypes.SELECT,
-    replacements:[entityType,filePurpose,statusId,publicRole,userId]
+    replacements:[statusId,publicRole,userId]
    })
+  //  console.log('show public user', showpublic_user)
+   let findTheImageUrl = await sequelize.query(`select fl.url,fl.fileId from amabhoomi.usermasters u inner join fileattachments f on u.userId = f.entityId  
+   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =? and u.userId = ?`,
+   {type:QueryTypes.SELECT,
+    replacements:[entityType,filePurpose,statusId,publicRole,userId]})
+    
+    if(findTheImageUrl.length>0){
+      showpublic_user[0].url = findTheImageUrl[0].url;
+      showpublic_user[0].fileId = findTheImageUrl[0].fileId;
+    }
 
    let showActivities = await sequelize.query(`select um.userActivityId, um.userActivityName from amabhoomi.useractivitymasters um
     inner join amabhoomi.useractivitypreferences up on um.userActivityId = up.userActivityId where up.statusId=? and up.userId=? `,
