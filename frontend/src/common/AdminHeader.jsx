@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppLogo from "../assets/ama-bhoomi_logo.png";
-import "../components/Public/Landing";
+// import "../components/Public/Landing";
 import "../common/AdminHeader.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

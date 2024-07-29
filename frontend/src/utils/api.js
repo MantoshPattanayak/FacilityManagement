@@ -1,6 +1,7 @@
 // to be maintained by backend developers
 const api = {
    LANGUAGE_RESOURCE_API: '/languageContent/view', //post  language - EN or OD
+   REFRESH_TOKEN_API: '/auth/refresh-token',
    PUBLIC_LOGIN_API: '/auth/publicLogin',
    PUBLIC_SIGNUP_API: '/auth/signUp',
    LOGOUT_API: '/auth/logout',  //post

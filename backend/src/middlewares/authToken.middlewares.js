@@ -14,10 +14,10 @@ function authenticateToken(req, res, next) {
     const sessionId = req.headers['sid']
     let statusId = 1;
 
-    // console.log(authHeader,'authHeaders and tokens',req.headers)
+    console.log(authHeader,'authHeaders and tokens',req.headers)
     const token = tokens?.accessToken || authHeader?.replace('Bearer', '').trim();
 
-    // console.log(token,'token')
+    console.log(token,'token')
     if (token == null) return res.status(statusCode.UNAUTHORIZED.code).json({ error: "Null token" });
 
     if (!token) {
@@ -25,11 +25,11 @@ function authenticateToken(req, res, next) {
     }
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (error, user) => {
-      // console.log(user);
+      console.log(user);
       if (error) return res.status(statusCode.UNAUTHORIZED.code).json({ error: error.message });
-      // console.log(user,'user')
+      console.log(user,'user')
       const findUser = await User.findByPk(user.userId);
-      // console.log(findUser,'findUser')
+      console.log(findUser,'findUser')
 
     
       // console.log(query.rows);
