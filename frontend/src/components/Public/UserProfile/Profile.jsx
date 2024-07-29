@@ -180,12 +180,12 @@ export default function Profile() {
       //   return;
       // }
 
-      let profilePic = [];
+      let profilePic = {};
 
       if(photoUrl.data != null){
-        profilePic = [
+        profilePic = 
           { fileId: formData.fileId, data: photoUrl.data }
-        ];
+        
       }
 
       // Log form data before updating
