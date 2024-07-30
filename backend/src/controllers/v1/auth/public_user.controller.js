@@ -365,9 +365,9 @@ const viewpublicUser = async (req, res) => {
    })
   //  console.log('show public user', showpublic_user)
    let findTheImageUrl = await sequelize.query(`select fl.url,fl.fileId from amabhoomi.usermasters u inner join fileattachments f on u.userId = f.entityId  
-   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =? and u.userId = ?`,
+   inner join files fl on fl.fileId = f.fileId where f.entityType = ? and f.filePurpose =? and u.statusId = ? and u.roleId =? and u.userId = ? and fl.statusId = ? and f.statusId = ?`,
    {type:QueryTypes.SELECT,
-    replacements:[entityType,filePurpose,statusId,publicRole,userId]})
+    replacements:[entityType,filePurpose,statusId,publicRole,userId,statusId,statusId]})
     
     if(findTheImageUrl.length>0){
       showpublic_user[0].url = findTheImageUrl[0].url;

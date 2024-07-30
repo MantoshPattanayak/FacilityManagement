@@ -13,6 +13,12 @@ const PaymentMethod = sequelize.define('paymentmethod',{
     methodName:{
         type:DataTypes.STRING(50)
     },
+    amount:{
+        type:DataTypes.DOUBLE
+    },
+    expiresAt:{
+        type:DataTypes.DATE
+    },
     description:{
         type:DataTypes.STRING(255)
     },
