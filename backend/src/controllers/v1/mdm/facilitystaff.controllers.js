@@ -63,7 +63,8 @@ let createFacilityStaffAllocation = async (req, res) => {
             facilityId: facilityId,
             allocationStartDate: allocationStartDate || null,
             allocationEndDate: allocationEndDate || null,
-            createdBy: user
+            createdBy: user,
+            statusId: 1
         });
 
         res.status(statusCode.CREATED.code).json({
@@ -78,23 +79,37 @@ let createFacilityStaffAllocation = async (req, res) => {
 }
 
 let updateFacilityStaffAllocation = async (req, res) => {
+    let transaction = await sequelize.transaction();
     try {
         let { facilityStaffAllocationId, facilityId, userId, allocationStartDate, allocationEndDate } = req.body;
         let user = req.user.userId;
-        let transaction = await sequelize.transaction();
-
+        console.log(1)
         let fetchFacilityStaffAllocationData = await facilityStaffAllocation.findOne({
             where: {
                 facilityStaffAllocationId: facilityStaffAllocationId
             }
         });
-        let paramsForUpdate;
+        console.log(2)
+        let paramsForUpdate = new Object();
         if (facilityId && facilityId != fetchFacilityStaffAllocationData.facilityId) {
             paramsForUpdate.facilityId = facilityId;
         }
         if (userId && userId != fetchFacilityStaffAllocationData.userId) {
             paramsForUpdate.userId = userId;
         }
+        if (allocationStartDate && allocationStartDate != fetchFacilityStaffAllocationData.allocationStartDate) {
+            paramsForUpdate.allocationStartDate = allocationStartDate;
+        }
+        if (allocationEndDate && allocationEndDate != fetchFacilityStaffAllocationData.allocationEndDate) {
+            paramsForUpdate.allocationEndDate = allocationEndDate;
+        }
+        
+        if(Object.keys(paramsForUpdate).length == 0) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "No changes made"
+            })
+        }
+        console.log(4);
         paramsForUpdate.updatedBy = user;
         paramsForUpdate.updatedOn = new Date();
 
@@ -103,14 +118,16 @@ let updateFacilityStaffAllocation = async (req, res) => {
                 facilityStaffAllocationId: facilityStaffAllocationId
             }
         }, { transaction });
-
+        console.log(5);
         if (updateCount > 0) {
+            console.log(6);
             transaction.commit();
             res.status(statusCode.SUCCESS.code).json({
                 message: "Staff allocation data updated successfully!"
             });
         }
         else {
+            console.log(7);
             transaction.rollback();
             res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                 message: "Updation failed! Please try again."
@@ -317,9 +334,122 @@ let uploadStaffAttendance = async (req, res) => {
     }
 }
 
+let viewStaffAllocation = async (req, res) => {
+    try {
+        let limit = req.body.page_size ? req.body.page_size : 50;
+        let page = req.body.page_number ? req.body.page_number : 1;
+        let offset = (page - 1) * limit;
+        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
+        let staffAllocationId = req.params.id ? req.params.id : null;
+
+        let fetchStaffAllocationQuery = `
+            select 
+                facilityStaffAllocationId, u.fullName, f.facilityname, fsa.allocationStartDate, fsa.allocationEndDate, fsa.createdOn, fsa.statusId, s.statusCode
+            from facilitystaffallocations fsa
+            inner join usermasters u on fsa.userId = u.userId
+            inner join facilities f on f.facilityId = fsa.facilityId
+            inner join statusmasters s on s.statusId = fsa.statusId and s.parentStatusCode = 'RECORD_STATUS'
+        `;
+
+        let fetchStaffAllocationData = await sequelize.query(fetchStaffAllocationQuery);
+        let matchedData = fetchStaffAllocationData[0];
+
+        if(givenReq) {
+            matchedData = matchedData.filter((data) => {
+                return data.fullName.toLowerCase().includes(givenReq) ||
+                data.facilityname.toLowerCase().includes(givenReq) ||
+                data.allocationStartDate.includes(givenReq) ||
+                data.allocationEndDate.includes(givenReq)
+            });
+        }
+
+        let paginatedMatchedData= matchedData.slice(
+            offset,
+            limit + offset
+        );
+
+        if(paginatedMatchedData.length > 0) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: "Facility staff allocation",
+                paginatedMatchedData
+            });
+        }
+        else {
+            res.status(statusCode.NOTFOUND.code).json({
+                message: "Facility staff allocation not found",
+                data: []
+            })
+        }
+    }
+    catch (error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+
+let viewStaffAllocationById = async (req, res) => {
+    try {
+        let limit = req.body.page_size ? req.body.page_size : 50;
+        let page = req.body.page_number ? req.body.page_number : 1;
+        let offset = (page - 1) * limit;
+        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
+        let staffAllocationId = req.params.id ? req.params.id : null;
+
+        let fetchStaffAllocationQuery = `
+            select 
+                fsa.facilityStaffAllocationId, u.userId, u.fullName, f.facilityname, f.facilityId, fsa.allocationStartDate, fsa.allocationEndDate, fsa.createdOn, fsa.statusId, s.statusCode
+            from facilitystaffallocations fsa
+            inner join usermasters u on fsa.userId = u.userId
+            inner join facilities f on f.facilityId = fsa.facilityId
+            inner join statusmasters s on s.statusId = fsa.statusId and s.parentStatusCode = 'RECORD_STATUS'
+            where fsa.facilityStaffAllocationId = ?
+        `;
+        let fetchStaffAllocationData = await sequelize.query(fetchStaffAllocationQuery, {
+            replacements: [staffAllocationId]
+        });
+        
+        let matchedData = fetchStaffAllocationData[0];
+
+        if(givenReq) {
+            matchedData = matchedData.filter((data) => {
+                return data.fullName.toLowerCase().includes(givenReq) ||
+                data.facilityname.toLowerCase().includes(givenReq) ||
+                data.allocationStartDate.includes(givenReq) ||
+                data.allocationEndDate.includes(givenReq)
+            });
+        }
+
+        let paginatedMatchedData= matchedData.slice(
+            offset,
+            limit + offset
+        );
+
+        if(paginatedMatchedData.length > 0) {
+            res.status(statusCode.SUCCESS.code).json({
+                message: "Facility staff allocation",
+                paginatedMatchedData
+            });
+        }
+        else {
+            res.status(statusCode.NOTFOUND.code).json({
+                message: "Facility staff allocation not found",
+                data: []
+            })
+        }
+    }
+    catch (error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     intialData
     , createFacilityStaffAllocation
     , updateFacilityStaffAllocation
     , uploadStaffAttendance
+    , viewStaffAllocation
+    , viewStaffAllocationById
 }

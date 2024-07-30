@@ -149,7 +149,14 @@ const api = {
    FETCH_GALLERY_DATA_BY_ID_API: '/gallery/fetchGalleryById',  //get :galleryId
    UPDATE_GALLERY_DATA_API: '/gallery/updateGalleryRecord', //put :galleryId --- description, fileAttachment: {name: '', data: ''}
    /// here footer pages api like contact with us, pathner with us...etc
-   contact_with_us_api:'/grievance/contactUs'
+   contact_with_us_api:'/grievance/contactUs',
+   // Facility staff allocation
+   VIEW_STAFF_ALLOCATION_LIST_API: '/facilityStaff/viewStaffAllocation',  //post page_size, page_number
+   VIEW_STAFF_ALLOCATION_DATA_API: '/facilityStaff/viewStaffAllocationById',  //post page_size, page_number
+   CREATE_STAFF_ALLOCATION_API: '/facilityStaff/createFacilityStaffAllocation',  //post
+   UPDATE_STAFF_ALLOCATION_LIST_API: '/facilityStaff/updateFacilityStaffAllocation',   //post
+   UPLOAD_STAFF_ATTENDANCE_API: '/facilityStaff/uploadStaffAttendance', //post
+   FETCH_INITIAL_DATA_FOR_STAFFALLOCATION: '/facilityStaff/initialData',   // get
 }
 
 export default api;
