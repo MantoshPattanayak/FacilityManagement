@@ -418,15 +418,11 @@ const initialDataFetch = async (req,res)=>{
           where: {
             statusId:statusId,
             facilityTypeId:{
-              [Op.ne]:[{
-                facilityEventType
-              },
-            {
-              facilityEventHostType
-            }]
+              [Op.notIn]:[facilityEventType,facilityEventHostType]
             }
           }
         })
+        console.log('fetchfacilitytypes',fetchFacilityTypes)
         console.log(fetchFacilityTypes,'fetchFacilitytypes')
         let fetchServices = await serviceMaster.findAll(
           {
@@ -696,7 +692,7 @@ const updateFacility = async(req,res)=>{
     }
     if(facilityImage){
       let findTheFacilityName = await facilities.findOne({
-        where:{[Op.and]:[{statusId:statusId,facilityId:facilityId}]}
+        where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]}
       })
       let facilityName = findTheFacilityName?.facilityname || updateFacilityDataVariable.facilityname
       if(facilityImage?.facilityImageOne){
