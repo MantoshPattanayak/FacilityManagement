@@ -9,12 +9,12 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("AuthProvider isAuthenticated useEffect", isAuthenticated);
+        // console.log("AuthProvider isAuthenticated useEffect", isAuthenticated);
         const initializeAuth = async () => {
             if (!isLoggedIn()) {
-                console.log("=================AuthProvider useEffect not logged in or expired========================")
+                // console.log("=====================AuthProvider useEffect not logged in or expired========================")
                 const newToken = await refreshAccessToken();
-                console.log("newToken", newToken, !!newToken);
+                // console.log("newToken", newToken, !!newToken);
                 setIsAuthenticated(!!newToken);
             } else {
                 setIsAuthenticated(true);
@@ -43,7 +43,7 @@ export function useAuth() {
 export function withAuth(Component) {
     return function AuthComponent(props) {
         const { isAuthenticated } = useAuth();
-        console.log("withAuth", isAuthenticated);
+        // console.log("withAuth", isAuthenticated);
         if (!isAuthenticated) {
             window.location.href = instance().baseName ? instance().baseName + '/login-signup' : '/login-signup';
             return null;

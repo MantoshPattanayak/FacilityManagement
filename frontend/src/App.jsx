@@ -124,6 +124,9 @@ import CreateFacilityType from "./components/Admin/MDM/FacilityTypeMaster/Create
 import EditFacilityType from "./components/Admin/MDM/FacilityTypeMaster/EditFacilityType";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
+import ViewStaffAllocation from "./components/Admin/Activity/FacilityStaffAllocation/ViewStaffAllocationList";
+import CreateStaffAllocation from "./components/Admin/Activity/FacilityStaffAllocation/CreateStaffAllocation";
+import EditStaffAllocation from "./components/Admin/Activity/FacilityStaffAllocation/EditStaffAllocation";
 
 const ProtectedProfile = withAuth(Profile);
 
@@ -283,6 +286,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+
                 {/* Activity - Grievance END */}
                 <Route
                   path="/activity/gallery"
@@ -603,6 +607,9 @@ function App() {
                 <Route path="/mdm/view-facility-type-list" element={<ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute>} />
                 <Route path="/mdm/create-facility-type-list" element={<ProtectedRoute><CreateFacilityType /></ProtectedRoute>} />
                 <Route path="/mdm/edit-facility-type-list" element={<ProtectedRoute><EditFacilityType /></ProtectedRoute>} />
+                <Route path="/activity/view-staff-allocation" element={<ViewStaffAllocation />} />
+                <Route path="/activity/create-staff-allocation" element={<CreateStaffAllocation />} />
+                <Route path="/activity/edit-staff-allocation" element={<EditStaffAllocation />} />
               </Routes>
               {/* <Footer /> */}
               <CommonFooter1 />
