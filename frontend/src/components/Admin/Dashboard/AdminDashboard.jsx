@@ -139,7 +139,7 @@ const AdminDashboard = () => {
             <div className='container-dashboard'>
                 <div className="heading-dashboard">
                     <h2><b>Dashboard</b></h2>
-                    <h2><FontAwesomeIcon className='download-icon' icon={faDownLong} />Download</h2>
+                    <h2></h2>
                 </div>
                 <br />
                 <hr />
@@ -194,7 +194,7 @@ const AdminDashboard = () => {
                             <div className="card-image">
                                 <h1>{calculateTotalEventBookings()}</h1>
                             </div>
-                            <div className="curve-img"><img src={img} alt="" /></div>
+                            
                         </div>
                         <div class="card-dashboard">
                             <div className="card-content">
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
                             <div className="card-image">
                                 <h1>{calculateTotalFacilityBookings()}</h1>
                             </div>
-                            <div className="curve-img"><img src={img} alt="" /></div>
+                          
                         </div>
                     </div>
                     {/* <div className="graph">
