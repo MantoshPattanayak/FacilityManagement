@@ -19,5 +19,7 @@ router.post('/webHook', razorPayPayment.verifyWebhook, razorPayPayment.webhook)
 
 router.get('/getDetailsWrtRazorpayOrderId', razorPayPayment.getDetailsWrtRazorpayOrderId)
 
+router.post("/refundPayment", authenticateToken, razorPayPayment.refundData);
+
 
 module.exports = router
