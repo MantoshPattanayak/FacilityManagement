@@ -1,26 +1,24 @@
-.con{
-    background-color: rgb(255, 255, 255);
-    height:450px;
-    width: 20vw;
-    border: 1px solid white;
-    border-radius: 10px;
-    margin-left: 30%;
-    margin-top: 120PX;
+.con {
+  background-color: rgb(255, 255, 255);
+  height: 450px;
+  width: 20vw;
+  border: 1px solid white;
+  border-radius: 10px;
+  margin-left: 30%;
+  margin-top: 120px;
 }
-.icon-close{
-    float: right;
-    color: rgb(0, 0, 0);
-    font-size: 30px;
-    margin-right: 5px;
+.icon-close {
+  float: right;
+  color: rgb(0, 0, 0);
+  font-size: 30px;
+  margin-right: 5px;
 }
-.VisitingPeople p{
-    color: aliceblue;
+.VisitingPeople p {
+  color: aliceblue;
 }
-.member-details{
-   margin-left: 15%
+.member-details {
+  margin-left: 15%;
 }
-
-
 
 .popup-overlay {
   position: fixed;
@@ -52,15 +50,14 @@
 }
 
 .popup-body {
-padding: 2%;
+  padding: 2%;
 }
 
 .popup-title {
-   font-size: 18px;
- 
+  font-size: 18px;
+
   text-align: center;
   font-weight: 600;
- 
 }
 
 .member-details {
@@ -77,14 +74,15 @@ padding: 2%;
   color: rgb(57, 55, 55);
 }
 /* input filed (Increamenent and decreament */
-	
+
 .increament_decrement_conatiner {
   position: relative;
   display: inline-block;
 }
 
 .formInput_Add_member {
-  width: 220px; /* Adjust width as needed */
+  /* width: 220px;  */
+  width: 20vw;
   padding: 8px;
   text-align: center;
   border: 1px solid #ccc;
@@ -106,7 +104,7 @@ padding: 2%;
   font-size: 20px;
   font-weight: 900;
 }
-.decrement-button  :hover {
+.decrement-button :hover {
   font-size: 21px;
   font-weight: 900;
   color: #007bff;
@@ -115,13 +113,12 @@ padding: 2%;
 .increment-button {
   right: 0;
   padding: 5px;
-   
+
   border: 1px dotted rgb(182, 178, 178);
   font-size: 20px;
   font-weight: 900;
- 
 }
-.increment-button  :hover{
+.increment-button :hover {
   font-size: 21px;
   font-weight: 900;
   color: #007bff;
@@ -139,7 +136,8 @@ padding: 2%;
   margin-top: 20px;
 }
 
-.cancel-button, .next-button {
+.cancel-button,
+.next-button {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -150,4 +148,73 @@ padding: 2%;
 
 .cancel-button {
   background-color: #dc3545;
+}
+
+
+
+@media screen and (max-width: 1400px) {
+  .popup-content {
+    /* width: 33%; */
+    width: max-content;
+    padding-inline: 2%;
+  }
+  .member-row label {
+    width: fit-content;
+  }
+  .member-row {
+    width: fit-content;
+  }
+  .member-details {
+    width: fit-content;
+  }
+  .popup-title {
+    text-align: center;
+  }
+  .popup-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .popup-footer {
+    width: 100%;
+  }
+  .member-details {
+    margin-left: 0%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .popup-content {
+    width: 44%;
+  }
+  .cancel-button,
+  .next-button {
+    padding: 10px 20px;
+    width: auto;
+  }
+  .member-row label {
+    width: fit-content;
+  }
+  .popup-footer {
+    width: 100%;
+  }
+  .member-details {
+    width: fit-content;
+  }
+  .member-row {
+    width: fit-content;
+  }
+  .formInput_Add_member {
+    width: 30vw;
+    text-align: center;
+  }
+  .popup-body {
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.member-details {
+  margin-left: 0%;
+}
 }

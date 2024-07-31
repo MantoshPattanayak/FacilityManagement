@@ -67,6 +67,33 @@
     box-sizing: border-box;
   }
   
+
+
   .activity_preference_popup{
     width: 35%;
   }
+
+
+  @media screen and (min-width: 1024px) {
+  .activity_preference_popup {
+    padding: 36px;
+    background-color: #f9f9f9;
+    height: max-content;
+    width: 32%;
+    margin-top: 20%;
+    margin-bottom: 20%;
+    margin-left: 32%;
+    border-radius: 12px;
+}
+}
+
+
+@media screen and (min-width: 530px){
+
+.activity_preference_popup {
+    width: 46%;
+    margin-left: 27%;
+    height: fit-content;
+    z-index: 100;
+}
+}

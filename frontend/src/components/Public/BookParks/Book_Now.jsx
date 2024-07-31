@@ -186,13 +186,13 @@ const Book_Now = () => {
     if (validateForm(modifiedFormData)) {
       try {
         const facilityPreference = {
-          totalMembers: modifiedFormData.totalMembers,
-          amount: formData.amount * modifiedFormData.adults,
-          activityPreference: modifiedFormData.activityPreference,
-          otherActivities: modifiedFormData.otherActivities,
-          bookingDate: modifiedFormData.bookingDate,
-          startTime: modifiedFormData.startTime,
-          durationInHours: modifiedFormData.durationInHours,
+          totalMembers:       encryptData(modifiedFormData.totalMembers),
+          amount:             encryptData(formData.amount * modifiedFormData.adults),
+          activityPreference: encryptData(modifiedFormData.activityPreference),
+          otherActivities:    encryptData(modifiedFormData.otherActivities),
+          bookingDate:        encryptData(modifiedFormData.bookingDate),
+          startTime:          encryptData(modifiedFormData.startTime),
+          durationInHours:    encryptData(modifiedFormData.durationInHours),
         };
 
         const requestBody = {

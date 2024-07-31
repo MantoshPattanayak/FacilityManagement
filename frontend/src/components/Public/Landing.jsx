@@ -9,13 +9,15 @@ import {
   faPause,
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   GoogleMap,
   LoadScript,
   Marker,
   InfoWindow,
+  Circle
 } from "@react-google-maps/api";
+import userLocationIcon from '../../assets/user_icon_here.png'
 import axiosHttpClient from "../../utils/axios";
 import park_logo from "../../assets/park-logo.png";
 import playground_logo from "../../assets/playground-logo.png";
@@ -132,7 +134,6 @@ const Landing = () => {
   const [distanceRange, setDistanceRange] = useState(10);
   const [activeButton, setActiveButton] = useState(10);
   const [currentIndex, setCurrentIndex] = useState(0);
-  let randomKey = Math.random();
   let navigate = useNavigate();
   //set auto-suggest facilties
   const [inputFacility, setInputFacility] = useState("");
@@ -141,6 +142,8 @@ const Landing = () => {
   const [currentIndexBg, setCurrentIndexBg] = useState(0);
   // here Gallery Image -------------------------------
   const [GalleryImage, setGalleryImage] = useState([]);
+  // show live location ----
+ 
   // set loader-------------------------------------------
   const [loading, setLoading] = useState(false); // Add loading state
   // --------------Explore new Activities-------------------------------------------------------------
@@ -180,19 +183,37 @@ const Landing = () => {
   const selectedImage = backGround_images[currentIndexBg];
 
   //function to fetch suggestions of facilities on input by user
-  async function fetchAutoSuggestData() {
+  async function fetchAutoSuggestData(inputValue) {
     try {
-      let response = await axiosHttpClient("View_Park_Data", "post", {
-        givenReq: inputFacility,
-        facilityTypeId: null,
+      let response = await axiosHttpClient("AUTO_SUGGEST_OVERALL_API", "post", {
+        givenReq: inputValue,
       });
 
-      console.log("auto suggest facility data", response.data.data);
-      setSuggestions(response.data.data);
+      console.log("auto suggest facility data", response.data);
+      setSuggestions(response.data.suggestions);
     } catch (error) {
       console.error(error);
     }
   }
+
+  // function to manage API calls while user search input entry
+  function debounce(fn, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args)
+      }, delay);
+    }
+  }
+
+  const debouncedFetchFunction = useCallback(debounce(fetchAutoSuggestData, 1000), []);
+
+  // call auto suggest API after a delay to prevent quick API call on input entry
+  useEffect(() => {
+    if (inputFacility != "" || inputFacility != null)
+      debouncedFetchFunction(inputFacility);
+  }, [inputFacility, debouncedFetchFunction]);
 
   //function to modify and set explore new activities section data
   function handleExploreActivitiesData(exploreData) {
@@ -262,10 +283,31 @@ const Landing = () => {
   }
 
   // function to fetch user current location
-  function setUserGeoLocation() {
+  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+          setLoading(false);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setUserLocation(defaultCenter); // Fallback to default center
+          setLoading(false);
+        }
+      );
+    } else {
+      setUserLocation(defaultCenter);
+      console.error('Geolocation is not supported by this browser');
+      setLoading(false);
+    }
+  }, []);
+  const setUserGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log("User position:", position);
           setUserLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -281,8 +323,6 @@ const Landing = () => {
         (error) => {
           console.error("Error getting location:", error);
           setUserLocation(defaultCenter);
-          // sessionStorage.setItem('location', JSON.stringify(location));
-          // Handle error, e.g., display a message to the user
         }
       );
     } else {
@@ -290,8 +330,8 @@ const Landing = () => {
       console.error("Geolocation is not supported by this browser");
       toast.error("Location permission not granted.");
     }
-    return;
-  }
+  };
+
   // here Get Near By data --------------------
   async function getNearbyFacilities() {
     setLoading(true); // Start loading
@@ -330,9 +370,11 @@ const Landing = () => {
       setLoading(false); // Stop loading
     }
   }
+
+
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
-    console.log("userLocation, distanceRange, facilityTypeId", {userLocation, distanceRange, facilityTypeId})
+    console.log("userLocation, distanceRange, facilityTypeId", { userLocation, distanceRange, facilityTypeId })
     if (userLocation && distanceRange && facilityTypeId) {
       getNearbyFacilities();
     }
@@ -363,15 +405,15 @@ const Landing = () => {
         setGivenReq(value);
     }
   }
+
   // Function to handle marker click ---------------------------------------------------
   const handleMarkerClick = (facilityId) => {
-    setSelectedParkId(facilityId); // Set selected parkId
-    const location = mapdata.find(
-      (location) => location.facilityId === facilityId
-    );
-    setSelectedLocationDetails(location); // Set selected location details
-    console.log(location);
+    const locationDetails = mapdata.find(location => location.facilityId === facilityId);
+    setSelectedLocationDetails(locationDetails);
+    setSelectedParkId(facilityId);
   };
+  // Mark Live location Name ---
+ 
   const [selectedButton, setSelectedButton] = useState(1);
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (typeid) => {
@@ -388,7 +430,7 @@ const Landing = () => {
   }
   // here Update the data-----------------------------------------------
   useEffect(() => {
-  
+
   }, [givenReq, facilityTypeId, showTour]);
 
   // refresh on user input to show suggestions of facilities
@@ -456,8 +498,8 @@ const Landing = () => {
     }
   };
   //------- Advatisemant -----------
-  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,
-    ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3
+  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,
+    ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3
   ];
   // Home page image
   const getStyles = () => {
@@ -565,34 +607,22 @@ const Landing = () => {
                 />
               </div> */}
             </div>
-            {/* {suggestions?.length > 0 && inputFacility && (
+            {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
                 {suggestions.length > 0 ? (
                   suggestions.map((suggestion, index) => (
                     <li
                       key={index}
-                      className={
-                        suggestion.facilityId === activeSuggestionIndex
-                          ? "active"
-                          : ""
-                      }
-                      onClick={(e) =>
-                        navigate(
-                          "/Sub_Park_Details" +
-                            `?facilityId=${encryptDataId(
-                              suggestion.facilityId
-                            )}`
-                        )
-                      }
+                      onClick={(e) => navigate(`/Search_card?query=${encodeURIComponent(suggestion)}`)}
                     >
-                      {suggestion.facilityname}
+                      {suggestion}
                     </li>
                   ))
                 ) : (
                   <li>No suggestions available</li>
                 )}
               </ul>
-            )} */}
+            )}
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
@@ -762,37 +792,54 @@ const Landing = () => {
                 ...(isMobile && { height: "280px" }),
               }}
               center={defaultCenter}
-              zoom={11}
+              zoom={12}
             >
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                userLocation && (
+                  <Circle
+                  center={{ lat: userLocation.latitude, lng: userLocation.longitude }}
+                  radius={500} // Radius in meters
+                  options={{
+                    fillColor: 'red',
+                    fillOpacity: 1.11,
+                    strokeColor: 'blue',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 12,
+                  }}
+                />
+                )
+              )}
+            
+              
+
+
               {/* Render markers */}
               {mapdata.map((location, index) => (
                 <Marker
                   key={index}
                   position={{ lat: location.latitude, lng: location.longitude }}
+
                   onClick={() => handleMarkerClick(location.facilityId)} // Call handleMarkerClick function with parkId when marker is clicked
                 />
               ))}
-
               {/* Show InfoWindow for selected location */}
               {selectedLocationDetails && (
                 <InfoWindow
-                  key={randomKey}
+                  key={selectedLocationDetails.facilityId}
                   position={{
                     lat: selectedLocationDetails.latitude,
                     lng: selectedLocationDetails.longitude,
-                  }} // Position the InfoWindow at the selected location
+                  }}
                   onCloseClick={() => {
                     setSelectedParkId(null);
                     setSelectedLocationDetails(null);
                   }}
                 >
-                  {selectedParkId ? (
-                    <div>
-                      <h3>Park Name:{selectedLocationDetails.facilityname}</h3>
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  <div>
+                    <h3>Park Name: {selectedLocationDetails.facilityname}</h3>
+                  </div>
                 </InfoWindow>
               )}
             </GoogleMap>
@@ -1157,5 +1204,5 @@ const Landing = () => {
     </div>
   );
 };
- 
+
 export default Landing;

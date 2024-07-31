@@ -381,6 +381,8 @@ const registerFacility = async (req, res) => {
     
     
     }
+
+    console.log('upto transaction it is coming')
     // if everything is successfull, then do commit the transaction here
     await transaction.commit()
  

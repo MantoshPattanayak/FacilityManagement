@@ -43,22 +43,23 @@ export function saveToken(tokenName, token) {
     return;
 }
 
-function isTokenExpired(tokenName, token) {
+export function isTokenExpired(tokenName, token) {
     const { exp, iat } = jwtDecode(token);
     const issueDate = new Date(iat * 1000);
-    const expirationDate = new Date(issueDate);
-    if (tokenName == 'accessToken') {
-        expirationDate.setDate(issueDate.getDate());
-    }
-    if (tokenName == "refreshToken") {
-        expirationDate.setDate(issueDate.getDate());
-    }
+    const expirationDate = new Date(exp * 1000);
+    // if (tokenName == 'accessToken') {
+    //     expirationDate.setDate(issueDate.getDate());
+    // }
+    // if (tokenName == "refreshToken") {
+    //     expirationDate.setDate(issueDate.getDate());
+    // }
+    // console.log("isTokenExpired", expirationDate < new Date(), expirationDate, new Date());
     return expirationDate < new Date();
 }
 
 export function isLoggedIn() {
     const { accessToken, refreshToken } = getToken();
-    console.log("isLoggedIn", { accessToken, refreshToken });
+    // console.log("isLoggedIn", { accessToken, refreshToken });
 
     if (!accessToken) return false;
 
@@ -71,30 +72,38 @@ export function isLoggedIn() {
 
 export async function refreshAccessToken() {
     const { accessToken, refreshToken } = getToken();
-    console.log("refresh token func start", { accessToken, refreshToken });
+    // console.log("refresh token func start", { accessToken, refreshToken });
 
-    if (!refreshToken) {
-        console.log(1)
+    if (!refreshToken) {    //is refresh token present
+        // console.log(1)
         removeToken("accessToken");
         removeToken("refreshToken");
         sessionStorage.setItem("isUserLoggedIn", 0);
+        sessionStorage.setItem("isAdminLoggedIn", 0)
         return null;
+    }
+    else {  // if present, then check validity of token
+        let isRefreshTokenValid = isTokenExpired("refreshToken", refreshToken);
+        if(!isRefreshTokenValid) {
+            // console.log("refreshAccessToken func expired", isRefreshTokenValid);
+            return null;
+        }
     }
 
     try {
-        console.log(2)
+        // console.log(2)
         const response = await axiosHttpClient("REFRESH_TOKEN_API", "post");
-        console.log("refreshAccessToken func", response);
+        // console.log("refreshAccessToken func", response);
 
         sessionStorage.setItem("isUserLoggedIn", 1);
+        sessionStorage.setItem("isAdminLoggedIn", 1);
         saveToken("accessToken", response.data.accessToken);
         return response.data.accessToken;
     }
     catch (error) {
-        console.log(5, error);
-        removeToken("accessToken");
-        removeToken("refreshToken");
+        // console.log(5, error);
         sessionStorage.setItem("isUserLoggedIn", 0);
+        sessionStorage.setItem("isAdminLoggedIn", 0)
         return null;
     }
 }

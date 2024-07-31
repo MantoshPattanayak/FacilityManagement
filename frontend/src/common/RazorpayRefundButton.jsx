@@ -3,11 +3,11 @@ import axiosHttpClient from "../utils/axios";
 import { faCreditCard, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Logo from '../../src/assets/ama_bhoomi_logo_odia.jpeg';
-import { decryptData, encryptData } from "../utils/encryptData";
+import { decryptData } from "../utils/encryptData";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
-const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, isDisabled }) => {
+const RazorpayRefundButton = ({ amount, currency, description, onSuccess, onFailure, isDisabled }) => {
   // dynamically load the script in the component
   useEffect(() => {
     const script = document.createElement('script');
@@ -23,35 +23,27 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
   const checkoutHandler = async () => {
     // fetch RAZORPAY API KEY
     const {
-      data: { key, secret },
+      data: { key },
     } = await axiosHttpClient("FETCH_RAZORPAY_API_KEY", "get");
     // console.log('apiKey', key);
 
     // create RAZORPAY order
-    const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { 
-      amount : encryptData(amount)
-    });
+    const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { amount });
     // console.log("order", order);
 
     //proceed for RAZORPAY checkout
     const options = {
       key: decryptData(key),
-      amount: decryptData(order.amount),
-      currency: decryptData(order.currency )|| currency,
+      amount: order.amount,
+      currency: order.currency || currency,
       name: "AMA BHOOMI",
       description: description,
       // image: Logo,
-      order_id: decryptData(order.id),
+      order_id: order.id,
       handler: async function (response) {
         try {
-          console.log('razorpay response', response);
-          let encryptedResponse = {
-            razorpay_payment_id  : encryptData(response.razorpay_payment_id),
-            razorpay_order_id    : encryptData(response.razorpay_order_id),
-            razorpay_signature   : encryptData(response.razorpay_signature)
-          };
-
-          let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', encryptedResponse);
+          // console.log('razorpay response', response);
+          let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', response);
           // mantosh added code
           // let res = await fetch('https://c6c7-122-187-160-238.ngrok-free.app/razorPayPayment/webHook', {
           //   method: 'POST',
@@ -67,12 +59,11 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
         }
         catch (error) {
           console.error(error);
-          toast.error(error.response.data.message);
         }
       },
       prefill: {
         name: "Test",
-        email: "test@email.com",
+        email: "test@test.com",
         contact: 9876543210,
       },
       notes: {
@@ -101,4 +92,4 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
   );
 };
 
-export default RazorpayButton;
+export default RazorpayRefundButton;

@@ -11,6 +11,7 @@ const api = {
    PRIVATE_LOGIN_VERIFY_OTP_API: '/userDetails/verifyOTPHandlerWithGenerateTokenForAdmin',   //post  encryptMobile  encryptOtp
    MAP_DISPLAY_DATA: '/mapData/displayMapData',
    OVERALL_SEARCH_DATA_API:'/mapData/findOverallSearch',  // overall search data ----- method-- get method parma giveReq
+   AUTO_SUGGEST_OVERALL_API: '/mapData/autoSuggestionForOverallSearch',  //post givenReq
    MAP_SEARCH: '/mapData/searchParkFacilities',
    PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post
    PROFILE_DATA_UPDATE_API: '/publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
@@ -149,7 +150,14 @@ const api = {
    FETCH_GALLERY_DATA_BY_ID_API: '/gallery/fetchGalleryById',  //get :galleryId
    UPDATE_GALLERY_DATA_API: '/gallery/updateGalleryRecord', //put :galleryId --- description, fileAttachment: {name: '', data: ''}
    /// here footer pages api like contact with us, pathner with us...etc
-   contact_with_us_api:'/grievance/contactUs'
+   contact_with_us_api:'/grievance/contactUs',
+   // Facility staff allocation
+   VIEW_STAFF_ALLOCATION_LIST_API: '/facilityStaff/viewStaffAllocation',  //post page_size, page_number
+   VIEW_STAFF_ALLOCATION_DATA_API: '/facilityStaff/viewStaffAllocationById',  //post page_size, page_number
+   CREATE_STAFF_ALLOCATION_API: '/facilityStaff/createFacilityStaffAllocation',  //post
+   UPDATE_STAFF_ALLOCATION_LIST_API: '/facilityStaff/updateFacilityStaffAllocation',   //post
+   UPLOAD_STAFF_ATTENDANCE_API: '/facilityStaff/uploadStaffAttendance', //post
+   FETCH_INITIAL_DATA_FOR_STAFFALLOCATION: '/facilityStaff/initialData',   // get
 }
 
 export default api;
