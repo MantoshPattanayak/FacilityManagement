@@ -67,3 +67,6 @@
     box-sizing: border-box;
   }
   
+  .activity_preference_popup{
+    width: 35%;
+  }
