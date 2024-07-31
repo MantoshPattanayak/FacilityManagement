@@ -87,7 +87,7 @@ const AddToCart = () => {
             notify('Unable to remove cart. Please try again.');
         }
     }
-    //    here Get data funcation ------------------------------------------------------
+    // here Get data funcation ------------------------------------------------------
     async function GetViewCardData() {
         try {
             let res = await axiosHttpClient('View_Card_UserId', 'get',)
@@ -97,7 +97,7 @@ const AddToCart = () => {
             setsaveForLaterData(res.data.saveForLater)
             let totalAmount = 0;
             for (let i = 0; i < res.data.data.length; i++) {
-                let amount = parseFloat(res.data.data[i].facilityPreference.amount);
+                let amount = parseFloat(decryptData(res.data.data[i].facilityPreference.amount));
                 if (!isNaN(amount)) {
                     totalAmount += amount;
                 }
@@ -145,13 +145,13 @@ const AddToCart = () => {
                                     <div className="text_contant_details_cart">
                                         <span className="park_name_date">
                                             <h1 className="Park_name_cart">{cardItem.facilityTypeName}</h1>
-                                            <h1 className="park_Booking_Date">{formatDate(cardItem.facilityPreference.bookingDate)}</h1>
+                                            <h1 className="park_Booking_Date">{formatDate(decryptData(cardItem.facilityPreference.bookingDate))}</h1>
                                         </span>
                                         <span className="Details_cart_details">
                                             <h1 className="facility_name_cart">{cardItem.facilityName}</h1>
-                                            <p className="p_tag_text">Total Members : {(cardItem.facilityPreference.totalMembers) || cardItem.facilityPreference.playersLimit}</p>
-                                            <p className="p_tag_text">Time: {formatTime(cardItem.facilityPreference.startTime) + '-' + (formatTime(cardItem.facilityPreference.endTime) || '')} </p>
-                                            <h1 className="cart_amount">₹ {cardItem.facilityPreference.amount ? parseFloat(cardItem.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                            <p className="p_tag_text">Total Members : {(decryptData(cardItem.facilityPreference.totalMembers)) || decryptData(cardItem.facilityPreference.playersLimit)}</p>
+                                            <p className="p_tag_text">Time: {formatTime(decryptData(cardItem.facilityPreference.startTime)) || ''} </p>
+                                            <h1 className="cart_amount">₹ {decryptData(cardItem.facilityPreference.amount) ? parseFloat(decryptData(cardItem.facilityPreference.amount)).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                         </span>
                                         <span className="Save_remove_button">
                                             <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'SAVED_FOR_LATER')}>SAVE FOR LATER</button>
@@ -196,13 +196,13 @@ const AddToCart = () => {
                                         <div className="text_contant_details_cart">
                                         <span className="park_name_date">
                                             <h1 className="Park_name_cart">{Item.facilityTypeName}</h1>
-                                            <h1 className="park_Booking_Date">{formatDate(Item.facilityPreference.bookingDate)}</h1>
+                                            <h1 className="park_Booking_Date">{formatDate(decryptData(Item.facilityPreference.bookingDate))}</h1>
                                         </span>
                                         <span className="Details_cart_details">
                                             <h1 className="facility_name_cart">{Item.facilityName}</h1>
-                                            <p className="p_tag_text">Total Members : {(Item.facilityPreference.totalMembers) || Item.facilityPreference.playersLimit}</p>
-                                            <p className="p_tag_text">Time: {formatTime(Item.facilityPreference.startTime) + '-' + (formatTime(Item.facilityPreference.endTime) || '')} </p>
-                                            <h1 className="cart_amount">₹ {Item.facilityPreference.amount ? parseFloat(Item.facilityPreference.amount).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                            <p className="p_tag_text">Total Members : {(decryptData(Item.facilityPreference.totalMembers)) || decryptData(Item.facilityPreference.playersLimit)}</p>
+                                            <p className="p_tag_text">Time: {formatTime(decryptData(Item.facilityPreference.startTime)) || ''} </p>
+                                            <h1 className="cart_amount">₹ {decryptData(Item.facilityPreference.amount) ? parseFloat(decryptData(Item.facilityPreference.amount)).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
                                         </span>
                                             <span className="Save_remove_button">
                                                 <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, Item.cartItemId, 'IN_CART')}>MOVE TO CART</button>
