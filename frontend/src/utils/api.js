@@ -11,6 +11,7 @@ const api = {
    PRIVATE_LOGIN_VERIFY_OTP_API: '/userDetails/verifyOTPHandlerWithGenerateTokenForAdmin',   //post  encryptMobile  encryptOtp
    MAP_DISPLAY_DATA: '/mapData/displayMapData',
    OVERALL_SEARCH_DATA_API:'/mapData/findOverallSearch',  // overall search data ----- method-- get method parma giveReq
+   AUTO_SUGGEST_OVERALL_API: '/mapData/autoSuggestionForOverallSearch',  //post givenReq
    MAP_SEARCH: '/mapData/searchParkFacilities',
    PROFILE_DATA_VIEW_API: '/publicUser/viewpublicUser', // post
    PROFILE_DATA_UPDATE_API: '/publicUser/updatepublic_user', // put publicUserId, title, firstName, middleName, lastName, userName, password, phoneNo, altPhoneNo, emailId, profilePicture, lastLogin,
