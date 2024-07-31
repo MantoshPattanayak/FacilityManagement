@@ -32,23 +32,7 @@ const getRazorpayApiKeys = async (req, res) => {
   }
 }
 
-// const checkout = async (req, res) => {
-//   try {
-//     const options = {
-//       amount: Number(req.body.amount * 100),
-//       currency: "INR",
-//       payment_capture: '1', // Automatically capture the payment
-//     };
-//     const order = await instance.orders.create(options);
 
-//     res.status(200).json({
-//       success: true,
-//       order,
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
 
 const paymentVerification = async (req, res) => {
   try {
@@ -174,50 +158,7 @@ const fetchPayment = async (req, res) => {
   }
 }
 
-// const webhook = async (req, res) => {
-//   const webhookSecret = 'YOUR_WEBHOOK_SECRET'; // Your webhook secret
 
-//   const crypto = require('crypto');
-//   const hmac = crypto.createHmac('sha256', webhookSecret);
-//   hmac.update(JSON.stringify(req.body));
-//   const digest = hmac.digest('hex');
-
-//   if (digest !== req.headers['x-razorpay-signature']) {
-//     return res.status(400).send('Webhook Error: Invalid signature');
-//   }
-
-//   // Webhook event payload
-//   const { event, payload } = req.body;
-
-//   try {
-//     // Handle specific webhook events
-//     switch (event) {
-//       case 'payment.captured':
-//         // Payment successfully captured
-//         console.log('Payment Captured:', payload);
-//         // Implement your logic here (e.g., update database, send email)
-//         break;
-//       case 'payment.failed':
-//         // Payment failed
-//         console.log('Payment Failed:', payload);
-//         // Implement your logic here (e.g., notify user, handle retries)
-//         break;
-//       case 'refund.processed':
-//         // Refund processed
-//         console.log('Refund Processed:', payload);
-//         // Implement your logic here (e.g., update transaction status)
-//         break;
-//       // Handle other events as needed
-//       default:
-//         console.log(`Unhandled event: ${event}`);
-//     }
-
-//     res.status(200).json({ received: true });
-//   } catch (error) {
-//     console.error('Webhook Error:', error.message);
-//     res.status(500).json({ error: 'Webhook Error' });
-//   }
-// }
 
 
 const checkout =  async (req, res) => {
