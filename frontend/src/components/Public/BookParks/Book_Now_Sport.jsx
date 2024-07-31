@@ -93,12 +93,12 @@ const Book_Now_Sport = () => {
             console.log("formData handleSubmitAndProceed", modifiedFormData);
             const validationError = validation(modifiedFormData);
             let facilityPreference = {
-                totalMembers: modifiedFormData.facilityPreference.playersLimit,
-                amount: amount * modifiedFormData.facilityPreference.playersLimit,
-                bookingDate: modifiedFormData.facilityPreference.bookingDate,
-                startTime: modifiedFormData.facilityPreference.startTime,
-                endTime: modifiedFormData.facilityPreference.endTime,
-                sports: modifiedFormData.facilityPreference.sports
+                totalMembers:     encryptData(modifiedFormData.facilityPreference.playersLimit),
+                amount:           encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
+                bookingDate:      encryptData(modifiedFormData.facilityPreference.bookingDate),
+                startTime:        encryptData(modifiedFormData.facilityPreference.startTime),
+                endTime:          encryptData(modifiedFormData.facilityPreference.endTime),
+                sports:           encryptData(modifiedFormData.facilityPreference.sports)
             };
             console.log("facilityPreference", facilityPreference);
             if (Object.keys(validationError).length <= 0) {
