@@ -301,43 +301,51 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
         //  find in facility name, facility location
         let matchedFacilitiesData = fetchFacilitiesData.map((facility) => {
             if(facility.facilityname.toLowerCase().includes(givenReq)) {
-                return facility.facilityname;
+                facility['suggestion'] = facility.facilityname;
+                return facility['suggestion'];
             }
             if(facility.address.toLowerCase().includes(givenReq)){
-                return facility.address;
+                facility['suggestion'] = facility.address;
+                return facility['suggestion'];
             }
         });
         //  find in event name, event location
         let matchedEventsData = await fetchEventsData.map((event) => {
             if(event.eventName.toLowerCase().includes(givenReq)) {
-                return event.eventName;
+                event['suggestion'] = event.eventName;
+                return event['suggestion'];
             }
             if(event.locationName.toLowerCase().includes(givenReq)) {
-                return event.locationName;
+                event['suggestion'] = event.locationName;
+                return event['suggestion'];
             }
         });
         //  find in activity master
         let matchedActivitiesData = await fetchActivitiesData.map((activity) => {
             if(activity.userActivityName.toLowerCase().includes(givenReq)) {
-                return activity.userActivityName;
+                activity['suggestion'] = activity.userActivityName;
+                return activity['suggestion'];
             }
         });
         //  find in services master
         let matchedServicesData = await fetchServicesData.map((service) => {
             if(service.description.toLowerCase().includes(givenReq)) {
-                return service.description;
+                service['suggestion'] = service.description;
+                return service['suggestion'];
             }
         });
         //  find in amenity master
         let matchedAmenitiesData = await fetchAmenitiesData.map((amenity) => {
             if(amenity.amenityName.toLowerCase().includes(givenReq)) {
-                return amenity.amenityName;
+                amenity['suggestion'] = amenity.amenityName;
+                return amenity['suggestion'];
             }
         });
         //  find in event category master
         let matchedEventCategoriesData = await fetchEventCategoriesData.map((eventCategory) => {
             if(eventCategory.eventCategoryName.toLowerCase().includes(givenReq)) {
-                return eventCategory.eventCategoryName;
+                eventCategory['suggestion'] = eventCategory.eventCategoryName;
+                return eventCategory['suggestion'];
             }
         });
 
@@ -347,12 +355,12 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
         res.status(statusCode.SUCCESS.code).json({
             message: "Suggestions",
             suggestions: matchedData
-        })
+        });
 
     } catch (err) {
        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:err.message
-       }) 
+       });
     }
 }
 
