@@ -1,155 +1,168 @@
+.fixed {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-   .fixed {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
+.booking-schedule-popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 20%;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.icon-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.booking-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custom-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.duration-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+.input-field {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.DatePickerContainer {
+  position: absolute;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 200px;
+  background: white;
+  z-index: 1000; /* Ensures it overlaps other elements */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.DateItem {
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  background: white;
+  color: black;
+  border-bottom: 1px solid #eee;
+}
+
+.DateItem:hover {
+  background: #f0f0f0;
+}
+
+.DateItem.selected {
+  background: #007bff;
+  color: white;
+}
+
+.DateItem.selected:hover {
+  background: #0056b3;
+}
+
+.time-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-input-container .clock-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.time-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  display: flex;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.time-picker-dropdown .column {
+  flex: 1;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.time-picker-dropdown h3 {
+  margin: 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.time-picker-dropdown ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+}
+
+.time-picker-dropdown ul li {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.time-picker-dropdown ul li:hover {
+  background-color: #f0f0f0;
+}
+
+@media screen and (min-width: 1024px) {
   .booking-schedule-popup {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 20%;
- 
+    margin-left: 32%;
+    width: 32%;
   }
-  
-  .popup-header {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .icon-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .booking-details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-   
-  }
-  
-  .custom-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .duration-container {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  
-  .wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 10px 0;
-  }
-  
-  .input-field {
-  
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-align: center;
-  }
-  
-  .DatePickerContainer {
-    position: absolute;
-    border: 1px solid #ccc;
-    max-height: 200px;
-    overflow-y: auto;
-    width: 200px;
-    background: white;
-    z-index: 1000; /* Ensures it overlaps other elements */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .DateItem {
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    background: white;
-    color: black;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .DateItem:hover {
-    background: #f0f0f0;
-  }
-  
-  .DateItem.selected {
-    background: #007bff;
-    color: white;
-  }
-  
-  .DateItem.selected:hover {
-    background: #0056b3;
-  }
-  
-  .time-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .time-input-container .clock-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .time-picker-dropdown {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    display: flex;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    z-index: 1000;
-  }
-  
-  .time-picker-dropdown .column {
-    flex: 1;
-    padding: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  .time-picker-dropdown h3 {
-    margin: 0;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .time-picker-dropdown ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto;
-  }
-  
-  .time-picker-dropdown ul li {
-    cursor: pointer;
-    padding: 5px;
-  }
-  
-  .time-picker-dropdown ul li:hover {
-    background-color: #f0f0f0;
-  }
-  
+}
 
-  
+@media screen and (max-width: 1024px) {
+  .booking-schedule-popup {
+    margin-left: 32%;
+    width: 32%;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .booking-schedule-popup {
+    width: 48%;
+    margin-left: 26%;
+}
+}
