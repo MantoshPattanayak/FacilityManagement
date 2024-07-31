@@ -1216,5 +1216,6 @@ module.exports ={
     viewParkById,
     nearByDataInMap,
     facilityFilterOption,
-    findOverallSearch
+    findOverallSearch,
+    autoSuggestionForOverallSearch
 }

@@ -20,5 +20,5 @@ router.get('/filterList', facilities.facilityFilterOption)
 
 router.post('/findOverallSearch', facilities.findOverallSearch)
 
-
+router.post('/autoSuggestionForOverallSearch', facilities.autoSuggestionForOverallSearch)
 module.exports = router
