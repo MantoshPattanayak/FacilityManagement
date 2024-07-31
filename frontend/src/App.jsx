@@ -129,6 +129,12 @@ import ViewFacilityTypeList from "./components/Admin/MDM/FacilityTypeMaster/View
 import CreateFacilityType from "./components/Admin/MDM/FacilityTypeMaster/CreateFacilityType";
 import EditFacilityType from "./components/Admin/MDM/FacilityTypeMaster/EditFacilityType";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
+import ViewStaffAllocation from "./components/Admin/Activity/FacilityStaffAllocation/ViewStaffAllocationList";
+import CreateStaffAllocation from "./components/Admin/Activity/FacilityStaffAllocation/CreateStaffAllocation";
+import EditStaffAllocation from "./components/Admin/Activity/FacilityStaffAllocation/EditStaffAllocation";
+
+const ProtectedProfile = withAuth(Profile);
 
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -167,7 +173,7 @@ function App() {
               <Route path="/Event_hostPage" element={<Event_hostPage />} />
               <Route path="/Sub_Park_Details" element={
                 <React.Suspense fallback="Loading page ...">
-                  <Sub_Park_Details/>
+                  <Sub_Park_Details />
                 </React.Suspense>
 
               } />
@@ -698,8 +704,10 @@ function App() {
               <Route path="/mdm/view-facility-type-list" element={<ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute>} />
               <Route path="/mdm/create-facility-type-list" element={<ProtectedRoute><CreateFacilityType /></ProtectedRoute>} />
               <Route path="/mdm/edit-facility-type-list" element={<ProtectedRoute><EditFacilityType /></ProtectedRoute>} />
+              <Route path="/activity/view-staff-allocation" element={<ViewStaffAllocation />} />
+              <Route path="/activity/create-staff-allocation" element={<CreateStaffAllocation />} />
+              <Route path="/activity/edit-staff-allocation" element={<EditStaffAllocation />} />
             </Routes>
-            {/* <Footer /> */}
             <CommonFooter1 />
           </div>
           <ToastContainer />

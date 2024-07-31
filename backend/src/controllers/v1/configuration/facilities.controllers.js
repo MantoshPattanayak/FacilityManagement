@@ -15,10 +15,11 @@ let userActivity = db.useractivitymasters;
 let facilityTariff = db.facilitytariff
 let userBookmark = db.bookmarks
 let eventActivities = db.eventActivities
+let activitiesMaster = db.useractivitymasters
+let servicesMaster = db.services
+let amenitiesMaster = db.amenitiesmaster
+let eventCategoriesMaster = db.eventCategoryMaster
 const fs = require('fs');
-
-
-
 const path = require('path');
 
 const displayMapData = async(req,res)=>{
@@ -256,9 +257,97 @@ const viewParkDetails = async(req,res)=>{
 
 
 
-const autoSuggestionForViewParkDetails = async (req,res)=>{
+const autoSuggestionForOverallSearch = async (req,res)=>{
     try {
-        let givenReq = req.params.givenReq?req.params.givenReq:null;
+        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
+
+        
+        let fetchFacilitiesData = await facilitiesTable.findAll({
+            where: {
+                statusId: 1
+            }
+        });
+        
+        let fetchEventsData = await eventActivities.findAll({
+            where: {
+                statusId: 1
+            }
+        });
+
+        let fetchActivitiesData = await activitiesMaster.findAll({
+            where: {
+                statusId: 1
+            }
+        });
+
+        let fetchServicesData = await servicesMaster.findAll({
+            where: {
+                statusId: 1
+            }
+        });
+
+        let fetchAmenitiesData = await amenitiesMaster.findAll({
+            where: {
+                statusId: 1
+            }
+        });
+
+        let fetchEventCategoriesData = await eventCategoriesMaster.findAll({
+            where: {
+                statusId: 1
+            }
+        })
+
+        //  find in facility name, facility location
+        let matchedFacilitiesData = fetchFacilitiesData.filter((facility) => {
+            if(facility.facilityname.toLowerCase().includes(givenReq)) {
+                return facility.facilityname;
+            }
+            if(facility.address.toLowerCase().includes(givenReq)){
+                return facility.address;
+            }
+        });
+        //  find in event name, event location
+        let matchedEventsData = await fetchEventsData.filter((event) => {
+            if(event.eventName.toLowerCase().includes(givenReq)) {
+                return event.eventName;
+            }
+            if(event.locationName.toLowerCase().includes(givenReq)) {
+                return event.locationName;
+            }
+        });
+        //  find in activity master
+        let matchedActivitiesData = await fetchActivitiesData.filter((activity) => {
+            if(activity.userActivityName.toLowerCase().includes(givenReq)) {
+                return activity.userActivityName;
+            }
+        });
+        //  find in services master
+        let matchedServicesData = await fetchServicesData.filter((service) => {
+            if(service.description.toLowerCase().includes(givenReq)) {
+                return service.description;
+            }
+        });
+        //  find in amenity master
+        let matchedAmenitiesData = await fetchAmenitiesData.filter((amenity) => {
+            if(amenity.amenityName.toLowerCase().includes(givenReq)) {
+                return amenity.amenityName;
+            }
+        });
+        //  find in event category master
+        let matchedEventCategoriesData = await fetchEventCategoriesData.filter((eventCategory) => {
+            if(eventCategory.eventCategoryName.toLowerCase().includes(givenReq)) {
+                return eventCategory.eventCategoryName;
+            }
+        });
+
+        let matchedData = [...matchedFacilitiesData, ...matchedEventsData, ...matchedActivitiesData, ...matchedServicesData, ...matchedAmenitiesData, ...matchedEventCategoriesData];
+        matchedData = [...new Set(matchedData)];
+
+        res.status(statusCode.SUCCESS.code).json({
+            message: "Suggestions",
+            suggestions: matchedData
+        })
 
     } catch (err) {
        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
