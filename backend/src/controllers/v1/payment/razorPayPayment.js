@@ -22,7 +22,7 @@ const getRazorpayApiKeys = async (req, res) => {
     // console.log("apiKey after encrypt", apiKey);
     res.status(statusCode.SUCCESS.code).json({
       key: apiKey,
-      secret: apiSecret
+      // secret: apiSecret
     })
   }
   catch (error) {
@@ -54,6 +54,10 @@ const paymentVerification = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
+       razorpay_order_id = await decrypt(razorpay_order_id);
+       razorpay_payment_id = await decrypt(razorpay_payment_id);
+       razorpay_signature = await decrypt(razorpay_signature)
+
       let updatedDt = new Date();
       let statusId = 27
     console.log(req.body);
@@ -69,8 +73,23 @@ const paymentVerification = async (req, res) => {
 
     if (isAuthentic) {
       let paymentDetails = await instance.payments.fetch(razorpay_payment_id);
+     
       console.log('payment details',paymentDetails)
       if(paymentDetails){
+        let amountPaid = paymentDetails.amount/100; // converting from paise to ruppess
+        let checkIfThePaymentAmountIsSameAsOrderAmount = await sequelize.query(`select * from amabhoomi.paymentmethods where
+          razorpay_order_id = ? and amount =?`,{
+            type:QueryTypes.SELECT,
+            replacements:[paymentDetails.order_id, amountPaid]
+          })
+
+          if(!checkIfThePaymentAmountIsSameAsOrderAmount){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message: 'Invalid payment request',
+              success: false
+            })
+          }
+          
         if(paymentDetails.captured){
           statusId = 25
         }
@@ -115,14 +134,18 @@ const paymentVerification = async (req, res) => {
       }
       
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
   }
 };
 
 const fetchOrder = async (req, res) => {
-  const { orderId } = req.params;
+
   try {
+    console.log('orderID')
+    const { orderId } = req.params;
+    console.log('orderId',orderId)
     const order = await instance.orders.fetch(orderId);
+    console.log(orderId,'why this api')
     res.status(statusCode.SUCCESS.code).json({
       message: "Order details",
       order
@@ -207,9 +230,16 @@ const checkout =  async (req, res) => {
     
     let pendingStatus = 26;
     let customerId = req.user.userId
+    let orderEncrypt;
     
-    const { amount } = req.body;
+    let { amount } = req.body;
+    if(!amount){
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:`Invalid Request`
+      })
+    }
  
+    amount = await decrypt(amount);
 
     // Create new order with idempotency key
     const options = {
@@ -270,12 +300,29 @@ const checkout =  async (req, res) => {
     }
   
     console.log('Transaction initiated and saved:', insertToPayment);
-
+    orderEncrypt = {
+      amount: encrypt(order.amount),
+      amount_due: encrypt(order.amount_due),
+      amount_paid: encrypt(order.amount_due),
+      attempts: encrypt(order.attempts),
+      created_at:encrypt(order.created_at) ,
+      currency: encrypt(order.currency),
+      entity: encrypt(order.entity),
+      id: encrypt(order.id),
+      notes: {
+          customer_id: encrypt(order.notes.customer_id)
+      },
+      offer_id: encrypt(order.offer_id),
+      receipt: encrypt(order.receipt),
+      status: encrypt(order.status)
+    }
+    console.log(orderEncrypt,'orderEncrypt')
     await transaction.commit();
+   
     return res.status(statusCode.SUCCESS.code).json({
       message:`Order is created`,
-      order:order,
-      success:true
+      order:orderEncrypt,
+      success:encrypt("true")
     })
   } catch (error) {
     if(transaction) await transaction.rollback();
@@ -314,6 +361,8 @@ let webhook =  async (req, res) => {
     let failureStatus = 27
     let refundStatus = 28;
     let updatedDt = new Date();
+    let amountPaid;
+    let checkIfThePaymentAmountIsSameAsOrderAmount;
     const event = req.body.event;
     const payload = req.body.payload;
     console.log(req.body,'eventdetail')
@@ -325,6 +374,19 @@ let webhook =  async (req, res) => {
       case 'payment.captured':
         // Payment successfully captured
         let capturedPaymentId = payload.payment.entity.id;
+         amountPaid = payload.payment.entity.amount
+         checkIfThePaymentAmountIsSameAsOrderAmount = await sequelize.query(`select * from amabhoomi.paymentmethods where
+          razorpay_order_id = ? and amount =?`,{
+            type:QueryTypes.SELECT,
+            replacements:[payload.payment.entity.order_id, amountPaid]
+          })
+
+          if(!checkIfThePaymentAmountIsSameAsOrderAmount){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message: 'Invalid payment request',
+              success: false
+            })
+          }
         // Update payment status
         let methodName =  payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity
         let [updatePayment] = await Payment.update({ statusId: successStatus,
@@ -358,7 +420,19 @@ let webhook =  async (req, res) => {
       case 'payment.failed':
         // Payment failed
         let failedPaymentId = payload.payment.entity.id;
+         amountPaid = payload.payment.entity.amount
+         checkIfThePaymentAmountIsSameAsOrderAmount = await sequelize.query(`select * from amabhoomi.paymentmethods where
+          razorpay_order_id = ? and amount =?`,{
+            type:QueryTypes.SELECT,
+            replacements:[payload.payment.entity.order_id, amountPaid]
+          })
 
+          if(!checkIfThePaymentAmountIsSameAsOrderAmount){
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message: 'Invalid payment request',
+              success: false
+            })
+          }
         // Update payment status
         let methodNameFailure =   payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity ;
         let [updatePaymentFailure,updatePaymentFailureData] = await Payment.update({ statusId: failureStatus,
@@ -389,7 +463,21 @@ let webhook =  async (req, res) => {
       case 'payment.refunded':
         // Payment refunded
         let refundPaymentId = payload.payment.entity.id;
+        
+        amountPaid = payload.payment.entity.amount
+        checkIfThePaymentAmountIsSameAsOrderAmount = await sequelize.query(`select * from amabhoomi.paymentmethods where
+         razorpay_order_id = ? and amount =?`,{
+           type:QueryTypes.SELECT,
+           replacements:[payload.payment.entity.order_id, amountPaid]
+         })
 
+         if(!checkIfThePaymentAmountIsSameAsOrderAmount){
+           return res.status(statusCode.BAD_REQUEST.code).json({
+             message: 'Invalid payment request',
+             success: false
+           })
+         }
+         
         // Update payment status
         let methodNameRefund =   payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity ;
         let [updatePaymentRefund] = await Payment.update({ statusId: refundStatus,
