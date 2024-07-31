@@ -83,19 +83,7 @@ const EditStaffAllocation = () => {
         return;
     }
 
-    // function to clear form data
-    function clearForm(e) {
-        e.preventDefault();
-        setFormData({
-            facilityId: '',
-            userId: '',
-            allocationStartDate: '',
-            allocationEndDate: ''
-        })
-        toast.success('All form inputs are cleared!')
-    }
-
-    // fetch dropdown date
+    // fetch dropdown data
     async function getInitialDropdownData() {
         try {
             const res = await axiosHttpClient("FETCH_INITIAL_DATA_FOR_STAFFALLOCATION", "get");
@@ -111,6 +99,7 @@ const EditStaffAllocation = () => {
         }
     }
 
+    // function to fetch saved staff allocation data
     async function fetchStaffAllocationData() {
       try {
         let response = await axiosHttpClient("VIEW_STAFF_ALLOCATION_DATA_API", "post", {}, staffAllocationId);
