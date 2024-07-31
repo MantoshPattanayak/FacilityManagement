@@ -46,6 +46,9 @@ let CryptoJS = require('crypto-js')
 const decrypt =  (val) => {
     let key = process.env.Encrypt_Decrypt_key
     let iv= process.env.IV
+    if(val==null){
+        return val
+    }
     let parsedKey = CryptoJS.enc.Hex.parse(key);
     let parsedIV = CryptoJS.enc.Hex.parse(iv);
     console.log('d1',val)

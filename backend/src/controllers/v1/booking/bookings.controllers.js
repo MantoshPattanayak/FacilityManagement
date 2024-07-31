@@ -667,6 +667,7 @@ let addToCart = async (req, res) => {
         let updatedDt = new Date();
         let statusId = 1;
         let { entityId, entityTypeId, facilityPreference } = req.body
+        console.log('facility preference',Object.entries(facilityPreference))
         console.log(typeof (entityId), 'req.body', entityTypeId == 2)
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
 
