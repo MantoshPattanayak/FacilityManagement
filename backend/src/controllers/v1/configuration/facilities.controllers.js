@@ -299,7 +299,7 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
         })
 
         //  find in facility name, facility location
-        let matchedFacilitiesData = fetchFacilitiesData.filter((facility) => {
+        let matchedFacilitiesData = fetchFacilitiesData.map((facility) => {
             if(facility.facilityname.toLowerCase().includes(givenReq)) {
                 return facility.facilityname;
             }
@@ -308,7 +308,7 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
             }
         });
         //  find in event name, event location
-        let matchedEventsData = await fetchEventsData.filter((event) => {
+        let matchedEventsData = await fetchEventsData.map((event) => {
             if(event.eventName.toLowerCase().includes(givenReq)) {
                 return event.eventName;
             }
@@ -317,25 +317,25 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
             }
         });
         //  find in activity master
-        let matchedActivitiesData = await fetchActivitiesData.filter((activity) => {
+        let matchedActivitiesData = await fetchActivitiesData.map((activity) => {
             if(activity.userActivityName.toLowerCase().includes(givenReq)) {
                 return activity.userActivityName;
             }
         });
         //  find in services master
-        let matchedServicesData = await fetchServicesData.filter((service) => {
+        let matchedServicesData = await fetchServicesData.map((service) => {
             if(service.description.toLowerCase().includes(givenReq)) {
                 return service.description;
             }
         });
         //  find in amenity master
-        let matchedAmenitiesData = await fetchAmenitiesData.filter((amenity) => {
+        let matchedAmenitiesData = await fetchAmenitiesData.map((amenity) => {
             if(amenity.amenityName.toLowerCase().includes(givenReq)) {
                 return amenity.amenityName;
             }
         });
         //  find in event category master
-        let matchedEventCategoriesData = await fetchEventCategoriesData.filter((eventCategory) => {
+        let matchedEventCategoriesData = await fetchEventCategoriesData.map((eventCategory) => {
             if(eventCategory.eventCategoryName.toLowerCase().includes(givenReq)) {
                 return eventCategory.eventCategoryName;
             }
