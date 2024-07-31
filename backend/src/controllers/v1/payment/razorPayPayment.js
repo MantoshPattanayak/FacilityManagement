@@ -52,7 +52,7 @@ const getRazorpayApiKeys = async (req, res) => {
 
 const paymentVerification = async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    let { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
        razorpay_order_id = await decrypt(razorpay_order_id);
        razorpay_payment_id = await decrypt(razorpay_payment_id);
@@ -477,7 +477,7 @@ let webhook =  async (req, res) => {
              success: false
            })
          }
-         
+
         // Update payment status
         let methodNameRefund =   payload.payment.entity.card.type +' ' + payload.payment.entity.card.entity ;
         let [updatePaymentRefund] = await Payment.update({ statusId: refundStatus,
