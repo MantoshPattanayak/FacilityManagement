@@ -11,6 +11,8 @@ const statusmasters = db.statusmaster;
 const useractivitymasters = db.useractivitymasters;
 const cart = db.cart
 const cartItem = db.cartItem
+let {encrypt} = require('../../../middlewares/encryption.middlewares')
+let {decrypt} = require('../../../middlewares/decryption.middlewares')
 const useractivitypreferences = db.userActivityPreference
 let port = process.env.PORT
 const { Op } = require('sequelize');
@@ -666,8 +668,16 @@ let addToCart = async (req, res) => {
         let createdDt = new Date();
         let updatedDt = new Date();
         let statusId = 1;
+        // let facilityPreferenceData={};
         let { entityId, entityTypeId, facilityPreference } = req.body
-        console.log('facility preference',Object.entries(facilityPreference))
+        console.log('23')
+        for(let key in facilityPreference){
+            console.log(' facilityPreference[key]', facilityPreference[key])
+            facilityPreference[key] = decrypt(facilityPreference[key])            
+        }
+        console.log('24')
+
+        console.log('facility preference',facilityPreference)
         console.log(typeof (entityId), 'req.body', entityTypeId == 2)
         // totalMembers, activityPreference,otherActivities,bookingDate,startTime,endTime,duration,playersLimit,sports,price    
 
@@ -979,14 +989,25 @@ let viewCartByUserId = async (req, res) => {
             //       ],
 
             // })
-            findCartItemsWRTCartId = findCartItemsWRTCartId.map((cartItem) => {
-                cartItem.imageUrl = encodeURI(cartItem.imageUrl);
-                return cartItem;
-            })
+            if(findCartItemsWRTCartId.length>0){
+                findCartItemsWRTCartId = findCartItemsWRTCartId.map((cartItem) => {
+                    for(let key in cartItem.facilityPreference){
+                        cartItem.facilityPreference[key] = encrypt(cartItem.facilityPreference[key] )
+                    } 
+                    cartItem.imageUrl = encodeURI(cartItem.imageUrl);
+                    return cartItem;
+                })
+            }
+          if(findCartItemsWRTCartIdSaveForLater.length>0){
             findCartItemsWRTCartIdSaveForLater = findCartItemsWRTCartIdSaveForLater.map((cartItem) => {
+                for(let key in cartItem.facilityPreference){
+                    cartItem.facilityPreference[key] = encrypt(cartItem.facilityPreference[key] )
+                } 
                 cartItem.imageUrl = encodeURI(cartItem.imageUrl);
                 return cartItem;
             })
+          }
+            
             console.log(findCartItemsWRTCartId, 'findCartIdByUserId')
             if (findCartIdByUserId.length <= 0 && findCartItemsWRTCartIdSaveForLater<=0) {
                 return res.status(statusCode.BAD_REQUEST.code).json({
