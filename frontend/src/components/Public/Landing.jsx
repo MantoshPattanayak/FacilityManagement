@@ -9,7 +9,7 @@ import {
   faPause,
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -183,19 +183,37 @@ const Landing = () => {
   const selectedImage = backGround_images[currentIndexBg];
 
   //function to fetch suggestions of facilities on input by user
-  async function fetchAutoSuggestData() {
+  async function fetchAutoSuggestData(inputValue) {
     try {
-      let response = await axiosHttpClient("View_Park_Data", "post", {
-        givenReq: inputFacility,
-        facilityTypeId: null,
+      let response = await axiosHttpClient("AUTO_SUGGEST_OVERALL_API", "post", {
+        givenReq: inputValue,
       });
 
-      console.log("auto suggest facility data", response.data.data);
-      setSuggestions(response.data.data);
+      console.log("auto suggest facility data", response.data);
+      setSuggestions(response.data.suggestions);
     } catch (error) {
       console.error(error);
     }
   }
+
+  // function to manage API calls while user search input entry
+  function debounce(fn, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args)
+      }, delay);
+    }
+  }
+
+  const debouncedFetchFunction = useCallback(debounce(fetchAutoSuggestData, 1000), []);
+
+  // call auto suggest API after a delay to prevent quick API call on input entry
+  useEffect(() => {
+    if (inputFacility != "" || inputFacility != null)
+      debouncedFetchFunction(inputFacility);
+  }, [inputFacility, debouncedFetchFunction]);
 
   //function to modify and set explore new activities section data
   function handleExploreActivitiesData(exploreData) {
@@ -589,34 +607,22 @@ const Landing = () => {
                 />
               </div> */}
             </div>
-            {/* {suggestions?.length > 0 && inputFacility && (
+            {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions">
                 {suggestions.length > 0 ? (
                   suggestions.map((suggestion, index) => (
                     <li
                       key={index}
-                      className={
-                        suggestion.facilityId === activeSuggestionIndex
-                          ? "active"
-                          : ""
-                      }
-                      onClick={(e) =>
-                        navigate(
-                          "/Sub_Park_Details" +
-                            `?facilityId=${encryptDataId(
-                              suggestion.facilityId
-                            )}`
-                        )
-                      }
+                      onClick={(e) => navigate(`/Search_card?query=${encodeURIComponent(suggestion)}`)}
                     >
-                      {suggestion.facilityname}
+                      {suggestion}
                     </li>
                   ))
                 ) : (
                   <li>No suggestions available</li>
                 )}
               </ul>
-            )} */}
+            )}
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
