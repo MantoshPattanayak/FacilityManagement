@@ -24,6 +24,7 @@ export default function ViewInventoryList() {
         }
         catch (error) {
             console.error(error);
+            setTableData([]);
         }
     }
 

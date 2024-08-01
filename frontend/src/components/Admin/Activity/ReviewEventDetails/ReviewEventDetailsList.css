@@ -1,6 +1,6 @@
 .ReviewEventRequest {
-    margin: 15px auto 10px auto;
-    width: 60%; /* Content width excluding AdminHeader and Footer */
+    margin: 80px auto 10px auto;
+    width: 100%; /* Content width excluding AdminHeader and Footer */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -11,15 +11,13 @@
 }
 
 .ReviewEventRequest .table-heading {
-    width: 60%;
+    width: 100%;
     display: flex;
-
-
-    justify-content: center;
+    justify-content: flex-start;
     font-size: 20px;
 }
 .ReviewEventRequest .table-heading h2 {
-    width: 60%;
+    width: 100%;
     align-items: center;
     font-weight: bold;
     height: 5vh;
@@ -34,7 +32,7 @@
     margin-top: 15px;
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding: 0 0 10px 0;
     gap: 10px;
@@ -43,7 +41,7 @@
 .ReviewEventRequest .search_input_field {
     padding: 5px;
     width: 25%;
-    border: 2px solid #c6c6c6;
+    border: 3px solid #c6c6c6;
     border-radius: 5px;
     transition: border-color 0.3s;
     outline: #c6c6c6;
@@ -61,7 +59,7 @@
 
 
 .ReviewEventRequest .search_input_calender {
-    border: 2px solid #c6c6c6;
+    border: 3px solid #c6c6c6;
     border-radius: 5px;
     padding: 4px;
     width: 30%;
@@ -74,8 +72,8 @@
 
 .ReviewEventRequest .eventdetails-tab {
     display: flex;
-    justify-content: flex-start;
-    width: 50%;
+    justify-content: space-between;
+    width: 90%;
     gap: 40px;
     margin-bottom: 10px;
 }
@@ -129,7 +127,7 @@
     display: flex;
     gap: 10px;
     font-size: 16px;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -168,7 +166,7 @@
 .ReviewEventRequest .Event-Details-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 5px;
     font-size: 16px;
     border: none;
@@ -274,11 +272,18 @@
         width: max-content;
     }
 
+    .ReviewEventRequest .search_input_field {
+        font-size: small;
+        padding: 5px;
+        margin-top: 6px;
+        width: 100%;
+    }
+
     .ReviewEventRequest .search_text_conatiner {
         width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
+        align-items: center;
     }
 
     .ReviewEventRequest .search_input_calender {
@@ -286,6 +291,7 @@
         border-radius: 5px;
         font-size: xx-small;
         padding: 2px;
+        width: 100%;
     }
 
 
@@ -324,7 +330,7 @@
     background: rgba(0, 0, 0, 0.75);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     z-index: 1000;
 }
 

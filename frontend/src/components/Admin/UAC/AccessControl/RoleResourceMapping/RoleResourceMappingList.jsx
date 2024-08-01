@@ -1,12 +1,11 @@
-import "../../../../../common/CommonTable.css";
 import "./RoleResourceMappingList.css";
 import AdminHeader from "../../../../../common/AdminHeader";
 import Footer from "../../../../../common/Footer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosHttpClient from "../../../../../utils/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
 // import { encryptData } from "../../../../../utils/encrypt"; // Assuming you have a utility function to encrypt the ID
 import { encryptData } from "../../../../../utils/encryptData";
 
@@ -15,40 +14,47 @@ const RoleResourceMappingList = () => {
   const [givenReq, setGivenReq] = useState("");
   const navigate = useNavigate();
 
-  async function fetchRoleResourceMappingListData() {
+  async function fetchRoleResourceMappingListData(givenReq) {
     try {
-      let res = await axiosHttpClient("ROLE_RESOURCE_VIEW_API", "get");
+      let res = await axiosHttpClient("ROLE_RESOURCE_VIEW_API", "post", { givenReq });
       setTableData(res.data.data);
       console.log(res.data.data);
-
     } catch (error) {
       console.error(error);
+      setTableData([]);
     }
-    console.log("object", tableData)
   }
 
+  function debounce(fn, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    }
+  }
+
+  const debouncedFetchRoleResourceMappingListData = useCallback(debounce(fetchRoleResourceMappingListData, 1000), [])
 
   useEffect(() => {
-    fetchRoleResourceMappingListData();
-  }, []);
+    debouncedFetchRoleResourceMappingListData(givenReq);
+  }, [givenReq, debouncedFetchRoleResourceMappingListData]);
 
   return (
     <>
       <AdminHeader />
-      <div className="Main_Conatiner_table">
-        <div className="headingHeader">
-          <div className="heading">
-            <div className="greenBar"></div>
-            <h1 className="heading-title">Role Resource Mapping List</h1>
-          </div>
+      <div className={`RoleResourceList`}>
+        <div className="table-heading">
+          <h2 className="">Role Resource mapping list</h2>
         </div>
 
-        <div className="search_text_conatiner2">
+        <div className="search_text_conatiner">
           <button
             className="search_field_button"
-            onClick={() => navigate("/UAC/RoleResource/CreateRoleResourceMapping")}
+            onClick={() => navigate("/UAC/RoleResource/View")}
           >
-            Create new role-resource mapping
+            <FontAwesomeIcon icon={faPlus} /> Create Role-Resource
           </button>
           <input
             type="text"
@@ -57,10 +63,11 @@ const RoleResourceMappingList = () => {
             placeholder="Search..."
             onChange={(e) => setGivenReq(e.target.value)}
           />
+          {/* <SearchDropdown /> */}
         </div>
 
         <div className="table_Container">
-          <table className="rrmlTh">
+          <table>
             <thead>
               <tr>
                 <th scope="col">Role Name</th>
@@ -84,11 +91,10 @@ const RoleResourceMappingList = () => {
                           : "NA"}
                       </td>
                       <td
-                        className={`${
-                          data.status === 1
-                            ? "active-status-rrml"
-                            : "Inactive-status-rrml"
-                        }`}
+                        className={`${data.status === 1
+                          ? "active-status-rrml"
+                          : "Inactive-status-rrml"
+                          }`}
                         data-label="Status"
                       >
                         {data.status === 1 && "Active"}
@@ -126,7 +132,6 @@ const RoleResourceMappingList = () => {
           </table>
         </div>
       </div>
-      {/* <Footer /> */}
     </>
   );
 };

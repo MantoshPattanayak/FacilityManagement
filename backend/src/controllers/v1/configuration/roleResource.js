@@ -297,18 +297,20 @@ let viewId = async (req, res) => {
 
 let viewRoleResource = async (req, res) => {
     try {
+        console.log(1)
         let limit = (req.body.page_size) ? req.body.page_size : 50;
         let page = (req.body.page_number) ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
-        let { givenReq } = req.body;
-
+        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
+        console.log(2, givenReq);
         let query =
             `select count(*) over() as totalCount,
         role_resource1.roleResourceId, 
         role1.roleName as role, 
         rm.name as resourceName, 
         rm2.name as parentResourceName, 
-        sm.statusId as status
+        sm.statusId as statusId,
+        sm.description as status
         from amabhoomi.rolemasters role1
         inner join amabhoomi.roleresources role_resource1 on role1.roleId = role_resource1.roleId
         inner join amabhoomi.resourcemasters rm on role_resource1.resourceId = rm.resourceId
@@ -325,7 +327,7 @@ let viewRoleResource = async (req, res) => {
         let findMatchRes = roleResourceData
         if (givenReq) {
             findMatchRes = roleResourceData.filter((allData) =>
-                allData.roleResourceId.includes(givenReq) ||
+                (!isNaN(givenReq) && allData.roleResourceId.includes(givenReq)) ||
                 allData.role.includes(givenReq) ||
                 allData.resourceName.includes(givenReq) ||
                 allData.status.includes(givenReq)
@@ -341,10 +343,10 @@ let viewRoleResource = async (req, res) => {
         //     status:await encrypt(allData.status)
 
         //    }))
-
-
-        res.status(statusCode.SUCCESS.code).json({ mesaage: 'role resource mapping list data', data: paginatedRoleResources });
-
+        if(paginatedRoleResources.length > 0)
+            res.status(statusCode.SUCCESS.code).json({ mesaage: 'role resource mapping list data', data: paginatedRoleResources });
+        else
+            res.status(statusCode.NOTFOUND.code).json({ mesaage: 'No role resource mapping list data', data: [] });
     }
     catch (err) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });

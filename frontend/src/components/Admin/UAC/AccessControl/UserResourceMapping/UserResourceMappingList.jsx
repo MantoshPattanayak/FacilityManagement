@@ -1,4 +1,3 @@
-import "../../../../../common/CommonTable.css";
 import "./UserResourceMappingList.css";
 import Footer from "../../../../../common/Footer";
 import { useEffect, useState } from "react";

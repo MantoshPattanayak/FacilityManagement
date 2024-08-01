@@ -24,6 +24,7 @@ export default function ViewFacilityTypeList() {
         }
         catch (error) {
             console.error(error);
+            setTableData([]);
         }
     }
 
