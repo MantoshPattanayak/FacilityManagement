@@ -142,577 +142,579 @@ function App() {
   return (
     <>
       {/* PUBLIC SECTION */}
-      <Provider store={appStore}>
-        <BrowserRouter basename={instance().baseName}>
-          <div>
-            {/* <AdminHeader /> */}
+      <AuthProvider>
+        <Provider store={appStore}>
+          <BrowserRouter basename={instance().baseName}>
+            <div>
+              {/* <AdminHeader /> */}
 
-            <Routes>
-              {/* HOME */}
+              <Routes>
+                {/* HOME */}
 
-              <Route path="/"
-                element={
-                  <React.Suspense fallback="Loading ......">
-                    <Landing />
+                <Route path="/"
+                  element={
+                    <React.Suspense fallback="Loading ......">
+                      <Landing />
+                    </React.Suspense>
+
+                  } />
+                {/* Facility_Reg and View_edit */}
+                <Route path="/Facility_Edit_View" element={<ProtectedRoute><Facility_Edit_View /></ProtectedRoute>} />
+                <Route path="/facility-registration" element={<ProtectedRoute><Facility_Reg /></ProtectedRoute>} />
+                <Route path="/facility-viewlist" element={<ProtectedRoute><Facility_ViewList /></ProtectedRoute>} />
+                <Route path="/PublicLoader" element={<PublicLoader />} />
+                <Route path="/facilities"
+                  element={
+                    <React.Suspense fallback='loading page ......'>
+                      <Main_Body_Park_Details />
+                    </React.Suspense>
+                  } />
+
+
+                <Route path="/Event_hostPage" element={<Event_hostPage />} />
+                <Route path="/Sub_Park_Details" element={
+                  <React.Suspense fallback="Loading page ...">
+                    <Sub_Park_Details />
                   </React.Suspense>
 
                 } />
-              {/* Facility_Reg and View_edit */}
-              <Route path="/Facility_Edit_View" element={<ProtectedRoute><Facility_Edit_View /></ProtectedRoute>} />
-              <Route path="/facility-registration" element={<ProtectedRoute><Facility_Reg /></ProtectedRoute>} />
-              <Route path="/facility-viewlist" element={<ProtectedRoute><Facility_ViewList /></ProtectedRoute>} />
-              <Route path="/PublicLoader" element={<PublicLoader />} />
-              <Route path="/facilities"
-                element={
-                  <React.Suspense fallback='loading page ......'>
-                    <Main_Body_Park_Details />
-                  </React.Suspense>
-                } />
+                <Route path="/BookingDetails" element={<BookingDetails />} />
+                <Route path="/About" element={<About />} />
+                <Route path="/History" element={<History />} />
+                <Route path="/Organogram" element={<Organogram />} />
+                <Route path="/Stakeholders" element={<Stakeholders />} />
+                <Route path="/StandOut" element={<StandOut />} />
+                <Route path="/faqs" element={<FqaPage />} />
 
+                {/* Search by place name  */}
+                <Route
+                  path="/Search_card"
+                  element={
+                    <Search_card />
+                  }
+                />
+                {/* <Route
+                  path="/activity-popup"
+                  element={
+                    <Activity_Preference_popup />
+                  }
+                /> */}
+                {/* Public (Book Parks)  */}
+                <Route
+                  path="/BookParks/Book_Now_Sport"
+                  element={
+                    <Book_Now_Sport />
+                  }
+                />
+                {/* Public (sport)  */}
+                <Route
+                  path="/BookParks/Book_Now"
+                  element={
+                    <Book_Now />
+                  }
+                />
+                <Route
+                  path="/BookEvent"
+                  element={
+                    <BookEvent />
+                  }
+                />
+                {/* Public (Add to Crad)  */}
+                <Route
+                  path="/cart-details"
+                  element={
+                    <React.Suspense fallback="Loading.....">
+                      <AddToCart />
+                    </React.Suspense>
 
-              <Route path="/Event_hostPage" element={<Event_hostPage />} />
-              <Route path="/Sub_Park_Details" element={
-                <React.Suspense fallback="Loading page ...">
-                  <Sub_Park_Details />
-                </React.Suspense>
+                  }
+                />
+                <Route
+                  path="/profile/booking-details/ticket"
+                  element={
+                    <Bokking_Bill />
+                  }
+                />
+                {/* Public (Book Details)  */}
+                <Route
+                  path="/profile/booking-details"
+                  element={
+                    <BookingDetails />
+                  }
+                />
+                {/* Public (Favorites)  */}
+                <Route
+                  path="/UserProfile/Favorites"
+                  element={
+                    <Favorites />
+                  }
+                />
+                {/* Public (ProfileHistory)  */}
+                <Route
+                  path="/UserProfile/ProfileHistory"
+                  element={
+                    <ProfileHistory />
+                  }
+                />
 
-              } />
-              <Route path="/BookingDetails" element={<BookingDetails />} />
-              <Route path="/About" element={<About />} />
-              <Route path="/History" element={<History />} />
-              <Route path="/Organogram" element={<Organogram />} />
-              <Route path="/Stakeholders" element={<Stakeholders />} />
-              <Route path="/StandOut" element={<StandOut />} />
-              <Route path="/faqs" element={<FqaPage />} />
+                {/* User-Profile */}
+                <Route
+                  path="/Profile"
+                  element={
+                    <Profile />
+                  }
+                />
 
-              {/* Search by place name  */}
-              <Route
-                path="/Search_card"
-                element={
-                  <Search_card />
-                }
-              />
-              {/* <Route
-                path="/activity-popup"
-                element={
-                  <Activity_Preference_popup />
-                }
-              /> */}
-              {/* Public (Book Parks)  */}
-              <Route
-                path="/BookParks/Book_Now_Sport"
-                element={
-                  <Book_Now_Sport />
-                }
-              />
-              {/* Public (sport)  */}
-              <Route
-                path="/BookParks/Book_Now"
-                element={
-                  <Book_Now />
-                }
-              />
-              <Route
-                path="/BookEvent"
-                element={
-                  <BookEvent />
-                }
-              />
-              {/* Public (Add to Crad)  */}
-              <Route
-                path="/cart-details"
-                element={
-                  <React.Suspense fallback="Loading.....">
-                    <AddToCart />
-                  </React.Suspense>
+                {/* gallery section */}
+                <Route
+                  path="/View_Gallery/Image_Gallery"
+                  element={
+                    <Image_Gallery />
+                  }
+                />
 
-                }
-              />
-              <Route
-                path="/profile/booking-details/ticket"
-                element={
-                  <Bokking_Bill />
-                }
-              />
-              {/* Public (Book Details)  */}
-              <Route
-                path="/profile/booking-details"
-                element={
-                  <BookingDetails />
-                }
-              />
-              {/* Public (Favorites)  */}
-              <Route
-                path="/UserProfile/Favorites"
-                element={
-                  <Favorites />
-                }
-              />
-              {/* Public (ProfileHistory)  */}
-              <Route
-                path="/UserProfile/ProfileHistory"
-                element={
-                  <ProfileHistory />
-                }
-              />
+                {/* Public User Login */}
+                <Route path="/login-signup" element={<Login />} />
+                <Route path="/login/SignUp" element={<SignUp />} />
+                <Route path="/ForgotPassword" element={<ForgotPassword />} />
 
-              {/* User-Profile */}
-              <Route
-                path="/Profile"
-                element={
-                  <Profile />
-                }
-              />
+                {/* use Section  */}
 
-              {/* gallery section */}
-              <Route
-                path="/View_Gallery/Image_Gallery"
-                element={
-                  <Image_Gallery />
-                }
-              />
+                {/* Events */}
+                <Route path="/events" element={<EventList />} />
+                <Route path="/events-details" element={<Details />} />
+                <Route path="/event-book" element={<Book_Event />} />
 
-              {/* Public User Login */}
-              <Route path="/login-signup" element={<Login />} />
-              <Route path="/login/SignUp" element={<SignUp />} />
-              <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                {/* ADMIN SECTION - Login */}
+                <Route path="/admin-login" element={<AdminLogin />} />
+                {/* ADMIN SECTION - Activity */}
 
-              {/* use Section  */}
+                <Route
+                  path="/Activity/ReviewUserRating"
+                  element={
+                    <ProtectedRoute>
+                      <ReviewUserRating />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Activity/ReviewEventDetailsList"
+                  element={
+                    <ProtectedRoute>
+                      <ReviewEventDetailsList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Activity/EventDetailsPage"
+                  element={
+                    <ProtectedRoute>
+                      <EventDetailsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Activity/AddNewNotification"
+                  element={
+                    <ProtectedRoute>
+                      <AddNewNotification />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Activity/ViewNotifications"
+                  element={
+                    <ProtectedRoute>
+                      <ViewNotifications />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Activity/EditNotification"
+                  element={
+                    <ProtectedRoute>
+                      <EditNotification />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Activity - Grievance START */}
+                <Route
+                  path="/activity/grievance"
+                  element={
+                    <ProtectedRoute>
+                      <ViewGrievanceList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/activity/assign-grievance"
+                  element={
+                    <ProtectedRoute>
+                      <AssignGrievance />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/activity/grievance-action"
+                  element={
+                    <ProtectedRoute>
+                      <ActionAgainstGrievance />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/grievance-feedback-form"
+                  element={
+                    <ProtectedRoute>
+                      <Grievance />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Advertising_with_us"
+                  element={
+                    <ProtectedRoute>
+                      <Advertising_with_us />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Activity - Grievance END */}
+                <Route
+                  path="/activity/gallery"
+                  element={
+                    <ProtectedRoute>
+                      <CreateNewGallery />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/activity/ViewGalleryList"
+                  element={
+                    <ProtectedRoute>
+                      <ViewGalleryList />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Activity Gallery Start */}
+                {/* Activity Gallery end */}
+                {/* ADMIN SECTION - UAC*/}
+                <Route
+                  path="/UAC/Resource/ListOfResources"
+                  element={
+                    <ProtectedRoute>
+                      <ListOfResources />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Resource/CreateResource"
+                  element={
+                    <ProtectedRoute>
+                      <CreateResource />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Resource/EditResource"
+                  element={
+                    <ProtectedRoute>
+                      <EditResource />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Role/ListOfRoles"
+                  element={
+                    <ProtectedRoute>
+                      <ListOfRoles />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Role/CreateRole"
+                  element={
+                    <ProtectedRoute>
+                      <CreateRole />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Role/EditRole"
+                  element={
+                    <ProtectedRoute>
+                      <EditRole />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Users/ListOfUsers"
+                  element={
+                    <ProtectedRoute>
+                      <ListOfUsers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Users/Create"
+                  element={
+                    <ProtectedRoute>
+                      <CreateNewUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Users/Edit"
+                  element={
+                    <ProtectedRoute>
+                      <EditUser />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Events */}
-              <Route path="/events" element={<EventList />} />
-              <Route path="/events-details" element={<Details />} />
-              <Route path="/event-book" element={<Book_Event />} />
+                {/* Facility regd. */}
+                <Route
+                  path="/Facility/Facility_Reg"
+                  element={
+                    <ProtectedRoute>
+                      <Facility_Reg />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Facility/Facility_ViewList"
+                  element={
+                    <ProtectedRoute>
+                      <Facility_ViewList />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Recource */}
+                <Route
+                  path="/UAC/Resources/ListOfResources"
+                  element={
+                    <ProtectedRoute>
+                      <ListOfResources />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Resources/CreateResource"
+                  element={
+                    <ProtectedRoute>
+                      <CreateResource />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Resources/EditDisplayResource"
+                  element={
+                    <ProtectedRoute>
+                      <EditDisplayResource />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* user Recource */}
+                <Route
+                  path="/UAC/Users/CreateUserResourceMapping"
+                  element={
+                    <ProtectedRoute>
+                      <CreateUserResourceMapping />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/Users/EditUserResourceMapping"
+                  element={
+                    <ProtectedRoute>
+                      <EditUserResourceMapping />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/UserResource/View"
+                  element={
+                    <ProtectedRoute>
+                      <UserResourceMappingList />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Role-Resource mapping  */}
+                <Route
+                  path="/UAC/RoleResource/CreateRoleResourceMapping"
+                  element={
+                    <ProtectedRoute>
+                      <CreateRoleResourceMapping />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/RoleResource/EditRoleResourceMapping"
+                  element={
+                    <ProtectedRoute>
+                      <EditRoleResourceMapping />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/UAC/RoleResource/View"
+                  element={
+                    <ProtectedRoute>
+                      <RoleResourceMappingList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-              {/* ADMIN SECTION - Login */}
-              <Route path="/admin-login" element={<AdminLogin />} />
-              {/* ADMIN SECTION - Activity */}
+                {/* DASHBOARD SECTION */}
+                <Route
+                  path="/Dashboard/AdminDashboard"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/Activity/ReviewUserRating"
-                element={
-                  <ProtectedRoute>
-                    <ReviewUserRating />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Activity/ReviewEventDetailsList"
-                element={
-                  <ProtectedRoute>
-                    <ReviewEventDetailsList />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Activity/EventDetailsPage"
-                element={
-                  <ProtectedRoute>
-                    <EventDetailsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Activity/AddNewNotification"
-                element={
-                  <ProtectedRoute>
-                    <AddNewNotification />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Activity/ViewNotifications"
-                element={
-                  <ProtectedRoute>
-                    <ViewNotifications />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Activity/EditNotification"
-                element={
-                  <ProtectedRoute>
-                    <EditNotification />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Activity - Grievance START */}
-              <Route
-                path="/activity/grievance"
-                element={
-                  <ProtectedRoute>
-                    <ViewGrievanceList />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/activity/assign-grievance"
-                element={
-                  <ProtectedRoute>
-                    <AssignGrievance />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/activity/grievance-action"
-                element={
-                  <ProtectedRoute>
-                    <ActionAgainstGrievance />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/grievance-feedback-form"
-                element={
-                  <ProtectedRoute>
-                    <Grievance />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Advertising_with_us"
-                element={
-                  <ProtectedRoute>
-                    <Advertising_with_us />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Activity - Grievance END */}
-              <Route
-                path="/activity/gallery"
-                element={
-                  <ProtectedRoute>
-                    <CreateNewGallery />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/activity/ViewGalleryList"
-                element={
-                  <ProtectedRoute>
-                    <ViewGalleryList />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Activity Gallery Start */}
-              {/* Activity Gallery end */}
-              {/* ADMIN SECTION - UAC*/}
-              <Route
-                path="/UAC/Resource/ListOfResources"
-                element={
-                  <ProtectedRoute>
-                    <ListOfResources />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Resource/CreateResource"
-                element={
-                  <ProtectedRoute>
-                    <CreateResource />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Resource/EditResource"
-                element={
-                  <ProtectedRoute>
-                    <EditResource />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Role/ListOfRoles"
-                element={
-                  <ProtectedRoute>
-                    <ListOfRoles />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Role/CreateRole"
-                element={
-                  <ProtectedRoute>
-                    <CreateRole />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Role/EditRole"
-                element={
-                  <ProtectedRoute>
-                    <EditRole />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Users/ListOfUsers"
-                element={
-                  <ProtectedRoute>
-                    <ListOfUsers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Users/Create"
-                element={
-                  <ProtectedRoute>
-                    <CreateNewUser />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Users/Edit"
-                element={
-                  <ProtectedRoute>
-                    <EditUser />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Facility regd. */}
-              <Route
-                path="/Facility/Facility_Reg"
-                element={
-                  <ProtectedRoute>
-                    <Facility_Reg />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Facility/Facility_ViewList"
-                element={
-                  <ProtectedRoute>
-                    <Facility_ViewList />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Recource */}
-              <Route
-                path="/UAC/Resources/ListOfResources"
-                element={
-                  <ProtectedRoute>
-                    <ListOfResources />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Resources/CreateResource"
-                element={
-                  <ProtectedRoute>
-                    <CreateResource />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Resources/EditDisplayResource"
-                element={
-                  <ProtectedRoute>
-                    <EditDisplayResource />
-                  </ProtectedRoute>
-                }
-              />
-              {/* user Recource */}
-              <Route
-                path="/UAC/Users/CreateUserResourceMapping"
-                element={
-                  <ProtectedRoute>
-                    <CreateUserResourceMapping />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/Users/EditUserResourceMapping"
-                element={
-                  <ProtectedRoute>
-                    <EditUserResourceMapping />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/UserResource/View"
-                element={
-                  <ProtectedRoute>
-                    <UserResourceMappingList />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Role-Resource mapping  */}
-              <Route
-                path="/UAC/RoleResource/CreateRoleResourceMapping"
-                element={
-                  <ProtectedRoute>
-                    <CreateRoleResourceMapping />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/RoleResource/EditRoleResourceMapping"
-                element={
-                  <ProtectedRoute>
-                    <EditRoleResourceMapping />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/UAC/RoleResource/View"
-                element={
-                  <ProtectedRoute>
-                    <RoleResourceMappingList />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/unauthorized" element={<UnauthorizedPage />} />
-
-              {/* DASHBOARD SECTION */}
-              <Route
-                path="/Dashboard/AdminDashboard"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Payment-razorPay */}
-              <Route
-                path="/paymentSection"
-                element={
-                  <ProtectedRoute>
-                    <PaymentHome />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Admin Traiff Page */}
-              <Route
-                path="/mdm/TariffDetails"
-                element={
-                  <ProtectedRoute>
-                    <TariffDetails />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Payment-razorPay */}
+                <Route
+                  path="/paymentSection"
+                  element={
+                    <ProtectedRoute>
+                      <PaymentHome />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Admin Traiff Page */}
+                <Route
+                  path="/mdm/TariffDetails"
+                  element={
+                    <ProtectedRoute>
+                      <TariffDetails />
+                    </ProtectedRoute>
+                  }
+                />
 
 
 
-              <Route
-                path="/mdm/ViewTariffList"
-                element={
-                  <ProtectedRoute>
-                    <ViewTariffList />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/mdm/Tariff_View_Details"
-                element={
-                  <ProtectedRoute>
-                    <Tariff_View_Details />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/ParkPayment"
-                element={
-                  <ProtectedRoute>
-                    <ParkPayment />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/common/AdminHeader"
-                element={
-                  <ProtectedRoute>
-                    <AdminHeader />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/common/CommonFrom"
-                element={
-                  <ProtectedRoute>
-                    <CommonFrom />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/mdm/ViewTariffList"
+                  element={
+                    <ProtectedRoute>
+                      <ViewTariffList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/mdm/Tariff_View_Details"
+                  element={
+                    <ProtectedRoute>
+                      <Tariff_View_Details />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/ParkPayment"
+                  element={
+                    <ProtectedRoute>
+                      <ParkPayment />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/common/AdminHeader"
+                  element={
+                    <ProtectedRoute>
+                      <AdminHeader />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/common/CommonFrom"
+                  element={
+                    <ProtectedRoute>
+                      <CommonFrom />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Footer pages */}
-              <Route
-                path="/ContactUs"
-                element={
-                  <ProtectedRoute>
-                    <ContactUs />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Footer pages */}
+                <Route
+                  path="/ContactUs"
+                  element={
+                    <ProtectedRoute>
+                      <ContactUs />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/Terms_ConditionPage"
-                element={
-                  <ProtectedRoute>
-                    <Terms_ConditionPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Disclaimer"
-                element={
-                  <ProtectedRoute>
-                    < Disclaimer />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/Terms_ConditionPage"
+                  element={
+                    <ProtectedRoute>
+                      <Terms_ConditionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Disclaimer"
+                  element={
+                    <ProtectedRoute>
+                      < Disclaimer />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/Privacy_Policy"
-                element={
-                  <ProtectedRoute>
-                    <Privacy_Policy />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/Partnerwithus"
-                element={
-                  <ProtectedRoute>
-                    <Partnerwithus />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/Privacy_Policy"
+                  element={
+                    <ProtectedRoute>
+                      <Privacy_Policy />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/Partnerwithus"
+                  element={
+                    <ProtectedRoute>
+                      <Partnerwithus />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/SpecialEvent"
-                element={
-                  <ProtectedRoute>
-                    <SpecialEvent />
-                  </ProtectedRoute>
-                }
-              />
-              {/** Master Data Management */}
-              <Route path="/mdm/view-services" element={<ProtectedRoute><ViewServicesList /></ProtectedRoute>} />
-              <Route path="/mdm/edit-services" element={<ProtectedRoute><EditService /></ProtectedRoute>} />
-              <Route path="/mdm/create-services" element={<ProtectedRoute><CreateService /></ProtectedRoute>} />
-              <Route path="/mdm/view-amenities" element={<ProtectedRoute><ViewAmenitiesList /></ProtectedRoute>} />
-              <Route path="/mdm/create-amenities" element={<ProtectedRoute><CreateNewAmenity /></ProtectedRoute>} />
-              <Route path="/mdm/edit-amenities" element={<ProtectedRoute><EditAmenity /></ProtectedRoute>} />
-              <Route path="/mdm/view-inventory" element={<ProtectedRoute><ViewInventoryList /></ProtectedRoute>} />
-              <Route path="/mdm/create-inventory" element={<ProtectedRoute><CreateInventory /></ProtectedRoute>} />
-              <Route path="/mdm/edit-inventory" element={<ProtectedRoute><EditInventory /></ProtectedRoute>} />
-              <Route path="/mdm/view-eventcategories" element={<ProtectedRoute><ViewEventCategoriesList /></ProtectedRoute>} />
-              <Route path="/mdm/create-eventcategories" element={<ProtectedRoute><CreateEventCategory /></ProtectedRoute>} />
-              <Route path="/mdm/edit-eventcategories" element={<ProtectedRoute><EditEventCategory /></ProtectedRoute>} />
-              <Route path="/mdm/view-facility-type-list" element={<ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute>} />
-              <Route path="/mdm/create-facility-type-list" element={<ProtectedRoute><CreateFacilityType /></ProtectedRoute>} />
-              <Route path="/mdm/edit-facility-type-list" element={<ProtectedRoute><EditFacilityType /></ProtectedRoute>} />
-              <Route path="/activity/view-staff-allocation" element={<ViewStaffAllocation />} />
-              <Route path="/activity/create-staff-allocation" element={<CreateStaffAllocation />} />
-              <Route path="/activity/edit-staff-allocation" element={<EditStaffAllocation />} />
-            </Routes>
-            <CommonFooter1 />
-          </div>
-          <ToastContainer />
-        </BrowserRouter>
-      </Provider>
+                <Route
+                  path="/SpecialEvent"
+                  element={
+                    <ProtectedRoute>
+                      <SpecialEvent />
+                    </ProtectedRoute>
+                  }
+                />
+                {/** Master Data Management */}
+                <Route path="/mdm/view-services" element={<ProtectedRoute><ViewServicesList /></ProtectedRoute>} />
+                <Route path="/mdm/edit-services" element={<ProtectedRoute><EditService /></ProtectedRoute>} />
+                <Route path="/mdm/create-services" element={<ProtectedRoute><CreateService /></ProtectedRoute>} />
+                <Route path="/mdm/view-amenities" element={<ProtectedRoute><ViewAmenitiesList /></ProtectedRoute>} />
+                <Route path="/mdm/create-amenities" element={<ProtectedRoute><CreateNewAmenity /></ProtectedRoute>} />
+                <Route path="/mdm/edit-amenities" element={<ProtectedRoute><EditAmenity /></ProtectedRoute>} />
+                <Route path="/mdm/view-inventory" element={<ProtectedRoute><ViewInventoryList /></ProtectedRoute>} />
+                <Route path="/mdm/create-inventory" element={<ProtectedRoute><CreateInventory /></ProtectedRoute>} />
+                <Route path="/mdm/edit-inventory" element={<ProtectedRoute><EditInventory /></ProtectedRoute>} />
+                <Route path="/mdm/view-eventcategories" element={<ProtectedRoute><ViewEventCategoriesList /></ProtectedRoute>} />
+                <Route path="/mdm/create-eventcategories" element={<ProtectedRoute><CreateEventCategory /></ProtectedRoute>} />
+                <Route path="/mdm/edit-eventcategories" element={<ProtectedRoute><EditEventCategory /></ProtectedRoute>} />
+                <Route path="/mdm/view-facility-type-list" element={<ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute>} />
+                <Route path="/mdm/create-facility-type-list" element={<ProtectedRoute><CreateFacilityType /></ProtectedRoute>} />
+                <Route path="/mdm/edit-facility-type-list" element={<ProtectedRoute><EditFacilityType /></ProtectedRoute>} />
+                <Route path="/activity/view-staff-allocation" element={<ViewStaffAllocation />} />
+                <Route path="/activity/create-staff-allocation" element={<CreateStaffAllocation />} />
+                <Route path="/activity/edit-staff-allocation" element={<EditStaffAllocation />} />
+              </Routes>
+              <CommonFooter1 />
+            </div>
+            <ToastContainer />
+          </BrowserRouter>
+        </Provider>
+      </AuthProvider>
     </>
   );
 }

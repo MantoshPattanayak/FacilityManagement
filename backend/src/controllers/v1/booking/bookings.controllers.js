@@ -300,6 +300,16 @@ let parkBooking = async (req, res) => {
          * 3	MULTIPURPOSE_GROUND
          * 6	EVENTS
          */
+
+        //decrypt each values of facility preference object
+        for (let [key, value] in facilityPreference) {
+            facilityPreference[key] = decrypt(value);
+        }
+        console.log("facilityPreference", facilityPreference);
+        return res.status(statusCode.SUCCESS.code).json({
+            data: facilityPreference
+        });
+
         if (entityTypeId == 1) {
             bookingTransactionForPark(entityId, facilityPreference);
         }
