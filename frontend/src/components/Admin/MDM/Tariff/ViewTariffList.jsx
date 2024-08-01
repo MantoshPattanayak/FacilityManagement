@@ -26,6 +26,7 @@ const ViewTariffList = () => {
         }
         catch (error) {
             console.error(error);
+            setTableData([]);
         }
     }
     // function to encrypt required data ----------------------------------------

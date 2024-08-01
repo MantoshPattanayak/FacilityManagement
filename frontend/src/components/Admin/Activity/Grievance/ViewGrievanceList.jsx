@@ -25,6 +25,7 @@ export default function ViewGrievanceList() {
         }
         catch (error) {
             console.error(error);
+            setTableData([]);
         }
     }
 

@@ -8,7 +8,7 @@ router.get('/dataLoad',authenticateToken,roleResource.dataload);
 
 router.post('/insertRoleResource',authenticateToken,roleResource.insertRoleResource)
 
-router.get('/viewRoleResource',authenticateToken,roleResource.viewRoleResource)
+router.post('/viewRoleResource',authenticateToken,roleResource.viewRoleResource)
 
 router.get('/autoSuggestionRoleResource/:givenReq',authenticateToken,roleResource.autoSuggestionForRoleResourceSearch)
 

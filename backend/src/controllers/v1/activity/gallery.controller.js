@@ -68,6 +68,8 @@ let fetchGalleryList = async (req, res) => {
         let limit = req.body.page_size ? req.body.page_size : 100;
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
+        let searchReq = req.body.searchReq ? req.body.searchReq : null;
+        console.log("search req", searchReq);
         // fetch gallery details
         let fetchGalleryRecords = await sequelize.query(`
             select g.galleryId, g.description, g.startDate, g.endDate, s.statusCode, f2.fileName, f2.url
@@ -77,12 +79,27 @@ let fetchGalleryList = async (req, res) => {
             inner join statusmasters s on s.statusId = g.statusId and s.parentStatusCode = 'RECORD_STATUS'
         `);
 
+        console.log("fetchGalleryRecords", fetchGalleryRecords[0]);
+        
+        let matchedData = fetchGalleryRecords;
+        if(searchReq) { // if record matches search string
+            matchedData = matchedData.filter((data) => {
+                return (
+                    data.description?.toLowerCase().includes(searchReq) ||
+                    data.statusCode?.toLowerCase().includes(searchReq) ||
+                    data.fileName?.toLowerCase().includes(searchReq) ||
+                    data.url?.toLowerCase().includes(searchReq)
+                );
+            })
+        }
+
+        console.log("matchedData", matchedData);
         //set data according to limit and offset
-        let paginatedFetchGalleryRecords = fetchGalleryRecords.slice(offset, limit + offset);
+        let paginatedFetchGalleryRecords = matchedData.slice(offset, limit + offset);
 
         res.status(statusCode.SUCCESS.code).json({
             message: "Gallery details",
-            data: paginatedFetchGalleryRecords[0].map((gallery) => {
+            data: paginatedFetchGalleryRecords[0]?.map((gallery) => {
                 return {
                     ...gallery, 
                     ['url']: encodeURI(gallery.url)
