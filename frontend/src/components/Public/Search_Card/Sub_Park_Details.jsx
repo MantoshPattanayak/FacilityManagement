@@ -44,6 +44,7 @@ import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
 import instance from "../../../../env";
 import { Navigate } from "react-router-dom";
 
+
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
   const [amenitiesData, setAmenitiesData] = useState([]);
@@ -251,6 +252,15 @@ const Sub_Park_Details = () => {
     return;
   }
 
+  // handeling back button
+  const handleBackClick = () => {
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else {
+      navigate(-1); // Go back to the previous page
+    }
+  };
+
   return (
     <div className="Sub_Manu_Conatiner">
       <PublicHeader />
@@ -283,7 +293,7 @@ const Sub_Park_Details = () => {
           <div className="back_button">
             <button
               className="back_btn bg-[rgba(0,0,0,0.8)]"
-              onClick={() => navigate(-1)}
+              onClick={handleBackClick}
             >
               <FontAwesomeIcon icon={faArrowLeftLong} />
               Back
