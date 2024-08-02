@@ -69,9 +69,9 @@ const FqaPage = () => {
                                         <span className="question-text"><button className="Radio_Button"> <FontAwesomeIcon icon={faQuestionCircle} className="question-icon" /></button>
                                            <h1 className="Question_name">{item.question}</h1>  
                                          </span>
-                                        <span className="icon">
-                                        <FontAwesomeIcon icon={activeIndex === index ? faMinus : faPlus} />
-                                        </span>
+                                        {/* <span className="icon">
+                                           <FontAwesomeIcon icon={activeIndex === index ? faMinus : faPlus} />
+                                        </span> */}
                                     </div>
                                     {activeIndex === index && (
                                         <div className="answer">
