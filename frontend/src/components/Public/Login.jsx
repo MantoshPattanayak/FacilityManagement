@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../Public/Login.css";
-import AdminHeader from "../../common/AdminHeader";
-import Footer from "../../common/Footer";
 // Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -10,7 +8,6 @@ import PublicHeader from "../../common/PublicHeader";
 import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import CommonFooter from "../../common/CommonFooter";
 // here import useDispatch to store the 
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from "../../utils/authSlice";
@@ -200,7 +197,7 @@ const Login = () => {
           {(otpGenerated == false) ?      //if otp is not generated then show send otp button
             (
               <div className="otp-btn" onClick={handleGenerateOTP}>
-                <button className="sendotp-btn" type="submit">
+                <button className="sendotp-btn_login" type="submit">
                   Send OTP
                 </button>
               </div>
@@ -208,7 +205,7 @@ const Login = () => {
             :
             (                             //if otp is not generated then show send otp button
               <div className="otp-btn" onClick={HandleSubmit}>
-                <button className="sendotp-btn" type="submit">
+                <button className="sendotp-btn_login" type="submit">
                   Submit
                 </button>
               </div>
@@ -219,7 +216,7 @@ const Login = () => {
             (otpGenerated == true) ?
               ((timer === 0) ? (
                 <div className="otp-btn" onClick={handleGenerateOTP}>
-                  <button className="sendotp-btn" type="submit">
+                  <button className="sendotp-btn_login" type="submit">
                     Resend OTP
                   </button>
                 </div>

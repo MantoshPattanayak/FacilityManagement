@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { encryptData } from "../../utils/encryptData.js";
 import ShimmerUI from "./Search_Card/ShimmerUI.jsx";
 import instance from "../../../env.js";
+import dummyimage from "../../assets/dummyBlankImage.png"
 
 
 function Search_Card() {
@@ -237,7 +238,7 @@ function Search_Card() {
             <div className="carousel-container">
               <div
                 className="carousel-images"
-                style={{ transform: `translateX(-${section.currentIndex * 420}px)` }} // Adjust transform value
+                style={{ width: 'auto', transform: `translateX(-${section.currentIndex * 420}px)` }} // Adjust transform value
               >
                 {section.data.map((d, i) => (
                   
@@ -252,7 +253,7 @@ function Search_Card() {
                   >
                     <img className="Card_img"
                 
-                    src={`${instance().baseURL}/static${d.url}`} alt="Park" /> {/* Updated to use imageURL from data */}
+                    src={`${instance().baseURL}/static${d.url}`} alt={"image"} /> {/* Updated to use imageURL from data */}
                     <div className="card_text">
                       <span className="Name_location">
                         <h2 className="park_name">{d.facilityname}</h2>

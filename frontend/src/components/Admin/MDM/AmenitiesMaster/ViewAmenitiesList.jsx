@@ -25,6 +25,7 @@ export default function ViewAmenitiesList() {
     }
     catch (error) {
       console.error(error);
+      setTableData([]);
     }
   }
 

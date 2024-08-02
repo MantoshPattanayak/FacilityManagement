@@ -17,6 +17,10 @@
   .m-auto {
     margin: auto; 
   }
+
+  /* .carousel-images{
+    width: auto;
+  } */
   
   .heading-text {
     text-align: center;
@@ -126,6 +130,7 @@
   .Card_img {
     border-radius: 15px;
     height: 20vh;
+    min-width: 14vw;
     width: 100%;
     object-fit: cover;
   }

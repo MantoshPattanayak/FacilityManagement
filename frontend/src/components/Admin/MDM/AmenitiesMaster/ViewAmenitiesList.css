@@ -3,7 +3,7 @@
     width: 100%; /* Content width excluding AdminHeader and Footer */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     min-height: 50vh;
     padding: 0 20px; /* Added padding for better spacing */

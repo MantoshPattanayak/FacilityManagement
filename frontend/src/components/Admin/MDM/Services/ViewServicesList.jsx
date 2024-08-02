@@ -24,6 +24,7 @@ export default function ViewServicesList() {
         }
         catch (error) {
             console.error(error);
+            setTableData([]);
         }
     }
 

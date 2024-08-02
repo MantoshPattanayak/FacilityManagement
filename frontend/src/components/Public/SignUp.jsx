@@ -323,7 +323,7 @@ const SignUp = () => {
                                 <input className='input-field' type="text" name="Mobile" value={mobileNumber} placeholder='Enter Mobile Number' onChange={(e) => setMobileNumber(e.target.value)} />
                             </div>
                             <div className="otp-btn" onClick={handleSignUp}>
-                                <button className="sendotp-btn" >Send OTP</button>
+                                <button className="sendotp-btn_login" >Send OTP</button>
                             </div>
                             {/* Option for SignIn */}
                             <div className="no-account">

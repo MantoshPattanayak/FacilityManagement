@@ -269,7 +269,7 @@ const checkout =  async (req, res) => {
     if(transaction) await transaction.rollback();
     console.error('Error creating order with Razorpay:', error);
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-      message:err.message
+      message:error.message
     })
   }
 }
