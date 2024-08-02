@@ -1,58 +1,113 @@
-/* Add this CSS to your Login.css file */
+/* General container styling */
 .Main_container_Login {
     width: 100%;
-     background-color: #F2FBF4;
+  height: auto;
+ 
     display: flex;
-  
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-}
-.signup-container{
-    background-color:white;
- 
-}
-.login-options{
-display: flex;
-align-items: center;
-}
-.forgot-password {
-    margin-top: 10px;
-    text-align: left;
-    font-size: 14px;
-    color:#007bff ;
+    padding: 10px;
 }
 
-/* Login with OTP */
-.login-otp {
-    margin-top: 10px;
-    margin-left: auto;
-    font-size: 14px;
-    color:#007bff ;
+/* Signup container styling */
+.signup-container {
+    background-color: #ffffff; /* White background for form */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 40px; /* Form padding */
+    width: 100%;
+    max-width: 400px; /* Max width for the form */
+    transition: all 0.3s ease-in-out;
 }
 
-/* I don't have an account */
-.no-account {
+/* Input field styling */
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 16px;
+    border-radius: 8px; /* Rounded input corners */
+    border: 1px solid #d1d5db; /* Light gray border */
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Focused input field styling */
+.input-field:focus {
+    border-color: #176BFB; /* Blue border on focus */
+    box-shadow: 0 0 0 4px rgba(23, 107, 251, 0.1); /* Light blue shadow */
+}
+
+/* Label styling */
+.text label {
+    font-size: 20px;
+    color: #333333; /* Dark text color */
+    margin-bottom: 5px;
+    /* display: block; */
+    font-weight: 600;
+}
+
+/* Button styling */
+.sendotp-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #176BFB; /* Blue background */
+    color: #ffffff; /* White text color */
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.sendotp-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.otp-btn {
     margin-top: 20px;
     text-align: center;
 }
 
-.no-account p {
-    margin-bottom: 10px;
+.bg-gray-400 {
+    background-color: #cbd5e0; /* Disabled button background */
 }
 
-.no-account a {
-    font-weight: bold;
-    color: #007bff; /* Adjust color as needed */
+/* Login options and no account styling */
+.login-options, .no-account {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.login-otp, .no-account a {
+    font-size: 14px;
+    color: #176BFB; /* Blue text color */
     text-decoration: none;
+    transition: color 0.3s ease-in-out;
 }
 
-.no-account a:hover {
+.login-otp:hover, .no-account a:hover {
+    color: #0056b3; /* Darker blue on hover */
     text-decoration: underline;
 }
 
-.input-field:focus {
-    border: 2px solid #405cf5;
-    outline: none;
+/* Responsive design */
+@media (max-width: 768px) {
+    .signup-container {
+        padding: 20px;
+        box-shadow: none; /* Remove shadow on small screens */
+        border-radius: 8px;
+    }
+
+    .sendotp-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .input-field {
+        padding: 10px;
+        font-size: 14px;
+    }
 }

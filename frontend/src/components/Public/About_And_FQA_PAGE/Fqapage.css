@@ -1,54 +1,60 @@
-.FQA_Main_Conatiner{
 
+.FQA_Main_Conatiner {}
+
+.Fqa_Child_Conatiner {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-.Fqa_Child_Conatiner{
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-.Fqa_Child_Ask_QUESTION{
+
+.Fqa_Child_Ask_QUESTION {
   display: flex;
   height: 40vh;
   padding-top: 50px;
   justify-content: space-evenly;
   background-color: hsl(155, 49%, 86%);
 }
-.Fqa_Child_Ask_QUESTION_text{
-    margin-top: 50px;
-}
-.FQA_IMAGE{
-    height: 30vh;
-    margin-top: 20px;
- 
-}
-.FQA_TEXT{
-    font-size: 50px;
-    font-style: italic;
-    font-weight: 600;
-    color: hsl(20deg 4.92% 11.96%);
-}
-.Have_q_text{
-    color:hsl(0, 1%, 18%) ;
-    font-weight: 400;
 
- 
+.Fqa_Child_Ask_QUESTION_text {
+  margin-top: 50px;
 }
 
-.freq_question{
-    font-size: 30px;
-    text-align: center;
-    font-weight: 600;
-    color: rgb(63, 63, 63);
+.FQA_IMAGE {
+  height: 30vh;
+  margin-top: 20px;
+
 }
-.Freq_ask_conatiner{
- 
+
+.FQA_TEXT {
+  font-size: 50px;
+  font-style: italic;
+  font-weight: 600;
+  color: hsl(20deg 4.92% 11.96%);
 }
+
+.Have_q_text {
+  color: hsl(0, 1%, 18%);
+  font-weight: 400;
+
+
+}
+
+.freq_question {
+  font-size: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: rgb(63, 63, 63);
+}
+
+.Freq_ask_conatiner {}
+
 .faq-section {
   max-width: 800px;
   margin: 0 auto;
- 
+
 }
-.fqa-body{
+
+.fqa-body {
   background-image: url('../../../assets/faq_ing.png');
   width: 100%;
   height: 100vh;
@@ -101,22 +107,77 @@
 .answer p {
   margin: 0;
 }
+
 .Radio_Button {
-    background-color: #e82c88;
-    border: none;
-    border-radius: 100%;
-    padding: 5px; /* Adjust padding as needed */
+  background-color: #e82c88;
+  border: none;
+  border-radius: 100%;
+  padding: 5px;
+  /* Adjust padding as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.question-icon {
+  color: #fff;
+
+}
+
+.Question_name {
+  font-size: 17px;
+  color: rgb(72, 71, 71);
+}
+
+/* css for Mobile  */
+@media only screen and (max-width: 768px) {
+  .Fqa_Child_Ask_QUESTION {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    height: 45vh;
+    padding-top: 50px;
+    justify-content: space-evenly;
+    background-color: hsl(155, 49%, 86%);
   }
-  
-  .question-icon {
-    color: #fff;
-  
+
+  .Fqa_Child_Ask_QUESTION_text {
+    margin-top: 50px;
   }
-  .Question_name{
+
+  .FQA_IMAGE {
+    height: 20vh;
+    margin-top: 70px;
+    margin-right: 40px;
+
+  }
+
+  .FQA_TEXT {
+    font-size: 25px;
+    font-style: italic;
+    font-weight: 600;
+    color: hsl(20deg 4.92% 11.96%);
+  }
+
+  .Have_q_text {
+    color: hsl(0, 1%, 18%);
+    font-weight: 400;
+    font-size: 10px;
+  }
+
+  .freq_question {
+    font-size: 25px;
+
+  }
+
+  .faq-title {
+    text-align: center;
     font-size: 17px;
-    color: rgb(72, 71, 71);
   }
+
+  .faq-container {
+    margin-top: 20px;
+    width: auto;
+    margin: 10px;
+
+  }
+}

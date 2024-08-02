@@ -11,6 +11,7 @@
   margin: 5vh auto;
   padding: 3rem 5rem;
   max-width: 1200px;
+ 
 
 }
 
@@ -31,17 +32,13 @@
 }
 
 .Cart_details_container {
-
   padding: 8px;
   background-color: rgb(249, 249, 249);
-
-
   border-radius: 4px;
 }
 
 .Cart_details_container1 {
   height: 5vh;
-
   margin-bottom: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -223,4 +220,207 @@ color: #1c1c1c;
 .mssing_cart_image {
   display: flex;
   justify-content: center;
+}
+
+/* Response Media Query ..... */
+@media screen and (max-width: 760px){
+  .Add_To_Card_Child_conatiner9 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    column-gap: 0rem;
+    margin: 5vh auto;
+    padding: 2rem 0rem;
+    width: 550px;
+  }
+  .park_image_cart {
+    height: 120px;
+    width: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  .Cart_details {
+    display: flex;
+    gap: 10px;
+    border: 1px solid rgb(224, 224, 224);
+    margin-bottom: 10px;
+  }
+  .Cart_details_container {
+    padding: 4px;
+    background-color: rgb(249, 249, 249);
+    border-radius: 4px;
+  }
+  
+  .Cart_details_container1 {
+    height: 10vh;
+    margin-bottom: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .cart_items_text {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333333;
+    text-shadow: #333333 5px;
+    padding: 8px;
+  }
+  
+  .text_contant_details_cart {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .park_name_date {
+    display: flex;
+    gap: 50px;
+  
+  }
+  
+  .park_Booking_Date {
+    font-size: 10px;
+    color: #757575;
+  }
+  
+  .Details_cart_details h1 {
+    font-size: 13px;
+    color: #212121;
+    margin: 5px 0;
+  }
+  .p_tag_text{
+    font-size: 12px;
+  }
+  
+.Details_cart_details h1 {
+  font-size: 12px;
+  color: #212121;
+  margin: 1px 0;
+}
+
+/* Save later container */
+.Save_remove_button {
+  display: flex;
+  gap: 15px;
+}
+
+.Save_Remove_Button {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d3d3d;
+}
+/* bill*/
+.Booking_Bill_Mian_Conatiner{
+  width:70%;
+  height: 25vh;
+  border-radius: 4px;
+  margin-top: 40px;
+
+}
+.approve-button{
+  font-size: 12px;
+  padding: 8px;
+  margin-right: 20px;
+}
+}
+/*  for tab  */
+@media screen and (max-width: 1160px){
+  .Add_To_Card_Child_conatiner9 {
+    display: flex;
+    justify-content: center;
+    column-gap: 0rem;
+    margin: 5vh auto;
+    padding: 2rem 0rem;
+    width: 600px;
+  }
+  .park_image_cart {
+    height: 120px;
+    width: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  .Cart_details {
+    display: flex;
+    gap: 10px;
+    border: 1px solid rgb(224, 224, 224);
+    margin-bottom: 10px;
+  }
+  .Cart_details_container {
+    padding: 4px;
+    background-color: rgb(249, 249, 249);
+    border-radius: 4px;
+  }
+  
+  .Cart_details_container1 {
+    height: 5vh;
+    margin-bottom: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .cart_items_text {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333333;
+    text-shadow: #333333 5px;
+    padding: 8px;
+  }
+  
+  .text_contant_details_cart {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .park_name_date {
+    display: flex;
+    gap: 50px;
+  
+  }
+  
+  .park_Booking_Date {
+    font-size: 12px;
+    color: #757575;
+  }
+  
+  .Details_cart_details h1 {
+    font-size: 13px;
+    color: #212121;
+    margin: 5px 0;
+  }
+  .p_tag_text{
+    font-size: 12px;
+  }
+  
+.Details_cart_details h1 {
+  font-size: 12px;
+  color: #212121;
+  margin: 1px 0;
+}
+
+/* Save later container */
+.Save_remove_button {
+  display: flex;
+  gap: 15px;
+}
+
+.Save_Remove_Button {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d3d3d;
+}
+/* bill*/
+.Booking_Bill_Mian_Conatiner{
+  width:40%;
+  height: 25vh;
+  border-radius: 4px;
+  margin-top: 40px;
+
+}
+.approve-button{
+  font-size: 12px;
+  padding: 8px;
+  margin-right: 20px;
+}
+.Pay_Now_Buttton {
+  height: 6vh;
+}
 }

@@ -159,7 +159,7 @@ const AdminLogin = () => {
           </div>
           <br />
           <div className="otp-btn" onClick={HandleSubmit}>
-            <button className="sendotp-btn" type="submit">
+            <button className="sendotp-btn_login" type="submit">
               Submit
             </button>
           </div>
