@@ -127,7 +127,6 @@ import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
 const ProtectedProfile = withAuth(Profile);
-
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
   return (
@@ -190,8 +189,7 @@ function App() {
                 <Route path="/Activity/EventDetailsPage" element={<React.Suspense fallback="loading page "><ProtectedRoute><EventDetailsPage /></ProtectedRoute></React.Suspense>} />
                 <Route path="/Activity/AddNewNotification" element={<React.Suspense fallback="Loading page ..."> <ProtectedRoute> <AddNewNotification /> </ProtectedRoute> </React.Suspense>} />
                 <Route path="/Activity/ViewNotifications" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewNotifications /></ProtectedRoute></React.Suspense>} />
-                <Route
-                  path="/Activity/EditNotification" element={<React.Suspense fallback="loading page "><ProtectedRoute><EditNotification /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Activity/EditNotification" element={<React.Suspense fallback="loading page "><ProtectedRoute><EditNotification /></ProtectedRoute></React.Suspense>} />
                 {/* Activity - Grievance START */}
                 <Route path="/activity/grievance" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewGrievanceList /></ProtectedRoute> </React.Suspense>} />
                 <Route path="/activity/assign-grievance" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><AssignGrievance /></ProtectedRoute></React.Suspense>} />
