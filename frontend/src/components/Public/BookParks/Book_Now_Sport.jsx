@@ -37,6 +37,8 @@ const Book_Now_Sport = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const amount = 10;
+    const [isDisabled, setIsDisabled] = useState(true);
+    const [errors, setErrors] = useState({});
 
     // Here Increment ------------------------------------------------
     const handleDecrement = () => {
@@ -93,12 +95,12 @@ const Book_Now_Sport = () => {
             console.log("formData handleSubmitAndProceed", modifiedFormData);
             const validationError = validation(modifiedFormData);
             let facilityPreference = {
-                totalMembers:     encryptData(modifiedFormData.facilityPreference.playersLimit),
-                amount:           encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
-                bookingDate:      encryptData(modifiedFormData.facilityPreference.bookingDate),
-                startTime:        encryptData(modifiedFormData.facilityPreference.startTime),
-                endTime:          encryptData(modifiedFormData.facilityPreference.endTime),
-                sports:           encryptData(modifiedFormData.facilityPreference.sports)
+                totalMembers: encryptData(modifiedFormData.facilityPreference.playersLimit),
+                amount: encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
+                bookingDate: encryptData(modifiedFormData.facilityPreference.bookingDate),
+                startTime: encryptData(modifiedFormData.facilityPreference.startTime),
+                endTime: encryptData(modifiedFormData.facilityPreference.endTime),
+                sports: encryptData(modifiedFormData.facilityPreference.sports)
             };
             console.log("facilityPreference", facilityPreference);
             if (Object.keys(validationError).length <= 0) {
@@ -134,12 +136,12 @@ const Book_Now_Sport = () => {
         console.log("formData handleSubmitAndProceed", modifiedFormData);
         const validationError = validation(modifiedFormData);
         let facilityPreference = {
-            totalMembers : encryptData(modifiedFormData.facilityPreference.playersLimit),
-            amount       : encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
-            bookingDate  : encryptData(modifiedFormData.facilityPreference.bookingDate),
-            startTime    : encryptData(modifiedFormData.facilityPreference.startTime),
-            endTime      : encryptData(modifiedFormData.facilityPreference.endTime),
-            sports       : encryptData(modifiedFormData.facilityPreference.sports)
+            totalMembers: encryptData(modifiedFormData.facilityPreference.playersLimit),
+            amount: encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
+            bookingDate: encryptData(modifiedFormData.facilityPreference.bookingDate),
+            startTime: encryptData(modifiedFormData.facilityPreference.startTime),
+            endTime: encryptData(modifiedFormData.facilityPreference.endTime),
+            sports: encryptData(modifiedFormData.facilityPreference.sports)
         };
         console.log("facilityPreference", facilityPreference);
         if (Object.keys(validationError).length == 0) {
@@ -152,7 +154,7 @@ const Book_Now_Sport = () => {
                 console.log("submit and response", res);
                 let bookingId = res.data.data.facilityBookingId;
                 let entityTypeId = modifiedFormData.entityTypeId;
-                
+
                 toast.success("Playground has been booked successfully.", {
                     autoClose: 3000, // Toast timer duration in milliseconds
                     onClose: () => {
@@ -240,12 +242,24 @@ const Book_Now_Sport = () => {
         if (!value.facilityPreference.endTime) {
             err.endTime = "Please Select End Time"
         }
-        if (!value.facilityPreference.playersLimit) {
-            err.playersLimit = "Please Select players Limit"
+        if (!value.facilityPreference.playersLimit && value.facilityPreference.playersLimit > 40) {
+            err.playersLimit = "Please enter players Limit upto 40."
         }
         console.log('error', err);
+        setErrors(err);
         return err;
     }
+    // on formData change, refresh screen
+    useEffect(() => {
+        console.log("formData", formData);
+        let err = validation(formData);
+        if(Object.keys(err).length > 0)
+            setIsDisabled(true);
+        else
+            setIsDisabled(false);
+    }, [formData])
+
+    useEffect(() => {console.log("isDisabled in useEffect", isDisabled)}, [isDisabled]);
     //  Return (jsx) -------------------------------------------------------------
     return (
         <div className="Book_sport_Main_conatiner">
@@ -363,19 +377,50 @@ const Book_Now_Sport = () => {
                         </form>
                     </div>
                     <div className="Button_Conatiner_Sport">
-                        <button type="submit" class="approve-button"
+                        <button type="submit" class="add-to-cart-button"
                             onClick={HandleAddtoCart}
+                            disabled={isDisabled}
                         >
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        <RazorpayButton
+                        {/* <RazorpayButton
                             amount={amount * formData.facilityPreference.playersLimit}
                             currency={"INR"}
                             description={"Pay now"}
                             onSuccess={handlePaymentSuccess}
                             onFailure={handlePaymentFailure}
-                        />
+                        /> */}
+                        {
+                            isDisabled ?
+                                <button
+                                    className="add-to-cart-button"
+                                    disabled={isDisabled}
+                                >
+                                    <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(amount * formData.facilityPreference.playersLimit).toFixed(2)}
+                                </button>
+                                : <RazorpayButton
+                                    amount={amount * formData.facilityPreference.playersLimit}
+                                    currency={"INR"}
+                                    description={"Book now"}
+                                    onSuccess={handlePaymentSuccess}
+                                    onFailure={handlePaymentFailure}
+                                    disabled={isDisabled}
+                                    data={{
+                                        entityId: encryptData(formData.entityId),
+                                        entityTypeId: encryptData(formData.entityTypeId),
+                                        facilityPreference: {
+                                            totalMembers: encryptData(formData.facilityPreference.playersLimit),
+                                            amount: encryptData(amount * formData.facilityPreference.playersLimit),
+                                            bookingDate: encryptData(formData.facilityPreference.bookingDate),
+                                            startTime: encryptData(formData.facilityPreference.startTime),
+                                            endTime: encryptData(formData.facilityPreference.endTime),
+                                            sports: encryptData(formData.facilityPreference.sports)
+                                        },
+                                        userCartId: null
+                                    }}
+                                />
+                        }
                     </div>
                 </div>
             </div>
