@@ -157,7 +157,6 @@ const Login = () => {
   return (
     <div className="Main_container_Login">
       <PublicHeader />
-
       <div className="signup-container">
         <form className="context">
           <div className="inputs">
@@ -197,7 +196,7 @@ const Login = () => {
           {(otpGenerated == false) ?      //if otp is not generated then show send otp button
             (
               <div className="otp-btn" onClick={handleGenerateOTP}>
-                <button className="sendotp-btn_login" type="submit">
+                <button className="sendotp-btn_login1" type="submit">
                   Send OTP
                 </button>
               </div>
