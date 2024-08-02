@@ -143,7 +143,7 @@ const Landing = () => {
   // here Gallery Image -------------------------------
   const [GalleryImage, setGalleryImage] = useState([]);
   // show live location ----
- 
+
   // set loader-------------------------------------------
   const [loading, setLoading] = useState(false); // Add loading state
   // --------------Explore new Activities-------------------------------------------------------------
@@ -370,7 +370,23 @@ const Landing = () => {
       setLoading(false); // Stop loading
     }
   }
-
+/// remove (Clean map load)
+useEffect(() => {
+  // Cleanup Google Maps script on unmount or when component reloads
+  return () => {
+    if (window.google && window.google.maps) {
+      const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+      if (script) {
+        script.parentNode.removeChild(script);
+      }
+      window.google.maps = null;
+    }
+  };
+}, []);
+const handleMapLoad = () => {
+  // The map is fully loaded, now we can fetch nearby facilities
+  getNearbyFacilities();
+};
 
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
@@ -413,7 +429,7 @@ const Landing = () => {
     setSelectedParkId(facilityId);
   };
   // Mark Live location Name ---
- 
+
   const [selectedButton, setSelectedButton] = useState(1);
   // Function to handle setting facility type ID and updating search input value ---------------------------
   const handleParkLogoClick = (typeid) => {
@@ -560,6 +576,9 @@ const Landing = () => {
       setShowTour(false);
     }
   };
+
+
+
 
   return (
     <div className="landingcontainer">
@@ -784,31 +803,31 @@ const Landing = () => {
               </div>
             </div>
           </div>
-          <LoadScript googleMapsApiKey={apiKey}>
+          <LoadScript googleMapsApiKey={apiKey} >
             <GoogleMap
               mapContainerStyle={{
                 height: "450px",
                 width: "100%",
-                ...(isMobile && { height: "280px" }),
               }}
               center={defaultCenter}
               zoom={12}
+              onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
               {loading ? (
                 <div>Loading...</div>
               ) : (
                 userLocation && (
                   <Circle
-                  center={{ lat: userLocation.latitude, lng: userLocation.longitude }}
-                  radius={500} // Radius in meters
-                  options={{
-                    fillColor: 'red',
-                    fillOpacity: 1.11,
-                    strokeColor: 'blue',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 12,
-                  }}
-                />
+                    center={{ lat: userLocation.latitude, lng: userLocation.longitude }}
+                    radius={500} // Radius in meters
+                    options={{
+                      fillColor: "red",
+                      fillOpacity: 0.3,
+                      strokeColor: "blue",
+                      strokeOpacity: 0.8,
+                      strokeWeight: 2,
+                    }}
+                  />
                 )
               )}
               {/* Render markers */}
@@ -816,8 +835,7 @@ const Landing = () => {
                 <Marker
                   key={index}
                   position={{ lat: location.latitude, lng: location.longitude }}
-
-                  onClick={() => handleMarkerClick(location.facilityId)} // Call handleMarkerClick function with parkId when marker is clicked
+                  onClick={() => handleMarkerClick(location.facilityId)} // Call handleMarkerClick function with facilityId when marker is clicked
                 />
               ))}
               {/* Show InfoWindow for selected location */}
@@ -829,12 +847,12 @@ const Landing = () => {
                     lng: selectedLocationDetails.longitude,
                   }}
                   onCloseClick={() => {
-                    setSelectedParkId(null);
                     setSelectedLocationDetails(null);
                   }}
                 >
                   <div>
-                    <h3>Park Name: {selectedLocationDetails.facilityname}</h3>
+                    <h3>Facility Name: {selectedLocationDetails.facilityName}</h3>
+                    <p>Distance: {selectedLocationDetails.distance} meters</p>
                   </div>
                 </InfoWindow>
               )}

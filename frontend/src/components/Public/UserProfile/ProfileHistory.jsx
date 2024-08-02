@@ -78,7 +78,6 @@ const ProfileHistory = () => {
       }
     }
   }
-
   function handleLogout(e) {
     // logOutUser(e);
     dispatch(Logout());
