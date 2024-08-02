@@ -6,8 +6,9 @@ import Logo from '../../src/assets/ama_bhoomi_logo_odia.jpeg';
 import { decryptData, encryptData } from "../utils/encryptData";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import './RazorpayButton.css';
 
-const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, isDisabled }) => {
+const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, isDisabled, data }) => {
   // dynamically load the script in the component
   useEffect(() => {
     const script = document.createElement('script');
@@ -27,9 +28,17 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
     } = await axiosHttpClient("FETCH_RAZORPAY_API_KEY", "get");
     // console.log('apiKey', key);
 
+    /**
+     * data = {
+     *  entityId, entityTypeId, facilityPreference, userCartId (ref from cartTable)
+     * }
+     */
+
+    console.log("data in razorpay btn", data);
     // create RAZORPAY order
     const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { 
-      amount : encryptData(amount)
+      amount : encryptData(amount),
+      data
     });
     // console.log("order", order);
 
@@ -93,7 +102,7 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
 
   return (
     <>
-      <button className="approve-button" onClick={checkoutHandler} disabled={isDisabled}>
+      <button className="razorpay-button" onClick={checkoutHandler} disabled={isDisabled}>
         <FontAwesomeIcon icon={faCreditCard} />&nbsp; Pay Now &nbsp;<FontAwesomeIcon icon={faIndianRupeeSign} />{parseFloat(amount).toFixed(2)}
       </button>
       <ToastContainer />
