@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        orderItemId:{
+            type: DataTypes.INTEGER,
+        },
         eventId: {
             type: DataTypes.INTEGER,
             allowNull: true
