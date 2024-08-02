@@ -1,106 +1,122 @@
 /* Css of Top image (header)  (Set image and Write text) ------------------------------------------------------------------------ */
 .Sub_Manu_Conatiner {
-    padding-top: 50px;
+  padding-top: 50px;
 }
 
 .Header_Img {
-    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/bg4_park.png");
-    height: 30vh;
-    background-size: cover;
-    background-repeat: no-repeat;
-
-}
-.playground_header_image{
-    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Sport.png");
-    height: 30vh;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-.MulitGroud{
-    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/MultiPark.jpg");
-    height: 30vh;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-.BlueWays{
-  background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Blue_ways_photo.png");
+  background-image: linear-gradient(
+      10deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.2)
+    ),
+    url("../../../assets/bg4_park.png");
   height: 30vh;
   background-size: cover;
   background-repeat: no-repeat;
 }
-.park_Name1{
+.playground_header_image {
+  background-image: linear-gradient(
+      10deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.2)
+    ),
+    url("../../../assets/Sport.png");
+  height: 30vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.MulitGroud {
+  background-image: linear-gradient(
+      10deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.2)
+    ),
+    url("../../../assets/MultiPark.jpg");
+  height: 30vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.BlueWays {
+  background-image: linear-gradient(
+      10deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.2)
+    ),
+    url("../../../assets/Blue_ways_photo.png");
+  height: 30vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.park_Name1 {
   width: 100vw;
-    display: flex;
-    height: auto;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  height: auto;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .text-park {
-    padding-top: 90px;
-    font-size: 42px;
-    color: #fff;
-    font-weight: 600;
-    margin-left: 40px;
-
+  padding-top: 90px;
+  font-size: 42px;
+  color: #fff;
+  font-weight: 600;
+  margin-left: 40px;
 }
-.back_button{
+.back_button {
   height: max-content;
   margin-top: 10vh;
   margin-right: 4vw;
 }
 
 .Location_text_sub_manu {
-    display: flex;
-    gap: 10px;
-    margin-left: 40px;
+  display: flex;
+  gap: 10px;
+  margin-left: 40px;
 }
 
 .text_location {
-    font-size: 30px;
-    color: #fff;
+  font-size: 30px;
+  color: #fff;
 }
 
 .location_icon {
-    height: 5vh;
-
+  height: 5vh;
 }
 
 /* ----------------------------------------------- Css image and Map here -------------------------------------------------------- */
 .map_img_main_conatiner {
-    display: flex;
-    justify-content: space-evenly;
-    padding-top: 30px;
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 30px;
 }
 
 .Park_image {
-    height: 50vh;
-    width: 100vh;
-    border-radius: 20px;
-    border: 1px solid #cdd1ce;
-    
-    /* Add a subtle shadow */
-   
+  height: 50vh;
+  width: 100vh;
+  border-radius: 20px;
+  border: 1px solid #cdd1ce;
+
+  /* Add a subtle shadow */
 }
 
-.carousel-container1{
+.carousel-container1 {
   height: 64vh;
 }
-.carousel1{
+.carousel1 {
   width: 100%;
   height: 64vh;
 }
 
 /* --------------------------------------------------------here Map _conatiner -------------------------------- */
 .Map_container {
-    background-color: rgb(251, 249, 249);
-    border: 2px solid #cdd1ce;
-    height: 44vh;
-    width: 40vh;
+  background-color: rgb(251, 249, 249);
+  border: 2px solid #cdd1ce;
+  height: 44vh;
+  width: 40vh;
 }
 
 .Google_map {
-    width: 40vh;
-    height: 30vh;
+  width: 40vh;
+  height: 30vh;
 }
 
 /* ----------------------------------------------Time and status ------------------------------------------ */
@@ -109,212 +125,214 @@
   display: flex;
   padding: 3px;
 }
-.timing-day{
+.timing-day {
   color: black;
   font-size: 20px;
   font-weight: 600;
 }
-.timing-day-text{
+.timing-day-text {
   font-size: 15px;
   color: #212121;
 }
 .time_status {
-    display: flex;
-    justify-content: space-around;
-
+  display: flex;
+  justify-content: space-around;
 }
 
 .time_text {
-    font-size: 18px;
-    font-weight: 600;
-    color: #484747;
+  font-size: 18px;
+  font-weight: 600;
+  color: #484747;
 }
 
 .Open_Button {
-
-    font-size: 15px;
-    font-weight: 700;
-    border: 1px 2px soild red;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px 2px soild red;
 }
 
 .open {
-    color: green;
+  color: green;
 }
 
 .closed {
-    color: rgb(191, 42, 42);
+  color: rgb(191, 42, 42);
 }
 
 .bookmark {
-    cursor: pointer;
-    font-size: 24px;
-    color: rgb(137, 127, 127); 
-    right: 0;
-    margin-left: 7%;
-  }
-  
-  .bookmark.bookmarked {
-    color: green; /* Color when bookmarked */
-  }
-  
+  cursor: pointer;
+  font-size: 24px;
+  color: rgb(137, 127, 127);
+  right: 0;
+  margin-left: 7%;
+}
+
+.bookmark.bookmarked {
+  color: green; /* Color when bookmarked */
+}
 
 .Button_ticket_container {
-    display: flex;
-    justify-content: space-around;
-
+  display: flex;
+  justify-content: space-around;
 }
 
 /* Host event */
 .button-10 {
-    appearance: button;
-    backface-visibility: hidden;
-    background-color: #1690b9;
-    border-radius: 6px;
-    border-width: 0;
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
-    font-size: 100%;
-    height: 44px;
-    line-height: 1.15;
-    margin: 12px 0 0;
-    outline: none;
-    overflow: hidden;
-    padding: -1 25px;
-    position: relative;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    align-items: center;
-    text-transform: none;
-    transform: translateZ(0);
-    transition: all .2s, box-shadow .08s ease-in;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    width: 45%;
-    font-size: small;
+  appearance: button;
+  backface-visibility: hidden;
+  background-color: #1690b9;
+  border-radius: 6px;
+  border-width: 0;
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset,
+    rgba(50, 50, 93, 0.1) 0 2px 5px 0, rgba(0, 0, 0, 0.07) 0 1px 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    Ubuntu, sans-serif;
+  font-size: 100%;
+  height: 44px;
+  line-height: 1.15;
+  margin: 12px 0 0;
+  outline: none;
+  overflow: hidden;
+  padding: -1 25px;
+  position: relative;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+  text-transform: none;
+  transform: translateZ(0);
+  transition: all 0.2s, box-shadow 0.08s ease-in;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 45%;
+  font-size: small;
 }
 
 .button-10:disabled {
-    cursor: default;
+  cursor: default;
 }
 
 .button-10:focus {
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset,
+    rgba(50, 50, 93, 0.2) 0 6px 15px 0, rgba(0, 0, 0, 0.1) 0 2px 2px 0,
+    rgba(50, 151, 211, 0.3) 0 0 0 4px;
 }
 
 .button-10:hover {
-    background-color: rgb(0, 60, 128);
+  background-color: rgb(0, 60, 128);
 }
 
 .Button_ticket_container {
-    padding: 20px;
+  padding: 20px;
 }
-.name_button{
-    padding: 9px;
+.name_button {
+  padding: 9px;
 }
-
 
 /* CSS */
 .button-9 {
-    appearance: button;
-    backface-visibility: hidden;
-    background-color: #3AB757;
-    border-radius: 6px;
-    border-width: 0;
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
-    font-size: 100%;
-    height: 44px;
-display: flex;
-justify-content: center;
-align-items: center;
-    line-height: 1.15;
-    margin: 12px 0 0;
-    outline: none;
-    overflow: hidden;
-    padding: 11px 25px;
-    position: relative;
-    text-align: center;
-    text-transform: none;
-    transform: translateZ(0);
-    transition: all .2s, box-shadow .08s ease-in;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    width: 45%;
-    font-size: small;
+  appearance: button;
+  backface-visibility: hidden;
+  background-color: #3ab757;
+  border-radius: 6px;
+  border-width: 0;
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset,
+    rgba(50, 50, 93, 0.1) 0 2px 5px 0, rgba(0, 0, 0, 0.07) 0 1px 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    Ubuntu, sans-serif;
+  font-size: 100%;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.15;
+  margin: 12px 0 0;
+  outline: none;
+  overflow: hidden;
+  padding: 11px 25px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transform: translateZ(0);
+  transition: all 0.2s, box-shadow 0.08s ease-in;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 45%;
+  font-size: small;
 }
 
 .button-9:disabled {
-    cursor: default;
+  cursor: default;
 }
 
 .button-9:focus {
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset,
+    rgba(50, 50, 93, 0.2) 0 6px 15px 0, rgba(0, 0, 0, 0.1) 0 2px 2px 0,
+    rgba(50, 151, 211, 0.3) 0 0 0 4px;
 }
 
 .Button_ticket_container {
-    padding: 20px;
+  padding: 20px;
 }
 
 .button-9:hover {
-    background-color: green;
+  background-color: green;
 }
-
 
 /* --------------------------------------------------- Service Conatiner start--------------------------------------------------- */
 .Service_Now_conatiner {
-    /* padding: 40px;
+  /* padding: 40px;
     margin-top: 25px; */
-    padding-inline: 40px;
-    padding-block: 5px;
-    margin-top: 80px;
+  padding-inline: 40px;
+  padding-block: 5px;
+  margin-top: 80px;
 }
 
 .Service_text {
-    position: relative;
-    /* font-size: 30px; */
-    font-size: 25px;
-    font-weight: 600;
-    color: #292929;
-    display: inline-block;
-    /* Ensure the text is displayed as a block */
+  position: relative;
+  /* font-size: 30px; */
+  font-size: 25px;
+  font-weight: 600;
+  color: #292929;
+  display: inline-block;
+  /* Ensure the text is displayed as a block */
 }
-.service_container{
+.service_container {
   display: flex;
   gap: 30px;
 }
 
 .Service_text::after {
-    content: "";
-    position: absolute;
-    bottom: -3px;
-    /* Adjust the distance between the text and the line */
-    left: 0;
-    width: 60%;
-    height: 3px;
-    /* Adjust the thickness of the line */
-    background-color: #028835;
-    /* Color of the line */
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  /* Adjust the distance between the text and the line */
+  left: 0;
+  width: 60%;
+  height: 3px;
+  /* Adjust the thickness of the line */
+  background-color: #028835;
+  /* Color of the line */
 }
 
 .Service_text:hover {
-    font-weight: 700;
-    color: #019f13;
+  font-weight: 700;
+  color: #019f13;
 }
 
 .Service_Avilable {
-    display: flex;
-    gap: 30px;
-    padding: 10px;
+  display: flex;
+  gap: 30px;
+  padding: 10px;
 }
 
 .service_item {
@@ -324,758 +342,456 @@ align-items: center;
 }
 
 .service_Avil_img {
-    height: 12vh;
-    border-radius: 17px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Add a subtle shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 12vh;
+  border-radius: 17px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Add a subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .service_Avil_img:hover {
-    transform: scale(1.05);
-    /* Scale up the image on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    /* Increase the shadow on hover */
+  transform: scale(1.05);
+  /* Scale up the image on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Increase the shadow on hover */
 }
 
 .service_name {
-
-    /* font-size: 17px; */
-    font-size: 16px;
-    font-weight: 600;
+  /* font-size: 17px; */
+  font-size: 16px;
+  font-weight: 600;
 }
 
 /* --------------------------- Amenities ------------------------------------------*/
 .Amenities_Main_conatiner {
-    /* padding: 40px; */
-    padding-inline: 40px;
-    padding-block: 5px;
+  /* padding: 40px; */
+  padding-inline: 40px;
+  padding-block: 5px;
 }
 
 .Amenities-Data {
-    display: flex;
-    gap: 40px;
-    padding: 10px;
+  display: flex;
+  gap: 40px;
+  padding: 10px;
 }
 
 .Correct_icon {
-    height: 3vh;
+  height: 3vh;
 }
 
 .Amenities_name {
-    /* font-size: 20px; */
-    font-size: 16px;
-    font-weight: 500;
+  /* font-size: 20px; */
+  font-size: 16px;
+  font-weight: 500;
 }
 
 /* -----------------------------About here------------------------------------------- */
 .About_Conatiner {
-    /* padding: 40px; */
-    padding-inline: 40px;
-    padding-block: 5px;
+  /* padding: 40px; */
+  padding-inline: 40px;
+  padding-block: 5px;
 }
 
 .About_text {
-    font-size: 20px;
-    font-weight: 500;
-    color: #292929;
-    padding: 10px;
-
+  font-size: 20px;
+  font-weight: 500;
+  color: #292929;
+  padding: 10px;
 }
 
 /* -------------------------------Helpline Number ----------------------------------- */
 .Helpline_number_conatine {
-    /* padding: 40px; */
-    padding-inline: 40px;
-    padding-block: 5px;
+  /* padding: 40px; */
+  padding-inline: 40px;
+  padding-block: 5px;
 }
 
 .Contact_number {
-    display: flex;
-    gap: 30px;
-    padding: 10px;
+  display: flex;
+  gap: 30px;
+  padding: 10px;
 }
 
 .Number {
-    font-size: 20px;
-    font-weight: 500;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .Phone_icon {
-    height: 4vh;
+  height: 4vh;
 }
 
 /* --------------------------------------------Event Available ------------------------------------------------------------- */
 .Event_Available_main_conatiner {
-    /* padding: 40px; */
-    padding-inline: 40px;
-    padding-block: 5px;
+  /* padding: 40px; */
+  padding-inline: 40px;
+  padding-block: 5px;
 }
 
 .Sub_Park_Details {
-    overflow: hidden;
-    /* Hide overflow to prevent horizontal scrollbar */
+  overflow: hidden;
+  /* Hide overflow to prevent horizontal scrollbar */
 }
 
 .carousel-container {
-    display: flex;
-    overflow-x: auto;
-    /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory;
-    /* Snap to each slide */
-    scroll-behavior: smooth;
-    /* Smooth scrolling effect */
-    width: 100%;
-    /* Full width */
-    height: auto;
-    /* Full height */
-    padding: 20px;
+  display: flex;
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  scroll-snap-type: x mandatory;
+  /* Snap to each slide */
+  scroll-behavior: smooth;
+  /* Smooth scrolling effect */
+  width: 100%;
+  /* Full width */
+  height: auto;
+  /* Full height */
+  padding: 20px;
 }
 
 .carousel-slide {
-    flex: 0 0 30%;
-    /* Each slide takes up 30% of the container width */
-    width: 20%;
-    /* Each slide takes up 30% of the container width */
-    height: 100%;
-    /* Each slide takes up full height of the container */
-    scroll-snap-align: start;
-    /* Align slides to the start of the container */
+  flex: 0 0 30%;
+  /* Each slide takes up 30% of the container width */
+  width: 20%;
+  /* Each slide takes up 30% of the container width */
+  height: 100%;
+  /* Each slide takes up full height of the container */
+  scroll-snap-align: start;
+  /* Align slides to the start of the container */
 
-
-    align-items: center;
-    border: 2px solid rgb(1, 129, 16);
-    margin: 0 5px;
-    /* Space between boxes */
-    background-color: #E0F8E5;
-    border-radius: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    /* Add shadow effect */
-    transition: background-color 0.3s ease;
+  align-items: center;
+  border: 2px solid rgb(1, 129, 16);
+  margin: 0 5px;
+  /* Space between boxes */
+  background-color: #e0f8e5;
+  border-radius: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* Add shadow effect */
+  transition: background-color 0.3s ease;
 }
 
 .carousel-slide:hover {
-    background-color: #fff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    /* Add shadow effect */
-    transition: background-color 0.3s ease;
-    border: 1px solid rgb(11, 11, 11);
-
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  /* Add shadow effect */
+  transition: background-color 0.3s ease;
+  border: 1px solid rgb(11, 11, 11);
 }
 
 .Yoga_image {
-    width: 59vh;
-    height: 20vh;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-
+  width: 59vh;
+  height: 20vh;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .Name_yoga {
-    font-size: 25px;
-    color: #019f13;
-    font-weight: 600;
-    margin: 10px;
+  font-size: 25px;
+  color: #019f13;
+  font-weight: 600;
+  margin: 10px;
 }
 
 .Yoga_date_time {
-    display: flex;
-    justify-content: space-evenly;
-    padding: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
 }
 
 .Yoga_date {
-    font-size: 20px;
-    font-weight: 600;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .Yoga_time {
-    font-size: 20px;
-    font-weight: 600;
+  font-size: 20px;
+  font-weight: 600;
 }
-
-@media (min-width: 1230px) {
-
-    .text-park {
-        padding-top: 54px;
-        font-size: 36px;
-    }
-
-    .time_text {
-        font-size: 13px;
-    }
-
-    .Open_Button {
-        font-size: 12px;
-    }
-
-    .button-9 {
-        display: flex;
-        font-size: 14px;
-    }
-
-    .Service_text {
-        font-size: 24px;
-    }
-
-    .About_text {
-        /* font-size: 14px; */
-        font-size: 16px;
-    }
-
-    .Number {
-        font-size: 14px;
-    }
-    .bookmark{
-        
-        margin-left: 16%;
-    }
-
-}
-
-@media screen and (max-width: 1024px) {
-    .open{
-        margin-left: 85px;
-    }
-    /* .map_img_main_conatiner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    } */
-    .map_img_main_conatiner {
-        display:unset;
-        margin-top: 70px;
-       
-    }
-    .carousel-container1{
-        margin-top: 20px;
-        margin-left: 15%;
-    }
-    .carousel1{
-        /* margin-top: 20px;
-        margin-left: 20%; */
-    }
-    .Map_container {
-        margin-left: 35%;
-        margin-top: 20px;
-    }
-
-    .Header_Img {
-        height: 20vh;
-        margin-top: 17px;
-    }
-
-    .text-park {
-        font-size: 28px;
-        padding: 12px;
-    }
-
-    .Park_image {
-        height: 38vh;
-        width: auto;
-        border-radius: 12px;
-    }
-
-    .Map_image_Goole {
-        height: 260px ;
-        width: 32vw ;
-      }
-    /* .Map_image_LoadScript  GoogleMap{
-        height: 256px;
-        width: 32vw;
-    } */
-
-    .Map_container {
-        height: 38vh;
-    }
-    .Service_text {
-        font-size: 24px;
-    }
-    .Service_Now_conatiner{
-        margin-top: 3%;
-    }
-}
-
-/* @media screen and (min-width: 769px) and (max-width: 1023px) {
-    .Header_Img {
-      height: 18vh;
-      margin-top: 7px;
-    }
-  
-    .carousel-container1 {
-      margin-top: 10px;
-      margin-left: 13%;
-      width: 94%;
-    }
-  } */
-  
-
-
-
-
 
 /* Add this CSS to style the carousel buttons */
 .carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  
-  .carousel-button.left {
-    left: 10px;
-  }
-  
-  .carousel-button.right {
-    right: 10px;
-  }
-  
-  .Image_conatiner {
-    position: relative;
-  }
-  
-  .Map_container {
-    position: relative;
-  }
-  
-  .inner {
-    overflow: hidden;
-    width: 100%;
-  }
-  
-  .slides {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-  }
-  
-  .slide {
-    min-width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .Event_img {
-    width: 100%;
-    height: auto;
-  }
-  
-
-
-
-  /* Sub_Park_Details.css */
-
-/* .Sub_Manu_Conatiner {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .Image_conatiner {
-    display: flex;
-    width: 100%;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-  }
-  
-  .Park_image {
-    width: 100%;
-    height: auto;
-  }
-  
-  .carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.5);
-    border: none;
-    padding: 10px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 1;
-  }
-  
-  .carousel-button.left {
-    left: 0;
-  }
-  
-  .carousel-button.right {
-    right: 0;
-  } */
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- /* Sub_Park_Details.css */
-
-/* .Image_conatiner {
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .carousel-slide {
-    flex: 0 0 100%; 
-    width: 100%; 
-    height: auto; 
-  }
-  
-  .carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  
-  .carousel-button.left {
-    left: 10px;
-  }
-  
-  .carousel-button.right {
-    right: 10px;
-  } */
-  
-  .day-open-close-status {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1000;
 }
-.open-close-btn{
+
+.carousel-button.left {
+  left: 10px;
+}
+
+.carousel-button.right {
+  right: 10px;
+}
+
+.Image_conatiner {
+  position: relative;
+}
+
+.Map_container {
+  position: relative;
+}
+
+.inner {
+  overflow: hidden;
+  width: 100%;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.Event_img {
+  width: 100%;
+  height: auto;
+}
+
+.day-open-close-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.open-close-btn {
   float: right;
   margin: 6px;
 }
-  /* carousel css final........... */
+/* carousel css final........... */
+.carousel-container1 {
+  position: relative;
+  /* width: 700px; */
+  width: 68vw;
+  /* margin: 0; */
+}
+
+.carousel1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  /* height: 400px; */
+  height: 64vh;
+  border-radius: 10px;
+}
+
+.carousel1 img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel1-button1 {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.carousel1-button1.left1 {
+  left: 10px;
+}
+
+.carousel1-button1.right1 {
+  right: 10px;
+}
+
+.carousel1-button1:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.other-contents {
+  padding: 5px;
+}
+.date_text {
+  font-weight: 500;
+}
+
+/* carousel for events................... */
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  width: 80vw;
+  max-width: 80vw;
+  margin: auto;
+}
+
+.carousel-wrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 0%;
+  box-sizing: border-box;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-button.left {
+  left: 20px;
+}
+
+.carousel-button.right {
+  right: 10px;
+}
+
+.Yoga_image {
+  width: 100%;
+  height: auto;
+}
+
+/* back button........ */
+.back_btn {
+  background-color: #3d58e0;
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.No_Event {
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (max-width: 1366px) {
   .carousel-container1 {
-    position: relative;
-    /* width: 700px; */
-    width: 68vw;
-    /* margin: 0; */
+    /* height: 28vh; */
+    height: 100%;
   }
-  
   .carousel1 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    /* height: 28vh; */
+    height: 100%;
+  }
+
+  /*----Timing -------*/
+  .timing-day {
+    font-size: 16px;
+  }
+  .timing-day-text {
+    font-size: 12px;
+  }
+
+  /* Bookmark */
+  .svg-inline--fa {
+    height: 1rem;
+  }
+  .Open_Button {
+    font-size: 12px;
+  }
+  .button-9 {
+    padding: 11px 11px;
+    height: 34px;
+    width: 42%;
+  }
+  .button-10 {
+    height: 34px;
+    width: 42%;
+  }
+  .Button_ticket_container {
+    padding: 6px;
+  }
+  .Map_container {
+    height: 25vh;
+    width: 30vh;
+  }
+  .Service_text {
+    font-size: 20px;
+  }
+  .About_text {
+    font-size: 16px;
+  }
+  .text-park {
+    font-size: 36px;
+  }
+  .text_location {
+    font-size: 24px;
+  }
+  .text-park {
+    padding-top: 52px;
+  }
+  .Correct_icon {
+    height: 2vh;
+  }
+  .Header_Img {
+    height: 27vh;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .text-park {
+    font-size: 26px;
+    padding-top: 36px;
+  }
+  .text_location {
+    font-size: 20px;
+  }
+  .back_btn {
+    font-size: 14px;
+    padding: 5px 13px;
+  }
+  .Header_Img {
+    height: 16vh;
+  }
+  .location_icon {
+    height: 4vh;
+  }
+  .map_img_main_conatiner {
+    padding-top: 10px;
+  }
+  .map_img_main_conatiner {
+    flex-direction: column;
+  }
+  .carousel-container1 {
     width: 100%;
-    /* height: 400px; */
-    height: 64vh;
-    border-radius: 10px;
   }
-  
-  .carousel1 img {
+  .Map_container {
     width: 100%;
-    height: auto;
-    transition: transform 0.5s ease-in-out;
   }
-  
-  .carousel1-button1 {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    border: none;
-    color: white;
-    padding: 10px;
-    cursor: pointer;
+  .other-contents {
+    margin-top: 14%;
   }
-  
-  .carousel1-button1.left1 {
-    left: 10px;
+  .Service_text {
+    font-size: 18px;
   }
-  
-  .carousel1-button1.right1 {
-    right: 10px;
+  .About_text {
+    font-size: 14px;
   }
-  
-  .carousel1-button1:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+  .Amenities_name {
+    font-size: 14px;
   }
-     
-  
-
-    @media screen and (max-width: 1024px) {
-        .Header_Img {
-            height: 18vh;
-            margin-top: 5px;
-          }
-        
-          .carousel-container1 {
-            margin-top: 20px;
-            margin-left: 5%;
-            width: 90%;
-          }
-      
-        .text-park {
-          font-size: 28px;
-          padding: 12px;
-        }
-      
-        .Park_image {
-          height: 38vh;
-          width: auto;
-          border-radius: 12px;
-        }
-      
-        .Map_container {
-          margin-left: 5%;
-          margin-top: 20px;
-        }
-      
-      
-        .Service_text {
-          font-size: 24px;
-        }
-
-        /* .day-open-close-status{
-          display: unset;
-          align-items: center;
-          justify-content: center;
-         
-        } */
-        .open-close-btn{
-          /* float: right; */
-          margin: 1px;
-        }
-        
-      }
-      
-      @media screen and (max-width: 600px) {
-        .map_img_main_conatiner {
-          display: unset;
-          margin-top: 70px;
-        }
-      
-        .carousel-slide {
-          flex: 0 0 100%;
-          width: 100%;
-          height: auto;
-        }
-      
-        .carousel-container1 {
-          margin-top: 20px;
-          margin-left: 0%;
-        }
-      
-        .carousel1 {
-          /* margin-top: 20px;
-          margin-left: 20%; */
-        }
-      
-        .Map_container {
-          margin-left: 7%;
-          margin-top: -20px;
-        }
-      
-        .Header_Img {
-            height: 15vh;
-            margin-top: 5px;
-          }
-        
-          .carousel-container1 {
-            margin-top: 20px;
-            margin-left: 5%;
-            width: 90%; /* Adjust width for better responsiveness */
-          }
-      
-        .text-park {
-          font-size: 28px;
-          padding: 12px;
-        }
-      
-        .Park_image {
-          height: 38vh;
-          width: auto;
-          border-radius: 12px;
-        }
-      
-        .Service_text {
-          font-size: 20px;
-        }
-      
-        .Service_Now_conatiner {
-          padding: 20px;
-          margin-top: 44%;
-        }
-      
-        .About_text {
-          font-size: 14px;
-        }
-      
-        .Number {
-          font-size: 14px;
-        }
-        .text-park {    
-            font-size: 24px;
-        }
-        .text_location {
-            font-size: 25px;
-        }
-      }
-      @media screen and (max-width: 420px) {
-        .Header_Img {
-            /* height: 15vh; */
-            margin-top: 17px;
-            width: 131%;
-        }
-        .Amenities_name {
-            font-size: 17px;
-        }
-        
-        .carousel-container1 {
-            margin-top: -30px;
-            margin-left: 8%;
-            /* margin-right: auto; */
-            width: 100%;
-        }
-          .Map_container {
-            /* margin-left: 28%; */
-            margin-top: -40px;
-          }
-          .Service_Now_conatiner {
-            margin-top: 52px;
-        }
-        .text-park {
-            font-size: 20px;
-        }
-        .text_location {
-            font-size: 18px;
-        }
-      }
-      
-
-      .other-contents{
-        padding: 5px;
-      }
-      .date_text{
-        font-weight: 500;
-      }
-      @media screen and (max-width:550px){
-        .Search_container{
-          display: grid;
-          grid-template-columns: minmax(90vw, 1fr);
-          align-items: center;
-          justify-content: center;
-        }
-
-        .Filter_grid{
-          margin: auto;
-        }
-        .button-59{
-          font-size: 15px;
-          height: 30px;
-          
-        }
-        .gride_page{
-          height: 30px;
-          font-size: 10px;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .gride_page select option{
-          font-size: 10px;
-          width: 26px;
-          height: 20px;
-        }
-        .filter_option{
-          height:30px;
-          margin-left: 5px;
-          font-size: 10px;
-        }
-        .text-filter{
-          font-size: 10px;
-          font-weight: 600;
-        }
-      }
-
-
-      /* carousel for events................... */
-      .carousel-container {
-        position: relative;
-        overflow: hidden;
-        width: 80vw;
-        max-width: 80vw;
-        margin: auto
-      }
-      
-      .carousel-wrapper {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-      }
-      
-      .carousel-slide {
-        min-width: 0%;
-        box-sizing: border-box;
-        
-      }
-      
-      .carousel-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        border: none;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-        z-index: 1;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .carousel-button.left {
-        left: 20px;
-      }
-      
-      .carousel-button.right {
-        right: 10px;
-      }
-      
-      .Yoga_image {
-        width: 100%;
-        height: auto;
-      }
-      
-      /* back button........ */
-      .back_btn{
-        background-color: #3d58e0; 
-        border: none;
-        color: white;
-        padding: 10px 25px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        border-radius: 10px;
-      }
-
-      .No_Event{
-        display: flex;
-        justify-content: center;
-      }
+}

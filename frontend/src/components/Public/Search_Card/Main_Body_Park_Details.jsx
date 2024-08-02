@@ -335,7 +335,7 @@ const Main_Body_Park_Details = () => {
               type="text"
               className="Search_input"
               placeholder="Search by Name, Location........"
-              name="givenReq"
+              name="givenReq" 
               id="givenReq"
               value={givenReq}
               onChange={(e) => setGivenReq(e.target.value)}

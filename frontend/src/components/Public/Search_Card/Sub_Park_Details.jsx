@@ -319,6 +319,7 @@ const Sub_Park_Details = () => {
         </div>
 
         <div className="Map_container">
+          <div className="timeButton">
           <span className="time_status flex flex-col">
             <div className="flex">
               <h1 className="time_text">
@@ -474,12 +475,13 @@ const Sub_Park_Details = () => {
               </button>
             </Link>
           </span>
+          </div>
 
           <div className="Map_image">
             <LoadScript googleMapsApiKey={apiKey}>
               <GoogleMap
                 ClassName="Map_image_Goole"
-                mapContainerStyle={{ height: "300px", width: "100%" }}
+                mapContainerStyle={{ height: "200px", width: "100%" }}
                 center={defaultCenter}
                 zoom={8}
               >
