@@ -24,7 +24,7 @@ const CommonFooter1 = () => {
             </p>
             <div className="Downlad_Appp">
               <h1 className="donwload_name"> Download App</h1>
-              <div className="input-container">
+              {/* <div className="input-container">
                 <input
                   type="text"
                   className="Input_text_send_mail"
@@ -34,7 +34,7 @@ const CommonFooter1 = () => {
                   icon={faPaperPlane}
                   className="paper-plane-icon"
                 />
-              </div>
+              </div> */}
               <div className="App_download">
                 <img className="download_image" src={Download_App}></img>
                 <img className="download_image" src={Download_OS_App}></img>

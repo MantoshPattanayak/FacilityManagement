@@ -170,7 +170,7 @@ const AddToCart = () => {
                         {/* Payment button section */}
                         {GetViewCradData.length > 0 && (
                             <div className="Pay_Now_Buttton">
-                                <button>
+                                <button class="button-43">
                                     <RazorpayButton
                                         amount={totalAmount || 0}
                                         currency={"INR"}

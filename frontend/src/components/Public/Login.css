@@ -1,7 +1,7 @@
 /* General container styling */
 .Main_container_Login {
     width: 100%;
-  height: auto;
+  height: 70vh;
  
     display: flex;
     flex-direction: column;
@@ -49,10 +49,10 @@
 }
 
 /* Button styling */
-.sendotp-btn {
+.sendotp-btn_login1{
     width: 100%;
     padding: 12px;
-    background-color: #176BFB; /* Blue background */
+    background-color: #03b317; /* Blue background */
     color: #ffffff; /* White text color */
     border: none;
     border-radius: 8px;
