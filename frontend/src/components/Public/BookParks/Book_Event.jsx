@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import PublicHeader from "../../../common/PublicHeader";
-import CommonFooter from "../../../common/CommonFooter";
 // here import Icon ------------------------------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesomeIcon
 import { faPlus, faMinus, faShoppingCart, faIndianRupeeSign, faCreditCard, faClose } from "@fortawesome/free-solid-svg-icons";
@@ -12,11 +11,12 @@ import { decryptData, encryptData } from "../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 // Import Css file here ---------------------------------
-import "./Book_Now_Sport.css";
+// import "./Book_Now_Sport.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 import { calculateTimeDifferenceinHours } from "../../../utils/utilityFunctions";
 import RazorpayButton from "../../../common/RazorpayButton";
+import "./Book_Event.css";
 
 const Book_Event = () => {
     // UseSate for post data -------------------------------------
@@ -28,22 +28,23 @@ const Book_Event = () => {
             startTime: "",
             durationInHours: 1,
             bookingDate: "",
-            price:""
+            price: ""
         },
     });
     const [FacilitiesData, setFacilitiesData] = useState('');
     const [errors, setErrors] = useState({}); // State to hold validation errors
     const location = useLocation();
     const navigate = useNavigate();
+    const [isDisabled, setIsDisabled] = useState(true);
 
     // Here Increment ------------------------------------------------
     const handleDecrement = (e) => {
         let { name } = e.target;
 
-        if(name = "playersLimit"){
+        if (name = "playersLimit") {
             let newValue = formData.facilityPreference.playersLimit;
             newValue--;
-            if(newValue < 1){
+            if (newValue < 1) {
                 toast.dismiss();
                 toast.warning("Atleast one member required for booking.");
                 return;
@@ -53,7 +54,7 @@ const Book_Event = () => {
             setFormData(formDataCopy);
             return;
         }
-        else{
+        else {
             if (formData.facilityPreference.durationInHours > 1) {
                 setFormData(prevState => ({
                     ...prevState,
@@ -72,12 +73,12 @@ const Book_Event = () => {
         let { name } = e.target;
         console.log(name);
 
-        if(name = "playersLimit"){
+        if (name = "playersLimit") {
             console.log("first");
             let newValue = formData.facilityPreference.playersLimit;
             newValue++;
             console.log("2", newValue)
-            if(newValue > 5){
+            if (newValue > 5) {
                 toast.dismiss();
                 toast.warning("Maximum members allowed per booking is 5.");
                 return;
@@ -87,7 +88,7 @@ const Book_Event = () => {
             setFormData(formDataCopy);
             return;
         }
-        else{
+        else {
             console.log("3");
             if (formData.facilityPreference.durationInHours < 4) {
                 setFormData(prevState => ({
@@ -126,11 +127,11 @@ const Book_Event = () => {
                 entityId: formData.entityId,
                 entityTypeId: formData.entityTypeId,
                 facilityPreference: {
-                    totalMembers    : encryptData(formData.facilityPreference.playersLimit),
-                    bookingDate     : encryptData(formData.facilityPreference.bookingDate),
-                    startTime       : encryptData(formData.facilityPreference.startTime),
-                    durationInHours : encryptData(formData.facilityPreference.durationInHours),
-                    amount          : encryptData(formData.facilityPreference.price * formData.facilityPreference.playersLimit),
+                    totalMembers: encryptData(formData.facilityPreference.playersLimit),
+                    bookingDate: encryptData(formData.facilityPreference.bookingDate),
+                    startTime: encryptData(formData.facilityPreference.startTime),
+                    durationInHours: encryptData(formData.facilityPreference.durationInHours),
+                    amount: encryptData(formData.facilityPreference.price * formData.facilityPreference.playersLimit),
                 }
             };
             let res = await axiosHttpClient("Add_to_Cart", "post", requestBody);
@@ -159,11 +160,11 @@ const Book_Event = () => {
                 entityId: formData.entityId,
                 entityTypeId: formData.entityTypeId,
                 facilityPreference: {
-                    totalMembers    : encryptData(formData.facilityPreference.playersLimit),
-                    bookingDate     : encryptData(formData.facilityPreference.bookingDate),
-                    startTime       : encryptData(formData.facilityPreference.startTime),
-                    durationInHours : encryptData(formData.facilityPreference.durationInHours),
-                    amount          : encryptData(formData.facilityPreference.price * formData.facilityPreference.playersLimit),
+                    totalMembers: encryptData(formData.facilityPreference.playersLimit),
+                    bookingDate: encryptData(formData.facilityPreference.bookingDate),
+                    startTime: encryptData(formData.facilityPreference.startTime),
+                    durationInHours: encryptData(formData.facilityPreference.durationInHours),
+                    amount: encryptData(formData.facilityPreference.price * formData.facilityPreference.playersLimit),
                 }
             };
             let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", requestBody);
@@ -228,6 +229,7 @@ const Book_Event = () => {
             err.startTime = "Please Select Start Time"
         }
         console.log(err);
+        setErrors(err);
         return err;
     }
     const validateForm = () => {
@@ -236,25 +238,34 @@ const Book_Event = () => {
         return Object.keys(err).length === 0; // Returns true if no errors
     };
 
-    const handleSuccess = (response) => {
+    const handlePaymentSuccess = (response) => {
         console.log(response);
         HandleProccedToPayment();
     }
 
-    const handleFailure = (response) => {
+    const handlePaymentFailure = (response) => {
         console.log(response);
         toast.dismiss();
         toast.error('Payment failed!!');
         return;
     }
 
+    useEffect(() => {
+        console.log("formData", formData);
+        let err = validation(formData);
+        if(Object.keys(err).length > 0)
+            setIsDisabled(true);
+        else
+            setIsDisabled(false);
+    }, [formData])
+
     return (
         <div className="Book_sport_Main_conatiner">
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             <PublicHeader />
             <div className="Book_sport_Child_conatiner">
                 <div className="Add_sport_form">
-                    <div className="text-xl flex justify-end cursor-pointer" onClick={(e) => navigate(-1)}><FontAwesomeIcon icon={faClose}/></div>
+                    <div className="text-xl flex justify-end cursor-pointer" onClick={(e) => navigate(-1)}><FontAwesomeIcon icon={faClose} /></div>
                     <div className="sport_name_Book">
                         <h1 className="Faclity_Name"> {FacilitiesData?.eventName}, {FacilitiesData?.locationName}</h1>
                         {/* <p className="Faclity_Address"> </p> */}
@@ -388,13 +399,42 @@ const Book_Event = () => {
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        <RazorpayButton 
+                        {/* <RazorpayButton
                             amount={formData.facilityPreference.price * formData.facilityPreference.playersLimit}
                             currency={"INR"}
                             description={"Pay now"}
                             onSuccess={handleSuccess}
                             onFailure={handleFailure}
-                        />
+                        /> */}
+                        {
+                            isDisabled ?
+                                <button
+                                    className="add-to-cart-button"
+                                    disabled={isDisabled}
+                                >
+                                    <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(formData.facilityPreference.price * formData.facilityPreference.playersLimit).toFixed(2)}
+                                </button>
+                                : <RazorpayButton
+                                    amount={formData.facilityPreference.price * formData.facilityPreference.playersLimit}
+                                    currency={"INR"}
+                                    description={"Book now"}
+                                    onSuccess={handlePaymentSuccess}
+                                    onFailure={handlePaymentFailure}
+                                    disabled={isDisabled}
+                                    data={{
+                                        entityId: encryptData(formData.entityId),
+                                        entityTypeId: encryptData(formData.entityTypeId),
+                                        facilityPreference: {
+                                            totalMembers: encryptData(formData.facilityPreference.playersLimit),
+                                            bookingDate: encryptData(formData.facilityPreference.bookingDate),
+                                            startTime: encryptData(formData.facilityPreference.startTime),
+                                            durationInHours: encryptData(formData.facilityPreference.durationInHours),
+                                            amount: encryptData(formData.facilityPreference.price * formData.facilityPreference.playersLimit),
+                                        },
+                                        userCartId: null
+                                    }}
+                                />
+                        }
                         {/* <button type="submit" class="Proceed_to_Payment"
                             onClick={HandleProccedToPayment}
                         >

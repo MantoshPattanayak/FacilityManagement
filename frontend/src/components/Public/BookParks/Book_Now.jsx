@@ -4,15 +4,7 @@ import Visiting_People from "./Popups_Book_now/Visiting_People";
 import AdminHeader from "../../../common/AdminHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCartShopping,
-  faXmark,
-  faCreditCard,
-  faPlus,
-  faMinus,
-  faIndianRupeeSign,
-  faArrowLeftLong,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faXmark, faCreditCard, faPlus, faMinus, faIndianRupeeSign, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
@@ -26,10 +18,11 @@ const Book_Now = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [FacilitiesData, setFacilitiesData] = useState([]);
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [formData, setFormData] = useState({});
   const [amount1, setAmount1] = useState([10]);
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -38,7 +31,7 @@ const Book_Now = () => {
     if (encryptedData) {
       try {
         const decryptedData = JSON.parse(decryptData(encryptedData));
-        // console.log("Decrypted Data: ", decryptedData);
+        console.log("Decrypted Data: ", decryptedData);
         setFormData(decryptedData);
         setSelectedGames(decryptedData.activityPreference); // Set selectedGames initially
       } catch (error) {
@@ -47,28 +40,6 @@ const Book_Now = () => {
     }
   }, [location.search]);
 
-  // useEffect(() => {
-  //   console.log("Booking Data: ", bookingData);
-  // }, [bookingData]);
-
-  // console.log(bookingData.totalMembers);
-  // const [formData, setFormData] = useState({
-  //   totalMembers: bookingData.totalMembers,
-  //   children: bookingData ? bookingData.children : 0,
-  //   seniorCitizen: bookingData ? bookingData.seniorCitizen : 0,
-  //   adults: bookingData ? bookingData.adults : 0,
-  //   amount: "10.00",
-  //   activityPreference: [],
-  //   otherActivities: bookingData ? bookingData.otherActivities : "",
-  //   bookingDate: bookingData ? bookingData.bookingDate : "",
-  //   startTime: bookingData ? bookingData.startTime : "",
-  //   durationInHours: bookingData ? bookingData.durationInHours : 0,
-  //   facilityId: bookingData ? bookingData.facilityId : "",
-  //   entityId: "",
-  //   entityTypeId: "",
-  //   facilityPreference: "",
-  //   priceBook: 0,
-  // });
 
   let facilityId = decryptData(formData.facilityId);
   const [refresh, setRefresh] = useState(false);
@@ -90,6 +61,15 @@ const Book_Now = () => {
     }
     // console.log("Form Data: ", formData);
   }, [refresh, selectedGames]);
+
+  useEffect(() => {
+    let isDisabled = validateForm(formData);
+    if(Object.keys(errors).length > 0) {
+      setIsDisabled(isDisabled);
+    }
+  }, [formData]);
+
+  useEffect(() => { }, [isDisabled]);
 
   async function getSub_park_details(facilityId) {
     try {
@@ -135,7 +115,7 @@ const Book_Now = () => {
     let intValue = parseInt(value);
     const updatedFormData = {
       ...formData,
-      [name]: isNaN(value) ? value : intValue,
+      [name]: !isNaN(value) ? value : formData[name],
     };
 
     if (["children", "seniorCitizen", "adults"].includes(name)) {
@@ -147,11 +127,11 @@ const Book_Now = () => {
 
     if (updatedFormData.totalMembers > 40) {
       toast.error("Total members cannot exceed 40.");
-      updatedFormData.totalMembers = 40;
+      // updatedFormData.totalMembers = 40;
+      // setIsDisabled(validateForm(updatedFormData));
     }
 
     setAmount1(formData.amount);
-    // setIsDisabled(updatedFormData.totalMembers > 40);
     setIsDisabled(validateForm(updatedFormData));
     setFormData(updatedFormData);
     setRefresh((prevState) => !prevState);
@@ -186,13 +166,13 @@ const Book_Now = () => {
     if (validateForm(modifiedFormData)) {
       try {
         const facilityPreference = {
-          totalMembers:       encryptData(modifiedFormData.totalMembers),
-          amount:             encryptData(formData.amount * modifiedFormData.adults),
+          totalMembers: encryptData(modifiedFormData.totalMembers),
+          amount: encryptData(formData.amount * modifiedFormData.adults),
           activityPreference: encryptData(modifiedFormData.activityPreference),
-          otherActivities:    encryptData(modifiedFormData.otherActivities),
-          bookingDate:        encryptData(modifiedFormData.bookingDate),
-          startTime:          encryptData(modifiedFormData.startTime),
-          durationInHours:    encryptData(modifiedFormData.durationInHours),
+          otherActivities: encryptData(modifiedFormData.otherActivities),
+          bookingDate: encryptData(modifiedFormData.bookingDate),
+          startTime: encryptData(modifiedFormData.startTime),
+          durationInHours: encryptData(modifiedFormData.durationInHours),
         };
 
         const requestBody = {
@@ -231,13 +211,13 @@ const Book_Now = () => {
     if (validateForm(modifiedFormData) && modifiedFormData.totalMembers <= 40) {
       try {
         const facilityPreference = {
-          totalMembers      : encryptData(modifiedFormData.totalMembers),
-          amount            : encryptData(formData.amount * modifiedFormData.adults),
+          totalMembers: encryptData(modifiedFormData.totalMembers),
+          amount: encryptData(formData.amount * modifiedFormData.adults),
           activityPreference: encryptData(modifiedFormData.activityPreference),
-          otherActivities   : encryptData(modifiedFormData.otherActivities),
-          bookingDate       : encryptData(modifiedFormData.bookingDate),
-          startTime         : encryptData(modifiedFormData.startTime),
-          durationInHours   : encryptData(modifiedFormData.durationInHours),
+          otherActivities: encryptData(modifiedFormData.otherActivities),
+          bookingDate: encryptData(modifiedFormData.bookingDate),
+          startTime: encryptData(modifiedFormData.startTime),
+          durationInHours: encryptData(modifiedFormData.durationInHours),
         };
 
         let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
@@ -263,6 +243,7 @@ const Book_Now = () => {
             }, 1000);
           },
         });
+        console.log("response bookingData, entityId, entityTypeId")
       } catch (error) {
         console.error("Error booking park", error);
         toast.error("Booking details submission failed.");
@@ -285,16 +266,15 @@ const Book_Now = () => {
 
   const validateForm = (formData) => {
     let errors = {};
-    // console.log("formData", formData.activityPreference, selectedGames);
-    if (formData.totalMembers > 0 && formData.totalMembers <= 40)
+    // console.log("formData", formData, selectedGames);
+    if (!(formData?.totalMembers > 0 && formData.totalMembers <= 40))
       errors.totalMembers = "Please provide number of members between 0 and 40";
-    if (!formData.bookingDate) errors.date = "Please provide date.";
-    if (!formData.startTime) errors.startTime = "Please provide Start time.";
-    if (!formData.durationInHours)
-      errors.durationInHours = "Please provide duration.";
-    if (formData.activityPreference.length < 1 || selectedGames.length < 1)
-      errors.activityPreference = "Please select an activity.";
-    // console.log(errors);
+    if (!formData?.bookingDate) errors.date = "Please provide date.";
+    if (!formData?.startTime) errors.startTime = "Please provide Start time.";
+    if (!formData?.durationInHours) errors.durationInHours = "Please provide duration.";
+    if (formData.activityPreference?.length < 1 || selectedGames.length < 1) errors.activityPreference = "Please select an activity.";
+    console.log("errors", errors);
+    setErrors(errors);
     return Object.keys(errors).length === 0 ? false : true;
   };
 
@@ -477,11 +457,10 @@ const Book_Now = () => {
                   activityPreferenceData.map((activity) => (
                     <button
                       key={activity.userActivityId}
-                      className={`game-btn ${
-                        selectedGames.includes(activity.userActivityId)
+                      className={`game-btn ${selectedGames.includes(activity.userActivityId)
                           ? "selected"
                           : ""
-                      }`}
+                        }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
@@ -515,30 +494,55 @@ const Book_Now = () => {
               <button
                 className="add-to-cart-button"
                 onClick={handleAddtoCart}
-                disabled={formData.totalMembers > 0 ? false : true}
+                disabled={formData.totalMembers > 0 && formData.totalMembers < 40 ? false : true}
               >
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
-              <RazorpayButton
-                amount={price}
-                currency={"INR"}
-                description={"Book now"}
-                onSuccess={handlePaymentSuccess}
-                onFailure={handlePaymentFailure}
-                disabled={formData.totalMembers > 0 ? false : true}
-              />
-              {/* <button
-                className="submit-and-proceed-button"
-                onClick={handleSubmitAndProceed}
-                disabled={isDisabled}
-              >
-                <FontAwesomeIcon icon={faCreditCard} /> Submit & Proceed
-              </button> */}
+              {
+                isDisabled ?
+                  <button
+                    className="add-to-cart-button"
+                    disabled={isDisabled}
+                  >
+                    <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(price).toFixed(2)}
+                  </button>
+                  : <RazorpayButton
+                    amount={price}
+                    currency={"INR"}
+                    description={"Book now"}
+                    onSuccess={handlePaymentSuccess}
+                    onFailure={handlePaymentFailure}
+                    disabled={formData.totalMembers > 0 && formData.totalMembers < 40 ? false : true}
+                    data={{
+                      entityId: encryptData(formData.entityId),
+                      entityTypeId: encryptData(formData.entityTypeId),
+                      facilityPreference: {
+                        totalMembers: encryptData(formData.totalMembers),
+                        amount: encryptData(formData.amount * formData.adults),
+                        activityPreference: encryptData(formData.activityPreference),
+                        otherActivities: encryptData(formData.otherActivities),
+                        bookingDate: encryptData(formData.bookingDate),
+                        startTime: encryptData(formData.startTime),
+                        durationInHours: encryptData(formData.durationInHours),
+                      },
+                      userCartId: null
+                    }}
+                  />
+              }
+              {
+                /* <button
+                  className="submit-and-proceed-button"
+                  onClick={handleSubmitAndProceed}
+                  disabled={isDisabled}
+                >
+                  <FontAwesomeIcon icon={faCreditCard} /> Submit & Proceed
+                </button> */
+              }
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       {/* {showPeople && <Visiting_People />} */}
     </div>
   );
