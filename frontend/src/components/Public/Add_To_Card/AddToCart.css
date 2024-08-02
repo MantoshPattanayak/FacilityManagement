@@ -207,7 +207,8 @@ color: #1c1c1c;
   display: flex;
   justify-content: right;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -10px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  height: 8vh;
+  height: 6vh;
+  
   border-top: 1px solid rgb(225, 224, 224);
 
 }
@@ -220,6 +221,37 @@ color: #1c1c1c;
 .mssing_cart_image {
   display: flex;
   justify-content: center;
+}
+
+
+/* CSS  pay_now_button*/
+.button-43 {
+  background-image: linear-gradient(-180deg, #37AEE2 0%, #1E96C8 100%);
+
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-size: 15px;
+  justify-content: center;
+   margin: 5px;
+  text-decoration: none;
+  width: 33%;
+ 
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-43:hover {
+  background-image: linear-gradient(-180deg, #1D95C9 0%, #17759C 100%);
+}
+
+@media (min-width: 768px) {
+  .button-43 {
+    padding: 1rem 2rem;
+  }
 }
 
 /* Response Media Query ..... */

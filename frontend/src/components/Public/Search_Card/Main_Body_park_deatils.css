@@ -371,10 +371,206 @@ select:focus {
 }
 
 /* here Table (List design) --------------------------- */
-.table_Container1 {
-  padding: 30px;
+.Table_container_1 {
+  padding: 60px;
  
 }
+
+.table_Container {
+  overflow-y: auto;
+  max-height: 700px;
+}
+
+
+.table-heading {
+  /* padding-left: 10px; */
+  /* margin-left: 10vw; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  /* Converted from 20px to 2.5vw */
+}
+
+.table-heading h2 {
+  /* margin-bottom: 1.5vw; */
+  /* Converted from 10px to 1.5vw */
+  min-width: 70vw;
+  background-color: green;
+  color: black;
+  font-weight: bold;
+  height: 5vh;
+  display: flex;
+  align-items: flex-start;
+  padding-left: 2vh;
+  background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+}
+
+
+table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table caption {
+  font-size: 1.5em;
+  margin: .5em 0 .75em;
+}
+
+table tr {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: .35em;
+}
+
+table th,
+table td {
+  padding: .625em;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  background-color: #01521c;
+  color: #f8f8f8;
+
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+  /* Specify the background color for odd rows */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f0f0f0;
+  /* Specify the background color for even rows */
+}
+
+
+
+
+
+@media screen and (max-width: 892px) {
+  table {
+    border: 0;
+  }
+
+
+  .table-heading {
+    margin-top: 5vw;
+  }
+  
+  .table-heading h2 {
+    min-width: 91vw;
+    height: 5vh;
+    padding-left: 2vh;
+  }
+  
+
+  table caption {
+    font-size: 1.3em;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+
+  table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 10px;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .table-heading {
+    margin-top: 7vw;
+  }
+  
+  .table-heading h2 {
+    min-width: 90vw;
+    height: 5vh;
+    padding-left: 2vh;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .table-heading {
+    margin-top: 10vw;
+  }
+  
+  .table-heading h2 {
+    min-width: 91vw;
+    height: 5vh;
+    padding-left: 2vh;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .Comming_son {
   font-size: 50px;

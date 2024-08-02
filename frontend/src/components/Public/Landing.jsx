@@ -811,10 +811,6 @@ const Landing = () => {
                 />
                 )
               )}
-            
-              
-
-
               {/* Render markers */}
               {mapdata.map((location, index) => (
                 <Marker

@@ -335,7 +335,7 @@ const Main_Body_Park_Details = () => {
               type="text"
               className="Search_input"
               placeholder="Search by Name, Location........"
-              name="givenReq"
+              name="givenReq" 
               id="givenReq"
               value={givenReq}
               onChange={(e) => setGivenReq(e.target.value)}
@@ -591,7 +591,7 @@ const Main_Body_Park_Details = () => {
           </select>
         </div>
       </div>
-      {/* Heere Name of Park, sports dyamics ---------------------------------------- */}
+      {/* Heere Name of Park, sports dyamics ----------------------------------------
       <span className="text_name_park">
         <h1 className="name_park1">
           {facilityTypeId == 1 && "Parks"}
@@ -600,7 +600,7 @@ const Main_Body_Park_Details = () => {
           {facilityTypeId == 4 && "Blueways"}
           {facilityTypeId == 5 && "Greenways"}
         </h1>
-      </span>
+      </span> */}
 
       {/* Card Container Here -------------------------------------------- */}
 
@@ -699,7 +699,8 @@ const Main_Body_Park_Details = () => {
             ))
           ) : (
             // here Table data (Data in list)----------------------------------------------------------------
-            <div className="table_Container1">
+            <div className="Table_container_1"> 
+            <div className="table_Container">
               <table>
                 <thead>
                   <tr>
@@ -757,6 +758,7 @@ const Main_Body_Park_Details = () => {
                     ))}
                 </tbody>
               </table>
+            </div>
             </div>
           )
         ) : (

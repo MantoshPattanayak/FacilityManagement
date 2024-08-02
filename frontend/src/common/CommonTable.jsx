@@ -5,16 +5,7 @@ import "../common/CommonTable.css";
 const CommonTable = () => {
   return (
     <div className="Main_Conatiner_table">
-      <div className="search_text_conatiner">
-      <button className='create-role-btn'>Create new Button</button>
-
-        <input
-          type="text"
-          className="search_input_field"
-          placeholder="Search..."
-          id="myInput"
-        />
-      </div>
+      
 
       <div className="table_Container">
         <table>
