@@ -279,22 +279,21 @@ let uploadTicket = async (title, bookingRef, location, date, time, cost, totalMe
     }
 }
 // ticket upload code end
-let parkBooking = async (req, res) => {
+let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,transaction) => {
     try {
-        let {
-            entityId,
-            entityTypeId,
-            facilityPreference,
-            userCartId
-        } = req.body;
+    
         console.log({
             entityId,
             entityTypeId,
             facilityPreference
         });
+
         console.log('park booking data', req.body)
         let userId = req.user?.userId || 1;
         let statusId = 1;
+        let bookingStatus = 3;  //Pending 
+        let paymentStatus = 26;
+        let result;
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -304,32 +303,84 @@ let parkBooking = async (req, res) => {
 
         // if no userCartId, then decrypt else decrypt in a function
         //decrypt each values of facility preference object
+        if(!userCartId){
         for (let key in facilityPreference) {
             facilityPreference[key] = decrypt(facilityPreference[key]);
         }
 
         if (entityTypeId == 1) {
-            bookingTransactionForPark(entityId, facilityPreference);
+           result =  bookingTransactionForPark(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
         }
         else if (entityTypeId == 2) {
-            bookingTransactionForPlaygrounds(entityId, facilityPreference);
+            result =  bookingTransactionForPlaygrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
         }
         else if (entityTypeId == 3) {
-            bookingTransactionForMPgrounds(entityId, facilityPreference);
+            result =  bookingTransactionForMPgrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
         }
         else if (entityTypeId == 6) {
-            bookingTransactionForEvents(entityId, facilityPreference);
+            result =  bookingTransactionForEvents(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
         }
         else {
-            res.status(statusCode.BAD_REQUEST.code).json({
-                message: 'Booking failed.'
-            })
+            return {
+                error:`Booking failed`
+            }
+        }
+        
+        if(result?.error){
+            return result
+        }
+        return null;
+
+    }
+    else{
+        let findAllTheCartItems = await cartItem.findAll({
+            where:{
+                [Op.and]:[{statusId:cartStatus},{cartId:userCartId}]
+            }
+        })
+        if(findAllTheCartItems.length==0){
+            return {
+                error:`Something went wrong`
+            }
+        }
+        for(let eachData of findAllTheCartItems){
+            if (eachData.entityTypeId == 1) {
+                result =  bookingTransactionForPark(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            }
+            else if (eachData.entityTypeId == 2) {
+                result =  bookingTransactionForPlaygrounds(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            }
+            else if (eachData.entityTypeId == 3) {
+                result =  bookingTransactionForMPgrounds(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            }
+            else if (eachData.entityTypeId == 6) {
+                result = bookingTransactionForEvents(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            }
+            else {
+                return {
+                    error:`Booking failed`
+                }
+            }
+
+              
+            if(result?.error){
+                return result
+            }
+            return null;
         }
 
-        async function bookingTransactionForPark(facilityId, bookingData) {
-            let transaction;
+    }
+    
+    }
+    catch (error) {
+    return {
+        error:`Something went wrong`
+    }
+    }
+    }
+
+        async function bookingTransactionForPark(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
             try {
-                transaction = await sequelize.transaction();
 
                 const newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
@@ -340,7 +391,7 @@ let parkBooking = async (req, res) => {
                     startDate: bookingData.startTime,
                     endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
                     amount: bookingData.amount,
-                    statusId: 1,
+                    statusId: bookingStatus,
                     paymentstatus: '',
                     createdBy: userId
                 }, { transaction, returning: true });
@@ -348,7 +399,7 @@ let parkBooking = async (req, res) => {
                 console.log(newParkBooking.facilityBookingId, 'newParkBooking data created');
                 let findTheBookingDetails = await facilitybookings.findOne({
                     where: {
-                        [Op.and]: [{ facilityBookingId: newParkBooking.facilityBookingId }, { statusId: statusId }]
+                        [Op.and]: [{ facilityBookingId: newParkBooking.facilityBookingId }, { statusId: bookingStatus }]
                     },
                     transaction
                 })
@@ -358,7 +409,7 @@ let parkBooking = async (req, res) => {
                     const newParkBookingActivityPreference = await userbookingactivities.create({
                         facilityBookingId: newParkBooking.dataValues.facilityBookingId,
                         userActivityId: bookingData.activityPreference[i],
-                        statusId: 1,
+                        statusId: statusId,
                         createdBy: userId
                     }, { transaction });
                 }
@@ -366,7 +417,8 @@ let parkBooking = async (req, res) => {
                 let findFacilityInformation = await facilities.findOne({
                     where: {
                         [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
-                    }
+                    },
+                    transaction
                 })
 
 
@@ -381,35 +433,39 @@ let parkBooking = async (req, res) => {
                 let facilityBookingId = newParkBooking.dataValues.facilityBookingId
 
                 let entityType = 'facilityBooking'
-                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
+                // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
 
-                if (ticketUploadAndGeneratePdf?.error) {
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message: ticketUploadAndGeneratePdf.error
-                    })
-                }
+                // if (ticketUploadAndGeneratePdf?.error) {
+                //     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                //         message: ticketUploadAndGeneratePdf.error
+                //     })
+                // }
 
 
-                await transaction.commit();
+                // await transaction.commit();
 
-                res.status(statusCode.SUCCESS.code).json({
-                    message: 'Park booking done successfully',
-                    data: newParkBooking, entityId, entityTypeId,
-                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
-                })
+                // res.status(statusCode.SUCCESS.code).json({
+                //     message: 'Park booking done successfully',
+                //     data: newParkBooking, entityId, entityTypeId,
+                //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
+                // })
+                return null;
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
 
-                console.error('Error creating user park booking:', error);
-                res.status(statusCode.BAD_REQUEST.code).json({
-                    message: 'Park booking failed!',
-                    data: []
-                })
+                return {
+                    error:`Park booking failed!`
+                }
+                // console.error('Error creating user park booking:', error);
+                // res.status(statusCode.BAD_REQUEST.code).json({
+                //     message: 'Park booking failed!',
+                //     data: []
+                // })
             }
         }
 
-        async function bookingTransactionForPlaygrounds(facilityId, bookingData) {
+        async function bookingTransactionForPlaygrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
             /** body params
              * playerLimit: '',
              * sports: '',
@@ -418,9 +474,8 @@ let parkBooking = async (req, res) => {
              * endTime: '',
              * amount: '',
              */
-            let transaction;
+         
             try {
-                transaction = await sequelize.transaction();
 
                 const newPlaygroundBooking = await facilitybookings.create({
                     facilityId: facilityId,
@@ -431,7 +486,7 @@ let parkBooking = async (req, res) => {
                     startDate: bookingData.startTime,
                     endDate: bookingData.endTime,
                     amount: bookingData.amount,
-                    statusId: 1,
+                    statusId: bookingStatus,
                     paymentstatus: '',
                     createdBy: userId
                 }, { transaction });
@@ -441,11 +496,12 @@ let parkBooking = async (req, res) => {
                 let findFacilityInformation = await facilities.findOne({
                     where: {
                         [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
-                    }
+                    },
+                    transaction
                 })
                 let findTheBookingDetails = await facilitybookings.findOne({
                     where: {
-                        [Op.and]: [{ facilityBookingId: newPlaygroundBooking.facilityBookingId }, { statusId: statusId }]
+                        [Op.and]: [{ facilityBookingId: newPlaygroundBooking.facilityBookingId }, { statusId: bookingStatus }]
                     },
                     transaction
                 })
@@ -461,38 +517,43 @@ let parkBooking = async (req, res) => {
 
                 let entityType = 'facilityBooking'
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
+                // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
 
-                if (ticketUploadAndGeneratePdf?.error) {
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message: ticketUploadAndGeneratePdf.error
-                    })
-                }
+                // if (ticketUploadAndGeneratePdf?.error) {
+                //     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                //         message: ticketUploadAndGeneratePdf.error
+                //     })
+                // }
 
 
-                await transaction.commit();
+                // await transaction.commit();
 
-                res.status(statusCode.SUCCESS.code).json({
-                    message: 'Playground booking done successfully',
-                    data: newPlaygroundBooking, entityId, entityTypeId,
-                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
-                })
+                // res.status(statusCode.SUCCESS.code).json({
+                //     message: 'Playground booking done successfully',
+                //     data: newPlaygroundBooking, entityId, entityTypeId,
+                //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
+                // })
+
+                return null;
+
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
 
-                console.error('Error creating user park booking:', error);
-                res.status(statusCode.BAD_REQUEST.code).json({
-                    message: 'Playground booking failed!',
-                    data: []
-                })
+                return {
+                    error:`Playground booking failed!`
+                }
+                // console.error('Error creating user park booking:', error);
+                // res.status(statusCode.BAD_REQUEST.code).json({
+                //     message: 'Playground booking failed!',
+                //     data: []
+                // })
             }
         }
 
-        async function bookingTransactionForMPgrounds(facilityId, bookingData) {
-            let transaction;
+        async function bookingTransactionForMPgrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
             try {
-                transaction = await sequelize.transaction();
+          
 
                 const newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
@@ -503,7 +564,7 @@ let parkBooking = async (req, res) => {
                     startDate: bookingData.startTime,
                     endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
                     amount: bookingData.amount,
-                    statusId: 1,
+                    statusId: bookingStatus,
                     paymentstatus: '',
                     createdBy: userId
                 }, { transaction, returning: true });
@@ -511,7 +572,7 @@ let parkBooking = async (req, res) => {
                 console.log(newParkBooking.facilityBookingId, 'new MP grounds booking data created');
                 let findTheBookingDetails = await facilitybookings.findOne({
                     where: {
-                        [Op.and]: [{ facilityBookingId: newParkBooking.facilityBookingId }, { statusId: statusId }]
+                        [Op.and]: [{ facilityBookingId: newParkBooking.facilityBookingId }, { statusId: bookingStatus }]
                     },
                     transaction
                 })
@@ -521,7 +582,7 @@ let parkBooking = async (req, res) => {
                     const newParkBookingActivityPreference = await userbookingactivities.create({
                         facilityBookingId: newParkBooking.dataValues.facilityBookingId,
                         userActivityId: bookingData.activityPreference[i],
-                        statusId: 1,
+                        statusId: statusId,
                         createdBy: userId
                     }, { transaction });
                 }
@@ -529,7 +590,8 @@ let parkBooking = async (req, res) => {
                 let findFacilityInformation = await facilities.findOne({
                     where: {
                         [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
-                    }
+                    },
+                    transaction
                 })
 
 
@@ -544,35 +606,39 @@ let parkBooking = async (req, res) => {
                 let facilityBookingId = newParkBooking.dataValues.facilityBookingId
 
                 let entityType = 'facilityBooking'
-                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
+                // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
 
-                if (ticketUploadAndGeneratePdf?.error) {
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message: ticketUploadAndGeneratePdf.error
-                    })
-                }
+                // if (ticketUploadAndGeneratePdf?.error) {
+                //     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                //         message: ticketUploadAndGeneratePdf.error
+                //     })
+                // }
 
 
-                await transaction.commit();
+                // await transaction.commit();
 
-                res.status(statusCode.SUCCESS.code).json({
-                    message: 'Park booking done successfully',
-                    data: newParkBooking, entityId, entityTypeId,
-                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
-                })
+                // res.status(statusCode.SUCCESS.code).json({
+                //     message: 'Park booking done successfully',
+                //     data: newParkBooking, entityId, entityTypeId,
+                //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
+                // })
+                return null;
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
 
-                console.error('Error creating user park booking:', error);
-                res.status(statusCode.BAD_REQUEST.code).json({
-                    message: 'Park booking failed!',
-                    data: []
-                })
+                return {
+                    error:`Multiplepurpose ground booking failed!`
+                }
+                // console.error('Error creating user park booking:', error);
+                // res.status(statusCode.BAD_REQUEST.code).json({
+                //     message: 'Park booking failed!',
+                //     data: []
+                // })
             }
         }
 
-        async function bookingTransactionForEvents(eventId, bookingData) {
+        async function bookingTransactionForEvents(eventId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
             /**
              * totalMembers: '',
              * bookingDate: '',
@@ -581,10 +647,7 @@ let parkBooking = async (req, res) => {
              * amount: '',
              * eventId: 1
              */
-            let transaction;
             try {
-                transaction = await sequelize.transaction();
-
                 const eventBookingData = await eventBooking.create({
                     eventId: eventId,
                     totalMembers: bookingData.totalMembers,
@@ -592,7 +655,7 @@ let parkBooking = async (req, res) => {
                     startDate: bookingData.startTime,
                     endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
                     amount: bookingData.amount,
-                    statusId: 1,
+                    statusId: bookingStatus,
                     paymentstatus: '',
                     createdBy: userId,
                     createdOn: new Date()
@@ -622,40 +685,38 @@ let parkBooking = async (req, res) => {
 
                 let entityType = 'eventBooking'
 
-                let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId, entityType)
+                // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId, entityType)
 
-                if (ticketUploadAndGeneratePdf?.error) {
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message: ticketUploadAndGeneratePdf.error
-                    })
-                }
+                // if (ticketUploadAndGeneratePdf?.error) {
+                //     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                //         message: ticketUploadAndGeneratePdf.error
+                //     })
+                // }
 
 
-                await transaction.commit();
+                // await transaction.commit();
 
-                res.status(statusCode.SUCCESS.code).json({
-                    message: 'Event booking done successfully',
-                    data: eventBooking, entityId, entityTypeId,
-                    shareableLink: ticketUploadAndGeneratePdf.shareableLink
-                })
+                // res.status(statusCode.SUCCESS.code).json({
+                //     message: 'Event booking done successfully',
+                //     data: eventBooking, entityId, entityTypeId,
+                //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
+                // })
+                return null;
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
 
-                console.error('Error creating user park booking:', error);
-                res.status(statusCode.BAD_REQUEST.code).json({
-                    message: 'Events booking failed!',
-                    data: []
-                })
+                // console.error('Error creating user park booking:', error);
+                // res.status(statusCode.BAD_REQUEST.code).json({
+                //     message: 'Events booking failed!',
+                //     data: []
+                // })
+                return {
+                    error:`Events booking failed`
+                }
             }
         }
-    }
-    catch (error) {
-        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message: error.message
-        });
-    }
-}
+   
 //  add to cart and cart items table
 // create cart
 // view cart by user id 
