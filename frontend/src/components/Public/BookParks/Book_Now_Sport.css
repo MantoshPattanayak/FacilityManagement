@@ -1,164 +1,188 @@
 .Book_sport_Main_conatiner {
-    width: 100%;
+  width: 100%;
 }
 
 .Book_sport_Child_conatiner {
 
-    display: flex;
-    justify-content: center; /* Center children vertically */
-    align-items: center; /* Center children horizontally */
-   padding: 100px;
+  display: flex;
+  justify-content: center;
+  /* Center children vertically */
+  align-items: center;
+  /* Center children horizontally */
+  padding: 100px;
 }
 
 .Add_sport_form {
-    width: 840px;
-    border: 1px solid rgb(157, 156, 156);
-    top: 30%;
+  width: 840px;
+  border: 1px solid rgb(157, 156, 156);
+  top: 30%;
 }
 
-.sport_name_Book h1{
-    font-size: 25px;
-    font-weight: 500;
+.sport_name_Book h1 {
+  font-size: 25px;
+  font-weight: 500;
 }
 
 /* here form */
 .bookingFormWrapper {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 30px;
-   
-   
-  
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+
+
+
 }
-.price_Sport{
-    font-size: 20px;
-    color: #232323;
-    font-weight: 500;
+
+.price_Sport {
+  font-size: 20px;
+  color: #232323;
+  font-weight: 500;
 }
 
 
 .bookingForm {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .formGroup {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .fieldName {
-    width: 120px;
-    font-weight: bold;
-    color: #555;
+  width: 120px;
+  font-weight: bold;
+  color: #555;
 }
 
 .formSelect,
 .formInput {
-    flex: 1;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-.Button_Conatiner_Sport{
-    display: flex;
-    justify-content: center;
-    gap: 140px;
-    padding: 20px;
+.Button_Conatiner_Sport {
+  display: flex;
+  justify-content: center;
+  gap: 140px;
+  padding: 20px;
 }
 
 
 /* Styles for both buttons */
 .Add_to_Cart {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
-  }
-  
-  .icon {
-    margin-right: 5px;
-  }
-  
-  /* Styles specific to Add to Cart button */
-  .Add_to_Cart {
-    background-color: #4caf50; /* Green */
-  }
-  
-  .Add_to_Cart:hover {
-    background-color: #45a049; /* Darker green */
-  }
-  
- 
-  .Proceed_to_Payment {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+}
 
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
-    padding: 10px;
-  }
-  
-  .icon {
-    margin-right: 5px;
-  }
-  
-  /* Styles specific to Add to Cart button */
-  .Proceed_to_Payment {
-    background-color: #4caf50; /* Green */
-  }
-  
-  .Proceed_to_Payment:hover {
-    background-color: #45a049; /* Darker green */
-  }
+.icon {
+  margin-right: 5px;
+}
+
+/* Styles specific to Add to Cart button */
+.Add_to_Cart {
+  background-color: #4caf50;
+  /* Green */
+}
+
+.Add_to_Cart:hover {
+  background-color: #45a049;
+  /* Darker green */
+}
 
 
-  /*  */
-  .increament_decrement_conatiner {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .formInput_Add_member {
-    width: 220px; /* Adjust width as needed */
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .decrement-button,
-  .increment-button {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    cursor: pointer;
-  }
-  
-  .decrement-button {
-    left: 0;
-    padding: 8px;
-    border-radius: 5px 0 0 5px;
-  
-  }
-  
-  .increment-button {
-    right: 0;
-    padding: 8px;
-    border-radius: 0 5px 5px 0;
-  }
-  .Faclity_Name{
-    text-align: center;
-   
-  }
-  .Faclity_adress{
-    text-align: center;
-    font-size: 25px;
-    font-weight: 500;
-  }
+.Proceed_to_Payment {
+
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  padding: 10px;
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+/* Styles specific to Add to Cart button */
+.Proceed_to_Payment {
+  background-color: #4caf50;
+  /* Green */
+}
+
+.Proceed_to_Payment:hover {
+  background-color: #45a049;
+  /* Darker green */
+}
+
+
+/*  */
+.increament_decrement_conatiner {
+  position: relative;
+  display: inline-block;
+}
+
+.formInput_Add_member {
+  width: 220px;
+  /* Adjust width as needed */
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.decrement-button,
+.increment-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.decrement-button {
+  left: 0;
+  padding: 8px;
+  border-radius: 5px 0 0 5px;
+
+}
+
+.increment-button {
+  right: 0;
+  padding: 8px;
+  border-radius: 0 5px 5px 0;
+}
+
+.Faclity_Name {
+  text-align: center;
+
+}
+
+.Faclity_adress {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.add-to-cart-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.add-to-cart-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
