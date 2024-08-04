@@ -279,7 +279,7 @@ let uploadTicket = async (title, bookingRef, location, date, time, cost, totalMe
     }
 }
 // ticket upload code end
-let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,transaction) => {
+let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transaction) => {
     try {
     
         console.log({
@@ -292,7 +292,8 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
         let userId = req.user?.userId || 1;
         let statusId = 1;
         let bookingStatus = 3;  //Pending 
-        let paymentStatus = 26;
+        let cartStatus = 21; // In cart
+        let paymentStatus = 26;  // pending payment status 
         let result;
         /**
          * 1	PARKS 
@@ -303,22 +304,18 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
 
         // if no userCartId, then decrypt else decrypt in a function
         //decrypt each values of facility preference object
-        if(!userCartId){
-        for (let key in facilityPreference) {
-            facilityPreference[key] = decrypt(facilityPreference[key]);
-        }
 
         if (entityTypeId == 1) {
-           result =  bookingTransactionForPark(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+           result =  bookingTransactionForPark(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
         }
         else if (entityTypeId == 2) {
-            result =  bookingTransactionForPlaygrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            result =  bookingTransactionForPlaygrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
         }
         else if (entityTypeId == 3) {
-            result =  bookingTransactionForMPgrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            result =  bookingTransactionForMPgrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
         }
         else if (entityTypeId == 6) {
-            result =  bookingTransactionForEvents(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
+            result =  bookingTransactionForEvents(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
         }
         else {
             return {
@@ -326,50 +323,8 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
             }
         }
         
-        if(result?.error){
-            return result
-        }
-        return null;
-
-    }
-    else{
-        let findAllTheCartItems = await cartItem.findAll({
-            where:{
-                [Op.and]:[{statusId:cartStatus},{cartId:userCartId}]
-            }
-        })
-        if(findAllTheCartItems.length==0){
-            return {
-                error:`Something went wrong`
-            }
-        }
-        for(let eachData of findAllTheCartItems){
-            if (eachData.entityTypeId == 1) {
-                result =  bookingTransactionForPark(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
-            }
-            else if (eachData.entityTypeId == 2) {
-                result =  bookingTransactionForPlaygrounds(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
-            }
-            else if (eachData.entityTypeId == 3) {
-                result =  bookingTransactionForMPgrounds(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
-            }
-            else if (eachData.entityTypeId == 6) {
-                result = bookingTransactionForEvents(eachData.entityId, eachData.facilityPreference,transaction,entityTypeId,bookingStatus,statusId);
-            }
-            else {
-                return {
-                    error:`Booking failed`
-                }
-            }
-
-              
-            if(result?.error){
-                return result
-            }
-            return null;
-        }
-
-    }
+      
+        return result;
     
     }
     catch (error) {
@@ -379,12 +334,13 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
     }
     }
 
-        async function bookingTransactionForPark(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
+        async function bookingTransactionForPark(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
             try {
 
-                const newParkBooking = await facilitybookings.create({
+                let newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
                     facilityTypeId: entityTypeId,
+                    orderId:orderId,
                     totalMembers: bookingData.totalMembers,
                     otherActivities: bookingData.otherActivities,
                     bookingDate: bookingData.bookingDate,
@@ -392,11 +348,17 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                     endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
                     amount: bookingData.amount,
                     statusId: bookingStatus,
-                    paymentstatus: '',
+                    paymentstatus: paymentStatus,
                     createdBy: userId
                 }, { transaction, returning: true });
 
                 console.log(newParkBooking.facilityBookingId, 'newParkBooking data created');
+                if (!newParkBooking){
+                    await transaction.rollback();
+                    return {
+                        error:`Something went wrong`
+                    }
+                }
                 let findTheBookingDetails = await facilitybookings.findOne({
                     where: {
                         [Op.and]: [{ facilityBookingId: newParkBooking.facilityBookingId }, { statusId: bookingStatus }]
@@ -449,7 +411,9 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                 //     data: newParkBooking, entityId, entityTypeId,
                 //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 // })
-                return null;
+                return {
+                    bookingId:newParkBooking.dataValues.facilityBookingId
+                };
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
@@ -465,7 +429,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
             }
         }
 
-        async function bookingTransactionForPlaygrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
+        async function bookingTransactionForPlaygrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
             /** body params
              * playerLimit: '',
              * sports: '',
@@ -477,8 +441,9 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
          
             try {
 
-                const newPlaygroundBooking = await facilitybookings.create({
+                let newPlaygroundBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    orderId:orderId,
                     facilityTypeId: entityTypeId,
                     totalMembers: bookingData.totalMembers,
                     sportsName: bookingData.sports,
@@ -487,11 +452,17 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                     endDate: bookingData.endTime,
                     amount: bookingData.amount,
                     statusId: bookingStatus,
-                    paymentstatus: '',
+                    paymentstatus: paymentStatus,
                     createdBy: userId
                 }, { transaction });
 
                 console.log('newPlaygroundBooking', newPlaygroundBooking);
+               if (!newPlaygroundBooking){
+                    await transaction.rollback();
+                    return {
+                        error:`Something went wrong`
+                    }
+                }
 
                 let findFacilityInformation = await facilities.findOne({
                     where: {
@@ -534,8 +505,9 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                 //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 // })
 
-                return null;
-
+                return {
+                    bookingId:newPlaygroundBooking.facilityBookingId
+                };
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
@@ -551,12 +523,13 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
             }
         }
 
-        async function bookingTransactionForMPgrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
+        async function bookingTransactionForMPgrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
             try {
           
 
                 const newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
+                    orderId:orderId,
                     facilityTypeId: entityTypeId,
                     totalMembers: bookingData.totalMembers,
                     otherActivities: bookingData.otherActivities,
@@ -565,9 +538,16 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                     endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
                     amount: bookingData.amount,
                     statusId: bookingStatus,
-                    paymentstatus: '',
+                    paymentstatus: paymentStatus,
                     createdBy: userId
                 }, { transaction, returning: true });
+                
+                if(!newParkBooking){
+                    await transaction.rollback();
+                    return {
+                        error:`Something went wrong`
+                    }
+                }
 
                 console.log(newParkBooking.facilityBookingId, 'new MP grounds booking data created');
                 let findTheBookingDetails = await facilitybookings.findOne({
@@ -622,7 +602,9 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                 //     data: newParkBooking, entityId, entityTypeId,
                 //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 // })
-                return null;
+                  return {
+                    bookingId:newParkBooking.facilityBookingId
+                };
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
@@ -638,7 +620,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
             }
         }
 
-        async function bookingTransactionForEvents(eventId, bookingData,transaction,entityTypeId,bookingStatus,statusId) {
+        async function bookingTransactionForEvents(eventId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
             /**
              * totalMembers: '',
              * bookingDate: '',
@@ -650,16 +632,24 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
             try {
                 const eventBookingData = await eventBooking.create({
                     eventId: eventId,
+                    orderId:orderId,
                     totalMembers: bookingData.totalMembers,
                     bookingDate: bookingData.bookingDate,
                     startDate: bookingData.startTime,
                     endDate: `${addHoursToTime(bookingData.startTime, Number(bookingData.durationInHours))}`,
                     amount: bookingData.amount,
                     statusId: bookingStatus,
-                    paymentstatus: '',
+                    paymentstatus: paymentStatus,
                     createdBy: userId,
                     createdOn: new Date()
                 }, { transaction });
+
+                if(!eventBookingData){
+                    await transaction.rollback();
+                    return {
+                        error:`Something went wrong`
+                    }
+                }
 
                 console.log('eventBooking', eventBookingData);
                 let findEventInformation = await eventactivites.findOne({
@@ -701,7 +691,9 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,userCartId,tra
                 //     data: eventBooking, entityId, entityTypeId,
                 //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 // })
-                return null;
+                 return {
+                    bookingId:eventBookingData.facilityBookingId
+                };
             }
             catch (error) {
                 if (transaction) await transaction.rollback();
@@ -823,6 +815,7 @@ let addToCart = async (req, res) => {
             console.log(' facilityPreference[key]', facilityPreference[key])
             facilityPreference[key] = decrypt(facilityPreference[key])            
         }
+
         console.log('24')
 
         console.log('facility preference',facilityPreference)
@@ -1597,5 +1590,6 @@ module.exports = {
     viewCartItemsWRTCartItemId,
     generateQRCode,
     verifyTheQRCode,
-    cancelBooking
+    cancelBooking,
+    
 }

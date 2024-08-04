@@ -9,6 +9,9 @@ module.exports = (sequelize,DataTypes)=>{
         orderId:{
             type:DataTypes.INTEGER
         },
+        bookingId:{
+            type:DataTypes.INTEGER
+        },
         entityId : {
             type:DataTypes.INTEGER
         },

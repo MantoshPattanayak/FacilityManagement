@@ -6,11 +6,15 @@ const { encrypt } = require('../../../middlewares/encryption.middlewares')
 const QueryTypes = db.QueryTypes
 const Payment = db.payment
 let refundTable = db.refund
+let cartItemTable = db.cartItem
+
 let {Op} = require('sequelize')
 let instance = require('../../../config/razorpay.config.js');
 let crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+let {parkBooking} = require('../booking/bookings.controllers.js')
 
+let paymentItems = db.paymentItems
 const getRazorpayApiKeys = async (req, res) => {
   try {
     console.log("getRazorpaykeys api called");
@@ -168,28 +172,195 @@ const checkout =  async (req, res) => {
     transaction = await sequelize.transaction();
     let createdDt = new Date();
     let updatedDt = new Date();
-    
-    let pendingStatus = 26;
+    let totalAmount;
+    let pendingStatus = 26; //payement pending 
+    let inCartStatus = 21;
     let customerId = req.user.userId
     let orderEncrypt;
     
-    let { amount } = req.body;
-    if(!amount){
+    let {entityId,entityTypeId,facilityPreference,userCartId } = req.body;
+
+    let insertToPaymentFirst;
+    let insertToBookingTable;
+    let insertToPaymentItemsTable;
+
+    if(entityId && entityTypeId && Object.keys(facilityPreference).length > 0){
+      entityTypeId = await decrypt(entityTypeId);
+      entityId = await decrypt(entityId);
+     
+      for(let key in facilityPreference){
+        console.log(' facilityPreference[key]', facilityPreference[key])
+        facilityPreference[key] = decrypt(facilityPreference[key])            
+      }
+      totalAmount = facilityPreference.amount;
+
+      insertToPaymentFirst = await Payment.create({
+     // Payment id will be updated on webhook
+        statusId: pendingStatus,
+        amount:facilityPreference.amount,
+        orderDate: createdDt,
+        createdDt:createdDt,
+        updatedDt:updatedDt,
+        createdBy:customerId,
+        updatedBy:customerId
+           
+      },{
+        transaction
+      });
+
+      if(!insertToPaymentFirst){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong`
+        })
+      }
+      // insert to the booking table  with the order id 
+      insertToBookingTable = await parkBooking(entityId,entityTypeId,facilityPreference,userCartId,insertToPaymentFirst.orderId,transaction)
+      if(insertToBookingTable?.error){
+        await transaction.rollback();
+        if(insertToBookingTable?.error.includes('Something went wrong')){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
+            message:error.message
+          })
+        }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:error.message
+          })
+        }
+        
+      }
+
+      // insert to order items table
+       insertToPaymentItemsTable = await paymentItems.create({
+        orderId:insertToPaymentFirst.orderId,
+        bookingId:insertToBookingTable.bookingId,
+        entityId:entityId,
+        entityTypeId:entityTypeId,
+        amount:facilityPreference.amount,
+        statusId:pendingStatus,
+        createdBy:createdBy,
+        updatedBy:updatedBy,
+        updatedDt:updatedDt,
+        createdDt:createdDt,
+
+      },
+    {transaction})
+
+    if(!insertToPaymentItemsTable){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+    }
+      
+    
+    }
+
+    else if(userCartId){
+  
+      userCartId = await decrypt(userCartId);
+      let findTheCartDetails = await cartItemTable.findAll({
+        where:{
+          [Op.and]:[{statusId:inCartStatus},{cartId:userCartId}]
+        },
+        transaction
+      })
+
+      if(findTheCartDetails.length==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`something went wrong`
+        })
+      }
+      for (let i of findTheCartDetails){
+        totalAmount += i.amount;
+      }
+      insertToPaymentFirst = await Payment.create({
+        // Payment id will be updated on webhook
+           statusId: pendingStatus,
+           amount:facilityPreference.amount,
+           orderDate: createdDt,
+           createdDt:createdDt,
+           updatedDt:updatedDt,
+           createdBy:customerId,
+           updatedBy:customerId
+              
+         },{
+           transaction
+         });
+   
+         if(!insertToPaymentFirst){
+           await transaction.rollback();
+           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+             message:`Something went wrong`
+           })
+         }
+
+      for(let eachCart of findTheCartDetails){
+        
+           // insert to the booking table  with the order id 
+           insertToBookingTable = await parkBooking(eachCart.entityId,eachCart.entityTypeId,eachCart.facilityPreference,userCartId,insertToPaymentFirst.orderId,transaction)
+           if(insertToBookingTable?.error){
+             await transaction.rollback();
+             if(insertToBookingTable?.error.includes('Something went wrong')){
+               return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
+                 message:error.message
+               })
+             }
+             else{
+               return res.status(statusCode.BAD_REQUEST.code).json({
+                 message:error.message
+               })
+             }
+             
+           }
+     
+           // insert to order items table
+            insertToPaymentItemsTable = await paymentItems.create({
+             orderId:insertToPaymentFirst.orderId,
+             bookingId:insertToBookingTable.bookingId,
+             entityId:entityId,
+             entityTypeId:entityTypeId,
+             amount:facilityPreference.amount,
+             statusId:pendingStatus,
+             createdBy:createdBy,
+             updatedBy:updatedBy,
+             updatedDt:updatedDt,
+             createdDt:createdDt,
+     
+           },
+         {transaction})
+     
+         if(!insertToPaymentItemsTable){
+           await transaction.rollback();
+           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+             message:`Something went wrong`
+           })
+         }
+
+// 
+      }
+
+    
+    }
+    else{
+      await transaction.rollback();
       return res.status(statusCode.BAD_REQUEST.code).json({
         message:`Invalid Request`
       })
     }
- 
-    amount = await decrypt(amount);
+  
 
     // Create new order with idempotency key
     const options = {
-      amount: amount * 100, // amount in paise
+      amount: totalAmount * 100, // amount in paise
       currency: 'INR',
       receipt: `receipt_${customerId}`,
       payment_capture: 1,
       notes:{
-        customer_id:customerId
+        customer_id:customerId,
+        internal_order_id:insertToPaymentFirst.orderId
       }
     };
 
@@ -219,21 +390,18 @@ const checkout =  async (req, res) => {
           });
         }
     
-    let insertToPayment = await Payment.create({
-      razorpay_order_id: order.id,
-   // Payment id will be updated on webhook
-      statusId: pendingStatus,
-      amount:amount,
-      expiresAt: expiresAt,
-      orderDate: createdDt,
-      createdDt:createdDt,
-      updatedDt:updatedDt,
-      createdBy:order.notes.customer_id,
-      updatedBy:order.notes.customer_id
-         
-    });
+  
 
-    if(!insertToPayment){
+    // update the order/payment table with the razorpay order id ;
+    let [updateTheOrderTable] = await Payment.update({razorpay_order_id:order.id,
+      orderDate:createdDt,
+      updatedDt:updatedDt
+    },
+      {where:[{orderId:order.notes.internal_order_id},{createdBy:order.notes.customer_id},{statusId:pendingStatus}]},{
+        transaction
+      })
+
+    if(updateTheOrderTable==0){
       await transaction.rollback();
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:`Something went wrong`
@@ -251,7 +419,8 @@ const checkout =  async (req, res) => {
       entity: encrypt(order.entity),
       id: encrypt(order.id),
       notes: {
-          customer_id: encrypt(order.notes.customer_id)
+          customer_id: encrypt(order.notes.customer_id),
+          internal_order_id:encrypt(order.notes.internal_order_id)
       },
       offer_id: encrypt(order.offer_id),
       receipt: encrypt(order.receipt),
