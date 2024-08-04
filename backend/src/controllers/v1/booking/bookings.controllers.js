@@ -279,22 +279,21 @@ let uploadTicket = async (title, bookingRef, location, date, time, cost, totalMe
     }
 }
 // ticket upload code end
-let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transaction) => {
+let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,userId,transaction) => {
     try {
     
-        console.log({
-            entityId,
-            entityTypeId,
-            facilityPreference
-        });
-
-        console.log('park booking data', req.body)
-        let userId = req.user?.userId || 1;
+        // console.log({
+        //     entityId,
+        //     entityTypeId,
+        //     facilityPreference
+        // });
+        console.log('122',orderId)
         let statusId = 1;
         let bookingStatus = 3;  //Pending 
         let cartStatus = 21; // In cart
         let paymentStatus = 26;  // pending payment status 
         let result;
+        console.log('entityId inside booking',entityId)
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -306,16 +305,21 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
         //decrypt each values of facility preference object
 
         if (entityTypeId == 1) {
-           result =  bookingTransactionForPark(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
+            console.log('inside park data')
+           result =  await bookingTransactionForPark(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId);
+        console.log(result, 'result for park')
+        
         }
         else if (entityTypeId == 2) {
-            result =  bookingTransactionForPlaygrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
+            
+            result = await bookingTransactionForPlaygrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId);
+        
         }
         else if (entityTypeId == 3) {
-            result =  bookingTransactionForMPgrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
+            result = await bookingTransactionForMPgrounds(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId);
         }
         else if (entityTypeId == 6) {
-            result =  bookingTransactionForEvents(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId);
+            result =  await bookingTransactionForEvents(entityId, facilityPreference,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId);
         }
         else {
             return {
@@ -334,9 +338,9 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
     }
     }
 
-        async function bookingTransactionForPark(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
+        async function bookingTransactionForPark(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId) {
             try {
-
+                console.log('new park booking',facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,'userId',userId)
                 let newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
                     facilityTypeId: entityTypeId,
@@ -384,17 +388,17 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
                 })
 
 
-                let title = findFacilityInformation.facilityname;
-                let bookingRef = findTheBookingDetails.dataValues.bookingReference;
-                let location = findFacilityInformation.address;
-                let date = bookingData.bookingDate;
-                let time = newParkBooking.dataValues.startDate;
-                let cost = newParkBooking.dataValues.amount;
-                let totalMembers = newParkBooking.dataValues.totalMembers;
-                let combinedData = `${newParkBooking.dataValues.facilityBookingId},${entityTypeId},${entityId}`
-                let facilityBookingId = newParkBooking.dataValues.facilityBookingId
+                // let title = findFacilityInformation.facilityname;
+                // let bookingRef = findTheBookingDetails.dataValues.bookingReference;
+                // let location = findFacilityInformation.address;
+                // let date = bookingData.bookingDate;
+                // let time = newParkBooking.dataValues.startDate;
+                // let cost = newParkBooking.dataValues.amount;
+                // let totalMembers = newParkBooking.dataValues.totalMembers;
+                // let combinedData = `${newParkBooking.dataValues.facilityBookingId},${entityTypeId},${entityId}`
+                // let facilityBookingId = newParkBooking.dataValues.facilityBookingId
 
-                let entityType = 'facilityBooking'
+                // let entityType = 'facilityBooking'
                 // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
 
                 // if (ticketUploadAndGeneratePdf?.error) {
@@ -411,6 +415,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
                 //     data: newParkBooking, entityId, entityTypeId,
                 //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
                 // })
+                console.log('park booking inserted successfully')
                 return {
                     bookingId:newParkBooking.dataValues.facilityBookingId
                 };
@@ -429,7 +434,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
             }
         }
 
-        async function bookingTransactionForPlaygrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
+        async function bookingTransactionForPlaygrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId) {
             /** body params
              * playerLimit: '',
              * sports: '',
@@ -523,7 +528,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
             }
         }
 
-        async function bookingTransactionForMPgrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
+        async function bookingTransactionForMPgrounds(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId) {
             try {
           
 
@@ -620,7 +625,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,transa
             }
         }
 
-        async function bookingTransactionForEvents(eventId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId) {
+        async function bookingTransactionForEvents(eventId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId) {
             /**
              * totalMembers: '',
              * bookingDate: '',
