@@ -340,7 +340,7 @@ let parkBooking = async (entityId,entityTypeId,facilityPreference,orderId,userId
 
         async function bookingTransactionForPark(facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,userId) {
             try {
-                console.log('new park booking',facilityId, bookingData,transaction,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,'userId',userId)
+                console.log('new park booking 232',facilityId, bookingData,entityTypeId,bookingStatus,statusId,paymentStatus,orderId,'userId',userId)
                 let newParkBooking = await facilitybookings.create({
                     facilityId: facilityId,
                     facilityTypeId: entityTypeId,

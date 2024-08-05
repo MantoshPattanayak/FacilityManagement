@@ -188,7 +188,7 @@ const paymentVerification = async (req, res) => {
                         message: ticketUploadAndGeneratePdf.error
                     })
                 }
-                ticketUploadArray.push = ({
+                ticketUploadArray.push({
                   shareableLink:ticketUploadAndGeneratePdf.shareableLink,
                   entityId:findTheBookingDetails[0].eventId,
                   entityTypeId:findEventInformation[0].eventCategoryId,
@@ -252,7 +252,7 @@ const paymentVerification = async (req, res) => {
                         message: ticketUploadAndGeneratePdf.error
                     })
                 }
-              ticketUploadArray.push = ({
+              ticketUploadArray.push({
                 shareableLink:ticketUploadAndGeneratePdf.shareableLink,
                 entityId:findTheBookingDetails[0].facilityId,
                 entityTypeId:findTheBookingDetails[0].facilityTypeId,
