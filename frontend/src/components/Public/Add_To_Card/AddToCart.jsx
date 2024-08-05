@@ -64,10 +64,6 @@ const AddToCart = () => {
         e.preventDefault();
         console.log('cartItemId', cartItemId);
         if (!cartItemId || !action) return;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         try {
             let res = await axiosHttpClient('Update_Card', 'put', {
                 cartItemId: cartItemId,
@@ -222,30 +218,6 @@ const AddToCart = () => {
                         </div>
                     )}
 
-<<<<<<< Updated upstream
-                        {/* Payment button section */}
-                        {GetViewCradData.length > 0 && (
-                            <div className="Pay_Now_Buttton">
-                                <button >
-                                    <RazorpayButton
-                                        amount={totalAmount || 0}
-                                        currency={"INR"}
-                                        description={"Book now"}
-                                        onSuccess={handlePaymentSuccess}
-                                        onFailure={handlePaymentFailure}
-                                        data={{
-                                            entityId: null,
-                                            entityTypeId: null,
-                                            facilityPreference: null,
-                                            userCartId: encryptData(cartId)
-                                        }}
-                                    />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-=======
->>>>>>> Stashed changes
 
                     {/* Save for Later Section */}
                     <div className="Save_latter_conatiner">
