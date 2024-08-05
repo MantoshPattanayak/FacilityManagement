@@ -64,7 +64,7 @@ const Book_Now = () => {
 
   useEffect(() => {
     let isDisabled = validateForm(formData);
-    if(Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 0) {
       setIsDisabled(isDisabled);
     }
   }, [formData]);
@@ -253,9 +253,26 @@ const Book_Now = () => {
     }
   };
 
-  const handlePaymentSuccess = (response) => {
+  const handlePaymentSuccess = ({ response, res }) => {
     // console.log("Book park payment success", response);
-    handleSubmitAndProceed();
+    console.log("booking response", res);
+
+    let bookingId = res.data.facilityBookingId;
+    let entityTypeId = res.data.entityTypeId;
+
+    toast.success("Park has been booked successfully.", {
+      autoClose: 2000,
+      onClose: () => {
+        setTimeout(() => {
+          navigate(
+            `/profile/booking-details/ticket?bookingId=${encryptData(
+              bookingId
+            )}&typeId=${encryptData(entityTypeId)}`
+          );
+        }, 1000);
+      },
+    });
+    // handleSubmitAndProceed();
   };
 
   const handlePaymentFailure = (response) => {
@@ -458,8 +475,8 @@ const Book_Now = () => {
                     <button
                       key={activity.userActivityId}
                       className={`game-btn ${selectedGames.includes(activity.userActivityId)
-                          ? "selected"
-                          : ""
+                        ? "selected"
+                        : ""
                         }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >

@@ -9,12 +9,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { decryptData } from "../../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import './EventDetailsPage.css';
+import instance from '../../../../../env';
 export default function EventDetailsPage() {
     // Decrypt the eventId Data ---------------
     const location = useLocation();
     const eventId = decryptData(
         new URLSearchParams(location.search).get("eventId")
     );
+    let navigate = useNavigate();
     //GetView Event Data useSate -------------------
     const [GetViewEventData, setGetViewEventData] = useState([])
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -58,10 +61,11 @@ export default function EventDetailsPage() {
                 }, eventId)
             console.log("here Response of Approve Reject Api", res)
             if (action === 'APPROVE') {
-                toast.success("Event Approved sucessfullty .!")
+                toast.success("Event Host Request is approved sucessfully!")
             } else if (action === 'REJECT') {
-                toast.success("Event Rejected sucessfullty .!")
+                toast.success("Event Host Request is rejected!")
             }
+            navigate("/Activity/ReviewEventDetailsList");
         }
         catch (err) {
             console.log("here Error of Approved and Reject Api", err)
@@ -70,7 +74,7 @@ export default function EventDetailsPage() {
     }
     // here Open Image on new tabe------------------------
     const openImageInNewTab = (imageUrl) => {
-        window.open(imageUrl, '_blank');
+        window.open(instance().baseURL + "/static" + imageUrl, '_blank');
     };
     /// here in Open Module set the action  and set------
     const openModal = (actionType) => {
@@ -182,14 +186,14 @@ export default function EventDetailsPage() {
                             <label htmlFor="input1">Number of tickets</label>
                             <input name='numberOfTickets' type="text"
                                 placeholder="Number of tickets"
-                                value={GetViewEventData.numberOfTickets}
+                                value={GetViewEventData.numberOfTickets || '0'}
                                 maxLength={dataLength.EMAIL} disabled />
                         </div>
                         <div className="form-group">
                             <label htmlFor="input1">Price</label>
                             <input name='ticketPrice' type="text"
                                 placeholder="Price"
-                                value={GetViewEventData.ticketPrice}
+                                value={GetViewEventData.ticketPrice || '0'}
                                 maxLength={dataLength.EMAIL} disabled />
                         </div>
                         <div className="form-group col-span-2">
@@ -197,7 +201,7 @@ export default function EventDetailsPage() {
                             <div className='div-border'>
                                 <div className="flex justify-between">
                                     <div><FontAwesomeIcon icon={faImage} /> {GetViewEventData.eventMainImage}
-                                        <button className='text-blue-600 ml-10'  onClick={() => openImageInNewTab(GetViewEventData.eventMainImage)}>View</button>
+                                        <button className='text-blue-600 ml-10' onClick={() => openImageInNewTab(GetViewEventData.eventMainImage)}>View</button>
                                     </div>
 
                                 </div>
@@ -284,7 +288,6 @@ export default function EventDetailsPage() {
                                         name='subject'
                                         value={subjectMessage.subject}
                                         onChange={(e) => setsubjectMessage({ ...subjectMessage, subject: e.target.value })}
-
                                     />
                                     {subjectError && <span className="error-message">{subjectError}</span>}
                                 </div>
@@ -293,22 +296,20 @@ export default function EventDetailsPage() {
                                     <textarea
                                         value={subjectMessage.messageBody}
                                         onChange={(e) => setsubjectMessage({ ...subjectMessage, messageBody: e.target.value })}
-
                                     ></textarea>
                                     {messageBodyError && <span className="error-message">{messageBodyError}</span>}
-
                                 </div>
                                 <div className="buttons-container21">
                                     <button className="approve-button" type="submit">Submit</button>
                                     <button type="button" className="cancel-button"
-                                        onClick={closeModal}>Close</button>
+                                        onClick={closeModal}>Close
+                                    </button> 
                                 </div>
                             </form>
                         </div>
                     </div>
                 )}
             </div>
-            <ToastContainer />
         </div>
 
     )

@@ -74,7 +74,7 @@ console.log("here Reponse of Host event", req.body)
       },
      transaction
     })
-    console.log('before check booking ')
+    console.log('before check booking checkIfEntityExist', checkIfEntityExist);
     // check if any event is gonna happen in same  date or not
     // let checkHostBooking = await hostbooking.findOne({
     //   where:{[Op.and]:[{statusId:{[Op.or]:[hostStatus,confirmedStatus]}},{facilityId:facilityId}]},
@@ -91,7 +91,7 @@ console.log("here Reponse of Host event", req.body)
       type:QueryTypes.SELECT})
 
     console.log(checkHostBooking,'check host booking if exist or not')
-    if(checkHostBooking){
+    if(checkHostBooking.length > 0){
       console.log(2343,'inside host booking check if the event is already there for same day')
       await transaction.rollback();
       return res.status(statusCode.BAD_REQUEST.code).json({
@@ -221,7 +221,8 @@ console.log("here Reponse of Host event", req.body)
       createdDt:createdDt,
       updatedDt:updatedDt,
       createdBy:userId,
-      updatedBy:userId
+      updatedBy:userId,
+      statusId: 1
     },
   {transaction})
     if(createEventActivities){

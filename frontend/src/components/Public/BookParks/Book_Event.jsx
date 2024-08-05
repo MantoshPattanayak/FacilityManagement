@@ -238,9 +238,26 @@ const Book_Event = () => {
         return Object.keys(err).length === 0; // Returns true if no errors
     };
 
-    const handlePaymentSuccess = (response) => {
-        console.log(response);
-        HandleProccedToPayment();
+    const handlePaymentSuccess = ({ response, res }) => {
+        // console.log(response);
+        // console.log("booking response", res);
+
+        let bookingId = res.data.facilityBookingId;
+        let entityTypeId = res.data.entityTypeId;
+
+        toast.success("Event has been booked successfully.", {
+            autoClose: 2000,
+            onClose: () => {
+                setTimeout(() => {
+                    navigate(
+                        `/profile/booking-details/ticket?bookingId=${encryptData(
+                            bookingId
+                        )}&typeId=${encryptData(entityTypeId)}`
+                    );
+                }, 1000);
+            },
+        });
+        // HandleProccedToPayment();
     }
 
     const handlePaymentFailure = (response) => {
@@ -253,7 +270,7 @@ const Book_Event = () => {
     useEffect(() => {
         console.log("formData", formData);
         let err = validation(formData);
-        if(Object.keys(err).length > 0)
+        if (Object.keys(err).length > 0)
             setIsDisabled(true);
         else
             setIsDisabled(false);

@@ -204,9 +204,24 @@ const Book_Now_Sport = () => {
     }
 
     // function to handle payment success
-    const handlePaymentSuccess = (response) => {
-        console.log("Book park payment success", response);
-        handleSubmitAndProceed();
+    const handlePaymentSuccess = ({ response, res }) => {
+        // console.log("Book park payment success", response);
+        let bookingId = res.data.facilityBookingId;
+        let entityTypeId = res.data.entityTypeId;
+
+        toast.success("Event has been booked successfully.", {
+            autoClose: 2000,
+            onClose: () => {
+                setTimeout(() => {
+                    navigate(
+                        `/profile/booking-details/ticket?bookingId=${encryptData(
+                            bookingId
+                        )}&typeId=${encryptData(entityTypeId)}`
+                    );
+                }, 1000);
+            },
+        });
+        // handleSubmitAndProceed();
     };
 
     //function handle payment failure and notify user
