@@ -372,22 +372,22 @@ const Landing = () => {
     }
   }
   /// remove (Clean map load)
-  useEffect(() => {
-    // Cleanup Google Maps script on unmount or when component reloads
-    return () => {
-      if (window.google && window.google.maps) {
-        const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
-        if (script) {
-          script.parentNode.removeChild(script);
-        }
-        window.google.maps = null;
-      }
-    };
-  }, []);
-  const handleMapLoad = () => {
-    // The map is fully loaded, now we can fetch nearby facilities
-    getNearbyFacilities();
-  };
+  // useEffect(() => {
+  //   // Cleanup Google Maps script on unmount or when component reloads
+  //   return () => {
+  //     if (window.google && window.google.maps) {
+  //       const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+  //       if (script) {
+  //         script.parentNode.removeChild(script);
+  //       }
+  //       window.google.maps = null;
+  //     }
+  //   };
+  // }, []);
+  // const handleMapLoad = () => {
+  //   // The map is fully loaded, now we can fetch nearby facilities
+  //   getNearbyFacilities();
+  // };
 
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
@@ -809,7 +809,7 @@ const Landing = () => {
               }}
               center={defaultCenter}
               zoom={12}
-              onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
+              // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
               {loading ? (
                 <div>Loading...</div>
