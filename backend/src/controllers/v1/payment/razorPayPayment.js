@@ -7,6 +7,8 @@ const QueryTypes = db.QueryTypes
 const Payment = db.payment
 let refundTable = db.refund
 let cartItemTable = db.cartItem
+let eventBookingTable = db.eventBookings;
+let facilityBookingTable = db.facilitybookings
 
 let {Op} = require('sequelize')
 let instance = require('../../../config/razorpay.config.js');
@@ -42,12 +44,16 @@ const paymentVerification = async (req, res) => {
   try {
     let { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
+      let pendingOrderItemStatus = 26;
        razorpay_order_id = await decrypt(razorpay_order_id);
        razorpay_payment_id = await decrypt(razorpay_payment_id);
        razorpay_signature = await decrypt(razorpay_signature)
 
       let updatedDt = new Date();
-      let statusId = 27
+      let statusId = 27;
+      let bookingStatus = 3;
+      let updateTheEventBooking;
+      let updateTheFaciliyBooking;
     console.log(req.body);
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -64,11 +70,11 @@ const paymentVerification = async (req, res) => {
      
       console.log('payment details',paymentDetails)
       if(paymentDetails){
-        let amountPaid = paymentDetails.amount/100; // converting from paise to ruppess
+        let amountPaid = paymentDetails.amount/100; // converting from paise to rupees
         let checkIfThePaymentAmountIsSameAsOrderAmount = await sequelize.query(`select * from amabhoomi.paymentmethods where
-          razorpay_order_id = ? and amount =?`,{
+          razorpay_order_id = ? and amount =? and createdBy = ? and orderId = ?`,{
             type:QueryTypes.SELECT,
-            replacements:[paymentDetails.order_id, amountPaid]
+            replacements:[paymentDetails.order_id, amountPaid, paymentDetails.notes.customer_id, paymentDetails.notes.internal_order_id ]
           })
 
           if(!checkIfThePaymentAmountIsSameAsOrderAmount){
@@ -80,9 +86,11 @@ const paymentVerification = async (req, res) => {
           
         if(paymentDetails.captured){
           statusId = 25
+          bookingStatus = 4
         }
         else{
           statusId = 27
+          bookingStatus = 5;
         }
         let [updatePayment] = await Payment.update({
           razorpay_payment_id:paymentDetails.id,
@@ -96,6 +104,52 @@ const paymentVerification = async (req, res) => {
           razorpay_order_id: razorpay_order_id
         }
       });
+       // update the payment items table and booking table
+       let checkTheOrderItemsTable = await paymentItems.findAll({
+        where:{
+          [Op.and]:[{statusId:pendingOrderItemStatus},{orderId:checkIfThePaymentAmountIsSameAsOrderAmount.orderId}]
+        }
+       })
+       if(checkTheOrderItemsTable.length ==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
+       }
+       let [updateThePaymentItemsTable] = await paymentItems.update({
+        statusId:statusId,
+        updatedDt:updatedDt
+      },{
+        where:{
+          orderId:checkIfThePaymentAmountIsSameAsOrderAmount.orderId
+        }
+      })
+      if(updateThePaymentItemsTable == 0){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong`
+        })
+      }
+    
+    for(let i of checkTheOrderItemsTable){
+      if(checkTheOrderItemsTable.entityTypeId == 6){
+        // update the event booking
+        [updateTheEventBooking] = await eventBookingTable.update({statusId:bookingStatus},{
+          where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount.orderId}
+        })
+        if(updateTheEventBooking==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
+        }
+      }
+      else {
+        // update the facility booking
+        [updateTheFaciliyBooking] = await facilityBookingTable.update({statusId:bookingStatus},{
+          where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount.orderId}
+        })
+
+        if(updateTheFaciliyBooking==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
+        }
+
+      }
+    }
+    
         if (updatePayment>=1) {
           return res.status(statusCode.SUCCESS.code).json({
             message: 'Payment done successfully',
