@@ -225,34 +225,7 @@ color: #1c1c1c;
 
 
 /* CSS  pay_now_button*/
-.button-43 {
-  background-image: linear-gradient(-180deg, #37AEE2 0%, #1E96C8 100%);
 
-  box-sizing: border-box;
-  color: #FFFFFF;
-  display: flex;
-  font-size: 15px;
-  justify-content: center;
-   margin: 5px;
-  text-decoration: none;
-  width: 33%;
- 
-  border: 0;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-43:hover {
-  background-image: linear-gradient(-180deg, #1D95C9 0%, #17759C 100%);
-}
-
-@media (min-width: 768px) {
-  .button-43 {
-    padding: 1rem 2rem;
-  }
-}
 
 /* Response Media Query ..... */
 @media screen and (max-width: 760px){

@@ -371,23 +371,23 @@ const Landing = () => {
       setLoading(false); // Stop loading
     }
   }
-/// remove (Clean map load)
-useEffect(() => {
-  // Cleanup Google Maps script on unmount or when component reloads
-  return () => {
-    if (window.google && window.google.maps) {
-      const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
-      if (script) {
-        script.parentNode.removeChild(script);
+  /// remove (Clean map load)
+  useEffect(() => {
+    // Cleanup Google Maps script on unmount or when component reloads
+    return () => {
+      if (window.google && window.google.maps) {
+        const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+        if (script) {
+          script.parentNode.removeChild(script);
+        }
+        window.google.maps = null;
       }
-      window.google.maps = null;
-    }
+    };
+  }, []);
+  const handleMapLoad = () => {
+    // The map is fully loaded, now we can fetch nearby facilities
+    getNearbyFacilities();
   };
-}, []);
-const handleMapLoad = () => {
-  // The map is fully loaded, now we can fetch nearby facilities
-  getNearbyFacilities();
-};
 
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
@@ -619,9 +619,9 @@ const handleMapLoad = () => {
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </div>
               </div>
-              
+
             </div>
-          
+
             {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions1">
                 {suggestions.length > 0 ? (
@@ -638,8 +638,8 @@ const handleMapLoad = () => {
                 )}
               </ul>
             )}
-       
-           
+
+
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
