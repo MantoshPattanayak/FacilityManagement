@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             primaryKey: true
         },
+        orderId: {
+            type: DataTypes.INTEGER
+        
+        },
         facilityId: {
             type: DataTypes.INTEGER,
             defaultValue: null
