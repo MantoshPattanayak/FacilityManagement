@@ -28,11 +28,15 @@ import { formatDate } from "../../../utils/utilityFunctions";
 import park_image from "../../../assets/park.jpg"
 import instance from "../../../../env";
 import missing_cart from "../../../assets/missing_cart.png"
+// Import  Shimmer Ui --------------
+import AddCartShimmerUi from "../../../common/AddCartShimmerUi";
 const AddToCart = () => {
     // here useState for Get the data -----------------------------------------------
     const [GetViewCradData, setGetViewCradData] = useState([])
     const [GetCountItem, setGetCountItem] = useState([])
     const [saveForLaterData, setsaveForLaterData] = useState([])
+    // set loding false
+    const [IsLoding, setIsLoding] = useState(false)
     // here Put (Delete the Cart) ----------------------------------------------------
     // Read the data (useing Selector ) ------------------------------------
     const languageContent = useSelector((state) => state.language.languageContent);
@@ -60,12 +64,14 @@ const AddToCart = () => {
         e.preventDefault();
         console.log('cartItemId', cartItemId);
         if (!cartItemId || !action) return;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         try {
             let res = await axiosHttpClient('Update_Card', 'put', {
                 cartItemId: cartItemId,
                 action: action
-
             });
             console.log("Update Cart", res);
             setRefresh(prevState => !prevState);
@@ -89,6 +95,7 @@ const AddToCart = () => {
     }
     // here Get data funcation ------------------------------------------------------
     async function GetViewCardData() {
+        setIsLoding(true)
         try {
             let res = await axiosHttpClient('View_Card_UserId', 'get',)
             console.log("here Response of View Card Data", res)
@@ -105,8 +112,10 @@ const AddToCart = () => {
             }
             setTotalAmount(totalAmount);
             console.log("totalAmount", totalAmount);
+            setIsLoding(false)
         }
         catch (err) {
+            setIsLoding(false)
             console.log("here Error of View Card Data", err)
         }
     }
@@ -153,44 +162,67 @@ const AddToCart = () => {
     return (
         <div className="Add_to_Card_Main_conatiner9">
             <PublicHeader />
+
             <div className="Add_To_Card_Child_conatiner9">
                 <div className="Show_Cart_Details_save_latter">
                     <div className="Cart_details_container1">
                         <h1 className="cart_items_text">Cart items</h1>
                     </div>
                     {/* Cart Details Section */}
-                    <div className="Cart_details_container">
-                        {GetViewCradData?.length > 0 ? (
-                            GetViewCradData?.map((cardItem) => (
-                                <div className="Cart_details" key={cardItem.cartItemId}>
-                                    <div className="image_section">
-                                        <img className="park_image_cart" src={`${instance().baseURL}/static${cardItem.imageUrl}`} alt="No image" />
+                    {IsLoding ? (
+                        // Display shimmer effect while loading
+                        <AddCartShimmerUi />
+                    ) : (
+                        <div className="Cart_details_container">
+                            {GetViewCradData?.length > 0 ? (
+                                GetViewCradData?.map((cardItem) => (
+                                    <div className="Cart_details" key={cardItem.cartItemId}>
+                                        <div className="image_section">
+                                            <img className="park_image_cart" src={`${instance().baseURL}/static${cardItem.imageUrl}`} alt="No image" />
+                                        </div>
+                                        <div className="text_contant_details_cart">
+                                            <span className="park_name_date">
+                                                <h1 className="Park_name_cart">{cardItem.facilityTypeName}</h1>
+                                                <h1 className="park_Booking_Date">{formatDate(decryptData(cardItem.facilityPreference.bookingDate))}</h1>
+                                            </span>
+                                            <span className="Details_cart_details">
+                                                <h1 className="facility_name_cart">{cardItem.facilityName}</h1>
+                                                <p className="p_tag_text">Total Members : {(decryptData(cardItem.facilityPreference.totalMembers)) || decryptData(cardItem.facilityPreference.playersLimit)}</p>
+                                                <p className="p_tag_text">Time: {formatTime(decryptData(cardItem.facilityPreference.startTime)) || ''} </p>
+                                                <h1 className="cart_amount">₹ {decryptData(cardItem.facilityPreference.amount) ? parseFloat(decryptData(cardItem.facilityPreference.amount)).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                            </span>
+                                            <span className="Save_remove_button">
+                                                <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'SAVED_FOR_LATER')}>SAVE FOR LATER</button>
+                                                <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'REMOVED')}>REMOVE</button>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="text_contant_details_cart">
-                                        <span className="park_name_date">
-                                            <h1 className="Park_name_cart">{cardItem.facilityTypeName}</h1>
-                                            <h1 className="park_Booking_Date">{formatDate(decryptData(cardItem.facilityPreference.bookingDate))}</h1>
-                                        </span>
-                                        <span className="Details_cart_details">
-                                            <h1 className="facility_name_cart">{cardItem.facilityName}</h1>
-                                            <p className="p_tag_text">Total Members : {(decryptData(cardItem.facilityPreference.totalMembers)) || decryptData(cardItem.facilityPreference.playersLimit)}</p>
-                                            <p className="p_tag_text">Time: {formatTime(decryptData(cardItem.facilityPreference.startTime)) || ''} </p>
-                                            <h1 className="cart_amount">₹ {decryptData(cardItem.facilityPreference.amount) ? parseFloat(decryptData(cardItem.facilityPreference.amount)).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
-                                        </span>
-                                        <span className="Save_remove_button">
-                                            <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'SAVED_FOR_LATER')}>SAVE FOR LATER</button>
-                                            <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, cardItem.cartItemId, 'REMOVED')}>REMOVE</button>
-                                        </span>
-                                    </div>
+                                ))
+                            ) : (
+                                <div className="mssing_cart_image">
+                                    <img className="image_missing" src={missing_cart}></img>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="mssing_cart_image">
-                                <img className="image_missing" src={missing_cart}></img>
-                            </div>
 
-                        )}
+                            )}
+                             
+                            {/* Payment button section */}
+                            {GetViewCradData.length > 0 && (
+                                <div className="Pay_Now_Buttton">
+                                    <button >
+                                        <RazorpayButton
+                                            amount={totalAmount || 0}
+                                            currency={"INR"}
+                                            description={"Book now"}
+                                        // onSuccess={handlePaymentSuccess}
+                                        // onFailure={handlePaymentFailure}
+                                        />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
+<<<<<<< Updated upstream
                         {/* Payment button section */}
                         {GetViewCradData.length > 0 && (
                             <div className="Pay_Now_Buttton">
@@ -212,10 +244,16 @@ const AddToCart = () => {
                             </div>
                         )}
                     </div>
+=======
+>>>>>>> Stashed changes
 
                     {/* Save for Later Section */}
                     <div className="Save_latter_conatiner">
                         <h1 className="Save_for_later_text">Save for later   </h1>
+                        {IsLoding ? (
+                        // Display shimmer effect while loading
+                        <AddCartShimmerUi />
+                    ) : (
                         <div className="Cart_details_container">
                             {saveForLaterData?.length > 0 ? (
                                 saveForLaterData?.map((Item) => (
@@ -245,6 +283,7 @@ const AddToCart = () => {
                                 <p className="missing_cart_item"></p>
                             )}
                         </div>
+                        )}
                     </div>
                 </div>
                 {/* Price Details Section */}
@@ -271,6 +310,7 @@ const AddToCart = () => {
 
                 </div>
             </div>
+
             {/* Toast Notifications */}
             {/* <ToastContainer /> */}
         </div>

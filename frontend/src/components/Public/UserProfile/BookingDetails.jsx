@@ -345,7 +345,11 @@ const BookingDetails = () => {
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button> */}
             </div>
-          </aside>
+          </aside> 
+          {IsLoding ? (
+                // Display shimmer effect while loading
+                <ShimmerUIFlex />
+              ) : (
           <div className="right-container-favorite">
             {/* New div with paragraph and blue border */}
             {/* <div className="form-container"> */}
@@ -524,11 +528,8 @@ const BookingDetails = () => {
             </div>
 
             <div className="eventdetails-cardsection_Bd">
-              {IsLoding ? (
-                // Display shimmer effect while loading
-                <ShimmerUIFlex />
-              ) : (
-                eventDetailsData.length > 0 &&
+             
+               { eventDetailsData.length > 0 &&
                 eventDetailsData.map((event) => (
                   <div key={event.bookingId} className="eventdetails-carddetails">
                     <div className="eventdetails-photo">
@@ -562,7 +563,7 @@ const BookingDetails = () => {
                     </div>
                   </div>
                 ))
-              )}
+              }
             </div>
 
             {eventDetailsData?.length == 0 && (
@@ -571,6 +572,7 @@ const BookingDetails = () => {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </main>
