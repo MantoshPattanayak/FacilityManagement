@@ -242,8 +242,8 @@ const Book_Event = () => {
         // console.log(response);
         // console.log("booking response", res);
 
-        let bookingId = res.data.facilityBookingId;
-        let entityTypeId = res.data.entityTypeId;
+        let bookingId = res.data.shareableLink[0].bookingId;
+        let entityTypeId = res.data.shareableLink[0].entityTypeId;
 
         toast.success("Event has been booked successfully.", {
             autoClose: 2000,
