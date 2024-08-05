@@ -209,12 +209,11 @@ db1.inventoryfacilities.hasMany(db1.inventorymaster,{foreignKey:'equipmentId'})
 db1.facilities.hasMany(db1.eventActivities,{foreignKey:'facilityId'})
 db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
-db1.eventActivities.hasMany(db1.hosteventbookings,{foreignKey:'facilityId'})
-db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
+
 
 
 db1.faq.sync({
-  alter: false,
+  alter:false,
 });
 
 module.exports = db1;

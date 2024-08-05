@@ -57,6 +57,7 @@ const paymentVerification = async (req, res) => {
       let updateTheEventBooking;
       let updateTheFaciliyBooking;
       let ticketUploadAndGeneratePdf;
+      let ticketUploadArray=[];
     console.log(req.body);
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -187,6 +188,14 @@ const paymentVerification = async (req, res) => {
                         message: ticketUploadAndGeneratePdf.error
                     })
                 }
+                ticketUploadArray.push = ({
+                  shareableLink:ticketUploadAndGeneratePdf.shareableLink,
+                  entityId:findTheBookingDetails[0].eventId,
+                  entityTypeId:findEventInformation[0].eventCategoryId,
+                  bookingId:findTheBookingDetails[0].eventBookingId,
+                  bookingRef:findTheBookingDetails[0].bookingReference
+  
+                })
       
 
       }
@@ -243,17 +252,24 @@ const paymentVerification = async (req, res) => {
                         message: ticketUploadAndGeneratePdf.error
                     })
                 }
-      
+              ticketUploadArray.push = ({
+                shareableLink:ticketUploadAndGeneratePdf.shareableLink,
+                entityId:findTheBookingDetails[0].facilityId,
+                entityTypeId:findTheBookingDetails[0].facilityTypeId,
+                bookingId:findTheBookingDetails[0].facilityBookingId,
+                bookingRef:findTheBookingDetails[0].bookingReference
+
+              })
 
       }
     }
         console.log(ticketUploadAndGeneratePdf.shareableLink,'payment ticketUploadAndGeneratePdf')
         if (updatePayment>=1) {
-          console.log('near to return success statement')
+          console.log('near to return success statement', ticketUploadArray)
           return res.status(statusCode.SUCCESS.code).json({
             message: 'Payment done successfully',
             success: true,
-            shareableLink: ticketUploadAndGeneratePdf.shareableLink
+            shareableLink: ticketUploadArray
           });
         } else {
           return res.status(statusCode.BAD_REQUEST.code).json({
