@@ -1,13 +1,11 @@
 import React, { useRef } from 'react'
-import '../Events/EventList.css'
+import './EventList.css'
 import Cardimg from "../../../assets/Card_img.png";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faCalendarDays, faLocationDot, faClock, faFilter, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 // Axios for Call the API --------------------------------
 import axiosHttpClient from "../../../utils/axios";
-// Common footer---------------------------- ----------------
-import CommonFooter from "../../../common/CommonFooter";
 // Import Logo here ------------------------------ ------------------------------
 import Park_Logo from "../../../assets/Ground_logo.png";
 import MultiPark from "../../../assets/ama_bhoomi_multipurpose_grounds_logo-removebg-preview.png";
@@ -365,11 +363,11 @@ export default function EventList() {
             )}
           </div>
           {/* Other filter buttons and elements */}
-          <div className="filter_button col-span-4 w-fit">
+          <div className="event-filter_button col-span-4 w-fit">
             {
               tabList?.length > 0 && tabList?.map((tab) => {
                 return (
-                  <button className={`button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
+                  <button className={`event-button-59 ${selectedTab.includes(tab) ? 'bg-[#19ba62] text-white' : ''}`} role="button" onClick={(e) => { handleTabClick(e, tab) }}>
                     {tab}
                   </button>
                 )
