@@ -310,10 +310,11 @@
 .gride_page {
   /* margin-right: 90px; */
   margin-left: 48%;
-  height: 100%;
+  height: fit-content;
   border: 0.0833vw solid #ccc;
   border-radius: 0.417vw;
   background-color: ghostwhite;
+  padding: 0px;
 }
 
 .filter_button {

@@ -165,9 +165,9 @@ const Event_hostPage = () => {
                     startEventDate: formData.startEventDate,
                     endEventDate: formData.endEventDate,
                     descriptionofEvent: formData.descriptionofEvent,
-                    ticketsold: formData.ticketsold,
-                    numberofTicket: formData.numberofTicket,
-                    price: formData.price,
+                    ticketsold: formData.ticketsold || null,
+                    numberofTicket: formData.numberofTicket || null,
+                    price: formData.price || null,
                     uploadEventImage: formData.uploadEventImage.data || null,
                     additionalFiles: formData.additionalFiles.map((file) => { return file.data }) || null,
                     facilityId: formData.facilityId
@@ -176,7 +176,7 @@ const Event_hostPage = () => {
                 toast.success('Host Event created successfully.');
             } catch (err) {
                 console.log(err);
-                toast.error('Host Event failed. Please try again.');
+                toast.error(err.response.data.message);
                 setformErrors('')
             }
         } else {

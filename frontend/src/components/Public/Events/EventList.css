@@ -155,11 +155,19 @@
     justify-content: space-between;
 }
 
-.event-gride_page select {
-    margin-right: 90px;
-    padding: 0.2vw;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.gride_page {
+    margin-left: 48%;
+    height: 100%;
+    border: 0.0833vw solid #ccc;
+    border-radius: 0.417vw;
+    background-color: ghostwhite;
+}
+
+.gride_page select {
+    /* margin-right: 90px; */
+    /* padding: 0.2vw; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 4px; */
 }
 
 .event-filter_button {
@@ -169,7 +177,7 @@
 
 select {
     border: none;
-    padding: 20px 20px;
+    padding: 2px 20px;
     border-radius: 5px;
 }
 
@@ -213,6 +221,90 @@ select:focus {
     color: #fff;
     fill: #06f;
 }
+
+.filter-dropdown {
+    /* display: block; */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+    z-index: 1;
+    width: 400px;
+}
+
+.filter-dropdown label {
+    display: block;
+    padding: 5px 0;
+}
+
+.filter-dropdown input {
+    margin-right: 5px;
+}
+
+.Comming_son {
+    font-size: 50px;
+    padding: 50px;
+}
+
+.filter_option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    gap: 5px;
+    height: 35px;
+}
+
+.filter-icon {
+    color: #029c3d;
+}
+
+.main__body__park {}
+
+.filter-container {
+    position: relative;
+    display: inline-block;
+}
+
+.filter_option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.filter_option:hover {
+    background-color: #f0f0f0;
+}
+
+.filter-icon {
+    margin-right: 5px;
+}
+
+.text-filter {
+    font-size: 14px;
+}
+
+/* @media screen and (max-width: 1024px) {
+    .Search_container {
+      display: grid;
+    }
+  
+    .filter-dropdown {
+      width: 330px;
+    }
+  
+    .filter-dropdown label {
+      padding: 3px;
+      font-size: 12px;
+    }
+  } */
 
 @media (min-width: 768px) {
     .event-button-59 {
@@ -261,9 +353,9 @@ select:focus {
         margin-left: 0;
     }
 
-    .event-gride_page select {
+    .gride_page select {
         margin-right: 0;
-        padding: 8px;
+        /* padding: 8px; */
     }
 
     .event-filter_button {
