@@ -256,9 +256,8 @@ const Book_Now = () => {
   const handlePaymentSuccess = ({ response, res }) => {
     // console.log("Book park payment success", response);
     console.log("booking response", res);
-
-    let bookingId = res.data.facilityBookingId;
-    let entityTypeId = res.data.entityTypeId;
+    let bookingId = res.data.shareableLink[0].bookingId;
+    let entityTypeId = res.data.shareableLink[0].entityTypeId;
 
     toast.success("Park has been booked successfully.", {
       autoClose: 2000,
