@@ -152,7 +152,7 @@ body {
 }
 
 .Search-Conatiner {
-  height: 420px;
+  height: 410px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -263,39 +263,73 @@ body {
 
 .search-bar:focus {
   border-color: initial;
-  /* Retain the same border color when focused */
-  box-shadow: none;
-  /* Remove any default box-shadow */
-}
 
-/* auto-suggest section - start*/
-.suggestions {
-  border: 1px solid #ccc;
-  border-radius: 0px 0px 10px 10px;
+  box-shadow: none;
+ 
+}
+/* auto suggestion */
+.suggestions1 {
+  border: 1px solid rgba(255, 255, 255, 0.3); 
+  border-radius: 10px 10px 20px 10px;
   border-top: none;
   max-height: 200px;
   overflow-y: auto;
   position: absolute;
-  width: 30%;
-  background-color: #fff;
+  width: 29%;
+  background-color: rgba(0, 0, 0, 0.2); 
   z-index: 99;
   list-style-type: none;
+  color: #ffffff; 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  padding: 0;
+  margin: 0;
+ margin-top: 320px;
 }
-
-.suggestions li {
-  padding: 8px;
+.suggestions1 li {
+  padding: 10px 12px;
   cursor: pointer;
   font-size: 16px;
+  color: #ffffff; 
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2); 
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.suggestions li.active {
-  background-color: #007bff;
-  color: white;
+.suggestions1 li:last-child {
+  border-bottom: none; 
 }
 
-.suggestions li:hover {
-  background-color: #ddd;
+.suggestions1 li.active, 
+.suggestions1 li:hover {
+  background-color: rgba(255, 255, 255, 0.2); 
+  color: #ffffff; 
 }
+
+.suggestions1 li.no-suggestions1 {
+  background-color: rgba(255, 255, 255, 0.1); 
+  color: #cccccc; 
+  text-align: center;
+  font-style: italic;
+  cursor: default;
+}
+
+.suggestions1 li.no-suggestions1:hover {
+  background-color: rgba(255, 255, 255, 0.1); 
+}
+/* Custom scrollbar styling */
+.suggestions1::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.suggestions1::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+}
+
+.suggestions1::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4); 
+  border-radius: 10px; 
+}
+
 
 /* auto-suggest section - end*/
 
@@ -681,7 +715,7 @@ body {
 }
 
 .marquee-content {
-  width: calc(100% - 120px);
+  width: calc(1800% - 0px);
   /* Adjust width to fit the remaining space after considering the span's width */
   white-space: nowrap;
   overflow: hidden;
@@ -1481,6 +1515,12 @@ margin-top: 20px;
     align-items: center;
     margin-left: 20;
   }
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }
 
 @media screen and (max-width: 1400px) {
@@ -1492,6 +1532,12 @@ margin-top: 20px;
   .Current_Event_image {
     align-items: center;
     margin-left: 12;
+  }
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   /*---- event card section----*/
@@ -1529,10 +1575,41 @@ margin-top: 20px;
     height: auto;
     gap: 2vh;
   }
+  .suggestions {
+    border: 1px solid rgba(255, 255, 255, 0.3); 
+    border-radius: 10px 10px 20px 10px;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 34%;
+    background-color: rgba(0, 0, 0, 0.2); 
+    z-index: 99;
+    list-style-type: none;
+    color: #ffffff; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    padding: 0;
+    margin: 0;
+    margin-top: 50px;
+  }
+  .suggestions li {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #ffffff; 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2); 
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  }
 
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
+  }
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .bg-img {
@@ -1598,7 +1675,12 @@ margin-top: 20px;
   .suggestions {
     top: 520px;
   }
-
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
+  }
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
@@ -1614,7 +1696,12 @@ margin-top: 20px;
     align-items: center;
     margin-left: 2;
   }
-
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
+  }
   /* header-content  Fonnt size-------------- */
   .header nav ul li a {
     font-size: 12px;
@@ -1841,14 +1928,23 @@ margin-top: 20px;
     margin-left: -12vw;
   }
 
+  
+
   .Current_Event_image {
     align-items: center;
     margin-left: 6;
+  }
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .Search-Conatiner {
     /* height: 36vh; */
     height: 42vh;
+    width: 220px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -2047,7 +2143,12 @@ margin-top: 20px;
   .landingcontainer {
     overflow-x: auto;
   }
-
+  .marquee-content {
+    width: calc(1800% - 0px);
+    /* Adjust width to fit the remaining space after considering the span's width */
+    white-space: nowrap;
+    overflow: hidden;
+  }
   .Current_Event_image {
     align-items: center;
     margin-left: 2;
