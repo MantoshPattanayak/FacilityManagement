@@ -257,6 +257,7 @@ const Landing = () => {
       console.log("Here is the Landing Page API data", resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
+      console.log("here Notification ", resLanding.data.notificationsList)
       setGalleryImage(resLanding.data.galleryData);
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
@@ -618,16 +619,11 @@ const handleMapLoad = () => {
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </div>
               </div>
-              {/* <div className="search-bar-arrow">
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="input-icon"
-                  onClick={handleSearch}
-                />
-              </div> */}
+              
             </div>
+          
             {suggestions?.length > 0 && inputFacility && (
-              <ul className="suggestions">
+              <ul className="suggestions1">
                 {suggestions.length > 0 ? (
                   suggestions.map((suggestion, index) => (
                     <li
@@ -642,6 +638,8 @@ const handleMapLoad = () => {
                 )}
               </ul>
             )}
+       
+           
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
