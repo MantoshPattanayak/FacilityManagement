@@ -6,11 +6,18 @@ const { encrypt } = require('../../../middlewares/encryption.middlewares')
 const QueryTypes = db.QueryTypes
 const Payment = db.payment
 let refundTable = db.refund
+let cartItemTable = db.cartItem
+let eventBookingTable = db.eventBookings;
+let facilityBookingTable = db.facilitybookings
+let facilities = db.facilities
 let {Op} = require('sequelize')
 let instance = require('../../../config/razorpay.config.js');
 let crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+let {parkBooking,uploadTicket} = require('../booking/bookings.controllers.js')
 
+
+let paymentItems = db.paymentItems
 const getRazorpayApiKeys = async (req, res) => {
   try {
     console.log("getRazorpaykeys api called");
@@ -38,12 +45,18 @@ const paymentVerification = async (req, res) => {
   try {
     let { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
+      let pendingOrderItemStatus = 26;
        razorpay_order_id = await decrypt(razorpay_order_id);
        razorpay_payment_id = await decrypt(razorpay_payment_id);
        razorpay_signature = await decrypt(razorpay_signature)
 
       let updatedDt = new Date();
-      let statusId = 27
+      let statusId = 27;
+      let activeStatus = 1;
+      let bookingStatus = 3;
+      let updateTheEventBooking;
+      let updateTheFaciliyBooking;
+      let ticketUploadAndGeneratePdf;
     console.log(req.body);
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -60,26 +73,34 @@ const paymentVerification = async (req, res) => {
      
       console.log('payment details',paymentDetails)
       if(paymentDetails){
-        let amountPaid = paymentDetails.amount/100; // converting from paise to ruppess
+        let amountPaid = paymentDetails.amount/100; // converting from paise to rupees
+        console.log(paymentDetails.order_id, amountPaid, paymentDetails.notes.customer_id, paymentDetails.notes.internal_order_id,
+          'payment data'
+        )
         let checkIfThePaymentAmountIsSameAsOrderAmount = await sequelize.query(`select * from amabhoomi.paymentmethods where
-          razorpay_order_id = ? and amount =?`,{
+          razorpay_order_id = ? and amount =? and createdBy = ? and orderId = ?`,{
             type:QueryTypes.SELECT,
-            replacements:[paymentDetails.order_id, amountPaid]
+            replacements:[paymentDetails.order_id, amountPaid, paymentDetails.notes.customer_id, paymentDetails.notes.internal_order_id ]
           })
+          // console.log('after checkIfThePaymentAmount',checkIfThePaymentAmountIsSameAsOrderAmount)
 
-          if(!checkIfThePaymentAmountIsSameAsOrderAmount){
+          if(checkIfThePaymentAmountIsSameAsOrderAmount.length==0){
             return res.status(statusCode.BAD_REQUEST.code).json({
               message: 'Invalid payment request',
               success: false
             })
           }
+          // console.log(checkIfThePaymentAmountIsSameAsOrderAmount,'payment details')
           
         if(paymentDetails.captured){
           statusId = 25
+          bookingStatus = 4
         }
         else{
           statusId = 27
+          bookingStatus = 5;
         }
+        // console.log('nearer to update payment', paymentDetails.order_id)
         let [updatePayment] = await Payment.update({
           razorpay_payment_id:paymentDetails.id,
           razorpay_signature: razorpay_signature,
@@ -89,18 +110,157 @@ const paymentVerification = async (req, res) => {
         },
       {
         where:{
-          razorpay_order_id: razorpay_order_id
+          razorpay_order_id: paymentDetails.order_id
         }
       });
+      // console.log('update payment table', paymentDetails.order_id, 'data', checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId)
+       // update the payment items table and booking table
+       let checkTheOrderItemsTable = await paymentItems.findAll({
+        where:{
+          [Op.and]:[{statusId:pendingOrderItemStatus},{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}]
+        }
+       })
+       console.log('after the order items table')
+       if(checkTheOrderItemsTable.length ==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
+       }
+       let [updateThePaymentItemsTable] = await paymentItems.update({
+        statusId:statusId,
+        updatedDt:updatedDt
+      },{
+        where:{
+          orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId
+        }
+      })
+      console.log('afterupdateThePaymentItemsTables ')
+
+      if(updateThePaymentItemsTable == 0){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong`
+        })
+      }
+    
+    for(let eachOrderItem of checkTheOrderItemsTable){
+      console.log(eachOrderItem,'eachOrderItem')
+      if(eachOrderItem.entityTypeId == 6){
+        // update the event booking
+        [updateTheEventBooking] = await eventBookingTable.update({statusId:bookingStatus},{
+          where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}
+        })
+        if(updateTheEventBooking==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
+        }
+
+        let findTheBookingDetails = await sequelize.query(`select * from amabhoomi.eventbookings where eventBookingId =? and orderId=? and statusId = ?`,
+          {
+            replacements:[eachOrderItem.bookingId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId, bookingStatus],
+            type:QueryTypes.SELECT
+          }
+        )
+      if(findTheBookingDetails.length == 0){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong `
+        })
+      }
+      
+        let findEventInformation = await eventactivites.findOne({
+          where: {
+              [Op.and]: [{ statusId: activeStatus }, { eventId: findTheBookingDetails[0].eventId }]
+          }
+      })
+        let title = findEventInformation.eventName;
+                let bookingRef = findTheBookingDetails[0].bookingReference;
+                let location = findEventInformation.locationName;
+                let date = findTheBookingDetails[0].bookingDate;
+                let time = findTheBookingDetails[0].startDate;
+                let cost = findTheBookingDetails[0].amount;
+                let totalMembers = findTheBookingDetails[0].totalMembers;
+                let combinedData = `${findTheBookingDetails[0].eventBookingId},${findEventInformation.eventCategoryId},${findTheBookingDetails[0].eventId}`
+                let eventBookingId = findTheBookingDetails[0].eventBookingId;
+
+                let entityType = 'eventBooking'
+
+                 ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, paymentDetails.notes.customer_id, entityType)
+
+                if (ticketUploadAndGeneratePdf?.error) {
+                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                        message: ticketUploadAndGeneratePdf.error
+                    })
+                }
+      
+
+      }
+      else {
+        // update the facility booking
+        [updateTheFaciliyBooking] = await facilityBookingTable.update({statusId:bookingStatus},{
+          where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}
+        })
+
+        if(updateTheFaciliyBooking==0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
+        }
+        console.log('facility boking paramerters',checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId , bookingStatus )
+        let findTheBookingDetails = await sequelize.query(`select * from amabhoomi.facilitybookings where facilityBookingId = ? and orderId=? and statusId = ?`,
+          {
+            replacements:[eachOrderItem.bookingId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId, bookingStatus],
+            type:QueryTypes.SELECT
+          }
+        )
+      if(findTheBookingDetails.length == 0){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong `
+        })
+      }
+     
+     
+        let findFacilityInformation = await facilities.findOne({
+          where: {
+              [Op.and]: [{ statusId: activeStatus }, { facilityId:findTheBookingDetails[0].facilityId }, {facilityTypeId:findTheBookingDetails[0].facilityTypeId}]
+          }
+        })
+
+        // console.log(findFacilityInformation,'findFacilityInformation')
+        if(!findFacilityInformation){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong `
+          })
+        }
+            let title = findFacilityInformation.facilityname;
+                let bookingRef = findTheBookingDetails[0].bookingReference;
+                let location = findFacilityInformation.address;
+                let date = findTheBookingDetails[0].bookingDate;
+                let time = findTheBookingDetails[0].startDate;
+                let cost = findTheBookingDetails[0].amount;
+                let totalMembers = findTheBookingDetails[0].totalMembers;
+                let combinedData = `${findTheBookingDetails[0].facilityBookingId},${findTheBookingDetails[0].facilityTypeId},${findTheBookingDetails[0].facilityId}`
+                let facilityBookingId = findTheBookingDetails[0].facilityBookingId
+
+                let entityType = 'facilityBooking'
+                 ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, paymentDetails.notes.customer_id, entityType)
+
+                if (ticketUploadAndGeneratePdf?.error) {
+                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                        message: ticketUploadAndGeneratePdf.error
+                    })
+                }
+      
+
+      }
+    }
+        console.log(ticketUploadAndGeneratePdf.shareableLink,'payment ticketUploadAndGeneratePdf')
         if (updatePayment>=1) {
+          console.log('near to return success statement')
           return res.status(statusCode.SUCCESS.code).json({
             message: 'Payment done successfully',
-            success: true
+            success: true,
+            shareableLink: ticketUploadAndGeneratePdf.shareableLink
           });
         } else {
           return res.status(statusCode.BAD_REQUEST.code).json({
             message: 'Payment Failed',
-            success: false
+            success: false,
+            shareableLink: ticketUploadAndGeneratePdf.shareableLink
+
           });
         }
       } else {
@@ -168,33 +328,212 @@ const checkout =  async (req, res) => {
     transaction = await sequelize.transaction();
     let createdDt = new Date();
     let updatedDt = new Date();
-    
-    let pendingStatus = 26;
+    let totalAmount;
+    let pendingStatus = 26; //payement pending 
+    let inCartStatus = 21;
     let customerId = req.user.userId
     let orderEncrypt;
     
-    let { amount } = req.body;
-    if(!amount){
+    let {entityId,entityTypeId,facilityPreference,userCartId } = req.body.data;
+    console.log(req.body, 'req.body')
+
+    let insertToPaymentFirst;
+    let insertToBookingTable;
+    let insertToPaymentItemsTable;
+  
+    if(entityId && entityTypeId && Object.keys(facilityPreference).length > 0){
+      entityTypeId = await decrypt(entityTypeId);
+      entityId = await decrypt(entityId);
+     
+      for(let key in facilityPreference){
+        console.log(' facilityPreference[key]', facilityPreference[key])
+        
+        facilityPreference[key] = decrypt(facilityPreference[key]);
+        if(key ==='activityPreference' && facilityPreference[key]!=null){
+          facilityPreference[key] = facilityPreference[key].split(',')
+        }
+
+      }
+      totalAmount = facilityPreference.amount;
+      console.log('facility prefernce1',facilityPreference)
+
+
+      insertToPaymentFirst = await Payment.create({
+     // Payment id will be updated on webhook
+        statusId: pendingStatus,
+        amount:facilityPreference.amount,
+        orderDate: createdDt,
+        createdDt:createdDt,
+        updatedDt:updatedDt,
+        createdBy:customerId,
+        updatedBy:customerId
+           
+      },{
+        transaction
+      });
+
+      if(!insertToPaymentFirst){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong`
+        })
+      }
+      console.log('after payment first creation')
+      // insert to the booking table  with the order id 
+      insertToBookingTable = await parkBooking(entityId,entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
+      if(insertToBookingTable?.error){
+        await transaction.rollback();
+        if(insertToBookingTable?.error.includes('Something went wrong')){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
+            message:error.message
+          })
+        }
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:error.message
+          })
+        }
+        
+      }
+
+      console.log('after booking creation', insertToBookingTable)
+
+      // insert to order items table
+       insertToPaymentItemsTable = await paymentItems.create({
+        orderId:insertToPaymentFirst.orderId,
+        bookingId:insertToBookingTable.bookingId,
+        entityId:entityId,
+        entityTypeId:entityTypeId,
+        amount:facilityPreference.amount,
+        statusId:pendingStatus,
+        createdBy:customerId,
+        updatedBy:customerId,
+        updatedDt:updatedDt,
+        createdDt:createdDt,
+
+      },
+    {transaction})
+
+    if(!insertToPaymentItemsTable){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:`Something went wrong`
+      })
+    }
+      console.log('inside the payment table without cart')
+    
+    }
+    
+    else if(userCartId){
+  
+      userCartId = await decrypt(userCartId);
+      let findTheCartDetails = await cartItemTable.findAll({
+        where:{
+          [Op.and]:[{statusId:inCartStatus},{cartId:userCartId}]
+        },
+        transaction
+      })
+
+      if(findTheCartDetails.length==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`something went wrong`
+        })
+      }
+      for (let i of findTheCartDetails){
+        totalAmount += i.amount;
+      }
+      insertToPaymentFirst = await Payment.create({
+        // Payment id will be updated on webhook
+           statusId: pendingStatus,
+           amount:facilityPreference.amount,
+           orderDate: createdDt,
+           createdDt:createdDt,
+           updatedDt:updatedDt,
+           createdBy:customerId,
+           updatedBy:customerId
+              
+         },{
+           transaction
+         });
+   
+         if(!insertToPaymentFirst){
+           await transaction.rollback();
+           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+             message:`Something went wrong`
+           })
+         }
+
+      for(let eachCart of findTheCartDetails){
+        
+           // insert to the booking table  with the order id 
+           insertToBookingTable = await parkBooking(eachCart.entityId,eachCart.entityTypeId,eachCart.facilityPreference,userCartId,insertToPaymentFirst.orderId,transaction)
+           if(insertToBookingTable?.error){
+             await transaction.rollback();
+             if(insertToBookingTable?.error.includes('Something went wrong')){
+               return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
+                 message:error.message
+               })
+             }
+             else{
+               return res.status(statusCode.BAD_REQUEST.code).json({
+                 message:error.message
+               })
+             }
+             
+           }
+     
+           // insert to order items table
+            insertToPaymentItemsTable = await paymentItems.create({
+             orderId:insertToPaymentFirst.orderId,
+             bookingId:insertToBookingTable.bookingId,
+             entityId:entityId,
+             entityTypeId:entityTypeId,
+             amount:facilityPreference.amount,
+             statusId:pendingStatus,
+             createdBy:customerId,
+             updatedBy:customerId,
+             updatedDt:updatedDt,
+             createdDt:createdDt,
+     
+           },
+         {transaction})
+     
+         if(!insertToPaymentItemsTable){
+           await transaction.rollback();
+           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+             message:`Something went wrong`
+           })
+         }
+
+// 
+      }
+
+    
+    }
+    else{
+      await transaction.rollback();
       return res.status(statusCode.BAD_REQUEST.code).json({
         message:`Invalid Request`
       })
     }
- 
-    amount = await decrypt(amount);
+  
 
     // Create new order with idempotency key
     const options = {
-      amount: amount * 100, // amount in paise
+      amount: totalAmount * 100, // amount in paise
       currency: 'INR',
       receipt: `receipt_${customerId}`,
       payment_capture: 1,
       notes:{
-        customer_id:customerId
+        customer_id:customerId,
+        internal_order_id:insertToPaymentFirst.orderId
       }
     };
 
+    console.log('options')
     const order = await instance.orders.create(options);
-
+    console.log('order',order)
     // Save transaction details 
     const oneHour = 24 * 60 * 60 * 1000;
     const expiresAt = new Date(Date.now() + oneHour);
@@ -219,28 +558,36 @@ const checkout =  async (req, res) => {
           });
         }
     
-    let insertToPayment = await Payment.create({
-      razorpay_order_id: order.id,
-   // Payment id will be updated on webhook
-      statusId: pendingStatus,
-      amount:amount,
-      expiresAt: expiresAt,
-      orderDate: createdDt,
-      createdDt:createdDt,
-      updatedDt:updatedDt,
-      createdBy:order.notes.customer_id,
-      updatedBy:order.notes.customer_id
-         
-    });
+  
+      console.log('update the order table')
+    // update the order/payment table with the razorpay order id ;
+    let [updateTheOrderTable] = await Payment.update(
+      {razorpay_order_id:order.id,
+      orderDate:createdDt,
+      expiresAt:expiresAt,
+      updatedDt:updatedDt
+    },
+      {
+        where:
+        {
+          [Op.and]:
+          [{orderId:order.notes.internal_order_id},{createdBy:order.notes.customer_id},{statusId:pendingStatus}]
+      },
+        transaction
+      }
+    )
 
-    if(!insertToPayment){
+      console.log('update the order table outside',updateTheOrderTable)
+
+    if(updateTheOrderTable==0){
       await transaction.rollback();
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:`Something went wrong`
       })
     }
-  
-    console.log('Transaction initiated and saved:', insertToPayment);
+    
+   
+    console.log('Transaction initiated and saved:');
     orderEncrypt = {
       amount: encrypt(order.amount),
       amount_due: encrypt(order.amount_due),
@@ -251,7 +598,8 @@ const checkout =  async (req, res) => {
       entity: encrypt(order.entity),
       id: encrypt(order.id),
       notes: {
-          customer_id: encrypt(order.notes.customer_id)
+          customer_id: encrypt(order.notes.customer_id),
+          internal_order_id:encrypt(order.notes.internal_order_id)
       },
       offer_id: encrypt(order.offer_id),
       receipt: encrypt(order.receipt),

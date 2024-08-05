@@ -41,6 +41,7 @@ db1.inventoryfacilities = require("./inventoryfacilities.models")(
 );
 db1.payment = require("./payment.models")(sequelize, DataTypes);
 db1.refund = require("./refund.models")(sequelize, DataTypes);
+db1.paymentItems = require("./paymentItems.models")(sequelize,DataTypes)
 
 db1.resourcemaster = require("./resourcemaster.models")(sequelize, DataTypes);
 db1.rolemaster = require("./rolemaster.models")(sequelize, DataTypes);
