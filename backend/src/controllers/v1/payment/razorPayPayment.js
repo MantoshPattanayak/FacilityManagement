@@ -275,8 +275,7 @@ const paymentVerification = async (req, res) => {
           return res.status(statusCode.BAD_REQUEST.code).json({
             message: 'Payment Failed',
             success: false,
-            shareableLink: ticketUploadAndGeneratePdf.shareableLink
-
+            shareableLink: ticketUploadArray
           });
         }
       } else {
