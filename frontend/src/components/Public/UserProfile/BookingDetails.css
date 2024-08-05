@@ -1,494 +1,302 @@
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 .booking-dtails-container {
-    box-sizing: border-box;
-    /* width: 90vw; */
-    padding: 10px;
-    margin-top: 5%;
-    margin-left: 4%;
-    display: flex;
+  box-sizing: border-box;
+  width: 90vw;
+  padding: 10px;
+  margin-top: 5%;
+  margin-left: 4%;
+  display: flex;
+  gap: 15%;
+}
+.right-container-favorite_booking_details {
+  height: 90vh;
 }
 .user-profile-section {
-    width: 20vw;
-    flex-shrink: 0;
-    /* Prevent shrinking of the user profile section */
+  width: 20vw;
+  flex-shrink: 0;
+  /* Prevent shrinking of the user profile section */
 }
 .icon-user {
-    width: 40px;
-    height: 40px;
+  width: 40px;
+  height: 40px;
 }
 .buttons-profile {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 .buttons-profile button {
-    background-color: #D9D9D9;
-    border: 1px solid white;
-    padding: 10px;
-    margin: 5px;
-    color: black;
-    padding: 8px 24px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    width: 150px;
+  background-color: #d9d9d9;
+  border: 1px solid white;
+  padding: 10px;
+  margin: 5px;
+  color: black;
+  padding: 8px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 150px;
 }
 .buttons-profile button:hover {
-    background-color: #00B562;
-    transition: 0.3s;
+  background-color: #00b562;
+  transition: 0.3s;
 }
 .right-container-booking-details {
-    flex: 1;
-    overflow: auto;
+  flex: 1;
+  overflow: auto;
 }
 .logout-button {
-    margin-top: 5px;
-    margin-left: 3px;
+  margin-top: 5px;
+  margin-left: 3px;
 }
 /* right section */
-.filterSctions{
-    width: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-block: 2vh;
+.filterSctions {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-block: 2vh;
 }
 
-.filterCard{
-    width:max-content;
+.filterCard {
+  width: max-content;
 }
 
-.filter-dropdown label{
-    font-size: small;
-    width:max-content;
+.filter-dropdown label {
+  font-size: small;
+  width: max-content;
 }
-.bookingDetailsSorting{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
+.bookingDetailsSorting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 
 .eventdetails-tab {
-    display: flex;
-    justify-content: space-evenly;
-    /* width: 625px; */
-    gap: 40px;
-    width: 70%;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  /* width: 625px; */
+  gap: 40px;
+  width: 70%;
+  margin-bottom: 10px;
 }
 .eventdetails-tab div {
-    font-size: 16px;
-    font-weight: bold;
-    width: 100%;
-    border: 1px solid;
-    border-radius: 8px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #00000031;
-    border: 1px solid #00000031;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00000031;
+  border: 1px solid #00000031;
 }
 .eventdetails-tab div:hover {
-    cursor: pointer;
-    background: #00B562;
-    color: white;
+  cursor: pointer;
+  background: #00b562;
+  color: white;
 }
 .eventdetails-tab .active {
-    background: #00B562;
-    color: white;
+  background: #00b562;
+  color: white;
 }
-.eventdetails-cardsection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 24px;
-    width: 830px;
-    /* border: 1px solid rgba(0, 0, 0, 0.2); */
-    height: 650px;
-    overflow-y: scroll;
-    /* overflow: hidden; */
+.eventdetails-cardsection_Bd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+  width: 830px;
+  /* border: 1px solid rgba(0, 0, 0, 0.2); */
+  height: 1050px;
+  overflow-y: scroll;
+  /* overflow: hidden; */
 }
 
-.eventdetails-cardsection::-webkit-scrollbar {
-    display: none;
-  }
+.eventdetails-cardsection_Bd::-webkit-scrollbar {
+  display: none;
+}
 .eventdetails-carddetails {
-    border: 1px solid #B9B9B97D;
-    width: 800px;
-    height: 144px;
-    border-radius: 10px;
-    padding: 12px;
-    background: #E9E9E9;
-    display: flex;
-    gap: 10px;
-    font-size: 16px;
+  border: 1px solid #b9b9b97d;
+  width: 800px;
+  height: 144px;
+  border-radius: 10px;
+  padding: 12px;
+  background: #e9e9e9;
+  display: flex;
+  gap: 10px;
+  font-size: 16px;
 }
 .eventdetails-photo img {
-    width: 190px;
-    height: 120px;
+  width: 190px;
+  height: 120px;
 }
 .eventdetails-details {
-    width: 75%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  width: 75%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .eventdetails-details-eventname {
-    font-weight: bold;
-    font-size: 16px;
+  font-weight: bold;
+  font-size: 16px;
 }
 .eventdetails-details-eventAddress {
-    font-size: 14px;
+  font-size: 14px;
 }
 .eventdetails-details-eventTime {
-    font-size: 11px;
+  font-size: 11px;
 }
 .eventdetails-eventbutton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    font-size: 11px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: green;
-    color: white;
-    width: 92px;
-    height: 21px
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  font-size: 11px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: green;
+  color: white;
+  width: 92px;
+  height: 21px;
 }
 /* Footer */
 .common-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
-@media screen and (max-width:900px) {
-    .booking-dtails-container {
-        margin-top: 70px;
-    }
+
+/*--------------------- Filter CSS  ---------*/
+.filter_option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  gap: 5px;
+  height: 35px;
 }
-@media screen and (max-width:400px) {
-    .user-profile-section {
-        width: fit-content;
-    }
+
+.filter-icon {
+  color: #029c3d;
 }
- @media screen and (max-width:972px) {
-    .calculated-time {
-        margin-right: 175px;
-    }
-    .right-container-booking-details {
-        width: 500px;
-    }
+
+.main__body__park {
 }
-@media screen and (max-width: 930px) {
-    .right-container-booking-details {
-        width: calc(100% - 25vw);
-    }
+
+.filter-container {
+  position: relative;
+  display: inline-block;
 }
-@media screen and (max-width: 1000px) {
-    .booking-dtails-container {
-        width: 90vw;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .user-profile-section {
-        width: 25vw;
-    }
-    .right-container-booking-details {
-        width: 75vw;
-    }
+
+.filter_option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
 }
-@media screen and (max-width:856px){
-    .eventdetails-carddetails {
-        border: 1px solid #B9B9B97D;
-        width: 431px;
-        height: 144px;
-        border-radius: 10px;
-        padding: 12px;
-        background: #E9E9E9;
-        display: flex;
-        gap: 10px;
-        font-size: 16px;
-    }
+
+.filter_option:hover {
+  background-color: #f0f0f0;
 }
-@media screen and (max-width: 575px) {
-    .buttons-profile button {
-        background-color: #D9D9D9;
-        border: 1px solid white;
-        padding: 10px;
-        margin: 5px;
-        color: black;
-        padding: 7px 18px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 12px;
-        width: 150px;
-    }
-    .booking-dtails-container {
-        width: 95vw;
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
+
+.filter-icon {
+  margin-right: 5px;
+}
+
+.text-filter {
+  font-size: 14px;
+}
+
+.filter-dropdown {
+  /* display: block; */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 1;
+  width: 400px;
+}
+
+.filter-dropdown label {
+  display: block;
+  padding: 5px 0;
+}
+
+.filter-dropdown input {
+  margin-right: 5px;
+}
+
+.common-footer {
+  padding: 10px;
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}
+
+@media screen and (max-width: 760px){
+    .booking-dtails-container{
         flex-direction: column;
-    }
-    .user-profile-section {
+        margin-left: 0px;
         width: 100%;
-        margin-bottom: 10px;
     }
-    .right-container-booking-details {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-left: 8vw;
-        flex: 1;
-        overflow: auto;
+
+    .text-filter {
+        font-size: 11px;
     }
-    .eventdetails-cardsection {
-         display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        /* gap: 24px;
-        width: 387px; */
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        height: 90vh;
-        overflow-y: scroll;
-    }
-    .eventdetails-carddetails {
-        border: 1px solid #B9B9B97D;
-        width: 263px;
-        /* margin-left: 150px; */
-        height: 144px;
-        border-radius: 10px;
-        padding: 12px;
-        background: #E9E9E9;
-        display: flex;
-        gap: 10px;
-        font-size: 16px;
-    }
-}
-@media screen and (max-width: 400px) {
-    
-    .booking-dtails-container {
-        width: 95vw;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .user-profile-section {
-        width: 80vw;
-    }
-    .right-container-booking-details {
-        width: 67vw;
-    }
-    .booking-dtails-container {
-        width: 95vw;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .user-profile-section {
-        width: 80vw;
-    }
-    .right-container-booking-details {
-        width: 67vw;
-    }
-    .buttons-profile {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .buttons-profile button {
-        width: auto;
-        margin: 5px;
-    }
-    .booking-date {
-        font-size: 8px;
-        margin-top: -5px;
-    }
-}
-@media screen and (max-width: 700px) {
-    .eventdetails-carddetails {
-        width: 328px;
-        height: 150px;
-        padding: 10px;
-        font-size: 18px;
-        line-height: 22px;
-    }
-    .eventdetails-photo img {
-        width: 80px;
-        height: 100%;
+    .filter_option {
+        gap: 0px;
+        padding: 7px;
+        height: 26px;
     }
     .eventdetails-tab {
-        width: auto;
-        gap: 20px;
-    }
-    .calculated-time {
-        visibility: hidden;
-        margin-left: 50px;
-        font-size: 8px;
-    }
-    eventdetails-details {
-        font-size: 15px;
-        width: 69%;
-        height: 96%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-    }
-    .eventdetails-details-eventname {
-        font-weight: bold;
-        font-size: 12px;
-    }
-    .eventdetails-eventbutton {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px;
-        font-size: 8px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        background-color: green;
-        color: white;
-        width: 66px;
-        height: 15px;
-    }
-    .right-container-booking-details {
-        width: 75vw;
-        margin-left: 25px;
-    }
-    .eventdetails-details-eventAddress {
-        font-size: 12px;
-    }
-}
-/* --- */
-/* @media screen and (max-width: 710px) {
-    .eventdetails-tab {
-       
-        display: flex;
-        justify-content: space-between;
-    }
-    .eventdetails-cardsection {
-        gap: 20px;
-    }
-    .eventdetails-carddetails {
-        height: 150px;
-        padding: 10px;
-        font-size: 18px;
-        line-height: 22px;
-    }
-    .search_text_conatiner {
-        justify-content: space-between;
-        flex-direction: row;
-        align-items: center;
-    }
-    .search_input_field {
-        font-size: small;
-        padding: 5px;
-        margin-top: 6px;
-    }
-    .eventdetails-tab div {
-        font-size: small;
-        padding: 5px;
-        width: 22vw;
-    }
-    .search_input_calender {
-        border: 1px solid rgba(0, 0, 0, 0.7);
-        border-radius: 8px;
-        font-size: small;
-        padding: 5px;
-    }
-} */
-@media screen and (max-width: 575px) {
-    .eventdetails-tab {
-        width: 70vw;
-        gap: 20px;
-    }
-    .form-heading h2 {
-        width: 377px;
-        font-size: 14px;
-        margin-bottom: 1.5vw;
-        height: 4vh;
-        padding-left: 1vh;
-    }
-    .eventdetails-tab div {
-        font-size: 9px;
-        padding: 5px;
-    }
-    .eventdetails-cardsection {
-        gap: 20px;
-    }
-    /* .eventdetails-carddetails {
-        min-height: 80px;
-        height: auto;
-        width: auto;
-        padding: 0px;
-        font-size: 14px;
-        line-height: 18px;
-    } */
-    .eventdetails-carddetails {
-        width: 263px;
-        height: 150px;
-        padding: 10px;
-        font-size: 18px;
-        line-height: 22px;
-    }
-    .eventdetails-photo img {
-        width: 150px;
-        height: 100%;
-    }
-    .eventdetails-details-eventname {
-        font-weight: 600;
-        font-size: 10px;
-    }
-    .eventdetails-details-eventAddress {
-        font-weight: 300;
-        font-size: 9px;
-    }
-    .eventdetails-details-eventTime {
-        font-size: 9px;
-    }
-    .eventdetails-eventbutton {
-        padding-inline: 8px;
-        font-size: xx-small;
-        width: max-content;
-    }
-    .search_text_conatiner {
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
     }
-    .search_input_calender {
-        border: 1px solid rgba(0, 0, 0, 0.7);
-        border-radius: 5px;
-        font-size: xx-small;
-        padding: 2px;
-    }
-}
-@media screen and (max-width: 300px) {
-    .eventdetails-tab {
-        width: 70vw;
-        gap: 20px;
+    .booking-dtails-container{
+        margin-top: 14%;
     }
     .eventdetails-tab div {
         font-size: 11px;
-        border-radius: 8px;
-        padding: 4px;
     }
-    .eventdetails-carddetails {
-        height: 100px;
-        padding: 10px;
+    .eventdetails-photo img {
+        width: 110px;
+        height: auto;
+    }
+    .eventdetails-details-eventname {
+        font-size: 13px;
+    }
+    .eventdetails-details-eventAddress {
+        font-size: 11px;
+    }
+    .booking-date{
+        font-size: 11px;
+    }
+    .eventdetails-eventbutton {
         font-size: 9px;
-        line-height: 11px;
+        width: 60px;
+        height: 18px;
+        margin-top: 6px;
+    }
+    .eventdetails-cardsection_Bd {
+        width: 100%;
+        gap: 8px;
+    }
+    .eventdetails-carddetails{
+        width: 100%;
     }
 }
+

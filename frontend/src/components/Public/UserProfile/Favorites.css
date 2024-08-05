@@ -1,3 +1,14 @@
+.Fev-Sec-container {
+    box-sizing: border-box;
+    width: 90vw;
+    padding: 10px;
+    margin-top: 5%;
+    margin-left: 4%;
+    display: flex;
+    gap: 15%;
+
+}
+
 .bookmark-icon{
    margin-left: auto;
    color: green;

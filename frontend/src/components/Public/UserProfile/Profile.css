@@ -6,10 +6,9 @@
   margin-top: 4px;
 }
 
-.profile-formContainer_Inner{
+.profile-formContainer_Inner {
   margin-bottom: 1rem;
 }
-
 
 /*-------------- Main Profile------------- */
 
@@ -17,7 +16,7 @@
   height: auto;
   padding: 3rem 5rem;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   min-height: 100vh;
   column-gap: 4rem;
   /* border: 2px solid red; */
@@ -31,15 +30,14 @@
   gap: 4vh;
 }
 
-
 .profile-leftside--Body {
-  width: 100%;
+  width: 18vw;
   /* border: 2px solid black; */
 }
 
 .profile-about {
   font-size: 16px;
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .profileTitle {
@@ -57,7 +55,7 @@
   padding: 1.25rem;
 }
 
-.profile-button--Section>li {
+.profile-button--Section > li {
   margin: 0.5rem 0;
 }
 
@@ -65,17 +63,16 @@
   background-color: rgba(0, 181, 98, 1);
 }
 
-.profile-button--Section>li>a {
+.profile-button--Section > li > a {
   display: flex;
   padding: 0.5rem;
   height: 6vh;
   align-items: center;
   border-radius: 6px;
   justify-content: center;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   font-weight: 500;
 }
-
 
 /* .profile-button--Section>li>a:hover {
   background-color: rgba(217, 217, 217, 1);
@@ -86,12 +83,11 @@
   color: white; /* White text color on hover */
 }
 
-.profile-about-icon{
+.profile-about-icon {
   display: flex;
   align-items: center;
   gap: 1vw;
 }
-
 
 /* .profilePhoto {
   display: flex;
@@ -118,7 +114,6 @@
 }
 
 .profilePhoto svg {
-
   height: 100px;
   width: 100px;
 }
@@ -190,7 +185,7 @@
   /* box-sizing: border-box; */
 }
 
-.profile-rightside--Body>h1 {
+.profile-rightside--Body > h1 {
   text-align: center;
   font-weight: 600;
   font-size: 1.9rem;
@@ -203,7 +198,7 @@
 
 /* Style for form labels */
 .profile-formContainer label,
-.profile--Activity-Box>h2 {
+.profile--Activity-Box > h2 {
   display: block;
   margin-bottom: 0.5rem;
   color: rgb(63, 63, 70);
@@ -218,7 +213,7 @@
   justify-content: space-between;
 }
 
-.profileTitle>h3 {
+.profileTitle > h3 {
   font-size: large;
   font-weight: bold;
 }
@@ -236,16 +231,16 @@
   font-size: 1rem;
   transition: border-color 0.3s ease; */
   width: 100%;
-    height: 100%;
-    padding: 0.625vw;
-    border: 0.0833vw solid #b1b1b1;
-    border-radius: 0.417vw;
-    background-color: #ECECEE;
+  height: 100%;
+  padding: 0.625vw;
+  border: 0.0833vw solid #b1b1b1;
+  border-radius: 0.417vw;
+  background-color: #ececee;
 }
 
-.profile-formContainer input:focus{
+.profile-formContainer input:focus {
   border: 2px solid #405cf5; /* Change border color and thickness on focus */
-    outline: none; /* Remove default outline */
+  outline: none; /* Remove default outline */
 }
 
 .profile--Activity-Box h2 {
@@ -293,7 +288,7 @@
   background-color: #6ab04c;
 }
 
-.profile-rightside--divided button{
+.profile-rightside--divided button {
   padding: 8px 16px;
   margin-right: 8px;
   border: 1px solid #ccc;
@@ -305,7 +300,7 @@
   transition: background-color 0.3s ease;
 }
 
-.profile-rightside--divided .active{
+.profile-rightside--divided .active {
   background-color: #008000;
   color: #fff;
   border-color: #008000;
@@ -315,15 +310,14 @@
   background-color: #ddd;
 }
 
-
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .button-67 {
     padding: 24px;
   }
-}
+} */
 
 /* Parent background */
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
   .profile--Main-Box {
     flex-direction: row;
     column-gap: 8rem;
@@ -334,18 +328,13 @@
   }
 
   .profile-rightside--Body {
-    /* align-items: center; */
-    /* justify-content: center; */
-    /* max-width: 44rem; */
     padding: 0 4rem;
     height: fit-content;
-    /* border: 2px solid black; */
   }
-}
+} */
 
-/* preferred location */
 .preferred-locations button {
-  background-color: white; 
+  background-color: white;
   border: 1px solid black;
   border-radius: 5px;
   margin: 5px;
@@ -356,16 +345,9 @@
   display: inline-block;
   font-size: 16px;
 }
-.preferred-locations button:hover{
-  background-color:rgb(25, 121, 31);
+.preferred-locations button:hover {
+  background-color: rgb(25, 121, 31);
 }
-
-
-
-
-
-
-
 
 .required-asterisk {
   color: red;
@@ -375,4 +357,67 @@
 .error-message {
   color: red;
   font-size: 0.8em;
+}
+
+@media screen and (max-width: 1366px) {
+  .profile-leftside--Body {
+    margin: 1vh 1vw;
+  }
+  .profile--Main-Box {
+    height: auto;
+    padding: 1rem 0rem;
+    display: flex;
+    margin-top: 8vh;
+  }
+  .profile-about {
+    font-size: 16px;
+    font-weight: 600;
+    width: max-content;
+  }
+  .profile-about-icon p {
+    font-size: 11px;
+  }
+  .svg-inline--fa {
+    display: var(--fa-display, inline-block);
+    height: 0.8rem;
+  }
+  .profile-button--Section > li > a {
+    font-weight: 400;
+    font-size: 11px;
+    height: 4vh;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .profile--Main-Box {
+    flex-direction: column;
+  }
+  .profile-leftside--Body {
+    width: 100%;
+  }
+  .profile-rightside--Body > h1 {
+    font-size: 1.5rem;
+  }
+  .profile-formContainer {
+    width: 94%;
+  }
+  .profile-formContainer input[type="text"],
+  .profile-formContainer input[type="email"],
+  .profile-formContainer input[type="password"],
+  .profile-formContainer input[type="aadhar"],
+  .profile-formContainer input[type="tel"],
+  .profile-formContainer select {
+    padding: 1.625vw;
+  }
+
+  .profile--Activity-options button{
+    font-size: 11px;
+    line-height: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .profile--Activity-options button span{
+    font-size: 9px;
+  }
 }

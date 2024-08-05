@@ -218,7 +218,7 @@ const Favorites = () => {
     return (
         <div>
             <PublicHeader />
-            <div className="booking-dtails-container">
+            <div className="Fev-Sec-container">
                 <aside className="profile-leftside--Body">
                     <div className="profile-view--Body">
                         <div className="profile-about">
