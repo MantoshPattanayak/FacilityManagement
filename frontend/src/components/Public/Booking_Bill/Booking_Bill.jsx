@@ -1,7 +1,7 @@
 
 import "./Booking_Bill.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { faIndianRupee, faRupeeSign, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faWhatsapp, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import axiosHttpClient from "../../../utils/axios";
@@ -31,11 +31,12 @@ const Bokking_Bill = () => {
     const entityTypeId = decryptData(new URLSearchParams(location.search).get("typeId"));
     const [showCancellationPolicy, setShowCancellationPolicy] = useState(false);
     const [checkBoxValue, setCheckBoxValue] = useState(false);
+    const [userLocation, setUserLocation] = useState(JSON.parse(sessionStorage.getItem("location")) || { latitude: 20.2961, longitude: 85.8245 })
     // here Post/get the data of Bill ------------------
     async function GetBill_Data() {
         try {
             let res = await axiosHttpClient("VIEW_TICKET_BILL_API", "post", {
-                bookingId: bookingId, entityTypeId: entityTypeId
+                bookingId: bookingId, entityTypeId: entityTypeId, origin: userLocation
             })
             const dynamicUrlPart = res.data.bookingDetails.url; 
             console.log("here Response of Bill Data", res.data.bookingDetails);
@@ -288,7 +289,7 @@ const Bokking_Bill = () => {
                 <div className="Date_Time_tciket">
                     <span className="Tciket_Date">
                         <h1>Cost</h1>
-                        <h2>Rs {Bill_Data.amount} /_</h2>
+                        <h2><FontAwesomeIcon icon={faIndianRupee} /> {parseFloat(Bill_Data.amount).toFixed(2)} /-</h2>
                     </span>
                     <span className="Ticekt_time">
                         <h1>Total Member(s)</h1>
@@ -297,7 +298,6 @@ const Bokking_Bill = () => {
                 </div>
                 <div className="QR_CODE">
                     <img className="QR_IMAGE_ICON" src={Bill_Data.QRCodeUrl}></img>
-
                 </div>
             </div>
             <div className="Buttonn_e-ticket">
