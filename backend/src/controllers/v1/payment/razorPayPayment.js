@@ -145,7 +145,9 @@ const paymentVerification = async (req, res) => {
       console.log(eachOrderItem,'eachOrderItem')
       if(eachOrderItem.entityTypeId == 6){
         // update the event booking
-        [updateTheEventBooking] = await eventBookingTable.update({statusId:bookingStatus},{
+        [updateTheEventBooking] = await eventBookingTable.update({statusId:bookingStatus,
+          paymentstatus:statusId
+        },{
           where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}
         })
         if(updateTheEventBooking==0){
@@ -201,7 +203,7 @@ const paymentVerification = async (req, res) => {
       }
       else {
         // update the facility booking
-        [updateTheFaciliyBooking] = await facilityBookingTable.update({statusId:bookingStatus},{
+        [updateTheFaciliyBooking] = await facilityBookingTable.update({statusId:bookingStatus,paymentstatus:statusId},{
           where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}
         })
 
@@ -304,6 +306,7 @@ const fetchOrder = async (req, res) => {
     const { orderId } = req.params;
     console.log('orderId',orderId)
     const order = await instance.orders.fetch(orderId);
+
     console.log(orderId,'why this api')
     res.status(statusCode.SUCCESS.code).json({
       message: "Order details",
@@ -318,9 +321,12 @@ const fetchOrder = async (req, res) => {
 }
 
 const fetchPayment = async (req, res) => {
-  const { paymentId } = req.params;
+ 
   try {
-    const payment = await instance.payments.fetch(paymentId);
+    const { paymentId } = req.params;
+    console.log('paymentId',paymentId)
+    let razorpay_payment_id = paymentId
+    const payment = await instance.payments.fetch(razorpay_payment_id);
     res.status(statusCode.SUCCESS.code).json({
       message: "Payment details",
       payment
