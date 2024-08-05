@@ -1,6 +1,6 @@
 module.exports = (sequelize,DataTypes)=>{
 
-    const PaymentItems = sequelize.define('paymentItem',{
+    const PaymentItems = sequelize.define('paymentitem',{
         orderItemId : {
             type:DataTypes.INTEGER,
             autoIncrement:true,
