@@ -20,7 +20,7 @@ import "./AddToCart.css"
 // Import Toast -------------------------------------------------------
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { decryptData } from "../../../utils/encryptData";
+import { decryptData, encryptData } from "../../../utils/encryptData";
 import No_item_cart from "../../../assets/No_items_to_cart.png"
 import { useSelector } from "react-redux";
 import RazorpayButton from "../../../common/RazorpayButton";
@@ -43,16 +43,16 @@ const AddToCart = () => {
     const [totalAmount, setTotalAmount] = useState(0.00);
     const [refresh, setRefresh] = useState(false);
     const [toastId, setToastId] = useState(null);
-
+    const [cartId, setCartId] = useState('');
     const notify = (message) => {
-      if (!toast.isActive(toastId)) {
-        const id = toast.success(message, {
-            onClose: () => {
-                toast.dismiss(toastId);
-            }
-        });
-        setToastId(id);
-      }
+        if (!toast.isActive(toastId)) {
+            const id = toast.success(message, {
+                onClose: () => {
+                    toast.dismiss(toastId);
+                }
+            });
+            setToastId(id);
+        }
     };
 
     // Delete the Cart ----------------------------------------
@@ -60,7 +60,7 @@ const AddToCart = () => {
         e.preventDefault();
         console.log('cartItemId', cartItemId);
         if (!cartItemId || !action) return;
-       
+
         try {
             let res = await axiosHttpClient('Update_Card', 'put', {
                 cartItemId: cartItemId,
@@ -95,6 +95,7 @@ const AddToCart = () => {
             setGetViewCradData(res.data.data)
             setGetCountItem(res.data);
             setsaveForLaterData(res.data.saveForLater)
+            setCartId(res.data.data[0].cartId);
             let totalAmount = 0;
             for (let i = 0; i < res.data.data.length; i++) {
                 let amount = parseFloat(decryptData(res.data.data[i].facilityPreference.amount));
@@ -117,6 +118,29 @@ const AddToCart = () => {
         const hours12 = hours % 12 || 12;
         return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
     }
+
+    const handlePaymentSuccess = ({ response, res }) => {
+        // console.log("Book park payment success", response);
+        console.log("booking response", res);
+        // let bookingId = res.data.shareableLink[0].bookingId;
+        // let entityTypeId = res.data.shareableLink[0].entityTypeId;
+
+        toast.success("Payment has been done successfully.", {
+            autoClose: 2000,
+            onClose: () => {
+                setTimeout(() => {
+                    navigate(`/profile/booking-details`);
+                }, 1000);
+            },
+        });
+        // handleSubmitAndProceed();
+    };
+
+    const handlePaymentFailure = (response) => {
+        // console.log("Book park payment failure", response);
+        toast.dismiss();
+        toast.error(response.description);
+    };
 
     // Update / call Api --------------------------------
     useEffect(() => {
@@ -175,8 +199,14 @@ const AddToCart = () => {
                                         amount={totalAmount || 0}
                                         currency={"INR"}
                                         description={"Book now"}
-                                    // onSuccess={handlePaymentSuccess}
-                                    // onFailure={handlePaymentFailure}
+                                        onSuccess={handlePaymentSuccess}
+                                        onFailure={handlePaymentFailure}
+                                        data={{
+                                            entityId: null,
+                                            entityTypeId: null,
+                                            facilityPreference: null,
+                                            userCartId: encryptData(cartId)
+                                        }}
                                     />
                                 </button>
                             </div>
@@ -194,16 +224,16 @@ const AddToCart = () => {
                                             <img className="park_image_cart" src={`${instance().baseURL}/static${Item.imageUrl}`} alt="No image" />
                                         </div>
                                         <div className="text_contant_details_cart">
-                                        <span className="park_name_date">
-                                            <h1 className="Park_name_cart">{Item.facilityTypeName}</h1>
-                                            <h1 className="park_Booking_Date">{formatDate(decryptData(Item.facilityPreference.bookingDate))}</h1>
-                                        </span>
-                                        <span className="Details_cart_details">
-                                            <h1 className="facility_name_cart">{Item.facilityName}</h1>
-                                            <p className="p_tag_text">Total Members : {(decryptData(Item.facilityPreference.totalMembers)) || decryptData(Item.facilityPreference.playersLimit)}</p>
-                                            <p className="p_tag_text">Time: {formatTime(decryptData(Item.facilityPreference.startTime)) || ''} </p>
-                                            <h1 className="cart_amount">₹ {decryptData(Item.facilityPreference.amount) ? parseFloat(decryptData(Item.facilityPreference.amount)).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
-                                        </span>
+                                            <span className="park_name_date">
+                                                <h1 className="Park_name_cart">{Item.facilityTypeName}</h1>
+                                                <h1 className="park_Booking_Date">{formatDate(decryptData(Item.facilityPreference.bookingDate))}</h1>
+                                            </span>
+                                            <span className="Details_cart_details">
+                                                <h1 className="facility_name_cart">{Item.facilityName}</h1>
+                                                <p className="p_tag_text">Total Members : {(decryptData(Item.facilityPreference.totalMembers)) || decryptData(Item.facilityPreference.playersLimit)}</p>
+                                                <p className="p_tag_text">Time: {formatTime(decryptData(Item.facilityPreference.startTime)) || ''} </p>
+                                                <h1 className="cart_amount">₹ {decryptData(Item.facilityPreference.amount) ? parseFloat(decryptData(Item.facilityPreference.amount)).toFixed(2) : parseFloat(0.00).toFixed(2)}</h1>
+                                            </span>
                                             <span className="Save_remove_button">
                                                 <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, Item.cartItemId, 'IN_CART')}>MOVE TO CART</button>
                                                 <button className="Save_Remove_Button" onClick={(e) => UpdateCart(e, Item.cartItemId, 'REMOVED')}>REMOVE</button>
