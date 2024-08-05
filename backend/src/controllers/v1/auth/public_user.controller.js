@@ -10,6 +10,7 @@ const facilityType = db.facilitytype;
 let user = db.usermaster
 let file = db.file;
 let useractivitypreferencesModels = db.userActivityPreference
+let userActivityMaster = db.useractivitymasters
 const {Op} = require('sequelize')
 let imageUpdate = require('../../../utils/imageUpdate');
 const fileattachmentModels = db.fileattachment;
@@ -434,7 +435,6 @@ const homePage = async (req, res) => {
 
     let fetchAllTypeOFFacility = await facilityType.findAll({
       attributes: ["facilitytypeId", "code", "description"],
-
       where: {
         statusId: 1,
       },
@@ -531,6 +531,8 @@ const homePage = async (req, res) => {
 
     let fetchGalleryListData = await sequelize.query(fetchGalleryListQuery);
 
+    let fetchActivityMaster = await userActivityMaster.findAll();
+
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,
@@ -539,7 +541,8 @@ const homePage = async (req, res) => {
       servicesDetails: fetchAllServices[0],
       notificationsList:viewNotificationsListQueryData,
       exploreActivities: facilityActivitiesData[0],
-      galleryData: fetchGalleryListData[0].map((gallery) => {return {...gallery, ['url']: encodeURI(gallery.url)}})
+      galleryData: fetchGalleryListData[0].map((gallery) => {return {...gallery, ['url']: encodeURI(gallery.url)}}),
+      fetchActivityMaster
     });
   } catch (err) {
     return res
