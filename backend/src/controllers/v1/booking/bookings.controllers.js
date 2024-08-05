@@ -1596,5 +1596,6 @@ module.exports = {
     generateQRCode,
     verifyTheQRCode,
     cancelBooking,
+    uploadTicket
     
 }
