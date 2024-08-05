@@ -374,6 +374,9 @@ const viewParkById = async (req,res)=>{
                 facilityId:facilityId
             }
         })
+        if(!findFacilityTypeId){
+            return res.status(statusCode.BAD_REQUEST.code).json({message:'Invalid Request'})
+        }
         if(facilityId){
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
