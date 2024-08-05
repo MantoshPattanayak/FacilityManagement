@@ -1,5 +1,6 @@
 import React from "react";
 import "../UserProfile/BookingDetails.css";
+import "../UserProfile/Profile.css";
 import { useState, useEffect, useRef } from "react";
 import eventPhoto from "../../../assets/ama_bhoomi_bg.jpg";
 import { useNavigate, Link } from "react-router-dom";
@@ -198,12 +199,12 @@ const BookingDetails = () => {
       console.log("response of fetch profile api", res.data.public_user);
 
       setUserName(
-        decryptData(res.data.public_user.firstName) +
+        decryptData(res.data.public_user[0].firstName) +
           " " +
-          decryptData(res.data.public_user.lastName)
+          decryptData(res.data.public_user[0].lastName)
       );
-      setEmailId(decryptData(res.data.public_user.emailId));
-      setPhoneNo(decryptData(res.data.public_user.phoneNo));
+      setEmailId(decryptData(res.data.public_user[0].emailId));
+      setPhoneNo(decryptData(res.data.public_user[0].phoneNo));
     } catch (error) {
       console.error("Error in fetching data:", error);
       if (error.respone.status == 401) {
@@ -268,7 +269,6 @@ const BookingDetails = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
-
   //When Click on outside filter it will close............................................
 
   const filterRef = useRef(null); // Ref for the filter dropdown
@@ -286,6 +286,7 @@ const BookingDetails = () => {
   }, []);
 
   return (
+    <main>
     <div>
       <PublicHeader />
       <ToastContainer />
@@ -312,7 +313,7 @@ const BookingDetails = () => {
           </div>
           <div>
             <ul className="profile-button--Section">
-              <li>
+              <li className="profile_edit_booking_details">
                 <Link to="/Profile" className="">
                   Edit User Profile
                 </Link>
@@ -331,7 +332,7 @@ const BookingDetails = () => {
               </li>
             </ul>
             {/* Logout Button */}
-            <button
+            {/* <button
               className="button-67 "
               onClick={(e) => {
                 handleLogout(e);
@@ -340,7 +341,7 @@ const BookingDetails = () => {
             >
               <h1>Logout</h1>
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
-            </button>
+            </button> */}
           </div>
         </aside>
         <div className="right-container-favorite">
@@ -521,7 +522,7 @@ const BookingDetails = () => {
           </div>
 
           {eventDetailsData?.length > 0 && (
-            <div className="eventdetails-cardsection">
+            <div className="eventdetails-cardsection_Bd">
               {eventDetailsData?.length > 0 &&
                 eventDetailsData?.map((event) => {
                   return (
@@ -572,7 +573,7 @@ const BookingDetails = () => {
         </div>
       </div>
     </div>
-
+</main>
     // </div>
     // </div>
   );
