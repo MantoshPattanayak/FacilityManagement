@@ -287,13 +287,13 @@ let parkBooking = async (entityId, entityTypeId, facilityPreference, orderId, us
         //     entityTypeId,
         //     facilityPreference
         // });
-        console.log('122', orderId)
+        console.log('122', entityId, entityTypeId, facilityPreference, orderId, userId)
         let statusId = 1;
         let bookingStatus = 3;  //Pending 
         let cartStatus = 21; // In cart
         let paymentStatus = 26;  // pending payment status 
         let result;
-        console.log('entityId inside booking', entityId)
+        console.log('entityId inside booking', entityId,entityTypeId)
         /**
          * 1	PARKS 
          * 2	PLAYGROUNDS
@@ -356,7 +356,7 @@ async function bookingTransactionForPark(facilityId, bookingData, transaction, e
             createdBy: userId
         }, { transaction, returning: true });
 
-        console.log(newParkBooking.facilityBookingId, 'newParkBooking data created');
+        console.log(newParkBooking, 'newParkBooking data created');
         if (!newParkBooking) {
             await transaction.rollback();
             return {
@@ -635,6 +635,7 @@ async function bookingTransactionForEvents(eventId, bookingData, transaction, en
      * eventId: 1
      */
     try {
+        console.log('inside event booking',eventId, bookingData, entityTypeId, bookingStatus, statusId, paymentStatus, orderId, userId)
         const eventBookingData = await eventBooking.create({
             eventId: eventId,
             orderId: orderId,
@@ -648,6 +649,7 @@ async function bookingTransactionForEvents(eventId, bookingData, transaction, en
             createdBy: userId,
             createdOn: new Date()
         }, { transaction });
+        console.log('after event booking')
 
         if (!eventBookingData) {
             await transaction.rollback();
@@ -1058,100 +1060,111 @@ let viewCartByUserId = async (req, res) => {
                 [Op.and]: [{ userId: userId }, { statusId: 1 }]
             }
         });
-        console.log('findCartIdByUserId', findCartIdByUserId);
+        console.log('findCartIdByUserId123', findCartIdByUserId);
         if (findCartIdByUserId) {
             console.log(findCartIdByUserId.cartId, 'cartId')
 
             // cart details for facilities booking only
-            let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName, f3.url as imageUrl
+            let findCartItemsWRTCartId = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName
                 from amabhoomi.cartitems c 
-                left join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  
+                inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  
                 inner join amabhoomi.facilities f on f.facilityId = c.entityId
-                inner join amabhoomi.fileattachments f2 on f2.entityId = f.facilityId and f2.entityType = 'facilities' and f2.filePurpose = 'singleFacilityImage'
-                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
-                where c.statusId = 21 and c.cartId = ? and c.entityTypeId !=6
-                UNION
-                select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, em.eventCategoryName as facilityTypeName, e.eventName as facilityName, f3.url as imageUrl
-                from amabhoomi.cartitems c 
-                inner join amabhoomi.eventactivities e on e.eventId = c.entityId 
-                inner join amabhoomi.eventcategorymasters em on em.eventCategoryId = e.eventCategoryId 
-                inner join amabhoomi.fileattachments f2 on f2.entityId = e.eventId and f2.entityType = 'events' and f2.filePurpose = 'Event Image'
-                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
-                where c.statusId = 21 and c.cartId = ? and c.entityTypeId = 6
+                where c.statusId = 21 and c.cartId = ?
                 `,
                 {
                     type: sequelize.QueryTypes.SELECT,
-                    replacements: [findCartIdByUserId.cartId, findCartIdByUserId.cartId]
+                    replacements: [findCartIdByUserId.cartId]
                 });
             // save for later
-            let findCartItemsWRTCartIdSaveForLater = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName, f3.url as imageUrl
+            let findCartItemsWRTCartIdSaveForLater = await sequelize.query(`select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, ft.code as facilityTypeName, f.facilityName
                 from amabhoomi.cartitems c 
-                left join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  
+                inner join amabhoomi.facilitytypes ft on ft.facilityTypeId = c.entityTypeId  
                 inner join amabhoomi.facilities f on f.facilityId = c.entityId
-                inner join amabhoomi.fileattachments f2 on f2.entityId = f.facilityId and f2.entityType = 'facilities' and f2.filePurpose = 'singleFacilityImage'
-                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
                 where c.statusId = 22 and c.cartId = ?
-                UNION
-                 select c.cartItemId, c.cartId, c.entityId, c.entityTypeId, c.facilityPreference, em.eventCategoryName as facilityTypeName, e.eventName as facilityName, f3.url as imageUrl
-                from amabhoomi.cartitems c 
-                inner join amabhoomi.eventactivities e on e.eventId = c.entityId 
-                inner join amabhoomi.eventcategorymasters em on em.eventCategoryId = e.eventCategoryId 
-                inner join amabhoomi.fileattachments f2 on f2.entityId = e.eventId and f2.entityType = 'events' and f2.filePurpose = 'Event Image'
-                inner join amabhoomi.files f3 on f3.fileId = f2.fileId
-                where c.statusId = 22 and c.cartId = ? and c.entityTypeId = 6`,
+                `,
                 {
                     type: sequelize.QueryTypes.SELECT,
-                    replacements: [findCartIdByUserId.cartId, findCartIdByUserId.cartId]
+                    replacements: [findCartIdByUserId.cartId]
                 });
-            // 
+           
+            console.log(findCartItemsWRTCartId,'findCartItemsWRTCartId')
 
-            // cart details for event booking only
-
-            //     let findCartItemsWRTCartId = await cartItem.findAll({
-            //     attributes:["cartItemId","cartId","entityId","entityTypeId","facilityPreference"],
-            //     where:{
-
-            //         [Op.and]: [{cartId:findCartIdByUserId.cartId},{statusId:1}]
-
-
-            //     },
-            //     include: [
-            //         {
-            //           model: facilitytype,
-            //           attributes: ["code"],
-            //           on: {
-            //             '$cartItem.entityTypeId$': sequelize.col('facilitytype.facilityTypeId')
-            //           },
-            //           required: true // true
-            //         },
-            //         {
-            //           model: facilities,
-            //           attributes: ["facilityName"],
-            //           on:{
-            //             '$cartItem.entityId$':sequelize.col('facilities.facilityId')
-            //           },
-            //           required: true //true
-            //         }
-            //       ],
-
-            // })
             if (findCartItemsWRTCartId.length > 0) {
-                findCartItemsWRTCartId = findCartItemsWRTCartId.map((cartItem) => {
+                findCartItemsWRTCartId = await Promise.all(findCartItemsWRTCartId.map(async (cartItem) => {
                     for (let key in cartItem.facilityPreference) {
-                        cartItem.facilityPreference[key] = encrypt(cartItem.facilityPreference[key])
+                        cartItem.facilityPreference[key] = await encrypt(cartItem.facilityPreference[key])
                     }
-                    cartItem.imageUrl = encodeURI(cartItem.imageUrl);
+                    if(cartItem.entityTypeId == 6){
+                        let checkIfImageUrlPresentOrNot = await sequelize.query(`Select f.url as imageUrl from amabhoomi.files f inner join
+                            amabhoomi.fileattachments ft on f.fileId = ft.fileId where ft.entityId = ? and
+                            ft.entityType = 'events' and ft.filePurpose = 'Event Image'
+                            `,
+                        {
+                            replacements:[cartItem.entityId],
+                            type:QueryTypes.SELECT
+                        })
+                        console.log(checkIfImageUrlPresentOrNot,'check if the image url is present event incart',cartItem.cartItemId)
+                        if(checkIfImageUrlPresentOrNot.length>0){
+                            console.log("cartItem",cartItem.cartItemId)
+                            cartItem.imageUrl = encodeURI(checkIfImageUrlPresentOrNot[0].imageUrl);
+                    }
+                    }
+                    else if(cartItem.entityTypeId != 6){
+                        let checkIfImageUrlPresentOrNot = await sequelize.query(`Select f.url as imageUrl from amabhoomi.files f inner join
+                            amabhoomi.fileattachments ft on f.fileId = ft.fileId where ft.entityId = ? and
+                            ft.entityType = 'facilities' and ft.filePurpose = 'singleFacilityImage'
+                            `,
+                        {
+                            replacements:[cartItem.entityId],
+                            type:QueryTypes.SELECT
+                        })
+                        console.log(checkIfImageUrlPresentOrNot,'check if the image url is present facility incart',cartItem.cartItemId)
+                        if(checkIfImageUrlPresentOrNot.length>0){
+                            cartItem.imageUrl = encodeURI(checkIfImageUrlPresentOrNot[0].imageUrl);
+                    }
+                    }
+                 console.log(cartItem,'cart item')
                     return cartItem;
                 })
+                )
             }
             if (findCartItemsWRTCartIdSaveForLater.length > 0) {
-                findCartItemsWRTCartIdSaveForLater = findCartItemsWRTCartIdSaveForLater.map((cartItem) => {
+                findCartItemsWRTCartIdSaveForLater = await Promise.all(findCartItemsWRTCartIdSaveForLater.map(async(cartItem) => {
                     for (let key in cartItem.facilityPreference) {
-                        cartItem.facilityPreference[key] = encrypt(cartItem.facilityPreference[key])
+                        cartItem.facilityPreference[key] = await encrypt(cartItem.facilityPreference[key])
                     }
-                    cartItem.imageUrl = encodeURI(cartItem.imageUrl);
+                    if(cartItem.entityTypeId == 6){
+                        
+                        let checkIfImageUrlPresentOrNot = await sequelize.query(`Select f.url as imageUrl from amabhoomi.files f inner join
+                            amabhoomi.fileattachments ft on f.fileId = ft.fileId where ft.entityId = ? and
+                            ft.entityType = 'events' and ft.filePurpose = 'Event Image'
+                            `,
+                        {
+                            replacements:[cartItem.entityId],
+                            type:QueryTypes.SELECT
+                        })
+                        console.log(checkIfImageUrlPresentOrNot,'check if the image url is present facility s',cartItem.cartItemId)
+                        if(checkIfImageUrlPresentOrNot.length>0){
+                            cartItem.imageUrl = encodeURI(checkIfImageUrlPresentOrNot[0].imageUrl);
+                    }
+                    }
+                    else if(cartItem.entityTypeId != 6){
+                        let checkIfImageUrlPresentOrNot = await sequelize.query(`Select f.url as imageUrl from amabhoomi.files f inner join
+                            amabhoomi.fileattachments ft on f.fileId = ft.fileId where ft.entityId = ? and
+                            ft.entityType = 'facilities' and ft.filePurpose = 'singleFacilityImage'
+                            `,
+                        {
+                            replacements:[cartItem.entityId],
+                            type:QueryTypes.SELECT
+                        })
+                        console.log(checkIfImageUrlPresentOrNot,'check if the image url is present facility s',cartItem.cartItemId)
+                        if(checkIfImageUrlPresentOrNot.length>0){
+                            cartItem.imageUrl = encodeURI(checkIfImageUrlPresentOrNot[0].imageUrl);
+                    }
+                    }
                     return cartItem;
                 })
+            )
             }
 
             console.log(findCartItemsWRTCartId, 'findCartIdByUserId')
