@@ -67,6 +67,7 @@ const Booking_Schedule = ({
   const handleDateClick = (date) => {
     setBookingDate(date);
     setShowDatePicker(false);
+    setShowTimePicker(false);
   };
 
   const handleChangeInput = (e) => {
@@ -92,6 +93,7 @@ const Booking_Schedule = ({
   };
 
   const handleClockIconClick = () => {
+    setShowDatePicker(false);
     setShowTimePicker(true);
   };
 
@@ -137,11 +139,17 @@ const Booking_Schedule = ({
   const renderHours = () => {
     const hours = [];
     const isToday = moment(bookingDate).isSame(moment(), "day");
-    const currentHour = moment().hour();
-    const closingTime = moment(formData.operatingHoursTo, "HH:mm:ss").subtract(30, "minutes").hour();
+    const currentHour = moment().hour() + 1;
+    const closingTime = moment(formData.operatingHoursTo, "HH:mm:ss")
+      .subtract(30, "minutes")
+      .hour();
 
-    const startHour = isToday ? currentHour : moment(formData.operatingHoursFrom, "HH:mm:ss").hour();
-    const endHour = isToday ? closingTime : moment(formData.operatingHoursTo, "HH:mm:ss").hour();
+    const startHour = isToday
+      ? currentHour
+      : moment(formData.operatingHoursFrom, "HH:mm:ss").hour();
+    const endHour = isToday
+      ? closingTime
+      : moment(formData.operatingHoursTo, "HH:mm:ss").hour();
 
     for (let hour = startHour; hour <= endHour; hour++) {
       hours.push(
@@ -166,10 +174,12 @@ const Booking_Schedule = ({
   };
 
   const toggleDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
+    setShowTimePicker(false);
+    // setShowDatePicker(!showDatePicker);
   };
 
   const toggleTimePicker = () => {
+    setShowDatePicker(false);
     setShowTimePicker(!showTimePicker);
   };
 
@@ -216,6 +226,7 @@ const Booking_Schedule = ({
               onFocus={() => setShowDatePicker(true)}
               onChange={handleChangeInput}
               className="input-field"
+              onClick={toggleDatePicker}
             />
             {showDatePicker && (
               <div className="DatePickerContainer">{renderNext10Days()}</div>
@@ -279,12 +290,6 @@ const Booking_Schedule = ({
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
-   
-
-
-
-          
-
           <div className="popup-footer">
             <button className="cancel-button" onClick={() => closePopup(false)}>
               Cancel
