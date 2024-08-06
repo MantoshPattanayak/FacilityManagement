@@ -209,8 +209,14 @@ const AddToCart = () => {
                                             amount={totalAmount || 0}
                                             currency={"INR"}
                                             description={"Book now"}
-                                        // onSuccess={handlePaymentSuccess}
-                                        // onFailure={handlePaymentFailure}
+                                            onSuccess={handlePaymentSuccess}
+                                            onFailure={handlePaymentFailure}
+                                            data={{
+                                                entityId: null,
+                                                entityTypeId: null,
+                                                facilityPreference: null,
+                                                userCartId: encryptData(cartId)
+                                            }}
                                         />
                                     </button>
                                 </div>
