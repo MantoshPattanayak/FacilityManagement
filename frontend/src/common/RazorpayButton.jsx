@@ -37,7 +37,6 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
     console.log("data in razorpay btn", data);
     // create RAZORPAY order
     const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { 
-      amount : encryptData(amount),
       data
     });
     // console.log("order", order);

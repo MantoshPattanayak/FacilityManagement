@@ -163,7 +163,7 @@ const Book_Now = () => {
       activityPreference: selectedGames,
     };
 
-    if (validateForm(modifiedFormData)) {
+    if (!validateForm(modifiedFormData)) {
       try {
         const facilityPreference = {
           totalMembers: encryptData(modifiedFormData.totalMembers),
@@ -208,7 +208,7 @@ const Book_Now = () => {
     };
     console.log("modifiedFormData", modifiedFormData);
 
-    if (validateForm(modifiedFormData) && modifiedFormData.totalMembers <= 40) {
+    if (!validateForm(modifiedFormData) && modifiedFormData.totalMembers <= 40) {
       try {
         const facilityPreference = {
           totalMembers: encryptData(modifiedFormData.totalMembers),
