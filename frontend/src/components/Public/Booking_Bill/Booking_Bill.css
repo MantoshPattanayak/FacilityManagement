@@ -14,7 +14,10 @@
     border: 1px dotted rgb(42, 42, 42);
     margin-top: 150px;
   }
-  
+  .location_QR_Location_Name{
+    display: flex;
+    justify-content: space-between;
+  }
   .ticket-header {
     display: flex;
     text-align: left;
@@ -90,6 +93,12 @@
 
   .QR_IMAGE_ICON{
     height: 12vh;
+  }
+  .QR_IMAGE_ICON1{
+    height: 8vh;
+  }
+  .scan_text{
+     color: #201f1f;
   }
 
   .Buttonn_e-ticket{
@@ -189,15 +198,31 @@
   .share-popup {
     display: flex;
     gap: 20px;
- 
-    padding: 10px;
+    left: 50%;
+    transform: translate(0%, 0%);
+    flex-direction: row;
+    padding: 20px;
     background: linear-gradient(to right, #f8f9fa, #e9ecef);
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     justify-content: center;
     align-items: center;
     margin: 0px auto;
+    width: 70%;
     animation: fadeIn 0.5s ease-in-out;
+}
+
+.cancel-button {
+  position: absolute;
+  top: -20px;
+  right: 10px;
+  font-size: 40px;
+  cursor: pointer;
+  color:red;
+}
+
+.cancel-button:hover {
+  color: rgb(55, 0, 0);
 }
 .social-media-icon_fa{
   font-size: 40px;
