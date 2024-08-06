@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
+import "../../Public/Search_card.css"
+import "..//Landing.css"
 
 import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
@@ -43,7 +45,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Visiting_People from "../BookParks/Popups_Book_now/Visiting_People";
 import instance from "../../../../env";
 import { Navigate } from "react-router-dom";
-
 
 const Sub_Park_Details = () => {
   const [ServiceData, setServiceData] = useState([]);
@@ -320,16 +321,16 @@ const Sub_Park_Details = () => {
 
         <div className="Map_container">
           <div className="timeButton">
-          <span className="time_status flex flex-col">
-            <div className="flex">
-              <h1 className="time_text">
-                <p className="timing-day">Timing :</p>
-                <span className="timing-day-text">
-                  {formatTime(FacilitiesData[0]?.operatingHoursFrom)} -{" "}
-                  {formatTime(FacilitiesData[0]?.operatingHoursTo)}
-                </span>
-              </h1>
-              {/* <div className="open-close-btn">
+            <span className="time_status flex flex-col">
+              <div className="flex">
+                <h1 className="time_text">
+                  <p className="timing-day">Timing :</p>
+                  <span className="timing-day-text">
+                    {formatTime(FacilitiesData[0]?.operatingHoursFrom)} -{" "}
+                    {formatTime(FacilitiesData[0]?.operatingHoursTo)}
+                  </span>
+                </h1>
+                {/* <div className="open-close-btn">
               <button
                 className={`Open_Button ${FacilitiesData.length > 0 && FacilitiesData[0].status === "open"
                   ? "open"
@@ -341,140 +342,143 @@ const Sub_Park_Details = () => {
               </button>
               </div> */}
 
-              <div
-                className={`bookmark ${isBookmarked ? "bookmarked" : ""}`}
-                onClick={handleBookmarkStatus}
-              >
-                <FontAwesomeIcon
-                  icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular}
-                />
-              </div>
-            </div>
-
-            <div className="day-open-close-status">
-              <h1 className="date_text text-[12px]">
-                <p className="timing-day">Day :</p>
-                <span className="timing-day-text">
-                  {operatingDays.toString()}
-                </span>
-              </h1>
-
-              <div className="open-close-btn">
-                <button
-                  className={`Open_Button ${
-                    FacilitiesData.length > 0 &&
-                    FacilitiesData[0].status === "open"
-                      ? "open"
-                      : "closed"
-                  }`}
+                <div
+                  className={`bookmark ${isBookmarked ? "bookmarked" : ""}`}
+                  onClick={handleBookmarkStatus}
                 >
-                  {FacilitiesData?.length > 0 &&
-                    FacilitiesData[0]?.status.toUpperCase()}
-                </button>
+                  <FontAwesomeIcon
+                    icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular}
+                  />
+                </div>
               </div>
-            </div>
-          </span>
 
-          <span className="Button_ticket_container">
-            {FacilitiesData[0]?.facilityTypeId == 1 ? (
-              // <Link
-              //   to={{
-              //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
-              //       }`,
-              //     search: `${isUserLoggedIn == 1
-              //       ? `?facilityId=${encryptDataId(
-              //         FacilitiesData[0]?.facilityId
-              //       )}`
-              //       : `?facilityId=${encryptDataId(
-              //         FacilitiesData[0]?.facilityId
-              //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
-              //       }`,
-              //   }}
-              //   className="button-9"
-              // >
-              //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
-              //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
+              <div className="day-open-close-status">
+                <h1 className="date_text text-[12px]">
+                  <p className="timing-day">Day :</p>
+                  <span className="timing-day-text">
+                    {operatingDays.toString()}
+                  </span>
+                </h1>
 
-              // </Link>
-              <button onClick={() => setShowPeople(true)} className="button-9">
-                Book Ticket
-              </button>
-            ) : FacilitiesData[0]?.facilityTypeId == 2 ? (
-              <Link
-                to={{
-                  pathname: `${
-                    isUserLoggedIn == 1
-                      ? "/BookParks/Book_Now_Sport"
-                      : "/login-signup"
-                  }`,
-                  search: `${
-                    isUserLoggedIn == 1
-                      ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
-                      : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` +
-                        `&redirect=${encryptDataId(
-                          "/BookParks/Book_Now_Sport"
-                        )}`
-                  }`,
-                }}
-                className="button-9"
-              >
-                <button role="button_by">Book Ticket</button>
-              </Link>
-            ) : (
-              <Link
-                to={{
-                  pathname: `${
-                    isUserLoggedIn == 1
-                      ? "/BookParks/Book_Now_Sport"
-                      : "/login-signup"
-                  }`,
-                  search: `${
-                    isUserLoggedIn == 1
-                      ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
-                      : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` +
-                        `&redirect=${encryptDataId(
-                          "/BookParks/Book_Now_Sport"
-                        )}`
-                  }`,
-                }}
-                className="button-9"
-              >
-                <button role="button_by" onClick={() => setShowPeople(true)}>
+                <div className="open-close-btn">
+                  <button
+                    className={`Open_Button ${
+                      FacilitiesData.length > 0 &&
+                      FacilitiesData[0].status === "open"
+                        ? "open"
+                        : "closed"
+                    }`}
+                  >
+                    {FacilitiesData?.length > 0 &&
+                      FacilitiesData[0]?.status.toUpperCase()}
+                  </button>
+                </div>
+              </div>
+            </span>
+
+            <span className="Button_ticket_container">
+              {FacilitiesData[0]?.facilityTypeId == 1 ? (
+                // <Link
+                //   to={{
+                //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
+                //       }`,
+                //     search: `${isUserLoggedIn == 1
+                //       ? `?facilityId=${encryptDataId(
+                //         FacilitiesData[0]?.facilityId
+                //       )}`
+                //       : `?facilityId=${encryptDataId(
+                //         FacilitiesData[0]?.facilityId
+                //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
+                //       }`,
+                //   }}
+                //   className="button-9"
+                // >
+                //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
+                //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
+
+                // </Link>
+                <button
+                  onClick={() => setShowPeople(true)}
+                  className="button-9"
+                >
                   Book Ticket
                 </button>
-              </Link>
-            )}
+              ) : FacilitiesData[0]?.facilityTypeId == 2 ? (
+                <Link
+                  to={{
+                    pathname: `${
+                      isUserLoggedIn == 1
+                        ? "/BookParks/Book_Now_Sport"
+                        : "/login-signup"
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
+                        ? `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}`
+                        : `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/BookParks/Book_Now_Sport"
+                          )}`
+                    }`,
+                  }}
+                  className="button-9"
+                >
+                  <button role="button_by">Book Ticket</button>
+                </Link>
+              ) : (
+                <Link
+                  to={{
+                    pathname: `${
+                      isUserLoggedIn == 1
+                        ? "/BookParks/Book_Now_Sport"
+                        : "/login-signup"
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
+                        ? `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}`
+                        : `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/BookParks/Book_Now_Sport"
+                          )}`
+                    }`,
+                  }}
+                  className="button-9"
+                >
+                  <button role="button_by" onClick={() => setShowPeople(true)}>
+                    Book Ticket
+                  </button>
+                </Link>
+              )}
 
-            <Link
-              to={{
-                pathname: `${
-                  isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-                }`,
-                search: `${
-                  isUserLoggedIn == 1
-                    ? `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}`
-                    : `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-                }`,
-              }}
-              className="button-10"
-            >
-              <button role="button_by" className="name_button">
-                Host Event
-              </button>
-            </Link>
-          </span>
+              <Link
+                to={{
+                  pathname: `${
+                    isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                  }`,
+                  search: `${
+                    isUserLoggedIn == 1
+                      ? `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}`
+                      : `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
+                  }`,
+                }}
+                className="button-10"
+              >
+                <button role="button_by" className="name_button">
+                  Host Event
+                </button>
+              </Link>
+            </span>
           </div>
 
           <div className="Map_image">
@@ -517,149 +521,114 @@ const Sub_Park_Details = () => {
         </div> */}
       </div>
       <div className="other-contents">
-        {/* -----------------------------services------------------------------------------ */}
-        <div className="Service_Now_conatiner">
-          <h1 className="Service_text">Services</h1>
-          <div className="service_container">
-            {ServiceData?.length > 0 &&
-              ServiceData?.map((item, index) => (
-                <div className="Service_Avilable" key={index}>
-                  <div className="service_item">
-                    <img
-                      className="Correct_icon"
-                      src={green_tick}
-                      alt={`Amenity icon ${index}`}
-                    />
-
-                    <p className="service_name">{item.description}</p>
-                  </div>
-                </div>
-              ))}
+  {/* -----------------------------services------------------------------------------ */}
+  <div className="Service_Now_container">
+    <h1 className="Service_text">Services</h1>
+    <div className="service_container">
+      {ServiceData?.length > 0 &&
+        ServiceData?.map((item, index) => (
+          <div className="Service_Avilable" key={index}>
+            <div className="service_item">
+              <img
+                className="Correct_icon"
+                src={green_tick}
+                alt={`Amenity icon ${index}`}
+              />
+              <p className="service_name">{item.description}</p>
+            </div>
           </div>
-        </div>
+        ))}
+    </div>
+  </div>
 
-        {/* --------------------------- Amenities ------------------------------------------*/}
-        <div className="Amenities_Main_conatiner">
-          <h1 className="Service_text">Amenities</h1>
-          <div className="Amenities-Data">
-            {amenitiesData
-              .flatMap((group) => group) // Flatten the array of arrays
-              .filter(
-                (item, index, self) =>
-                  self.findIndex((t) => t.amenityName === item.amenityName) ===
-                  index
-              ) // Filter unique items
-              .map((item, index) => (
-                <span className="flex gap-2" key={index}>
-                  <img
-                    className="Correct_icon"
-                    src={green_tick}
-                    alt={`Amenity icon ${index}`}
-                  />
-                  <h1 className="Amenities_name">{item.amenityName}</h1>
-                </span>
-              ))}
-          </div>
-        </div>
+  {/* --------------------------- Amenities ------------------------------------------*/}
+  <div className="Amenities_Main_container">
+    <h1 className="Service_text">Amenities</h1>
+    <div className="Amenities-Data">
+      {amenitiesData
+        .flatMap((group) => group) // Flatten the array of arrays
+        .filter(
+          (item, index, self) =>
+            self.findIndex((t) => t.amenityName === item.amenityName) === index
+        ) // Filter unique items
+        .map((item, index) => (
+          <span className="flex gap-2" key={index}>
+            <img
+              className="Correct_icon"
+              src={green_tick}
+              alt={`Amenity icon ${index}`}
+            />
+            <h1 className="Amenities_name">{item.amenityName}</h1>
+          </span>
+        ))}
+    </div>
+  </div>
 
-        {/* -------------------------- Here About -------------------------------------------- */}
-        <div className="About_Conatiner">
-          <h1 className="Service_text">About</h1>
-          <h1 className="About_text">
-            {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
-          </h1>
-        </div>
-        
-      
+  {/* -------------------------- Here About -------------------------------------------- */}
+  <div className="About_Container">
+    <h1 className="Service_text">About</h1>
+    <h1 className="About_text">
+      {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
+    </h1>
+  </div>
 
-        {/* -------------------------Event Available ----------------------------------------------------------- */}
-        {/* <div className="Event_Available_main_conatiner">
-          <h1 className="Service_text">Event Available</h1>
-          <div className="Sub_Park_Details">
-            {EventAvailable?.length > 0 &&
-              EventAvailable?.map((item, index) => {
-                return (
-                  <div
-                    className="carousel-container"
-                    // ref={containerRef}
-                    key={index}
-                  >
-                    <div className="carousel-slide">
-                      <img
-                        className="Yoga_image"
-                        src={Yoga_img}
-                        alt="Event"
-                      ></img>
-                      <h1 className="Name_yoga"> {item.eventName}</h1>
-                      <span className="Yoga_date_time">
-                        <h1 className="Yoga_date">
-                          Date:-{formatDate(item.eventDate)}
-                        </h1>
-                        <h1 className="Yoga_time">
-                          Time:-{formatTime(item.eventStartTime)} -{" "}
-                          {formatTime(item.eventEndTime)}
-                        </h1>
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            {EventAvailable?.length == 0 && <p>No events.</p>}
-          </div>
-        </div> */}
-
-        <div className="Event_Available_main_conatiner">
-          <h1 className="Service_text">Event Available</h1>
-          {EventAvailable.length > 0 ? (
-            <div className="carousel-container">
-              <button
-                className="carousel-button left"
-                onClick={handleEventPrev}
-              >
-                &lt;
-              </button>
+  {/* -------------------------Event Available ----------------------------------------------------------- */}
+  <div className="Event_Available_main_container">
+    <h1 className="Service_text">Event Available</h1>
+    {EventAvailable?.length > 0 ? (
+      <div className="carousel">
+        <button className="carousel-button2 left" onClick={handleEventPrev}>
+          &lt;
+        </button>
+        <div className="carousel-container">
+          <div
+            className="carousel-images"
+            style={{
+              width: "auto",
+              transform: `translateX(-${currentIndex2 * 420}px)`,
+            }}
+          >
+            {EventAvailable.map((d, i) => (
               <div
-                className="carousel-wrapper"
-                style={{ transform: `translateX(-${currentIndex2 * 100}%)` }}
+                className="carousel-slide"
+                key={i}
+                onClick={() => {
+                  navigate(
+                    `/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`
+                  );
+                }}
               >
-                {EventAvailable.map((event, index) => (
-                  <div key={index} className="carousel-slide">
-                    <img className="Yoga_image" src={Yoga_img} alt="Event" />
-                    <h1 className="Name_yoga">{event.eventName}</h1>
+                <img
+                  className="Card_img"
+                  src={`${instance().baseURL}/static${d.url}`}
+                  alt={"image"}
+                />
+                <div className="card_text">
+                  <span className="Name_location">
+                    <h2 className="park_name">{d.eventName}</h2>
                     <span className="Yoga_date_time">
-                      <h1>Date: {formatDate(event.eventDate)}</h1>
-                      <h1>Time: {formatTime(event.eventTime)}</h1>
+                      <h1>Date: {formatDate(d.eventDate)}</h1>
+                      <h1>Time: {formatTime(d.eventStartTime)}</h1>
                     </span>
-                  </div>
-                ))}
+                  </span>
+                </div>
               </div>
-              <button
-                className="carousel-button right"
-                onClick={handleEventNext}
-              >
-                &gt;
-              </button>
-            </div>
-          ) : (
-            <div className="No_Event">
-              <img className="No_event_image" src={No_Event_Data_img}></img>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-        {/* <Book_Now/> */}
+        <button className="carousel-button2 right" onClick={handleEventNext}>
+          &gt;
+        </button>
       </div>
+    ) : (
+      <p>No events.</p>
+    )}
+  </div>
+  {/* <Book_Now/> */}
+</div>
+
 
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-
-      {/* {showPeople && (
-        <Visiting_People
-          closePopup={closePopup}
-          facilityId={encryptDataId(FacilitiesData[0]?.facilityId)}
-          facilityName={FacilitiesData[0]?.facilityName}
-          operatingHoursFrom={FacilitiesData[0]?.operatingHoursFrom}
-          operatingHoursTo={FacilitiesData[0]?.operatingHoursTo}
-        />
-      )} */}
 
       {showPeople &&
         (isUserLoggedIn == 1 ? (
@@ -680,3 +649,5 @@ const Sub_Park_Details = () => {
 
 // Export Sub_Park_details ------------------------
 export default Sub_Park_Details;
+
+
