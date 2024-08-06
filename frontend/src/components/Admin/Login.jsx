@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../Public/Login.css";
+import "./Login.css";
 import AdminHeader from "../../common/AdminHeader";
 // Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
@@ -8,7 +9,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import CommonFooter from "../../common/CommonFooter";
+import "../../common/CommonFrom.css";
 // here import useDispatch to store the
 import { useDispatch } from "react-redux";
 import { adminLogin } from "../../utils/authSlice";
@@ -56,10 +57,10 @@ const AdminLogin = () => {
               roleId: res.data.role,
             })
           );
-
+          console.log("res.data.menuItems", res.data.menuItems);
           if (res.data.menuItems) {
             let homeRoute = res.data.menuItems.filter(
-              (route) => route.name === "Dashboard"
+              (route) => route.name.trim().toLowerCase() == "dashboard"
             )[0]?.children[0]?.path;
             if (!homeRoute) {
               toast.error("User access not provided!");
@@ -158,7 +159,7 @@ const AdminLogin = () => {
             />
           </div>
           <br />
-          <div className="otp-btn" onClick={HandleSubmit}>
+          <div className="admin-login-otp-btn" onClick={HandleSubmit}>
             <button className="sendotp-btn_login" type="submit">
               Submit
             </button>
@@ -170,8 +171,6 @@ const AdminLogin = () => {
           </div>
         </form>
       </div>
-
-      <ToastContainer />
     </div>
   );
 };

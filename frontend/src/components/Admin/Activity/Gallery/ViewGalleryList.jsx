@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import AdminHeader from '../../../../common/AdminHeader';
 import { useNavigate } from "react-router-dom";
+import './ViewGalleryList.css';
+import "../../../../common/CommonTable.css";
 
 export default function ViewGalleryList() {
   const [tableData, setTableData] = useState([]);
@@ -45,7 +47,7 @@ export default function ViewGalleryList() {
   return (
     <>
       <AdminHeader />
-      <div className="RoleResourceList">
+      <div className="GalleryList">
         <div className="table-heading">
           <h2 className="">Gallery List</h2>
         </div>

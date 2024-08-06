@@ -49,7 +49,7 @@
 }
 
 /* Button styling */
-.sendotp-btn_login1{
+.public-login-sendotp-btn_login1{
     width: 100%;
     padding: 12px;
     background-color: #03b317; /* Blue background */
@@ -62,7 +62,7 @@
     transition: background-color 0.3s ease-in-out;
 }
 
-.sendotp-btn:hover {
+.public-login-sendotp-btn_login1:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
 

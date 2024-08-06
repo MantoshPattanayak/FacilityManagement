@@ -65,3 +65,19 @@
 .divider {
   color: #ccc;
 }
+
+/* Styles for OTP buttons */
+.admin-login-otp-btn {
+  width: 100%;
+  /* Make buttons full width */
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  background-color: #00B562;
+  color: #fff;
+  padding: 10px 0;
+  /* Increase padding for better tap targets */
+  text-align: center;
+  /* Center align button text */
+  cursor: pointer;
+  border-radius: 5px;
+}

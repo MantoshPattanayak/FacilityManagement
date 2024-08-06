@@ -10,7 +10,8 @@ body {
   margin-top: 5%;
   margin-left: 4%;
   display: flex;
-  gap: 15%;
+  /* gap: 15%; */
+  gap: 0%;
 }
 .right-container-favorite_booking_details {
   height: 90vh;
@@ -291,12 +292,50 @@ body {
         height: 18px;
         margin-top: 6px;
     }
+    .eventdetails-carddetails{
+        width: 100%;
+    }
     .eventdetails-cardsection_Bd {
         width: 100%;
         gap: 8px;
     }
-    .eventdetails-carddetails{
-        width: 100%;
+    .booking-dtails-container {
+        align-items: center;
     }
 }
 
+
+@media screen and (max-width: 1366px){
+    .right-container-favorite {
+        /* width: 100%; */
+        width: max-content;
+    }
+    .eventdetails-photo img {
+        width: 130px;
+        height: auto;
+    }
+    .eventdetails-details {
+        width: 100%;
+    }
+    .eventdetails-carddetails {
+        width: 100%;
+    }
+    .right-container-favorite {
+        margin-left: 0vw;
+    }
+    .eventdetails-cardsection_Bd {
+        width: 100%;
+    }
+    .button, input, optgroup, select, textarea {
+        font-size: 60%;
+    }
+    .booking-dtails-container {
+        width: 100vw;
+        margin-top: 10%;
+        gap: 10%;
+    }
+    .eventdetails-tab {
+        width: 100%;
+    }
+   
+}

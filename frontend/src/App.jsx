@@ -126,6 +126,8 @@ import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
 // import provider for connect to our app
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
+// Import classic Loader -----------
+import ClassicLoader from "./common/ClassicLoader";
 const ProtectedProfile = withAuth(Profile);
 function App() {
   let isAuthorized = sessionStorage.getItem("isAuthorized") || false;
@@ -138,129 +140,130 @@ function App() {
             <div>
               <Routes>
                 {/* HOME */}
-                <Route path="/" element={<React.Suspense fallback="Loading ......"><Landing /></React.Suspense>} />
+                <Route path="/" element={<React.Suspense fallback={<ClassicLoader/>}><Landing /></React.Suspense>} />
                 {/* Facility_Reg and View_edit */}
-                <Route path="/Facility_Edit_View" element={<React.Suspense fallback='loading page ....'><ProtectedRoute><Facility_Edit_View /></ProtectedRoute></React.Suspense>} />
-                <Route path="/facility-registration" element={<React.Suspense fallback='loading Page...' ><ProtectedRoute><Facility_Reg /></ProtectedRoute></React.Suspense>} />
-                <Route path="/facility-viewlist" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><Facility_ViewList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/PublicLoader" element={<React.Suspense fallback="loading page ..."><PublicLoader /></React.Suspense>} />
-                <Route path="/facilities" element={<React.Suspense fallback='loading page ......'><Main_Body_Park_Details /></React.Suspense>} />
-                <Route path="/Event_hostPage" element={<React.Suspense fallback="loading page .."><Event_hostPage /></React.Suspense>} />
-                <Route path="/Sub_Park_Details" element={<React.Suspense fallback="Loading page ..."><Sub_Park_Details /></React.Suspense>} />
-                <Route path="/BookingDetails" element={<React.Suspense fallback='loading page..'><BookingDetails /></React.Suspense>} />
-                <Route path="/About" element={<React.Suspense fallback='loading page ...'><About /></React.Suspense>} />
-                <Route path="/History" element={<React.Suspense fallback="loading page ..."> <History /></React.Suspense>} />
-                <Route path="/Organogram" element={<React.Suspense fallback="Loading page.."><Organogram /></React.Suspense>} />
-                <Route path="/Stakeholders" element={<React.Suspense fallback="loading page .."><Stakeholders /></React.Suspense>} />
-                <Route path="/StandOut" element={<React.Suspense fallback="loading page..."><StandOut /></React.Suspense>} />
-                <Route path="/faqs" element={<React.Suspense fallback="Loading page..."><FqaPage /></React.Suspense>} />
+                <Route path="/Facility_Edit_View" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_Edit_View /></ProtectedRoute></React.Suspense>} />
+                <Route path="/facility-registration" element={<React.Suspense fallback={<ClassicLoader/>} ><ProtectedRoute><Facility_Reg /></ProtectedRoute></React.Suspense>} />
+                <Route path="/facility-viewlist" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_ViewList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/PublicLoader" element={<React.Suspense fallback={<ClassicLoader/>}><PublicLoader /></React.Suspense>} />
+                <Route path="/facilities" element={<React.Suspense fallback={<ClassicLoader/>}><Main_Body_Park_Details /></React.Suspense>} />
+                <Route path="/Event_hostPage" element={<React.Suspense fallback={<ClassicLoader/>}><Event_hostPage /></React.Suspense>} />
+                <Route path="/Sub_Park_Details" element={<React.Suspense fallback={<ClassicLoader/>}><Sub_Park_Details /></React.Suspense>} />
+                <Route path="/BookingDetails" element={<React.Suspense fallback={<ClassicLoader/>}><BookingDetails /></React.Suspense>} />
+                <Route path="/About" element={<React.Suspense fallback={<ClassicLoader/>}><About /></React.Suspense>} />
+                <Route path="/History" element={<React.Suspense fallback={<ClassicLoader/>}> <History /></React.Suspense>} />
+                <Route path="/Organogram" element={<React.Suspense fallback={<ClassicLoader/>}><Organogram /></React.Suspense>} />
+                <Route path="/Stakeholders" element={<React.Suspense fallback={<ClassicLoader/>}><Stakeholders /></React.Suspense>} />
+                <Route path="/StandOut" element={<React.Suspense fallback={<ClassicLoader/>}><StandOut /></React.Suspense>} />
+                <Route path="/faqs" element={<React.Suspense fallback={<ClassicLoader/>}><FqaPage /></React.Suspense>} />
                 {/* Search by place name  */}
-                <Route path="/Search_card" element={<React.Suspense fallback="Loading page ..."><Search_card /></React.Suspense>} />
-                <Route path="/BookParks/Book_Now_Sport" element={<React.Suspense fallback="Loading page..."><Book_Now_Sport /></React.Suspense>} />
+                <Route path="/Search_card" element={<React.Suspense fallback={<ClassicLoader/>}><Search_card /></React.Suspense>} />
+                <Route path="/BookParks/Book_Now_Sport" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now_Sport /></React.Suspense>} />
                 {/* Public (sport)  */}
-                <Route path="/BookParks/Book_Now" element={<React.Suspense fallback="Loading page ..."><Book_Now /></React.Suspense>} />
-                <Route path="/BookEvent" element={<React.Suspense fallback="Loading page ..."><BookEvent /></React.Suspense>} />
+                <Route path="/BookParks/Book_Now" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now /></React.Suspense>} />
+                <Route path="/BookEvent" element={<React.Suspense fallback={<ClassicLoader/>}><BookEvent /></React.Suspense>} />
                 {/* Public (Add to Crad)  */}
-                <Route path="/cart-details" element={<React.Suspense fallback="Loading....."><AddToCart /></React.Suspense>} />
-                <Route path="/profile/booking-details/ticket" element={<React.Suspense fallback="Loading page ..."><Bokking_Bill /></React.Suspense>} />
+                <Route path="/cart-details" element={<React.Suspense fallback={<ClassicLoader/>}><AddToCart /></React.Suspense>} />
+                <Route path="/profile/booking-details/ticket" element={<React.Suspense fallback={<ClassicLoader/>}><Bokking_Bill /></React.Suspense>} />
                 {/* Public (Book Details)  */}
-                <Route path="/profile/booking-details" element={<React.Suspense fallback="loading page ..."> <BookingDetails /></React.Suspense>} />
+                <Route path="/profile/booking-details" element={<React.Suspense fallback={<ClassicLoader/>}> <BookingDetails /></React.Suspense>} />
                 {/* Public (Favorites)  */}
-                <Route path="/UserProfile/Favorites" element={<React.Suspense fallback="loading page ..."><Favorites /></React.Suspense>} />
+                <Route path="/UserProfile/Favorites" element={<React.Suspense fallback={<ClassicLoader/>}><Favorites /></React.Suspense>} />
                 {/* Public (ProfileHistory)  */}
-                <Route path="/UserProfile/ProfileHistory" element={<React.Suspense fallback="Loading page ..."> <ProfileHistory /></React.Suspense>} />
+                <Route path="/UserProfile/ProfileHistory" element={<React.Suspense fallback={<ClassicLoader/>}> <ProfileHistory /></React.Suspense>} />
                 {/* User-Profile */}
-                <Route path="/Profile" element={<React.Suspense fallback="loading page ..."><Profile /></React.Suspense>} />
+                <Route path="/Profile" element={<React.Suspense fallback={<ClassicLoader/>}><Profile /></React.Suspense>} />
                 {/* gallery section */}
-                <Route path="/View_Gallery/Image_Gallery" element={<React.Suspense fallback="Loading page ..."> <Image_Gallery /></React.Suspense>} />
+                <Route path="/View_Gallery/Image_Gallery" element={<React.Suspense fallback={<ClassicLoader/>}> <Image_Gallery /></React.Suspense>} />
                 {/* Public User Login */}
-                <Route path="/login-signup" element={<React.Suspense fallback="Loading page..."> <Login /></React.Suspense>} />
-                <Route path="/login/SignUp" element={<React.Suspense fallback="Loading page ..."><SignUp /></React.Suspense>} />
-                <Route path="/ForgotPassword" element={<React.Suspense fallback="Loading page"><ForgotPassword /> </React.Suspense>} />
+                <Route path="/login-signup" element={<React.Suspense fallback={<ClassicLoader/>}> <Login /></React.Suspense>} />
+                <Route path="/login/SignUp" element={<React.Suspense fallback={<ClassicLoader/>}><SignUp /></React.Suspense>} />
+                <Route path="/ForgotPassword" element={<React.Suspense fallback={<ClassicLoader/>}><ForgotPassword /> </React.Suspense>} />
                 {/* use Section  */}
                 {/* Events */}
                 <Route path="/events" element={<React.Suspense fallback="Loading page ..."><EventList /> </React.Suspense>} />
                 <Route path="/event-book" element={<React.Suspense fallback="Loading page ..."> <Book_Event /></React.Suspense>} />
+                <Route path="/events-details" element={<React.Suspense fallback="Loading page ..."> <Details /></React.Suspense>} />
                 {/* ADMIN SECTION - Login */}
-                <Route path="/admin-login" element={<React.Suspense fallback="Loading page ..." ><AdminLogin /></React.Suspense>} />
+                <Route path="/admin-login" element={<React.Suspense fallback={<ClassicLoader/>} ><AdminLogin /></React.Suspense>} />
                 {/* ADMIN SECTION - Activity */}
-                <Route path="/Activity/ReviewUserRating" element={<React.Suspense fallback="loading page "><ProtectedRoute><ReviewUserRating /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Activity/ReviewEventDetailsList" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ReviewEventDetailsList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Activity/EventDetailsPage" element={<React.Suspense fallback="loading page "><ProtectedRoute><EventDetailsPage /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Activity/AddNewNotification" element={<React.Suspense fallback="Loading page ..."> <ProtectedRoute> <AddNewNotification /> </ProtectedRoute> </React.Suspense>} />
-                <Route path="/Activity/ViewNotifications" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewNotifications /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Activity/EditNotification" element={<React.Suspense fallback="loading page "><ProtectedRoute><EditNotification /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Activity/ReviewUserRating" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ReviewUserRating /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Activity/ReviewEventDetailsList" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ReviewEventDetailsList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Activity/EventDetailsPage" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EventDetailsPage /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Activity/AddNewNotification" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <AddNewNotification /> </ProtectedRoute> </React.Suspense>} />
+                <Route path="/Activity/ViewNotifications" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewNotifications /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Activity/EditNotification" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditNotification /></ProtectedRoute></React.Suspense>} />
                 {/* Activity - Grievance START */}
-                <Route path="/activity/grievance" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewGrievanceList /></ProtectedRoute> </React.Suspense>} />
-                <Route path="/activity/assign-grievance" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><AssignGrievance /></ProtectedRoute></React.Suspense>} />
-                <Route path="/activity/grievance-action" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute></React.Suspense>} />
-                <Route path="/grievance-feedback-form" element={<React.Suspense fallback="loading page ...."> <ProtectedRoute><Grievance /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Advertising_with_us" element={<React.Suspense fallback="Loading page ..."><ProtectedRoute><Advertising_with_us /></ProtectedRoute></React.Suspense>} />
+                <Route path="/activity/grievance" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewGrievanceList /></ProtectedRoute> </React.Suspense>} />
+                <Route path="/activity/assign-grievance" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><AssignGrievance /></ProtectedRoute></React.Suspense>} />
+                <Route path="/activity/grievance-action" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute></React.Suspense>} />
+                <Route path="/grievance-feedback-form" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><Grievance /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Advertising_with_us" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Advertising_with_us /></ProtectedRoute></React.Suspense>} />
                 {/* Activity - Grievance END */}
-                <Route path="/activity/gallery" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><CreateNewGallery /></ProtectedRoute></React.Suspense>} />
-                <Route path="/activity/ViewGalleryList" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute> <ViewGalleryList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Resource/ListOfResources" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ListOfResources /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Resource/CreateResource" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute> <CreateResource /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Resource/EditResource" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><EditResource /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Role/ListOfRoles" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <ListOfRoles /> </ProtectedRoute> </React.Suspense>} />
-                <Route path="/UAC/Role/CreateRole" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <CreateRole /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Role/EditRole" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <EditRole /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Users/ListOfUsers" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><ListOfUsers /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Users/Create" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute> <CreateNewUser /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Users/Edit" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute> <EditUser /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/activity/gallery" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><CreateNewGallery /></ProtectedRoute></React.Suspense>} />
+                <Route path="/activity/ViewGalleryList" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <ViewGalleryList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Resource/ListOfResources" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ListOfResources /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Resource/CreateResource" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <CreateResource /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Resource/EditResource" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditResource /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Role/ListOfRoles" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <ListOfRoles /> </ProtectedRoute> </React.Suspense>} />
+                <Route path="/UAC/Role/CreateRole" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <CreateRole /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Role/EditRole" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <EditRole /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Users/ListOfUsers" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><ListOfUsers /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Users/Create" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <CreateNewUser /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Users/Edit" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <EditUser /> </ProtectedRoute></React.Suspense>} />
                 {/* Facility regd. */}
-                <Route path="/Facility/Facility_Reg" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><Facility_Reg /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/Facility/Facility_ViewList" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><Facility_ViewList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Facility/Facility_Reg" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_Reg /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/Facility/Facility_ViewList" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_ViewList /></ProtectedRoute></React.Suspense>} />
                 {/* Recource */}
-                <Route path="/UAC/Resources/ListOfResources" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute> <ListOfResources /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Resources/CreateResource" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <CreateResource /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Resources/EditDisplayResource" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><EditDisplayResource /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Resources/ListOfResources" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <ListOfResources /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Resources/CreateResource" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <CreateResource /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Resources/EditDisplayResource" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditDisplayResource /></ProtectedRoute></React.Suspense>} />
                 {/* user Recource */}
-                <Route path="/UAC/Users/CreateUserResourceMapping" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <CreateUserResourceMapping /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/Users/EditUserResourceMapping" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><EditUserResourceMapping /> </ProtectedRoute> </React.Suspense>} />
-                <Route path="/UAC/UserResource/View" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><UserResourceMappingList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Users/CreateUserResourceMapping" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <CreateUserResourceMapping /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/Users/EditUserResourceMapping" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditUserResourceMapping /> </ProtectedRoute> </React.Suspense>} />
+                <Route path="/UAC/UserResource/View" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><UserResourceMappingList /></ProtectedRoute></React.Suspense>} />
                 {/* Role-Resource mapping  */}
-                <Route path="/UAC/RoleResource/CreateRoleResourceMapping" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><CreateRoleResourceMapping /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/RoleResource/EditRoleResourceMapping" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><EditRoleResourceMapping /></ProtectedRoute></React.Suspense>} />
-                <Route path="/UAC/RoleResource/View" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><RoleResourceMappingList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/unauthorized" element={<React.Suspense fallback="loading page ..."> <UnauthorizedPage /> </React.Suspense>} />
+                <Route path="/UAC/RoleResource/CreateRoleResourceMapping" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><CreateRoleResourceMapping /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/RoleResource/EditRoleResourceMapping" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><EditRoleResourceMapping /></ProtectedRoute></React.Suspense>} />
+                <Route path="/UAC/RoleResource/View" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><RoleResourceMappingList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/unauthorized" element={<React.Suspense fallback={<ClassicLoader/>}> <UnauthorizedPage /> </React.Suspense>} />
                 {/* DASHBOARD SECTION */}
-                <Route path="/Dashboard/AdminDashboard" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><AdminDashboard /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Dashboard/AdminDashboard" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><AdminDashboard /></ProtectedRoute></React.Suspense>} />
                 {/* Payment-razorPay */}
-                <Route path="/paymentSection" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute> <PaymentHome /></ProtectedRoute></React.Suspense>} />
+                <Route path="/paymentSection" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <PaymentHome /></ProtectedRoute></React.Suspense>} />
                 {/* Admin Traiff Page */}
-                <Route path="/mdm/TariffDetails" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <TariffDetails /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/ViewTariffList" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewTariffList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/Tariff_View_Details" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><Tariff_View_Details /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/ParkPayment" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><ParkPayment /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/common/AdminHeader" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><AdminHeader /></ProtectedRoute></React.Suspense>} />
-                <Route path="/common/CommonFrom" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><CommonFrom /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/TariffDetails" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <TariffDetails /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/ViewTariffList" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewTariffList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/Tariff_View_Details" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Tariff_View_Details /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/ParkPayment" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><ParkPayment /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/common/AdminHeader" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><AdminHeader /></ProtectedRoute></React.Suspense>} />
+                <Route path="/common/CommonFrom" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CommonFrom /></ProtectedRoute></React.Suspense>} />
                 {/* Footer pages */}
-                <Route path="/ContactUs" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><ContactUs /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Terms_ConditionPage" element={<React.Suspense fallback="loading page ..."><ProtectedRoute> <Terms_ConditionPage /> </ProtectedRoute></React.Suspense>} />
-                <Route path="/Disclaimer" element={<React.Suspense fallback="loading page ..."><ProtectedRoute>< Disclaimer /></ProtectedRoute></React.Suspense>} />
-                <Route path="/Privacy_Policy" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><Privacy_Policy /> </ProtectedRoute> </React.Suspense>} />
-                <Route path="/Partnerwithus" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><Partnerwithus /></ProtectedRoute></React.Suspense>} />
-                <Route path="/SpecialEvent" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><SpecialEvent /></ProtectedRoute></React.Suspense>} />
+                <Route path="/ContactUs" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><ContactUs /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Terms_ConditionPage" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <Terms_ConditionPage /> </ProtectedRoute></React.Suspense>} />
+                <Route path="/Disclaimer" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute>< Disclaimer /></ProtectedRoute></React.Suspense>} />
+                <Route path="/Privacy_Policy" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Privacy_Policy /> </ProtectedRoute> </React.Suspense>} />
+                <Route path="/Partnerwithus" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><Partnerwithus /></ProtectedRoute></React.Suspense>} />
+                <Route path="/SpecialEvent" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><SpecialEvent /></ProtectedRoute></React.Suspense>} />
                 {/** Master Data Management */}
-                <Route path="/mdm/view-services" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewServicesList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/edit-services" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><EditService /></ProtectedRoute> </React.Suspense>} />
-                <Route path="/mdm/create-services" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><CreateService /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/view-amenities" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewAmenitiesList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/create-amenities" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><CreateNewAmenity /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/edit-amenities" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><EditAmenity /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/view-inventory" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewInventoryList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/create-inventory" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><CreateInventory /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/edit-inventory" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><EditInventory /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/view-eventcategories" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewEventCategoriesList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/create-eventcategories" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><CreateEventCategory /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/edit-eventcategories" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><EditEventCategory /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/view-facility-type-list" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/create-facility-type-list" element={<React.Suspense fallback="loading page ..."><ProtectedRoute><CreateFacilityType /></ProtectedRoute></React.Suspense>} />
-                <Route path="/mdm/edit-facility-type-list" element={<React.Suspense fallback="loading page ..."> <ProtectedRoute><EditFacilityType /></ProtectedRoute></React.Suspense>} />
-                <Route path="/activity/view-staff-allocation" element={<React.Suspense fallback="loading page ..."> <ViewStaffAllocation /> </React.Suspense>} />
-                <Route path="/activity/create-staff-allocation" element={<React.Suspense fallback="loading page ..."><CreateStaffAllocation /> </React.Suspense>} />
-                <Route path="/activity/edit-staff-allocation" element={<React.Suspense fallback="loading page ..."><EditStaffAllocation /> </React.Suspense>} />
+                <Route path="/mdm/view-services" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewServicesList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/edit-services" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditService /></ProtectedRoute> </React.Suspense>} />
+                <Route path="/mdm/create-services" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><CreateService /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/view-amenities" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewAmenitiesList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/create-amenities" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CreateNewAmenity /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/edit-amenities" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditAmenity /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/view-inventory" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewInventoryList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/create-inventory" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CreateInventory /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/edit-inventory" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><EditInventory /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/view-eventcategories" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewEventCategoriesList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/create-eventcategories" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CreateEventCategory /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/edit-eventcategories" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditEventCategory /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/view-facility-type-list" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewFacilityTypeList /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/create-facility-type-list" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CreateFacilityType /></ProtectedRoute></React.Suspense>} />
+                <Route path="/mdm/edit-facility-type-list" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><EditFacilityType /></ProtectedRoute></React.Suspense>} />
+                <Route path="/activity/view-staff-allocation" element={<React.Suspense fallback={<ClassicLoader/>}> <ViewStaffAllocation /> </React.Suspense>} />
+                <Route path="/activity/create-staff-allocation" element={<React.Suspense fallback={<ClassicLoader/>}><CreateStaffAllocation /> </React.Suspense>} />
+                <Route path="/activity/edit-staff-allocation" element={<React.Suspense fallback={<ClassicLoader/>}><EditStaffAllocation /> </React.Suspense>} />
               </Routes>
               <CommonFooter1 />
             </div>
