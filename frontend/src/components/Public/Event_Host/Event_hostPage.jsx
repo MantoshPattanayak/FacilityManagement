@@ -9,13 +9,14 @@ import PublicHeader from "../../../common/PublicHeader";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import verfiy_img from "../../../assets/verify_img.png"
+import { useNavigate } from "react-router-dom";
 
 const Event_hostPage = () => {
     // useSate for page -----------------------------------------------
     const [currentStep, setCurrentStep] = useState(1);
     // here set the error -------------------------------------------
     const [formErrors, setformErrors] = useState({});
-
+    const navigate = useNavigate();
     // here get the Bank Name in drop down ---------------------------------
     const [GetbankName, setGetbankName] = useState([])
     const [EventType, setEventType] = useState([])
@@ -173,7 +174,13 @@ const Event_hostPage = () => {
                     facilityId: formData.facilityId
                 });
                 console.log(res);
-                toast.success('Host Event created successfully.');
+                toast.success('Host Event created successfully.', {
+                    onClose: () => {
+                        setTimeout(() => {
+                            navigate('/');
+                        }, 1000)
+                    }
+                });
             } catch (err) {
                 console.log(err);
                 toast.error(err.response.data.message);
@@ -407,8 +414,9 @@ const Event_hostPage = () => {
         setIsDropdownOpen(true);
     };
     // here set the handleOption   and  Set both facilityId and facilityName in form data
-    const handleOptionSelect = (facilityId, facilityname) => {
+    const handleOptionSelect = (facilityId, facilityname, address) => {
         setFormData({ ...formData, facilityId, facilityName: facilityname }); 
+        setFormData({ ...formData, ["locationofEvent"]: address })
         setSearchTerm(facilityname);
         setIsDropdownOpen(false);
         filterEventTypes(facilityId);
@@ -642,17 +650,7 @@ const Event_hostPage = () => {
                                         {formErrors.eventDate && <p className="error text-red-700">{formErrors.eventDate}</p>}
                                     </div>
                                 </div>
-                                <div className="HostEvent_Row">
-                                    <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Location of Event <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Plase Enter the Location of Event"
-                                            name="locationofEvent"
-                                            value={formData.locationofEvent}
-                                            onChange={handleChange}
-                                        />
-                                        {formErrors.locationofEvent && <p className="error text-red-700">{formErrors.locationofEvent}</p>}
-                                    </div>
-                                </div>
+                                
                                 {/* Two more similar rows for Heading 1 */}
                             </div>
                             <div className="HostEvent_Heading">
@@ -678,7 +676,7 @@ const Event_hostPage = () => {
                                                     filteredOptions.map((event, index) => (
                                                         <li
                                                             key={index}
-                                                            onClick={() => handleOptionSelect(event.facilityId, event.facilityname)}
+                                                            onClick={() => handleOptionSelect(event.facilityId, event.facilityname, event.address)}
                                                             className="dropdown-item"
                                                         >
                                                             {event.facilityname}
@@ -713,6 +711,17 @@ const Event_hostPage = () => {
 
                                 </div>
                                 <div className="HostEvent_Row">
+                                    <div className="HostEvent_Group" id='AddressBox'>
+                                        <label htmlFor="input1">Location of Event <span className="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="text" id="input1" className="input_padding" placeholder="Plase Enter the Location of Event"
+                                            name="locationofEvent"
+                                            value={formData.locationofEvent}
+                                            onChange={handleChange}
+                                        />
+                                        {formErrors.locationofEvent && <p className="error text-red-700">{formErrors.locationofEvent}</p>}
+                                    </div>
+                                </div>
+                                <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input1">Start Event Time & Date  <span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="datetime-local" id="input1" className="input_padding" placeholder="Please Enter Phone Number"
@@ -740,7 +749,7 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Description of Event <span className="text-red-600 font-bold text-xl">*</span></label>
-                                        <input type="text" id="input1" className="input_padding" placeholder="Please Enter the Description of Event"
+                                        <textarea type="text" id="input1" className="input_padding" placeholder="Please Enter the Description of Event"
                                             name="descriptionofEvent"
                                             value={formData.descriptionofEvent}
                                             onChange={handleChange}
@@ -758,7 +767,7 @@ const Event_hostPage = () => {
                                             value={formData.ticketsold}
                                             onChange={handleChange}
                                         >
-                                            <option value="" disabled selected hidden> there be ticket sold</option>
+                                            <option value="" disabled selected hidden>Select</option>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
 
@@ -771,7 +780,7 @@ const Event_hostPage = () => {
 
                                             <div className="HostEvent_Group1 ">
                                                 <label htmlFor="input2">Number of tickets <span className="text-red-600 font-bold text-xl">*</span></label>
-                                                <input type="text" id="No_ticket" className="input_padding" placeholder="Please Enter Number of tickets"
+                                                <input type="text" id="No_ticket" className="input_padding" placeholder="Enter Number of tickets"
                                                     name="numberofTicket"
                                                     value={formData.numberofTicket}
                                                     onChange={handleChange}
@@ -909,7 +918,7 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Organization / Individual Name*</label>
+                                        <label htmlFor="input1">Organization / Individual Name<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" className="input_padding" id="input1" placeholder="Organization / Individual Name" name="organisationName"
 
                                             value={formData.organisationName}
@@ -918,7 +927,7 @@ const Event_hostPage = () => {
 
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Organization/Individual PAN card number*</label>
+                                        <label htmlFor="input2">Organization/Individual PAN card number<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input2" className="input_padding" placeholder="Organization/Individual PAN card number" name="organisationPanCardNumber"
 
                                             value={formData.organisationPanCardNumber}
@@ -929,7 +938,7 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
-                                        <label htmlFor="input1">Organization/Individual Address*</label>
+                                        <label htmlFor="input1">Organization/Individual Address<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input1" className="input_padding" placeholder="Organization/Individual Address" name="organisationAddress"
 
                                             value={formData.organisationAddress}
@@ -948,7 +957,7 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">First Name*</label>
+                                        <label htmlFor="input1">First Name<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input1" className="input_padding" placeholder="First Name" name="firstName"
 
                                             value={formData.firstName}
@@ -957,7 +966,7 @@ const Event_hostPage = () => {
 
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Last Name*</label>
+                                        <label htmlFor="input2">Last Name<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input2" className="input_padding" placeholder="Last Name" name="lastName"
 
                                             value={formData.lastName}
@@ -968,7 +977,7 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Phone Number*</label>
+                                        <label htmlFor="input1">Phone Number<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input1" className="input_padding" placeholder="Phone Number" name="phoneNo"
                                             maxLength={10}
                                             value={formData.phoneNo}
@@ -996,7 +1005,7 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Beneficiary Name*</label>
+                                        <label htmlFor="input1">Beneficiary Name<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input1" className="input_padding" placeholder="Beneficiary Name" name="beneficiaryName"
 
                                             value={formData.beneficiaryName}
@@ -1005,7 +1014,7 @@ const Event_hostPage = () => {
 
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2" >Account Type*</label>
+                                        <label htmlFor="input2" >Account Type<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input1" className="input_padding" placeholder="Beneficiary Name" name="beneficiaryName"
                                             value={formData.accountType}
                                             disabled
@@ -1035,7 +1044,7 @@ const Event_hostPage = () => {
                                         {formErrors.bankName && <p className="error text-red-700">{formErrors.bankName}</p>}
                                     </div>
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input2">Account Number*</label>
+                                        <label htmlFor="input2">Account Number<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input2" className="input_padding" placeholder="Account Number" name="accountNumber"
 
                                             value={formData.accountNumber}
@@ -1047,7 +1056,7 @@ const Event_hostPage = () => {
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
-                                        <label htmlFor="input1">Bank IFSC*</label>
+                                        <label htmlFor="input1">Bank IFSC<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <input type="text" id="input1" className="input_padding" placeholder="Bank IFSC" name="bankIFSC"
 
                                             value={formData.bankIFSC}
