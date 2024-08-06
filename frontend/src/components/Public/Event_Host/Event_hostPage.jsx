@@ -415,8 +415,8 @@ const Event_hostPage = () => {
     };
     // here set the handleOption   and  Set both facilityId and facilityName in form data
     const handleOptionSelect = (facilityId, facilityname, address) => {
-        setFormData({ ...formData, facilityId, facilityName: facilityname }); 
-        setFormData({ ...formData, ["locationofEvent"]: address })
+        console.log({facilityId, facilityname, address});
+        setFormData({ ...formData, facilityId, facilityName: facilityname, locationofEvent: address }); 
         setSearchTerm(facilityname);
         setIsDropdownOpen(false);
         filterEventTypes(facilityId);
@@ -1137,7 +1137,7 @@ const Event_hostPage = () => {
                                                     filteredOptions.map((event, index) => (
                                                         <li
                                                             key={index}
-                                                            onClick={() => handleOptionSelect(event.facilityId, event.facilityname)}
+                                                            onClick={() => handleOptionSelect(event.facilityId, event.facilityname, event.address)}
                                                             className="dropdown-item"
                                                         >
                                                             {event.facilityname}
