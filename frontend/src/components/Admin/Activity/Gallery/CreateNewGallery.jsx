@@ -7,6 +7,7 @@ import { faArrowLeftLong, faCloudUploadAlt, faClose } from "@fortawesome/free-so
 import axiosHttpClient from "../../../../utils/axios";
 import { toast } from "react-toastify";
 import { dataLength } from "../../../../utils/regexExpAndDataLength";
+import './CreateNewGallery.css';
 
 export default function CreateNewGallery() {
   const navigate = useNavigate();

@@ -22,10 +22,8 @@ const Booking_Schedule = ({
   const navigate = useNavigate();
   const [bookingData, setBookingData] = useState({
     bookingDate: formData.bookingDate,
-    // startTime: moment(formData.operatingHoursFrom, "HH:mm:ss").format("HH:mm"),
     startTime: formData.operatingHoursFrom.slice(0, 5),
     endTime: formData.operatingHoursTo.slice(0, 5),
-    // endTime: moment(formData.operatingHoursTo, "HH:mm:ss").format("HH:mm"),
     durationInHours: formData.durationInHours,
     totalMembers: totalMembers,
     children: children,
@@ -41,13 +39,6 @@ const Booking_Schedule = ({
     priceBook: formData.priceBook,
   });
 
-  // console.log(
-  //   "qwertyuiopsdfghjkl",
-  //   bookingData.startTime,
-  //   "---",
-  //   bookingData.endTime
-  // );
-
   const [bookingDate, setBookingDate] = useState(formData.bookingDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -55,12 +46,10 @@ const Booking_Schedule = ({
   const [selectedMinute, setSelectedMinute] = useState(moment().minute());
   const [currentTime, setCurrentTime] = useState(moment().format("HH:mm"));
   const [hourChanged, setHourChanged] = useState(false);
-  const [minuteChnged, setMinuteChanged] = useState(moment().format(false));
-
+  const [minuteChanged, setMinuteChanged] = useState(false);
 
   // Update current time every minute
   useEffect(() => {
-    // console.log("bookingData", bookingData);
     const interval = setInterval(() => {
       setCurrentTime(moment().format("HH:mm"));
     }, 60000);
@@ -106,28 +95,10 @@ const Booking_Schedule = ({
     setShowTimePicker(true);
   };
 
-  // const handleHourSelect = (hour) => {
-  //   setSelectedHour(hour);
-  //   setShowTimePicker(false);
-  //   setBookingData((prevData) => ({
-  //     ...prevData,
-  //     startTime: moment().hour(hour).minute(selectedMinute).format("HH:mm"),
-  //   }));
-  // };
-
-  // const handleMinuteSelect = (minute) => {
-  //   setSelectedMinute(minute);
-  //   setShowTimePicker(false);
-  //   setBookingData((prevData) => ({
-  //     ...prevData,
-  //     startTime: moment().hour(selectedHour).minute(minute).format("HH:mm"),
-  //   }));
-  // };
-
   const handleHourSelect = (hour) => {
     setSelectedHour(hour);
-    setHourChanged(true)
-    if (minuteChnged) {
+    setHourChanged(true);
+    if (minuteChanged) {
       setBookingData((prevData) => ({
         ...prevData,
         startTime: moment().hour(hour).minute(selectedMinute).format("HH:mm"),
@@ -138,7 +109,7 @@ const Booking_Schedule = ({
 
   const handleMinuteSelect = (minute) => {
     setSelectedMinute(minute);
-    setMinuteChanged(true)
+    setMinuteChanged(true);
     if (hourChanged) {
       setBookingData((prevData) => ({
         ...prevData,
@@ -163,15 +134,16 @@ const Booking_Schedule = ({
     return moment(time, "HH:mm").format("HH:mm");
   };
 
-  // console.log("start time and end time2", bookingData.startTime, "---", bookingData.endTime);
-
   const renderHours = () => {
     const hours = [];
-    for (
-      let hour = bookingData.startTime;
-      hour < bookingData.endTime;
-      hour++
-    ) {
+    const isToday = moment(bookingDate).isSame(moment(), "day");
+    const currentHour = moment().hour();
+    const closingTime = moment(formData.operatingHoursTo, "HH:mm:ss").subtract(30, "minutes").hour();
+
+    const startHour = isToday ? currentHour : moment(formData.operatingHoursFrom, "HH:mm:ss").hour();
+    const endHour = isToday ? closingTime : moment(formData.operatingHoursTo, "HH:mm:ss").hour();
+
+    for (let hour = startHour; hour <= endHour; hour++) {
       hours.push(
         <li key={hour} onClick={() => handleHourSelect(hour)}>
           {hour < 10 ? `0${hour}` : hour}

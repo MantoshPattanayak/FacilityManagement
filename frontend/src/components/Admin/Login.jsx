@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../Public/Login.css";
+// import "../Public/Login.css";
+import "./Login.css";
 import AdminHeader from "../../common/AdminHeader";
 // Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
@@ -8,7 +9,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import CommonFooter from "../../common/CommonFooter";
+import "../../common/CommonFrom.css";
 // here import useDispatch to store the
 import { useDispatch } from "react-redux";
 import { adminLogin } from "../../utils/authSlice";
@@ -170,8 +171,6 @@ const AdminLogin = () => {
           </div>
         </form>
       </div>
-
-      <ToastContainer />
     </div>
   );
 };
