@@ -69,8 +69,10 @@
   .Button_Conatiner_Sport {
     display: flex;
     justify-content: center;
-    gap: 140px;
+    align-items: center;
+    gap: 100px;
     padding: 20px;
+    width: 100%;
   }
   
   

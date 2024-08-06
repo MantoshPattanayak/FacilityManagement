@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import "../Public/Login.css";
+import "../Public/Login.css";
 import "./Login.css";
 import AdminHeader from "../../common/AdminHeader";
 // Import Axios ------------------------
@@ -159,7 +159,7 @@ const AdminLogin = () => {
             />
           </div>
           <br />
-          <div className="otp-btn" onClick={HandleSubmit}>
+          <div className="admin-login-otp-btn" onClick={HandleSubmit}>
             <button className="sendotp-btn_login" type="submit">
               Submit
             </button>

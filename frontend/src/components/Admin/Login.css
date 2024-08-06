@@ -67,7 +67,7 @@
 }
 
 /* Styles for OTP buttons */
-.otp-btn {
+.admin-login-otp-btn {
   width: 100%;
   /* Make buttons full width */
   margin-top: 10px;
