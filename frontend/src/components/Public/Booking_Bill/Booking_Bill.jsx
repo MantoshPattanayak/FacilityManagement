@@ -25,7 +25,7 @@ const Bokking_Bill = () => {
     const [Bill_Data, setBill_Data] = useState([])
     const [showSharePopup, setShowSharePopup] = useState(false);
     //   here share Url on social Media ---------------------------------
-    const[shareUrl, setshareUrl]=useState("")
+    const [shareUrl, setshareUrl] = useState("")
     const [title, setTitle] = useState(["Check out this ticket!"]);
     const bookingId = decryptData(new URLSearchParams(location.search).get("bookingId"));
     const entityTypeId = decryptData(new URLSearchParams(location.search).get("typeId"));
@@ -38,13 +38,13 @@ const Bokking_Bill = () => {
             let res = await axiosHttpClient("VIEW_TICKET_BILL_API", "post", {
                 bookingId: bookingId, entityTypeId: entityTypeId, origin: userLocation
             })
-            const dynamicUrlPart = res.data.bookingDetails.url; 
+            const dynamicUrlPart = res.data.bookingDetails.url;
             console.log("here Response of Bill Data", res.data.bookingDetails);
             setBill_Data(res.data.bookingDetails)
-          
+
             setshareUrl(`http://localhost:8000/static${dynamicUrlPart}`)
             setTitle(`           Check out ${res.data.bookingDetails.facility.facilityname} ticket!                          `)
-           
+
         }
         catch (err) {
             console.log("Here error of Get Bill Data", err)
@@ -96,7 +96,7 @@ const Bokking_Bill = () => {
         setShowSharePopup(!showSharePopup)
     }
 
-  
+
     // formate of date and Time ------------------
     function formatTime(time24) {
         //format 24 hour time as 12 hour time
@@ -153,67 +153,67 @@ const Bokking_Bill = () => {
                 }
             });
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
             toast.error('Cancellation of ticket. Please and try again later!');
         }
     }
 
     //function to seek confirmation
-  function handleConfirmation(e) {
-    e.preventDefault();
-    toast.dismiss();
-    // Disable interactions with the background
-    document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.pointerEvents = 'none';
-    document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.opacity = 0.4;
+    function handleConfirmation(e) {
+        e.preventDefault();
+        toast.dismiss();
+        // Disable interactions with the background
+        document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.pointerEvents = 'none';
+        document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.opacity = 0.4;
 
-    toast.warn(
-      <div>
-        <p>Are you sure you want to cancel?</p>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCancel();
-              // Re-enable interactions with the background
-              document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.opacity = 1;
-              toast.dismiss();
-            }}
-            className="bg-green-400 text-white p-2 border rounded-md"
-          >
-            Yes
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              // Re-enable interactions with the background
-              document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.opacity = 1;
-              toast.dismiss();
-              toast.error('Action cancelled!', {
-                position: "top-right",
-                autoClose: 3000,
-              });
-            }}
-            className="bg-red-400 text-white p-2 border rounded-md"
-          >
-            No
-          </button>
-        </div>
-      </div>,
-      {
-        position: "top-center",
-        autoClose: false, // Disable auto close
-        closeOnClick: false, // Disable close on click
-        onClose: () => {
-          // Re-enable interactions with the background if the toast is closed
-          document.body.style.pointerEvents = 'auto';
-        }
-      }
-    );
-    return;
-  }
+        toast.warn(
+            <div>
+                <p>Are you sure you want to cancel?</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancel();
+                            // Re-enable interactions with the background
+                            document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.pointerEvents = 'auto';
+                            document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.opacity = 1;
+                            toast.dismiss();
+                        }}
+                        className="bg-green-400 text-white p-2 border rounded-md"
+                    >
+                        Yes
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            // Re-enable interactions with the background
+                            document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.pointerEvents = 'auto';
+                            document.querySelectorAll('.Ticket_Mian_conatiner')[0].style.opacity = 1;
+                            toast.dismiss();
+                            toast.error('Action cancelled!', {
+                                position: "top-right",
+                                autoClose: 3000,
+                            });
+                        }}
+                        className="bg-red-400 text-white p-2 border rounded-md"
+                    >
+                        No
+                    </button>
+                </div>
+            </div>,
+            {
+                position: "top-center",
+                autoClose: false, // Disable auto close
+                closeOnClick: false, // Disable close on click
+                onClose: () => {
+                    // Re-enable interactions with the background if the toast is closed
+                    document.body.style.pointerEvents = 'auto';
+                }
+            }
+        );
+        return;
+    }
 
     // useEffect -------------------------------
     useEffect(() => {
@@ -225,116 +225,116 @@ const Bokking_Bill = () => {
 
     return (
         <>
-        <div className="Ticket_Mian_conatiner">
-            <PublicHeader />
-            <div className="ticket">
-                <div className="Name_Park">
+            <div className="Ticket_Mian_conatiner">
+                <PublicHeader />
+                <div className="ticket">
+                    <div className="Name_Park">
 
-                    {Bill_Data && Bill_Data.facility && (
-                        <h1>{Bill_Data.facility.facilityname}</h1>
-                    )}
-                </div>
-                <div className="share_Popup_icon">
+                        {Bill_Data && Bill_Data.facility && (
+                            <h1>{Bill_Data.facility.facilityname}</h1>
+                        )}
+                    </div>
+                    <div className="location_QR_Location_Name">
+                        <span>
+                            
+                            <img className="QR_IMAGE_ICON1" src={Bill_Data.googleMapsBaseURL}></img>
+                            <p className="scan_text" >Scan for Direction to facility</p>
 
-
-                    <span className="Share_icon" onClick={ToggleSharePopup}>
-                        <FontAwesomeIcon icon={faShareAlt} className="share-icon_font" />
-                    </span>
-                    {showSharePopup && (
-                        <div className="share-popup">
-                            <FacebookShareButton url={shareUrl} title={title}>
-                                <FontAwesomeIcon icon={faFacebook} className="social-media-icon_fa" />
-                            </FacebookShareButton>
-                            <WhatsappShareButton url={shareUrl} title={title}>
-                                <FontAwesomeIcon icon={faWhatsapp} className="social-media-icon_what " />
-                            </WhatsappShareButton>
-                            <InstapaperShareButton url={shareUrl} title={title}>
-                                <FontAwesomeIcon icon={faInstagram} className="social-media-icon_insta" />
-                            </InstapaperShareButton>
-                            <EmailShareButton url={shareUrl} title={title}>
-                                <FontAwesomeIcon icon={faEnvelope} className="social-media-icon_email" />
-                            </EmailShareButton>
-                            <TwitterShareButton url={shareUrl} title={title}>
-                                <FontAwesomeIcon icon={faTwitter} className="social-media-icon_twitter" />
-                            </TwitterShareButton>
-                            {/* Add more share buttons as needed */}
-                        </div>
-                    )}
-                </div>
-                <div className="ticket-header">
-                    <h2>Booking Ref#</h2>
-                    <p>{Bill_Data.bookingReference}</p>
-                </div>
-                <span className="Line_one"></span>
-                <div className="Location_Park">
-
-                    <h1>Location.</h1>
-                    {Bill_Data && Bill_Data.facility && (
-                        <h2>{Bill_Data.facility.address}</h2>
-                    )}
+                        </span>
 
 
-                </div>
+                    </div>
+                    <div className="share_Popup_icon">
+                        <span className="Share_icon" onClick={ToggleSharePopup}>
+                            <FontAwesomeIcon icon={faShareAlt} className="share-icon_font" />
+                        </span>
+                        {showSharePopup && (
+                            <div className="share-popup">
+                                 <div className="cancel-button" onClick={() => setShowSharePopup(false)}>×</div>
+                                <WhatsappShareButton url={shareUrl} title={title}>
+                                    <FontAwesomeIcon icon={faWhatsapp} className="social-media-icon_what " />
+                                </WhatsappShareButton>
+                                <EmailShareButton url={shareUrl} title={title}>
+                                    <FontAwesomeIcon icon={faEnvelope} className="social-media-icon_email" />
+                                </EmailShareButton>
+                                {/* Add more share buttons as needed */}
+                            </div>
+                        )}
+                    </div>
+                    <div className="ticket-header">
+                        <h2>Booking Ref#</h2>
+                        <p>{Bill_Data.bookingReference}</p>
+                    </div>
+                    <span className="Line_one"></span>
+                    <div className="Location_Park">
 
-                <div className="Date_Time_tciket">
-                    <span className="Tciket_Date">
-                        <h1>Date</h1>
-                        <h2>{formatDate(Bill_Data.bookingDate)}</h2>
-                    </span>
-                    <span className="Ticekt_time">
-                        <h1>Time</h1>
-                        <h2>{formatTime(Bill_Data.createdOn)}</h2>
-                    </span>
+                        <h1>Location.</h1>
+                        {Bill_Data && Bill_Data.facility && (
+                            <h2>{Bill_Data.facility.address}</h2>
+                        )}
+
+
+                    </div>
+
+                    <div className="Date_Time_tciket">
+                        <span className="Tciket_Date">
+                            <h1>Date</h1>
+                            <h2>{formatDate(Bill_Data.bookingDate)}</h2>
+                        </span>
+                        <span className="Ticekt_time">
+                            <h1>Time</h1>
+                            <h2>{formatTime(Bill_Data.createdOn)}</h2>
+                        </span>
+                    </div>
+                    <div className="Date_Time_tciket">
+                        <span className="Tciket_Date">
+                            <h1>Cost</h1>
+                            <h2><FontAwesomeIcon icon={faIndianRupee} /> {parseFloat(Bill_Data.amount).toFixed(2)} /-</h2>
+                        </span>
+                        <span className="Ticekt_time">
+                            <h1>Total Member(s)</h1>
+                            <h2 className="text-center">{Bill_Data.totalMembers}</h2>
+                        </span>
+                    </div>
+                    <div className="QR_CODE">
+                        <img className="QR_IMAGE_ICON" src={Bill_Data.QRCodeUrl}></img>
+                    </div>
                 </div>
-                <div className="Date_Time_tciket">
-                    <span className="Tciket_Date">
-                        <h1>Cost</h1>
-                        <h2><FontAwesomeIcon icon={faIndianRupee} /> {parseFloat(Bill_Data.amount).toFixed(2)} /-</h2>
-                    </span>
-                    <span className="Ticekt_time">
-                        <h1>Total Member(s)</h1>
-                        <h2 className="text-center">{Bill_Data.totalMembers}</h2>
-                    </span>
+                <div className="Buttonn_e-ticket">
+                    <button type="Button" className="button-379" onClick={hadleGeneratePd}>
+                        Print E-Ticket</button>
+                    <button type="Button" className="button-3791" onClick={(e) => setShowCancellationPolicy(prevState => !prevState)}>
+                        Cancel</button>
                 </div>
-                <div className="QR_CODE">
-                    <img className="QR_IMAGE_ICON" src={Bill_Data.QRCodeUrl}></img>
-                </div>
+                {showCancellationPolicy &&
+                    <div className="cancellationPolicyContainer">
+                        <h2 className="policyHeading">Cancellation & Refund Policy</h2>
+                        <li>
+                            Due to limited available tickets, we request that you cancel at least 72 hours before a scheduled booking.
+                            This gives us the opportunity to fill the remaning tickets.
+                            If you have to cancel your tickets, we offer you a full refund to your account if you cancel before 72 hours.
+                            If you cancel before the 48-72 hours, we offer you to refund 70% of ticket price. However, if you cancel less than 48 hours before scheduled
+                            booking, you will lose the refund amount. The owner has the only right to be flexible here.
+                        </li>
+                        <li>
+                            Cancellations made 7 days or more in advance of the event hosting date, will receive a 100% refund.
+                            Cancellations made within 3 - 6 days will incur a 20% fee.
+                            Cancellations made within 48 hours of the event will incur a 30% fee.
+                        </li>
+                        <li>
+                            Refund amount will be processed within 3-5 business days depending upon merchat bank.
+                        </li>
+                        <span>
+                            <input type="checkbox" checked={checkBoxValue} onChange={(e) => { setCheckBoxValue(prevState => !prevState) }} /> I agree to above mentioned policies.
+                        </span>
+                        <span className="flex gap-x-2">
+                            <button className="proceed-button" onClick={handleConfirmation} disabled={checkBoxValue == true ? false : true}>Proceed</button>
+                            <button className="close-button" onClick={(e) => setShowCancellationPolicy(false)}>Close</button>
+                        </span>
+                    </div>
+                }
             </div>
-            <div className="Buttonn_e-ticket">
-                <button type="Button" className="button-379" onClick={hadleGeneratePd}>
-                    Print E-Ticket</button>
-                <button type="Button" className="button-3791" onClick={(e) => setShowCancellationPolicy(prevState => !prevState)}>
-                    Cancel</button>
-            </div>
-            {showCancellationPolicy && 
-                <div className="cancellationPolicyContainer">
-                    <h2 className="policyHeading">Cancellation & Refund Policy</h2>
-                    <li>
-                        Due to limited available tickets, we request that you cancel at least 72 hours before a scheduled booking. 
-                        This gives us the opportunity to fill the remaning tickets.
-                        If you have to cancel your tickets, we offer you a full refund to your account if you cancel before 72 hours. 
-                        If you cancel before the 48-72 hours, we offer you to refund 70% of ticket price. However, if you cancel less than 48 hours before scheduled
-                        booking, you will lose the refund amount. The owner has the only right to be flexible here.
-                    </li>
-                    <li>
-                        Cancellations made 7 days or more in advance of the event hosting date, will receive a 100% refund. 
-                        Cancellations made within 3 - 6 days will incur a 20% fee. 
-                        Cancellations made within 48 hours of the event will incur a 30% fee.
-                    </li>
-                    <li>
-                        Refund amount will be processed within 3-5 business days depending upon merchat bank.
-                    </li>
-                    <span>
-                        <input type="checkbox" checked={checkBoxValue} onChange={(e)=>{setCheckBoxValue(prevState => !prevState)}}/> I agree to above mentioned policies.
-                    </span>
-                    <span className="flex gap-x-2">
-                        <button className="proceed-button" onClick={handleConfirmation} disabled={checkBoxValue == true ? false : true}>Proceed</button>
-                        <button className="close-button" onClick={(e) => setShowCancellationPolicy(false)}>Close</button>
-                    </span>
-                </div>
-            }
-        </div>
-        <ToastContainer /></>
+            <ToastContainer /></>
     )
 }
 export default Bokking_Bill;
