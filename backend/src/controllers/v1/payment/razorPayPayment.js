@@ -14,6 +14,7 @@ let {Op} = require('sequelize')
 let instance = require('../../../config/razorpay.config.js');
 let crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+let eventactivites = db.eventActivities
 let {parkBooking,uploadTicket} = require('../booking/bookings.controllers.js')
 
 
@@ -176,6 +177,9 @@ const paymentVerification = async (req, res) => {
               [Op.and]: [{ statusId: activeStatus }, { eventId: findTheBookingDetails[0].eventId }]
           }
       })
+
+      console.log(findEventInformation,'180eventInformation')
+
         let title = findEventInformation.eventName;
                 let bookingRef = findTheBookingDetails[0].bookingReference;
                 let location = findEventInformation.locationName;
@@ -198,7 +202,7 @@ const paymentVerification = async (req, res) => {
                 ticketUploadArray.push({
                   shareableLink:ticketUploadAndGeneratePdf.shareableLink,
                   entityId:findTheBookingDetails[0].eventId,
-                  entityTypeId:findEventInformation[0].eventCategoryId,
+                  entityTypeId:findEventInformation.eventCategoryId,
                   bookingId:findTheBookingDetails[0].eventBookingId,
                   bookingRef:findTheBookingDetails[0].bookingReference
   
@@ -392,7 +396,13 @@ const checkout =  async (req, res) => {
         }
 
       }
-      totalAmount = facilityPreference.amount;
+      if(typeof(facilityPreference.amount)==='string'){
+        totalAmount += parseFloat(facilityPreference.amount);
+      }
+      else{
+        totalAmount = facilityPreference.amount + totalAmount;
+      }
+      console.log(totalAmount, 'total amount ')
       console.log('facility prefernce1',facilityPreference)
 
 
@@ -479,8 +489,14 @@ const checkout =  async (req, res) => {
         })
       }
       for (let i of findTheCartDetails){
-        console.log('cartdata',i.facilityPreference.amount, 'i')
-        totalAmount += i.facilityPreference.amount;
+        console.log('cartdata',i.facilityPreference.amount, 'i', typeof(i.facilityPreference.amount))
+        if(typeof(i.facilityPreference.amount)==='string'){
+          totalAmount += parseFloat(i.facilityPreference.amount);
+        }
+        else{
+          totalAmount = i.facilityPreference.amount + totalAmount;
+        }
+        
         console.log('totalamount',totalAmount)
       }
       console.log('payment methods', totalAmount)

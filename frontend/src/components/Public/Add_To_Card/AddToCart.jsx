@@ -30,6 +30,7 @@ import instance from "../../../../env";
 import missing_cart from "../../../assets/missing_cart.png"
 // Import  Shimmer Ui --------------
 import AddCartShimmerUi from "../../../common/AddCartShimmerUi";
+import { useNavigate } from "react-router-dom";
 const AddToCart = () => {
     // here useState for Get the data -----------------------------------------------
     const [GetViewCradData, setGetViewCradData] = useState([])
@@ -48,6 +49,7 @@ const AddToCart = () => {
     const [refresh, setRefresh] = useState(false);
     const [toastId, setToastId] = useState(null);
     const [cartId, setCartId] = useState('');
+    const navigate = useNavigate();
     const notify = (message) => {
         if (!toast.isActive(toastId)) {
             const id = toast.success(message, {
