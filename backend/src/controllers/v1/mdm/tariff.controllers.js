@@ -10,30 +10,30 @@ const facilityTariff = db.facilitytariff
 let tarifftype = db.tarifftype
 let tariffmaster = db.tariffmaster
 const Sequelize = db.Sequelize;
-let {Op} = require('sequelize')
+let { Op } = require('sequelize')
 let faciltyActivity = db.facilityactivities;
 let facilityEvents = db.facilityEvents;
 let useractivitymaster = db.useractivitymasters
 let eventcategorymaster = db.eventCategoryMaster
 // create tariff api
-let createTariff = async (req,res)=>{
-    let transaction 
+let createTariff = async (req, res) => {
+    let transaction
     try {
-       
+
         let createdDt = new Date();
         let updatedDt = new Date();
         let userId = req.user.userId
         let statusId = 1;
-        let {facilityTariffData} = req.body
+        let { facilityTariffData } = req.body
         let tariffCreationData;
         console.log("tariff Create data", facilityTariffData)
         // let {facilityId, operatingHoursFrom, operatingHoursTo, dayWeek, amount, validityFrom, validityTo }= req.body
-         transaction = await sequelize.transaction();
+        transaction = await sequelize.transaction();
 
-        if(facilityTariffData.length==0 || facilityTariffData.some((tariffData)=>{!tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo  || !tariffData.dayWeek  ||  !tariffData.tariffTypeId || !tariffData.entityId})){
+        if (facilityTariffData.length == 0 || facilityTariffData.some((tariffData) => { !tariffData.facilityId || !tariffData.operatingHoursFrom || !tariffData.operatingHoursTo || !tariffData.dayWeek || !tariffData.tariffTypeId || !tariffData.entityId })) {
 
             return res.status(statusCode.BAD_REQUEST.code).json({
-                message:"Please provide all required fields"
+                message: "Please provide all required fields"
             })
         }
         let tariffMasterCreationData;
@@ -42,51 +42,51 @@ let createTariff = async (req,res)=>{
         for (let eachTariffObject of facilityTariffData) {
             // console.log('each tariff object', eachTariffObject)
 
-           
-            let findOutIfTheTariffAlreadyPresentOrNot  = await tariffmaster.findOne({
-                where:{[Op.and]:[{facilityId:eachTariffObject.facilityId}, {entityId:eachTariffObject.entityId},{tariffTypeId:eachTariffObject.tariffTypeId},{statusId:statusId}]},  
-                transaction 
+
+            let findOutIfTheTariffAlreadyPresentOrNot = await tariffmaster.findOne({
+                where: { [Op.and]: [{ facilityId: eachTariffObject.facilityId }, { entityId: eachTariffObject.entityId }, { tariffTypeId: eachTariffObject.tariffTypeId }, { statusId: statusId }] },
+                transaction
             })
             console.log('find out if the tariff', findOutIfTheTariffAlreadyPresentOrNot)
             let tariffMasterQuery // for inserting the data to tariff masters
-            if(!findOutIfTheTariffAlreadyPresentOrNot){
+            if (!findOutIfTheTariffAlreadyPresentOrNot) {
                 tariffMasterCreationData = {
-                    facilityId:eachTariffObject.facilityId,
-                    entityId:eachTariffObject.entityId,
-                    tariffTypeId:eachTariffObject.tariffTypeId,
-                    statusId:statusId,
-                    createdBy:userId,
-                    createdDt:createdDt,
-                    updatedBy:userId,
-                    updatedDt:updatedDt
+                    facilityId: eachTariffObject.facilityId,
+                    entityId: eachTariffObject.entityId,
+                    tariffTypeId: eachTariffObject.tariffTypeId,
+                    statusId: statusId,
+                    createdBy: userId,
+                    createdDt: createdDt,
+                    updatedBy: userId,
+                    updatedDt: updatedDt
                 }
-    
-             tariffMasterQuery = await tariffmaster.create(tariffMasterCreationData,{ transaction, returning: true  })
-             console.log('tariff master query', tariffMasterQuery)
+
+                tariffMasterQuery = await tariffmaster.create(tariffMasterCreationData, { transaction, returning: true })
+                console.log('tariff master query', tariffMasterQuery)
             }
-            else{
-                 tariffMasterQuery = {};
+            else {
+                tariffMasterQuery = {};
                 tariffMasterQuery.tariffMasterId = findOutIfTheTariffAlreadyPresentOrNot.tariffMasterId;
             }
-           
+
             console.log('hello 67 line')
-             tariffCreationData = {
-                facilityId:eachTariffObject.facilityId,
-                tariffMasterId:tariffMasterQuery.tariffMasterId,
-                operatingHoursFrom:eachTariffObject.operatingHoursFrom,
-                operatingHoursTo:eachTariffObject.operatingHoursTo,
-                sun:eachTariffObject.dayWeek.sun,
-                mon:eachTariffObject.dayWeek.mon,
-                tue:eachTariffObject.dayWeek.tue,
-                wed:eachTariffObject.dayWeek.wed,
-                thu:eachTariffObject.dayWeek.thu,
-                fri:eachTariffObject.dayWeek.fri,
-                sat:eachTariffObject.dayWeek.sat,
-                createdBy:userId,
-                createdDt:new Date(),
-                updatedBy:userId,
-                updatedDt:new Date(),
-                statusId:statusId
+            tariffCreationData = {
+                facilityId: eachTariffObject.facilityId,
+                tariffMasterId: tariffMasterQuery.tariffMasterId,
+                operatingHoursFrom: eachTariffObject.operatingHoursFrom,
+                operatingHoursTo: eachTariffObject.operatingHoursTo,
+                sun: eachTariffObject.dayWeek.sun,
+                mon: eachTariffObject.dayWeek.mon,
+                tue: eachTariffObject.dayWeek.tue,
+                wed: eachTariffObject.dayWeek.wed,
+                thu: eachTariffObject.dayWeek.thu,
+                fri: eachTariffObject.dayWeek.fri,
+                sat: eachTariffObject.dayWeek.sat,
+                createdBy: userId,
+                createdDt: new Date(),
+                updatedBy: userId,
+                updatedDt: new Date(),
+                statusId: statusId
             }
             console.log('hello 88 line', tariffCreationData)
 
@@ -97,7 +97,7 @@ let createTariff = async (req,res)=>{
                             statusId: statusId
                         },
                         {
-                            tariffMasterId:tariffMasterQuery.tariffMasterId
+                            tariffMasterId: tariffMasterQuery.tariffMasterId
                         }
                         ,
                         {
@@ -114,77 +114,80 @@ let createTariff = async (req,res)=>{
                             }
                         }
                     ]
-                },  transaction 
+                }, transaction
             });
 
-            
-        console.log(findIfTheFacilityId,'findif the facilityId')
 
-        if(findIfTheFacilityId){
-            await transaction.rollback();
-            return res.status(statusCode.BAD_REQUEST.code).json({
-                message:`This tariff data is already present for operating hours ${eachTariffObject.operatingHoursFrom},`
-            })
-        }
-    
-        let createTariffData = await facilityTariff.create(tariffCreationData,{ transaction, returning: true  })
+            console.log(findIfTheFacilityId, 'findif the facilityId')
 
-        if(!createTariffData){
-            await transaction.rollback();
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(`failed to create the tariff for operating hours from ${operatingHoursFrom} `)
+            if (findIfTheFacilityId) {
+                await transaction.rollback();
+                return res.status(statusCode.BAD_REQUEST.code).json({
+                    message: `This tariff data is already present for operating hours ${eachTariffObject.operatingHoursFrom},`
+                })
+            }
 
-        }
-      
+            let createTariffData = await facilityTariff.create(tariffCreationData, { transaction, returning: true })
+
+            if (!createTariffData) {
+                await transaction.rollback();
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(`failed to create the tariff for operating hours from ${operatingHoursFrom} `)
+
+            }
+
         }
         await transaction.commit(); // If everything goes well, will do the commit here
 
         return res.status(statusCode.SUCCESS.code).json({
-            message:"This data is successfully inserted"
+            message: "This data is successfully inserted"
         })
-    
-        
-      
+
+
+
 
     } catch (err) {
-        if(transaction) await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-           message: err.message
+            message: err.message
         })
     }
 }
 
-let getTariffById = async (req,res)=>{
+let getTariffById = async (req, res) => {
     try {
-        console.log('1',req.body)
-        let {facilityId,entityId,tariffTypeId} = req.body
+        // console.log('1', req.body)
+        let { facilityId, entityId, tariffTypeId } = req.body
         let statusId = 1;
-        
+        console.log({ facilityId, entityId, tariffTypeId });
+
         let findTariffById = await tariffmaster.findOne({
-            where:{
-                [Op.and]:[{entityId:entityId},{statusId:statusId},{facilityId:facilityId},{tariffTypeId:tariffTypeId}]
+            where: {
+                [Op.and]: [{ entityId: entityId }, { statusId: statusId }, { facilityId: facilityId }, { tariffTypeId: tariffTypeId }]
             },
-            include:[{
-                model:facilityTariff,
-                required:true,
+            include: [{
+                model: facilityTariff,
+                required: true,
                 where: {
-                    statusId: statusId  
+                    statusId: statusId
                 }
             }]
         })
-        if(findTariffById){
+        console.log("findTariffById", findTariffById);
+        
+        if (findTariffById) {
             return res.status(statusCode.SUCCESS.code).json({
-                message:"Here is the tariff Data",
-                tariffData:findTariffById
+                message: "Here is the tariff Data",
+                tariffData: findTariffById
             })
         }
         return res.status(statusCode.BAD_REQUEST.code).json({
-            message:"Invalid Request"
+            message: "Invalid Request"
         })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
-    })
-}
+        })
+    }
 }
 
 
@@ -206,8 +209,8 @@ let updateTariff = async (req, res) => {
 
         for (let eachTariffObject of facilityTariffData) {
             let findFacilityTariffMaster = await tariffmaster.findOne({
-                where:{
-                    tariffMasterId:eachTariffObject.tariffMasterId
+                where: {
+                    tariffMasterId: eachTariffObject.tariffMasterId
                 },
                 transaction
             })
@@ -307,7 +310,7 @@ let updateTariff = async (req, res) => {
                 console.log('inactive tariff details', inactiveTheFacilityTariffStatus)
 
 
-                if (inactiveTheFacilityTariffStatus === 0 || inactiveTheTariffStatus === 0 && findFacilityTariffMaster.statusId ===1) {
+                if (inactiveTheFacilityTariffStatus === 0 || inactiveTheTariffStatus === 0 && findFacilityTariffMaster.statusId === 1) {
                     await transaction.rollback();
                     return res.status(statusCode.BAD_REQUEST.code).json({
                         message: `Failed to update status for tariff detail id ${eachTariffObject.tariffDetailId}`
@@ -350,36 +353,36 @@ let updateTariff = async (req, res) => {
 };
 
 
-let inActiveEachTariffData = async(req,res)=>{
+let inActiveEachTariffData = async (req, res) => {
     try {
-        let {tariffDetailId,statusId}= req.body;
-      console.log("here Response ", req.body)
-        
+        let { tariffDetailId, statusId } = req.body;
+        console.log("here Response ", req.body)
+
         let [inActiveTheStatus] = await facilityTariff.update({
-            statusId:statusId
-        },{
-            where:{
-                tariffDetailId:tariffDetailId
+            statusId: statusId
+        }, {
+            where: {
+                tariffDetailId: tariffDetailId
             }
         }
-    )
-   
-    if(inActiveTheStatus>0){
-        return res.status(statusCode.SUCCESS.code).json({
-            message:`Data deactivated successfully`
+        )
+
+        if (inActiveTheStatus > 0) {
+            return res.status(statusCode.SUCCESS.code).json({
+                message: `Data deactivated successfully`
+            })
+        }
+        return res.status(statusCode.BAD_REQUEST.code).json({
+            message: `Data is not updated`
         })
-    }
-    return res.status(statusCode.BAD_REQUEST.code).json({
-        message:`Data is not updated`
-    })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
     }
 }
 
-let viewTariff = async (req,res)=>{
+let viewTariff = async (req, res) => {
     try {
         let limit = req.body.page_size ? req.body.page_size : 500;
         let page = req.body.page_number ? req.body.page_number : 1;
@@ -407,167 +410,177 @@ let viewTariff = async (req,res)=>{
         //     });
         // }
 
-         findViewTariff = await sequelize.query(`  select query.* from
+        findViewTariff = await sequelize.query(`
+        select query.* from
         (
-        SELECT f.facilityName, f.facilityId, 'ACTIVITIES' AS tariffType,
-            uam.userActivityId AS activitiesEventId, uam.userActivityName AS activitiesEventName,
-            CASE
-            WHEN EXISTS (SELECT 1 FROM tarifftypes tt
-                    JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
-                    WHERE tt.code = 'ACTIVITIES' AND tm.facilityId = f.facilityId
-                ) THEN 1
-                ELSE 0
-            END AS tariffCheck
-        FROM facilities f
-        LEFT JOIN
-            facilityactivities fa ON f.facilityId = fa.facilityId
-        LEFT JOIN
-            useractivitymasters uam ON fa.activityId = uam.userActivityId
-        WHERE
-            fa.id IS NOT NULL
-        union all
-        SELECT
-            f.facilityname AS facilityName,
-            f.facilityId,
-            'HOST_EVENT' AS tariffType,
-            ecm.eventCategoryId as activitiesEventId,
-            ecm.eventCategoryName AS activitiesEventName,
-            CASE
-                WHEN EXISTS (
-                    SELECT 1
-                    FROM tarifftypes tt
-                    JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
-                    WHERE tt.code = 'HOST_EVENT'
-                    AND tm.facilityId = f.facilityId
-                ) THEN 1
-                ELSE 0
-            END AS tariffCheck
-        FROM
-            facilities f
-        LEFT JOIN
-            facilityevents fe ON f.facilityId = fe.facilityId
-        LEFT JOIN
-            eventcategorymasters ecm ON fe.eventCategoryId = ecm.eventCategoryId
-        WHERE
-            fe.facilityEventId IS NOT null
+            SELECT f.facilityName, f.facilityId, t2.tariffTypeId, f.facilityTypeId,
+                uam.userActivityId AS entityId, uam.userActivityName AS activitiesEventName,
+                CASE
+                WHEN EXISTS (SELECT 1 FROM tarifftypes tt
+                        JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
+                        WHERE tt.code = 'ACTIVITIES' AND tm.facilityId = f.facilityId
+                    ) THEN 1
+                    ELSE 0
+                END AS tariffCheck
+            FROM facilities f
+            LEFT JOIN
+                facilityactivities fa ON f.facilityId = fa.facilityId
+            LEFT JOIN
+                useractivitymasters uam ON fa.activityId = uam.userActivityId
+            left join tariffmasters t on t.facilityId = f.facilityId
+            left join tarifftypes t2 on t2.tariffTypeId = t.tariffTypeId
+            WHERE
+                fa.id IS NOT null
+            group by f.facilityname, f.facilityId, t2.tariffTypeId,f.facilityTypeId,uam.userActivityId,uam.userActivityName,tariffCheck
+            union all
+            SELECT
+                f.facilityname AS facilityName,
+                f.facilityId,
+                t2.tariffTypeId,
+                f.facilityTypeId,
+                ecm.eventCategoryId as entityId,
+                ecm.eventCategoryName AS activitiesEventName,
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM tarifftypes tt
+                        JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
+                        WHERE tt.code = 'HOST_EVENT'
+                        AND tm.facilityId = f.facilityId
+                    ) THEN 1
+                    ELSE 0
+                END AS tariffCheck
+            FROM
+                facilities f
+            LEFT JOIN
+                facilityevents fe ON f.facilityId = fe.facilityId
+            LEFT JOIN
+                eventcategorymasters ecm ON fe.eventCategoryId = ecm.eventCategoryId
+            left join tariffmasters t on t.facilityId = f.facilityId
+            left join tarifftypes t2 on t2.tariffTypeId = t.tariffTypeId
+            WHERE
+                fe.facilityEventId IS NOT null
+            group by f.facilityname, f.facilityId, t2.tariffTypeId,f.facilityTypeId,ecm.eventCategoryId,ecm.eventCategoryName,tariffCheck
         ) query
-
-
-`,{
-    type:QueryTypes.SELECT
-})
+        `, {
+            type: QueryTypes.SELECT
+        })
 
         let paginatedTariff = findViewTariff.slice(offset, offset + limit);
 
-        return res.status(statusCode.SUCCESS.code).json({message:"All Tariff Data", tariffData:paginatedTariff})
+        return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: paginatedTariff })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:err.message
+            message: err.message
         })
     }
 }
 
-let initialDataForTariffSelectionWRTCategory = async (req,res)=>{
+let initialDataForTariffSelectionWRTCategory = async (req, res) => {
     try {
-        let {facilityId,tariffTypeId} = req.body
-        let statusId =1;
+        let { facilityId, tariffTypeId } = req.body
+        let statusId = 1;
         let findTheNameOfThoseActivities;
         let findTheNameOfThoseSports;
         let findTheNameOfThoseEvents;
         let findFacilityTypeIdFromFacilityTable
 
-        let tariffTypeQuery = await tarifftype.findAll({where:{statusId:statusId}})
+        let tariffTypeQuery = await tarifftype.findAll({ where: { statusId: statusId } })
 
-        if(facilityId){
-             findFacilityTypeIdFromFacilityTable = await facilities.findOne({
-                where:{
-                   [Op.and]:[ {statusId:statusId},{facilityId:facilityId}]
+        if (facilityId) {
+            findFacilityTypeIdFromFacilityTable = await facilities.findOne({
+                where: {
+                    [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
                 }
             })
         }
-   
-        if(facilityId && tariffTypeId==1){
-             findTheNameOfThoseActivities = await faciltyActivity.findAll({
-                where:{
-                    [Op.and]:[{facilityTypeId:{[Op.ne]:2}},{statusId:statusId},{facilityId:facilityId}]
+
+        if (facilityId && tariffTypeId == 1) {
+            findTheNameOfThoseActivities = await faciltyActivity.findAll({
+                where: {
+                    [Op.and]: [{ facilityTypeId: { [Op.ne]: 2 } }, { statusId: statusId }, { facilityId: facilityId }]
                 },
                 include: [{
                     model: useractivitymaster,
-                    as:'activityData',
-                    attributes:[['userActivityId','activityId'],['userActivityName','activityName']]
-                    
+                    as: 'activityData',
+                    attributes: [['userActivityId', 'activityId'], ['userActivityName', 'activityName']]
+
                     // Add any additional options for the included model here if needed
                 }]
-        
-    })
+
+            })
 
             return res.status(statusCode.SUCCESS.code).json({
-                message:"Initial Data for tariff",
-                facilityData:findFacilityTypeIdFromFacilityTable,
-                tariffTypeData:tariffTypeQuery,
-                activityData:findTheNameOfThoseActivities
-            })  
+                message: "Initial Data for tariff",
+                facilityData: findFacilityTypeIdFromFacilityTable,
+                tariffTypeData: tariffTypeQuery,
+                activityData: findTheNameOfThoseActivities
+            })
         }
-            if(findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId==2){
-            
-                    findTheNameOfThoseSports = await faciltyActivity.findAll({
-                    where:{[Op.and]:[{facilityTypeId:{[Op.eq]:2}},{statusId:statusId},{facilityId:facilityId}]
-            },
-            include:[
-                { model: useractivitymaster,
-                    as:'activityDetails',
-                    
-                    attributes:[['userActivityId','activityId'],['userActivityName','activityName']]
-                    // Add any additional options for the included model here if needed
+        if (findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId == 2) {
+
+            findTheNameOfThoseSports = await faciltyActivity.findAll({
+                where: {
+                    [Op.and]: [{ facilityTypeId: { [Op.eq]: 2 } }, { statusId: statusId }, { facilityId: facilityId }]
+                },
+                include: [
+                    {
+                        model: useractivitymaster,
+                        as: 'activityDetails',
+
+                        attributes: [['userActivityId', 'activityId'], ['userActivityName', 'activityName']]
+                        // Add any additional options for the included model here if needed
                     }
                 ]
-                }
+            }
             )
 
-       
-        return res.status(statusCode.SUCCESS.code).json({
-            message:"Initial Data for tariff",
-            facilityData:findFacilityTypeIdFromFacilityTable,
-            tariffTypeData:tariffTypeQuery,
-            activityData:findTheNameOfThoseSports
-        })
+
+            return res.status(statusCode.SUCCESS.code).json({
+                message: "Initial Data for tariff",
+                facilityData: findFacilityTypeIdFromFacilityTable,
+                tariffTypeData: tariffTypeQuery,
+                activityData: findTheNameOfThoseSports
+            })
         }
-        if(facilityId && tariffTypeId==3){
-           
+        if (facilityId && tariffTypeId == 3) {
+
             findTheNameOfThoseEvents = await facilityEvents.findAll({
-               where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]
-       },
-       include:[
-        { model: eventcategorymaster,
-          as:'activityData',
-          attributes:[['eventCategoryId', 'activityId'], // Rename eventCategoryId to activityId
-          ['eventCategoryName', 'activityName']] // Rename eventCategoryName to activityName]
-         // Add any additional options for the included model here if needed
-         }
-        ]
-    }
-   )
-    return res.status(statusCode.SUCCESS.code).json({
-        message:"Initial Data for tariff",
-        facilityData:findFacilityTypeIdFromFacilityTable,
-        tariffTypeData:tariffTypeQuery,
-        activityData:findTheNameOfThoseEvents
-    })  
-    }
+                where: {
+                    [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
+                },
+                include: [
+                    {
+                        model: eventcategorymaster,
+                        as: 'activityData',
+                        attributes: [['eventCategoryId', 'activityId'], // Rename eventCategoryId to activityId
+                        ['eventCategoryName', 'activityName']] // Rename eventCategoryName to activityName]
+                        // Add any additional options for the included model here if needed
+                    }
+                ]
+            }
+            )
+            return res.status(statusCode.SUCCESS.code).json({
+                message: "Initial Data for tariff",
+                facilityData: findFacilityTypeIdFromFacilityTable,
+                tariffTypeData: tariffTypeQuery,
+                activityData: findTheNameOfThoseEvents
+            })
+        }
         return res.status(statusCode.SUCCESS.code).json({
-            message:"Initial Data for tariff",
-            facilityData:findFacilityTypeIdFromFacilityTable,
-            tariffTypeData:tariffTypeQuery
-        })   
-        
-     
+            message: "Initial Data for tariff",
+            facilityData: findFacilityTypeIdFromFacilityTable,
+            tariffTypeData: tariffTypeQuery
+        })
+
+
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
     }
 }
 
 
-module.exports= {
+module.exports = {
     createTariff,
     getTariffById,
     updateTariff,
