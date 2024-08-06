@@ -1,5 +1,6 @@
 import React from 'react'
 import './Favorites.css'
+import './BookingDetails.css'
 import CommonFooter from '../../../common/CommonFooter';
 
 import { useState, useEffect } from 'react';
@@ -90,9 +91,9 @@ const Favorites = () => {
             let res = await axiosHttpClient('PROFILE_DATA_VIEW_API', 'post');
             console.log('response of fetch profile api', res.data.public_user);
 
-            setUserName(decryptData(res.data.public_user.firstName) + ' ' + decryptData(res.data.public_user.lastName));
-            setEmailId(decryptData(res.data.public_user.emailId));
-            setPhoneNo(decryptData(res.data.public_user.phoneNo));
+            setUserName(decryptData(res.data.public_user[0].firstName) + ' ' +decryptData(res.data.public_user[0].middleName)+' '+ decryptData(res.data.public_user[0].lastName));
+            setEmailId(decryptData(res.data.public_user[0].emailId));
+            setPhoneNo(decryptData(res.data.public_user[0].phoneNo));
         }
         catch (error) {
             console.error("Error in fetching data:", error);
@@ -218,7 +219,7 @@ const Favorites = () => {
     return (
         <div>
             <PublicHeader />
-            <div className="Fev-Sec-container">
+            <div className="booking-dtails-container">
                 <aside className="profile-leftside--Body">
                     <div className="profile-view--Body">
                         <div className="profile-about">
@@ -231,7 +232,7 @@ const Favorites = () => {
                                 <FontAwesomeIcon icon={faEnvelope} />
                                 <p>{emailId}</p>
                             </div>
-
+ 
                             <div className="profile-about-icon" >
                                 <FontAwesomeIcon icon={faMobileScreenButton} />
                                 <p>{phoneNo}</p>
@@ -261,10 +262,10 @@ const Favorites = () => {
                             </li>
                         </ul>
                         {/* Logout Button */}
-                        <button className="button-67 " onClick={handleLogout}>
+                        {/* <button className="button-67 " onClick={handleLogout}>
                             <h1>Logout</h1>
                             <FontAwesomeIcon icon={faArrowRightFromBracket} />
-                        </button>
+                        </button> */}
 
                     </div>
                 </aside>

@@ -386,6 +386,9 @@
     font-size: 11px;
     height: 4vh;
   }
+  .button, input, optgroup, select, textarea {
+    font-size: 100%;
+}
 }
 
 @media screen and (max-width: 760px) {
@@ -410,14 +413,14 @@
     padding: 1.625vw;
   }
 
-  .profile--Activity-options button{
+  .profile--Activity-options button {
     font-size: 11px;
     line-height: 0.5rem;
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
-  .profile--Activity-options button span{
+  .profile--Activity-options button span {
     font-size: 9px;
   }
 }

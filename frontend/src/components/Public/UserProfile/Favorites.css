@@ -1,13 +1,13 @@
-.Fev-Sec-container {
+.booking-dtails-container {
     box-sizing: border-box;
     width: 90vw;
     padding: 10px;
     margin-top: 5%;
     margin-left: 4%;
     display: flex;
-    gap: 15%;
-
-}
+    /* gap: 15%; */
+    gap: 0%;
+  }
 
 .bookmark-icon{
    margin-left: auto;
@@ -23,4 +23,160 @@
     flex-direction: column;
     align-items: center;
     margin-left: 8vw;
+}
+
+/* /Profile ------------------- */
+
+.profile-leftside--Body {
+    width: 18vw;
+    /* border: 2px solid black; */
+  }
+  .profile-view--Body {
+    padding: 1.25rem;
+    border-bottom-width: 2px;
+    border-color: gray;
+    /* margin: 0.94rem; */
+  }
+  .profile-about {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .profile-about-icon {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+  }
+  .profile-about-icon {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+  }
+  .profile-button--Section {
+    padding: 1.25rem;
+  }
+  
+  .profile-button--Section > li {
+    margin: 0.5rem 0;
+  }
+  
+  .profile-button--Active {
+    background-color: rgba(0, 181, 98, 1);
+  }
+  
+  .profile-button--Section > li > a {
+    display: flex;
+    padding: 0.5rem;
+    height: 6vh;
+    align-items: center;
+    border-radius: 6px;
+    justify-content: center;
+    background-color: #d9d9d9;
+    font-weight: 500;
+  }
+  
+  /* .profile-button--Section>li>a:hover {
+    background-color: rgba(217, 217, 217, 1);
+  } */
+  
+  .profile-button--Section li a:hover {
+    background-color: green; /* Green background on hover */
+    color: white; /* White text color on hover */
+  }
+  .profile-button--Section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media screen and (max-width: 760px){
+    .booking-dtails-container{
+        flex-direction: column;
+        margin-left: 0px;
+        width: 100%;
+    }
+
+    .text-filter {
+        font-size: 11px;
+    }
+    .filter_option {
+        gap: 0px;
+        padding: 7px;
+        height: 26px;
+    }
+    .eventdetails-tab {
+        width: 100%;
+    }
+    .booking-dtails-container{
+        margin-top: 14%;
+    }
+    .eventdetails-tab div {
+        font-size: 11px;
+    }
+    .eventdetails-photo img {
+        width: 110px;
+        height: auto;
+    }
+    .eventdetails-details-eventname {
+        font-size: 13px;
+    }
+    .eventdetails-details-eventAddress {
+        font-size: 11px;
+    }
+    .booking-date{
+        font-size: 11px;
+    }
+    .eventdetails-eventbutton {
+        font-size: 9px;
+        width: 60px;
+        height: 18px;
+        margin-top: 6px;
+    }
+    .eventdetails-carddetails{
+        width: 100%;
+    }
+    .eventdetails-cardsection_Bd {
+        width: 100%;
+        gap: 8px;
+    }
+    .booking-dtails-container {
+        align-items: center;
+    }
+    .profile-leftside--Body{
+        width: 100%;
+    }
+}
+
+
+@media screen and (max-width: 1366px){
+    .right-container-favorite {
+        /* width: 100%; */
+        width: max-content;
+    }
+    .eventdetails-photo img {
+        width: 130px;
+        height: auto;
+    }
+    .eventdetails-details {
+        width: 100%;
+    }
+    .eventdetails-carddetails {
+        width: 100%;
+    }
+    .right-container-favorite {
+        margin-left: 0vw;
+    }
+    .eventdetails-cardsection_Bd {
+        width: 100%;
+    }
+    .button, input, optgroup, select, textarea {
+        font-size: 60%;
+    }
+    .booking-dtails-container {
+        width: 100vw;
+        margin-top: 10%;
+        gap: 10%;
+    }
+    .eventdetails-tab {
+        width: 100%;
+    }
+   
 }
