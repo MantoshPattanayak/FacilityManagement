@@ -530,8 +530,8 @@ const BookingDetails = () => {
             <div className="eventdetails-cardsection_Bd">
              
                { eventDetailsData.length > 0 &&
-                eventDetailsData.map((event) => (
-                  <div key={event.bookingId} className="eventdetails-carddetails">
+                eventDetailsData.map((event, idx) => (
+                  <div key={idx} className="eventdetails-carddetails">
                     <div className="eventdetails-photo">
                       <img src={eventPhoto} alt="Event" />
                     </div>

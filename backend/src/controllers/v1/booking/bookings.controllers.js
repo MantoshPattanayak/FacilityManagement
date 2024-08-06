@@ -184,23 +184,54 @@ let parkBookingFormInitialData = async (req, res) => {
 }
 
 // Function to add hours to a time string
+// function addHoursToTime(timeString, hoursToAdd) {
+//     // Parse the time string into hours and minutes
+//     const [hours, minutes] = timeString.split(':').map(Number);
+//     console.log({ hours, minutes, hoursToAdd });
+
+//     // Add the hours
+//     let newHours = (hours + hoursToAdd) % 24;
+
+//     // Ensure newHours is in the range [0, 23]
+//     newHours = newHours < 0 ? newHours + 24 : newHours;
+
+//     // Format the result back into a time string
+//     const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+//     console.log(newTimeString);
+
+//     return newTimeString;
+// }
+
 function addHoursToTime(timeString, hoursToAdd) {
     // Parse the time string into hours and minutes
     const [hours, minutes] = timeString.split(':').map(Number);
-    console.log({ hours, minutes, hoursToAdd });
 
-    // Add the hours
-    let newHours = (hours + hoursToAdd) % 24;
+    // Separate the integer and fractional parts of hoursToAdd
+    const wholeHours = Math.floor(hoursToAdd);
+    const fractionalHours = hoursToAdd - wholeHours;
 
-    // Ensure newHours is in the range [0, 23]
+    // Convert fractional hours to minutes
+    const additionalMinutes = Math.round(fractionalHours * 60);
+
+    // Calculate new hours and minutes
+    let newHours = (hours + wholeHours) % 24;
+    let newMinutes = minutes + additionalMinutes;
+
+    // Handle overflow of minutes
+    if (newMinutes >= 60) {
+        newHours = (newHours + Math.floor(newMinutes / 60)) % 24;
+        newMinutes = newMinutes % 60;
+    }
+
+    // Handle underflow of hours
     newHours = newHours < 0 ? newHours + 24 : newHours;
 
     // Format the result back into a time string
-    const newTimeString = `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-    console.log(newTimeString);
+    const newTimeString = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
 
     return newTimeString;
 }
+
 
 /**
  * book park, playgrounds, multipurpose grounds, events API
@@ -658,29 +689,30 @@ async function bookingTransactionForEvents(eventId, bookingData, transaction, en
             }
         }
 
-        console.log('eventBooking', eventBookingData);
-        let findEventInformation = await eventactivites.findOne({
-            where: {
-                [Op.and]: [{ statusId: statusId }, { eventId: eventId }]
-            }
-        })
+        console.log('eventBookingdata', eventBookingData);
+        // let findEventInformation = await eventactivites.findOne({
+        //     where: {
+        //         [Op.and]: [{ statusId: statusId }, { eventId: eventId }]
+        //     },
+        //     transaction
+        // })
         // let findTheBookingDetails = await facilitybookings.findOne({
         //     where:{
         //        [Op.and]: [{facilityBookingId:eventBookingData.facilityBookingId},{statusId:statusId}]
         //     },
         //      transaction 
         // })
-        let title = findEventInformation.eventName;
-        let bookingRef = eventBookingData.bookingReference;
-        let location = findEventInformation.locationName;
-        let date = bookingData.bookingDate;
-        let time = eventBookingData.startDate;
-        let cost = eventBookingData.amount;
-        let totalMembers = eventBookingData.totalMembers;
-        let combinedData = `${eventBookingData.eventBookingId},${entityTypeId},${entityId}`
-        let eventBookingId = eventBookingData.eventBookingId;
+        // let title = findEventInformation.eventName;
+        // let bookingRef = eventBookingData.bookingReference;
+        // let location = findEventInformation.locationName;
+        // let date = bookingData.bookingDate;
+        // let time = eventBookingData.startDate;
+        // let cost = eventBookingData.amount;
+        // let totalMembers = eventBookingData.totalMembers;
+        // let combinedData = `${eventBookingData.eventBookingId},${entityTypeId},${entityId}`
+        // let eventBookingId = eventBookingData.eventBookingId;
 
-        let entityType = 'eventBooking'
+        // let entityType = 'eventBooking'
 
         // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId, entityType)
 
@@ -699,7 +731,7 @@ async function bookingTransactionForEvents(eventId, bookingData, transaction, en
         //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
         // })
         return {
-            bookingId: eventBookingData.facilityBookingId
+            bookingId: eventBookingData.eventBookingId
         };
     }
     catch (error) {
