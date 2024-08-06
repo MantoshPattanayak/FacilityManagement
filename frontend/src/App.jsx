@@ -181,6 +181,7 @@ function App() {
                 {/* Events */}
                 <Route path="/events" element={<React.Suspense fallback="Loading page ..."><EventList /> </React.Suspense>} />
                 <Route path="/event-book" element={<React.Suspense fallback="Loading page ..."> <Book_Event /></React.Suspense>} />
+                <Route path="/events-details" element={<React.Suspense fallback="Loading page ..."> <Details /></React.Suspense>} />
                 {/* ADMIN SECTION - Login */}
                 <Route path="/admin-login" element={<React.Suspense fallback="Loading page ..." ><AdminLogin /></React.Suspense>} />
                 {/* ADMIN SECTION - Activity */}
