@@ -35,6 +35,7 @@ import PublicHeader from "../../../common/PublicHeader";
 // import images here
 import amabhoomi from '../../../assets/Anand_park.jpg';
 import instance from '../../../../env';
+import "../Search_Card/Sub_Park_Details.css";
 
 
 export default function Details() {
