@@ -57,10 +57,10 @@ const AdminLogin = () => {
               roleId: res.data.role,
             })
           );
-
+          console.log("res.data.menuItems", res.data.menuItems);
           if (res.data.menuItems) {
             let homeRoute = res.data.menuItems.filter(
-              (route) => route.name === "Dashboard"
+              (route) => route.name.trim().toLowerCase() == "dashboard"
             )[0]?.children[0]?.path;
             if (!homeRoute) {
               toast.error("User access not provided!");
