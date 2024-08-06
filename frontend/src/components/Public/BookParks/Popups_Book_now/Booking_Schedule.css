@@ -58,6 +58,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   text-align: center;
+  padding: 7px 0px;
 }
 
 .DatePickerContainer {
@@ -146,16 +147,11 @@
   background-color: #f0f0f0;
 }
 
-@media screen and (min-width: 1024px) {
-  .booking-schedule-popup {
-    margin-left: 32%;
-    width: 32%;
-  }
-}
 
 @media screen and (max-width: 1024px) {
   .booking-schedule-popup {
-    margin-left: 32%;
+    /* margin-left: 32%; */
+    margin-left: 0%;
     width: 32%;
   }
 }
@@ -163,6 +159,7 @@
 @media screen and (max-width: 530px) {
   .booking-schedule-popup {
     width: 48%;
-    margin-left: 26%;
+    /* margin-left: 26%; */
+    margin-left: 0%;
 }
 }

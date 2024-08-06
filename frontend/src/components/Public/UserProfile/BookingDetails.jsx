@@ -287,52 +287,52 @@ const BookingDetails = () => {
 
   return (
     <main>
-    <div>
-      <PublicHeader />
-      <ToastContainer />
-      {/* <div className="booking-dtails-container"> */}
-      <div className="booking-dtails-container">
-        <aside className="profile-leftside--Body">
-          <div className="profile-view--Body">
-            <div className="profile-about">
-              <div className="profile-about-icon">
-                <FontAwesomeIcon icon={faUser} />
-                <p>{userName}</p>
-              </div>
+      <div>
+        <PublicHeader />
+        <ToastContainer />
+        {/* <div className="booking-dtails-container"> */}
+        <div className="booking-dtails-container">
+          <aside className="profile-leftside--Body">
+            <div className="profile-view--Body">
+              <div className="profile-about">
+                <div className="profile-about-icon">
+                  <FontAwesomeIcon icon={faUser} />
+                  <p>{userName}</p>
+                </div>
 
-              <div className="profile-about-icon">
-                <FontAwesomeIcon icon={faEnvelope} />
-                <p>{emailId}</p>
-              </div>
+                <div className="profile-about-icon">
+                  <FontAwesomeIcon icon={faEnvelope} />
+                  <p>{emailId}</p>
+                </div>
 
-              <div className="profile-about-icon">
-                <FontAwesomeIcon icon={faMobileScreenButton} />
-                <p>{phoneNo}</p>
+                <div className="profile-about-icon">
+                  <FontAwesomeIcon icon={faMobileScreenButton} />
+                  <p>{phoneNo}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <ul className="profile-button--Section">
-              <li className="profile_edit_booking_details">
-                <Link to="/Profile" className="">
-                  Edit User Profile
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/BookingDetails"
-                  className="profile-button"
-                  style={{ color: "white", backgroundColor: "green" }}
-                >
-                  Booking Details
-                </Link>
-              </li>
-              <li>
-                <Link to="/UserProfile/Favorites">Favorites</Link>
-              </li>
-            </ul>
-            {/* Logout Button */}
-            {/* <button
+            <div>
+              <ul className="profile-button--Section">
+                <li className="profile_edit_booking_details">
+                  <Link to="/Profile" className="">
+                    Edit User Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/BookingDetails"
+                    className="profile-button"
+                    style={{ color: "white", backgroundColor: "green" }}
+                  >
+                    Booking Details
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/UserProfile/Favorites">Favorites</Link>
+                </li>
+              </ul>
+              {/* Logout Button */}
+              {/* <button
               className="button-67 "
               onClick={(e) => {
                 handleLogout(e);
@@ -342,238 +342,240 @@ const BookingDetails = () => {
               <h1>Logout</h1>
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button> */}
-          </div>
-        </aside>
-        <div className="right-container-favorite">
-          {/* New div with paragraph and blue border */}
-          {/* <div className="form-container"> */}
-          <div className="eventdetails-tab">
-            {tab?.length > 0 &&
-              tab.map((tabData) => {
-                if (tabData.active) {
-                  return (
-                    <div
-                      className="active"
-                      onClick={(e) => manageCurrentTab(e, tabData.tabName)}
-                    >
-                      <button
+            </div>
+          </aside>
+          <div className="right-container-favorite">
+            {/* New div with paragraph and blue border */}
+            {/* <div className="form-container"> */}
+            <div className="eventdetails-tab">
+              {tab?.length > 0 &&
+                tab.map((tabData) => {
+                  if (tabData.active) {
+                    return (
+                      <div
+                        className="active"
                         onClick={(e) => manageCurrentTab(e, tabData.tabName)}
                       >
-                        {tabData.tabName}
-                      </button>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
-                      <button
+                        <button
+                          onClick={(e) => manageCurrentTab(e, tabData.tabName)}
+                        >
+                          {tabData.tabName}
+                        </button>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div
                         onClick={(e) => manageCurrentTab(e, tabData.tabName)}
                       >
-                        {tabData.tabName}
-                      </button>
-                    </div>
-                  );
-                }
-              })}
-          </div>
+                        <button
+                          onClick={(e) => manageCurrentTab(e, tabData.tabName)}
+                        >
+                          {tabData.tabName}
+                        </button>
+                      </div>
+                    );
+                  }
+                })}
+            </div>
 
-          {/* add filter option.............. */}
-          <div className="filterSctions">
-            <div className="grid grid-cols-3 gap-x-2 items-center">
-              <div className="filter-container col-span-1">
-                <div className="filter_option" onClick={toggleFilter}>
-                  <div className="filter-icon">
-                    <FontAwesomeIcon icon={faFilter} />
+            {/* add filter option.............. */}
+            <div className="filterSctions">
+              <div className="grid grid-cols-3 gap-x-2 items-center">
+                <div className="filter-container col-span-1">
+                  <div className="filter_option" onClick={toggleFilter}>
+                    <div className="filter-icon">
+                      <FontAwesomeIcon icon={faFilter} />
+                    </div>
+                    <div className="text-filter">Filters</div>
                   </div>
-                  <div className="text-filter">Filters</div>
+                  {isFilterOpen && (
+                    <div
+                      className="filter-dropdown grid grid-cols-3 gap-x-3 max-w-max	text-xs w-content"
+                      ref={filterRef}
+                      style={{ width: "max-content" }}
+                    >
+                      <div className="col-span-1 max-w-max mx-auto">
+                        <b>Facility Type</b>
+                        {filters?.facilityType?.length > 0 &&
+                          filters.facilityType.map((facility, index) => {
+                            if (
+                              selectedFilter.facilityType.includes(
+                                facility.facilitytypeId
+                              )
+                            ) {
+                              return (
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    name="boating"
+                                    onChange={(e) =>
+                                      handleFilterSelection(
+                                        e,
+                                        facility.facilitytypeId,
+                                        "facilityType"
+                                      )
+                                    }
+                                    checked={true}
+                                  />
+                                  {facility.description}
+                                </label>
+                              );
+                            } else {
+                              return (
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    name="boating"
+                                    onChange={(e) =>
+                                      handleFilterSelection(
+                                        e,
+                                        facility.facilitytypeId,
+                                        "facilityType"
+                                      )
+                                    }
+                                    checked={false}
+                                  />
+                                  {facility.description}
+                                </label>
+                              );
+                            }
+                          })}
+                      </div>
+                      <div className="col-span-1 max-w-max">
+                        <b>Booking Status</b>
+                        {filters?.BookingStatus?.length > 0 &&
+                          filters.BookingStatus.map((status, index) => {
+                            if (
+                              selectedFilter.BookingStatus.includes(
+                                status.statusId
+                              )
+                            ) {
+                              return (
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    name="boating"
+                                    onChange={(e) =>
+                                      handleFilterSelection(
+                                        e,
+                                        status.statusId,
+                                        "BookingStatus"
+                                      )
+                                    }
+                                    checked
+                                  />
+                                  {status.statusCode}
+                                </label>
+                              );
+                            } else {
+                              return (
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    name="boating"
+                                    onChange={(e) =>
+                                      handleFilterSelection(
+                                        e,
+                                        status.statusId,
+                                        "BookingStatus"
+                                      )
+                                    }
+                                  />
+                                  {status.statusCode}
+                                </label>
+                              );
+                            }
+                          })}
+                      </div>
+
+                      <div className="filter-group flex justify-start flex-col items-baseline h-max-content">
+                        <b>Sort by Booking Date</b>
+                        <div className="bookingDetailsSorting">
+                          <input
+                            type="radio"
+                            value="asc"
+                            checked={sortOrder === "asc"}
+                            onChange={() => setSortOrder("asc")}
+                          />
+                          <label>Ascending</label>
+                        </div>
+                        <div className="bookingDetailsSorting">
+                          <input
+                            type="radio"
+                            value="desc"
+                            checked={sortOrder === "desc"}
+                            onChange={() => setSortOrder("desc")}
+                          />
+                          <label>Descending</label>
+                        </div>
+                      </div>
+
+                      <div
+                        className="cursor-pointer"
+                        onClick={clearFilterSelection}
+                      >
+                        <FontAwesomeIcon icon={faTrashCan} /> Clear
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {isFilterOpen && (
-                  <div
-                    className="filter-dropdown grid grid-cols-3 gap-x-3 max-w-max	text-xs w-content"
-                    ref={filterRef}
-                    style={{ width: "max-content" }}
-                  >
-                    <div className="col-span-1 max-w-max mx-auto">
-                      <b>Facility Type</b>
-                      {filters?.facilityType?.length > 0 &&
-                        filters.facilityType.map((facility, index) => {
-                          if (
-                            selectedFilter.facilityType.includes(
-                              facility.facilitytypeId
-                            )
-                          ) {
-                            return (
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  name="boating"
-                                  onChange={(e) =>
-                                    handleFilterSelection(
-                                      e,
-                                      facility.facilitytypeId,
-                                      "facilityType"
-                                    )
-                                  }
-                                  checked={true}
-                                />
-                                {facility.description}
-                              </label>
-                            );
-                          } else {
-                            return (
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  name="boating"
-                                  onChange={(e) =>
-                                    handleFilterSelection(
-                                      e,
-                                      facility.facilitytypeId,
-                                      "facilityType"
-                                    )
-                                  }
-                                  checked={false}
-                                />
-                                {facility.description}
-                              </label>
-                            );
-                          }
-                        })}
-                    </div>
-                    <div className="col-span-1 max-w-max">
-                      <b>Booking Status</b>
-                      {filters?.BookingStatus?.length > 0 &&
-                        filters.BookingStatus.map((status, index) => {
-                          if (
-                            selectedFilter.BookingStatus.includes(
-                              status.statusId
-                            )
-                          ) {
-                            return (
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  name="boating"
-                                  onChange={(e) =>
-                                    handleFilterSelection(
-                                      e,
-                                      status.statusId,
-                                      "BookingStatus"
-                                    )
-                                  }
-                                  checked
-                                />
-                                {status.statusCode}
-                              </label>
-                            );
-                          } else {
-                            return (
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  name="boating"
-                                  onChange={(e) =>
-                                    handleFilterSelection(
-                                      e,
-                                      status.statusId,
-                                      "BookingStatus"
-                                    )
-                                  }
-                                />
-                                {status.statusCode}
-                              </label>
-                            );
-                          }
-                        })}
-                    </div>
-
-                    <div className="filter-group flex justify-start flex-col items-baseline h-max-content">
-                      <b>Sort by Booking Date</b>
-                      <div className="bookingDetailsSorting">
-                        <input
-                          type="radio"
-                          value="asc"
-                          checked={sortOrder === "asc"}
-                          onChange={() => setSortOrder("asc")}
-                        />
-                        <label>Ascending</label>
-                      </div>
-                      <div className="bookingDetailsSorting">
-                        <input
-                          type="radio"
-                          value="desc"
-                          checked={sortOrder === "desc"}
-                          onChange={() => setSortOrder("desc")}
-                        />
-                        <label>Descending</label>
-                      </div>
-                    </div>
-
-                    <div
-                      className="cursor-pointer"
-                      onClick={clearFilterSelection}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} /> Clear
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
-          </div>
 
-          {eventDetailsData?.length > 0 && (
-            <div className="eventdetails-cardsection_Bd">
-              {eventDetailsData?.length > 0 &&
-                eventDetailsData?.map((event) => {
-                  return (
-                    <div className="eventdetails-carddetails">
-                      <div className="eventdetails-photo">
-                        <img src={eventPhoto} />
-                      </div>
-                      <div className="eventdetails-details">
-                        <div className="eventdetails-details-eventname">
-                          {event.name}
+            {eventDetailsData?.length > 0 && (
+              <div className="eventdetails-cardsection_Bd">
+                {eventDetailsData?.length > 0 &&
+                  eventDetailsData?.map((event) => {
+                    return (
+                      <div className="eventdetails-carddetails">
+                        <div className="eventdetails-photo">
+                          <img src={eventPhoto} />
                         </div>
-                        <div className="eventdetails-details-eventAddress">
-                          {event.location}
-                        </div>
-                        <div className="flex justify-between eventdetails-details-eventTime">
-                          <div className="booking-date">
-                            Booking Date {formatDate(event.bookingDate)}
+                        <div className="eventdetails-details">
+                          <div className="eventdetails-details-eventname">
+                            {event.name}
                           </div>
-                          {/* <div>
+                          <div className="eventdetails-details-eventAddress">
+                            {event.location}
+                          </div>
+                          <div className="flex justify-between eventdetails-details-eventTime">
+                            <div className="booking-date">
+                              Booking Date {formatDate(event.bookingDate)}
+                            </div>
+                            {/* <div>
                               <FontAwesomeIcon icon={faClock} />{" "}
                               {calculateTime(event.createdDate)} ago
                             </div> */}
+                          </div>
+
+                          <Link
+                            to={{
+                              pathname: "/profile/booking-details/ticket",
+                              search: `?bookingId=${encryptDataId(
+                                event.bookingId
+                              )}&typeId=${encryptDataId(event.typeId)}`,
+                            }}
+                            className="eventdetails-eventbutton"
+                          >
+                            Details
+                          </Link>
                         </div>
-
-                        <Link
-                          to={{
-                            pathname: "/profile/booking-details/ticket",
-                            search: `?bookingId=${encryptDataId(
-                              event.bookingId
-                            )}&typeId=${encryptDataId(event.typeId)}`,
-                          }}
-                          className="eventdetails-eventbutton"
-                        >
-                          Details
-                        </Link>
                       </div>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
+                    );
+                  })}
+              </div>
+            )}
 
-          {eventDetailsData?.length == 0 && (
-            <div className="flex justify-center w-full">
-              <img src={No_Data_icon} alt="No Data Found" />
-            </div>
-          )}
+            {eventDetailsData?.length == 0 && (
+              <div className="flex justify-center w-full">
+                <img src={No_Data_icon} alt="No Data Found" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-</main>
+    </main>
     // </div>
     // </div>
   );
