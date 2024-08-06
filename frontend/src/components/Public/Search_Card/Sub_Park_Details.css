@@ -688,6 +688,11 @@
   justify-content: center;
 }
 
+.Yoga_date_time{
+  flex-direction: column;
+  width: max-content;
+}
+
 @media screen and (max-width: 1366px) {
   .carousel-container1 {
     /* height: 28vh; */
