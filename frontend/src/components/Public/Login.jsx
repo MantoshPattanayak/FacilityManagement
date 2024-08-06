@@ -196,7 +196,7 @@ const Login = () => {
           {(otpGenerated == false) ?      //if otp is not generated then show send otp button
             (
               <div className="otp-btn" onClick={handleGenerateOTP}>
-                <button className="sendotp-btn_login1" type="submit">
+                <button className="public-login-sendotp-btn_login1" type="submit">
                   Send OTP
                 </button>
               </div>
@@ -204,7 +204,7 @@ const Login = () => {
             :
             (                             //if otp is not generated then show send otp button
               <div className="otp-btn" onClick={HandleSubmit}>
-                <button className="sendotp-btn_login" type="submit">
+                <button className="public-login-sendotp-btn_login1" type="submit">
                   Submit
                 </button>
               </div>
@@ -215,7 +215,7 @@ const Login = () => {
             (otpGenerated == true) ?
               ((timer === 0) ? (
                 <div className="otp-btn" onClick={handleGenerateOTP}>
-                  <button className="sendotp-btn_login" type="submit">
+                  <button className="public-login-sendotp-btn_login1" type="submit">
                     Resend OTP
                   </button>
                 </div>

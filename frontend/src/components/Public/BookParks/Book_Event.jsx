@@ -71,13 +71,13 @@ const Book_Event = () => {
     const handleIncrement = (e) => {
         e.preventDefault();
         let { name } = e.target;
-        console.log(name);
+        // console.log(name);
 
         if (name = "playersLimit") {
-            console.log("first");
+            // console.log("first");
             let newValue = formData.facilityPreference.playersLimit;
             newValue++;
-            console.log("2", newValue)
+            // console.log("2", newValue)
             if (newValue > 5) {
                 toast.dismiss();
                 toast.warning("Maximum members allowed per booking is 5.");
@@ -89,7 +89,7 @@ const Book_Event = () => {
             return;
         }
         else {
-            console.log("3");
+            // console.log("3");
             if (formData.facilityPreference.durationInHours < 4) {
                 setFormData(prevState => ({
                     ...prevState,
@@ -214,14 +214,14 @@ const Book_Event = () => {
         let eventId = decryptData(
             new URLSearchParams(location.search).get("eventId")
         );
-        console.log("facilityId", eventId);
+        console.log("eventId", eventId);
         getEventDetails(eventId);
     }, []);
 
     // here Validation fun--------------------------------------------
     const validation = (value) => {
         const err = {}
-
+        console.log(value);
         if (!value.bookingDate) {
             err.bookingDate = "Please Select Booking Date"
         }
@@ -239,8 +239,8 @@ const Book_Event = () => {
     };
 
     const handlePaymentSuccess = ({ response, res }) => {
-        // console.log(response);
-        // console.log("booking response", res);
+        console.log(response);
+        console.log("booking response", res);
 
         let bookingId = res.data.shareableLink[0].bookingId;
         let entityTypeId = res.data.shareableLink[0].entityTypeId;
@@ -261,16 +261,16 @@ const Book_Event = () => {
     }
 
     const handlePaymentFailure = (response) => {
-        console.log(response);
+        // console.log(response);
         toast.dismiss();
         toast.error('Payment failed!!');
         return;
     }
 
     useEffect(() => {
-        console.log("formData", formData);
-        let err = validation(formData);
-        if (Object.keys(err).length > 0)
+        // console.log("formData", formData);
+        // let err = validation(formData);
+        if (Object.keys(errors).length > 0)
             setIsDisabled(true);
         else
             setIsDisabled(false);
@@ -318,34 +318,6 @@ const Book_Event = () => {
                                             <FontAwesomeIcon icon={faPlus} />
                                         </button>
                                     </div>
-                                    {/* <select class="formSelect"
-                                        name="playersLimit"
-                                        value={formData.facilityPreference.playersLimit}
-                                        onChange={handleChangeInput}
-                                    >
-                                        <option value="">1</option>
-                                        <option value="">2</option>
-                                        <option value="">3</option>
-                                        <option value="">4</option>
-                                        <option value="">5</option>
-                                        <option value="">6</option>
-                                        <option value="">7</option>
-                                        <option value="">8</option>
-                                        <option value="">9</option>
-                                        <option value="">10</option>
-                                        <option value="">11</option>
-                                        <option value="">12</option>
-                                        <option value="">1</option>
-                                        <option value="">13</option>
-                                        <option value="">14</option>
-                                        <option value="">15</option>
-                                        <option value="">16</option>
-                                        <option value="">17</option>
-                                        <option value="">18</option>
-                                        <option value="">19</option>
-                                        <option value="">20</option>
-                                    </select> */}
-
                                 </div>
                                 <span className="error_massage_span">
                                     {errors.playersLimit && <span className="errorMessage">{errors.playersLimit}</span>}
@@ -410,19 +382,13 @@ const Book_Event = () => {
                         </form>
                     </div>
                     <div className="Button_Conatiner_Sport">
-                        <button type="submit" class="approve-button"
+                        <button type="submit" class="add-to-cart-button"
                             onClick={HandleAddtoCart}
+                            disabled={isDisabled}
                         >
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        {/* <RazorpayButton
-                            amount={formData.facilityPreference.price * formData.facilityPreference.playersLimit}
-                            currency={"INR"}
-                            description={"Pay now"}
-                            onSuccess={handleSuccess}
-                            onFailure={handleFailure}
-                        /> */}
                         {
                             isDisabled ?
                                 <button
@@ -452,16 +418,9 @@ const Book_Event = () => {
                                     }}
                                 />
                         }
-                        {/* <button type="submit" class="Proceed_to_Payment"
-                            onClick={HandleProccedToPayment}
-                        >
-                            <FontAwesomeIcon icon={faCreditCard} className="Icon" />
-                            Proceed to Payment
-                        </button> */}
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }
