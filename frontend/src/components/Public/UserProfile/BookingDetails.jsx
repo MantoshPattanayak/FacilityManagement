@@ -28,6 +28,7 @@ import { useDispatch } from "react-redux";
 import { Logout } from "../../../utils/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ShimmerUIFlex from "../../../common/ShimmerUIFlex";
 
 const BookingDetails = () => {
   const dispatch = useDispatch(); // Initialize dispatch
@@ -61,6 +62,7 @@ const BookingDetails = () => {
   const [sortOrder, setSortOrder] = useState("desc"); // Default sort order: descending
   const [tab, setTab] = useState(tabList);
   const [eventDetailsData, setEventDetailsData] = useState([]);
+  const [Loading, setLoading] = useState(false)
 
   // here UseEffect of Update the data--------------------
   useEffect(() => {
@@ -200,8 +202,8 @@ const BookingDetails = () => {
 
       setUserName(
         decryptData(res.data.public_user[0].firstName) +
-          " " +
-          decryptData(res.data.public_user[0].lastName)
+        " " +
+        decryptData(res.data.public_user[0].lastName)
       );
       setEmailId(decryptData(res.data.public_user[0].emailId));
       setPhoneNo(decryptData(res.data.public_user[0].phoneNo));
@@ -343,7 +345,11 @@ const BookingDetails = () => {
               <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button> */}
             </div>
-          </aside>
+          </aside> 
+          {IsLoding ? (
+                // Display shimmer effect while loading
+                <ShimmerUIFlex />
+              ) : (
           <div className="right-container-favorite">
             {/* New div with paragraph and blue border */}
             {/* <div className="form-container"> */}
@@ -365,9 +371,7 @@ const BookingDetails = () => {
                     );
                   } else {
                     return (
-                      <div
-                        onClick={(e) => manageCurrentTab(e, tabData.tabName)}
-                      >
+                      <div onClick={(e) => manageCurrentTab(e, tabData.tabName)}>
                         <button
                           onClick={(e) => manageCurrentTab(e, tabData.tabName)}
                         >
@@ -523,49 +527,44 @@ const BookingDetails = () => {
               </div>
             </div>
 
-            {eventDetailsData?.length > 0 && (
-              <div className="eventdetails-cardsection_Bd">
-                {eventDetailsData?.length > 0 &&
-                  eventDetailsData?.map((event) => {
-                    return (
-                      <div className="eventdetails-carddetails">
-                        <div className="eventdetails-photo">
-                          <img src={eventPhoto} />
-                        </div>
-                        <div className="eventdetails-details">
-                          <div className="eventdetails-details-eventname">
-                            {event.name}
-                          </div>
-                          <div className="eventdetails-details-eventAddress">
-                            {event.location}
-                          </div>
-                          <div className="flex justify-between eventdetails-details-eventTime">
-                            <div className="booking-date">
-                              Booking Date {formatDate(event.bookingDate)}
-                            </div>
-                            {/* <div>
-                              <FontAwesomeIcon icon={faClock} />{" "}
-                              {calculateTime(event.createdDate)} ago
-                            </div> */}
-                          </div>
-
-                          <Link
-                            to={{
-                              pathname: "/profile/booking-details/ticket",
-                              search: `?bookingId=${encryptDataId(
-                                event.bookingId
-                              )}&typeId=${encryptDataId(event.typeId)}`,
-                            }}
-                            className="eventdetails-eventbutton"
-                          >
-                            Details
-                          </Link>
-                        </div>
+            <div className="eventdetails-cardsection_Bd">
+             
+               { eventDetailsData.length > 0 &&
+                eventDetailsData.map((event) => (
+                  <div key={event.bookingId} className="eventdetails-carddetails">
+                    <div className="eventdetails-photo">
+                      <img src={eventPhoto} alt="Event" />
+                    </div>
+                    <div className="eventdetails-details">
+                      <div className="eventdetails-details-eventname">
+                        {event.name}
                       </div>
-                    );
-                  })}
-              </div>
-            )}
+                      <div className="eventdetails-details-eventAddress">
+                        {event.location}
+                      </div>
+                      <div className="flex justify-between eventdetails-details-eventTime">
+                        <div className="booking-date">
+                          Booking Date {formatDate(event.bookingDate)}
+                        </div>
+                        {/* Uncomment this if you want to show the createdDate */}
+                        {/* <div>
+                  <FontAwesomeIcon icon={faClock} /> {calculateTime(event.createdDate)} ago
+                </div> */}
+                      </div>
+                      <Link
+                        to={{
+                          pathname: "/profile/booking-details/ticket",
+                          search: `?bookingId=${encryptDataId(event.bookingId)}&typeId=${encryptDataId(event.typeId)}`,
+                        }}
+                        className="eventdetails-eventbutton"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
 
             {eventDetailsData?.length == 0 && (
               <div className="flex justify-center w-full">
@@ -573,6 +572,7 @@ const BookingDetails = () => {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </main>
