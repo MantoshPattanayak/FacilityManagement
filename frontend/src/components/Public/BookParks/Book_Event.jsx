@@ -252,7 +252,7 @@ const Book_Event = () => {
                     navigate(
                         `/profile/booking-details/ticket?bookingId=${encryptData(
                             bookingId
-                        )}&typeId=${encryptData(entityTypeId)}`
+                        )}&typeId=${encryptData(6)}`
                     );
                 }, 1000);
             },

@@ -99,6 +99,9 @@
   }
   .scan_text{
      color: #201f1f;
+     font-size: 12px;
+     font-weight: 500;
+     font-style: italic;
   }
 
   .Buttonn_e-ticket{

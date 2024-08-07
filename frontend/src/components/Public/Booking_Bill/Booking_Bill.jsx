@@ -38,13 +38,12 @@ const Bokking_Bill = () => {
             let res = await axiosHttpClient("VIEW_TICKET_BILL_API", "post", {
                 bookingId: bookingId, entityTypeId: entityTypeId, origin: userLocation
             })
-            const dynamicUrlPart = res.data.bookingDetails.url;
             console.log("here Response of Bill Data", res.data.bookingDetails);
+            const dynamicUrlPart = res.data.bookingDetails.url;
             setBill_Data(res.data.bookingDetails)
 
             setshareUrl(`http://localhost:8000/static${dynamicUrlPart}`)
-            setTitle(`           Check out ${res.data.bookingDetails.facility.facilityname} ticket!                          `)
-
+            setTitle(`           Check out ${res.data.bookingDetails.facilityname} ticket!                          `)
         }
         catch (err) {
             console.log("Here error of Get Bill Data", err)
@@ -229,10 +228,18 @@ const Bokking_Bill = () => {
                 <PublicHeader />
                 <div className="ticket">
                     <div className="Name_Park">
-
-                        {Bill_Data && Bill_Data.facility && (
-                            <h1>{Bill_Data.facility.facilityname}</h1>
-                        )}
+                        { 
+                            entityTypeId == 6 && Bill_Data?.eventName && 
+                            (
+                                <h1>{Bill_Data.eventName}</h1>
+                            )
+                        }
+                        {
+                            (entityTypeId == 1 || entityTypeId == 2 || entityTypeId == 3 || entityTypeId == 4 || entityTypeId == 5) && Bill_Data?.facilityname && 
+                            (
+                                <h1>{Bill_Data.facilityname}</h1>
+                            )
+                        }
                     </div>
                     <div className="location_QR_Location_Name">
                         <span>
