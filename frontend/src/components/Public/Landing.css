@@ -46,7 +46,7 @@ body {
   position: fixed;
   top: 40vh;
   /* Adjust this value as needed */
-  right: 10px;
+  right: 20px;
   /* Adjust this value as needed */
   z-index: 1000;
   /* Ensure it is above other content */
@@ -66,6 +66,11 @@ body {
   /* Adjust the width of the icons */
   height: auto;
   /* Maintain aspect ratio */
+}
+
+.iconPlayAppleItem:hover {
+  transform: scale(1.2);
+  cursor: pointer;
 }
 
 .adImg {

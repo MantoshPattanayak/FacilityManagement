@@ -130,9 +130,9 @@ export default function PublicHeader() {
                 {(language === 'EN') && <><button value={'OD'} onClick={() => { setLanguageCode('OD'); setRefresh(prevState => !prevState); }}>ଓଡ଼ିଆ</button> &nbsp; | </>}
                 {(language === 'OD') && <><button value={'EN'} onClick={() => { setLanguageCode('EN'); setRefresh(prevState => !prevState); }}>English</button> &nbsp; | </>}
               </li>
-              <li>
+              {/* <li>
                 <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
-              </li>
+              </li> */}
               <li>
                 <Link to={'/About'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderAbout')?.languageResourceValue)?.toUpperCase()}</Link>
               </li>
@@ -144,6 +144,9 @@ export default function PublicHeader() {
               </li>
               <li>
                 <Link to={'/events'}>EVENTS</Link>
+              </li>
+              <li>
+                <Link to={"/ContactUs"}>CONTACT US</Link>
               </li>
 
               {isUserLoggedIn == 1 ? (
@@ -161,6 +164,7 @@ export default function PublicHeader() {
                       )}
                       <li><Link to="/profile/booking-details">Booking Details</Link></li>
                       <li><Link to="/UserProfile/Favorites">Favorites</Link></li>
+                      <li><Link to={"/grievance-feedback-form"}>Submit Grievance</Link></li>
                       {isUserLoggedIn == 1 && (
                         <li>
                           <Link onClick={handleLogout}>Logout</Link>

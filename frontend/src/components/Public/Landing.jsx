@@ -15,7 +15,7 @@ import {
   LoadScript,
   Marker,
   InfoWindow,
-  Circle
+  Circle,
 } from "@react-google-maps/api";
 import userLocationIcon from '../../assets/user_icon_here.png'
 import axiosHttpClient from "../../utils/axios";
@@ -91,6 +91,7 @@ import TourGuide from "../../common/TourGuide.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { manageTourGuide } from "../../utils/authSlice.jsx";
 import instance from "../../../env.js";
+import { toast } from "react-toastify";
 // import "./YourStyles.css";
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
@@ -127,12 +128,10 @@ const Landing = () => {
   const [facilityTypeId, setFacilityTypeId] = useState(1);
   const [eventNameLanding, setEventNameLanding] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
+  // const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   const [userLocation, setUserLocation] = useState(defaultCenter || JSON.parse(sessionStorage.getItem("location")));
   const [nearbyParks, setNearbyParks] = useState([]);
-  const [distanceRange, setDistanceRange] = useState(10);
-  const [activeButton, setActiveButton] = useState(10);
   const [currentIndex, setCurrentIndex] = useState(0);
   let navigate = useNavigate();
   //set auto-suggest facilties
@@ -152,6 +151,13 @@ const Landing = () => {
   let dispatch = useDispatch();
   const marqueeRef = useRef(null);
   const [isMarqueePaused, setIsMarqueePaused] = useState(false);
+  // for nearby facilities section
+  const [radiusForSearch, setRadiusForSearch] = useState([1, 2, 4]);
+  const [distanceRange, setDistanceRange] = useState(radiusForSearch[0]);
+  const [activeButton, setActiveButton] = useState(radiusForSearch[0]);
+  // for google maps
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const handleTogglePlayPause = () => {
     if (isMarqueePaused) {
@@ -163,7 +169,6 @@ const Landing = () => {
   };
 
   const [exploreNewActivities, setExploreNewActivities] = useState([]);
-
   const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
 
@@ -389,6 +394,37 @@ const Landing = () => {
   //   getNearbyFacilities();
   // };
 
+  // clean loading of google maps
+  useEffect(() => {
+    const loadGoogleMaps = (apiKey, callbackName) => {
+      return new Promise((resolve, reject) => {
+        if (typeof window.google === 'object' && typeof window.google.maps === 'object') {
+          resolve();
+          return;
+        }
+
+        window[callbackName] = () => {
+          resolve();
+        };
+
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=${callbackName}`;
+        script.async = true;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
+
+    loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, 'initMap')
+      .then(() => {
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        console.error('Error loading Google Maps:', error);
+        setLoadError(true);
+      });
+  }, []);
+
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
     console.log("userLocation, distanceRange, facilityTypeId", { userLocation, distanceRange, facilityTypeId })
@@ -446,9 +482,7 @@ const Landing = () => {
     return res;
   }
   // here Update the data-----------------------------------------------
-  useEffect(() => {
-
-  }, [givenReq, facilityTypeId, showTour]);
+  useEffect(() => { }, [givenReq, facilityTypeId, showTour]);
 
   // refresh on user input to show suggestions of facilities
   useEffect(() => {
@@ -578,16 +612,72 @@ const Landing = () => {
     }
   };
 
+  //function to seek confirmation
+  function handleExternalLinkOpen(e, url) {
+    e.preventDefault();
+    toast.dismiss();
+    // Disable interactions with the background
+    // document.querySelectorAll('body')[0].style.pointerEvents = 'none';
+    // document.querySelectorAll('body')[0].style.opacity = 0.4;
 
-
+    toast.warn(
+      <div>
+        <p>
+          <b>You will be redirected to an external link. Are you sure to proceed ?</b><br />
+          These links are being provided as a convenience and for informational purposes only.
+        </p>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              // Re-enable interactions with the background
+              document.querySelectorAll('body')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('body')[0].style.opacity = 1;
+              toast.dismiss();
+            }}
+            className="bg-red-400 text-white p-2 border rounded-md"
+          >
+            No
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(url, '_blank'); // Open the link in a new tab
+              // Re-enable interactions with the background
+              document.querySelectorAll('body')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('body')[0].style.opacity = 1;
+              toast.dismiss();
+            }}
+            className="bg-green-400 text-white p-2 border rounded-md"
+          >
+            Yes
+          </button>
+        </div>
+      </div>,
+      {
+        position: "top-center",
+        autoClose: false, // Disable auto close
+        closeOnClick: false, // Disable close on click
+        onClose: () => {
+          // Re-enable interactions with the background if the toast is closed
+          document.body.style.pointerEvents = 'auto';
+        }
+      }
+    );
+    return;
+  }
 
   return (
     <div className="landingcontainer">
       <section className="bg-img" style={styles}>
         <PublicHeader />
         <div className="iconPlayApple">
-          <img src={googlePlayStore} alt="Google Play Store" />
-          <img src={appleStore} alt="Apple Store" />
+        <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
+          <img className="iconPlayAppleItem" src={googlePlayStore} alt="Google Play Store" />
+        </a>
+        <a onClick={(e) => handleExternalLinkOpen(e, instance().APP_STORE_LINK)} rel="noopener noreferrer">
+          <img className="iconPlayAppleItem" src={appleStore} alt="Apple Store" />
+        </a>
         </div>
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
@@ -638,8 +728,6 @@ const Landing = () => {
                 )}
               </ul>
             )}
-
-
           </span>
           <div className="abBgButton">
             <FontAwesomeIcon
@@ -801,7 +889,11 @@ const Landing = () => {
               </div>
             </div>
           </div>
-          <LoadScript googleMapsApiKey={apiKey} >
+          {loadError ? (
+            <div>Error loading maps</div>
+          ) : !isLoaded ? (
+            <div>Loading Maps...</div>
+          ) : (
             <GoogleMap
               mapContainerStyle={{
                 height: "450px",
@@ -855,7 +947,7 @@ const Landing = () => {
                 </InfoWindow>
               )}
             </GoogleMap>
-          </LoadScript>
+          )}
         </section>
 
         {/* --------Facilities Near me----------------------------------------------------- */}
@@ -867,7 +959,23 @@ const Landing = () => {
             {selectedButton === 5 && <h1>Greenways Near Me</h1>}
             {selectedButton === 4 && <h1>Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
-              <button
+              {
+                radiusForSearch.map((radius) => {
+                  return(
+                    <button
+                      type="button"
+                      className={activeButton === radius ? "active" : ""}
+                      onClick={() => {
+                        setDistanceRange(radius);
+                        setActiveButton(radius);
+                      }}
+                    >
+                      {radius}km
+                    </button>
+                  )
+                })
+              }
+              {/* <button
                 type="button"
                 className={activeButton === 10 ? "active" : ""}
                 onClick={() => {
@@ -896,7 +1004,7 @@ const Landing = () => {
                 }}
               >
                 40km
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="facility-list-map overflow-y-scroll">
@@ -928,7 +1036,7 @@ const Landing = () => {
       {/* -----Whats New Section------------------------------------------- */}
       <div className="notice2">
         <div className="notice2-container">
-          <button className="what_new">Whats New</button>
+          <button className="what_new">What's New</button>
           <marquee
             className="marquee"
             behavior="scroll"
