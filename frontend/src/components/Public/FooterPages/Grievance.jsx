@@ -322,7 +322,7 @@ const GrievanceForm = () => {
       </div>
 
       <div className="row">
-        <div className="form-group">
+        <div className="form-group flex flex-col">
           <label htmlFor="grievanceCategory">Grievance Category *</label>
           <select
             id="grievanceCategory"
@@ -407,6 +407,7 @@ const GrievanceForm = () => {
               name="filepath"
               readOnly
               value={user.filepath.name}
+              disabled
             />
             <button type="button" onClick={handleButtonClick}>
               Upload

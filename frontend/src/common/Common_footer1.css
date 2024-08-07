@@ -53,9 +53,9 @@
     gap: 20px;
   }
 
-  .download_image {
+  /* .download_image {
     height: 5vh;
-  }
+  } */
 
   .footer-bottom {
     position: relative;
@@ -143,7 +143,9 @@ body, html {
 }
 
 .Downlad_Appp {
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 20px;
 }
 
@@ -173,11 +175,16 @@ body, html {
 
 .App_download {
   display: flex;
-  padding-top: 40px;
+  padding-top: 0px;
+  gap: 10px;
 }
 
 .download_image {
-  height: 7vh;
+  height: 150px;
+}
+
+.download_image:hover {
+  cursor: pointer;
 }
 
 .footer-content {
