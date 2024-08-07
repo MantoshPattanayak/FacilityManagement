@@ -1477,6 +1477,7 @@ let generateQRCode = async (req, res) => {
         // let origin = { latitude: '', longitude: '' };
         let destination = { latitude: '', longitude: '' };
         let entityType;
+        let combinedData;
         if (entityTypeId == 1 || entityTypeId == 2 || entityTypeId == 3) {
             entityType = "facilityBooking"
             let fetchFacilityLocation = await sequelize.query(`
@@ -1485,13 +1486,21 @@ let generateQRCode = async (req, res) => {
                 from facilitybookings f
                 inner join facilities f2 on f.facilityId = f2.facilityId
                 where f.facilityBookingId = ?`, {
-                    replacements: [bookingId]
-                },
-                { type: QueryTypes.SELECT }
+                    replacements: [bookingId],
+                    type: QueryTypes.SELECT
+                }
             );
-            console.log("fetchFacilityLocation", fetchFacilityLocation[0][0]);
-            destination.latitude = fetchFacilityLocation[0][0].latitude;
-            destination.longitude = fetchFacilityLocation[0][0].longitude;
+            console.log("fetchFacilityLocation", fetchFacilityLocation[0]);
+            destination.latitude = fetchFacilityLocation[0].latitude;
+            destination.longitude = fetchFacilityLocation[0].longitude;
+
+            let fetchFacilityId = await facilitybookings.findOne({
+                where: {
+                    facilityBookingId: bookingId
+                }
+            })
+            // console.log('fetch facility', fetchFacilityId)
+            combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
         }
         else if (entityTypeId == 4) {
             entityType = "bluewayBooking"
@@ -1501,13 +1510,21 @@ let generateQRCode = async (req, res) => {
                 from facilitybookings f
                 inner join facilities f2 on f.facilityId = f2.facilityId
                 where f.facilityBookingId = ?`, {
-                    replacements: [bookingId]
-                },
-                { type: QueryTypes.SELECT }
+                    replacements: [bookingId],
+                    type: QueryTypes.SELECT
+                }
             );
-            console.log("fetchFacilityLocation", fetchFacilityLocation[0][0]);
-            destination.latitude = fetchFacilityLocation[0][0].latitude;
-            destination.longitude = fetchFacilityLocation[0][0].longitude;
+            console.log("fetchFacilityLocation", fetchFacilityLocation[0]);
+            destination.latitude = fetchFacilityLocation[0].latitude;
+            destination.longitude = fetchFacilityLocation[0].longitude;
+
+            let fetchFacilityId = await facilitybookings.findOne({
+                where: {
+                    facilityBookingId: bookingId
+                }
+            })
+            // console.log('fetch facility', fetchFacilityId)
+            combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
         }
         else if (entityTypeId == 5) {
             entityType = "greenwayBooking"
@@ -1517,30 +1534,41 @@ let generateQRCode = async (req, res) => {
                 from facilitybookings f
                 inner join facilities f2 on f.facilityId = f2.facilityId
                 where f.facilityBookingId = ?`, {
-                    replacements: [bookingId]
-                },
-                { type: QueryTypes.SELECT }
+                    replacements: [bookingId],
+                    type: QueryTypes.SELECT
+                }
             );
-            console.log("fetchFacilityLocation", fetchFacilityLocation[0][0]);
-            destination.latitude = fetchFacilityLocation[0][0].latitude;
-            destination.longitude = fetchFacilityLocation[0][0].longitude;
+            console.log("fetchFacilityLocation", fetchFacilityLocation[0]);
+            destination.latitude = fetchFacilityLocation[0].latitude;
+            destination.longitude = fetchFacilityLocation[0].longitude;
+
+            let fetchFacilityId = await facilitybookings.findOne({
+                where: {
+                    facilityBookingId: bookingId
+                }
+            })
+            // console.log('fetch facility', fetchFacilityId)
+            combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
         }
         else if (entityTypeId == 6) {
             entityType = "eventBooking"
             let fetchEventLocation = await sequelize.query(`
                 select
-                    f.latitude, f.longitude
+                    f.latitude, f.longitude, e2.eventCategoryId, e2.eventId
                 from eventbookings e
                 inner join eventactivities e2 on e.eventId = e2.eventId
                 inner join facilities f on f.facilityId = e2.facilityId
                 where e.eventBookingId = ?`, {
-                    replacements: [bookingId]
+                    replacements: [bookingId],
+                    type: QueryTypes.SELECT
                 },
-                { type: QueryTypes.SELECT }
             );
-            console.log("fetchFacilityLocation", fetchEventLocation[0][0]);
-            destination.latitude = fetchEventLocation[0][0].latitude;
-            destination.longitude = fetchEventLocation[0][0].longitude;
+            console.log("fetchFacilityLocation", fetchEventLocation);
+            destination.latitude = fetchEventLocation[0].latitude;
+            destination.longitude = fetchEventLocation[0].longitude;
+
+            // console.log('fetch event', fetchEventId)
+            combinedData = `${bookingId},${fetchEventLocation[0].eventCategoryId},${fetchEventLocation[0].eventId}`
         }
         else if (entityTypeId == 7) {
             entityType = "eventHostBooking"
@@ -1552,13 +1580,13 @@ let generateQRCode = async (req, res) => {
                 inner join eventactivities e on e.eventId = h2.eventId
                 inner join facilities f on f.facilityId = e.facilityId
                 where h.hostBookingId = ?`, {
-                    replacements: [bookingId]
-                },
-                { type: QueryTypes.SELECT }
+                    replacements: [bookingId],
+                    type: QueryTypes.SELECT
+                }
             );
-            console.log("fetchFacilityLocation", fetchEventHostLocation[0][0]);
-            destination.latitude = fetchEventHostLocation[0][0].latitude;
-            destination.longitude = fetchEventHostLocation[0][0].longitude;
+            console.log("fetchFacilityLocation", fetchEventHostLocation[0]);
+            destination.latitude = fetchEventHostLocation[0].latitude;
+            destination.longitude = fetchEventHostLocation[0].longitude;
         }
         console.log("destination", destination);
         if (!bookingId) {
@@ -1566,42 +1594,49 @@ let generateQRCode = async (req, res) => {
                 message: "Please provide required details"
             })
         }
-        let fetchFacilityId = await facilitybookings.findOne({
-            where: {
-                facilityBookingId: bookingId
-            }
-        })
-        // console.log('fetch facility', fetchFacilityId)
-        let combinedData = `${bookingId},${fetchFacilityId.facilityTypeId},${fetchFacilityId.facilityId}`
-        console.log(1)
+        
+        console.log(1, "QRCodeUrl");
         let QRCodeUrl = await QRCode.toDataURL(combinedData)
         console.log(2)
         // for parks, playgrounds, multipurpose grounds, blueways, greenways
         if (entityTypeId == 1 || entityTypeId == 2 || entityTypeId == 3 || entityTypeId == 4 || entityTypeId == 5) {
-            fetchBookingDetails = await facilitybookings.findOne({
+            console.log("entityTypeId", entityTypeId);
 
-                where: {
-                    [Op.and]: [{ facilityBookingId: bookingId }, { statusId: bookingStatusId }]
-                },
-                include: [
-                    {
-                        model: facilities
-                    }
-                ]
+            fetchBookingDetails = await sequelize.query(`
+                select fb.*, f.facilityname from amabhoomi.facilitybookings fb
+                inner join amabhoomi.facilities f on fb.facilityId = f.facilityId
+                where fb.facilityBookingId = ? and fb.statusId = ?
+            `,
+            {
+                type: QueryTypes.SELECT,
+                replacements: [bookingId, bookingStatusId]
             })
+            // fetchBookingDetails = await facilitybookings.findOne({
+
+            //     where: {
+            //         [Op.and]: [{ facilityBookingId: bookingId }, { statusId: bookingStatusId }]
+            //     },
+            //     include: [
+            //         {
+            //             model: facilities
+            //         }
+            //     ]
+            // })
         }
         // for event live bookings
         else if (entityTypeId == 6) {
-            fetchBookingDetails = await sequelize.query(`select f.*,e2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join eventbookings e2 on e2.eventId =e.eventId 
+            console.log("entityTypeId", entityTypeId);
+            fetchBookingDetails = await sequelize.query(`select f.*,e2.*, e.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join eventbookings e2 on e2.eventId =e.eventId 
             where e2.eventBookingId= ? and e2.statusId = ? `,
                 {
                     type: QueryTypes.SELECT,
                     replacements: [bookingId, bookingStatusId]
                 })
-
+            console.log("fetchBookingDetails", fetchBookingDetails);
         }
         // for event host request
         else if (entityTypeId == 7) {
+            console.log("entityTypeId", entityTypeId);
             fetchBookingDetails = await sequelize.query(`select f.*, h2.* from amabhoomi.facilities f inner join eventactivities e on e.facilityId = f.facilityId inner join hosteventdetails h on h.eventId = e.eventId 
              inner join hostbookings h2 on h2.hostId = h.hostId where h2.hostBookingId= ? and h2.statusId = ? `,
                 {
@@ -1618,10 +1653,11 @@ let generateQRCode = async (req, res) => {
             where fa.entityId = ? and fa.filePurpose = ? and fa.entityType=? and f.statusId = ?`
             , { replacements: [bookingId, filePurpose, entityType, fileStatusId], type: QueryTypes.SELECT })
         console.log(4)
-        fetchBookingDetails.dataValues.QRCodeUrl = QRCodeUrl
+        fetchBookingDetails = fetchBookingDetails[0];
+        fetchBookingDetails.QRCodeUrl = QRCodeUrl
         console.log(5)
         // console.log("fetchPdfImage", fetchPdfImage);
-        fetchBookingDetails.dataValues.url = fetchPdfImage[0].url
+        fetchBookingDetails.url = fetchPdfImage[0].url
         console.log(6)
         // console.log('fetchPdfImage', fetchPdfImage)
         //QR code for facility/event location direction in google maps
@@ -1636,8 +1672,8 @@ let generateQRCode = async (req, res) => {
         }
         // googleMapsBaseURL += `@20.3191225,85.7905229,14z/data=!3m1!4b1?entry=ttu`;
         console.log("googleMapsBaseURL", googleMapsBaseURL, destination);
-        fetchBookingDetails.dataValues.googleMapsBaseURL = await QRCode.toDataURL(googleMapsBaseURL);
-
+        fetchBookingDetails.googleMapsBaseURL = await QRCode.toDataURL(googleMapsBaseURL);
+        console.log("fetchBookingDetails", fetchBookingDetails);
         return res.status(statusCode.SUCCESS.code).json({
             message: "Here is the QR code",
             bookingDetails: fetchBookingDetails
