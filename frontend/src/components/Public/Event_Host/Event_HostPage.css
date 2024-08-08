@@ -7,7 +7,7 @@
 
 .HostEvent_Heading {
     margin-top: 28px;
-    width: 70%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -28,8 +28,7 @@
     background-color: #00B562;
 }
 .HeadingTitle9 h2{
-    font-size: 20px;
-    /* font-family: 'Inter'; */
+    font-size: 15px;
     font-weight: 600;
 }
 
@@ -47,14 +46,15 @@
 }
 .HostEvent_Group label {
     color: #23272E;
-    /* font-family: 'Inter'; */
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: capitalize;
 }
 
 .HostEvent_Group input, select, textarea {
     width: 100%;
     height: 100%;
-    border: 1px solid #b1b1b1;
+    border: 1px solid #d6d6d6;
     background-color: #ffffff;
     border-radius: 8px;
     outline: none;
@@ -85,7 +85,7 @@
 .buttons-container{
     width: 70%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 70px;
 }
 
@@ -254,9 +254,11 @@
 /* here set the padding  */
 .all_From_conatiner{
     padding: 50px;
+
 }
+
 .verify_name_text{
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 600;
 }
 .img_verify_text_container{
@@ -288,4 +290,87 @@
 
 .dropdown-item:hover {
     background-color: #f1f1f1;
+}
+
+/* Upload image and additional image */
+/* Container Styles */
+#mForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+.Upload_image_addition_ {
+    padding: 10px;
+    border: 2px dashed #cccccc;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    color: #333333;
+    margin-bottom: 10px;
+    transition: border-color 0.3s;
+}
+
+.Upload_image_addition_:hover {
+    border-color: #007bff;
+}
+
+.Upload_image_addition_::file-selector-button {
+    padding: 5px 15px;
+    border: none;
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.Upload_image_addition_::file-selector-button:hover {
+    background-color: #0056b3;
+}
+
+.italic {
+    font-style: italic;
+    color: #6c757d;
+}
+
+.Additional_image {
+    font-size: 1rem;
+    color: #444444;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.primary_image, .secondry_image {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border: 1px solid rgb(241, 240, 240);
+  
+}
+
+
+.primary_image img, .secondry_image img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgb(171, 171, 171);
+    margin: 2px;
+
+}
+
+.primary_image {
+    margin-bottom: 20px;
+}
+
+.Remove_image{
+    font-size: 15px;
+    font-weight: 600;
 }
