@@ -1302,7 +1302,7 @@ const Landing = () => {
                       />
                       <div className="description">{item.description}</div>
                     </div>
-                    <div className="description">{item.description}</div>
+                    
                   </div>
                 );
               })}
