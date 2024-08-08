@@ -347,7 +347,7 @@ select:focus {
 
 .button-59 {
   align-items: center;
-  background-color: #fff;
+  /* background-color: #fff; */
   border: 2px solid #01b116;
   box-sizing: border-box;
   color: #000;
@@ -377,7 +377,8 @@ select:focus {
 
 .button-59:hover {
   border-color: rgb(4, 156, 1);
-  background-color: rgb(2, 125, 0);
+  /* background-color: rgb(2, 125, 0); */
+  background-color: #3AB757;
   color: #fff;
   fill: #06f;
 }
@@ -467,8 +468,20 @@ tbody tr:nth-child(even) {
   /* Specify the background color for even rows */
 }
 
-
-
+.Search_container.sticky {
+  position: fixed;
+  top: 48px;
+  left: 0;
+  z-index: 1000;
+  width: 100vw;
+  background-color: white;
+  margin-left: 0;
+  padding-inline: 5vw;
+  background-color: rgb(246, 245, 245);
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
+    rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
 
 
 @media screen and (max-width: 892px) {

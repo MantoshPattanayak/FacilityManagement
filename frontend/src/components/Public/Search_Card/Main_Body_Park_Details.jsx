@@ -297,11 +297,30 @@ const Main_Body_Park_Details = () => {
     };
   }, []);
 
+
+  //  Stickey and fixed search and svg section
+  const [isSticky, setIsSticky] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        // Adjust this value based on when you want the section to stick
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   //Return here------------------------------------------------------------------------------------------------------------
   return (
     <div className="main__body__park">
       {/* here Header -----------------------------------------------------*/}
-      <PublicHeader />
+      <PublicHeader className="header" />
       {/* Here Below of header set image ---------------------------------------------------- */}
       <div
         className={`${
@@ -320,21 +339,21 @@ const Main_Body_Park_Details = () => {
       >
         <h1 className="name_park_img">
           {facilityTypeId == 1 && "Parks"}
-          {facilityTypeId == 2 && "Playfields"}
+          {facilityTypeId == 2 && "Playgrounds"}
           {facilityTypeId == 3 && "Multi-purpose Grounds"}
           {facilityTypeId == 4 && "Blueways"}
           {facilityTypeId == 5 && "Greenways"}
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}
-      <div className="Search_container">
+      <div className={`Search_container ${isSticky ? "sticky" : ""}`}>
         <span className="Input_text_conatiner">
           <div className="search-container1">
             <input
               type="text"
               className="Search_input"
               placeholder="Search by Name, Location........"
-              name="givenReq" 
+              name="givenReq"
               id="givenReq"
               value={givenReq}
               onChange={(e) => setGivenReq(e.target.value)}
@@ -349,7 +368,9 @@ const Main_Body_Park_Details = () => {
           {/* Park */}
           <button
             onClick={(e) => handleParkLogoClick(e, 1)}
-            className={`image-button ${facilityTypeId == 1 ? 'selected' : null}`}
+            className={`image-button ${
+              facilityTypeId == 1 ? "selected" : null
+            }`}
           >
             <img className="h-20" src={Parks_img} alt="Event" />
             <span className="button-text">Parks</span>
@@ -358,7 +379,9 @@ const Main_Body_Park_Details = () => {
           {/* Sports */}
           <button
             onClick={(e) => handleParkLogoClick(e, 2)}
-            className={`image-button ${facilityTypeId == 2 ? 'selected' : null}`}
+            className={`image-button ${
+              facilityTypeId == 2 ? "selected" : null
+            }`}
           >
             <img className="h-20" src={Playfields_img} alt="Sports" />
             <span className="button-text">Playfields</span>
@@ -367,15 +390,22 @@ const Main_Body_Park_Details = () => {
           {/* Multipark */}
           <button
             onClick={(e) => handleParkLogoClick(e, 3)}
-            className={`image-button ${facilityTypeId == 3 ? 'selected' : null}`}
+            className={`image-button ${
+              facilityTypeId == 3 ? "selected" : null
+            }`}
           >
             <img className="h-20" src={MultiPark} alt="Multipark" />
-            <span className="button-text1">Multipurpose<br /> Grounds</span>
+            <span className="button-text1">
+              Multipurpose
+              <br /> Grounds
+            </span>
           </button>
           {/* blueway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 4)}
-            className={`image-button ${facilityTypeId == 4 ? 'selected' : null}`}
+            className={`image-button ${
+              facilityTypeId == 4 ? "selected" : null
+            }`}
           >
             <img className="h-20" src={blueway} alt="Multipark" />
             <span className="button-text">Blueways</span>
@@ -383,7 +413,9 @@ const Main_Body_Park_Details = () => {
           {/* waterway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 5)}
-            className={`image-button ${facilityTypeId == 5 ? 'selected' : null}`}
+            className={`image-button ${
+              facilityTypeId == 5 ? "selected" : null
+            }`}
           >
             <img className="h-20" src={greenway} alt="Multipark" />
             <span className="button-text">Greenways</span>
@@ -590,11 +622,11 @@ const Main_Body_Park_Details = () => {
           </select>
         </div>
       </div>
-      {/* Heere Name of Parks, sports dyamics ----------------------------------------
+      {/* Heere Name of Park, sports dyamics ----------------------------------------
       <span className="text_name_park">
         <h1 className="name_park1">
           {facilityTypeId == 1 && "Parks"}
-          {facilityTypeId == 2 && "Playfields"}
+          {facilityTypeId == 2 && "Playgrounds"}
           {facilityTypeId == 3 && "Multipurpose Grounds"}
           {facilityTypeId == 4 && "Blueways"}
           {facilityTypeId == 5 && "Greenways"}
@@ -698,66 +730,67 @@ const Main_Body_Park_Details = () => {
             ))
           ) : (
             // here Table data (Data in list)----------------------------------------------------------------
-            <div className="Table_container_1"> 
-            <div className="table_Container">
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col " className="text-left">
-                      Name{" "}
-                    </th>
-                    <th scope="col" className="text-left">
-                      Location
-                    </th>
-                    <th scope="col">Distance</th>
-                    <th scope="col">Status</th>
-                    <th className="left">Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {DisPlayParkData?.length > 0 &&
-                    DisPlayParkData.map((table_item, table_index) => (
-                      <tr key={table_index}>
-                        <td data-label="Name" className="text-left">
-                          {table_item.facilityname}
-                        </td>
-                        <td data-label="Location" className="text-left">
-                          {table_item.address}
-                        </td>
-                        <td data-label="Distance">
-                          {Number(table_item.distance?.toFixed(2)) || 10} km(s)
-                        </td>
-                        <td
-                          data-label="Park Status"
-                          className={`Avilable ${
-                            table_item.status == "open"
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }`}
-                        >
-                          {table_item.status?.charAt(0).toUpperCase() +
-                            table_item.status?.slice(1)}
-                        </td>
-                        <td className="left text-green-700 text-xl font-medium">
-                          {" "}
-                          {/* Wrap Details within the <td> */}
-                          <Link
-                            key={table_index}
-                            to={{
-                              pathname: "/Sub_Park_Details",
-                              search: `?facilityId=${encryptDataId(
-                                table_item.facilityId
-                              )}`,
-                            }}
+            <div className="Table_container_1">
+              <div className="table_Container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col " className="text-left">
+                        Name{" "}
+                      </th>
+                      <th scope="col" className="text-left">
+                        Location
+                      </th>
+                      <th scope="col">Distance</th>
+                      <th scope="col">Status</th>
+                      <th className="left">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {DisPlayParkData?.length > 0 &&
+                      DisPlayParkData.map((table_item, table_index) => (
+                        <tr key={table_index}>
+                          <td data-label="Name" className="text-left">
+                            {table_item.facilityname}
+                          </td>
+                          <td data-label="Location" className="text-left">
+                            {table_item.address}
+                          </td>
+                          <td data-label="Distance">
+                            {Number(table_item.distance?.toFixed(2)) || 10}{" "}
+                            km(s)
+                          </td>
+                          <td
+                            data-label="Park Status"
+                            className={`Avilable ${
+                              table_item.status == "open"
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
                           >
-                            Details
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+                            {table_item.status?.charAt(0).toUpperCase() +
+                              table_item.status?.slice(1)}
+                          </td>
+                          <td className="left text-green-700 text-xl font-medium">
+                            {" "}
+                            {/* Wrap Details within the <td> */}
+                            <Link
+                              key={table_index}
+                              to={{
+                                pathname: "/Sub_Park_Details",
+                                search: `?facilityId=${encryptDataId(
+                                  table_item.facilityId
+                                )}`,
+                              }}
+                            >
+                              Details
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )
         ) : (
