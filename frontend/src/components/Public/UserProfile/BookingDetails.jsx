@@ -96,8 +96,14 @@ const BookingDetails = () => {
           return new Date(b.bookingDate) - new Date(a.bookingDate);
         }
       });
-      setEventDetailsData(res.data.data);
-      console.log("here response of all bookings details", res.data.data);
+      console.log("sortedData", sortedData);
+      if(selectedFilter.facilityType.length) {
+        sortedData = sortedData.filter((data) => {
+          return selectedFilter.facilityType.includes(parseInt(data.typeId));
+        }) 
+      }
+      setEventDetailsData(sortedData);
+      console.log("here response of all bookings details", sortedData);
       setIsLoding(false);
     } catch (err) {
       setEventDetailsData([]);

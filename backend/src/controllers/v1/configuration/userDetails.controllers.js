@@ -1019,7 +1019,7 @@ let viewBookings = async (req, res) => {
         facilityTypeId = facilityTypeId.split(',');
         console.log("facilityTypeId", facilityTypeId);
         if(facilityTypeId.includes('6')) {  // event type filter selected
-          console.log(51)
+          console.log(51, searchEventQueryResult);
           modifiedResultArray = [...modifiedResultArray, ...searchEventQueryResult];
         }
         if(facilityTypeId.includes('7')) {  // event host type filter selected
