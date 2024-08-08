@@ -576,7 +576,7 @@ const Sub_Park_Details = () => {
   <div className="Event_Available_main_container">
     <h1 className="Service_text">Event Available</h1>
     {EventAvailable?.length > 0 ? (
-      <div className="carousel">
+      <div className="carousel carousal321">
         <button className="carousel-button2 left" onClick={handleEventPrev}>
           &lt;
         </button>

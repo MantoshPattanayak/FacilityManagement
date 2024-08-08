@@ -362,7 +362,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-20" src={Park_Logo} alt="Sports" />
-            <span className="button-text">Playgrounds</span>
+            <span className="button-text">Playfields</span>
           </button>
 
           {/* Multipark */}

@@ -187,7 +187,7 @@ const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursF
           </div>
   
           <div className="popup-footer">
-            <button className="cancel-button" onClick={(e) => closePopup(false)}>
+            <button className="cancel-button01" onClick={(e) => closePopup(false)}>
               Cancel
             </button>
             <button className="next-button" onClick={handleNext}>
