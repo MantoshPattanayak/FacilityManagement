@@ -792,7 +792,7 @@ const Landing = () => {
           </Link>
 
           <div className="iconLogo">
-            <img src={greenway} alt="" />
+            <img  src={greenway} alt="" />
             <h2>Greenways</h2>
           </div>
           <div className="iconLogo">
