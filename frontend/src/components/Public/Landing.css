@@ -68,6 +68,11 @@ body {
   /* Maintain aspect ratio */
 }
 
+.iconPlayAppleItem:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
 .adImg {
   height: 20vh;
   padding: 40px;
