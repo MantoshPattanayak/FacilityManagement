@@ -25,7 +25,6 @@ const Event_hostPage = () => {
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [filteredEventTypes, setFilteredEventTypes] = useState([]);
-
     // here useState for post the data -----------------------
     const [formData, setFormData] = useState({
         organisationName: "",
@@ -53,10 +52,7 @@ const Event_hostPage = () => {
         ticketsold: "",
         numberofTicket: "",
         price: "",
-        uploadEventImage: {
-            data: null,
-            name: ""
-        },
+        uploadEventImage:null,
         additionalFiles: new Array(),
         facilityId: null
 
@@ -64,72 +60,97 @@ const Event_hostPage = () => {
 
     // handler for target the Name of Input field -------------------------------------------------
     const handleChange = (e) => {
-        const { name, value, files } = e.target;
-
-        switch (name) {
-            case "uploadEventImage":
-                let file = files[0];
-                console.log('file name', files);
-                if (parseInt(file.size / 1024) <= 200) {   
-                    const reader = new FileReader();
-
-                    reader.onloadend = () => {
-                        setFormData({
-                            ...formData,
-                            [name]: {
-                                data: reader.result,
-                                name: file.name
-                            }
-                        });
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-                else {
-                    alert("Kindly choose an image with size less than 200 KB.");
-                    document.getElementById("myForm_files").reset();
-                }
-                break;
-            case "additionalFiles":
-                let filesData = formData.additionalFiles;
-                console.log('filesData', filesData);
-                // Check if number of files exceeds the limit
-                if (files.length + formData.additionalFiles.length > 3) {
-                    alert("You can only upload a maximum of 3 files.");
-
-                    return;
-                }
-
-                for (let i = 0; i < files.length; i++) {
-                    let file = files[i];
-                    if (parseInt(file.size / 1024) <= 400) { // Checking for 400KB
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                            filesData.push({
-                                data: reader.result,
-                                name: file.name
-                            });
-                            // If all files are read, update form data
-                            if (filesData.length === files.length) {
-                                setFormData({ ...formData, [name]: filesData });
-                            }
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        alert("Kindly choose images with size less than 200 KB.");
-                        // Reset the form if any file exceeds size limit
-                        document.getElementById("myForm_files").reset();
-                        return; // Stop further processing
+        const { name, files, value } = e.target;
+        // Check if files is defined before accessing its properties
+        if (files && files.length > 0) {
+            const fileArray = Array.from(files);
+            console.log("file array", fileArray)
+            switch (name) {
+                
+                case "uploadImage":
+                    // find Total Image user can Upload ....
+                    const totalUploadedImages=formData.additionalFiles.length+ fileArray.length;
+                    console.log("here total image", totalUploadedImages)
+                    if (totalUploadedImages > 5 || (formData.uploadEventImage && totalUploadedImages)>=6) {
+                        alert("You can only upload a maximum of 1 primary image and 5 additional images.");
+                        document.getElementById("myForm").reset();
+                        return;
                     }
-                }
-                break;
-            default:
-                console.log("from data", formData)
-                setFormData({ ...formData, [name]: value });
-                setformErrors({ ...formErrors, [name]: '' });
-                break;
+                    const [firstFile, ...otherFiles] = fileArray;
+                    if (firstFile) {
+                        if (parseInt(firstFile.size / 1024) <= 200) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                const primaryImage = {
+                                    data: reader.result,
+                                    name: firstFile.name
+                                };
+                                let updatedAdditionalFiles = [...formData.additionalFiles];
+                                // Move the previous primary image to additional files
+                                if (formData.uploadEventImage) {
+                                    updatedAdditionalFiles = [formData.uploadEventImage, ...updatedAdditionalFiles];
+                                }
+                                // Process additional files
+                                const additionalImages = otherFiles.map(file => {
+                                    if (parseInt(file.size / 1024) <= 400) {
+                                        return {
+                                            data: URL.createObjectURL(file),
+                                            name: file.name
+                                        };
+                                    } else {
+                                        alert("Additional images must be less than 400 KB.");
+                                        document.getElementById("myForm").reset();
+                                        return null; // Prevent processing further
+                                    }
+                                }).filter(file => file !== null); // Filter out null values
+                                console.log('additionalImages', additionalImages)
+                                // Combine previous additional files with new ones
+                                updatedAdditionalFiles = [...updatedAdditionalFiles, ...additionalImages].slice(0, 4);
+                                setFormData({
+                                    ...formData,
+                                    uploadEventImage: primaryImage,
+                                    additionalFiles: updatedAdditionalFiles,
+                                });
+                            };
+                            reader.readAsDataURL(firstFile);
+                        } else {
+                            alert("The primary image must be less than 200 KB.");
+                            document.getElementById("myForm").reset();
+                        }
+                    }
+                    break;
+
+                default:
+                    // Handle text input changes
+                    if (name.startsWith('textField')) {
+                        setFormData({ ...formData, [name]: value });
+                    } else {
+                        console.log("Unsupported file input");
+                    }
+                    break;
+            }
+        } else {
+            // Handle text input changes
+            setFormData({ ...formData, [name]: value });
+            setformErrors({ ...formErrors, [name]: '' });
         }
-        console.log('form data', formData);
+    };
+    // here Remove the image -----
+    const handleRemoveImage = (e, index, type) => {
+        e.preventDefault()
+        if (type === "primary") {
+            setFormData((prevState) => ({
+                ...prevState,
+                uploadEventImage: null, // Remove primary image
+            }));
+        } else if (type === "secondary") {
+            setFormData((prevState) => ({
+                ...prevState,
+                additionalFiles: prevState.additionalFiles.filter((_, i) => i !== index), // Remove specific secondary image
+            }));
+        } else {
+            setformErrors({ ...formErrors, [name]: '' });
+        }
     };
 
 
@@ -341,6 +362,9 @@ const Event_hostPage = () => {
         if (!value.eventCategory) {
             err.eventCategory = "Event Category is Required"
         }
+        if (!value.uploadEventImage) {
+            err.uploadEventImage = "Primary image is Required"
+        }
         if (!value.startEventDate) {
             err.startEventDate = "Start Event Date is Required"
         }
@@ -359,9 +383,6 @@ const Event_hostPage = () => {
         } else if (!space_block.test(value.descriptionofEvent)) {
             err.descriptionofEvent = "Do not use spaces at beginning"
         }
-        if (!value.uploadEventImage) {
-            err.uploadEventImage = "Upload Event Image is required"
-        }
         if (value.ticketsold === '1') {
             if (!value.numberofTicket) {
                 err.numberofTicket = "Number of Ticket is Required"
@@ -378,8 +399,6 @@ const Event_hostPage = () => {
                 err.price = "Do not use spaces at beginning"
             }
         }
-
-
         return err;
     }
     /// here set the initail data of facility Type --------------------------------
@@ -415,13 +434,13 @@ const Event_hostPage = () => {
     };
     // here set the handleOption   and  Set both facilityId and facilityName in form data
     const handleOptionSelect = (facilityId, facilityname, address) => {
-        console.log({facilityId, facilityname, address});
-        setFormData({ ...formData, facilityId, facilityName: facilityname, locationofEvent: address }); 
+        console.log({ facilityId, facilityname, address });
+        setFormData({ ...formData, facilityId, facilityName: facilityname, locationofEvent: address });
         setSearchTerm(facilityname);
         setIsDropdownOpen(false);
         filterEventTypes(facilityId);
     };
-     // filter the  Event Type accoding to facilityId-------------------
+    // filter the  Event Type accoding to facilityId-------------------
     const filterEventTypes = (facilityId) => {
         const filtered = EventType.filter(event => event.facilityId === facilityId);
         setFilteredEventTypes(filtered);
@@ -449,7 +468,7 @@ const Event_hostPage = () => {
 
     // ---------------------------------------------- here Return Function ---------------------------------------------------------------
     return (
-        <div>
+        <div className="main">
             <PublicHeader />
             <div className="all_From_conatiner">
                 {currentStep === 1 && (
@@ -650,7 +669,7 @@ const Event_hostPage = () => {
                                         {formErrors.eventDate && <p className="error text-red-700">{formErrors.eventDate}</p>}
                                     </div>
                                 </div>
-                                
+
                                 {/* Two more similar rows for Heading 1 */}
                             </div>
                             <div className="HostEvent_Heading">
@@ -801,97 +820,62 @@ const Event_hostPage = () => {
 
                                         </>
                                     )}
-
-
-
-
                                 </div>
                                 {/*----------------------------- here Upload Event Image ---------------------------- */}
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1">Upload Event Image <span className="text-red-600 font-bold text-xl">*</span></label>
                                     <form id="myForm" className="m-0">
                                         <input
-                                            className="form-input"
-                                            id="uploadEventImage"
-                                            name="uploadEventImage"
+                                            className="Upload_image_addition_"
+                                            id="uploadImage"
+                                            name="uploadImage"
                                             type="file"
                                             accept="image/*"
                                             onChange={handleChange}
                                         />
                                         <p className="italic text-sm font-bold text-gray-500">
-                                            Max. image file size is 200KB.
+                                            Max. image file size is 200KB for the primary image and 400KB for additional images.
                                         </p>
+                                        {formErrors.uploadEventImage && <p className="error text-red-700">{formErrors.uploadEventImage}</p>}
                                     </form>
-
-                                    {/* <p className="italic text-sm font-bold text-gray-500">
-                                        Max. image or PDF file size is 200KB.
-                                    </p> */}
-                                    {formErrors.uploadEventImage && <p className="error text-red-700">{formErrors.uploadEventImage}</p>}
-                                    {/* here Upload */}
-                                    {formData.uploadEventImage && (
-                                        <div
-                                            onClick={(e) => {
-
-                                                setFormData({
-                                                    ...formData,
-                                                    ["uploadEventImage"]: null,
-                                                });
-                                                document.getElementById("myForm").reset();
-                                            }}
-
-                                        >
-
+                                    <div>
+                                        {formData.uploadEventImage && (
+                                            <div >
+                                                <h4 className="Additional_image">Primary Image:</h4>
+                                                <div className=" primary_image">
+                                                    <div>
+                                                        <img className="image_primary"
+                                                            src={formData.uploadEventImage.data}
+                                                        />
+                                                        <p>{formData.uploadEventImage.name}</p>
+                                                        <button className="Remove_image" onClick={(e) => handleRemoveImage(e, null, "primary")}>Remove</button>
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                        )}
+                                        <div >
+                                            <h4 className="Additional_image" >Additional Images:</h4>
+                                            <div className="secondry_image  ">
+                                                {
+                                                    formData.additionalFiles.map((file, index) => (
+                                                        <div key={index-1}>
+                                                            <img
+                                                             className="image_primary"
+                                                                src={file.data}
+                                                                alt={file.name}
+                                                            >
+                                                            </img>
+                                                            <p className="tex_file_name" >{file.name}</p>
+                                                            <button className="Remove_image" onClick={(e) => handleRemoveImage(e, index, "secondary")}>Remove</button>
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                            
                                         </div>
-                                    )}
-
-                                </div>
-                                <div className="HostEvent_Group" id='AddressBox'>
-
+                                    </div>
                                 </div>
                                 {/*----------------------------- here Upload Additional Files ---------------------------- */}
-
-                                <div className="HostEvent_Group" id='AddressBox'>
-                                    <label htmlFor="input1">Upload Additional Files <span className="text-red-600 font-bold text-xl">*</span></label>
-                                    <form id="myForm_files" className="m-0">
-                                        <input
-                                            className="form-input"
-                                            id="additionalFiles"
-                                            name="additionalFiles"
-                                            type="file"
-                                            accept="file/*"
-                                            multiple
-                                            onChange={handleChange}
-                                        />
-                                        <p className="italic text-sm font-bold text-gray-500">
-                                            Max. image file size is 200KB.
-                                        </p>
-                                    </form>
-
-                                    {/* <p className="italic text-sm font-bold text-gray-500">
-                                        Max. image or PDF file size is 200KB.
-                                    </p> */}
-
-                                    {/* here Upload */}
-                                    {formData.additionalFiles && formData.additionalFiles.length > 0 && (
-                                        <div
-                                            onClick={(e) => {
-
-                                                setFormData({
-                                                    ...formData,
-                                                    ["additionalFiles"]: null,
-                                                });
-                                                document.getElementById("myForm_files").reset();
-                                            }}
-                                            id="ownerPhotoRemove"
-                                            className="block"
-                                        >
-
-                                        </div>
-
-                                    )}
-
-                                </div>
-
                             </div>
                             {/* Two more similar headings */}
                             <div className="buttons-container">
@@ -909,7 +893,7 @@ const Event_hostPage = () => {
                             <div className="HostEvent_Heading">
                                 <span className="img_verify_text_container">
                                     <h1 className="verify_name_text">Verify Your Details</h1>
-                                    <img className="h-12" src={verfiy_img}></img>
+
                                 </span>
 
                                 <div className="HeadingTitle9">
@@ -1084,10 +1068,7 @@ const Event_hostPage = () => {
                                             name="eventTitle"
                                             value={formData.eventTitle}
                                             disabled
-
                                         />
-
-
                                     </div>
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Event Date</label>
@@ -1150,12 +1131,6 @@ const Event_hostPage = () => {
                                         )}
                                         {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
                                     </div>
-
-
-
-
-
-
                                     <div className="HostEvent_Group">
                                         <label htmlFor="input2">Event Category<span className="text-red-600 font-bold text-xl">*</span></label>
                                         <select id="input2"
@@ -1170,11 +1145,9 @@ const Event_hostPage = () => {
                                                     {event.eventCategoryName}
                                                 </option>
                                             ))}
-
                                         </select>
                                         {formErrors.eventCategory && <p className="error text-red-700">{formErrors.eventCategory}</p>}
                                     </div>
-
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
@@ -1195,12 +1168,10 @@ const Event_hostPage = () => {
                                         />
                                         {formErrors.endEventDate && <p className="error text-red-700">{formErrors.endEventDate}</p>}
                                     </div>
-
                                 </div>
                                 {/* Two more similar rows for Heading 1 */}
                             </div>
                             <div className="HostEvent_Heading">
-
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group" id='AddressBox'>
                                         <label htmlFor="input1">Description of Event</label>
@@ -1208,11 +1179,8 @@ const Event_hostPage = () => {
                                             name="descriptionofEvent"
                                             value={formData.descriptionofEvent}
                                             disabled
-
                                         />
-
                                     </div>
-
                                 </div>
                                 <div className="HostEvent_Row">
                                     <div className="HostEvent_Group">
@@ -1221,23 +1189,15 @@ const Event_hostPage = () => {
                                             name="descriptionofEvent"
                                             value={formData.ticketsold}
                                             disabled
-
                                         />
-
                                     </div>
-
-
-
-
                                     <div className="HostEvent_Group1 ">
                                         <label htmlFor="input2">No of tickets</label>
                                         <input type="text" id="No_ticket" className="input_padding" placeholder="Account Number"
                                             name="numberofTicket"
                                             value={formData.numberofTicket}
                                             disabled
-
                                         />
-
                                     </div>
                                     <div className="HostEvent_Group1">
                                         <label htmlFor="input2">price</label>
@@ -1245,35 +1205,53 @@ const Event_hostPage = () => {
                                             name="price"
                                             value={formData.price}
                                             disabled
-
                                         />
-
                                     </div>
-
-
-
-
-
-
                                 </div>
                                 <div className="HostEvent_Group" id='AddressBox'>
-                                    <label htmlFor="input1">Upload Event Image</label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Event image"
-                                        name="uploadeventImage"
-                                        value={formData.uploadEventImage.name}
-                                        disabled
-
-                                    />
-
-                                </div>
-                                <div className="HostEvent_Group" id='AddressBox'>
-                                    <label htmlFor="input1">Upload any Additional Files</label>
-                                    <input type="text" id="input1" className="input_padding" placeholder="Additional files"
-                                        name="additionalFiles"
-                                        value={[...formData.additionalFiles.map((file) => { return file.name })].toString()}
-                                        disabled
-
-                                    />
+                                    <label htmlFor="input1"> Event Image <span className="text-red-600 font-bold text-xl">*</span></label>
+                                    <form id="myForm" className="m-0">
+                                       
+                                      
+                                        {formErrors.uploadEventImage && <p className="error text-red-700">{formErrors.uploadEventImage}</p>}
+                                    </form>
+                                    <div>
+                                        {formData.uploadEventImage && (
+                                            <div >
+                                                <h4 className="Additional_image">Primary Image:</h4>
+                                                <div className=" primary_image">
+                                                    <div>
+                                                        <img className="image_primary"
+                                                            src={formData.uploadEventImage.data}
+                                                            disabled
+                                                        />
+                                                        <p>{formData.uploadEventImage.name}</p>
+                                                        
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                        )}
+                                        <div >
+                                            <h4 className="Additional_image" >Additional Images:</h4>
+                                            <div className="secondry_image  ">
+                                                {
+                                                    formData.additionalFiles.map((file, index) => (
+                                                        <div key={index-1}>
+                                                            <img
+                                                                src={file.data}
+                                                                alt={file.name}
+                                                                disabled
+                                                            >
+                                                            </img>
+                                                            <p className="tex_file_name" >{file.name}</p>
+                                                            
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Two more similar rows for Heading 1 */}
