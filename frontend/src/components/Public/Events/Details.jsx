@@ -64,6 +64,9 @@ export default function Details() {
     Park_img,
   ]);
   const [currentIndex1, setCurrentIndex1] = useState(0);
+  // for google maps
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   // Here Get the data of Sub_park_details------------------------------------------
   async function getEventDetailData() {
@@ -163,6 +166,51 @@ export default function Details() {
       navigate(-1); // Go back to the previous page
     }
   };
+
+  // clean loading of google maps
+  useEffect(() => {
+    const loadGoogleMaps = (apiKey, callbackName) => {
+      return new Promise((resolve, reject) => {
+        // Check if Google Maps is already loaded
+        if (window.google && window.google.maps) {
+          resolve();
+          return;
+        }
+
+        // Define callback function
+        window[callbackName] = () => {
+          resolve();
+        };
+
+        // Create and append script element
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=${callbackName}`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
+
+    // Load Google Maps
+    loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, 'initMap')
+      .then(() => {
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        console.error('Error loading Google Maps:', error);
+        setLoadError(true);
+      });
+
+    // Cleanup function to remove the script when the component unmounts
+    return () => {
+      const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+      if (script) {
+        script.remove();
+      }
+      delete window.initMap;
+    };
+  }, []);
 
   return (
     <div className="event-Sub_Manu_Conatiner">
@@ -281,10 +329,18 @@ export default function Details() {
           </span>
 
           <div className="event-Map_image">
-            <LoadScript googleMapsApiKey={apiKey}>
-              <GoogleMap
+            {
+              loadError ? (
+                <div>Error loading maps</div>
+              ) : !isLoaded ? (
+                <div>Loading Maps...</div>
+              ) : (
+                <GoogleMap
                 mapContainerStyle={{ height: "300px", width: "100%" }}
-                center={defaultCenter}
+                center={{
+                  lat: eventDetailsData?.latitude,
+                  lng: eventDetailsData?.longitude,
+                }}
                 zoom={12}
               >
                 {/* Render markers */}
@@ -296,7 +352,8 @@ export default function Details() {
                   }}
                 />
               </GoogleMap>
-            </LoadScript>
+              )
+            }
           </div>
         </div>
       </div>
