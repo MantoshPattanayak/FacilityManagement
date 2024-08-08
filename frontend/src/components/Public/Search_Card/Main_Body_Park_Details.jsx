@@ -321,7 +321,7 @@ const Main_Body_Park_Details = () => {
       >
         <h1 className="name_park_img">
           {facilityTypeId == 1 && "Parks"}
-          {facilityTypeId == 2 && "Playgrounds"}
+          {facilityTypeId == 2 && "Playfields"}
           {facilityTypeId == 3 && "Multi-purpose Grounds"}
           {facilityTypeId == 4 && "Blueways"}
           {facilityTypeId == 5 && "Greenways"}
@@ -353,7 +353,7 @@ const Main_Body_Park_Details = () => {
             className="image-button"
           >
             <img className="h-20" src={Event_img} alt="Event" />
-            <span className="button-text">Park</span>
+            <span className="button-text">Parks</span>
           </button>
 
           {/* Sports */}
@@ -591,11 +591,11 @@ const Main_Body_Park_Details = () => {
           </select>
         </div>
       </div>
-      {/* Heere Name of Park, sports dyamics ----------------------------------------
+      {/* Heere Name of Parks, sports dyamics ----------------------------------------
       <span className="text_name_park">
         <h1 className="name_park1">
           {facilityTypeId == 1 && "Parks"}
-          {facilityTypeId == 2 && "Playgrounds"}
+          {facilityTypeId == 2 && "Playfields"}
           {facilityTypeId == 3 && "Multipurpose Grounds"}
           {facilityTypeId == 4 && "Blueways"}
           {facilityTypeId == 5 && "Greenways"}

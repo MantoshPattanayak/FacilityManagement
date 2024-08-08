@@ -155,7 +155,7 @@ const Book_Now_Sport = () => {
                 let bookingId = res.data.data.facilityBookingId;
                 let entityTypeId = modifiedFormData.entityTypeId;
 
-                toast.success("Playground has been booked successfully.", {
+                toast.success("Playfield has been booked successfully.", {
                     autoClose: 3000, // Toast timer duration in milliseconds
                     onClose: () => {
                         // Navigate to another page after toast timer completes
