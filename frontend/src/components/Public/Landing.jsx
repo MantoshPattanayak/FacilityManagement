@@ -12,17 +12,16 @@ import {
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   GoogleMap,
-  LoadScript,
   Marker,
-  InfoWindow,
+  InfoWindowF,
   Circle,
 } from "@react-google-maps/api";
-import userLocationIcon from '../../assets/user_icon_here.png'
 import axiosHttpClient from "../../utils/axios";
-import park_logo from "../../assets/park-logo.png";
-import playground_logo from "../../assets/playground-logo.png";
-import mp_ground_logo from "../../assets/multipurpose-ground-logo.png";
-import adImg from "../../assets/Park_near_Utkal.png";
+import park_logo from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_PARKS.svg";
+import playground_logo from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_PLAYFIELDS.svg";
+import mp_ground_logo from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_MPGROUNDS.svg";
+import greenway from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_GREENWAYS.svg";
+import Blueway from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_BLUEWAYS.svg";
 import galleryImg1 from "../../assets/Gallery_Anant Vihar Park,Phase-3,DDC Park_Pokhariput.jpg";
 import galleryImg2 from "../../assets/Gallery_BDA Children's Park.jpg";
 import galleryImg3 from "../../assets/Gallery_Disabled Friendly Park_Saheed Nagar.jpg";
@@ -64,15 +63,9 @@ import anan_image from "../../assets/Anan_vihar.jpg";
 import No_Current_Event_img from "../../assets/No_Current_Event_Data.png";
 import No_data_nearBy from "../../assets/Near_Data_No_Found.png";
 // here import Park Image
-
 import PublicHeader from "../../common/PublicHeader.jsx";
-
 // Location icon and image all types of image---------------------------------------------
-
 import Yoga_img from "../../assets/Yoga_img.png";
-import greenway from "../../assets/Greenway.png";
-import Blueway from "../../assets/blueways.png";
-
 // import blueWays_logo from "../../assets/ama_bhoomi_blueways_logo.jpeg";
 // import greenWays_logo from "../../assets/ama_bhoomi_greenways.jpeg";
 // import here encpty js ----------------------------------
@@ -916,7 +909,7 @@ const Landing = () => {
                 height: "450px",
                 width: "100%",
               }}
-              center={{ lat: userLocation.lat || userLocation.latitude, lng: userLocation.lng || userLocation.longitude }}
+              center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
               zoom={12}
               // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
@@ -925,11 +918,11 @@ const Landing = () => {
               ) : (
                 userLocation && (
                   <Circle
-                    center={{ lat: userLocation.latitude, lng: userLocation.longitude }}
-                    radius={500} // Radius in meters
+                    center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
+                    radius={250} // Radius in meters
                     options={{
                       fillColor: "red",
-                      fillOpacity: 0.3,
+                      fillOpacity: 0.2,
                       strokeColor: "blue",
                       strokeOpacity: 0.8,
                       strokeWeight: 2,
@@ -947,8 +940,8 @@ const Landing = () => {
               ))}
               {/* Show InfoWindow for selected location */}
               {selectedLocationDetails && (
-                <InfoWindow
-                  key={selectedLocationDetails.facilityId}
+                <InfoWindowF
+                  // key={selectedLocationDetails.facilityId}
                   position={{
                     lat: selectedLocationDetails.latitude,
                     lng: selectedLocationDetails.longitude,
@@ -957,11 +950,13 @@ const Landing = () => {
                     setSelectedLocationDetails(null);
                   }}
                 >
-                  <div>
-                    <h3>Facility Name: {selectedLocationDetails.facilityName}</h3>
-                    <p>Distance: {selectedLocationDetails.distance} meters</p>
+                  <div key={selectedLocationDetails.facilityId}>
+                    <h3>Facility Name: {selectedLocationDetails.facilityname}</h3>
+                    <p>Address: {selectedLocationDetails.address}</p>
+                    <p>Distance: {selectedLocationDetails.distance} km(s) (approx.)</p>
+                    <p>Status: <span className={`${selectedLocationDetails.status == 'open' ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}`}>{selectedLocationDetails.status.toUpperCase()}</span></p>
                   </div>
-                </InfoWindow>
+                </InfoWindowF>
               )}
             </GoogleMap>
           )}
@@ -1321,7 +1316,6 @@ const Landing = () => {
           <h1 className="text-3xl">Advertisement</h1>
         </div>
         <div className="avatisement-Content2">
-          {/* <img src={adImg} alt="" className="avatisement-Image" id='advertise-img' /> */}
           <div className="advertisement-Scroll2">
             {ad.map((img, index) => (
               <img
