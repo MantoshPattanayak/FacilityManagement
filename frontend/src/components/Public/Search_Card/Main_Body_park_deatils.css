@@ -337,7 +337,7 @@ select:focus {
 
 .button-59 {
   align-items: center;
-  background-color: #fff;
+  /* background-color: #fff; */
   border: 2px solid #01b116;
   box-sizing: border-box;
   color: #000;
@@ -367,7 +367,8 @@ select:focus {
 
 .button-59:hover {
   border-color: rgb(4, 156, 1);
-  background-color: rgb(2, 125, 0);
+  /* background-color: rgb(2, 125, 0); */
+  background-color: #3AB757;
   color: #fff;
   fill: #06f;
 }
