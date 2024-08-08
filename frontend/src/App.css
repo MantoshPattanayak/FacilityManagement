@@ -42,3 +42,6 @@
 } */
 /* App.css */
 
+html {
+  overflow-x: initial !important;
+}
