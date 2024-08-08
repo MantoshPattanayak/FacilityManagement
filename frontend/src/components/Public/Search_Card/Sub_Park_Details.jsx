@@ -178,7 +178,7 @@ const Sub_Park_Details = () => {
         console.log("user bookmarks", { res: res.data.data, facilityId });
         let bookmarkBool = res.data?.data?.some((data) => {
           if (
-            ["Parks", "Playgrounds", "Multi Purpose Ground"].includes(
+            ["Parks", "Playfields", "Multi Purpose Ground"].includes(
               data.facilityType
             )
           ) {

@@ -245,7 +245,7 @@ const Home = () => {
             <div className='Activity_Data' ref={counterRef}>
               <span className='Actvity_pure_data'>
                 <h1 className='count'>450 +</h1>
-                <p>Playground</p>
+                <p>Playfields</p>
               </span>
               <span className='Actvity_pure_data'>
                 <h1 className='count'>200 +</h1>

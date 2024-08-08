@@ -309,6 +309,7 @@ const Landing = () => {
       setLoading(false);
     }
   }, []);
+
   const setUserGeoLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -398,23 +399,28 @@ const Landing = () => {
   useEffect(() => {
     const loadGoogleMaps = (apiKey, callbackName) => {
       return new Promise((resolve, reject) => {
-        if (typeof window.google === 'object' && typeof window.google.maps === 'object') {
+        // Check if Google Maps is already loaded
+        if (window.google && window.google.maps) {
           resolve();
           return;
         }
 
+        // Define callback function
         window[callbackName] = () => {
           resolve();
         };
 
+        // Create and append script element
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=${callbackName}`;
         script.async = true;
+        script.defer = true;
         script.onerror = reject;
         document.head.appendChild(script);
       });
     };
 
+    // Load Google Maps
     loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, 'initMap')
       .then(() => {
         setIsLoaded(true);
@@ -423,7 +429,17 @@ const Landing = () => {
         console.error('Error loading Google Maps:', error);
         setLoadError(true);
       });
+
+    // Cleanup function to remove the script when the component unmounts
+    return () => {
+      const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+      if (script) {
+        script.remove();
+      }
+      delete window.initMap;
+    };
   }, []);
+  
 
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
@@ -616,6 +632,7 @@ const Landing = () => {
   function handleExternalLinkOpen(e, url) {
     e.preventDefault();
     toast.dismiss();
+    console.log("handle external link");
     // Disable interactions with the background
     // document.querySelectorAll('body')[0].style.pointerEvents = 'none';
     // document.querySelectorAll('body')[0].style.opacity = 0.4;
@@ -764,7 +781,7 @@ const Landing = () => {
           >
             <div className="iconLogo">
               <img src={playground_logo} alt="" />
-              <h2>Playgrounds</h2>
+              <h2>Playfields</h2>
             </div>
           </Link>
           <Link
@@ -816,9 +833,9 @@ const Landing = () => {
                 >
                   <img src={playground_logo} alt="" />
                   {selectedButton === 2 ? (
-                    <h2 className="clicked-text-icon">Playgrounds</h2>
+                    <h2 className="clicked-text-icon">Playfields</h2>
                   ) : (
-                    <h2 className="text1">Playgrounds</h2>
+                    <h2 className="text1">Playfields</h2>
                   )}
                 </button>
               </div>
@@ -899,7 +916,7 @@ const Landing = () => {
                 height: "450px",
                 width: "100%",
               }}
-              center={defaultCenter}
+              center={{ lat: userLocation.lat || userLocation.latitude, lng: userLocation.lng || userLocation.longitude }}
               zoom={12}
               // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
@@ -954,7 +971,7 @@ const Landing = () => {
         <div className="nearByFacilities">
           <div className="nearByFacilities-heading">
             {selectedButton === 1 && <h1>Parks Near Me</h1>}
-            {selectedButton === 2 && <h1>PlayGround Near Me</h1>}
+            {selectedButton === 2 && <h1>Playfields Near Me</h1>}
             {selectedButton === 3 && <h1>Multipurpose Grounds Near Me</h1>}
             {selectedButton === 5 && <h1>Greenways Near Me</h1>}
             {selectedButton === 4 && <h1>Blueways Near Me</h1>}

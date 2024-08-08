@@ -168,7 +168,7 @@ const AdminDashboard = () => {
                         <div class="card-dashboard">
                             <div className="card-content">
                                 <div className="card-top">
-                                    <span className="card-title">Total Playground</span>
+                                    <span className="card-title">Total Playfields</span>
                                 </div>
                             </div>
                             <div className="card-image">

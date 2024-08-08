@@ -418,15 +418,19 @@ body {
   justify-content: space-between;
 }
 
+.icon1_button:hover {
+  color: black;
+  opacity: 1;
+}
+
 .text1 {
   position: absolute;
   top: 95%;
   left: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0;
+  opacity: 0.5;
   transition: opacity 0.3s ease-in-out;
-
-  color: #013409;
+  color: #1a1a1a;
   padding: 0px;
   border-radius: 5px;
   font-size: 13px;
@@ -439,10 +443,9 @@ body {
   top: 110%;
   left: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0;
+  opacity: 0.5;
   transition: opacity 0.3s ease-in-out;
-
-  color: #013409;
+  color: #1a1a1a;
   padding: 0px;
   border-radius: 5px;
   font-size: 13px;
@@ -452,11 +455,10 @@ body {
 
 .clicked-text-icon {
   position: absolute;
-
   top: 70%;
   left: 0%;
-
-  color: #013409;
+  opacity: 1;
+  color: black;
   padding: 10px;
   border-radius: 5px;
   font-size: 13px;
