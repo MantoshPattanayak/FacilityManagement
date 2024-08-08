@@ -84,7 +84,7 @@ import TourGuide from "../../common/TourGuide.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { manageTourGuide } from "../../utils/authSlice.jsx";
 import instance from "../../../env.js";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 // import "./YourStyles.css";
 
 const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
@@ -681,6 +681,7 @@ const Landing = () => {
     <div className="landingcontainer">
       <section className="bg-img" style={styles}>
         <PublicHeader />
+        <ToastContainer />
         <div className="iconPlayApple">
         <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
           <img className="iconPlayAppleItem" src={googlePlayStore} alt="Google Play Store" />
