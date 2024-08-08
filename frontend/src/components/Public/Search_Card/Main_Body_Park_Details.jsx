@@ -12,13 +12,12 @@ import {
 // Axios for Call the API --------------------------------
 import axiosHttpClient from "../../../utils/axios";
 // Common footer---------------------------- ----------------
-import CommonFooter from "../../../common/CommonFooter";
 // Import Logo here ------------------------------ ------------------------------
-import Park_Logo from "../../../assets/Ground_logo.png";
-import MultiPark from "../../../assets/ama_bhoomi_multipurpose_grounds_logo-removebg-preview.png";
-import Event_img from "../../../assets/ama_boomi_park_logo-removebg-preview.png";
-import greenway from "../../../assets/Greenway.png";
-import blueway from "../../../assets/blueways.png";
+import Playfields_img from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_PLAYFIELDS.svg";
+import MultiPark from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_MPGROUNDS.svg";
+import Parks_img from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_PARKS.svg";
+import greenway from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_GREENWAYS.svg";
+import blueway from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_BLUEWAYS.svg";
 // Data Not available Icon ---------------------------------------------------------------
 import No_Data_icon from "../../../assets/No_Data.png";
 import { useEffect, useState, useRef } from "react";
@@ -350,33 +349,33 @@ const Main_Body_Park_Details = () => {
           {/* Park */}
           <button
             onClick={(e) => handleParkLogoClick(e, 1)}
-            className="image-button"
+            className={`image-button ${facilityTypeId == 1 ? 'selected' : null}`}
           >
-            <img className="h-20" src={Event_img} alt="Event" />
-            <span className="button-text">Park</span>
+            <img className="h-20" src={Parks_img} alt="Event" />
+            <span className="button-text">Parks</span>
           </button>
 
           {/* Sports */}
           <button
             onClick={(e) => handleParkLogoClick(e, 2)}
-            className="image-button"
+            className={`image-button ${facilityTypeId == 2 ? 'selected' : null}`}
           >
-            <img className="h-20" src={Park_Logo} alt="Sports" />
+            <img className="h-20" src={Playfields_img} alt="Sports" />
             <span className="button-text">Playfields</span>
           </button>
 
           {/* Multipark */}
           <button
             onClick={(e) => handleParkLogoClick(e, 3)}
-            className="image-button"
+            className={`image-button ${facilityTypeId == 3 ? 'selected' : null}`}
           >
             <img className="h-20" src={MultiPark} alt="Multipark" />
-            <span className="button-text1">Multipurpose Grounds</span>
+            <span className="button-text1">Multipurpose<br /> Grounds</span>
           </button>
           {/* blueway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 4)}
-            className="image-button"
+            className={`image-button ${facilityTypeId == 4 ? 'selected' : null}`}
           >
             <img className="h-20" src={blueway} alt="Multipark" />
             <span className="button-text">Blueways</span>
@@ -384,7 +383,7 @@ const Main_Body_Park_Details = () => {
           {/* waterway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 5)}
-            className="image-button"
+            className={`image-button ${facilityTypeId == 5 ? 'selected' : null}`}
           >
             <img className="h-20" src={greenway} alt="Multipark" />
             <span className="button-text">Greenways</span>
