@@ -291,7 +291,7 @@ const Booking_Schedule = ({
             </button>
           </div>
           <div className="popup-footer">
-            <button className="cancel-button" onClick={() => closePopup(false)}>
+            <button className="cancel-button01" onClick={() => closePopup(false)}>
               Cancel
             </button>
             <button className="next-button" onClick={handleBookingData}>

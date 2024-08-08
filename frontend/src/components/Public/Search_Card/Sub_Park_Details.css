@@ -358,7 +358,7 @@
 
 .service_name {
   /* font-size: 17px; */
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -381,7 +381,7 @@
 
 .Amenities_name {
   /* font-size: 20px; */
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -393,7 +393,7 @@
 }
 
 .About_text {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   color: #292929;
   padding: 10px;
@@ -615,6 +615,8 @@
 
 .other-contents {
   padding: 5px;
+  margin-left: 3.5%;
+  margin-top: 2vh;
 }
 .date_text {
   font-weight: 500;
@@ -625,7 +627,7 @@
   position: relative;
   overflow: hidden;
   width: 80vw;
-  max-width: 80vw;
+  max-width: 94vw;
   margin: auto;
 }
 
@@ -688,9 +690,12 @@
   justify-content: center;
 }
 
-.Yoga_date_time{
+.Yoga_date_time {
   flex-direction: column;
   width: max-content;
+}
+.carousel321{
+  width: auto;
 }
 
 @media screen and (max-width: 1366px) {

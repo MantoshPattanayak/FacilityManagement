@@ -1,5 +1,5 @@
-import React from 'react'
-import '../Events/Details.css'
+import React from "react";
+import "../Events/Details.css";
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
@@ -33,13 +33,11 @@ import {
 } from "@react-google-maps/api";
 import PublicHeader from "../../../common/PublicHeader";
 // import images here
-import amabhoomi from '../../../assets/Anand_park.jpg';
-import instance from '../../../../env';
+import amabhoomi from "../../../assets/Anand_park.jpg";
+import instance from "../../../../env";
 import "../Search_Card/Sub_Park_Details.css";
 
-
 export default function Details() {
-
   // UseSate for get data -------------------------------------
   const [eventDetailsData, setEventDetailsData] = useState({});
   // here Check Login Status------------------------------------
@@ -58,7 +56,13 @@ export default function Details() {
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
   let randomKey = Math.random();
   // For image Carousel............
-  const [images, setImages] = useState([Park_img, amabhoomi, Park_img, amabhoomi, Park_img]);
+  const [images, setImages] = useState([
+    Park_img,
+    amabhoomi,
+    Park_img,
+    amabhoomi,
+    Park_img,
+  ]);
   const [currentIndex1, setCurrentIndex1] = useState(0);
 
   // Here Get the data of Sub_park_details------------------------------------------
@@ -74,8 +78,11 @@ export default function Details() {
 
       console.log("Response of event details", res.data.eventActivityDetails);
       setEventDetailsData(res.data.eventActivityDetails);
-      console.log("event additional images", res.data.eventActivityDetails.eventAdditionalImages.split(';'))
-      setImages(res.data.eventActivityDetails.eventAdditionalImages.split(';'));
+      console.log(
+        "event additional images",
+        res.data.eventActivityDetails.eventAdditionalImages.split(";")
+      );
+      setImages(res.data.eventActivityDetails.eventAdditionalImages.split(";"));
     } catch (err) {
       console.log("here Error", err);
     }
@@ -83,7 +90,7 @@ export default function Details() {
   // For Find Out the Status of Login Page -----------------------------------
   // For Find Out the Status of Login Page -------------------------------
 
-  useEffect(() => { }, [isUserLoggedIn]);
+  useEffect(() => {}, [isUserLoggedIn]);
 
   // UseEffect for Update the data---------------------------------------------
   useEffect(() => {
@@ -137,11 +144,24 @@ export default function Details() {
   }
 
   const handlePrev = () => {
-    setCurrentIndex1(currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1);
+    setCurrentIndex1(
+      currentIndex1 === 0 ? images.length - 1 : currentIndex1 - 1
+    );
   };
 
   const handleNext = () => {
-    setCurrentIndex1(currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1);
+    setCurrentIndex1(
+      currentIndex1 === images.length - 1 ? 0 : currentIndex1 + 1
+    );
+  };
+
+  // handeling back button
+  const handleBackClick = () => {
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else {
+      navigate(-1); // Go back to the previous page
+    }
   };
 
   return (
@@ -150,27 +170,43 @@ export default function Details() {
       <PublicHeader />
       {/* Here Heading Image (Below of header) */}
       <div className="event-Header_Img">
-        <h1 className="event-text-park">
-          {eventDetailsData?.eventName}
-        </h1>
+        <div className="park_Name1">
+          <div className="park_Name2">
+            <h1 className="text-park">{eventDetailsData?.eventName}</h1>
+            <span className="Location_text_sub_manu">
+              <img className="location_icon" src={Location_icon}></img>
+              <h1 className="text_location">
+                {eventDetailsData?.locationName}
+              </h1>
+            </span>
+          </div>
+          <div className="back_button">
+            <button
+              className="back_btn bg-[rgba(0,0,0,0.8)]"
+              onClick={handleBackClick}
+            >
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </button>
+          </div>
+        </div>
+
+        {/* <h1 className="event-text-park">{eventDetailsData?.eventName}</h1>
         <span className="event-Location_text_sub_manu">
           <img className="event-location_icon" src={Location_icon}></img>
           <h1 className="event-text_location">
             {eventDetailsData?.locationName}
           </h1>
-        </span>
+        </span> */}
       </div>
       {/*---------------- Jsx for Map and Image ------------------- */}
       <div className="event-map_img_main_conatiner">
-
-
-
         <div className="carousel-container1">
           <div className="carousel1">
             {/* <img className="event-Park_image" src={Park_img}></img> */}
-            <img 
+            <img
               src={instance().baseURL + "/static" + images[currentIndex1]}
-              alt={`Slide ${currentIndex1 + 1}`} 
+              alt={`Slide ${currentIndex1 + 1}`}
             />
           </div>
           <button className="carousel1-button1 left1" onClick={handlePrev}>
@@ -181,59 +217,67 @@ export default function Details() {
           </button>
         </div>
 
-
         <div className="event-Map_container">
           <span className="event-time_status grid grid-rows-2 grid-cols-3">
-            <h1 className="event-time_text col-span-3">Event start date: {formatDate(eventDetailsData?.eventStartTime?.split("T")[0])} {formatTime(eventDetailsData?.eventStartTime)}</h1>
-            <h1 className="event-time_text col-span-3">Event end date: {formatDate(eventDetailsData?.eventEndTime?.split("T")[0])} {formatTime(eventDetailsData?.eventEndTime)}</h1>
-            <span className='event-time_text col-start-1 col-span-3 items-start'>
+            <h1 className="event-time_text col-span-3">
+              Event start date:{" "}
+              {formatDate(eventDetailsData?.eventStartTime?.split("T")[0])}{" "}
+              {formatTime(eventDetailsData?.eventStartTime)}
+            </h1>
+            <h1 className="event-time_text col-span-3">
+              Event end date:{" "}
+              {formatDate(eventDetailsData?.eventEndTime?.split("T")[0])}{" "}
+              {formatTime(eventDetailsData?.eventEndTime)}
+            </h1>
+            <span className="event-time_text col-start-1 col-span-3 items-start">
               {/* <h1 className="event-time_text col-span-3">
                 {" "}
                 Timing : {formatDate(eventDetailsData?.eventStartTime?.split("T")[0])} {formatTime(eventDetailsData?.eventStartTime)}&nbsp; 
                 - {formatDate(eventDetailsData?.eventEndTime?.split("T")[0])} {formatTime(eventDetailsData?.eventEndTime)}
               </h1> */}
               <button
-                className={`event-Open_Button col-span-1 ${eventDetailsData?.status == "ACTIVE"
-                  ? "event-open"
-                  : "event-closed"
-                  }`}
-              >
-                {
+                className={`event-Open_Button col-span-1 ${
                   eventDetailsData?.status == "ACTIVE"
-                    ? "Available"
-                    : "Closed"
-                }
+                    ? "event-open"
+                    : "event-closed"
+                }`}
+              >
+                {eventDetailsData?.status == "ACTIVE" ? "Available" : "Closed"}
               </button>
             </span>
           </span>
 
           <span className={`event-Button_ticket_container`}>
-            {
-              eventDetailsData.status == 'ACTIVE' ?
-                <>
-                  <Link
-                    to={{
-                      pathname: `${isUserLoggedIn == 1 ? "/event-book" : "/login-signup"
-                        }`,
-                      search: `${isUserLoggedIn == 1
-                        ? `?eventId=${encryptDataId(
-                          eventDetailsData?.eventId
-                        )}`
+            {eventDetailsData.status == "ACTIVE" ? (
+              <>
+                <Link
+                  to={{
+                    pathname: `${
+                      isUserLoggedIn == 1 ? "/event-book" : "/login-signup"
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
+                        ? `?eventId=${encryptDataId(eventDetailsData?.eventId)}`
                         : `?eventId=${encryptDataId(
-                          eventDetailsData?.eventId
-                        )}` + `&redirect=${encryptDataId("/event-book")}`
-                        }`,
-                    }}
-                    className={`event-button-9`}
-                  >
-                    Book Ticket
-                  </Link>
-                </>
-                :
-                <>
-                  <button disabled className={`event-button-9 disabled:bg-slate-500`}>Book Ticket</button>
-                </>
-            }
+                            eventDetailsData?.eventId
+                          )}` + `&redirect=${encryptDataId("/event-book")}`
+                    }`,
+                  }}
+                  className={`event-button-9`}
+                >
+                  Book Ticket
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  disabled
+                  className={`event-button-9 disabled:bg-slate-500`}
+                >
+                  Book Ticket
+                </button>
+              </>
+            )}
           </span>
 
           <div className="event-Map_image">
@@ -255,16 +299,6 @@ export default function Details() {
             </LoadScript>
           </div>
         </div>
-        {/* Back button............. */}
-        <Link to={'/events'}>
-          <div className="back_button">
-
-            <button className="back_btn">
-              <FontAwesomeIcon icon={faArrowLeftLong} />
-              Back
-            </button>
-          </div>
-        </Link>
       </div>
 
       {/* -----------------------------services------------------------------------------ */}
@@ -284,22 +318,22 @@ export default function Details() {
         ))}
     </div> */}
 
+    <div className="other-contents">
+
       {/* --------------------------- Amenities ------------------------------------------*/}
       <div className="event-Amenities_Main_conatiner">
         <h1 className="event-Service_text">Amenities</h1>
         <div className="event-Amenities-Data">
-          {
-            eventDetailsData.amentities?.map((item, index) => (
-              <span className="flex gap-2" key={index}>
-                <img
-                  className="event-Correct_icon"
-                  src={correct_icon}
-                  alt={`Amenity icon ${index}`}
-                />
-                <h1 className="event-Amenities_name">{item}</h1>
-              </span>
-            ))
-          }
+          {eventDetailsData.amentities?.map((item, index) => (
+            <span className="flex gap-2" key={index}>
+              <img
+                className="event-Correct_icon"
+                src={correct_icon}
+                alt={`Amenity icon ${index}`}
+              />
+              <h1 className="event-Amenities_name">{item}</h1>
+            </span>
+          ))}
         </div>
       </div>
 
@@ -321,8 +355,8 @@ export default function Details() {
           <h1 className="event-Number">9192847567</h1>
         </div>
       </div>
+      </div>
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
-
     </div>
-  )
+  );
 }

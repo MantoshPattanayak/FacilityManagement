@@ -136,7 +136,7 @@
   margin-top: 20px;
 }
 
-.cancel-button,
+.cancel-button01,
 .next-button {
   background-color: #007bff;
   color: #fff;
@@ -146,7 +146,7 @@
   border-radius: 5px;
 }
 
-.cancel-button {
+.cancel-button01 {
   background-color: #dc3545;
 }
 
@@ -187,7 +187,7 @@
   .popup-content {
     width: 44%;
   }
-  .cancel-button,
+  .cancel-button01,
   .next-button {
     padding: 10px 20px;
     width: auto;
