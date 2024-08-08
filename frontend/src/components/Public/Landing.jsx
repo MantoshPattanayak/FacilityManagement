@@ -15,6 +15,7 @@ import {
   LoadScript,
   Marker,
   InfoWindow,
+  InfoWindowF,
   Circle,
 } from "@react-google-maps/api";
 import userLocationIcon from '../../assets/user_icon_here.png'
@@ -916,7 +917,7 @@ const Landing = () => {
                 height: "450px",
                 width: "100%",
               }}
-              center={{ lat: userLocation.lat || userLocation.latitude, lng: userLocation.lng || userLocation.longitude }}
+              center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
               zoom={12}
               // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
@@ -925,11 +926,11 @@ const Landing = () => {
               ) : (
                 userLocation && (
                   <Circle
-                    center={{ lat: userLocation.latitude, lng: userLocation.longitude }}
-                    radius={500} // Radius in meters
+                    center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
+                    radius={250} // Radius in meters
                     options={{
                       fillColor: "red",
-                      fillOpacity: 0.3,
+                      fillOpacity: 0.2,
                       strokeColor: "blue",
                       strokeOpacity: 0.8,
                       strokeWeight: 2,
@@ -947,8 +948,8 @@ const Landing = () => {
               ))}
               {/* Show InfoWindow for selected location */}
               {selectedLocationDetails && (
-                <InfoWindow
-                  key={selectedLocationDetails.facilityId}
+                <InfoWindowF
+                  // key={selectedLocationDetails.facilityId}
                   position={{
                     lat: selectedLocationDetails.latitude,
                     lng: selectedLocationDetails.longitude,
@@ -957,11 +958,13 @@ const Landing = () => {
                     setSelectedLocationDetails(null);
                   }}
                 >
-                  <div>
-                    <h3>Facility Name: {selectedLocationDetails.facilityName}</h3>
-                    <p>Distance: {selectedLocationDetails.distance} meters</p>
+                  <div key={selectedLocationDetails.facilityId}>
+                    <h3>Facility Name: {selectedLocationDetails.facilityname}</h3>
+                    <p>Address: {selectedLocationDetails.address}</p>
+                    <p>Distance: {selectedLocationDetails.distance} km(s) (approx.)</p>
+                    <p>Status: <span className={`${selectedLocationDetails.status == 'open' ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}`}>{selectedLocationDetails.status.toUpperCase()}</span></p>
                   </div>
-                </InfoWindow>
+                </InfoWindowF>
               )}
             </GoogleMap>
           )}
