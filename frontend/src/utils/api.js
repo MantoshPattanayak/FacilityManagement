@@ -25,6 +25,7 @@ const api = {
    Update_Card: '/booking/updateCart', // Put
    //  Landing page Api......................................
    LandingApi: '/publicUser/homePage',
+   GOOGLE_MAPS_API: '/publicUser/fetchGoogleMap', //post apiKey
    //Admin login
    ADMIN_LOGIN_API: '/auth/privateLogin',    //post = encryptMobile or encryptEmail, encryptPassword
    // Park_Booking(Search) Page

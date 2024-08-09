@@ -17,11 +17,11 @@ let viewEventCategoriesList = async (req, res) => {
         `;
         let fetchEventCategoriesList = await sequelize.query(fetchEventCategoriesQuery);
         let matchedData = fetchEventCategoriesList[0];
-
+        console.log("data fetched", matchedData);
         if(givenReq) {
             console.log(2)
             matchedData = matchedData.filter((data) => {
-                if(data.code?.toLowerCase()?.includes(givenReq) ||
+                if(data.eventCategoryName?.toLowerCase()?.includes(givenReq) ||
                 data.description?.toLowerCase()?.includes(givenReq) ||
                 data.status?.toLowerCase()?.includes(givenReq))
                     return data;

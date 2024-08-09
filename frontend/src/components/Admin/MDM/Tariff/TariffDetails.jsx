@@ -3,7 +3,7 @@ import "./TariffDetails.css"; // Importing CSS file
 import AdminHeader from "../../../../common/AdminHeader";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faTrash, faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faTrash, faPenToSquare, faPlus, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../../utils/axios";
 import { decryptData } from "../../../../utils/encryptData";
 //Toast -----------------------------------------------------------------
@@ -94,6 +94,7 @@ const TariffDetails = () => {
 
   // Post the data of Tariff details
   async function handle_Post_TariffData() {
+    console.log("post data");
     const errorList = validate();
     if (errorList.some(err => Object.keys(err).length > 0)) {
       return; // Prevent submission if there are errors
@@ -149,6 +150,7 @@ const TariffDetails = () => {
   // Vaildation of Create Tariff
   const validate = () => {
     const errorList = [];
+    console.log("tariif rows", tariffRows);
     tariffRows.forEach((row, index) => {
       const err = {};
       // Validation for operating hours
@@ -202,15 +204,16 @@ const TariffDetails = () => {
       }
 
       // Validation for tariffTypeId and entityId (dropdowns)
-      if (!row.tariffTypeId) {
+      if (row.tariffTypeId == "") {
         err.tariffTypeId = "Please select a Facility Type";
       }
-      if (!row.entityId) {
+      if (row.entityId == "") {
         err.entityId = "Please select an Activities Type";
       }
 
       errorList[index] = err;
     });
+    console.log("Error list", errorList);
     setErrors(errorList);
     return errorList;
   };
@@ -228,8 +231,17 @@ const TariffDetails = () => {
       <div className="tariff-container">
 
         {/* input fields of form................ */}
-        <h1 className="Park_Name">{GetFacilityData.facilityname}</h1>
-        <p className="Address">{GetFacilityData.address}</p>
+        <div className="w-[100%] flex justify-center items-center">
+          <div className="w-[90%] flex flex-col justify-center">
+            <h1 className="Park_Name">{GetFacilityData.facilityname}</h1>
+            <p className="Address">{GetFacilityData.address}</p>
+          </div>
+          <div className="w-[10%]">
+            <button className="back_btn" onClick={(e)=> { navigate("/mdm/ViewTariffList") }}>
+                <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+            </button>
+          </div>
+        </div>
         <div className="form">
           <div className="dropdown-container">
             <div className="dropdown-container">
@@ -296,7 +308,7 @@ const TariffDetails = () => {
                 <th>Mon</th>
                 <th>Thu</th>
                 <th>Wed</th>
-                <th>Thus</th>
+                <th>Thurs</th>
                 <th>Fri</th>
                 <th>Sat</th>
                 <th>Delete</th>

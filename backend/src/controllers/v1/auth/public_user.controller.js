@@ -550,9 +550,33 @@ const homePage = async (req, res) => {
       .json({ message: err.message });
   }
 };
+
+let fetchGoogleMap = async (req, res) => {
+  try {
+    let { apiKey, callbackName } = req.body;
+    apiKey = decrypt(apiKey);
+    callbackName = decrypt(callbackName);
+    const url = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`; // Add other libraries if needed
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch Google Maps script: ${response.statusText}`);
+    }
+
+    const scriptContent = await response.text();
+    res.set('Content-Type', 'application/javascript');
+    res.status(statusCode.SUCCESS.code).json(scriptContent);
+  }
+  catch (error) {
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message: error.message
+    })
+  }
+}
 module.exports = {
   updatepublic_user,
   //viewpublic_user,
   viewpublicUser,
   homePage,
+  fetchGoogleMap
 };

@@ -387,7 +387,7 @@ let viewTariff = async (req, res) => {
         let limit = req.body.page_size ? req.body.page_size : 500;
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
-        let givenReq = req.body.givenReq ? req.body.givenReq : null;
+        let givenReq = req.body.givenReq ? req.body.givenReq.toString().toLowerCase() : null;
         let statusId = 1;
         let findViewTariff
         // if(givenReq){
@@ -413,7 +413,7 @@ let viewTariff = async (req, res) => {
         findViewTariff = await sequelize.query(`
         select query.* from
         (
-            SELECT f.facilityName, f.facilityId, t2.tariffTypeId, f.facilityTypeId,
+            SELECT f.facilityName, f.facilityId, t2.tariffTypeId, t2.name as tariffType,f.facilityTypeId,
                 uam.userActivityId AS entityId, uam.userActivityName AS activitiesEventName,
                 CASE
                 WHEN EXISTS (SELECT 1 FROM tarifftypes tt
@@ -437,6 +437,7 @@ let viewTariff = async (req, res) => {
                 f.facilityname AS facilityName,
                 f.facilityId,
                 t2.tariffTypeId,
+                t2.name as tariffType,
                 f.facilityTypeId,
                 ecm.eventCategoryId as entityId,
                 ecm.eventCategoryName AS activitiesEventName,
@@ -467,6 +468,15 @@ let viewTariff = async (req, res) => {
         })
 
         let paginatedTariff = findViewTariff.slice(offset, offset + limit);
+
+        if(givenReq) {
+            paginatedTariff = paginatedTariff.filter((data) => {
+               if ( data.facilityName?.toLowerCase().includes(givenReq) 
+                || data.tariffType?.toLowerCase().includes(givenReq)
+                || data.activitiesEventName?.toLowerCase().includes(givenReq) )
+                    return data; 
+            });
+        }
 
         return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: paginatedTariff })
     } catch (err) {

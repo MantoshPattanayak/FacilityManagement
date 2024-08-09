@@ -81,7 +81,7 @@ let fetchGalleryList = async (req, res) => {
 
         console.log("fetchGalleryRecords", fetchGalleryRecords[0]);
         
-        let matchedData = fetchGalleryRecords;
+        let matchedData = fetchGalleryRecords[0];
         if(searchReq) { // if record matches search string
             matchedData = matchedData.filter((data) => {
                 return (
@@ -93,13 +93,13 @@ let fetchGalleryList = async (req, res) => {
             })
         }
 
-        console.log("matchedData", matchedData);
+        // console.log("matchedData", matchedData);
         //set data according to limit and offset
         let paginatedFetchGalleryRecords = matchedData.slice(offset, limit + offset);
 
         res.status(statusCode.SUCCESS.code).json({
             message: "Gallery details",
-            data: paginatedFetchGalleryRecords[0]?.map((gallery) => {
+            data: paginatedFetchGalleryRecords?.map((gallery) => {
                 return {
                     ...gallery, 
                     ['url']: encodeURI(gallery.url)

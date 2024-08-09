@@ -18,6 +18,7 @@ let viewList = async (req, res) => {
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
         let statusInput = req.body.statusCode ? req.body.statusCode : null;
+        console.log("givenReq", givenReq);
 
         console.log("statusInput", statusInput);
 
