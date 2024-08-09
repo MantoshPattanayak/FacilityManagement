@@ -12,5 +12,6 @@ router.put("/updatepublic_user",userUpload.fields([
 //router.post("/viewpublic_user", public_user.viewpublic_user); //findAll
 router.post("/viewpublicUser", authenticateToken, public_user.viewpublicUser); //findOne
 router.get("/homePage", public_user.homePage);
+router.post("/fetchGoogleMap", public_user.fetchGoogleMap);
 
 module.exports = router;

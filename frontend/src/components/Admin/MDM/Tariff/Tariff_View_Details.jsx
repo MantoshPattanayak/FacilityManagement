@@ -3,7 +3,7 @@ import "./TariffDetails.css"; // Importing CSS file
 import AdminHeader from "../../../../common/AdminHeader";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faTrash, faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faTrash, faPenToSquare, faPlus, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../../utils/axios";
 import { decryptData } from "../../../../utils/encryptData";
 //Toast -----------------------------------------------------------------
@@ -24,9 +24,8 @@ const Tariff_View_Details = () => {
   const tariffTypeId = decryptData(
     new URLSearchParams(location.search).get("tariffTypeId")
   );
-  console.log("here facilitytype, facilityid, entityid", facilityId, facilityTypeId, entityId)
+  console.log("here facilitytype, facilityid, entityid, tariffTypeId", facilityId, facilityTypeId, entityId, tariffTypeId)
   const action = new URLSearchParams(location.search).get('action');
-  console.log("Decrypt data", facilityTypeId, facilityId, tariffTypeId);
   // Get initial Data
   let navigate = useNavigate();
   // show the error msg set in useSate --------------------------------------------
@@ -302,8 +301,18 @@ const Tariff_View_Details = () => {
       <AdminHeader />
       <div className="tariff-container">
         {/* input fields of form................ */}
-        <h1 className="Park_Name">{GetInitailName.facilityname}</h1>
-        <p className="Address">{GetInitailName.address}</p>
+        <div className="w-[100%] flex justify-center items-center">
+          <div className="w-[90%] flex flex-col justify-center">
+            <h1 className="Park_Name">{GetInitailName.facilityname}</h1>
+            <p className="Address">{GetInitailName.address}</p>
+          </div>
+          <div className="w-[10%]">
+            <button className="back_btn" onClick={(e)=> { navigate("/mdm/ViewTariffList") }}>
+                <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+            </button>
+          </div>
+        </div>
+
         <div className="table-container">
           {
             action == 'Edit' &&
@@ -325,7 +334,7 @@ const Tariff_View_Details = () => {
                 <th>Mon</th>
                 <th>Thu</th>
                 <th>Wed</th>
-                <th>Thus</th>
+                <th>Thurs</th>
                 <th>Fri</th>
                 <th>Sat</th>
                 {

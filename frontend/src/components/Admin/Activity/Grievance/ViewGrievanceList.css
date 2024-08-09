@@ -150,6 +150,7 @@
     text-align: left;
     border-left: none;
     border-right: none;
+    word-break: break-all;
 }
 
 
@@ -198,7 +199,7 @@
     }
     
     .ViewGrievanceList table td:nth-child(2), .ViewGrievanceList table tr > th:nth-child(2) {
-        width: 15%;
+        width: 20%;
     }
     
     .ViewGrievanceList table td:nth-child(n+3), .ViewGrievanceList table tr > th:nth-child(n+3) {

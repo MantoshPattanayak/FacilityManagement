@@ -34,6 +34,7 @@ export default function ReviewEventDetailsList() {
 
   const [eventDetails, setEventDetails] = useState([]);
   const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
+  const [givenReq, setGivenReq] = useState("");
   //here Location crypto and navigate the page ---------------
   const location = useLocation();
 
@@ -42,7 +43,7 @@ export default function ReviewEventDetailsList() {
     try {
       let res = await axiosHttpClient(
         "REVIEW_EVENTS_VIEWLIST_API",
-        "post", { statusCode: tabList.filter((data) => { return data.active == true })[0].statusInput }
+        "post", { statusCode: tabList.filter((data) => { return data.active == true })[0].statusInput, givenReq }
       );
       console.log("Get data of ResourceEvent", res);
       setEventDetails(res.data.data);
@@ -59,7 +60,7 @@ export default function ReviewEventDetailsList() {
   useEffect(() => {
     console.log("useEffect triggered");
     GetDisplayReviewEvents();
-  }, [tab]);
+  }, [tab, givenReq]);
 
   // Cal the time and data --------------------------------
   function calculateTime(dataTime) {
@@ -135,6 +136,8 @@ export default function ReviewEventDetailsList() {
             type="text"
             className="search_input_field"
             placeholder="Search..."
+            value={givenReq}
+            onChange={(e) => setGivenReq(e.target.value)}
           />
           <input
             type="date"

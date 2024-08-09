@@ -110,17 +110,17 @@ let viewServiceById = async (req, res) => {
         console.log('fetchServiceDetailsById', fetchServiceDetailsById.dataValues);
 
         // check if entered data already exists
-        let fetchExistingData = await serviceMaster.findAll({
-            where: {
-                [Op.or]: [{ code: code }, { description: description }]
-            }
-        })
+        // let fetchExistingData = await serviceMaster.findAll({
+        //     where: {
+        //         [Op.or]: [{ code: code }, { description: description }]
+        //     }
+        // })
 
-        if(fetchExistingData.length > 0) {
-            return res.status(statusCode.CONFLICT.code).json({
-                message: 'Entered data already exists.'
-            })
-        }
+        // if(fetchExistingData.length > 0) {
+        //     return res.status(statusCode.CONFLICT.code).json({
+        //         message: 'Entered data already exists.'
+        //     })
+        // }
 
         if(fetchServiceDetailsById.dataValues) {
             res.status(statusCode.SUCCESS.code).json({
