@@ -67,7 +67,9 @@ const createHosteventdetails = async (req, res) => {
       transactionId,
       numberofTicket
     } = req.body;
-console.log("here Reponse of Host event", req.body)
+
+    console.log( req.body,"here reqbody of Host event")
+
     let checkIfEntityExist = await usermasters.findOne({
       where:{
        [Op.and]: [{userId:userId},{statusId:statusId},{isEntity:isEntity}]
@@ -270,10 +272,10 @@ console.log("here Reponse of Host event", req.body)
         console.log( uploadSingleEventImage,'328 line event image')
         if(errors.length>0){
           await transaction.rollback();
-          if(errors.some(error => error.includes("something went wrong"))){
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+          if(errors.some(error => error.includes("Something went wrong"))){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors[0]})
           }
-          return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+          return res.status(statusCode.BAD_REQUEST.code).json({message:errors[0]})
         }
     }
       if(additionalFiles.length > 0){

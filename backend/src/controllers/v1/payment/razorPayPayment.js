@@ -58,6 +58,7 @@ const paymentVerification = async (req, res) => {
 
       let ticketUploadAndGeneratePdf;
       let ticketUploadArray=[];
+      let removeCartStatus = 23
     console.log(req.body);
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -97,6 +98,9 @@ const paymentVerification = async (req, res) => {
           console.log('coming to captured stage')
           statusId = 25
           bookingStatus = 4
+
+          
+          
         }
         else{
           statusId = 27
@@ -115,6 +119,28 @@ const paymentVerification = async (req, res) => {
           razorpay_order_id: paymentDetails.order_id
         }
       });
+      if(updatePayment==0){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:'Something went wrong'
+        })
+      }
+      // removed the cart items table
+      if(paymentDetails.notes.user_cart_id){
+        let removeCartItems = await cartItemTable.update({
+          statusId:removeCartStatus
+        },
+        {
+          where:{
+          cartId:paymentDetails.notes.user_cart_id
+        }
+      }
+      )
+      if(removeCartItems.length==0){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:`Something went wrong`
+        })
+      }
+      }
       // console.log('update payment table', paymentDetails.order_id, 'data', checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId)
        // update the payment items table and booking table
        let checkTheOrderItemsTable = await paymentItems.findAll({
@@ -476,7 +502,7 @@ const checkout =  async (req, res) => {
   
       userCartId = await decrypt(userCartId);
       console.log(userCartId, 'userCartId')
-      let findTheCartDetails = await sequelize.query(`select * from amabhoomi.cartItems where statusId = ? and cartId = ?`,
+      let findTheCartDetails = await sequelize.query(`select * from amabhoomi.cartitems where statusId = ? and cartId = ?`,
         {replacements:[inCartStatus,userCartId],
           type:QueryTypes.SELECT,
           transaction
@@ -494,7 +520,7 @@ const checkout =  async (req, res) => {
           totalAmount += parseFloat(i.facilityPreference.amount);
         }
         else{
-          totalAmount = i.facilityPreference.amount + totalAmount;
+          totalAmount += i.facilityPreference.amount;
         }
         
         console.log('totalamount',totalAmount)
@@ -587,9 +613,17 @@ const checkout =  async (req, res) => {
       payment_capture: 1,
       notes:{
         customer_id:customerId,
-        internal_order_id:insertToPaymentFirst.orderId
+        internal_order_id:insertToPaymentFirst.orderId,
+        user_cart_id:userCartId
       }
     };
+    if(totalAmount == 0){
+      
+      let paymentStatus = 25
+      let bookingStatus = 4
+
+      let 
+    }
 
     console.log('options')
     const order = await instance.orders.create(options);
