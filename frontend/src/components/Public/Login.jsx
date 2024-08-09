@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../Public/Login.css";
-// Import Axios ------------------------
 import axiosHttpClient from "../../utils/axios";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import PublicHeader from "../../common/PublicHeader";
-// EncrptData here --------------------------------------------------------
 import { decryptData, encryptData } from "../../utils/encryptData";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-// here import useDispatch to store the 
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../utils/authSlice";
 
 const Login = () => {
-  // UseState for Post the data---------------------------------
+  const length = 6;
   const [LogingDataPost, setLogingDataPost] = useState({
     Mobile: "",
-    otp: "",
+    otp: new Array(length).fill(""),
   });
   const dispatch = useDispatch();
   let navigate = useNavigate();
@@ -27,117 +24,19 @@ const Login = () => {
   const facilityId = new URLSearchParams(location.search).get("facilityId");
   const eventId = new URLSearchParams(location.search).get("eventId");
   const [otpGenerated, setOtpGenerated] = useState(false);
-  console.log("redirect", redirect);
-  const [timer, setTimer] = useState(0); // Initial timer value in seconds
+  const [timer, setTimer] = useState(0);
+  const inputRefs = useRef([]);
 
-  // Function to handle sending OTP
-  async function handleGenerateOTP(e) {
-    e.preventDefault();
-    if (LogingDataPost.Mobile == '') {
-      toast.error('Please enter mobile number.');
-      return;
+  useEffect(() => {
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
     }
+  }, []);
 
-    try {
-      let res = await axiosHttpClient('PUBLIC_SIGNUP_GENERATE_OTP_API', 'post', {
-        encryptMobile: encryptData(LogingDataPost.Mobile)
-      });
-      console.log('response after signup', res.data);
-      setOtpGenerated(true);
-      setTimer(60);
-      toast.success('An OTP is sent to your registered mobile number.')
-    }
-    catch (error) {
-      console.error(error);
-      toast.error('OTP generation failed. Please try again!')
-    }
-  }
-
-  // Aysnc functaion for Post the data ------------------------
-  async function HandleSubmit(e) {
-    e.preventDefault();
-    console.log("handleSubmit");
-
-    const errors = validation(LogingDataPost);
-    console.log(errors);
-    toast.dismiss();
-    if (Object.keys(errors).length === 0) {
-      try {
-        const res = await axiosHttpClient("PUBLIC_SIGNUP_VERIFY_OTP_API", "post", {
-          encryptMobile: encryptData(LogingDataPost.Mobile),
-          encryptOtp: encryptData(LogingDataPost.otp)
-        });
-        console.log("user Login Response", res);
-        // Dispatch login success action with tokens and user data -------------------
-        if (res.data.decideSignUpOrLogin == 1) {
-          dispatch(loginSuccess({
-            accessToken: res.data.accessToken,
-            refreshToken: res.data.refreshToken,
-            user: res.data.user,
-            sid: res.data.sid
-          }));
-          toast.success("Login successfully.");
-          // sessionStorage.setItem("isUserLoggedIn", 1);
-          redirect ?
-            facilityId ? navigate(redirect + `?facilityId=${facilityId}`)
-              : eventId ? navigate(redirect + `?eventId=${eventId}`)
-                : navigate('/')
-            : navigate('/');
-        }
-        else {
-          toast.error('User does not exist. Kindly signup first!');
-        }
-      } catch (err) {
-        console.error("Error:", err);
-        toast.error("Login failed. Please try again.");
-        // sessionStorage.setItem("isUserLoggedIn", 0);
-      }
-    } else {
-      // Iterate over validation errors and display them
-      Object.values(errors).forEach((error) => {
-        toast.error(error);
-      });
-    }
-  }
-
-  function handleChange(e) {
-    e.preventDefault();
-    let { name, value } = e.target;
-    setLogingDataPost({ ...LogingDataPost, [name]: value });
-    console.log("LogingDataPost", LogingDataPost);
-    return;
-  }
-
-
-  // Validation here ----------------------------------------
-  const validation = (value) => {
-    const err = {};
-    console.log(value);
-    // Mobile number validation
-    if (!value.Mobile) {
-      err.Mobile = "Please Enter your Mobile Number";
-    } else {
-      const mobileNumberRegex = /^[1-9]\d{9}$/; // Regex to match 10-digit mobile number not starting with 0
-      if (!mobileNumberRegex.test(value.Mobile)) {
-        err.Mobile = "Invalid Mobile Number";
-      }
-    }
-    // Password validation
-    if (!value.otp) {
-      err.password = "Please enter your OTP";
-    }
-    return err;
-  };
-
-  useEffect(() => { }, [LogingDataPost]);
-
-  //refresh otp timer
   useEffect(() => {
     let intervalId;
-    console.log('timer', timer);
-    // Function to decrement timer every second
     const decrementTimer = () => {
-      setTimer(prevTimer => {
+      setTimer((prevTimer) => {
         if (prevTimer === 0) {
           clearInterval(intervalId);
           return 0;
@@ -145,14 +44,131 @@ const Login = () => {
         return prevTimer - 1;
       });
     };
-
-    // Start the timer when OTP is sent
     if (timer > 0) {
       intervalId = setInterval(decrementTimer, 1000);
     }
-    // Clean up interval when component unmounts
     return () => clearInterval(intervalId);
   }, [timer]);
+
+  const handleGenerateOTP = async (e) => {
+    e.preventDefault();
+    if (LogingDataPost.Mobile === "") {
+      toast.error("Please enter mobile number.");
+      return;
+    }
+
+    try {
+      let res = await axiosHttpClient(
+        "PUBLIC_SIGNUP_GENERATE_OTP_API",
+        "post",
+        {
+          encryptMobile: encryptData(LogingDataPost.Mobile),
+        }
+      );
+      setOtpGenerated(true);
+      setTimer(60);
+      toast.success("An OTP is sent to your registered mobile number.");
+    } catch (error) {
+      console.error(error);
+      toast.error("OTP generation failed. Please try again!");
+    }
+  };
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = validation(LogingDataPost);
+
+    if (Object.keys(errors).length === 0) {
+      try {
+        const res = await axiosHttpClient(
+          "PUBLIC_SIGNUP_VERIFY_OTP_API",
+          "post",
+          {
+            encryptMobile: encryptData(LogingDataPost.Mobile),
+            encryptOtp: encryptData(LogingDataPost.otp.join("")),
+          }
+        );
+
+        if (res.data.decideSignUpOrLogin === 1) {
+          dispatch(
+            loginSuccess({
+              accessToken: res.data.accessToken,
+              refreshToken: res.data.refreshToken,
+              user: res.data.user,
+              sid: res.data.sid,
+            })
+          );
+          toast.success("Login successful.");
+          if (redirect) {
+            if (facilityId) {
+              navigate(`${redirect}?facilityId=${facilityId}`);
+            } else if (eventId) {
+              navigate(`${redirect}?eventId=${eventId}`);
+            } else {
+              navigate("/");
+            }
+          } else {
+            navigate("/");
+          }
+        } else {
+          toast.error("User does not exist. Kindly signup first!");
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        toast.error("Login failed. Please try again.");
+      }
+    } else {
+      Object.values(errors).forEach((error) => {
+        toast.error(error);
+      });
+    }
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    let { name, value } = e.target;
+    setLogingDataPost({ ...LogingDataPost, [name]: value });
+  };
+
+  const handleOtpChange = (e, index) => {
+    const { value } = e.target;
+    if (isNaN(value)) return;
+
+    const newOtp = [...LogingDataPost.otp];
+    newOtp[index] = value.substring(value.length - 1);
+    setLogingDataPost({ ...LogingDataPost, otp: newOtp });
+
+    if (value && index < length - 1 && inputRefs.current[index + 1]) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (
+      e.key === "Backspace" &&
+      !LogingDataPost.otp[index] &&
+      index > 0 &&
+      inputRefs.current[index - 1]
+    ) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
+  const validation = (value) => {
+    const err = {};
+    if (!value.Mobile) {
+      err.Mobile = "Please Enter your Mobile Number";
+    } else {
+      const mobileNumberRegex = /^[1-9]\d{9}$/;
+      if (!mobileNumberRegex.test(value.Mobile)) {
+        err.Mobile = "Invalid Mobile Number";
+      }
+    }
+    if (!value.otp.join("")) {
+      err.otp = "Please enter your OTP";
+    }
+    return err;
+  };
 
   return (
     <div className="Main_container_Login">
@@ -161,7 +177,7 @@ const Login = () => {
         <form className="context">
           <div className="inputs">
             <div className="text">
-              <label htmlFor="">Enter Mobile Number</label>
+              <label htmlFor="Mobile">Enter Mobile Number</label>
             </div>
             <input
               className="input-field"
@@ -175,89 +191,71 @@ const Login = () => {
             />
           </div>
           <br />
-
           {otpGenerated && (
             <div className="inputs">
               <div className="text">
-                <label htmlFor="">Enter OTP</label>
+                <label htmlFor="otp">Enter OTP</label>
               </div>
-              <input
-                className="input-field focus:border-[#176BFB]"
-                name="otp"
-                type="password"
-                placeholder="Enter OTP"
-                autoComplete="off"
-                value={LogingDataPost.otp}
-                onChange={handleChange}
-              />
-            </div>)
-          }
-
-          {(otpGenerated == false) ?      //if otp is not generated then show send otp button
-            (
-              <div className="otp-btn" onClick={handleGenerateOTP}>
-                <button className="public-login-sendotp-btn_login1" type="submit">
-                  Send OTP
-                </button>
+              <div className="otp-container">
+                {LogingDataPost.otp.map((value, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    ref={(input) => (inputRefs.current[index] = input)}
+                    value={value}
+                    onChange={(e) => handleOtpChange(e, index)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    maxLength="1"
+                    className="otpInput"
+                  />
+                ))}
               </div>
-            )
-            :
-            (                             //if otp is not generated then show send otp button
-              <div className="otp-btn" onClick={HandleSubmit}>
-                <button className="public-login-sendotp-btn_login1" type="submit">
-                  Submit
-                </button>
-              </div>
-            )
-          }
-
-          {
-            (otpGenerated == true) ?
-              ((timer === 0) ? (
-                <div className="otp-btn" onClick={handleGenerateOTP}>
-                  <button className="public-login-sendotp-btn_login1" type="submit">
-                    Resend OTP
-                  </button>
-                </div>
-              ) :
-                (
-                  <div className="otp-btn bg-gray-400 cursor-not-allowed">
-                    <p>Resend OTP in {timer} seconds.</p>
-                  </div>
-                )
-              )
-              :
-              ''
-          }
-
+            </div>
+          )}
+          {!otpGenerated && (
+            <div className="otp-btn" onClick={handleGenerateOTP}>
+              <button className="public-login-sendotp-btn_login1" type="submit">
+                Send OTP
+              </button>
+            </div>
+          )}
+          {otpGenerated && (
+            <div className="otp-btn" onClick={HandleSubmit}>
+              <button className="public-login-sendotp-btn_login1" type="submit">
+                Submit
+              </button>
+            </div>
+          )}
+          {otpGenerated && timer === 0 && (
+            <div className="otp-btn" onClick={handleGenerateOTP}>
+              <button
+                className="public-login-sendotp-btn_login1"
+                type="submit"
+              >
+                Resend OTP
+              </button>
+            </div>
+          )}
+          {otpGenerated && timer > 0 && (
+            // <div className="otp-btn bg-gray-400 cursor-not-allowed">
+            //   <p>Resend OTP in {timer} seconds.</p>
+            // </div>
+            <div className="otp-btn cursor-not-allowed">
+              <p>Resend OTP in {timer} seconds.</p>
+            </div>
+          )}
           <div className="login-options">
-            {/* Option for Forgot Password */}
-            {/* <div className="forgot-password">
-              <Link to={'/ForgotPassword'}>
-                Forgot Password?
-              </Link>
-            </div> */}
-
-            {/* Option for Login with OTP */}
             <div className="login-otp">
-              <Link to={'/admin-login'}>
-                Admin login
-              </Link>
+              <Link to={"/admin-login"}>Admin login</Link>
             </div>
           </div>
-
-          {/* Option for SignUp */}
           <div className="no-account">
             <p>Don't have an account?</p>
-            <Link to={'/login/SignUp'}>
-              SignUp
-            </Link>
+            <Link to={"/login/SignUp"}>SignUp</Link>
           </div>
         </form>
       </div>
-
       <ToastContainer />
-
     </div>
   );
 };
