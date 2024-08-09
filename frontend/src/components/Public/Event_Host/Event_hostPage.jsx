@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import verfiy_img from "../../../assets/verify_img.png"
 import { useNavigate } from "react-router-dom";
+import RazorpayButton from "../../../common/RazorpayButton";
 
 const Event_hostPage = () => {
     // useSate for page -----------------------------------------------
@@ -52,7 +53,7 @@ const Event_hostPage = () => {
         ticketsold: "",
         numberofTicket: "",
         price: "",
-        uploadEventImage:null,
+        uploadEventImage: null,
         additionalFiles: new Array(),
         facilityId: null
 
@@ -66,12 +67,12 @@ const Event_hostPage = () => {
             const fileArray = Array.from(files);
             console.log("file array", fileArray)
             switch (name) {
-                
+
                 case "uploadImage":
                     // find Total Image user can Upload ....
-                    const totalUploadedImages=formData.additionalFiles.length+ fileArray.length;
+                    const totalUploadedImages = formData.additionalFiles.length + fileArray.length;
                     console.log("here total image", totalUploadedImages)
-                    if (totalUploadedImages > 5 || (formData.uploadEventImage && totalUploadedImages)>=6) {
+                    if (totalUploadedImages > 5 || (formData.uploadEventImage && totalUploadedImages) >= 6) {
                         alert("You can only upload a maximum of 1 primary image and 5 additional images.");
                         document.getElementById("myForm").reset();
                         return;
@@ -243,6 +244,11 @@ const Event_hostPage = () => {
             console.log('Validation errors:', validationErrors1);
         }
     };
+    const nextStep3 = (e) => {
+        e.preventDefault()
+        setCurrentStep(currentStep + 1);
+
+    }
     // Prev (Button) --------------------------------------------------------------------------------
     const prevStep = () => {
         setCurrentStep(currentStep - 1);
@@ -851,7 +857,7 @@ const Event_hostPage = () => {
                                                         <button className="Remove_image" onClick={(e) => handleRemoveImage(e, null, "primary")}>Remove</button>
                                                     </div>
                                                 </div>
-                                               
+
                                             </div>
                                         )}
                                         <div >
@@ -859,9 +865,9 @@ const Event_hostPage = () => {
                                             <div className="secondry_image  ">
                                                 {
                                                     formData.additionalFiles.map((file, index) => (
-                                                        <div key={index-1}>
+                                                        <div key={index - 1}>
                                                             <img
-                                                             className="image_primary"
+                                                                className="image_primary"
                                                                 src={file.data}
                                                                 alt={file.name}
                                                             >
@@ -871,7 +877,7 @@ const Event_hostPage = () => {
                                                         </div>
                                                     ))}
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -887,7 +893,7 @@ const Event_hostPage = () => {
                 )}
                 {/*           ----------------------------------- step-3 (show the data and Submit--------------------------------------------------------------------------------------------) */}
                 {currentStep === 3 && (
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={nextStep2}     >
                         <div className="HostEvent_container">
 
                             <div className="HostEvent_Heading">
@@ -1211,8 +1217,8 @@ const Event_hostPage = () => {
                                 <div className="HostEvent_Group" id='AddressBox'>
                                     <label htmlFor="input1"> Event Image <span className="text-red-600 font-bold text-xl">*</span></label>
                                     <form id="myForm" className="m-0">
-                                       
-                                      
+
+
                                         {formErrors.uploadEventImage && <p className="error text-red-700">{formErrors.uploadEventImage}</p>}
                                     </form>
                                     <div>
@@ -1226,10 +1232,10 @@ const Event_hostPage = () => {
                                                             disabled
                                                         />
                                                         <p>{formData.uploadEventImage.name}</p>
-                                                        
+
                                                     </div>
                                                 </div>
-                                               
+
                                             </div>
                                         )}
                                         <div >
@@ -1237,7 +1243,7 @@ const Event_hostPage = () => {
                                             <div className="secondry_image  ">
                                                 {
                                                     formData.additionalFiles.map((file, index) => (
-                                                        <div key={index-1}>
+                                                        <div key={index - 1}>
                                                             <img
                                                                 src={file.data}
                                                                 alt={file.name}
@@ -1245,11 +1251,11 @@ const Event_hostPage = () => {
                                                             >
                                                             </img>
                                                             <p className="tex_file_name" >{file.name}</p>
-                                                            
+
                                                         </div>
                                                     ))}
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -1258,13 +1264,95 @@ const Event_hostPage = () => {
                             </div>
                             <div className="buttons-container">
                                 <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
-                                <button type="submit" className="next_button1">Submit</button>
+                                <button type="submit" className="next_button1">Next</button>
                             </div>
                         </div>
 
                     </form>
                 )}
+                {currentStep === 4 && (
+                    <form onSubmit={handleSubmit}>
+                        <div className="HostEvent_container">
+                            <div className="HostEvent_Heading">
+                                <h1 className="verify_name_text"></h1>
+                                <div className="HeadingTitle9">
+                                    <div></div>
+                                    <h2>Order Summary</h2>
+                                </div>
+                                <div class="parent-container">
+                                    <div class="Order_summary">
+                                   <span className="order_summary_text">
+                                       <h1>Event Tittle:</h1>
+                                       <p >{formData.organisationName}</p>
+                                   </span>
+                                   <span className="order_summary_text">
+                                        <h1>Event Category:</h1>
+                                        <p>{
+                                            filteredEventTypes.map((event, index) => {
+                                                if(event.eventCategoryId==formData.eventCategory)
+                                                    return event.eventCategoryName
+                                                })
+                                        }</p>
+                                    </span>
+                                    <span className="order_summary_text">
+                                    <h1>Event Location:</h1> 
+                                    <p>{formData.locationofEvent }</p>
+                                    </span>
+                                    <span className="order_summary_text">
+                                    <h1>Event Date:</h1>
+                                    <p>{formData.eventDate}</p>
+                                    </span>
+                                    <span className="order_summary_text">
+                                        <h1>Event Start Time:</h1>
+                                        <p>{formData.startEventDate}</p>
+                                    </span>
+                                    <span className="order_summary_text">
+                                        <h1>Event Close Time:</h1>
+                                        <p>{formData.endEventDate}</p>
+                                        </span>
+                                        <span className="order_summary_text">
+                                            <h1>Number of tickets:</h1>
+                                            <p> {formData.numberofTicket}</p>
+                                        </span>
+                                        <span className="order_summary_text">
+                                            <h1>Price of each event ticket</h1>
+                                            <p>{formData.price || '0'}</p>
+                                        </span>
+                                        <span className="price_bill1">
+
+                                        </span>
+                                        <span className="order_summary_text">
+                                            <h1> <strong>Total Amount</strong> (To be paid)</h1>
+                                            <p className="font-bold">₹5000/_ </p>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="buttons-container">
+                                <button type="button" className="prev_button" onClick={prevStep}>Previous</button>
+                                <RazorpayButton
+                                    amount={5000 || 0}
+                                    currency={"INR"}
+                                    description={"Book now"}
+                                    // onSuccess={handlePaymentSuccess}
+                                    // onFailure={handlePaymentFailure}
+                                    data={{
+                                        entityId: null,
+                                        entityTypeId: formData.eventCategory,
+                                        facilityPreference: formData,
+                                        userCartId: null
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </form>
+                )}
+
+
+
             </div>
+
             {/* ---------------------------------------------------here Toast Libary-------------------------------------- */}
             <ToastContainer />
 
