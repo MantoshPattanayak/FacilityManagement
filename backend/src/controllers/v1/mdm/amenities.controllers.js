@@ -7,7 +7,7 @@ const { Op, where } = require('sequelize');
 
 let viewAmenitiesList = async (req, res) => {
     try {
-        let givenReq = req.body.givenReq ? req.body.givenReq.toLowerCase() : null;
+        let givenReq = req.body.givenReq ? req.body.givenReq.toString().toLowerCase() : null;
         console.log("givenReq", givenReq);
 
         let fetchAmenitiesQuery = `
@@ -16,14 +16,14 @@ let viewAmenitiesList = async (req, res) => {
         `;
         let fetchAmenitiesList = await sequelize.query(fetchAmenitiesQuery);
         let matchedData = fetchAmenitiesList[0];
-        // console.log(fetchServicesList[0]);
+        console.log("fetch amenities data", matchedData);
 
         if(givenReq) {
             console.log(2)
             matchedData = matchedData.filter((data) => {
-                if(data.code?.toLowerCase()?.includes(givenReq) ||
-                data.description?.toLowerCase()?.includes(givenReq) ||
-                data.status?.toLowerCase()?.includes(givenReq))
+                if(data.amenityName?.toLowerCase()?.includes(givenReq) 
+                    || data.status?.toLowerCase()?.includes(givenReq) 
+                    || data.createdOn?.toString()?.includes(givenReq))
                     return data;
             })
         }

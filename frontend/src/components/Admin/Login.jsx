@@ -67,12 +67,13 @@ const AdminLogin = () => {
               return;
             }
 
-            toast.success("Login successfully.", {
-              autoClose: 2000,
-              onClose: () => {
-                navigate(homeRoute);
-              },
-            });
+            // toast.success("Login successfully.", {
+            //   autoClose: 2000,
+            //   onClose: () => {
+            //     navigate(homeRoute);
+            //   },
+            // });
+            navigate(homeRoute);
           } else {
             toast.error("Authorized resources not found!");
           }

@@ -390,27 +390,56 @@ const Landing = () => {
 
   // clean loading of google maps
   useEffect(() => {
-    const loadGoogleMaps = (apiKey, callbackName) => {
-      return new Promise((resolve, reject) => {
-        // Check if Google Maps is already loaded
+    const loadGoogleMaps = async (apiKey, callbackName) => {
+      try {
+        let mapResponse = await axiosHttpClient("GOOGLE_MAPS_API", "post", {
+          apiKey: encryptData(apiKey),
+          callbackName: encryptData(callbackName)
+        });
+
         if (window.google && window.google.maps) {
-          resolve();
+          console.log("window.google.maps")
+          // resolve();
           return;
         }
 
-        // Define callback function
-        window[callbackName] = () => {
-          resolve();
-        };
-
         // Create and append script element
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=${callbackName}`;
+        script.text = mapResponse.data;
+        script.type = 'text/javascript';
         script.async = true;
         script.defer = true;
-        script.onerror = reject;
         document.head.appendChild(script);
-      });
+        /*
+        return new Promise((resolve, reject) => {
+          // Check if Google Maps is already loaded
+          if (window.google && window.google.maps) {
+            console.log("window.google.maps")
+            resolve();
+            return;
+          }
+
+          // Define callback function
+          window[callbackName] = () => {
+            resolve();
+          };
+
+          // Create and append script element
+          const script = document.createElement('script');
+          script.text = mapResponse.data;
+          script.type = 'text/javascript';
+          // script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=${callbackName}`;
+          script.async = true;
+          script.defer = true;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+        */
+      }
+      catch (error) {
+        console.error('Error loading Google Maps:', error);
+        setLoadError(true);
+      }
     };
 
     // Load Google Maps
@@ -681,7 +710,7 @@ const Landing = () => {
     <div className="landingcontainer">
       <section className="bg-img" style={styles}>
         <PublicHeader />
-        <ToastContainer />
+        {/* <ToastContainer /> */}
         <div className="iconPlayApple">
         <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
           <img className="iconPlayAppleItem" src={googlePlayStore} alt="Google Play Store" />

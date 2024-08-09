@@ -7,7 +7,7 @@ import AdminHeader from '../../../../common/AdminHeader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 import { dataLength } from '../../../../utils/regexExpAndDataLength';
-import './CreateFacilityType.css';
+import './EditFacilityType.css';
 import { decryptData } from '../../../../utils/encryptData';
 
 export default function EditFacilityType() {
@@ -63,8 +63,8 @@ export default function EditFacilityType() {
     e.preventDefault();
     toast.dismiss();
     // Disable interactions with the background
-    document.querySelectorAll('.CreateInventoryContainer')[0].style.pointerEvents = 'none';
-    document.querySelectorAll('.CreateInventoryContainer')[0].style.opacity = 0.4;
+    document.querySelectorAll('.EditFacilityTypeContainer')[0].style.pointerEvents = 'none';
+    document.querySelectorAll('.EditFacilityTypeContainer')[0].style.opacity = 0.4;
 
     toast.warn(
       <div>
@@ -75,8 +75,8 @@ export default function EditFacilityType() {
               e.stopPropagation();
               handleSubmit();
               // Re-enable interactions with the background
-              document.querySelectorAll('.CreateInventoryContainer')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('.CreateInventoryContainer')[0].style.opacity = 1;
+              document.querySelectorAll('.EditFacilityTypeContainer')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('.EditFacilityTypeContainer')[0].style.opacity = 1;
               toast.dismiss();
             }}
             className="bg-green-400 text-white p-2 border rounded-md"
@@ -87,8 +87,8 @@ export default function EditFacilityType() {
             onClick={(e) => {
               e.stopPropagation();
               // Re-enable interactions with the background
-              document.querySelectorAll('.CreateInventoryContainer')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('.CreateInventoryContainer')[0].style.opacity = 1;
+              document.querySelectorAll('.EditFacilityTypeContainer')[0].style.pointerEvents = 'auto';
+              document.querySelectorAll('.EditFacilityTypeContainer')[0].style.opacity = 1;
               toast.dismiss();
               toast.error('Action cancelled!', {
                 position: "top-right",
@@ -171,7 +171,7 @@ export default function EditFacilityType() {
   return (
     <div>
       <AdminHeader />
-      <div className="CreateInventoryContainer">
+      <div className="EditFacilityTypeContainer">
         <div className="form-heading">
           <h2>Edit/View Asset details</h2>
           <div className="flex flex-col-reverse items-end w-[100%]">

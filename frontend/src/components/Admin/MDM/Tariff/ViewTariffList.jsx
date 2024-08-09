@@ -85,7 +85,7 @@ const ViewTariffList = () => {
                                         <tr key={data.index}>
                                             {/* <td data-label="Sl No.">{index + 1}</td> */}
                                             <td data-label="Facility Name">{data.facilityName}</td>
-                                            <td data-label="Address">{data.tariffType}</td>
+                                            <td data-label="Tariff for">{data.activitiesEventName}</td>
                                             {data.tariffCheck == 0 ? (
                                                 <td data-label="View">
                                                     <Link
@@ -109,8 +109,7 @@ const ViewTariffList = () => {
                                                     <Link
                                                         to={{
                                                             pathname: '/mdm/Tariff_View_Details',
-                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}
-                                                             &entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=Edit`
+                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=Edit`
                                                         }}
                                                         title='Edit'
                                                     >
