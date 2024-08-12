@@ -346,45 +346,7 @@ const Book_Now_Sport = () => {
                                 </div>
                             </div>
 
-                            {/* <div class="formGroup">
-                                <span class="fieldName"   >Date:</span>
-                                <input type="date" class="formInput" name="bookingDate" value={formData.bookingDate} onChange={handleChangeInput} />
-                            </div>
-                            <div class="formGroup">
-                                <span class="fieldName"   >Satrt Time:</span>
-                                <input type="time" class="formInput" name="startTime" value={formData.startTime} onChange={handleChangeInput} />
-                            </div>
-                            <div class="formGroup">
-                                <span class="fieldName"   >End Time:</span>
-                                <input type="time" class="formInput" name="endTime" value={formData.endTime} onChange={handleChangeInput} />
-                            </div>
-                            <div class="formGroup">
-                                <span class="fieldName"  >No of Player</span>
-                                <div className="increament_decrement_conatiner">
-                                    <button
-                                        type="button"
-                                        className="decrement-button"
-
-                                        onClick={handleDecrement}
-                                    >
-                                        <FontAwesomeIcon icon={faMinus} />
-                                    </button>
-                                    <input
-                                        type="text"
-                                        className="formInput_Add_member"
-                                        value={formData.facilityPreference.playersLimit}
-                                        name="playersLimit"
-                                        onChange={handleChangeInput}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="increment-button"
-                                        onClick={handleIncrement}
-                                    >
-                                        <FontAwesomeIcon icon={faPlus} />
-                                    </button>
-                                </div>
-                            </div> */}
+                       
                             <div class="formGroup">
                                 <span class="fieldName">Amount</span>
                                 <FontAwesomeIcon icon={faIndianRupeeSign} /><h1 className="price_Sport">&nbsp; {amount * formData.facilityPreference.playersLimit}/-</h1>
@@ -399,13 +361,7 @@ const Book_Now_Sport = () => {
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                        {/* <RazorpayButton
-                            amount={amount * formData.facilityPreference.playersLimit}
-                            currency={"INR"}
-                            description={"Pay now"}
-                            onSuccess={handlePaymentSuccess}
-                            onFailure={handlePaymentFailure}
-                        /> */}
+                     
                         {
                             isDisabled ?
                                 <button
