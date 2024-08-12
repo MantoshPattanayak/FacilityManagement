@@ -452,28 +452,8 @@ const Sub_Park_Details = () => {
                 </div>
               </div>
             </span>
-
             <span className="Button_ticket_container">
               {FacilitiesData[0]?.facilityTypeId == 1 ? (
-                // <Link
-                //   to={{
-                //     pathname: `${isUserLoggedIn == 1 ? 'onclick={()=> setShowPeople(true)}' : "/login-signup"
-                //       }`,
-                //     search: `${isUserLoggedIn == 1
-                //       ? `?facilityId=${encryptDataId(
-                //         FacilitiesData[0]?.facilityId
-                //       )}`
-                //       : `?facilityId=${encryptDataId(
-                //         FacilitiesData[0]?.facilityId
-                //       )}` + `&redirect=${encryptDataId("/BookParks/Book_Now")}`
-                //       }`,
-                //   }}
-                //   className="button-9"
-                // >
-                //   {/* <button role="button_by" onClick={togglePopup}  >Book Ticket</button> */}
-                //   <button className="button-9" role="button_by"  onClick={()=> setShowPeople(true)} >Book Ticket</button>
-
-                // </Link>
                 <button
                   onClick={() => setShowPeople(true)}
                   className="button-9"
@@ -505,12 +485,12 @@ const Sub_Park_Details = () => {
                 >
                   <button role="button_by">Book Ticket</button>
                 </Link>
-              ) : (
+              ) :  FacilitiesData[0]?.facilityTypeId == 4 ? (
                 <Link
                   to={{
                     pathname: `${
                       isUserLoggedIn == 1
-                        ? "/BookParks/Book_Now_Sport"
+                        ? "/BluewaysBookPage"
                         : "/login-signup"
                     }`,
                     search: `${
@@ -522,7 +502,7 @@ const Sub_Park_Details = () => {
                             FacilitiesData[0]?.facilityId
                           )}` +
                           `&redirect=${encryptDataId(
-                            "/BookParks/Book_Now_Sport"
+                            "/BluewaysBookPage"
                           )}`
                     }`,
                   }}
@@ -532,8 +512,63 @@ const Sub_Park_Details = () => {
                     Book Ticket
                   </button>
                 </Link>
-              )}
-
+              ):  FacilitiesData[0]?.facilityTypeId == 5 ?(
+                <Link
+                to={{
+                  pathname: `${
+                    isUserLoggedIn == 1
+                      ? "/GreenwaysBookingPage"
+                      : "/login-signup"
+                  }`,
+                  search: `${
+                    isUserLoggedIn == 1
+                      ? `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}`
+                      : `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}` +
+                        `&redirect=${encryptDataId(
+                          "/GreenwaysBookingPage"
+                        )}`
+                  }`,
+                }}
+                className="button-9"
+              >
+                <button role="button_by" onClick={() => setShowPeople(true)}>
+                  Book Ticket
+                </button>
+              </Link>
+              ):(
+                <Link
+                to={{
+                  pathname: `${
+                    isUserLoggedIn == 1
+                      ? "/GreenwaysBookingPage"
+                      : "/login-signup"
+                  }`,
+                  search: `${
+                    isUserLoggedIn == 1
+                      ? `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}`
+                      : `?facilityId=${encryptDataId(
+                          FacilitiesData[0]?.facilityId
+                        )}` +
+                        `&redirect=${encryptDataId(
+                          "/GreenwaysBookingPage"
+                        )}`
+                  }`,
+                }}
+                className="button-9"
+              >
+                <button role="button_by" onClick={() => setShowPeople(true)}>
+                  Book Ticket
+                </button>
+              </Link>
+              )
+            }
+              {/* Host Event */}
               <Link
                 to={{
                   pathname: `${

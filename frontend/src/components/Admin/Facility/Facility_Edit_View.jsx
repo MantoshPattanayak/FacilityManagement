@@ -162,7 +162,7 @@ const Facility_Edit_View = () => {
                 facilityId,
                 facilityTypeId
             });
-            console.log("Response of Display Facility Data", res.data);
+            console.log("Response11 of Display Facility Data", res.data);
             const {
                 amenity,
                 eventCategory,
