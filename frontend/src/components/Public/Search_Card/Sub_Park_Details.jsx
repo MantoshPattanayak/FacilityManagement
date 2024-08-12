@@ -353,7 +353,8 @@ const Sub_Park_Details = () => {
             ? "MulitGroud"
             : FacilitiesData[0]?.facilityTypeId === 4
             ? "BlueWays"
-            : ""
+            :  FacilitiesData[0]?.facilityTypeId === 5
+            ? "Greenways" :""
         }
       >
         <div className="park_Name1">
