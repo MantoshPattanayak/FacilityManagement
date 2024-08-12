@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import verfiy_img from "../../../assets/verify_img.png"
 import { useNavigate } from "react-router-dom";
 import RazorpayButton from "../../../common/RazorpayButton";
+import { encryptData } from "../../../utils/encryptData";
 
 const Event_hostPage = () => {
     // useSate for page -----------------------------------------------
@@ -28,34 +29,37 @@ const Event_hostPage = () => {
     const [filteredEventTypes, setFilteredEventTypes] = useState([]);
     // here useState for post the data -----------------------
     const [formData, setFormData] = useState({
-        organisationName: "",
-        organisationPanCardNumber: "",
-        organisationAddress: "",
-        // personal Details ------------------------------
-        firstName: "",
-        lastName: "",
-        phoneNo: "",
-        emailId: "",
-        // Bank Details ------------------------------------
-        beneficiaryName: "",
-        accountType: "",
-        bankName: "",
-        accountNumber: "",
-        bankIFSC: "",
-        // 2nd step from -----------------------------------
-        eventTitle: "",
-        eventDate: "",
-        locationofEvent: "",
-        eventCategory: "",
-        startEventDate: "",
-        endEventDate: "",
-        descriptionofEvent: "",
-        ticketsold: "",
-        numberofTicket: "",
-        price: "",
-        uploadEventImage: null,
-        additionalFiles: new Array(),
-        facilityId: null
+    
+            organisationName: "",
+            organisationPanCardNumber: "",
+            organisationAddress: "",
+            // personal Details ------------------------------
+            firstName: "",
+            lastName: "",
+            phoneNo: "",
+            emailId: "",
+            // Bank Details ------------------------------------
+            beneficiaryName: "",
+            accountType: "",
+            bankName: "",
+            accountNumber: "",
+            bankIFSC: "",
+            // 2nd step from -----------------------------------
+            eventTitle: "",
+            eventDate: "",
+            locationofEvent: "",
+            eventCategory: "",
+            startEventDate: "",
+            endEventDate: "",
+            descriptionofEvent: "",
+            ticketsold: "",
+            numberofTicket: "",
+            price: "",
+            uploadEventImage: null,
+            additionalFiles: new Array(),
+            facilityId: null
+        
+        
 
     });
 
@@ -864,7 +868,7 @@ const Event_hostPage = () => {
                                             <h4 className="Additional_image" >Additional Images:</h4>
                                             <div className="secondry_image  ">
                                                 {
-                                                    formData.additionalFiles.map((file, index) => (
+                                                    formData?.additionalFiles?.map((file, index) => (
                                                         <div key={index - 1}>
                                                             <img
                                                                 className="image_primary"
@@ -1271,7 +1275,8 @@ const Event_hostPage = () => {
                     </form>
                 )}
                 {currentStep === 4 && (
-                    <form onSubmit={handleSubmit}>
+                    // onSubmit={handleSubmit}
+                    <form >
                         <div className="HostEvent_container">
                             <div className="HostEvent_Heading">
                                 <h1 className="verify_name_text"></h1>
@@ -1337,11 +1342,42 @@ const Event_hostPage = () => {
                                     description={"Book now"}
                                     // onSuccess={handlePaymentSuccess}
                                     // onFailure={handlePaymentFailure}
+                                    
                                     data={{
-                                        entityId: null,
-                                        entityTypeId: formData.eventCategory,
-                                        facilityPreference: formData,
-                                        userCartId: null
+                                        entityId: encryptData(formData.facilityId),
+                                        entityTypeId: encryptData('7'),
+                                        facilityPreference:{
+    
+                                            organisationName:encryptData(formData.organisationName),
+                                            organisationPanCardNumber: encryptData(formData.organisationPanCardNumber),
+                                            organisationAddress: encryptData(formData.organisationAddress),
+                                            // personal Details -------------------------
+                                            firstName: encryptData(formData.firstName),
+                                            lastName: encryptData(formData.lastName),
+                                            phoneNo: encryptData(formData.phoneNo),
+                                            emailId: encryptData(formData.emailId),
+                                            // Bank Details -----------------
+                                            beneficiaryName: encryptData(formData.beneficiaryName),
+                                            accountType: encryptData(formData.accountType),
+                                            bankName: encryptData(formData.bankName),
+                                            accountNumber: encryptData(formData.accountNumber),
+                                            bankIFSC: encryptData(formData.bankIFSC),
+                                            // 2nd from -----------------------------
+                                            eventTitle: encryptData(formData.eventTitle),
+                                            eventDate: encryptData(formData.eventDate),
+                                            locationofEvent: encryptData(formData.locationofEvent),
+                                            eventCategory: encryptData(formData.eventCategory),
+                                            startEventDate: encryptData(formData.startEventDate),
+                                            endEventDate: encryptData(formData.endEventDate),
+                                            descriptionofEvent: encryptData(formData.descriptionofEvent),
+                                            ticketsold: encryptData(formData.ticketsold || null),
+                                            numberofTicket: encryptData(formData.numberofTicket || null),
+                                            price: encryptData(formData.price || null),
+                                            uploadEventImage: (formData.uploadEventImage.data || null),
+                                            additionalFiles: (formData.additionalFiles.map((file) => { return file.data }) || null),
+                                            facilityId: encryptData(formData.facilityId)
+                                        }
+                                      
                                     }}
                                 />
                             </div>
