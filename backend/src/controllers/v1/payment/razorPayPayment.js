@@ -43,7 +43,9 @@ const getRazorpayApiKeys = async (req, res) => {
 
 
 const paymentVerification = async (req, res) => {
+  let transaction;
   try {
+     transaction = sequelize.transaction();
     let { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
       let pendingOrderItemStatus = 26;
@@ -119,213 +121,40 @@ const paymentVerification = async (req, res) => {
           razorpay_order_id: paymentDetails.order_id
         }
       });
-      if(updatePayment==0){
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:'Something went wrong'
-        })
-      }
-      // removed the cart items table
-      if(paymentDetails.notes.user_cart_id){
-        let removeCartItems = await cartItemTable.update({
-          statusId:removeCartStatus
-        },
-        {
-          where:{
-          cartId:paymentDetails.notes.user_cart_id
-        }
-      }
-      )
-      if(removeCartItems.length==0){
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:`Something went wrong`
-        })
-      }
-      }
-      // console.log('update payment table', paymentDetails.order_id, 'data', checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId)
-       // update the payment items table and booking table
-       let checkTheOrderItemsTable = await paymentItems.findAll({
-        where:{
-          [Op.and]:[{statusId:pendingOrderItemStatus},{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}]
-        }
-       })
-       console.log('after the order items table')
-       if(checkTheOrderItemsTable.length ==0){
-          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
-       }
-       let [updateThePaymentItemsTable] = await paymentItems.update({
-        statusId:statusId,
-        updatedDt:updatedDt
-      },{
-        where:{
-          orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId
-        }
-      })
-      console.log('afterupdateThePaymentItemsTables ',updateThePaymentItemsTable)
-
-      if(updateThePaymentItemsTable == 0){
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:`Something went wrong`
-        })
-      }
-    console.log('nearer to eventbooking 1')
-    for(let eachOrderItem of checkTheOrderItemsTable){
-      console.log(eachOrderItem,'eachOrderItem')
-      if(eachOrderItem.entityTypeId == 6){
-
-        // update the event booking
-        let updateTheEventBooking = await eventBookingTable.update({statusId:bookingStatus,
-          paymentstatus:statusId
-        },{
-          where:{orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId}
-        })
-        console.log('23232')
-        if(updateTheEventBooking.length==0){
-          console.log('154')
-          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
-        }
-
-        let findTheBookingDetails = await sequelize.query(`select * from amabhoomi.eventbookings where eventBookingId =? and orderId=? and statusId = ?`,
-          {
-            replacements:[eachOrderItem.bookingId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId, bookingStatus],
-            type:QueryTypes.SELECT
-          }
-        )
-      if(findTheBookingDetails.length == 0){
-        console.log('165')
-
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:`Something went wrong `
-        })
-      }
-      console.log('nearer to eventinformation')
-        let findEventInformation = await eventactivites.findOne({
-          where: {
-              [Op.and]: [{ statusId: activeStatus }, { eventId: findTheBookingDetails[0].eventId }]
-          }
-      })
-
-      console.log(findEventInformation,'180eventInformation')
-
-        let title = findEventInformation.eventName;
-                let bookingRef = findTheBookingDetails[0].bookingReference;
-                let location = findEventInformation.locationName;
-                let date = findTheBookingDetails[0].bookingDate;
-                let time = findTheBookingDetails[0].startDate;
-                let cost = findTheBookingDetails[0].amount;
-                let totalMembers = findTheBookingDetails[0].totalMembers;
-                let combinedData = `${findTheBookingDetails[0].eventBookingId},${findEventInformation.eventCategoryId},${findTheBookingDetails[0].eventId}`
-                let eventBookingId = findTheBookingDetails[0].eventBookingId;
-
-                let entityType = 'eventBooking'
-
-                 ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, paymentDetails.notes.customer_id, entityType)
-
-                if (ticketUploadAndGeneratePdf?.error) {
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message: ticketUploadAndGeneratePdf.error
-                    })
-                }
-                ticketUploadArray.push({
-                  shareableLink:ticketUploadAndGeneratePdf.shareableLink,
-                  entityId:findTheBookingDetails[0].eventId,
-                  entityTypeId:findEventInformation.eventCategoryId,
-                  bookingId:findTheBookingDetails[0].eventBookingId,
-                  bookingRef:findTheBookingDetails[0].bookingReference
-  
-                })
-      
-
-      }
-      else {
-        // update the facility booking
-        
-        let updateTheFaciliyBooking = await facilityBookingTable.update(
-          {
-          statusId:bookingStatus,
-          paymentstatus:statusId
-        },
-        {
-          where:{
-            orderId:checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId
-          }
-        })
-
-        console.log('2323',updateTheFaciliyBooking,bookingStatus, statusId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId)
-
-        if(updateTheFaciliyBooking.length == 0){
-          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`})
-        }
-        console.log('facility boking paramerters',checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId , bookingStatus )
-        let findTheBookingDetails = await sequelize.query(`select * from amabhoomi.facilitybookings where facilityBookingId = ? and orderId=? and statusId = ?`,
-          {
-            replacements:[eachOrderItem.bookingId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId, bookingStatus],
-            type:QueryTypes.SELECT
-          }
-        )
-        console.log('bookingDetals',findTheBookingDetails)
-      if(findTheBookingDetails.length == 0){
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:`Something went wrong `
-        })
-      }
      
-     
-        let findFacilityInformation = await facilities.findOne({
-          where: {
-              [Op.and]: [{ statusId: activeStatus }, { facilityId:findTheBookingDetails[0].facilityId }, {facilityTypeId:findTheBookingDetails[0].facilityTypeId}]
-          }
-        })
+      if(updatePayment>=1){
 
-        // console.log(findFacilityInformation,'findFacilityInformation')
-        if(!findFacilityInformation){
+        let updateAllThePaymentDetailsTable = await verificationWithTicketGenerate (paymentDetails.notes.user_cart_id, removeCartStatus, checkIfThePaymentAmountIsSameAsOrderAmount[0], pendingOrderItemStatus, statusId, bookingStatus,activeStatus, updatedDt,paymentDetails.notes.customer_id,ticketUploadAndGeneratePdf, ticketUploadArray, transaction);
+     
+      if(updateAllThePaymentDetailsTable?.error){
+        await transaction.rollback();
+        if(updateAllThePaymentDetailsTable.error.includes('Something went wrong')){
           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:`Something went wrong `
+            message:err.message
           })
         }
-            let title = findFacilityInformation.facilityname;
-                let bookingRef = findTheBookingDetails[0].bookingReference;
-                let location = findFacilityInformation.address;
-                let date = findTheBookingDetails[0].bookingDate;
-                let time = findTheBookingDetails[0].startDate;
-                let cost = findTheBookingDetails[0].amount;
-                let totalMembers = findTheBookingDetails[0].totalMembers;
-                let combinedData = `${findTheBookingDetails[0].facilityBookingId},${findTheBookingDetails[0].facilityTypeId},${findTheBookingDetails[0].facilityId}`
-                let facilityBookingId = findTheBookingDetails[0].facilityBookingId
-
-                let entityType = 'facilityBooking'
-                 ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, paymentDetails.notes.customer_id, entityType)
-
-                if (ticketUploadAndGeneratePdf?.error) {
-                    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-                        message: ticketUploadAndGeneratePdf.error
-                    })
-                }
-              ticketUploadArray.push({
-                shareableLink:ticketUploadAndGeneratePdf.shareableLink,
-                entityId:findTheBookingDetails[0].facilityId,
-                entityTypeId:findTheBookingDetails[0].facilityTypeId,
-                bookingId:findTheBookingDetails[0].facilityBookingId,
-                bookingRef:findTheBookingDetails[0].bookingReference
-
-              })
-
+        else{
+          return res.status(statusCode.BAD_REQUEST.code).json({
+            message:err.message
+          })
+        }
       }
-    }
-        console.log(ticketUploadAndGeneratePdf.shareableLink,'payment ticketUploadAndGeneratePdf')
-        if (updatePayment>=1) {
-          console.log('near to return success statement', ticketUploadArray)
+          await transaction.commit();
+
           return res.status(statusCode.SUCCESS.code).json({
             message: 'Payment done successfully',
             success: true,
-            shareableLink: ticketUploadArray
+            shareableLink: updateAllThePaymentDetailsTable.ticketUploadArray
           });
-        } else {
-          return res.status(statusCode.BAD_REQUEST.code).json({
-            message: 'Payment Failed',
-            success: false,
-            shareableLink: ticketUploadArray
-          });
-        }
+      }
+      else { 
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message: 'Something went wrong',
+          success: false
+        });
+      }
+      
+         
       } else {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
           message: 'Something went wrong',
@@ -341,7 +170,7 @@ const paymentVerification = async (req, res) => {
       }
       
   } catch (err) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
   }
 };
 
@@ -385,7 +214,250 @@ const fetchPayment = async (req, res) => {
   }
 }
 
+let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertToPaymentFirst,pendingStatus,paymentStatus,bookingStatus,activeStatus, updatedDt,userId,ticketUploadAndGeneratePdf, ticketUploadArray, transaction)=>{
+  try {
+       // removed the cart items table
+       if(userCartId){
+        let removeCartItems = await cartItemTable.update({
+          statusId:removeCartStatus,
+          updatedBy:userId,
+          updatedDt:updatedDt
+        },
+        {
+          where:{
+          cartId:userCartId
+        },
+        transaction
+      }
+      )
+      if(removeCartItems.length==0){
+        await transaction.rollback();
+        return ({
+          error:`Something went wrong`
+        })
+      }
+      }
+      
 
+       // update the payment items table and booking table
+       let checkTheOrderItemsTable = await paymentItems.findAll({
+        where:{
+          [Op.and]:[{statusId:pendingStatus},{orderId:insertToPaymentFirst.orderId}]
+        },
+        transaction
+       })
+       console.log('after the order items table')
+       if(checkTheOrderItemsTable.length ==0){
+          await transaction.rollback();
+          return ({
+            error:`Something went wrong`
+          })
+       }
+       let [updateThePaymentItemsTable] = await paymentItems.update({
+        statusId:paymentStatus,
+        updatedDt:updatedDt,
+        updatedBy:userId
+      },{
+        where:{
+          orderId:insertToPaymentFirst.orderId
+        },
+        transaction
+      })
+      console.log('afterupdateThePaymentItemsTables ',updateThePaymentItemsTable)
+
+      if(updateThePaymentItemsTable == 0){
+        await transaction.rollback();
+        return ({
+          error:`Something went wrong`
+        })
+      }
+      // iterate over each order items
+      for(let eachOrderItem of checkTheOrderItemsTable){
+        console.log(eachOrderItem,'eachOrderItem')
+        if(eachOrderItem.entityTypeId == 6){
+  
+          // update the event booking
+          let updateTheEventBooking = await eventBookingTable.update({statusId:bookingStatus,
+            paymentstatus:paymentStatus,
+            updatedDt:updatedDt,
+            updatedBy:userId
+          },{
+            where:{orderId:insertToPaymentFirst.orderId},
+            transaction
+          })
+          console.log('23232')
+          if(updateTheEventBooking.length==0){
+            console.log('154')
+            await transaction.rollback();
+            return ({
+              error:`Something went wrong`
+            })
+          }
+  
+          let findTheBookingDetails = await sequelize.query(`select * from amabhoomi.eventbookings where eventBookingId =? and orderId=? and statusId = ?`,
+            {
+              replacements:[eachOrderItem.bookingId,insertToPaymentFirst.orderId, bookingStatus],
+              type:QueryTypes.SELECT,
+              transaction
+            }
+          )
+        if(findTheBookingDetails.length == 0){
+          console.log('165')
+  
+          await transaction.rollback();
+          return ({
+            error:`Something went wrong`
+          })
+        }
+        console.log('nearer to eventinformation')
+          let findEventInformation = await eventactivites.findOne({
+            where: {
+                [Op.and]: [{ statusId: activeStatus }, { eventId: findTheBookingDetails[0].eventId }]
+            },
+            transaction
+        })
+        if(!findEventInformation){
+          await transaction.rollback();
+          return ({
+            error:`Something went wrong`
+          })
+        }
+  
+        console.log(findEventInformation,'180eventInformation')
+  
+          let title = findEventInformation.eventName;
+                  let bookingRef = findTheBookingDetails[0].bookingReference;
+                  let location = findEventInformation.locationName;
+                  let date = findTheBookingDetails[0].bookingDate;
+                  let time = findTheBookingDetails[0].startDate;
+                  let cost = findTheBookingDetails[0].amount;
+                  let totalMembers = findTheBookingDetails[0].totalMembers;
+                  let combinedData = `${findTheBookingDetails[0].eventBookingId},${findEventInformation.eventCategoryId},${findTheBookingDetails[0].eventId}`
+                  let eventBookingId = findTheBookingDetails[0].eventBookingId;
+  
+                  let entityType = 'eventBooking'
+  
+                   ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, eventBookingId, userId, entityType)
+  
+                  if (ticketUploadAndGeneratePdf?.error) {
+                    await transaction.rollback();
+                    return ({
+                      error:ticketUploadAndGeneratePdf.error
+                    })
+                  }
+                  ticketUploadArray.push({
+                    shareableLink:ticketUploadAndGeneratePdf.shareableLink,
+                    entityId:findTheBookingDetails[0].eventId,
+                    entityTypeId:findEventInformation.eventCategoryId,
+                    bookingId:findTheBookingDetails[0].eventBookingId,
+                    bookingRef:findTheBookingDetails[0].bookingReference
+    
+                  })
+        
+  
+        }
+        else {
+          // update the facility booking
+          
+          let updateTheFaciliyBooking = await facilityBookingTable.update(
+            {
+            statusId:bookingStatus,
+            paymentstatus:paymentStatus,
+            updatedBy:userId,
+            updatedDt:updatedDt
+          },
+          {
+            where:{
+              orderId:insertToPaymentFirst.orderId
+            },
+            transaction
+          })
+  
+          console.log('2323',updateTheFaciliyBooking,bookingStatus, statusId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId)
+  
+          if(updateTheFaciliyBooking.length == 0){
+            await transaction.rollback();
+            return ({
+              error:`Something went wrong`
+            })
+          }
+          let findTheBookingDetails = await sequelize.query(`select * from amabhoomi.facilitybookings where facilityBookingId = ? and orderId=? and statusId = ?`,
+            {
+              replacements:[eachOrderItem.bookingId,insertToPaymentFirst.orderId, bookingStatus],
+              type:QueryTypes.SELECT,
+              transaction
+            }
+          )
+          console.log('bookingDetals',findTheBookingDetails)
+        if(findTheBookingDetails.length == 0){
+          await transaction.rollback();
+          return ({
+            error:`Something went wrong`
+          })
+        }
+       
+       
+          let findFacilityInformation = await facilities.findOne({
+            where: {
+                [Op.and]: [{ statusId: activeStatus }, { facilityId:findTheBookingDetails[0].facilityId }, {facilityTypeId:findTheBookingDetails[0].facilityTypeId}]
+            },
+            transaction
+          })
+  
+          // console.log(findFacilityInformation,'findFacilityInformation')
+          if(!findFacilityInformation){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+              message:`Something went wrong `
+            })
+          }
+              let title = findFacilityInformation.facilityname;
+                  let bookingRef = findTheBookingDetails[0].bookingReference;
+                  let location = findFacilityInformation.address;
+                  let date = findTheBookingDetails[0].bookingDate;
+                  let time = findTheBookingDetails[0].startDate;
+                  let cost = findTheBookingDetails[0].amount;
+                  let totalMembers = findTheBookingDetails[0].totalMembers;
+                  let combinedData = `${findTheBookingDetails[0].facilityBookingId},${findTheBookingDetails[0].facilityTypeId},${findTheBookingDetails[0].facilityId}`
+                  let facilityBookingId = findTheBookingDetails[0].facilityBookingId
+  
+                  let entityType = 'facilityBooking'
+                   ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
+  
+                  if (ticketUploadAndGeneratePdf?.error) {
+                    await transaction.rollback();
+                    return ({
+                      error: ticketUploadAndGeneratePdf.error
+                    })
+                      
+                  }
+                ticketUploadArray.push({
+                  shareableLink:ticketUploadAndGeneratePdf.shareableLink,
+                  entityId:findTheBookingDetails[0].facilityId,
+                  entityTypeId:findTheBookingDetails[0].facilityTypeId,
+                  bookingId:findTheBookingDetails[0].facilityBookingId,
+                  bookingRef:findTheBookingDetails[0].bookingReference
+  
+                })
+  
+        }
+      }
+
+      // return res.status(statusCode.SUCCESS.code).json({
+      //   message: 'Booking done successfully',
+      //   success: true,
+      //   shareableLink: ticketUploadArray
+      // });
+      return{
+        shareableLink : ticketUploadArray
+      }
+    
+  } catch (err) {
+    if(transaction) await transaction.rollback();
+    return{
+      error:`Something went wrong`
+    }
+  }
+}
 
 
 const checkout =  async (req, res) => {
@@ -417,7 +489,7 @@ const checkout =  async (req, res) => {
         console.log(' facilityPreference[key]', facilityPreference[key])
         
         facilityPreference[key] = decrypt(facilityPreference[key]);
-        if(key ==='activityPreference' && facilityPreference[key]!=null){
+        if(key ==='activityPreference' && facilityPreference[key]!=null && entityTypeId != 7){
           facilityPreference[key] = facilityPreference[key].split(',')
         }
 
@@ -515,7 +587,9 @@ const checkout =  async (req, res) => {
         })
       }
       for (let i of findTheCartDetails){
+        
         console.log('cartdata',i.facilityPreference.amount, 'i', typeof(i.facilityPreference.amount))
+
         if(typeof(i.facilityPreference.amount)==='string'){
           totalAmount += parseFloat(i.facilityPreference.amount);
         }
@@ -618,11 +692,49 @@ const checkout =  async (req, res) => {
       }
     };
     if(totalAmount == 0){
-      
+      let ticketUploadAndGeneratePdf;
+      let ticketUploadArray=[];
       let paymentStatus = 25
       let bookingStatus = 4
-
-      let 
+      let activeStatus = 1;
+      let removeCartStatus = 23
+      // 
+      let [updatePayment] = await Payment.update({
+        updatedDt:updatedDt,
+        updatedBy:customerId,
+        statusId:paymentStatus
+      },
+    {
+      where:{
+        orderId: insertToPaymentFirst.orderId
+      }
+    });
+    if(updatePayment==0){
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:'Something went wrong'
+      })
+    }
+    let updateAllThePaymentDetailsTable = await verificationWithTicketGenerate (userCartId,removeCartStatus,insertToPaymentFirst,pendingStatus,paymentStatus,bookingStatus,activeStatus, updatedDt,customerId,ticketUploadAndGeneratePdf, ticketUploadArray, transaction);
+    if(updateAllThePaymentDetailsTable?.error){
+      await transaction.rollback();
+      if(updateAllThePaymentDetailsTable.error.includes('Something went wrong')){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:err.message
+        })
+      }
+      else{
+        return res.status(statusCode.BAD_REQUEST.code).json({
+          message:err.message
+        })
+      }
+    }
+      await transaction.commit();
+       return res.status(statusCode.SUCCESS.code).json({
+        message: 'Booking done successfully',
+        success: true,
+        shareableLink: updateAllThePaymentDetailsTable.shareableLink
+      });
+     
     }
 
     console.log('options')

@@ -293,7 +293,11 @@ let uploadTicket = async (title, bookingRef, location, date, time, cost, totalMe
                 entityType: entityType,
                 fileId: createFile.fileId,
                 statusId: 1,
-                filePurpose: filePurpose
+                filePurpose: filePurpose,
+                createdDt: createdDt,
+                updatedDt: updatedDt,
+                createdBy: userId,
+                updatedBy: userId
             });
 
             console.log('fjljdflds')

@@ -76,7 +76,12 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
                 entityType: entityType,
                 fileId: createFile.fileId,
                 statusId: 1,
-                filePurpose: filePurpose
+                filePurpose: filePurpose,
+                createdBy:userId,
+                updatedBy:userId,
+                createdDt: createdDt,
+                updatedDt: updatedDt
+
               },
               {transaction}
             );
