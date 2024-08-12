@@ -15,11 +15,11 @@ import { decryptData, encryptData } from "../../../utils/encryptData";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 // Import Css file here ---------------------------------
-import "./Book_Now_Sport.css";
+import "./BlueWayBookPage.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 import RazorpayButton from "../../../common/RazorpayButton";
-const Book_Now_Sport = () => {
+const BlueWayBookPage = () => {
     // UseSate for post data -------------------------------------
     const [formData, setFormData] = useState({
         entityId: "",
@@ -85,13 +85,6 @@ const Book_Now_Sport = () => {
             let modifiedFormData = {
                 ...formData
             };
-            /**
-             * playersLimit: 1,
-                sports: "",
-                startTime: "",
-                endTime: "",
-                bookingDate: "",
-             */
             console.log("formData handleSubmitAndProceed", modifiedFormData);
             const validationError = validation(modifiedFormData);
             let facilityPreference = {
@@ -127,50 +120,6 @@ const Book_Now_Sport = () => {
             toast.error('Add to Cart failed.Try agin')
         }
     }
-
-    async function handleSubmitAndProceed() {
-        let modifiedFormData = {
-            ...formData
-        };
-        console.log("formData handleSubmitAndProceed", modifiedFormData);
-        const validationError = validation(modifiedFormData);
-        let facilityPreference = {
-            totalMembers: encryptData(modifiedFormData.facilityPreference.playersLimit),
-            amount: encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
-            bookingDate: encryptData(modifiedFormData.facilityPreference.bookingDate),
-            startTime: encryptData(modifiedFormData.facilityPreference.startTime),
-            endTime: encryptData(modifiedFormData.facilityPreference.endTime),
-            sports: encryptData(modifiedFormData.facilityPreference.sports)
-        };
-        console.log("facilityPreference", facilityPreference);
-        if (Object.keys(validationError).length == 0) {
-            try {
-                let res = await axiosHttpClient("PARK_BOOK_PAGE_SUBMIT_API", "post", {
-                    entityId: modifiedFormData.entityId,
-                    entityTypeId: modifiedFormData.entityTypeId,
-                    facilityPreference,
-                });
-                console.log("submit and response", res);
-                let bookingId = res.data.data.facilityBookingId;
-                let entityTypeId = modifiedFormData.entityTypeId;
-
-                toast.success("Playfield has been booked successfully.", {
-                    autoClose: 3000, // Toast timer duration in milliseconds
-                    onClose: () => {
-                        // Navigate to another page after toast timer completes
-                        setTimeout(() => {
-                            navigate(`/profile/booking-details/ticket?bookingId=${encryptData(bookingId)}&typeId=${encryptData(entityTypeId)}`);
-                        }, 1000); // Wait 1 second after toast timer completes before navigating
-                    },
-                });
-            } catch (error) {
-                console.log(error);
-                toast.error("Booking details submission failed.");
-            }
-        } else {
-            toast.error("Please fill the required data.");
-        }
-    }
     // Here Get the data ofsport details------------------------------------------
     async function getSub_Sport_details(facilityId) {
         console.log("get park details", facilityId);
@@ -195,7 +144,7 @@ const Book_Now_Sport = () => {
             let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
             console.log("here Response of Get sport type in dropdown", res.data.data);
             setSportsList(res.data.data.filter((sports) => {
-                return sports.facilityTypeId == 2
+                return sports.facilityTypeId == 4
             }));
         } catch (err) {
             console.error("here Error of get sport types in dropdown");
@@ -290,7 +239,7 @@ const Book_Now_Sport = () => {
                     <div class="bookingFormWrapper">
                         <form class="bookingForm">
                             <div class="formGroup">
-                                <span class="fieldName">Sport<span className="required-asterisk">*</span>:</span>
+                                <span class="fieldName">Activity<span className="required-asterisk">*</span>:</span>
                                 <select class="formSelect"
                                     name="sports"
                                     value={formData.facilityPreference.sports}
@@ -397,4 +346,4 @@ const Book_Now_Sport = () => {
         </div>
     );
 };
-export default Book_Now_Sport;
+export default BlueWayBookPage;
