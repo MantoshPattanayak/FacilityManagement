@@ -16,7 +16,7 @@ let crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 let eventactivites = db.eventActivities
 let {parkBooking,uploadTicket} = require('../booking/bookings.controllers.js')
-
+let {createHosteventdetails} = require('../configuration/hosteventdetails.controller.js')
 
 let paymentItems = db.paymentItems
 const getRazorpayApiKeys = async (req, res) => {
@@ -463,6 +463,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
 const checkout =  async (req, res) => {
   let transaction
   try {
+    console.log('startin of checkout', req.body)
 
     transaction = await sequelize.transaction();
     let createdDt = new Date();
@@ -475,8 +476,7 @@ const checkout =  async (req, res) => {
     
     let {entityId,entityTypeId,facilityPreference,userCartId } = req.body.data;
 
-    console.log(req.body, 'req.body')
-
+   
     let insertToPaymentFirst;
     let insertToBookingTable;
     let insertToPaymentItemsTable;
@@ -487,21 +487,29 @@ const checkout =  async (req, res) => {
      
       for(let key in facilityPreference){
         console.log(' facilityPreference[key]', facilityPreference[key])
+
+        if(key!=="uploadEventImage" &&  key !== "additionalFiles"){
+          facilityPreference[key] = decrypt(facilityPreference[key]);
+        }
         
-        facilityPreference[key] = decrypt(facilityPreference[key]);
+        if(key === 'price' && facilityPreference[key]!=null && entityTypeId ==7 ){
+          facilityPreference.amount = facilityPreference[key]
+        }
         if(key ==='activityPreference' && facilityPreference[key]!=null && entityTypeId != 7){
           facilityPreference[key] = facilityPreference[key].split(',')
         }
 
       }
+      console.log(facilityPreference,'facilityPreference after decrypt')
+      
       if(typeof(facilityPreference.amount)==='string'){
         totalAmount += parseFloat(facilityPreference.amount);
       }
       else{
-        totalAmount = facilityPreference.amount + totalAmount;
+        totalAmount += facilityPreference.amount;
       }
       console.log(totalAmount, 'total amount ')
-      console.log('facility prefernce1',facilityPreference)
+      console.log(facilityPreference,'facility prefernce1')
 
 
       insertToPaymentFirst = await Payment.create({
@@ -526,21 +534,41 @@ const checkout =  async (req, res) => {
       }
       console.log('after payment first creation', insertToPaymentFirst.orderId)
       // insert to the booking table  with the order id 
-      insertToBookingTable = await parkBooking(entityId,entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
-      if(insertToBookingTable?.error){
-        await transaction.rollback();
-        if(insertToBookingTable?.error.includes('Something went wrong')){
-          return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
-            message:error.message
-          })
-        }
-        else{
-          return res.status(statusCode.BAD_REQUEST.code).json({
-            message:error.message
-          })
-        }
+      if(entityTypeId==7){
+        insertToBookingTable = await createHosteventdetails(entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
+        if(insertToBookingTable?.error){
+          await transaction.rollback();
+          if(insertToBookingTable?.error.includes('Something went wrong')){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
+              message:error.message
+            })
+          }
+          else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:error.message
+            })
+          }
         
       }
+      }
+      else{
+        insertToBookingTable = await parkBooking(entityId,entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
+        if(insertToBookingTable?.error){
+          await transaction.rollback();
+          if(insertToBookingTable?.error.includes('Something went wrong')){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code.code).json({
+              message:error.message
+            })
+          }
+          else{
+            return res.status(statusCode.BAD_REQUEST.code).json({
+              message:error.message
+            })
+          }
+          
+        }
+      }
+      
 
       console.log('after booking creation', insertToBookingTable)
 
@@ -757,10 +785,10 @@ const checkout =  async (req, res) => {
             return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Transaction has expired. Please create a new order.' });
           }
           // If transaction already exists and is not expired, return the existing order details
-          return res.status(200).json({
+          return res.status(statusCode.SUCCESS.code).json({
             message: 'Transaction already processed',
-            orderId: existingTransaction.razorpay_order_id,
-            status: existingTransaction.statusId
+            orderId: await encrypt(existingTransaction.razorpay_order_id),
+            status: await encrypt(existingTransaction.statusId)
           });
         }
     

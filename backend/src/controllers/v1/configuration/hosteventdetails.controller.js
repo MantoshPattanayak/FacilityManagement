@@ -16,12 +16,10 @@ let imageUpload = require('../../../utils/imageUpload')
 const {Op} = require('sequelize')
 let user = db.usermaster
 let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
-const createHosteventdetails = async (req, res) => {
-  let transaction;
+
+const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,userId,transaction) => {
   try {
     console.log('req  body for event hosting', req.body)
-    transaction = await sequelize.transaction();
-    let userId = req.user?.userId || 1;
     let createdDt = new Date();
     let updatedDt = new Date();
     let statusId = 1;
@@ -64,9 +62,8 @@ const createHosteventdetails = async (req, res) => {
       price,
       uploadEventImage,
       additionalFiles,
-      transactionId,
       numberofTicket
-    } = req.body;
+    } = facilityPreference;
 
     console.log( req.body,"here reqbody of Host event")
 
@@ -96,9 +93,10 @@ const createHosteventdetails = async (req, res) => {
     if(checkHostBooking.length > 0){
       console.log(2343,'inside host booking check if the event is already there for same day')
       await transaction.rollback();
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message:`This date is already booked for other events`
-      })
+      return {
+        error:`This date is already booked for other events`
+      }
+      
     }
     if(!checkIfEntityExist){
       let [updateIsEntityInUserMaster] = await usermasters.update({isEntity:isEntity},
@@ -111,9 +109,9 @@ const createHosteventdetails = async (req, res) => {
       )
       if(updateIsEntityInUserMaster==0){
         await transaction.rollback();
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:`Something went wrong`
-        })
+        return {
+          error:`Something went wrong`
+        }
       }
       createBankDetails = await bankDetails.create({
         beneficiaryName:encrypt(beneficiaryName),
@@ -131,10 +129,9 @@ const createHosteventdetails = async (req, res) => {
     if(!createBankDetails){
 
       await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:`Something went wrong`
-      })
-
+        return {
+          error:`Something went wrong`
+        }
     }
     }
     else if(checkIfEntityExist){
@@ -172,10 +169,10 @@ const createHosteventdetails = async (req, res) => {
           })
           if(updateTheBankDetails==0){
             await transaction.rollback();
+            return {
+            error:`Something went wrong`
+            }
           
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:`Something went wrong`
-          })
         }
         }
        
@@ -196,9 +193,9 @@ const createHosteventdetails = async (req, res) => {
     if(!createBankDetails){
 
       await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:`Something went wrong`
-      })
+      return {
+        error:`Something went wrong`
+        }
 
     }
       }
@@ -253,12 +250,12 @@ const createHosteventdetails = async (req, res) => {
         
         if(!createHosteventdetails){
           await transaction.rollback();
-          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-            message:`Something went wrong`
-          })
+          return {
+            error:` Something went wrong `
+          }
         }
     // Image upload work
-    let serverError = 'something went wrong'
+    let serverError = 'Something went wrong'
     let insertionData = {
      id:createEventActivities.eventId,
      name:createEventActivities.eventName
@@ -273,9 +270,14 @@ const createHosteventdetails = async (req, res) => {
         if(errors.length>0){
           await transaction.rollback();
           if(errors.some(error => error.includes("Something went wrong"))){
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors[0]})
+            return {
+              error:errors[0]
+              }
+          
           }
-          return res.status(statusCode.BAD_REQUEST.code).json({message:errors[0]})
+          return {
+            error:errors[0]
+            }
         }
     }
       if(additionalFiles.length > 0){
@@ -289,9 +291,13 @@ const createHosteventdetails = async (req, res) => {
         if(errors.length>0){
           await transaction.rollback();
           if(errors.some(error => error.includes("something went wrong"))){
-            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+            return {
+              error:errors[0]
+              }
           }
-          return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+          return {
+            error:errors[0]
+            }
         }
 
       }
@@ -345,38 +351,38 @@ const createHosteventdetails = async (req, res) => {
     //       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
     //   }
 
-        await transaction.commit();
-        return res.status(statusCode.SUCCESS.code).json({
-          message: "Host Event created successfully",
-        });
+        return {
+          message:"Host Event created successfully"
+          }
       }
     
       await transaction.rollback();
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message: "Host Event is not created",
-      });
+      return {
+        error:"Host Event is not created "
+        }
+      
     }
     
     await transaction.rollback();
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message: "Host Event is not created",
-      });
+    return {
+      error:"Host Event is not created "
+      }
   
 
     }
     else
     {
       await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:"Something went wrong"
-      })
+      return {
+        error:"Something went wrong"
+        }
     }
 
   } catch (error) {
     if(transaction) await transaction.rollback();
-    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-      message: error.message,
-    });
+    return {
+      error:"Something went wrong"
+      }
   }
 };
 const bankService = async (req, res) => {

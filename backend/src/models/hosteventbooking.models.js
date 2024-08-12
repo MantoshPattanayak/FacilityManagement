@@ -8,6 +8,9 @@ module.exports = (sequelize,DataTypes)=>{
         hostId:{
             type:DataTypes.INTEGER
         },
+        orderId:{
+            type:DataTypes.INTEGER
+        },
         transactionId:{
             type:DataTypes.INTEGER
         },
