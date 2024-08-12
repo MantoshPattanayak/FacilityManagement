@@ -6,7 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosHttpClient from "../../../utils/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
-
+import Grivance_image from '../../../assets/Gri12.png'
+import Feedback from  '../../../assets/Feedback1.jpg'
 const Grievance = () => {
   const [selectedForm, setSelectedForm] = useState("Grievance");
 
@@ -17,11 +18,17 @@ const Grievance = () => {
   return (
     <div>
       <PublicHeader />
-      <div className="grievenceForm">
-        <div className="heading">
-          <h2>{selectedForm} Form</h2>
+      <div className="Bg_Grivence">
+      {selectedForm === "Grievance" ? (
+         <img  className="bg_image_grivence" src={Grivance_image}></img>
+      ):(
+        <img  className="bg_image_grivence" src={Feedback}></img>
+      )}
+        
         </div>
-        <p>
+      <div className="grievenceForm">
+    
+        <p className="p_text_Grievance_feedback">
           If you want to lodge a {selectedForm.toLowerCase()}, kindly fill the
           following {selectedForm.toLowerCase()} registration form!
         </p>
@@ -304,7 +311,7 @@ const GrievanceForm = () => {
                 onChange={handleChange}
                 checked={user.isWhatsappNumber}
               />
-              <label htmlFor="checkBox1">Is WhatsApp Number?</label>
+              <label htmlFor="checkBox1" className="check_whats">Is WhatsApp Number?</label>
             </div>
           </div>
           <input
