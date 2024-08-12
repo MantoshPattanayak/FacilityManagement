@@ -1,3 +1,12 @@
+
+.bg_image_grivence{
+    height: 50vh;
+    width: 200vh;
+    background-repeat: no-repeat;
+    backface-visibility: visible;
+   
+}
+
 .grievenceForm {
     width: 100%;
     display: flex;
@@ -28,8 +37,9 @@
 }
 
 .grievenceForm p {
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(62, 62, 62);
 }
 
 .radiobutton {
@@ -64,7 +74,10 @@
     align-items: baseline;
     justify-content: space-between;
 }
-
+.row11{
+    display: flex;
+    justify-content: right;
+}
 .form-group {
     width: 456px;
 }
@@ -170,10 +183,19 @@
     /* background-color: yellow; */
     align-items: center;
 }
-
+label{
+    font-size: 17px;
+    font-weight: 500;
+    color: #3d3c3c;
+}
 #checkBox1 {
     height: 17px;
     width: 17px;
+}
+.check_whatsapp{
+    font-size: 18px;
+    font-weight: 600;
+    color: rgb(46, 45, 45);
 }
 
 .inputButton {
@@ -186,7 +208,7 @@
 
 .inputButton button {
     width: 126px;
-    background-color: #3DDE5C;
+    background-color: #064b9a;
     color: white;
 }
 

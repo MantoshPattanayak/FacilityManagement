@@ -66,6 +66,7 @@ const BookEvent = React.lazy(() => import('./components/Public/Events/BookEvent'
 const AddToCart = React.lazy(() => import('./components/Public/Add_To_Card/AddToCart'))
 const Book_Now_Sport = React.lazy(() => import('./components/Public/BookParks/Book_Now_Sport'))
 const Book_Event = React.lazy(() => import('./components/Public/BookParks/Book_Event'))
+const BluewaysBookPage= React.lazy(()=>import('./components/Public/BookParks/BlueWayBookPage'))
 // here PublicLoader
 const PublicLoader = React.lazy(() => import('./common/PublicLoader'))
 // here Gallery
@@ -121,6 +122,7 @@ const EditFacilityType = React.lazy(() => import('./components/Admin/MDM/Facilit
 const ViewStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/ViewStaffAllocationList'))
 const CreateStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/CreateStaffAllocation'))
 const EditStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/EditStaffAllocation'))
+const GreenwaysBookingPage=React.lazy(()=>import('./components/Public/BookParks/GreenWaysBookingPage'))
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
 // import provider for connect to our app
@@ -160,7 +162,9 @@ function App() {
                 <Route path="/Search_card" element={<React.Suspense fallback={<ClassicLoader/>}><Search_card /></React.Suspense>} />
                 <Route path="/BookParks/Book_Now_Sport" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now_Sport /></React.Suspense>} />
                 {/* Public (sport)  */}
+                <Route path="/GreenwaysBookingPage" element={<React.Suspense fallback={<ClassicLoader/>}><GreenwaysBookingPage/></React.Suspense>} />
                 <Route path="/BookParks/Book_Now" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now /></React.Suspense>} />
+                <Route path="/BluewaysBookPage" element={<React.Suspense fallback={<ClassicLoader/>}><BluewaysBookPage /></React.Suspense>} />
                 <Route path="/BookEvent" element={<React.Suspense fallback={<ClassicLoader/>}><BookEvent /></React.Suspense>} />
                 {/* Public (Add to Crad)  */}
                 <Route path="/cart-details" element={<React.Suspense fallback={<ClassicLoader/>}><AddToCart /></React.Suspense>} />
