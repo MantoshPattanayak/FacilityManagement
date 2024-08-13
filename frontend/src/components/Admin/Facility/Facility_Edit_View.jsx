@@ -43,6 +43,7 @@ const Facility_Edit_View = () => {
     const [initialFacilityDataStore, setinitialFacilityDataStore] = useState({})
     // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
+        facilityId:"",
         facilityType: "",
         facilityName: "",
         longitude: "",
@@ -252,6 +253,7 @@ const Facility_Edit_View = () => {
             console.log("Changed Values", ChangesValues);
             const payloadfacilityData = {
                 ...ChangesValues,
+                facilityId:PostFacilityData.facilityId || null,
                 facilityType: PostFacilityData.facilityType || null,
                 facilityName: PostFacilityData.facilityName || null,
                 longitude: PostFacilityData.longitude || null,

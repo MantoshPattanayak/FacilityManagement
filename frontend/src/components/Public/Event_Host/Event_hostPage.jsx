@@ -480,6 +480,7 @@ const Event_hostPage = () => {
         console.log("booking response", res);
         let bookingId = res.data.shareableLink[0].bookingId;
         let entityTypeId = res.data.shareableLink[0].entityTypeId;
+        console.log("here entityty id", entityTypeId)
     
         toast.success("Event host Request has been Submitted successfully.", {
           autoClose: 2000,
