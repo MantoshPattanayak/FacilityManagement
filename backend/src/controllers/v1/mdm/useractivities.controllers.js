@@ -4,6 +4,7 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 let statusmaster = db.statusmaster;
 let activitymaster = db.useractivitymasters;
+let facilityTypeMaster = db.facilitytype;
 const { Op, where } = require("sequelize");
 
 let viewUserActivitiesList = async (req, res) => {
@@ -196,9 +197,32 @@ let updateUserActivity = async (req, res) => {
     }
 };
 
+let initialData = async (req, res) => {
+    try {
+        let fetchStatusMaster = await statusmaster.findAll({
+            where: {
+                parentStatusCode: "RECORD_STATUS"
+            }
+        });
+        let fetchFacilityTypeMaster = await facilityTypeMaster.findAll({});
+
+        return res.status(statusCode.SUCCESS.code).json({
+            message: 'Initial data for user activity master',
+            fetchStatusMaster,
+            fetchFacilityTypeMaster
+        });
+    }
+    catch (error) {
+        res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
   viewUserActivitiesList,
   createUserActivity,
   viewUserActivityById,
   updateUserActivity,
+  initialData
 };

@@ -8,5 +8,6 @@ router.post("/viewUserActivitiesList", authenticateToken, userActivities.viewUse
 router.post("/createUserActivity", authenticateToken, userActivities.createUserActivity);
 router.get("/viewUserActivityById/:userActivityId", authenticateToken, userActivities.viewUserActivityById);
 router.put("/updateUserActivity", authenticateToken, userActivities.updateUserActivity);
+router.get("/initialData", authenticateToken, userActivities.initialData);
 
 module.exports = router;
