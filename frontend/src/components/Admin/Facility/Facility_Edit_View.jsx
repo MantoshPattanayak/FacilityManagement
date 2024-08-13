@@ -19,10 +19,14 @@ const Facility_Edit_View = () => {
     const facilityTypeId = decryptData(
         new URLSearchParams(location.search).get("facilityTypeId")
     );
+    console.log("Decrypted facilityTypeId: ", facilityTypeId);
+    
     const facilityId = decryptData(
         new URLSearchParams(location.search).get("facilityId")
     );
-    console.log("Decrypt data", facilityTypeId, facilityId);
+    console.log("Decrypted facilityId: ", facilityId);
+
+
     let navigate = useNavigate();
     // useSate for page -------------------------------------------------
     const [currentStep, setCurrentStep] = useState(1);
@@ -43,8 +47,7 @@ const Facility_Edit_View = () => {
     const [initialFacilityDataStore, setinitialFacilityDataStore] = useState({})
     // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
-        facilityId:"",
-        facilityType: "",
+       
         facilityName: "",
         longitude: "",
         latitude: "",
@@ -253,8 +256,8 @@ const Facility_Edit_View = () => {
             console.log("Changed Values", ChangesValues);
             const payloadfacilityData = {
                 ...ChangesValues,
-                facilityId:PostFacilityData.facilityId || null,
-                facilityType: PostFacilityData.facilityType || null,
+                facilityId,
+                facilityTypeId,
                 facilityName: PostFacilityData.facilityName || null,
                 longitude: PostFacilityData.longitude || null,
                 latitude: PostFacilityData.latitude || null,
