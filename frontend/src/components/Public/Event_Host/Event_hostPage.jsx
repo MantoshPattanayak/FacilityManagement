@@ -57,7 +57,8 @@ const Event_hostPage = () => {
             price: "",
             uploadEventImage: null,
             additionalFiles: new Array(),
-            facilityId: null
+            facilityId: null,
+            amount:'5000'
         
         
 
@@ -1375,7 +1376,8 @@ const Event_hostPage = () => {
                                             price: encryptData(formData.price || null),
                                             uploadEventImage: (formData.uploadEventImage.data || null),
                                             additionalFiles: (formData.additionalFiles.map((file) => { return file.data }) || null),
-                                            facilityId: encryptData(formData.facilityId)
+                                            facilityId: encryptData(formData.facilityId),
+                                            amount:encryptData(formData.amount)
                                         }
                                       
                                     }}
