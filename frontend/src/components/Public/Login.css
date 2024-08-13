@@ -103,9 +103,9 @@
 /* New OTp CSS  */
 .otp-container {
   display: flex;
-  gap: 8px; /* space between boxes */
+  gap: 8px;
   min-width: 100%;
-  height: 3vh;
+  height: 4vh;
 }
 
 .otp-box {
@@ -128,7 +128,7 @@
   /* width: 3vw; */
   width: 18%;
   /* height: 5.4vh; */
-  height: auto;
+  padding-block: 5%;
   text-align: center;
   font-size: 18px;
   border: 1px solid #ccc;
