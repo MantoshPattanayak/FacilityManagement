@@ -553,10 +553,12 @@ const checkout =  async (req, res) => {
           message:`Something went wrong`
         })
       }
-      console.log('after payment first creation', insertToPaymentFirst.orderId)
+      console.log('after payment first creation', insertToPaymentFirst.orderId, 'entityTypeid', entityTypeId)
       // insert to the booking table  with the order id 
       if(entityTypeId==7){
+
         insertToBookingTable = await createHosteventdetails(entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
+        
         if(insertToBookingTable?.error){
           await transaction.rollback();
           if(insertToBookingTable?.error.includes('Something went wrong')){

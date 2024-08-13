@@ -19,7 +19,7 @@ let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 
 const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,userId,transaction) => {
   try {
-    console.log('req  body for event hosting', req.body)
+    console.log('inside create host event details')
     let createdDt = new Date();
     let updatedDt = new Date();
     let statusId = 1;
@@ -38,6 +38,8 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
     let createEventActivities;
     let entityType = 'events'
     let isEntity  = 1 ; // if the user comes first time then put this isEntity value or else put zero
+
+    console.log('232323232')
     const {
       organisationPanCardNumber,
       organisationName,
@@ -67,7 +69,30 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
       numberofTicket
     } = facilityPreference;
 
-    console.log( req.body,"here reqbody of Host event")
+    console.log( "here reqbody of Host event",organisationPanCardNumber,
+      organisationName,
+      organisationAddress,
+      firstName,
+      lastName,
+      emailId,
+      phoneNo,
+      accountType,
+      beneficiaryName,
+      bankName,
+      bankIFSC,
+      accountNumber,
+      eventCategory,
+      eventTitle,
+      facilityId,
+      locationofEvent,
+      eventDate,
+      startEventDate,
+      endEventDate,
+      descriptionofEvent,
+      ticketsold,
+      price,
+      amount,
+      numberofTicket )
 
     let checkIfEntityExist = await usermasters.findOne({
       where:{
@@ -75,7 +100,7 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
       },
      transaction
     })
-    console.log('before check booking checkIfEntityExist', checkIfEntityExist);
+    console.log('before check booking checkIfEntityExist',checkStatusIfExist, facilityId, eventDate, startEventDate);
     // check if any event is gonna happen in same  date or not
     // let checkHostBooking = await hostbooking.findOne({
     //   where:{[Op.and]:[{statusId:{[Op.or]:[hostStatus,confirmedStatus]}},{facilityId:facilityId}]},
@@ -91,7 +116,7 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
       },
       type:QueryTypes.SELECT})
 
-    console.log(checkHostBooking,'check host booking if exist or not')
+    console.log('check host booking length')
     if(checkHostBooking.length > 0){
       console.log(2343,'inside host booking check if the event is already there for same day')
       await transaction.rollback();
@@ -355,7 +380,7 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
     //       await transaction.rollback();
     //       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
     //   }
-
+        console.log('inside host event details end part')
         return {
           bookingId: hostBookingData.hostBookingId,
           entityId:createEventActivities.eventId
