@@ -23,7 +23,11 @@ const Login = React.lazy(() => import('./components/Public/Login'))
 const ForgotPassword = React.lazy(() => import('./components/Public/Forgot_Password/ForgotPassword'))
 const Search_card = React.lazy(() => import('./components/Public/Search_card'))
 //import BookParks files here
-const Book_Now = React.lazy(() => import('./components/Public/BookParks/Book_Now'))
+const Book_Now = React.lazy(() => import('./components/Public/BookParks/Book_Now')) 
+import Book_Now_Multipurposeground from "./components/Public/BookParks/Book_Now_Multipurposeground";
+const ViewActivityList=React.lazy(()=>import('./components/Admin/MDM/ActivitiesMaster/ViewActivityList'))
+const EditActivities=React.lazy(()=>import('./components/Admin/MDM/ActivitiesMaster/EditActivities'))
+const CreateNewActivity=React.lazy(()=>import('./components/Admin/MDM/ActivitiesMaster/CreateNewActivity'))
 //User profile (Booking Details)
 const BookingDetails = React.lazy(() => import('./components/Public/UserProfile/BookingDetails'))
 //User profile (Favorites -USER PROFILE)
@@ -161,6 +165,7 @@ function App() {
                 {/* Search by place name  */}
                 <Route path="/Search_card" element={<React.Suspense fallback={<ClassicLoader/>}><Search_card /></React.Suspense>} />
                 <Route path="/BookParks/Book_Now_Sport" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now_Sport /></React.Suspense>} />
+                <Route path="/Book_Now_Multipurposeground" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now_Multipurposeground /></React.Suspense>} />
                 {/* Public (sport)  */}
                 <Route path="/GreenwaysBookingPage" element={<React.Suspense fallback={<ClassicLoader/>}><GreenwaysBookingPage/></React.Suspense>} />
                 <Route path="/BookParks/Book_Now" element={<React.Suspense fallback={<ClassicLoader/>}><Book_Now /></React.Suspense>} />
@@ -215,6 +220,7 @@ function App() {
                 <Route path="/UAC/Users/ListOfUsers" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><ListOfUsers /></ProtectedRoute></React.Suspense>} />
                 <Route path="/UAC/Users/Create" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <CreateNewUser /></ProtectedRoute></React.Suspense>} />
                 <Route path="/UAC/Users/Edit" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <EditUser /> </ProtectedRoute></React.Suspense>} />
+                
                 {/* Facility regd. */}
                 <Route path="/Facility/Facility_Reg" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_Reg /> </ProtectedRoute></React.Suspense>} />
                 <Route path="/Facility/Facility_ViewList" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_ViewList /></ProtectedRoute></React.Suspense>} />
@@ -268,6 +274,9 @@ function App() {
                 <Route path="/activity/view-staff-allocation" element={<React.Suspense fallback={<ClassicLoader/>}> <ViewStaffAllocation /> </React.Suspense>} />
                 <Route path="/activity/create-staff-allocation" element={<React.Suspense fallback={<ClassicLoader/>}><CreateStaffAllocation /> </React.Suspense>} />
                 <Route path="/activity/edit-staff-allocation" element={<React.Suspense fallback={<ClassicLoader/>}><EditStaffAllocation /> </React.Suspense>} />
+                <Route path="/EditActivities" element={<React.Suspense fallback={<ClassicLoader/>}><EditActivities /> </React.Suspense>} />
+                <Route path="/ViewActivityList" element={<React.Suspense fallback={<ClassicLoader/>}><ViewActivityList /> </React.Suspense>} />
+                <Route path="/CreateNewActivity" element={<React.Suspense fallback={<ClassicLoader/>}><CreateNewActivity /> </React.Suspense>} />
               </Routes>
               <CommonFooter1 />
             </div>
