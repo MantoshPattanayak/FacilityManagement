@@ -133,7 +133,7 @@ export default function PublicHeader() {
   // Secondary header................................................
   const [isSecondaryHeaderVisible, setIsSecondaryHeaderVisible] =
     useState(true);
-    const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+  const [isHeaderFixed, setIsHeaderFixed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,16 +146,55 @@ export default function PublicHeader() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  function adjustFontSize(change) {
+    const root = document.documentElement;
+    let currentSize = parseFloat(getComputedStyle(root).fontSize);
+
+    if (change === 0) {
+      root.style.fontSize = "16px"; // Default font size
+    } else {
+      root.style.fontSize = `${currentSize + change}px`;
+    }
+  }
+
   return (
     <div>
       {/* Secondary Header */}
       {isSecondaryHeaderVisible && (
         <div className="secondary-header">
+          <div className="secHeaderItem">
           <ul className="secondary-header-items">
             <li>Screen Reader</li>
             <li>Customer Connect</li>
-            <li>Colour Theme</li>
           </ul>
+          <div className="font-size-adjust">
+            <a
+              title="Decrease Font Size"
+              aria-label="Decrease Font Size Button"
+              id="btn-decrease"
+              onClick={() => adjustFontSize(-1)}
+            >
+              A-
+            </a>
+            <a
+              title="Normalize Font Size"
+              aria-label="Normalize Font Size Button"
+              id="btn-orig"
+              onClick={() => adjustFontSize(0)}
+            >
+              A
+            </a>
+            <a
+              title="Increase Font Size"
+              aria-label="Increase Font Size Button"
+              id="btn-increase"
+              onClick={() => adjustFontSize(1)}
+            >
+              A+
+            </a>
+          </div>
+          </div>
         </div>
       )}
       <header
