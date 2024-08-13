@@ -504,47 +504,8 @@ async function bookingTransactionForPlaygrounds(facilityId, bookingData, transac
             }
         }
 
-        let findFacilityInformation = await facilities.findOne({
-            where: {
-                [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
-            },
-            transaction
-        })
-        let findTheBookingDetails = await facilitybookings.findOne({
-            where: {
-                [Op.and]: [{ facilityBookingId: newPlaygroundBooking.facilityBookingId }, { statusId: bookingStatus }]
-            },
-            transaction
-        })
-        let title = findFacilityInformation.facilityname;
-        let bookingRef = findTheBookingDetails.bookingReference;
-        let location = findFacilityInformation.address;
-        let date = bookingData.bookingDate;
-        let time = newPlaygroundBooking.startDate;
-        let cost = newPlaygroundBooking.amount;
-        let totalMembers = newPlaygroundBooking.totalMembers;
-        let combinedData = `${newPlaygroundBooking.facilityBookingId},${entityTypeId},${entityId}`
-        let facilityBookingId = newPlaygroundBooking.dataValues.facilityBookingId
-
-        let entityType = 'facilityBooking'
-
-        // let ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
-
-        // if (ticketUploadAndGeneratePdf?.error) {
-        //     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        //         message: ticketUploadAndGeneratePdf.error
-        //     })
-        // }
-
-
-        // await transaction.commit();
-
-        // res.status(statusCode.SUCCESS.code).json({
-        //     message: 'Playground booking done successfully',
-        //     data: newPlaygroundBooking, entityId, entityTypeId,
-        //     shareableLink: ticketUploadAndGeneratePdf.shareableLink
-        // })
-
+     
+        console.log('booking Id')
         return {
             bookingId: newPlaygroundBooking.facilityBookingId
         };
@@ -857,6 +818,9 @@ let addToCart = async (req, res) => {
         for (let key in facilityPreference) {
             console.log(' facilityPreference[key]', facilityPreference[key])
             facilityPreference[key] = decrypt(facilityPreference[key])
+            if(key ==='activityPreference' && facilityPreference[key]!=null){
+                facilityPreference[key] = facilityPreference[key].split(',')
+              }
         }
 
         console.log('24')
