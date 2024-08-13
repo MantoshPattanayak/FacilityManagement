@@ -193,7 +193,7 @@ const Login = () => {
           <br />
           {otpGenerated && (
             <div className="inputs">
-              <div className="text">
+              <div className="textOTP">
                 <label htmlFor="otp">Enter OTP</label>
               </div>
               <div className="otp-container">
