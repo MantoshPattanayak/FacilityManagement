@@ -479,7 +479,7 @@ const Book_Now_Multipurposeground = () => {
               </button>
             ) : (
               <RazorpayButton
-                amount={amount * formData.facilityPreference.playersLimit}
+                amount={(amount * formData.facilityPreference.playersLimit) || "0"}
                 currency={"INR"}
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
@@ -493,7 +493,7 @@ const Book_Now_Multipurposeground = () => {
                       formData.facilityPreference.playersLimit
                     ),
                     amount: encryptData(
-                      amount * formData.facilityPreference.playersLimit
+                      (amount * formData.facilityPreference.playersLimit) || "0"
                     ),
                     bookingDate: encryptData(
                       formData.facilityPreference.bookingDate
