@@ -293,10 +293,16 @@
   background-color: #006622; /* Example color */
   color: #fff;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
+  padding: 0 65px;
   z-index: 101; /* Make sure it is above the primary header */
   transition: top 0.3s ease-in-out;
+}
+
+.secHeaderItem{
+  display: flex;
+  gap: 1vw;
 }
 
 .secondary-header-items {
@@ -310,6 +316,19 @@
 .secondary-header-items li {
   cursor: pointer;
 }
+
+.font-size-adjust a {
+  margin: 0 5px;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.font-size-adjust a:hover {
+  text-decoration: underline;
+}
+
 
 /* Adjust primary header when secondary header is present */
 .header {
