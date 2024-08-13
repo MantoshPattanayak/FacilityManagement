@@ -87,6 +87,8 @@ const facilityType = require('./routes/api/' + api_version + '/mdm/facilitytype'
 const gallery = require('./routes/api/' + api_version + '/activity/gallery')
 
 const facilityStaff = require('./routes/api/' + api_version + '/mdm/facilitystaff')
+
+const userActivity = require('./routes/api/' + api_version + '/mdm/useractivities')
 console.log(port, "port");
 
 app.use(
@@ -164,6 +166,8 @@ app.use('/facilitytype', facilityType)
 app.use('/gallery', gallery)
 // facility staff allocation
 app.use("/facilityStaff", facilityStaff)
+// user activity master
+app.use("/userActivity", userActivity)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
