@@ -55,7 +55,8 @@ const Bokking_Bill = () => {
         try {
             let res = await axiosHttpClient('VIEW_TICKET_BILL_API', 'post', {
                 bookingId: bookingId,
-                entityTypeId: entityTypeId
+                entityTypeId: entityTypeId,
+                origin: userLocation
             });
 
             console.log("here Response of Generate Pdf", res, bookingId);
