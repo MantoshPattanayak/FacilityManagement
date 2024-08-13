@@ -398,7 +398,7 @@ const Book_Event = () => {
                                     <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(formData.facilityPreference.price * formData.facilityPreference.playersLimit).toFixed(2)}
                                 </button>
                                 : <RazorpayButton
-                                    amount={formData.facilityPreference.price * formData.facilityPreference.playersLimit}
+                                    amount={(formData.facilityPreference.price * formData.facilityPreference.playersLimit) || "0"}
                                     currency={"INR"}
                                     description={"Book now"}
                                     onSuccess={handlePaymentSuccess}
@@ -412,7 +412,7 @@ const Book_Event = () => {
                                             bookingDate: encryptData(formData.facilityPreference.bookingDate),
                                             startTime: encryptData(formData.facilityPreference.startTime),
                                             durationInHours: encryptData(formData.facilityPreference.durationInHours),
-                                            amount: encryptData(formData.facilityPreference.price * formData.facilityPreference.playersLimit),
+                                            amount: encryptData((formData.facilityPreference.price * formData.facilityPreference.playersLimit) || "0"),
                                         },
                                         userCartId: null
                                     }}

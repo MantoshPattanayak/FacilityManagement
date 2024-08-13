@@ -289,7 +289,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 54px;
+  height: 30px;
   background-color: #006622; /* Example color */
   color: #fff;
   display: flex;
@@ -332,5 +332,5 @@
 
 /* Adjust primary header when secondary header is present */
 .header {
-  top: 54px; /* Adjust based on secondary header height */
+  top: 30px; /* Adjust based on secondary header height */
 }

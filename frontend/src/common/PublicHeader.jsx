@@ -166,7 +166,7 @@ export default function PublicHeader() {
           <div className="secHeaderItem">
           <ul className="secondary-header-items">
             <li>Screen Reader</li>
-            <li>Customer Connect</li>
+            {/* <li>Customer Connect</li> */}
           </ul>
           <div className="font-size-adjust">
             <a
