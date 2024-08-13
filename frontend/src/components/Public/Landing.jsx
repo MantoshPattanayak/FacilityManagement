@@ -592,9 +592,10 @@ const Landing = () => {
     }
   };
   //------- Advatisemant -----------
-  const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,
-    ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3
-  ];
+  // const ad = [ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3,
+  //   ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3, ad1, ad1, ad2, ad3
+  // ];
+  const ad = [];
   // Home page image
   const getStyles = () => {
     const width = window.innerWidth;
