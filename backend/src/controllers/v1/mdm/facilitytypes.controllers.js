@@ -179,7 +179,7 @@ let updateFacilityType = async (req, res) => {
             paramsForUpdate,
             {
                 where: {
-                    facilitytypeId: facilitytypeId
+                    facilitytypeId: facilityTypeId
                 }
             }
         );
