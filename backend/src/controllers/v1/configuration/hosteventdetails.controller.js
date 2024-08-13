@@ -23,7 +23,8 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
     let createdDt = new Date();
     let updatedDt = new Date();
     let statusId = 1;
-    let hostStatus = 10
+    let hostStatus = 10;
+    let paymentStatus = 26;
     let checkStatusIfExist = [10,11]
     findTheRoleFromTheUserId = await user.findOne({
       where:{
@@ -60,6 +61,7 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
       descriptionofEvent,
       ticketsold,
       price,
+      amount,
       uploadEventImage,
       additionalFiles,
       numberofTicket
@@ -309,6 +311,9 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
       // insert one transaction id after the payment getting successfull
       let hostBookingData = await hostbooking.create({
         hostId:createHosteventdetails.hostId,
+        orderId:orderId,
+        amount:amount,
+        paymentstatus:paymentStatus,
         bookingDate:eventDate,
         startDate:startEventDate,
         endDate:endEventDate,
@@ -352,7 +357,8 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
     //   }
 
         return {
-          message:"Host Event created successfully"
+          bookingId: hostBookingData.hostBookingId,
+          entityId:createEventActivities.eventId
           }
       }
     

@@ -29,7 +29,7 @@ module.exports = (sequelize,DataTypes)=>{
         amount:{
             type:DataTypes.DECIMAL
         },
-        paymentStatus:{
+        paymentstatus:{
             type:DataTypes.STRING(255)
         },
         bookingReferenceNumber:{

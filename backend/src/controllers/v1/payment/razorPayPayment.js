@@ -9,6 +9,7 @@ let refundTable = db.refund
 let cartItemTable = db.cartItem
 let eventBookingTable = db.eventBookings;
 let facilityBookingTable = db.facilitybookings
+let hostBookingTable = db.hosteventbookings
 let facilities = db.facilities
 let {Op} = require('sequelize')
 let instance = require('../../../config/razorpay.config.js');
@@ -356,6 +357,30 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
         
   
         }
+        else if(eachOrderItem.entityTypeId == 7){
+          // update the host booking details 
+          
+          let updateTheEventHostBooking = await hostBookingTable.update(
+            {
+            paymentstatus:paymentStatus,
+            updatedBy:userId,
+            updatedDt:updatedDt
+          },
+          {
+            where:{
+              orderId:insertToPaymentFirst.orderId
+            },
+            transaction
+          })
+          
+          if(updateTheEventHostBooking.length == 0){
+            await transaction.rollback();
+            return ({
+              error:`Something went wrong`
+            })
+          }
+
+        }
         else {
           // update the facility booking
           
@@ -491,10 +516,6 @@ const checkout =  async (req, res) => {
         if(key!=="uploadEventImage" &&  key !== "additionalFiles"){
           facilityPreference[key] = decrypt(facilityPreference[key]);
         }
-        
-        if(key === 'price' && facilityPreference[key]!=null && entityTypeId ==7 ){
-          facilityPreference.amount = facilityPreference[key]
-        }
         if(key ==='activityPreference' && facilityPreference[key]!=null && entityTypeId != 7){
           facilityPreference[key] = facilityPreference[key].split(',')
         }
@@ -550,6 +571,7 @@ const checkout =  async (req, res) => {
           }
         
       }
+      entityId = insertToBookingTable.entityId
       }
       else{
         insertToBookingTable = await parkBooking(entityId,entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
