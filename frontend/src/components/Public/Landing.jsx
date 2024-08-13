@@ -729,11 +729,19 @@ const Landing = () => {
           <span className="Search-Conatiner">
             <h1>AMA BHOOMI</h1>
             <span className="about">
+             
               <p className="about_text">
-                AMA BHOOMI stands for Assuring Mass Access through BHubaneswar
-                Open Spaces <br></br>and Ownership Management Initiative.{" "}
+              Assuring Mass Access through Bhubaneswar Open <br></br>
+              Spaces & Ownership Management Initiative.
               </p>
+              
             </span>
+            <span className="enjoy_text">
+               <p className="about_text">Your one stop destination for Bhubaneswar’s Open Spaces !</p>
+              <h4>JOIN THE MOVEMENT</h4>
+
+            </span>
+           
             <h2 className="typing-animation">
               Explore, Book and Enjoy Open Spaces{" "}
             </h2>
@@ -756,7 +764,7 @@ const Landing = () => {
               </div>
 
             </div>
-
+          
             {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions1">
                 {suggestions.length > 0 ? (
@@ -773,7 +781,13 @@ const Landing = () => {
                 )}
               </ul>
             )}
+
+
+          <span className="Reg_text">
+                <h1>REGISTER TO AVAIL THE BENEFITS</h1>
+            </span>
           </span>
+           
           <div className="abBgButton">
             <FontAwesomeIcon
               onClick={handlePrevImage}

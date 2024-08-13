@@ -1,5 +1,5 @@
 .About_Mian_conatiner {
-  height: 100vh;
+  height: 200vh;
 }
 .Child_about_container {
   background-image: linear-gradient(10deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)),
@@ -46,9 +46,21 @@
   justify-content: space-evenly;
 }
 
+.About_us_text {
+  display: flex;
+  justify-content: center; /* Centers the text block horizontally */
+  padding: 20px; /* Adds padding around the container */
+  margin: 0 auto; /* Centers the container on the page */
+}
+
 .About_us_text_details {
-  color: #212121;
-  font-size: 20px;
+  color: #212121; /* Sets the text color */
+  font-size: 20px; /* Sets the font size */
+  line-height: 1.6; /* Increases line height for readability */
+  max-width: 1050px; /* Sets a max width for the text block */
+  text-align: justify; /* Justifies text for even edges */
+  border-radius: 10px; /* Rounds the corners of the text block */
+ 
 }
 
 .About_us_img {
@@ -57,6 +69,7 @@
   border: 1px solid rgb(5, 97, 2);
   background-color: #d0ffeb;
   width: 20%;
+  height: 18vh;
 }
 .Heading_text_button {
   padding: 7px;
