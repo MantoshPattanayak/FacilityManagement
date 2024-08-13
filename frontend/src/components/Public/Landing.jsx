@@ -983,7 +983,7 @@ const Landing = () => {
                   <div key={selectedLocationDetails.facilityId}>
                     <h3>Facility Name: {selectedLocationDetails.facilityname}</h3>
                     <p>Address: {selectedLocationDetails.address}</p>
-                    <p>Distance: {selectedLocationDetails.distance} km(s) (approx.)</p>
+                    <p>Distance: {parseFloat(selectedLocationDetails.distance).toFixed(2)} km(s) (approx.)</p>
                     <p>Status: <span className={`${selectedLocationDetails.status == 'open' ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}`}>{selectedLocationDetails.status.toUpperCase()}</span></p>
                   </div>
                 </InfoWindowF>
