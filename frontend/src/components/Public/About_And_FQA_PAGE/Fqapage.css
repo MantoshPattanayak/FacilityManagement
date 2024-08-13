@@ -57,7 +57,8 @@
 .fqa-body {
   background-image: url('../../../assets/faq_ing.png');
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
+  min-height: 50vh;
 }
 
 .faq-title {
@@ -69,7 +70,7 @@
   margin-top: 20px;
 }
 
-.faq-item {
+.faq-item-1, .faq-item-2, .faq-item-3, .faq-item-4, .faq-item-5, .faq-item-6, .faq-item-7, .faq-item-8, .faq-item-9, .faq-item-10, .faq-item-11 {
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -77,8 +78,18 @@
   transition: all 0.3s ease;
 }
 
-.faq-item.active {
+.faq-item-1 .factive1, .faq-item-2 .factive2, .faq-item-3 .factive3 .faq-item-4 .factive4, .faq-item-5 .factive5, .faq-item-6 .factive6, .faq-item-7 .factive7, .faq-item-8 .factive8, .faq-item-9 .factive9, .faq-item-10 .factive10, .faq-item-11 .factive11 {
   border-color: #037b3d;
+}
+
+.faq-section h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8em;
+  color: #555;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #019306;
+  padding-bottom: 5px;
 }
 
 .question {

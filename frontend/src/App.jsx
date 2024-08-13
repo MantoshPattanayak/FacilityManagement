@@ -104,6 +104,7 @@ const Advertising_with_us = React.lazy(() => import('./components/Public/FooterP
 const Terms_ConditionPage = React.lazy(() => import('./components/Public/FooterPages/Terms_ConditionPage'))
 const Disclaimer = React.lazy(() => import('./components/Public/FooterPages/Disclaimer'))
 const Privacy_Policy = React.lazy(() => import('./components/Public/FooterPages/Privacy_Policy'))
+const DosDont = React.lazy(() => import('./components/Public/FooterPages/DosDont'))
 const Partnerwithus = React.lazy(() => import('./components/Public/FooterPages/PartnerWithUs'))
 const Gallery = React.lazy(() => import('./components/Public/View_Gallery/Image_Gallery'))
 const SpecialEvent = React.lazy(() => import('../src/components/Admin/Activity/SpecialEventBooking/SpecialEvent'))
@@ -253,6 +254,7 @@ function App() {
                 <Route path="/Terms_ConditionPage" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute> <Terms_ConditionPage /> </ProtectedRoute></React.Suspense>} />
                 <Route path="/Disclaimer" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute>< Disclaimer /></ProtectedRoute></React.Suspense>} />
                 <Route path="/Privacy_Policy" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Privacy_Policy /> </ProtectedRoute> </React.Suspense>} />
+                <Route path="/DosDont" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><DosDont /> </ProtectedRoute> </React.Suspense>}/>
                 <Route path="/Partnerwithus" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><Partnerwithus /></ProtectedRoute></React.Suspense>} />
                 <Route path="/SpecialEvent" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><SpecialEvent /></ProtectedRoute></React.Suspense>} />
                 {/** Master Data Management */}
