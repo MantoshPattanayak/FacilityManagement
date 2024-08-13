@@ -692,11 +692,12 @@ const updateFacility = async(req,res)=>{
     if(othereventCategory){
       updateOwnershipDataVariable.otherEventCategories = othereventCategory 
     }
-    if(facilityImage){
+    if(Object.keys(facilityImage).length > 0){
       let findTheFacilityName = await facilities.findOne({
         where:{[Op.and]:[{statusId:statusId},{facilityId:facilityId}]}
       })
-      let facilityName = findTheFacilityName?.facilityname || updateFacilityDataVariable.facilityname
+      let facilityName = updateFacilityDataVariable?.facilityname ? updateFacilityDataVariable.facilityname : findTheFacilityName?.facilityname;
+
       if(facilityImage?.facilityImageOne){
         let cardFacilityImage = facilityImage.facilityImageOne?.data
         if(facilityImage.facilityImageOne?.fileId!=0){
