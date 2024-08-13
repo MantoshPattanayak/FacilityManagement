@@ -519,12 +519,13 @@ body {
   align-items: center;
   background-color: #c8c8c8;
   border: 1px solid #dcdcdc;
-  border-radius: 24px;
+   border-bottom-left-radius: 24px;
+   border-top-left-radius: 24px;
   /* Rounded corners for a more modern look */
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* Light shadow for depth */
-  max-width: 600px;
+  max-width: 800px;
   /* Optional: set a max-width for the search bar */
   width: 100%;
   /* Ensure it takes full width up to max-width */
@@ -624,6 +625,7 @@ body {
   width: 28%;
   height: 344px;
   margin: 16px;
+  border: 1px solid rgb(229, 224, 224);
 }
 
 .nearByFacilities-heading {
@@ -692,6 +694,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-block: 28px;
+  
 }
 
 .notice2-container {
@@ -700,6 +703,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid #fb8c73;
   /* margin-right: 50px; */
   /* margin-left: 0px; */
 }
@@ -708,8 +712,9 @@ body {
   position: relative;
   display: inline-block;
   flex-shrink: 0;
-  padding: 8px 20px;
-  background: rgb(6, 63, 113);
+  padding: 11px 20px;
+
+  background:  #fe6f4e;
   color: #fff;
   overflow: hidden;
   /* clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%); */
@@ -766,30 +771,29 @@ body {
   overflow: hidden;
   width: 100%;
 }
-.carousel-main_container{
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 24px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0px;
-
-}
 
 
 .carousel-image_gallery{
   display: flex;
   transition: transform 0.5s ease;
-   height: 25vh;
+   height: 30vh;
 
+}
+.carousel-image_gallery:hover{
+  height: 32vh;
 }
 
 .carousel-slide2 {
   /* flex-shrink: 0;
     width: 22vw;
     margin: 10px; */
-
+border: 1px solid #fe6f4e;
   flex-shrink: 0;
   width: 20vw;
   /* height: 42vh; */
-  height: 98%;
-  background: rgba(224, 248, 229, 1);
-  margin: 10px;
+  height:100%;
+  
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -810,15 +814,16 @@ body {
   /* width: 59vh;
     height: 24vh; */
 
-  width: 18vw;
-  height: auto;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  width: 20vw;
+  height: 21vh;
+ border-top-left-radius: 10px;
+ border-top-right-radius: 10px;
+
 }
 
 .carousel-slide-text {
   padding: 10px;
-  background-color: rgba(224, 248, 229, 1);
+  
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -831,7 +836,7 @@ body {
   font-size: 16px;
   color: #019f13;
   font-weight: 600;
-  width: 18vw;
+  width: 15vw;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -1161,7 +1166,7 @@ margin-top: 20px;
 .viewMoreGallery {
   display: flex;
   gap: 2px;
-  background-color: #3ab757;
+  background-color: #fe6f4e;
   color: white;
   padding: 6px;
   align-items: center;
@@ -1179,7 +1184,7 @@ margin-top: 20px;
   width: 6px;
   height: 49px;
   border-radius: 4px;
-  background-color: #3ab757;
+  background-color: #fe6f4e;
 }
 
 .gallerySlider svg {
@@ -2116,6 +2121,7 @@ margin-top: 20px;
     width: 4px;
     height: 26px;
   }
+ 
 
   .parkList {
     height: auto;

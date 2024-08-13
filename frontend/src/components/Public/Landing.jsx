@@ -85,9 +85,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { manageTourGuide } from "../../utils/authSlice.jsx";
 import instance from "../../../env.js";
 import { toast, ToastContainer } from "react-toastify";
+import lading_page_image1 from "../../assets/landing.jpg";
+import lading_page_image2 from "../../assets/landing2.jpg";
+import laidng5 from '../../assets/landing4.jpg'
+import lading4 from '../../assets/landing5.jpg'
+import lading6 from '../../assets/landing3.jpg'
 // import "./YourStyles.css";
-
-const backGround_images = [Landing_Img_1, galleryImg1, galleryImg3];
+// here set the image of lading page 
+const backGround_images = [lading_page_image1, lading_page_image2, lading4, laidng5, lading6];
 
 // mediaquary for responsive landing page
 const responsive = {
@@ -461,7 +466,7 @@ const Landing = () => {
       delete window.initMap;
     };
   }, []);
-  
+
 
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
@@ -712,12 +717,12 @@ const Landing = () => {
         <PublicHeader />
         {/* <ToastContainer /> */}
         <div className="iconPlayApple">
-        <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
-          <img className="iconPlayAppleItem" src={googlePlayStore} alt="Google Play Store" />
-        </a>
-        <a onClick={(e) => handleExternalLinkOpen(e, instance().APP_STORE_LINK)} rel="noopener noreferrer">
-          <img className="iconPlayAppleItem" src={appleStore} alt="Apple Store" />
-        </a>
+          <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
+            <img className="iconPlayAppleItem" src={googlePlayStore} alt="Google Play Store" />
+          </a>
+          <a onClick={(e) => handleExternalLinkOpen(e, instance().APP_STORE_LINK)} rel="noopener noreferrer">
+            <img className="iconPlayAppleItem" src={appleStore} alt="Apple Store" />
+          </a>
         </div>
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
@@ -821,7 +826,7 @@ const Landing = () => {
           </Link>
 
           <div className="iconLogo">
-            <img  src={greenway} alt="" />
+            <img src={greenway} alt="" />
             <h2>Greenways</h2>
           </div>
           <div className="iconLogo">
@@ -941,7 +946,7 @@ const Landing = () => {
               }}
               center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
               zoom={12}
-              // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
+            // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
               {loading ? (
                 <div>Loading...</div>
@@ -1003,7 +1008,7 @@ const Landing = () => {
             <div className="nearByFacilities-buttons">
               {
                 radiusForSearch.map((radius) => {
-                  return(
+                  return (
                     <button
                       type="button"
                       className={activeButton === radius ? "active" : ""}
@@ -1115,25 +1120,27 @@ const Landing = () => {
               })}
             </div>
           </marquee>
+
+          <div className="button-container22">
+            {isMarqueePaused ? (
+              <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
+                <FontAwesomeIcon icon={faPlay} />
+              </button>
+            ) : (
+              <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
+                <FontAwesomeIcon icon={faPause} />
+              </button>
+            )}
+          </div>
         </div>
-        <div className="button-container22">
-          {isMarqueePaused ? (
-            <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
-              <FontAwesomeIcon icon={faPlay} />
-            </button>
-          ) : (
-            <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
-              <FontAwesomeIcon icon={faPause} />
-            </button>
-          )}
-        </div>
+
       </div>
       {/* ------Event details card-------------------------------------------------------------------- */}
       <div className="EventContainerlanding">
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
-            <h1>Current Events</h1>
+            <h1 className="">Current Events</h1>
           </div>
           {eventNameLanding.length > 0 ? (
             <button className="viewMoreGallery">
@@ -1327,7 +1334,7 @@ const Landing = () => {
                       />
                       <div className="description">{item.description}</div>
                     </div>
-                    
+
                   </div>
                 );
               })}
@@ -1340,24 +1347,27 @@ const Landing = () => {
       </div>
       {/* ------------advertisement section -------------------------------------------------------------------------------------*/}
 
-      <div className="avatisement-Border2">
-        <div className="galleryTitleLeft">
-          <div className="greenHeader"></div>
-          <h1 className="text-3xl">Advertisement</h1>
-        </div>
-        <div className="avatisement-Content2">
-          <div className="advertisement-Scroll2">
-            {ad.map((img, index) => (
-              <img
-                src={img}
-                alt={`ad-${index}`}
-                className="advertisement-Image"
-                key={index}
-              />
-            ))}
+      {ad.length > 0 && (
+        <div className="avatisement-Border2">
+          <div className="galleryTitleLeft">
+            <div className="greenHeader"></div>
+            <h1 className="text-3xl">Advertisement</h1>
+          </div>
+          <div className="avatisement-Content2">
+            <div className="advertisement-Scroll2">
+              {ad.map((img, index) => (
+                <img
+                  src={img}
+                  alt={`ad-${index}`}
+                  className="advertisement-Image"
+                  key={index}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
       {/* <div className="footer"></div> */}
       {showTour == "true" && (
         <TourGuide run={runTour} callback={handleJoyrideCallback} />
