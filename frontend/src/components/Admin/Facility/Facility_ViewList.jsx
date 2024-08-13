@@ -95,8 +95,7 @@ export default function Facility_ViewList() {
                                                 <Link
                                                     to={{
                                                         pathname: '/Facility_Edit_View',
-                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId))}
-                                                        &action=View`
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId.toString()))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId.toString()))}&action=View`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faEye} />
@@ -106,8 +105,7 @@ export default function Facility_ViewList() {
                                                 <Link
                                                     to={{
                                                         pathname: '/Facility_Edit_View',
-                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId))}
-                                                        &action=Edit`
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId))}&action=Edit`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faPenToSquare} />
