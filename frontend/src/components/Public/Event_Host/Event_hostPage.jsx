@@ -474,6 +474,34 @@ const Event_hostPage = () => {
         GetFacilityType()
     }, [formErrors])
 
+    // handle payment success
+    const handlePaymentSuccess = ({ response, res }) => {
+        // console.log("Book park payment success", response);
+        console.log("booking response", res);
+        let bookingId = res.data.shareableLink[0].bookingId;
+        let entityTypeId = res.data.shareableLink[0].entityTypeId;
+    
+        toast.success("Event host Request has been Submitted successfully.", {
+          autoClose: 2000,
+          onClose: () => {
+            setTimeout(() => {
+              navigate(
+                `/profile/booking-details/ticket?bookingId=${encryptData(
+                  bookingId
+                )}&typeId=${encryptData(entityTypeId)}`
+              );
+            }, 1000);
+          },
+        });
+        // handleSubmitAndProceed();
+      };
+    
+      const handlePaymentFailure = (response) => {
+        // console.log("Book park payment failure", response);
+        toast.dismiss();
+        toast.error(response.description);
+      };
+
 
 
 
@@ -1341,14 +1369,12 @@ const Event_hostPage = () => {
                                     amount={5000 || 0}
                                     currency={"INR"}
                                     description={"Book now"}
-                                    // onSuccess={handlePaymentSuccess}
-                                    // onFailure={handlePaymentFailure}
-                                    
+                                    onSuccess={handlePaymentSuccess}
+                                    onFailure={handlePaymentFailure}
                                     data={{
                                         entityId: encryptData(formData.facilityId),
                                         entityTypeId: encryptData('7'),
                                         facilityPreference:{
-    
                                             organisationName:encryptData(formData.organisationName),
                                             organisationPanCardNumber: encryptData(formData.organisationPanCardNumber),
                                             organisationAddress: encryptData(formData.organisationAddress),
