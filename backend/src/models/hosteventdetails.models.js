@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             collate: 'utf8mb4_0900_ai_ci'
         },
         emailId: {
-            type: DataTypes.STRING(25),
+            type: DataTypes.STRING(100),
         },
         phoneNo: {
             type: DataTypes.STRING(25),
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
         },
         Description: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.TEXT,
         },
         emailVerified:{
             type:DataTypes.INTEGER

@@ -8,6 +8,12 @@ module.exports = (sequelize,DataTypes)=>{
         hostId:{
             type:DataTypes.INTEGER
         },
+        facilityId:{
+            type:DataTypes.INTEGER
+        },
+        orderId:{
+            type:DataTypes.INTEGER
+        },
         transactionId:{
             type:DataTypes.INTEGER
         },
@@ -26,7 +32,7 @@ module.exports = (sequelize,DataTypes)=>{
         amount:{
             type:DataTypes.DECIMAL
         },
-        paymentStatus:{
+        paymentstatus:{
             type:DataTypes.STRING(255)
         },
         bookingReferenceNumber:{
