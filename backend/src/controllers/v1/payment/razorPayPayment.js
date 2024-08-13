@@ -46,7 +46,6 @@ const getRazorpayApiKeys = async (req, res) => {
 const paymentVerification = async (req, res) => {
   let transaction;
   try {
-     transaction = sequelize.transaction();
     let { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
       let pendingOrderItemStatus = 26;
@@ -124,10 +123,12 @@ const paymentVerification = async (req, res) => {
       });
      
       if(updatePayment>=1){
-
-        let updateAllThePaymentDetailsTable = await verificationWithTicketGenerate (paymentDetails.notes.user_cart_id, removeCartStatus, checkIfThePaymentAmountIsSameAsOrderAmount[0], pendingOrderItemStatus, statusId, bookingStatus,activeStatus, updatedDt,paymentDetails.notes.customer_id,ticketUploadAndGeneratePdf, ticketUploadArray, transaction);
+        transaction = await sequelize.transaction();
+        console.log('updatepayment')
+        let updateAllThePaymentDetailsTable = await verificationWithTicketGenerate(paymentDetails.notes.user_cart_id, removeCartStatus, checkIfThePaymentAmountIsSameAsOrderAmount[0], pendingOrderItemStatus, statusId, bookingStatus,activeStatus, updatedDt,paymentDetails.notes.customer_id,ticketUploadAndGeneratePdf, ticketUploadArray, transaction);
      
       if(updateAllThePaymentDetailsTable?.error){
+        console.log('updateAllThePaymentDetailsTable',updateAllThePaymentDetailsTable)
         await transaction.rollback();
         if(updateAllThePaymentDetailsTable.error.includes('Something went wrong')){
           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -140,12 +141,12 @@ const paymentVerification = async (req, res) => {
           })
         }
       }
-          await transaction.commit();
-
+           await transaction.commit();
+          
           return res.status(statusCode.SUCCESS.code).json({
             message: 'Payment done successfully',
             success: true,
-            shareableLink: updateAllThePaymentDetailsTable.ticketUploadArray
+            shareableLink: updateAllThePaymentDetailsTable.shareableLink
           });
       }
       else { 
@@ -217,6 +218,7 @@ const fetchPayment = async (req, res) => {
 
 let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertToPaymentFirst,pendingStatus,paymentStatus,bookingStatus,activeStatus, updatedDt,userId,ticketUploadAndGeneratePdf, ticketUploadArray, transaction)=>{
   try {
+    console.log('all data')
        // removed the cart items table
        if(userCartId){
         let removeCartItems = await cartItemTable.update({
@@ -238,7 +240,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
         })
       }
       }
-      
+      console.log('after remove cart items',pendingStatus, insertToPaymentFirst)
 
        // update the payment items table and booking table
        let checkTheOrderItemsTable = await paymentItems.findAll({
@@ -272,6 +274,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
           error:`Something went wrong`
         })
       }
+      // console.log()
       // iterate over each order items
       for(let eachOrderItem of checkTheOrderItemsTable){
         console.log(eachOrderItem,'eachOrderItem')
@@ -383,7 +386,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
         }
         else {
           // update the facility booking
-          
+          console.log('inside facility booking')
           let updateTheFaciliyBooking = await facilityBookingTable.update(
             {
             statusId:bookingStatus,
@@ -397,8 +400,8 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
             },
             transaction
           })
-  
-          console.log('2323',updateTheFaciliyBooking,bookingStatus, statusId,checkIfThePaymentAmountIsSameAsOrderAmount[0].orderId)
+          console.log('after update the facilitybooking')
+        
   
           if(updateTheFaciliyBooking.length == 0){
             await transaction.rollback();
@@ -472,6 +475,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
       //   success: true,
       //   shareableLink: ticketUploadArray
       // });
+      console.log(ticketUploadArray,'ticket upload array inside the verification')
       return{
         shareableLink : ticketUploadArray
       }
@@ -558,7 +562,7 @@ const checkout =  async (req, res) => {
       if(entityTypeId==7){
 
         insertToBookingTable = await createHosteventdetails(entityTypeId,facilityPreference,insertToPaymentFirst.orderId,customerId,transaction)
-        
+
         if(insertToBookingTable?.error){
           await transaction.rollback();
           if(insertToBookingTable?.error.includes('Something went wrong')){
@@ -645,6 +649,7 @@ const checkout =  async (req, res) => {
         if(typeof(i.facilityPreference.amount)==='string'){
           totalAmount += parseFloat(i.facilityPreference.amount);
         }
+
         else{
           totalAmount += i.facilityPreference.amount;
         }
@@ -743,7 +748,10 @@ const checkout =  async (req, res) => {
         user_cart_id:userCartId
       }
     };
+    console.log('totalAmount')
+    console.log(totalAmount)
     if(totalAmount == 0){
+      console.log('totalAmount', totalAmount)
       let ticketUploadAndGeneratePdf;
       let ticketUploadArray=[];
       let paymentStatus = 25
@@ -759,13 +767,15 @@ const checkout =  async (req, res) => {
     {
       where:{
         orderId: insertToPaymentFirst.orderId
-      }
+      },
+      transaction
     });
     if(updatePayment==0){
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:'Something went wrong'
       })
     }
+    console.log('updatePayment')
     let updateAllThePaymentDetailsTable = await verificationWithTicketGenerate (userCartId,removeCartStatus,insertToPaymentFirst,pendingStatus,paymentStatus,bookingStatus,activeStatus, updatedDt,customerId,ticketUploadAndGeneratePdf, ticketUploadArray, transaction);
     if(updateAllThePaymentDetailsTable?.error){
       await transaction.rollback();
