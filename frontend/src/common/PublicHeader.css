@@ -1,5 +1,5 @@
 .header {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -281,3 +281,37 @@
     display: flex;
   }
 } */
+
+
+/* Secondary Header */
+.secondary-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 54px;
+  background-color: #006622; /* Example color */
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 101; /* Make sure it is above the primary header */
+  transition: top 0.3s ease-in-out;
+}
+
+.secondary-header-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.secondary-header-items li {
+  cursor: pointer;
+}
+
+/* Adjust primary header when secondary header is present */
+.header {
+  top: 54px; /* Adjust based on secondary header height */
+}

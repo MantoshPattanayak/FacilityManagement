@@ -129,9 +129,43 @@ export default function PublicHeader() {
   const handleMouseLeave = () => {
     setShowProfileMenu(false);
   };
+
+  // Secondary header................................................
+  const [isSecondaryHeaderVisible, setIsSecondaryHeaderVisible] =
+    useState(true);
+    const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSecondaryHeaderVisible(window.scrollY < 80);
+      setIsHeaderFixed(scrollY >= 80);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <div>
-      <header className="header" id="header-public">
+      {/* Secondary Header */}
+      {isSecondaryHeaderVisible && (
+        <div className="secondary-header">
+          <ul className="secondary-header-items">
+            <li>Screen Reader</li>
+            <li>Customer Connect</li>
+            <li>Colour Theme</li>
+          </ul>
+        </div>
+      )}
+      <header
+        className={`header ${isHeaderFixed ? "fixed" : "absolute"}`}
+        id="header-public"
+        style={{
+          top: isSecondaryHeaderVisible ? "" : "0px",
+          // transition: "top 0.3s",
+        }}
+      >
         {/* <ToastContainer /> */}
         <div className="header-content">
           <div className="logo-ama-boomi">
