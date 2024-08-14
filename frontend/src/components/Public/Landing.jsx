@@ -737,9 +737,8 @@ const Landing = () => {
     );
     return;
   }
-  
 
-  // dropdown 
+  // dropdown
 
   const [selectedButton21, setSelectedButton21] = useState(null);
 
@@ -753,7 +752,6 @@ const Landing = () => {
     setSelectedButton21(id);
     // Add any additional logic you need when an option is selected
   };
-
 
   return (
     <div className="landingcontainer">
@@ -918,12 +916,18 @@ const Landing = () => {
         <section className="map-container2">
           <div className="map-bar">
             <div className="map-icons">
-              <select className="facilitySelecterHome" name="facility" onChange={(e) => {handleParkLogoClick(parseInt(e.target.value));}}>
-                <option value={1} >Parks</option>
-                <option value={2} >Playfields</option>
-                <option value={3} >Multipurpose grounds</option>
-                <option value={4} >Blueways</option>
-                <option value={5} >Greenways</option>
+              <select
+                className="facilitySelecterHome"
+                name="facility"
+                onChange={(e) => {
+                  handleParkLogoClick(parseInt(e.target.value));
+                }}
+              >
+                <option value={1}>Parks</option>
+                <option value={2}>Playfields</option>
+                <option value={3}>Multipurpose grounds</option>
+                <option value={4}>Blueways</option>
+                <option value={5}>Greenways</option>
               </select>
 
               <div className="icon1">
@@ -998,8 +1002,6 @@ const Landing = () => {
                 </button>
               </div>
             </div>
-
-
 
             <div className="mapSearchContainer">
               <div className="mapSearchButton">
@@ -1352,6 +1354,7 @@ const Landing = () => {
           <div className="whiteHeader"></div>
           <h1>Explore And Book New Activities</h1>
         </div>
+        {exploreNewActivities.length > 0 ? (
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
@@ -1407,6 +1410,14 @@ const Landing = () => {
             </div>
           </div>
         </div>
+        ) : (
+          <div className="no-data-message_Current_event1">
+            <img
+              className="Current_Event_image"
+              src={No_Current_Event_img}
+            ></img>
+          </div>
+        )}
       </div>
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
       <div className="galleryOuter">
