@@ -1,13 +1,14 @@
 /* Disclaimer Container */
 .disclaimer-container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 30px;
+    max-width: 1000px;
+ 
+    margin: 70px auto;
+   
     background-color: #fff;
     border-radius: 12px;
  
     overflow: hidden;
-    position: relative;
+   padding-top: 70px;
 }
 
 /* Disclaimer Title */

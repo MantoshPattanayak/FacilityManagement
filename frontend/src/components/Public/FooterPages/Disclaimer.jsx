@@ -4,8 +4,11 @@ import PublicHeader from '../../../common/PublicHeader';
 
 const Disclaimer = () => {
     return (
-        <div className="disclaimer-container">
+        <div >
             <PublicHeader/>
+            <div className="disclaimer-container">
+
+            
         <h1 className="disclaimer-title">Disclaimer</h1>
         <div className="disclaimer-content">
             <p>All the information on this website – AMA BHOOMI Portal - is published in good faith and for general information purpose only. The website and Application do not make any warranties about the completeness, reliability and accuracy of this information. Any action you take upon the information you find on this website/application, is strictly at your own risk. AMA BHOOMI portal will not be liable for any losses and/or damages in connection with the use of our website or application. </p>
@@ -15,6 +18,7 @@ const Disclaimer = () => {
 
             <h2>Update</h2>
             <p>Should we update, amend or make any changes to this document, those changes will be prominently posted here</p>
+        </div>
         </div>
     </div>
     );

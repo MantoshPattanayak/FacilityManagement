@@ -4,8 +4,8 @@
 }
 
 .event-body {
-    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/event-pic.jpg");
-    height: 35vh;
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url("../../../assets/Event_image_banner.png");
+    height: 40vh;
     background-size: cover;
     background-repeat: no-repeat;
 }
