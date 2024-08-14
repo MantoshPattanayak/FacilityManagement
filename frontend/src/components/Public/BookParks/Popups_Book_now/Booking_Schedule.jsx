@@ -208,7 +208,7 @@ const Booking_Schedule = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+    <div className="main_conatiner_booking_schedule  fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div className="booking-schedule-popup">
         <div className="popup-header">
           <button className="icon-close" onClick={() => closePopup(false)}>
