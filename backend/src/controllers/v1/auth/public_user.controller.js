@@ -13,6 +13,8 @@ let useractivitypreferencesModels = db.userActivityPreference
 let userActivityMaster = db.useractivitymasters
 const {Op} = require('sequelize')
 let imageUpdate = require('../../../utils/imageUpdate');
+let imageUpload = require('../../../utils/imageUpload')
+
 const fileattachmentModels = db.fileattachment;
 const updatepublic_user = async (req, res) => {
   let transaction;
@@ -184,10 +186,10 @@ const updatepublic_user = async (req, res) => {
             
           }
         }
-        console.log('near 176 line','data',profilePicture,'profile data')
+        // console.log('near 176 line','data',profilePicture,'profile data')
 
       if(Object.keys(profilePicture).length>0){
-        console.log('profilePicture?.data',profilePicture?.data)
+        // console.log('profilePicture?.data',profilePicture?.data)
         if(profilePicture.fileId!=0 && profilePicture?.data){
           console.log('inside image part')
           let findThePreviousFilePath = await file.findOne({
@@ -215,6 +217,29 @@ const updatepublic_user = async (req, res) => {
           }
           imageUpdateVariable = 1;
       }
+      else if(!profilePicture.fileId && profilePicture?.data){
+        console.log('inside new image part')
+        let insertionData = {
+          id:userId,
+          name:decrypt(firstName)
+         }
+        // create the data
+        let entityType = 'usermaster'
+        let errors = [];
+        let subDir = "userDir"
+        let filePurpose = "User Image"
+        let uploadSingleImage = await imageUpload(profilePicture.data,entityType,subDir,filePurpose,insertionData,userId,errors,1,transaction)
+        console.log( uploadSingleImage,'165 line facility image')
+        if(errors.length>0){
+          await transaction.rollback();
+          if(errors.some(error => error.includes("something went wrong"))){
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:errors})
+          }
+          return res.status(statusCode.BAD_REQUEST.code).json({message:errors})
+        }
+        imageUpdateVariable = 1;
+
+    }
       else if(profilePicture.fileId!=0){
         console.log('inside file')
         let inactiveTheFileId = await file.update({statusId:inActiveStatus},
