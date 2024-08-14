@@ -705,7 +705,7 @@ const updateFacility = async(req,res)=>{
 
       if(facilityImage?.facilityImageOne){
         let cardFacilityImage = facilityImage.facilityImageOne?.data
-        if(facilityImage.facilityImageOne?.fileId!=0){
+        if(facilityImage.facilityImageOne?.fileId!=null){
           let findThePreviousFilePath = await file.findOne({
             where:{[Op.and]:[{statusId:statusId},{fileId:facilityImage.facilityImageOne.fileId}]},
             transaction
@@ -759,7 +759,7 @@ const updateFacility = async(req,res)=>{
           let i = 0;
           for (let facilityArrayOfImage of facilityImage.facilityArrayOfImages){
             let multipleFacilityImage = facilityArrayOfImage?.data
-            if(facilityArrayOfImage?.fileId!=0 && multipleFacilityImage){
+            if(facilityArrayOfImage?.fileId!=null && multipleFacilityImage){
               let findThePreviousFilePath = await file.findOne({
                 where:{[Op.and]:[{statusId:statusId},{fileId:facilityImage.facilityImageOne.fileId}]},transaction
               })
