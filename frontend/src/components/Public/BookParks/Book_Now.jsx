@@ -167,7 +167,7 @@ const Book_Now = () => {
       try {
         const facilityPreference = {
           totalMembers: encryptData(modifiedFormData.totalMembers),
-          amount: encryptData(formData.amount * modifiedFormData.adults),
+          amount: encryptData(parseFloat(formData.amount * formData.adults) ? (formData.amount * formData.adults) : "0"),
           activityPreference: encryptData(modifiedFormData.activityPreference),
           otherActivities: encryptData(modifiedFormData.otherActivities),
           bookingDate: encryptData(modifiedFormData.bookingDate),
@@ -523,7 +523,7 @@ const Book_Now = () => {
                     <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(price).toFixed(2)}
                   </button>
                   : <RazorpayButton
-                    amount={price || "0"}
+                    amount={parseFloat(price) ? (price) : "0"}
                     currency={"INR"}
                     description={"Book now"}
                     onSuccess={handlePaymentSuccess}
@@ -534,7 +534,7 @@ const Book_Now = () => {
                       entityTypeId: encryptData(formData.entityTypeId),
                       facilityPreference: {
                         totalMembers: encryptData(formData.totalMembers),
-                        amount: encryptData("0"), //(formData.amount * formData.adults) || 
+                        amount: encryptData(parseFloat(formData.amount * formData.adults) ? (formData.amount * formData.adults) : "0"),
                         activityPreference: encryptData(formData.activityPreference),
                         otherActivities: encryptData(formData.otherActivities),
                         bookingDate: encryptData(formData.bookingDate),
