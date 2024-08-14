@@ -118,6 +118,9 @@ const registerFacility = async (req, res) => {
       ownersAddress,
       lastName,
       facilityisownedbBDA)
+      if(facilityisownedbBDA==1){
+        ownership = "BDA"
+      }
       console.log('check if the data is exist or not')
      let checkIfTheFacilityAlreadyExist = await facilities.findOne({
       where:{
@@ -222,7 +225,7 @@ const registerFacility = async (req, res) => {
           let errors = [];
           let subDir = "facilityImages"
           let filePurpose = "singleFacilityImage"
-          console.log('163 line facility image')
+          console.log(entityType,subDir,filePurpose,insertionData,userId,errors, '163 line facility image')
           
           let uploadSingleFacilityImage = await imageUpload(cardFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, 1, transaction)
           console.log( uploadSingleFacilityImage,'165 line facility image')
@@ -238,10 +241,12 @@ const registerFacility = async (req, res) => {
           let errors = [];
           let subDir = "facilityImageList"
           let filePurpose = "multipleFacilityImage"
+          
           for (let i = 0; i < arrayFacilityImage.length; i++) {
             let eachFacilityImage = arrayFacilityImage[i]
             let uploadSingleFacilityImage = await imageUpload(eachFacilityImage,entityType,subDir,filePurpose,insertionData,userId,errors, i+1, transaction)
           }
+
           if(errors.length>0){
             await transaction.rollback();
             
