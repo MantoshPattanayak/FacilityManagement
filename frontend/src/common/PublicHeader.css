@@ -66,7 +66,7 @@
   .login-button {
     width: 145px;
     height: 34px;
-    background-color: #e9816a;
+    background-color: #e9816a; /* #3AB757 */
     color: white;
     border-radius: 8px;
     display: flex;
