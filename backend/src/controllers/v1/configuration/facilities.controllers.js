@@ -367,7 +367,11 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
 const viewParkById = async (req,res)=>{
     try{
         let userId = req.user?.userId || 1;
+        let statusId = 1;
         let multipleFacilityImage="multipleFacilityImage"
+        let facilityEntityType ='facilities'
+        let eventFilePurpose = "Event Image"
+        let eventEntityType = 'events' 
         let facilityId = req.params.facilityId? req.params.facilityId:null;
         let findFacilityTypeId = await facilitiesTable.findOne({
             where:{
@@ -381,40 +385,81 @@ const viewParkById = async (req,res)=>{
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-            end as status,ft.filePurpose,address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat,group_concat(fl.url separator  ';') as url
-            from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId where facilityId = ? and ft.filePurpose = ?
+            end as status,address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat
+            from amabhoomi.facilities f where f.facilityId = ?
       
        `
+            let fetchTheFacilityImageQuery = `select group_concat(fl.url separator  ';') as url from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
+            where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`
+
            let fetchTheFacilitiesDetailsData = await sequelize.query(fetchTheFacilitiesDetailsQuery,
         {
-            replacements:[new Date(), facilityId,multipleFacilityImage]
+            replacements:[new Date(),facilityId],
+            type:QueryTypes.SELECT
         })
+        if(fetchTheFacilitiesDetailsData.length==0){
+            return res.status(statusCode.BAD_REQUEST.code).json('Invalid Request')
+        }
+        let fetchTheFacilityImageData = await sequelize.query(fetchTheFacilityImageQuery,
+            {
+                replacements:[facilityId, facilityEntityType, multipleFacilityImage, statusId, statusId],
+                type:QueryTypes.SELECT
+            })
+            console.log(fetchTheFacilityImageData,'fethcFacilityImageData')
+            if(fetchTheFacilityImageData.length > 0){
+                fetchTheFacilitiesDetailsData[0].url = fetchTheFacilityImageData[0].url
+            }
+            else{
+                fetchTheFacilitiesDetailsData[0].url = null
+            }
 
         let fetchEventDetailsQuery = `
         select e.eventName, e.eventCategoryId, e.locationName, e.eventDate, e.eventStartTime,
-        s.statusCode, e.eventEndTime, e.descriptionOfEvent,fl.url,fat.filePurpose ,fat.entityType
-        from amabhoomi.eventactivities e
-        inner join amabhoomi.statusmasters s on e.statusId = s.statusId
-        left join amabhoomi.fileattachments fat on fat.entityId  = e.eventId and fat.filePurpose = 'Event Image' and fat.entityType = 'events' 
-        left join amabhoomi.files fl on fl.fileId  = fat.fileId
-        and facilityId=?`;
+         e.eventEndTime, e.descriptionOfEvent
+        from amabhoomi.eventactivities e where
+        e.facilityId=?`;
 
         let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,
             {
-                replacements:[facilityId]
+                replacements:[facilityId],
+                type:QueryTypes.SELECT
             })
+
+            if(fetchEventDetailsData.length>0){
+                for(let i of  fetchEventDetailsData){
+                    let fetchTheEventImageQuery = `select group_concat(fl.url separator  ';') as url from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
+                    where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`
+        
+                    let fetchTheEventImageData = await sequelize.query(fetchTheEventImageQuery,
+                        {
+                            replacements:[i.eventId, eventEntityType, eventFilePurpose, statusId, statusId],
+                            type:QueryTypes.SELECT
+                        })
+            
+                        if(fetchTheEventImageData.length > 0){
+                            i.url = fetchTheEventImageData[0].url
+                        }
+                        else{
+                            i.url = null
+                        }
+                }
+              
+            }
+            
 
         let fethAmenitiesDataQuery =  `select am.amenityName from amabhoomi.facilityamenities fa inner join amabhoomi.amenitymasters am on am.amenityId = fa.amenityId  where fa.facilityId = ? and fa.statusId=1`
         let fethAmenitiesDetailsDataData = await sequelize.query(fethAmenitiesDataQuery,
             {
-                replacements:[facilityId]
+                replacements:[facilityId],
+                type:QueryTypes.SELECT
             })
         
 
         let fetchServicesDataQuery = `select s.code, s.description from amabhoomi.services s inner join amabhoomi.servicefacilities sf on sf.serviceId = s.serviceId where sf.facilityId =? and sf.statusId =1`
         let fetchServicesDetailsData = await sequelize.query(fetchServicesDataQuery,
             {
-                replacements:[facilityId]
+                replacements:[facilityId],
+                type:QueryTypes.SELECT
             })
         // if the facilityType is playground then this facility activities will display some data
         
@@ -442,14 +487,14 @@ const viewParkById = async (req,res)=>{
                 publicUserId:userId
             }
         })
-        const encodedFacilities = encodeUrls(fetchTheFacilitiesDetailsData[0]);
+        const encodedFacilities = encodeUrls(fetchTheFacilitiesDetailsData);
 
         return res.status(statusCode.SUCCESS.code).json({message:
             "These are the required Data",
-           facilitiesData: fetchTheFacilitiesDetailsData[0],
-           eventDetails:fetchEventDetailsData[0],
-            amenitiesData:fethAmenitiesDetailsDataData[0],
-            serviceData:fetchServicesDetailsData[0],
+           facilitiesData: fetchTheFacilitiesDetailsData,
+           eventDetails:fetchEventDetailsData,
+            amenitiesData:fethAmenitiesDetailsDataData,
+            serviceData:fetchServicesDetailsData,
             fetchfacilitiesActivities:fetchfacilitiesActivities,
             fetchTariffData:fetchTariff,
             fetchBookmarkDetails:fetchBookmarkDetails
