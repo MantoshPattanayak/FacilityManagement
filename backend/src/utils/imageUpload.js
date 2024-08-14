@@ -22,6 +22,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
         console.log(mime, mimeMatch,'mime match')
         if ([
           "image/jpeg",
+          "image/jpg",
           "image/png",
           "image/webp",
           "application/pdf",
