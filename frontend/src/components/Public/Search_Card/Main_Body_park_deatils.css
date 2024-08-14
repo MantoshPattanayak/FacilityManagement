@@ -11,8 +11,8 @@
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0, 0.2)
     ),
-    url("../../../assets/bg4_park.png");
-  height: 30vh;
+    url("../../../assets/Park_541.png");
+  height: 40vh;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -23,8 +23,8 @@
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0, 0.2)
     ),
-    url("../../../assets/MultiPark.jpg");
-  height: 30vh;
+    url("../../../assets/Multiprpose_Ground.png");
+  height: 40vh;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -34,8 +34,8 @@
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0, 0.2)
     ),
-    url("../../../assets/Blue_ways_photo.png");
-  height: 30vh;
+    url("../../../assets/Blueways122.png");
+  height: 40vh;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -46,8 +46,8 @@
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0, 0.2)
     ),
-    url("../../../assets/Sport.png");
-  height: 30vh;
+    url("../../../assets/playfield.png");
+  height: 40vh;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -57,8 +57,8 @@
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0, 0.2)
     ),
-    url("../../../assets/Green_ways.png");
-  height: 30vh;
+    url("../../../assets/Greenway322.png");
+  height: 40vh;
   background-size: cover;
   background-repeat: no-repeat;
 }

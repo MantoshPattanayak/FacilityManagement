@@ -317,9 +317,15 @@ background-repeat: no-repeat;
   display: inline-block;
   /* Ensure the text is displayed as a block */
 }
-.service_container {
+/* .service_container {
   display: flex;
   gap: 30px;
+} */
+.service_container {
+  display: flex;
+  gap: 0px 10px;
+  flex-wrap: wrap;
+  max-width: 68vw;
 }
 
 .Service_text::after {
@@ -370,7 +376,7 @@ background-repeat: no-repeat;
 .service_name {
   /* font-size: 17px; */
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* --------------------------- Amenities ------------------------------------------*/
@@ -380,10 +386,17 @@ background-repeat: no-repeat;
   padding-block: 5px;
 }
 
-.Amenities-Data {
+/* .Amenities-Data {
   display: flex;
   gap: 40px;
   padding: 10px;
+} */
+.Amenities-Data {
+  display: flex;
+  gap: 0px 10px;
+  flex-wrap: wrap;
+  padding: 10px;
+  max-width: 68vw;
 }
 
 .Correct_icon {
