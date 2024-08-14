@@ -20,7 +20,7 @@ const Facility_Edit_View = () => {
         new URLSearchParams(location.search).get("facilityTypeId")
     );
     console.log("Decrypted facilityTypeId: ", facilityTypeId);
-    
+
     const facilityId = decryptData(
         new URLSearchParams(location.search).get("facilityId")
     );
@@ -47,7 +47,7 @@ const Facility_Edit_View = () => {
     const [initialFacilityDataStore, setinitialFacilityDataStore] = useState({})
     // here Facility Post data ----------------------------------------------
     const [PostFacilityData, setPostFacilityData] = useState({
-       
+
         facilityName: "",
         longitude: "",
         latitude: "",
@@ -87,12 +87,13 @@ const Facility_Edit_View = () => {
         emailAdress: "",
         ownerPanCard: "",
         ownership: "",
-        ownersAddress1: "",
+        ownersAddress: "",
         fileNames: {  // New state to store file names ----------------------
             facilityImageOne: "",
             facilityArrayOfImages: []
         }
     });
+    const [removedParkInventory, setRemovedParkInventory] = useState([]);
     // here call the api for get the initial data ---------------------------
     async function GetFacilityInitailData() {
         try {
@@ -181,12 +182,15 @@ const Facility_Edit_View = () => {
             const fetchDataDisplayFacility = {
                 amenity: amenity.map(acc => acc.amenityId) || [],
                 eventCategory: eventCategory.map(ec => ec.eventCategoryId) || [],
-                facilityArrayOfImages: facilityArrayOfImages || [],
+                fileNames: {
+                    facilityImageOne: facilityImageOne[0] || {},
+                    facilityArrayOfImages: facilityArrayOfImages || [],
+                },
                 facilityData: {
                     ...PostFacilityData.facilityData,
                     ...facilityData
                 },
-                facilityImageOne: facilityImageOne || [],
+                // facilityImageOne: facilityImageOne || [],
                 game: game.map(acc => acc.userActivityId) || [],
                 ownersAddress: ownersAddress.length > 0 ? ownersAddress[0] : {},
                 parkInventory: parkInventory || [],
@@ -276,8 +280,14 @@ const Facility_Edit_View = () => {
                 othergame: PostFacilityData.othergame || null,
                 otherAmenities: PostFacilityData.otherAmenities || null,
                 additionalDetails: PostFacilityData.additionalDetails || null,
-                facilityImage: PostFacilityData.facilityImage || null,
-                parkInventory: PostFacilityData.parkInventory || null,
+                facilityImage: PostFacilityData.fileNames || null,
+                parkInventory: [
+                    ...removedParkInventory.map((inv) => {
+                        inv.count = 0;
+                        return inv;
+                    }),
+                    ...PostFacilityData.parkInventory
+                ] || null,
                 facilityisownedbBDA: facilityisownedbBDAValue,
                 firstName: PostFacilityData.firstName || null,
                 lastName: PostFacilityData.lastName || null,
@@ -285,7 +295,7 @@ const Facility_Edit_View = () => {
                 emailAdress: PostFacilityData.emailAdress || null,
                 ownerPanCard: PostFacilityData.ownerPanCard || null,
                 ownership: PostFacilityData.ownership || null,
-                ownersAddress: PostFacilityData.ownersAddress1 || null
+                ownersAddress: PostFacilityData.ownersAddress || null
             };
             let res = await axiosHttpClient("Facility_Update_Api", "put", payloadfacilityData);
             console.log("Response of Post the data of Facility", res);
@@ -306,30 +316,35 @@ const Facility_Edit_View = () => {
     const handleImageUpload = (name, files) => {
         if (files && files.length > 0) {
             if (name === "facilityImageOne") {
-                const currentImagesCount1 = PostFacilityData.facilityImage.facilityImageOne.length;
-                if (currentImagesCount1 + files.length > 1) {
-                    toast.warning('You can upload only one image for Facility Image.');
-                    document.getElementById("myForm").reset();
-                    return;
-                }
+                const currentImagesCount1 = PostFacilityData.fileNames.facilityImageOne.length;
+                // if (currentImagesCount1 + files.length > 1) {
+                //     toast.warning('You can upload only one image for Facility Image.');
+                //     document.getElementById("myForm").reset();
+                //     return;
+                // }
                 let file = files[0];
                 if (parseInt(file.size / 1024) <= 200) { // File size check for single image
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         setPostFacilityData(prevState => ({
                             ...prevState,
-                            facilityImage: {
-                                ...prevState.facilityImage,
-                                facilityImageOne: reader.result
-                            },
+                            // facilityImage: {
+                            //     ...prevState.facilityImage,
+                            //     facilityImageOne: reader.result
+                            // },
                             fileNames: {
                                 ...prevState.fileNames,
-                                facilityImageOne: file.name
+                                facilityImageOne: {
+                                    code: file.name,
+                                    fileId: null,
+                                    data: reader.result
+                                }
                             }
                         }));
-                        displayFileName("facilityImageOne", [file.name]);
+                        // displayFileName("facilityImageOne", PostFacilityData.fileNames.facilityImageOne);
                     };
                     reader.readAsDataURL(file);
+                    console.log("post facility data", PostFacilityData);
                 } else {
                     toast.warning('Kindly choose an image with size less than 200 KB.');
 
@@ -338,7 +353,7 @@ const Facility_Edit_View = () => {
             } else if (name === "facilityArrayOfImages") {     // Mulitple Image Upload 
                 const validFiles = [];
                 let totalSize = 0;
-                const currentImagesCount = PostFacilityData.facilityImage.facilityArrayOfImages.length;
+                const currentImagesCount = PostFacilityData.fileNames.facilityArrayOfImages.length;
                 if (currentImagesCount + files.length > 5) {    // max 5 image user can Upload 
                     toast.warning("You can only upload up to 5 images for Additional Facility Images.");
                     document.getElementById("myForm").reset();
@@ -356,29 +371,36 @@ const Facility_Edit_View = () => {
                     }
                 }
                 if (totalSize <= 1000) { // Adjusted total size limit for up to 5 images
-                    const newFileNames = validFiles.map(file => file.name);
+                    // const newFileNames = validFiles.map(file => file.name);
                     validFiles.forEach(file => {
                         const reader = new FileReader();
                         reader.onloadend = () => {
                             setPostFacilityData(prevState => ({
                                 ...prevState,
-                                facilityImage: {
-                                    ...prevState.facilityImage,
-                                    facilityArrayOfImages: [
-                                        ...prevState.facilityImage.facilityArrayOfImages,
-                                        reader.result
-                                    ]
-                                },
+                                // facilityImage: {
+                                //     ...prevState.facilityImage,
+                                //     facilityArrayOfImages: [
+                                //         ...prevState.facilityImage.facilityArrayOfImages,
+                                //         reader.result
+                                //     ]
+                                // },
                                 fileNames: {
                                     ...prevState.fileNames,
-                                    facilityArrayOfImages: [...prevState.fileNames.facilityArrayOfImages, ...newFileNames]
+                                    facilityArrayOfImages: [
+                                        ...prevState.fileNames.facilityArrayOfImages,
+                                        {
+                                            code: file.name,
+                                            fileId: null,
+                                            data: reader.result
+                                        }
+                                    ]
                                 }
                             }));
                         };
                         reader.readAsDataURL(file);
                     });
-                    displayFileName("facilityArrayOfImages", newFileNames);
-
+                    // displayFileName("facilityArrayOfImages", PostFacilityData.fileNames.facilityArrayOfImages);
+                    console.log("post facility data", PostFacilityData);
                 } else {
                     toast.warning("Total size of images should not exceed 1000 KB for up to 5 images.");
                     document.getElementById("myForm").reset();
@@ -391,7 +413,7 @@ const Facility_Edit_View = () => {
     const displayFileName = (inputName, fileNames) => {
         const container = document.getElementById(inputName === "facilityImageOne" ? "facilityImageOneContainer" : "facilityArrayOfImagesContainer").querySelector(".image-preview");
         fileNames.forEach(fileName => {
-            // const fileLabel = document.createElement("p");
+            const fileLabel = document.createElement("p");
             fileLabel.textContent = fileName;
             container.appendChild(fileLabel);
 
@@ -504,11 +526,29 @@ const Facility_Edit_View = () => {
     // Handle Remove (Row in table)---------------------------------------------
     const handleRemoveRow = (index, e) => {
         e.preventDefault();
+        let removedInventory = PostFacilityData.parkInventory.filter((_, i) => i == index)[0];
+        console.log("removedInventory 1", removedInventory);
+        removedInventory["count"] = 0;
+        console.log("removedInventory 2", removedInventory);
+
+        setRemovedParkInventory([...removedParkInventory, removedInventory]);
+
         // Remove the row from parkInventory
         setPostFacilityData(prevState => ({
             ...prevState,
             parkInventory: prevState.parkInventory.filter((_, i) => i !== index)
         }));
+
+        // const newParkInventory = PostFacilityData.parkInventory.map((item, i) => {
+        //     if (i === index) {
+        //         return { ...item, [field]: value };
+        //     }
+        //     return item;
+        // });
+        // setPostFacilityData(prevState => ({
+        //     ...prevState,
+        //     parkInventory: newParkInventory
+        // }));
 
         // Remove errors associated with the removed row from formErrors
         const updatedErrors = { ...formErrors };
@@ -518,7 +558,7 @@ const Facility_Edit_View = () => {
         delete updatedErrors[`count${index}`];
 
         // Update formErrors state with the updatedErrors
-
+        console.log("removed park inventory", removedParkInventory);
     };
     //handleChnage of handleEquipmentChange
     const handleEquipmentChange = (index, field, value) => {
@@ -852,7 +892,7 @@ const Facility_Edit_View = () => {
 
                                     </div>
                                 </div>
-                                <div className="HostEvent_Row">
+                                <div className="HostEvent_Row h-[120px]">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Services
@@ -900,7 +940,7 @@ const Facility_Edit_View = () => {
                                         {formErrors.otherServices && <p className="error text-red-700">{formErrors.otherServices}</p>}
                                     </div>
                                 </div>
-                                <div className="HostEvent_Row">
+                                <div className="HostEvent_Row h-[170px]">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Amenities
@@ -950,7 +990,7 @@ const Facility_Edit_View = () => {
                                         {formErrors.otherAmenities && <p className="error text-red-700">{formErrors.otherAmenities}</p>}
                                     </div>
                                 </div>
-                                <div className="HostEvent_Row">
+                                <div className="HostEvent_Row h-[100px]">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Events Category
@@ -1095,24 +1135,26 @@ const Facility_Edit_View = () => {
                                             </div>
                                         }
                                         {formErrors.facilityImageOne && <p className="error text-red-700  text-sm">{formErrors.facilityImageOne}</p>}
-                                        {PostFacilityData?.facilityImageOne && (
+                                        {PostFacilityData?.fileNames.facilityImageOne && (
                                             <div className="image-preview" id="imagePreview">
                                                 <p>
-                                                    {PostFacilityData.facilityImageOne.map(image => (
-                                                        <span key={image.attachmentId}>
-                                                            {image.code}
+                                                    {
+                                                        // PostFacilityData.fileNames.facilityImageOne.map(image => (
+                                                        <span key={PostFacilityData.fileNames.facilityImageOne?.attachmentId}>
+                                                            {PostFacilityData.fileNames.facilityImageOne?.code}
                                                             <span
                                                                 onClick={() => handleImageRemove("facilityImageOne")}
                                                                 style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}>
 
                                                             </span>
                                                             <span
-                                                                onClick={() => openImageInNewTab(image.url)}
+                                                                onClick={() => openImageInNewTab(PostFacilityData.fileNames.facilityImageOne?.url)}
                                                                 style={{ cursor: 'pointer', color: 'blue', marginLeft: '10px' }}>
                                                                 <FontAwesomeIcon icon={faEye} />
                                                             </span>
                                                         </span>
-                                                    ))}
+                                                        // ))
+                                                    }
                                                 </p>
                                             </div>
                                         )}
@@ -1140,12 +1182,9 @@ const Facility_Edit_View = () => {
                                                 </div>
                                             </div>
                                         }
-                                        {PostFacilityData.facilityArrayOfImages && (
+                                        {PostFacilityData.fileNames.facilityArrayOfImages && (
                                             <div className="image-preview" id="imagePreview">
-                                                {PostFacilityData.facilityArrayOfImages.map(image => (
-
-
-
+                                                {PostFacilityData.fileNames.facilityArrayOfImages.map(image => (
                                                     <span key={image.attachmentId}>
                                                         {image.code}
                                                         <span
@@ -1159,7 +1198,6 @@ const Facility_Edit_View = () => {
                                                             <FontAwesomeIcon icon={faEye} />
                                                         </span>
                                                     </span>
-
                                                 ))}
                                             </div>
                                         )}
@@ -1278,7 +1316,7 @@ const Facility_Edit_View = () => {
                                             </option>
 
                                             {action == 'View' &&
-                                                PostFacilityData?.ownersAddress?.facilityisownedbBDA === 0 && (
+                                                PostFacilityData?.ownersAddress?.facilityisownedbBDA == 1 && (
                                                     <option value="Yes" selected={PostFacilityData.ownersAddress.facilityisownedbBDA}>
                                                         Yes
                                                     </option>
@@ -1286,8 +1324,8 @@ const Facility_Edit_View = () => {
 
 
                                             }
-                                            {PostFacilityData?.ownersAddress?.facilityisownedbBDA === 1 && (
-                                                <option value="No" selected={PostFacilityData.ownersAddress.facilityisownedbBDA == 1}>
+                                            {PostFacilityData?.ownersAddress?.facilityisownedbBDA == 0 && (
+                                                <option value="No" selected={PostFacilityData.ownersAddress.facilityisownedbBDA}>
                                                     No
                                                 </option>
                                             )}

@@ -13,7 +13,7 @@ import AdminHeader from "../../../common/AdminHeader";
 import Location_icon from "../../../assets/Location_goggle_icon-removebg-preview.png";
 import { MdHomeRepairService } from "react-icons/md";
 import Park_img from "../../../assets/Park_details.jpg";
-import amabhoomi from "../../../assets/ama_bhoomi_bgi.jpg";
+import amabhoomi from "../../../assets/bg_park_3.png";
 import sport_image from "../../../assets/sport_details_image.jpg";
 
 import Yoga_img from "../../../assets/Yoga_img.png";
@@ -79,8 +79,8 @@ const Sub_Park_Details = () => {
   // for google maps
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
-
-  useEffect(() => {}, [facilityId]);
+  const [imagesFetch, setImagesFetch] = useState(false);
+  useEffect(() => { }, [facilityId]);
   // Book Mark Funcation ----------------------------------------
   async function handleBookmarkStatus(e) {
     e.preventDefault();
@@ -138,10 +138,23 @@ const Sub_Park_Details = () => {
       console.log("facility details data fetch", res.data);
       // Set images data
       if (res.data.facilitiesData.length > 0) {
-        let imagesData = res.data.facilitiesData[0].url
-          .split(";")
-          .filter((url) => url.trim() !== "");
-        setImagesList(imagesData);
+        if (res.data.facilitiesData[0].url && res.data.facilitiesData[0].url.split(";").length > 0) {
+          let imagesData = res.data.facilitiesData[0].url
+            .split(";")
+            .filter((url) => url.trim() !== "");
+          setImagesList(imagesData);
+          setImagesFetch(true);
+        }
+        else {
+          setImagesFetch(false);
+          setImagesList([
+            Park_img,
+            amabhoomi,
+            Park_img,
+            amabhoomi,
+            Park_img,
+          ]);
+        }
       }
 
       function setOperatingDaysFromRes(res) {
@@ -200,7 +213,7 @@ const Sub_Park_Details = () => {
     }
   }
 
-  useEffect(() => {}, [isBookmarked]);
+  useEffect(() => { }, [isBookmarked]);
 
   useEffect(() => {
     getSub_park_details();
@@ -349,13 +362,13 @@ const Sub_Park_Details = () => {
           FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1
             ? "Header_Img"
             : FacilitiesData[0]?.facilityTypeId === 2
-            ? "playground_header_image"
-            : FacilitiesData[0]?.facilityTypeId === 3
-            ? "MulitGroud"
-            : FacilitiesData[0]?.facilityTypeId === 4
-            ? "BlueWays"
-            :  FacilitiesData[0]?.facilityTypeId === 5
-            ? "Greenways" :""
+              ? "playground_header_image"
+              : FacilitiesData[0]?.facilityTypeId === 3
+                ? "MulitGroud"
+                : FacilitiesData[0]?.facilityTypeId === 4
+                  ? "BlueWays"
+                  : FacilitiesData[0]?.facilityTypeId === 5
+                    ? "Greenways" : ""
         }
       >
         <div className="park_Name1">
@@ -385,10 +398,17 @@ const Sub_Park_Details = () => {
       <div className="map_img_main_conatiner">
         <div className="carousel-container1">
           <div className="carousel1">
-            <img
-              src={instance().baseURL + "/static" + images[currentIndex1]}
-              alt={`Slide ${currentIndex1 + 1}`}
-            />
+            {
+              imagesFetch ? <img
+                src={instance().baseURL + "/static" + images[currentIndex1]}
+                alt={`Slide ${currentIndex1 + 1}`}
+              />
+                : <img
+                  src={images[currentIndex1]}
+                  alt={`Slide ${currentIndex1 + 1}`}
+                />
+            }
+
           </div>
           <button className="carousel1-button1 left1" onClick={handlePrev}>
             &lt;
@@ -441,12 +461,11 @@ const Sub_Park_Details = () => {
 
                 <div className="open-close-btn">
                   <button
-                    className={`Open_Button ${
-                      FacilitiesData.length > 0 &&
-                      FacilitiesData[0].status === "open"
+                    className={`Open_Button ${FacilitiesData.length > 0 &&
+                        FacilitiesData[0].status === "open"
                         ? "open"
                         : "closed"
-                    }`}
+                      }`}
                   >
                     {FacilitiesData?.length > 0 &&
                       FacilitiesData[0]?.status.toUpperCase()}
@@ -466,23 +485,21 @@ const Sub_Park_Details = () => {
               ) : FacilitiesData[0]?.facilityTypeId == 2 ? (
                 <Link
                   to={{
-                    pathname: `${
-                      isUserLoggedIn == 1
+                    pathname: `${isUserLoggedIn == 1
                         ? "/BookParks/Book_Now_Sport"
                         : "/login-signup"
-                    }`,
-                    search: `${
-                      isUserLoggedIn == 1
+                      }`,
+                    search: `${isUserLoggedIn == 1
                         ? `?facilityId=${encryptDataId(
-                            FacilitiesData[0]?.facilityId
-                          )}`
+                          FacilitiesData[0]?.facilityId
+                        )}`
                         : `?facilityId=${encryptDataId(
-                            FacilitiesData[0]?.facilityId
-                          )}` +
-                          `&redirect=${encryptDataId(
-                            "/BookParks/Book_Now_Sport"
-                          )}`
-                    }`,
+                          FacilitiesData[0]?.facilityId
+                        )}` +
+                        `&redirect=${encryptDataId(
+                          "/BookParks/Book_Now_Sport"
+                        )}`
+                      }`,
                   }}
                   className="button-9"
                 >
@@ -491,19 +508,17 @@ const Sub_Park_Details = () => {
               ) : FacilitiesData[0]?.facilityTypeId == 3 ? (
                 <Link
                   to={{
-                    pathname: `${
-                      isUserLoggedIn == 1
+                    pathname: `${isUserLoggedIn == 1
                         ? "/Book_Now_Multipurposeground"
                         : "/login-signup"
-                    }`,
-                    search: `${
-                      isUserLoggedIn == 1
+                      }`,
+                    search: `${isUserLoggedIn == 1
                         ? `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}`
                         : `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}` +
-                          `&redirect=${encryptDataId(
-                            "/Book_Now_Multipurposeground"
-                          )}`
-                    }`,
+                        `&redirect=${encryptDataId(
+                          "/Book_Now_Multipurposeground"
+                        )}`
+                      }`,
                   }}
                   className="button-9"
                 >
@@ -512,23 +527,21 @@ const Sub_Park_Details = () => {
               ) : (
                 <Link
                   to={{
-                    pathname: `${
-                      isUserLoggedIn == 1
+                    pathname: `${isUserLoggedIn == 1
                         ? "/BookParks/Book_Now_Sport"
                         : "/login-signup"
-                    }`,
-                    search: `${
-                      isUserLoggedIn == 1
+                      }`,
+                    search: `${isUserLoggedIn == 1
                         ? `?facilityId=${encryptDataId(
-                            FacilitiesData[0]?.facilityId
-                          )}`
+                          FacilitiesData[0]?.facilityId
+                        )}`
                         : `?facilityId=${encryptDataId(
-                            FacilitiesData[0]?.facilityId
-                          )}` +
-                          `&redirect=${encryptDataId(
-                            "/BookParks/Book_Now_Sport"
-                          )}`
-                    }`,
+                          FacilitiesData[0]?.facilityId
+                        )}` +
+                        `&redirect=${encryptDataId(
+                          "/BookParks/Book_Now_Sport"
+                        )}`
+                      }`,
                   }}
                   className="button-9"
                 >
@@ -540,18 +553,16 @@ const Sub_Park_Details = () => {
 
               <Link
                 to={{
-                  pathname: `${
-                    isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-                  }`,
-                  search: `${
-                    isUserLoggedIn == 1
+                  pathname: `${isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                    }`,
+                  search: `${isUserLoggedIn == 1
                       ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
+                        FacilitiesData[0]?.facilityId
+                      )}`
                       : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-                  }`,
+                        FacilitiesData[0]?.facilityId
+                      )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
+                    }`,
                 }}
                 className="button-10"
               >
@@ -563,32 +574,32 @@ const Sub_Park_Details = () => {
           </div>
 
           <div className="Map_image">
-          {
+            {
               loadError ? (
                 <div>Error loading maps</div>
               ) : !isLoaded ? (
                 <div>Loading Maps...</div>
               ) : (
                 <GoogleMap
-                ClassName="Map_image_Goole"
-                mapContainerStyle={{ height: "200px", width: "100%" }}
-                center={{
-                  lat: FacilitiesData[0]?.latitude,
-                  lng: FacilitiesData[0]?.longitude
-                }}
-                zoom={15}
-              >
-                {/* Render markers */}
-                {FacilitiesData?.map((location, index) => (
-                  <Marker
-                    key={index}
-                    position={{
-                      lat: location.latitude,
-                      lng: location.longitude,
-                    }}
-                  />
-                ))}
-              </GoogleMap>
+                  ClassName="Map_image_Goole"
+                  mapContainerStyle={{ height: "200px", width: "100%" }}
+                  center={{
+                    lat: FacilitiesData[0]?.latitude,
+                    lng: FacilitiesData[0]?.longitude
+                  }}
+                  zoom={15}
+                >
+                  {/* Render markers */}
+                  {FacilitiesData?.map((location, index) => (
+                    <Marker
+                      key={index}
+                      position={{
+                        lat: location.latitude,
+                        lng: location.longitude,
+                      }}
+                    />
+                  ))}
+                </GoogleMap>
               )
             }
             {/* <LoadScript googleMapsApiKey={apiKey}>
@@ -629,111 +640,111 @@ const Sub_Park_Details = () => {
         </div> */}
       </div>
       <div className="other-contents">
-  {/* -----------------------------services------------------------------------------ */}
-  <div className="Service_Now_container">
-    <h1 className="Service_text">Services</h1>
-    <div className="service_container">
-      {ServiceData?.length > 0 &&
-        ServiceData?.map((item, index) => (
-          <div className="Service_Avilable" key={index}>
-            <div className="service_item">
-              <img
-                className="Correct_icon"
-                src={green_tick}
-                alt={`Amenity icon ${index}`}
-              />
-              <p className="service_name">{item.description}</p>
-            </div>
-          </div>
-        ))}
-    </div>
-  </div>
-
-  {/* --------------------------- Amenities ------------------------------------------*/}
-  <div className="Amenities_Main_container">
-    <h1 className="Service_text">Amenities</h1>
-    <div className="Amenities-Data">
-      {amenitiesData
-        .flatMap((group) => group) // Flatten the array of arrays
-        .filter(
-          (item, index, self) =>
-            self.findIndex((t) => t.amenityName === item.amenityName) === index
-        ) // Filter unique items
-        .map((item, index) => (
-          <span className="flex gap-2" key={index}>
-            <img
-              className="Correct_icon"
-              src={green_tick}
-              alt={`Amenity icon ${index}`}
-            />
-            <h1 className="Amenities_name">{item.amenityName}</h1>
-          </span>
-        ))}
-    </div>
-  </div>
-
-  {/* -------------------------- Here About -------------------------------------------- */}
-  <div className="About_Container">
-    <h1 className="Service_text">About</h1>
-    <h1 className="About_text">
-      {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
-    </h1>
-  </div>
-
-  {/* -------------------------Event Available ----------------------------------------------------------- */}
-  <div className="Event_Available_main_container">
-    <h1 className="Service_text">Event Available</h1>
-    {EventAvailable?.length > 0 ? (
-      <div className="carousel carousal321">
-        <button className="carousel-button2 left" onClick={handleEventPrev}>
-          &lt;
-        </button>
-        <div className="carousel-container">
-          <div
-            className="carousel-images"
-            style={{
-              width: "auto",
-              transform: `translateX(-${currentIndex2 * 420}px)`,
-            }}
-          >
-            {EventAvailable.map((d, i) => (
-              <div
-                className="carousel-slide"
-                key={i}
-                onClick={() => {
-                  navigate(
-                    `/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`
-                  );
-                }}
-              >
-                <img
-                  className="Card_img"
-                  src={`${instance().baseURL}/static${d.url}`}
-                  alt={"image"}
-                />
-                <div className="card_text">
-                  <span className="Name_location">
-                    <h2 className="park_name">{d.eventName}</h2>
-                    <span className="Yoga_date_time">
-                      <h1>Date: {formatDate(d.eventDate)}</h1>
-                      <h1>Time: {formatTime(d.eventStartTime)}</h1>
-                    </span>
-                  </span>
+        {/* -----------------------------services------------------------------------------ */}
+        <div className="Service_Now_container">
+          <h1 className="Service_text">Services</h1>
+          <div className="service_container">
+            {ServiceData?.length > 0 &&
+              ServiceData?.map((item, index) => (
+                <div className="Service_Avilable" key={index}>
+                  <div className="service_item">
+                    <img
+                      className="Correct_icon"
+                      src={green_tick}
+                      alt={`Amenity icon ${index}`}
+                    />
+                    <p className="service_name">{item.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
-        <button className="carousel-button2 right" onClick={handleEventNext}>
-          &gt;
-        </button>
+
+        {/* --------------------------- Amenities ------------------------------------------*/}
+        <div className="Amenities_Main_container">
+          <h1 className="Service_text">Amenities</h1>
+          <div className="Amenities-Data">
+            {amenitiesData
+              .flatMap((group) => group) // Flatten the array of arrays
+              .filter(
+                (item, index, self) =>
+                  self.findIndex((t) => t.amenityName === item.amenityName) === index
+              ) // Filter unique items
+              .map((item, index) => (
+                <span className="flex gap-2" key={index}>
+                  <img
+                    className="Correct_icon"
+                    src={green_tick}
+                    alt={`Amenity icon ${index}`}
+                  />
+                  <h1 className="Amenities_name">{item.amenityName}</h1>
+                </span>
+              ))}
+          </div>
+        </div>
+
+        {/* -------------------------- Here About -------------------------------------------- */}
+        <div className="About_Container">
+          <h1 className="Service_text">About</h1>
+          <h1 className="About_text">
+            {FacilitiesData?.length > 0 && FacilitiesData[0]?.about}
+          </h1>
+        </div>
+
+        {/* -------------------------Event Available ----------------------------------------------------------- */}
+        <div className="Event_Available_main_container">
+          <h1 className="Service_text">Event Available</h1>
+          {EventAvailable?.length > 0 ? (
+            <div className="carousel carousal321">
+              <button className="carousel-button2 left" onClick={handleEventPrev}>
+                &lt;
+              </button>
+              <div className="carousel-container">
+                <div
+                  className="carousel-images"
+                  style={{
+                    width: "auto",
+                    transform: `translateX(-${currentIndex2 * 420}px)`,
+                  }}
+                >
+                  {EventAvailable.map((d, i) => (
+                    <div
+                      className="carousel-slide"
+                      key={i}
+                      onClick={() => {
+                        navigate(
+                          `/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`
+                        );
+                      }}
+                    >
+                      <img
+                        className="Card_img"
+                        src={`${instance().baseURL}/static${d.url}`}
+                        alt={"image"}
+                      />
+                      <div className="card_text">
+                        <span className="Name_location">
+                          <h2 className="park_name">{d.eventName}</h2>
+                          <span className="Yoga_date_time">
+                            <h1>Date: {formatDate(d.eventDate)}</h1>
+                            <h1>Time: {formatTime(d.eventStartTime)}</h1>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <button className="carousel-button2 right" onClick={handleEventNext}>
+                &gt;
+              </button>
+            </div>
+          ) : (
+            <p>No events.</p>
+          )}
+        </div>
+        {/* <Book_Now/> */}
       </div>
-    ) : (
-      <p>No events.</p>
-    )}
-  </div>
-  {/* <Book_Now/> */}
-</div>
 
 
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
