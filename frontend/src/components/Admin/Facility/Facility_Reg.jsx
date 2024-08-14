@@ -752,7 +752,7 @@ const Facility_Reg = () => {
             } else {
                 equipmentIds.add(item.equipmentId);
             }
-            if (!item.count) {
+            if (!parseInt(item.count)) {
                 errors[`count${index}`] = "Please Enter a Number of item/Equipment"
             } else if (!Number_item_regex.test(item.count)) {
                 errors[`count${index}`] = "Please enter a valid number between 1 and 100."
