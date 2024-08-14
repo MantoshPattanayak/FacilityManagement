@@ -12,13 +12,14 @@
 
 /* Disclaimer Title */
 .disclaimer-title {
-    text-align: center;
-    color: #333;
-    font-size: 3rem;
-    margin-bottom: 20px;
-    opacity: 0;
-    animation: slideInTitle 1s ease forwards;
-    animation-delay: 0.3s;
+    font-family: 'Montserrat', sans-serif;
+  font-size: 2.5em;
+  color: #444;
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #028a19;
+  padding-bottom: 15px;
+  letter-spacing: 1.5px;
 }
 
 @keyframes slideInTitle {
@@ -37,6 +38,21 @@
     opacity: 0;
     animation: fadeInContent 1s ease forwards;
     animation-delay: 0.6s;
+}
+
+.disclaimer-content h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8em;
+    color: #555;
+    margin-top: 30px;
+    border-bottom: 1px solid #019306;
+    padding-bottom: 10px;
+}
+  
+.disclaimer-content p {
+    font-size: 1.1em;
+    margin: 15px 0;
+    text-align: justify;
 }
 
 @keyframes fadeInContent {

@@ -133,7 +133,7 @@ export default function PublicHeader() {
   // Secondary header................................................
   const [isSecondaryHeaderVisible, setIsSecondaryHeaderVisible] =
     useState(true);
-    const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+  const [isHeaderFixed, setIsHeaderFixed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,45 +146,25 @@ export default function PublicHeader() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  function adjustFontSize(change) {
+    const root = document.documentElement;
+    let currentSize = parseFloat(getComputedStyle(root).fontSize);
+
+    if (change === 0) {
+      root.style.fontSize = "16px"; // Default font size
+    } else {
+      root.style.fontSize = `${currentSize + change}px`;
+    }
+  }
+
   return (
     <div>
       {/* Secondary Header */}
       {isSecondaryHeaderVisible && (
         <div className="secondary-header">
-          <ul className="secondary-header-items">
-            <li>Screen Reader</li>
-            <li>Customer Connect</li>
-            <li>Colour Theme</li>
-          </ul>
-        </div>
-      )}
-      <header
-        className={`header ${isHeaderFixed ? "fixed" : "absolute"}`}
-        id="header-public"
-        style={{
-          top: isSecondaryHeaderVisible ? "" : "0px",
-          // transition: "top 0.3s",
-        }}
-      >
-        {/* <ToastContainer /> */}
-        <div className="header-content">
-          <div className="logo-ama-boomi">
-            <Link to={"/"}>
-              <img
-                src={AppLogo}
-                alt="App Logo"
-                className="h-[100%] top-0 absolute"
-              />
-            </Link>
-          </div>
-          <div className="navbar">
-            <ul
-              className={
-                showMediaIcon
-                  ? "hidden menu_links mobile_menu_links show"
-                  : "hidden menu_links mobile_menu_links"
-              }
-            >
+          <div className="secHeaderItem">
+            <ul className="secondary-header-items">
               <li>
                 {language === "EN" && (
                   <>
@@ -215,6 +195,95 @@ export default function PublicHeader() {
                   </>
                 )}
               </li>
+              <li>Screen Reader</li>
+              {/* <li>Customer Connect</li> */}
+            </ul>
+            <div className="font-size-adjust">
+              <a
+                title="Decrease Font Size"
+                aria-label="Decrease Font Size Button"
+                id="btn-decrease"
+                onClick={() => adjustFontSize(-1)}
+              >
+                A-
+              </a>
+              <a
+                title="Normalize Font Size"
+                aria-label="Normalize Font Size Button"
+                id="btn-orig"
+                onClick={() => adjustFontSize(0)}
+              >
+                A
+              </a>
+              <a
+                title="Increase Font Size"
+                aria-label="Increase Font Size Button"
+                id="btn-increase"
+                onClick={() => adjustFontSize(1)}
+              >
+                A+
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+      <header
+        className={`header ${isHeaderFixed ? "fixed" : "absolute"}`}
+        id="header-public"
+        style={{
+          top: isSecondaryHeaderVisible ? "" : "0px",
+          // transition: "top 0.3s",
+        }}
+      >
+        {/* <ToastContainer /> */}
+        <div className="header-content">
+          <div className="logo-ama-boomi">
+            <Link to={"/"}>
+              <img
+                src={AppLogo}
+                alt="App Logo"
+                className="h-[100%] top-0 absolute"
+              />
+            </Link>
+          </div>
+          <div className="navbar">
+            <ul
+              className={
+                showMediaIcon
+                  ? "hidden menu_links mobile_menu_links show"
+                  : "hidden menu_links mobile_menu_links"
+              }
+            >
+              {/* <li>
+                {language === "EN" && (
+                  <>
+                    <button
+                      value={"OD"}
+                      onClick={() => {
+                        setLanguageCode("OD");
+                        setRefresh((prevState) => !prevState);
+                      }}
+                    >
+                      ଓଡ଼ିଆ
+                    </button>{" "}
+                    &nbsp; |{" "}
+                  </>
+                )}
+                {language === "OD" && (
+                  <>
+                    <button
+                      value={"EN"}
+                      onClick={() => {
+                        setLanguageCode("EN");
+                        setRefresh((prevState) => !prevState);
+                      }}
+                    >
+                      English
+                    </button>{" "}
+                    &nbsp; |{" "}
+                  </>
+                )}
+              </li> */}
               {/* <li>
                 <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
               </li> */}
@@ -224,7 +293,7 @@ export default function PublicHeader() {
                     .find(
                       (data) => data.languageResourceKey == "publicHeaderAbout"
                     )
-                    ?.languageResourceValue?.toUpperCase()}
+                    ?.languageResourceValue?.toUpperCase() || "ABOUT"}
                 </Link>
               </li>
               <li>

@@ -171,7 +171,7 @@ const Main_Body_Park_Details = () => {
       );
     } else {
       console.error("Geolocation is not supported by this browser");
-      toast.error("Location permission not granted.");
+      // toast.error("Location permission not granted.");
     }
     return;
   }
@@ -220,7 +220,7 @@ const Main_Body_Park_Details = () => {
       setIsLoding(false);
     } catch (error) {
       console.error(error);
-      toast.error("Location permission not granted.");
+      // toast.error("Location permission not granted.");
       setIsLoding(false);
     }
   }

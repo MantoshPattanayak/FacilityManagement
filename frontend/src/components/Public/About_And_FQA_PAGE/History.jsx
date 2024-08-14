@@ -26,7 +26,7 @@ const History = () => {
                         </h1>
 
                     </div>
-                    <div className="About_us_img">
+                    {/* <div className="About_us_img">
 
                         <button class="button-37" role="button">In This Section</button>
                         <button type="button" className="Button_About" onClick={() => navigate('/About')} >Overview</button>
@@ -35,7 +35,7 @@ const History = () => {
                         <button type="button" className="Button_About" onClick={() => navigate('/Stakeholders')}>Key Stakeholders</button>
                         <button type="button" className="Button_About" onClick={() => navigate('/StandOut')}>What Make Us Stand Out</button>
 
-                    </div>
+                    </div> */}
                 </div>
             </div>
 

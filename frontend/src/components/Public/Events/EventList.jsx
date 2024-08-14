@@ -180,7 +180,7 @@ export default function EventList() {
       );
     } else {
       console.error('Geolocation is not supported by this browser');
-      toast.error('Location permission not granted.');
+      // toast.error('Location permission not granted.');
     }
     return;
   }

@@ -1404,7 +1404,7 @@ const Event_hostPage = () => {
                                             uploadEventImage: (formData.uploadEventImage.data || null),
                                             additionalFiles: (formData.additionalFiles.map((file) => { return file.data }) || null),
                                             facilityId: encryptData(formData.facilityId),
-                                            amount:encryptData(formData.amount)
+                                            amount:encryptData(formData.amount || "0")
                                         }
                                       
                                     }}

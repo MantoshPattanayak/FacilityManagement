@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
 import instance from "../../env";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 const CommonFooter1 = () => {
 
   //function to seek confirmation
@@ -81,17 +81,6 @@ const CommonFooter1 = () => {
             </p>
             <div className="Downlad_Appp">
               <h1 className="donwload_name"> Download App</h1>
-              {/* <div className="input-container">
-                <input
-                  type="text"
-                  className="Input_text_send_mail"
-                  placeholder="Enter your email"
-                />
-                <FontAwesomeIcon
-                  icon={faPaperPlane}
-                  className="paper-plane-icon"
-                />
-              </div> */}
               <div className="App_download">
                 <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
                   <img className="download_image" src={Download_App} alt="Download Google App" />
@@ -121,13 +110,12 @@ const CommonFooter1 = () => {
               </li>
             </ul>
             <div className="term_condtion_conatiner">
+              <Link to='/DosDont'><p>Do's and Don'ts</p></Link>
               <Link to='/Disclaimer'><p>Disclaimer</p></Link>
-
               <Link to='/Privacy_Policy'> <p>Privacy Policy</p></Link>
               <Link to='/Terms_ConditionPage'><p> Terms & Condtitions</p></Link>
             </div>
-
-            <div className="Socail_media">
+            {/* <div className="Socail_media hidden">
               <h1 className="socail_media_text">Social Media</h1>
               <div className="social-icons">
                 <FontAwesomeIcon
@@ -147,15 +135,16 @@ const CommonFooter1 = () => {
                   className="social-icon twitter-icon"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
-        <div className="footer-bottom">
+        <div className="footer-bottom font-bold text-white">
           <p>
             &copy; 2024 AMA BHOOMI, Bhubaneswar, Odisha. All Rights Reserved.
           </p>
         </div>
       </footer>
+      <ToastContainer />
     </div>
   );
 };
