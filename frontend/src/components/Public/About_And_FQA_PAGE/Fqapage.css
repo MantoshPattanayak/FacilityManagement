@@ -8,11 +8,8 @@
 }
 
 .Fqa_Child_Ask_QUESTION {
-  display: flex;
-  height: 40vh;
-  padding-top: 50px;
-  justify-content: space-evenly;
-  background-color: hsl(155, 49%, 86%);
+ height: 50vh;
+
 }
 
 .Fqa_Child_Ask_QUESTION_text {
