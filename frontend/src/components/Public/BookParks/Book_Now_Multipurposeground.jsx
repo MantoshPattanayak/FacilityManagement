@@ -103,7 +103,7 @@ const Book_Now_Multipurposeground = () => {
           modifiedFormData.facilityPreference.playersLimit
         ),
         amount: encryptData(
-          amount * modifiedFormData.facilityPreference.playersLimit
+          parseFloat(amount * modifiedFormData.facilityPreference.playersLimit) ? amount * modifiedFormData.facilityPreference.playersLimit : "0"
         ),
         bookingDate: encryptData(
           modifiedFormData.facilityPreference.bookingDate
@@ -149,7 +149,7 @@ const Book_Now_Multipurposeground = () => {
         modifiedFormData.facilityPreference.playersLimit
       ),
       amount: encryptData(
-        amount * modifiedFormData.facilityPreference.playersLimit
+        parseFloat(amount * modifiedFormData.facilityPreference.playersLimit) ? amount * modifiedFormData.facilityPreference.playersLimit : "0"
       ),
       bookingDate: encryptData(modifiedFormData.facilityPreference.bookingDate),
       startTime: encryptData(modifiedFormData.facilityPreference.startTime),
@@ -479,7 +479,7 @@ const Book_Now_Multipurposeground = () => {
               </button>
             ) : (
               <RazorpayButton
-                amount={(amount * formData.facilityPreference.playersLimit) || "0"}
+                amount={parseFloat(amount * formData.facilityPreference.playersLimit) ? (amount * formData.facilityPreference.playersLimit) : "0"}
                 currency={"INR"}
                 description={"Book now"}
                 onSuccess={handlePaymentSuccess}
@@ -492,9 +492,7 @@ const Book_Now_Multipurposeground = () => {
                     totalMembers: encryptData(
                       formData.facilityPreference.playersLimit
                     ),
-                    amount: encryptData(
-                      (amount * formData.facilityPreference.playersLimit) || "0"
-                    ),
+                    amount: encryptData(parseFloat(amount * formData.facilityPreference.playersLimit) ? (amount * formData.facilityPreference.playersLimit) : "0"),
                     bookingDate: encryptData(
                       formData.facilityPreference.bookingDate
                     ),

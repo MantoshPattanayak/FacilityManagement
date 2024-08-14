@@ -89,7 +89,7 @@ const GreenwaysBookingPage = () => {
             const validationError = validation(modifiedFormData);
             let facilityPreference = {
                 totalMembers: encryptData(modifiedFormData.facilityPreference.playersLimit),
-                amount: encryptData(amount * modifiedFormData.facilityPreference.playersLimit),
+                amount: encryptData(parseFloat(amount * modifiedFormData.facilityPreference.playersLimit) ? amount * modifiedFormData.facilityPreference.playersLimit : "0"),
                 bookingDate: encryptData(modifiedFormData.facilityPreference.bookingDate),
                 startTime: encryptData(modifiedFormData.facilityPreference.startTime),
                 endTime: encryptData(modifiedFormData.facilityPreference.endTime),
@@ -319,7 +319,7 @@ const GreenwaysBookingPage = () => {
                                     <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(amount * formData.facilityPreference.playersLimit).toFixed(2)}
                                 </button>
                                 : <RazorpayButton
-                                    amount={(amount * formData.facilityPreference.playersLimit) || "0"}
+                                    amount={parseFloat(amount * formData.facilityPreference.playersLimit) ? (amount * formData.facilityPreference.playersLimit) : "0"}
                                     currency={"INR"}
                                     description={"Book now"}
                                     onSuccess={handlePaymentSuccess}
@@ -330,7 +330,7 @@ const GreenwaysBookingPage = () => {
                                         entityTypeId: encryptData(formData.entityTypeId),
                                         facilityPreference: {
                                             totalMembers: encryptData(formData.facilityPreference.playersLimit),
-                                            amount: encryptData((amount * formData.facilityPreference.playersLimit) || "0"),
+                                            amount: encryptData(parseFloat(amount * formData.facilityPreference.playersLimit) ? (amount * formData.facilityPreference.playersLimit) : "0"),
                                             bookingDate: encryptData(formData.facilityPreference.bookingDate),
                                             startTime: encryptData(formData.facilityPreference.startTime),
                                             endTime: encryptData(formData.facilityPreference.endTime),

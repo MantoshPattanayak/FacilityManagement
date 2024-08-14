@@ -147,14 +147,19 @@ export default function PublicHeader() {
     };
   }, []);
 
+  // Adjust text size 
+
   function adjustFontSize(change) {
     const root = document.documentElement;
     let currentSize = parseFloat(getComputedStyle(root).fontSize);
 
     if (change === 0) {
       root.style.fontSize = "16px"; // Default font size
-    } else {
-      root.style.fontSize = `${currentSize + change}px`;
+    } else if (change) { // && root.style.fontSize < "20px" && root.style.fontSize > "14px"
+      if(change > 0 && root.style.fontSize < "18px")
+        root.style.fontSize = `${currentSize + change}px`;
+      else if(change < 0 && root.style.fontSize > "14px")
+        root.style.fontSize = `${currentSize + change}px`;
     }
   }
 
@@ -196,7 +201,6 @@ export default function PublicHeader() {
                 )}
               </li>
               <li>Screen Reader</li>
-              {/* <li>Customer Connect</li> */}
             </ul>
             <div className="font-size-adjust">
               <a
@@ -293,7 +297,7 @@ export default function PublicHeader() {
                     .find(
                       (data) => data.languageResourceKey == "publicHeaderAbout"
                     )
-                    ?.languageResourceValue?.toUpperCase() || "ABOUT"}
+                    ?.languageResourceValue?.toUpperCase()}
                 </Link>
               </li>
               <li>
