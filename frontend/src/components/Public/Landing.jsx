@@ -35,8 +35,9 @@ import appleStore from "../../assets/apple.svg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/badminton_ENA.png";
 import badmintonBg from "../../assets/Explore_New_Activity_background.png";
-import cricket_bg from "../../assets/cricket_bg_ENA.jpg";
-import cricket_1 from "../../assets/cricket_ENA.jpg";
+import cricket_bg from "../../assets/mid-section-of-wicketkeeper.png";
+import cricket_1 from "../../assets/circket222111.png";
+import walking_img from "../../assets/jogging.png"
 import football_bg from "../../assets/fotable2.jpg";
 import football_1 from "../../assets/football_ENA.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
@@ -159,7 +160,7 @@ const Landing = () => {
   // for google maps
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
-
+     
   const handleTogglePlayPause = () => {
     if (isMarqueePaused) {
       marqueeRef.current.start();
@@ -567,7 +568,7 @@ const Landing = () => {
   // handleGameClick ------------------------------------------------
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
-
+  
     if (activity === "Football") {
       setCurrentImage(football_bg);
       setCurrentInnerImage(football_1);
@@ -737,9 +738,8 @@ const Landing = () => {
     );
     return;
   }
-  
 
-  // dropdown 
+  // dropdown
 
   const [selectedButton21, setSelectedButton21] = useState(null);
 
@@ -753,7 +753,6 @@ const Landing = () => {
     setSelectedButton21(id);
     // Add any additional logic you need when an option is selected
   };
-
 
   return (
     <div className="landingcontainer">
@@ -918,12 +917,18 @@ const Landing = () => {
         <section className="map-container2">
           <div className="map-bar">
             <div className="map-icons">
-              <select className="facilitySelecterHome" name="facility" onChange={(e) => {handleParkLogoClick(parseInt(e.target.value));}}>
-                <option value={1} >Parks</option>
-                <option value={2} >Playfields</option>
-                <option value={3} >Multipurpose grounds</option>
-                <option value={4} >Blueways</option>
-                <option value={5} >Greenways</option>
+              <select
+                className="facilitySelecterHome"
+                name="facility"
+                onChange={(e) => {
+                  handleParkLogoClick(parseInt(e.target.value));
+                }}
+              >
+                <option value={1}>Parks</option>
+                <option value={2}>Playfields</option>
+                <option value={3}>Multipurpose grounds</option>
+                <option value={4}>Blueways</option>
+                <option value={5}>Greenways</option>
               </select>
 
               <div className="icon1">
@@ -998,8 +1003,6 @@ const Landing = () => {
                 </button>
               </div>
             </div>
-
-
 
             <div className="mapSearchContainer">
               <div className="mapSearchButton">
@@ -1352,6 +1355,7 @@ const Landing = () => {
           <div className="whiteHeader"></div>
           <h1>Explore And Book New Activities</h1>
         </div>
+        {exploreNewActivities.length > 0 ? (
         <div className="exploreNewAct-outer">
           {/* Mapping through the exploreNewActivities data */}
           <div className="exploreNewAct-firstDiv">
@@ -1407,6 +1411,14 @@ const Landing = () => {
             </div>
           </div>
         </div>
+        ) : (
+          <div className="no-data-message_Current_event1">
+            <img
+              className="Current_Event_image"
+              src={No_Current_Event_img}
+            ></img>
+          </div>
+        )}
       </div>
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
       <div className="galleryOuter">
