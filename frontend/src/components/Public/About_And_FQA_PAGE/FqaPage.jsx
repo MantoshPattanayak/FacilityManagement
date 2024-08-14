@@ -1,7 +1,7 @@
 
 import PublicHeader from "../../../common/PublicHeader";
 import CommonFooter from "../../../common/CommonFooter";
-import Fqa_image from "../../../assets/FQA_IMAGE.png"
+import Fqa_image from "../../../assets/faq2.png"
 import "./Fqapage.css"
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -240,13 +240,8 @@ const FqaPage = () => {
 
             <div className="Fqa_Child_Conatiner">
                 <div className="Fqa_Child_Ask_QUESTION">
-                    <span className="Fqa_Child_Ask_QUESTION_text">
-                        <h1 className="FQA_TEXT">FAQs</h1>
-                        <p className="Have_q_text" >Have Questions.? Here You'll find the answer most valued by <br></br> our partne,along with access to step-step instructions <br></br> and Support</p>
-                    </span>
-                    <span className="Fqa_Child_Ask_QUESTION_Image">
-                        <img className="FQA_IMAGE" src={Fqa_image}></img>
-                    </span>
+                 
+                    <img src={Fqa_image}></img>
                 </div>
                 
                  <div className="fqa-body">
