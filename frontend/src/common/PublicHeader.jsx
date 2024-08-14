@@ -147,13 +147,15 @@ export default function PublicHeader() {
     };
   }, []);
 
+  // Adjust text size 
+
   function adjustFontSize(change) {
     const root = document.documentElement;
     let currentSize = parseFloat(getComputedStyle(root).fontSize);
 
     if (change === 0) {
       root.style.fontSize = "16px"; // Default font size
-    } else {
+    } else if(root.style.fontSize < "20px" && root.style.fontSize > "14px") {
       root.style.fontSize = `${currentSize + change}px`;
     }
   }
@@ -164,66 +166,35 @@ export default function PublicHeader() {
       {isSecondaryHeaderVisible && (
         <div className="secondary-header">
           <div className="secHeaderItem">
-            <ul className="secondary-header-items">
-              <li>
-                {language === "EN" && (
-                  <>
-                    <button
-                      value={"OD"}
-                      onClick={() => {
-                        setLanguageCode("OD");
-                        setRefresh((prevState) => !prevState);
-                      }}
-                    >
-                      ଓଡ଼ିଆ
-                    </button>{" "}
-                    &nbsp; |{" "}
-                  </>
-                )}
-                {language === "OD" && (
-                  <>
-                    <button
-                      value={"EN"}
-                      onClick={() => {
-                        setLanguageCode("EN");
-                        setRefresh((prevState) => !prevState);
-                      }}
-                    >
-                      English
-                    </button>{" "}
-                    &nbsp; |{" "}
-                  </>
-                )}
-              </li>
-              <li>Screen Reader</li>
-              {/* <li>Customer Connect</li> */}
-            </ul>
-            <div className="font-size-adjust">
-              <a
-                title="Decrease Font Size"
-                aria-label="Decrease Font Size Button"
-                id="btn-decrease"
-                onClick={() => adjustFontSize(-1)}
-              >
-                A-
-              </a>
-              <a
-                title="Normalize Font Size"
-                aria-label="Normalize Font Size Button"
-                id="btn-orig"
-                onClick={() => adjustFontSize(0)}
-              >
-                A
-              </a>
-              <a
-                title="Increase Font Size"
-                aria-label="Increase Font Size Button"
-                id="btn-increase"
-                onClick={() => adjustFontSize(1)}
-              >
-                A+
-              </a>
-            </div>
+          <ul className="secondary-header-items">
+            <li>Screen Reader</li>
+          </ul>
+          <div className="font-size-adjust">
+            <a
+              title="Decrease Font Size"
+              aria-label="Decrease Font Size Button"
+              id="btn-decrease"
+              onClick={() => adjustFontSize(-1)}
+            >
+              A-
+            </a>
+            <a
+              title="Normalize Font Size"
+              aria-label="Normalize Font Size Button"
+              id="btn-orig"
+              onClick={() => adjustFontSize(0)}
+            >
+              A
+            </a>
+            <a
+              title="Increase Font Size"
+              aria-label="Increase Font Size Button"
+              id="btn-increase"
+              onClick={() => adjustFontSize(1)}
+            >
+              A+
+            </a>
+          </div>
           </div>
         </div>
       )}
@@ -254,7 +225,7 @@ export default function PublicHeader() {
                   : "hidden menu_links mobile_menu_links"
               }
             >
-              {/* <li>
+              <li>
                 {language === "EN" && (
                   <>
                     <button
@@ -283,7 +254,7 @@ export default function PublicHeader() {
                     &nbsp; |{" "}
                   </>
                 )}
-              </li> */}
+              </li>
               {/* <li>
                 <Link to={'/'}>{(languageContent.find(data => data.languageResourceKey == 'publicHeaderHome')?.languageResourceValue)?.toUpperCase()}</Link>
               </li> */}
@@ -293,7 +264,7 @@ export default function PublicHeader() {
                     .find(
                       (data) => data.languageResourceKey == "publicHeaderAbout"
                     )
-                    ?.languageResourceValue?.toUpperCase() || "ABOUT"}
+                    ?.languageResourceValue?.toUpperCase()}
                 </Link>
               </li>
               <li>
@@ -352,7 +323,7 @@ export default function PublicHeader() {
               ) : (
                 <li>
                   <Link className="login-button" to="/login-signup">
-                    LOGIN | REGISTER
+                    LOGIN
                   </Link>
                 </li>
               )}
