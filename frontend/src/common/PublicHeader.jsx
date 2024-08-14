@@ -155,8 +155,11 @@ export default function PublicHeader() {
 
     if (change === 0) {
       root.style.fontSize = "16px"; // Default font size
-    } else if (root.style.fontSize < "20px" && root.style.fontSize > "14px") {
-      root.style.fontSize = `${currentSize + change}px`;
+    } else if (change) { // && root.style.fontSize < "20px" && root.style.fontSize > "14px"
+      if(change > 0 && root.style.fontSize < "18px")
+        root.style.fontSize = `${currentSize + change}px`;
+      else if(change < 0 && root.style.fontSize > "14px")
+        root.style.fontSize = `${currentSize + change}px`;
     }
   }
 
