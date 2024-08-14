@@ -333,7 +333,7 @@ const Landing = () => {
     } else {
       setUserLocation(defaultCenter);
       console.error("Geolocation is not supported by this browser");
-      toast.error("Location permission not granted.");
+      // toast.error("Location permission not granted.");
     }
   };
 
@@ -370,7 +370,7 @@ const Landing = () => {
       }));
     } catch (error) {
       console.error(error);
-      toast.error("Location permission not granted.");
+      // toast.error("Location permission not granted.");
     } finally {
       setLoading(false); // Stop loading
     }
