@@ -10,12 +10,7 @@ import {
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  GoogleMap,
-  Marker,
-  InfoWindowF,
-  Circle,
-} from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindowF, Circle } from "@react-google-maps/api";
 import axiosHttpClient from "../../utils/axios";
 import park_logo from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_PARKS.svg";
 import playground_logo from "../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_PLAYFIELDS.svg";
@@ -87,12 +82,18 @@ import instance from "../../../env.js";
 import { toast, ToastContainer } from "react-toastify";
 import lading_page_image1 from "../../assets/landing.jpg";
 import lading_page_image2 from "../../assets/landing2.jpg";
-import laidng5 from '../../assets/landing4.jpg'
-import lading4 from '../../assets/landing5.jpg'
-import lading6 from '../../assets/landing3.jpg'
+import laidng5 from "../../assets/landing4.jpg";
+import lading4 from "../../assets/landing5.jpg";
+import lading6 from "../../assets/landing3.jpg";
 // import "./YourStyles.css";
-// here set the image of lading page 
-const backGround_images = [lading_page_image1, lading_page_image2, lading4, laidng5, lading6];
+// here set the image of lading page
+const backGround_images = [
+  lading_page_image1,
+  lading_page_image2,
+  lading4,
+  laidng5,
+  lading6,
+];
 
 // mediaquary for responsive landing page
 const responsive = {
@@ -128,7 +129,9 @@ const Landing = () => {
   const [notifications, setNotifications] = useState([]);
   // const apiKey = "AIzaSyBYFMsMIXQ8SCVPzf7NucdVR1cF1DZTcao";
   const defaultCenter = { lat: 20.2961, lng: 85.8245 };
-  const [userLocation, setUserLocation] = useState(defaultCenter || JSON.parse(sessionStorage.getItem("location")));
+  const [userLocation, setUserLocation] = useState(
+    defaultCenter || JSON.parse(sessionStorage.getItem("location"))
+  );
   const [nearbyParks, setNearbyParks] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   let navigate = useNavigate();
@@ -205,12 +208,15 @@ const Landing = () => {
     return function (...args) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        fn(...args)
+        fn(...args);
       }, delay);
-    }
+    };
   }
 
-  const debouncedFetchFunction = useCallback(debounce(fetchAutoSuggestData, 1000), []);
+  const debouncedFetchFunction = useCallback(
+    debounce(fetchAutoSuggestData, 1000),
+    []
+  );
 
   // call auto suggest API after a delay to prevent quick API call on input entry
   useEffect(() => {
@@ -260,7 +266,7 @@ const Landing = () => {
       console.log("Here is the Landing Page API data", resLanding.data);
       setEventNameLanding(resLanding.data.eventDetailsData);
       setNotifications(resLanding.data.notificationsList);
-      console.log("here Notification ", resLanding.data.notificationsList)
+      console.log("here Notification ", resLanding.data.notificationsList);
       setGalleryImage(resLanding.data.galleryData);
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
@@ -296,14 +302,14 @@ const Landing = () => {
           setLoading(false);
         },
         (error) => {
-          console.error('Error getting location:', error);
+          console.error("Error getting location:", error);
           setUserLocation(defaultCenter); // Fallback to default center
           setLoading(false);
         }
       );
     } else {
       setUserLocation(defaultCenter);
-      console.error('Geolocation is not supported by this browser');
+      console.error("Geolocation is not supported by this browser");
       setLoading(false);
     }
   }, []);
@@ -365,9 +371,11 @@ const Landing = () => {
           return a.distance - b.distance;
         })
       );
-      setmapdata(res.data.data.sort((a, b) => {
-        return a.distance - b.distance;
-      }));
+      setmapdata(
+        res.data.data.sort((a, b) => {
+          return a.distance - b.distance;
+        })
+      );
     } catch (error) {
       console.error(error);
       // toast.error("Location permission not granted.");
@@ -399,19 +407,19 @@ const Landing = () => {
       try {
         let mapResponse = await axiosHttpClient("GOOGLE_MAPS_API", "post", {
           apiKey: encryptData(apiKey),
-          callbackName: encryptData(callbackName)
+          callbackName: encryptData(callbackName),
         });
 
         if (window.google && window.google.maps) {
-          console.log("window.google.maps")
+          console.log("window.google.maps");
           // resolve();
           return;
         }
 
         // Create and append script element
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.text = mapResponse.data;
-        script.type = 'text/javascript';
+        script.type = "text/javascript";
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
@@ -440,26 +448,27 @@ const Landing = () => {
           document.head.appendChild(script);
         });
         */
-      }
-      catch (error) {
-        console.error('Error loading Google Maps:', error);
+      } catch (error) {
+        console.error("Error loading Google Maps:", error);
         setLoadError(true);
       }
     };
 
     // Load Google Maps
-    loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, 'initMap')
+    loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, "initMap")
       .then(() => {
         setIsLoaded(true);
       })
       .catch((error) => {
-        console.error('Error loading Google Maps:', error);
+        console.error("Error loading Google Maps:", error);
         setLoadError(true);
       });
 
     // Cleanup function to remove the script when the component unmounts
     return () => {
-      const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+      const script = document.querySelector(
+        `script[src*="maps.googleapis.com"]`
+      );
       if (script) {
         script.remove();
       }
@@ -467,10 +476,13 @@ const Landing = () => {
     };
   }, []);
 
-
   // useEffect Update NearBy data ------------------------------------
   useEffect(() => {
-    console.log("userLocation, distanceRange, facilityTypeId", { userLocation, distanceRange, facilityTypeId })
+    console.log("userLocation, distanceRange, facilityTypeId", {
+      userLocation,
+      distanceRange,
+      facilityTypeId,
+    });
     if (userLocation && distanceRange && facilityTypeId) {
       getNearbyFacilities();
     }
@@ -504,7 +516,9 @@ const Landing = () => {
 
   // Function to handle marker click ---------------------------------------------------
   const handleMarkerClick = (facilityId) => {
-    const locationDetails = mapdata.find(location => location.facilityId === facilityId);
+    const locationDetails = mapdata.find(
+      (location) => location.facilityId === facilityId
+    );
     setSelectedLocationDetails(locationDetails);
     setSelectedParkId(facilityId);
   };
@@ -525,7 +539,7 @@ const Landing = () => {
     return res;
   }
   // here Update the data-----------------------------------------------
-  useEffect(() => { }, [givenReq, facilityTypeId, showTour]);
+  useEffect(() => {}, [givenReq, facilityTypeId, showTour]);
 
   // refresh on user input to show suggestions of facilities
   useEffect(() => {
@@ -668,16 +682,28 @@ const Landing = () => {
     toast.warn(
       <div>
         <p>
-          <b>You will be redirected to an external link. Are you sure to proceed ?</b><br />
-          These links are being provided as a convenience and for informational purposes only.
+          <b>
+            You will be redirected to an external link. Are you sure to proceed
+            ?
+          </b>
+          <br />
+          These links are being provided as a convenience and for informational
+          purposes only.
         </p>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+          }}
+        >
           <button
             onClick={(e) => {
               e.stopPropagation();
               // Re-enable interactions with the background
-              document.querySelectorAll('body')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('body')[0].style.opacity = 1;
+              document.querySelectorAll("body")[0].style.pointerEvents = "auto";
+              document.querySelectorAll("body")[0].style.opacity = 1;
               toast.dismiss();
             }}
             className="bg-red-400 text-white p-2 border rounded-md"
@@ -687,10 +713,10 @@ const Landing = () => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              window.open(url, '_blank'); // Open the link in a new tab
+              window.open(url, "_blank"); // Open the link in a new tab
               // Re-enable interactions with the background
-              document.querySelectorAll('body')[0].style.pointerEvents = 'auto';
-              document.querySelectorAll('body')[0].style.opacity = 1;
+              document.querySelectorAll("body")[0].style.pointerEvents = "auto";
+              document.querySelectorAll("body")[0].style.opacity = 1;
               toast.dismiss();
             }}
             className="bg-green-400 text-white p-2 border rounded-md"
@@ -705,12 +731,29 @@ const Landing = () => {
         closeOnClick: false, // Disable close on click
         onClose: () => {
           // Re-enable interactions with the background if the toast is closed
-          document.body.style.pointerEvents = 'auto';
-        }
+          document.body.style.pointerEvents = "auto";
+        },
       }
     );
     return;
   }
+  
+
+  // dropdown 
+
+  const [selectedButton21, setSelectedButton21] = useState(null);
+
+  const handleSelectChange = (event) => {
+    const selectedValue = parseInt(event.target.value);
+    setSelectedButton21(selectedValue);
+    handleParkLogoClick21(selectedValue);
+  };
+
+  const handleParkLogoClick21 = (id) => {
+    setSelectedButton21(id);
+    // Add any additional logic you need when an option is selected
+  };
+
 
   return (
     <div className="landingcontainer">
@@ -718,11 +761,29 @@ const Landing = () => {
         <PublicHeader />
         {/* <ToastContainer /> */}
         <div className="iconPlayApple">
-          <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
-            <img className="iconPlayAppleItem" src={googlePlayStore} alt="Google Play Store" />
+          <a
+            onClick={(e) =>
+              handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)
+            }
+            rel="noopener noreferrer"
+          >
+            <img
+              className="iconPlayAppleItem"
+              src={googlePlayStore}
+              alt="Google Play Store"
+            />
           </a>
-          <a onClick={(e) => handleExternalLinkOpen(e, instance().APP_STORE_LINK)} rel="noopener noreferrer">
-            <img className="iconPlayAppleItem" src={appleStore} alt="Apple Store" />
+          <a
+            onClick={(e) =>
+              handleExternalLinkOpen(e, instance().APP_STORE_LINK)
+            }
+            rel="noopener noreferrer"
+          >
+            <img
+              className="iconPlayAppleItem"
+              src={appleStore}
+              alt="Apple Store"
+            />
           </a>
         </div>
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
@@ -730,19 +791,18 @@ const Landing = () => {
           <span className="Search-Conatiner">
             <h1>AMA BHOOMI</h1>
             <span className="about">
-             
               <p className="about_text">
-              Assuring Mass Access through Bhubaneswar Open <br></br>
-              Spaces & Ownership Management Initiative.
+                Assuring Mass Access through Bhubaneswar Open <br></br>
+                Spaces & Ownership Management Initiative.
               </p>
-              
             </span>
             <span className="enjoy_text">
-               <p className="about_text">Your one stop destination for Bhubaneswar’s Open Spaces !</p>
+              <p className="about_text">
+                Your one stop destination for Bhubaneswar’s Open Spaces !
+              </p>
               <h4>JOIN THE MOVEMENT</h4>
-
             </span>
-           
+
             <h2 className="typing-animation">
               Explore, Book and Enjoy Open Spaces{" "}
             </h2>
@@ -763,16 +823,19 @@ const Landing = () => {
                   <FontAwesomeIcon icon={faSearch} className="os-icon" />
                 </div>
               </div>
-
             </div>
-          
+
             {suggestions?.length > 0 && inputFacility && (
               <ul className="suggestions1">
                 {suggestions.length > 0 ? (
                   suggestions.map((suggestion, index) => (
                     <li
                       key={index}
-                      onClick={(e) => navigate(`/Search_card?query=${encodeURIComponent(suggestion)}`)}
+                      onClick={(e) =>
+                        navigate(
+                          `/Search_card?query=${encodeURIComponent(suggestion)}`
+                        )
+                      }
                     >
                       {suggestion}
                     </li>
@@ -783,12 +846,11 @@ const Landing = () => {
               </ul>
             )}
 
-
-          <span className="Reg_text">
-                <h1>REGISTER TO AVAIL THE BENEFITS</h1>
+            <span className="Reg_text">
+              <h1>REGISTER TO AVAIL THE BENEFITS</h1>
             </span>
           </span>
-           
+
           <div className="abBgButton">
             <FontAwesomeIcon
               onClick={handlePrevImage}
@@ -856,6 +918,14 @@ const Landing = () => {
         <section className="map-container2">
           <div className="map-bar">
             <div className="map-icons">
+              <select className="facilitySelecterHome" name="facility" onChange={(e) => {handleParkLogoClick(parseInt(e.target.value));}}>
+                <option value={1} >Parks</option>
+                <option value={2} >Playfields</option>
+                <option value={3} >Multipurpose grounds</option>
+                <option value={4} >Blueways</option>
+                <option value={5} >Greenways</option>
+              </select>
+
               <div className="icon1">
                 <button
                   className="icon1_button"
@@ -928,6 +998,9 @@ const Landing = () => {
                 </button>
               </div>
             </div>
+
+
+
             <div className="mapSearchContainer">
               <div className="mapSearchButton">
                 <input
@@ -959,16 +1032,22 @@ const Landing = () => {
                 height: "450px",
                 width: "100%",
               }}
-              center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
+              center={{
+                lat: userLocation.latitude || userLocation.lat,
+                lng: userLocation.longitude || userLocation.lng,
+              }}
               zoom={12}
-            // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
+              // onLoad={handleMapLoad} // Call handleMapLoad when the map is loaded
             >
               {loading ? (
                 <div>Loading...</div>
               ) : (
                 userLocation && (
                   <Circle
-                    center={{ lat: userLocation.latitude || userLocation.lat, lng: userLocation.longitude || userLocation.lng }}
+                    center={{
+                      lat: userLocation.latitude || userLocation.lat,
+                      lng: userLocation.longitude || userLocation.lng,
+                    }}
                     radius={250} // Radius in meters
                     options={{
                       fillColor: "red",
@@ -1001,10 +1080,27 @@ const Landing = () => {
                   }}
                 >
                   <div key={selectedLocationDetails.facilityId}>
-                    <h3>Facility Name: {selectedLocationDetails.facilityname}</h3>
+                    <h3>
+                      Facility Name: {selectedLocationDetails.facilityname}
+                    </h3>
                     <p>Address: {selectedLocationDetails.address}</p>
-                    <p>Distance: {parseFloat(selectedLocationDetails.distance).toFixed(2)} km(s) (approx.)</p>
-                    <p>Status: <span className={`${selectedLocationDetails.status == 'open' ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}`}>{selectedLocationDetails.status.toUpperCase()}</span></p>
+                    <p>
+                      Distance:{" "}
+                      {parseFloat(selectedLocationDetails.distance).toFixed(2)}{" "}
+                      km(s) (approx.)
+                    </p>
+                    <p>
+                      Status:{" "}
+                      <span
+                        className={`${
+                          selectedLocationDetails.status == "open"
+                            ? "text-green-500 font-semibold"
+                            : "text-red-500 font-semibold"
+                        }`}
+                      >
+                        {selectedLocationDetails.status.toUpperCase()}
+                      </span>
+                    </p>
                   </div>
                 </InfoWindowF>
               )}
@@ -1021,22 +1117,20 @@ const Landing = () => {
             {selectedButton === 5 && <h1>Greenways Near Me</h1>}
             {selectedButton === 4 && <h1>Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
-              {
-                radiusForSearch.map((radius) => {
-                  return (
-                    <button
-                      type="button"
-                      className={activeButton === radius ? "active" : ""}
-                      onClick={() => {
-                        setDistanceRange(radius);
-                        setActiveButton(radius);
-                      }}
-                    >
-                      {radius}km
-                    </button>
-                  )
-                })
-              }
+              {radiusForSearch.map((radius) => {
+                return (
+                  <button
+                    type="button"
+                    className={activeButton === radius ? "active" : ""}
+                    onClick={() => {
+                      setDistanceRange(radius);
+                      setActiveButton(radius);
+                    }}
+                  >
+                    {radius}km
+                  </button>
+                );
+              })}
               {/* <button
                 type="button"
                 className={activeButton === 10 ? "active" : ""}
@@ -1138,17 +1232,22 @@ const Landing = () => {
 
           <div className="button-container22">
             {isMarqueePaused ? (
-              <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
+              <button
+                className="Play_pause_icon"
+                onClick={handleTogglePlayPause}
+              >
                 <FontAwesomeIcon icon={faPlay} />
               </button>
             ) : (
-              <button className="Play_pause_icon" onClick={handleTogglePlayPause}>
+              <button
+                className="Play_pause_icon"
+                onClick={handleTogglePlayPause}
+              >
                 <FontAwesomeIcon icon={faPause} />
               </button>
             )}
           </div>
         </div>
-
       </div>
       {/* ------Event details card-------------------------------------------------------------------- */}
       <div className="EventContainerlanding">
@@ -1194,8 +1293,8 @@ const Landing = () => {
                         src={
                           event.eventMainImage
                             ? instance().baseURL +
-                            "/static" +
-                            event.eventMainImage
+                              "/static" +
+                              event.eventMainImage
                             : Yoga_img
                         }
                         onError={(e) => {
@@ -1259,8 +1358,9 @@ const Landing = () => {
             {exploreNewActivities.map((activity, index) => (
               <button
                 key={index}
-                className={`activity  ${selectedActivity === index ? "selected" : ""
-                  }`}
+                className={`activity  ${
+                  selectedActivity === index ? "selected" : ""
+                }`}
                 onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
               >
                 {activity.game}
@@ -1287,9 +1387,9 @@ const Landing = () => {
                               onClick={(e) => {
                                 navigate(
                                   "/Sub_Park_Details" +
-                                  `?facilityId=${encryptDataId(
-                                    park.facilityId
-                                  )}`
+                                    `?facilityId=${encryptDataId(
+                                      park.facilityId
+                                    )}`
                                 );
                               }}
                             >
@@ -1345,11 +1445,10 @@ const Landing = () => {
                         src={imageUrl}
                         alt={`carousel-img${index}`}
                         className="carousel-image_gallery"
-                      // Hide broken images
+                        // Hide broken images
                       />
                       <div className="description">{item.description}</div>
                     </div>
-
                   </div>
                 );
               })}
