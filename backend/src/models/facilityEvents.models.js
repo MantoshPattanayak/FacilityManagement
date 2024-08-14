@@ -1,5 +1,5 @@
 module.exports = (sequelize,DataTypes)=>{
-    let facilityEvent = sequelize.define('facilityEvents',{
+    let facilityEvent = sequelize.define('facilityevents',{
         facilityEventId:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
