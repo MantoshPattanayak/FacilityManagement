@@ -11,11 +11,11 @@ const About=()=>{
     <div className="About_Mian_conatiner">
       <PublicHeader/>
      <div className="Child_about_container">
-       <h1 className="About">Overview</h1>
+       <h1 className="About">About</h1>
        <img src=""></img>
      </div>
       <div className="About_div">
-         <h1 className="About_heading">Overview</h1>
+         <h1 className="About_heading">About</h1>
          <div className="About_us_flex_conatiner">
             <div className="About_us_text">
             <h1 className="About_us_text_details">
