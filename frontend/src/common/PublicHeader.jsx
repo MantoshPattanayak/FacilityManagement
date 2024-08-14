@@ -147,13 +147,15 @@ export default function PublicHeader() {
     };
   }, []);
 
+  // Adjust text size 
+
   function adjustFontSize(change) {
     const root = document.documentElement;
     let currentSize = parseFloat(getComputedStyle(root).fontSize);
 
     if (change === 0) {
       root.style.fontSize = "16px"; // Default font size
-    } else {
+    } else if(root.style.fontSize < "20px" && root.style.fontSize > "14px") {
       root.style.fontSize = `${currentSize + change}px`;
     }
   }
@@ -166,7 +168,6 @@ export default function PublicHeader() {
           <div className="secHeaderItem">
           <ul className="secondary-header-items">
             <li>Screen Reader</li>
-            <li>Customer Connect</li>
           </ul>
           <div className="font-size-adjust">
             <a
