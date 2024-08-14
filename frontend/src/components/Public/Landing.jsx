@@ -1308,7 +1308,7 @@ const Landing = () => {
                         <div className="carousel-slide-location">
                           <FontAwesomeIcon
                             icon={faLocationDot}
-                            style={{ color: "#504f4e" }}
+                            style={{ color: "#fe6f4e" }}
                             className="os-icon"
                           />
                           <h1>{event.locationName}</h1>
