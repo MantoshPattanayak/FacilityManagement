@@ -8,7 +8,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
       console.log('image upload function entry')
-        console.log(entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber,'these are all parameters in upload image function')
+        console.log(imageData,entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber,'these are all parameters in upload image function')
         let createdDt = new Date();
         let updatedDt = new Date();
         let uploadFilePath = null;
@@ -18,14 +18,16 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
         console.log('base 64 image file line 10')
         const mimeMatch = imageData.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
         const mime = mimeMatch ? mimeMatch[1] : null;
-        // console.log(mime, mimeMatch,'mime match')
+        
+        console.log(mime, mimeMatch,'mime match')
         if ([
           "image/jpeg",
           "image/png",
+          "image/webp",
           "application/pdf",
           "application/msword",
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ].includes(mime)) {
+        ].includes(mime.toLowerCase())) {
           console.log('base 64 image file line 21 certain mime type')
 
           // convert base 64 to buffer for image or document or set to null if not present
