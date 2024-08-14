@@ -35,8 +35,9 @@ import appleStore from "../../assets/apple.svg";
 import ama_bhoomi_bgi from "../../assets/ama_bhoomi_bgi.jpg";
 import badminton from "../../assets/badminton_ENA.png";
 import badmintonBg from "../../assets/Explore_New_Activity_background.png";
-import cricket_bg from "../../assets/cricket_bg_ENA.jpg";
-import cricket_1 from "../../assets/cricket_ENA.jpg";
+import cricket_bg from "../../assets/mid-section-of-wicketkeeper.png";
+import cricket_1 from "../../assets/circket222111.png";
+import walking_img from "../../assets/jogging.png"
 import football_bg from "../../assets/fotable2.jpg";
 import football_1 from "../../assets/football_ENA.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
@@ -159,7 +160,7 @@ const Landing = () => {
   // for google maps
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
-
+     
   const handleTogglePlayPause = () => {
     if (isMarqueePaused) {
       marqueeRef.current.start();
@@ -567,7 +568,7 @@ const Landing = () => {
   // handleGameClick ------------------------------------------------
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
-
+  
     if (activity === "Football") {
       setCurrentImage(football_bg);
       setCurrentInnerImage(football_1);
