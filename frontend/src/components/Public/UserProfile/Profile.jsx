@@ -194,13 +194,17 @@ export default function Profile() {
       let profilePic = {};
 
       if (!isPhotoUpdated) {
-        profilePic = {};
+        profilePic = {fileId: formData.fileId };
+        console.log("photo response 1:  ",formData.fileId)
       } else if (photoUrl != null) {
         console.log("here data", photoUrl.data);
         profilePic = { fileId: formData.fileId, data: photoUrl.data };
-      } else if (formData.fileId != null) {
-        profilePic = { fileId: formData.fileId };
+        console.log("photo response 2:  ",formData.fileId)
       }
+      //  else if (formData.fileId != null) {
+      //   profilePic = { fileId: formData.fileId };
+      //   console.log("photo response 3:  ",formData.fileId)
+      // }
 
       // Log form data before updating
       console.log("Form Data Before Update:", formData);
