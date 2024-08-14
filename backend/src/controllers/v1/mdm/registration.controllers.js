@@ -705,11 +705,17 @@ const updateFacility = async(req,res)=>{
 
       if(facilityImage?.facilityImageOne){
         let cardFacilityImage = facilityImage.facilityImageOne?.data
-        if(facilityImage.facilityImageOne?.fileId!=null){
+        if(facilityImage.facilityImageOne?.fileId!=null && facilityImage.facilityImageOne?.data){
           let findThePreviousFilePath = await file.findOne({
             where:{[Op.and]:[{statusId:statusId},{fileId:facilityImage.facilityImageOne.fileId}]},
             transaction
           })
+          if(!findThePreviousFilePath){
+            await transaction.rollback();
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+              message:`Something went wrong`
+            })
+          }
           let oldFilePath = findThePreviousFilePath?.url
           let errors=[];
           let insertionData = {
@@ -731,7 +737,34 @@ const updateFacility = async(req,res)=>{
           }
           hasUpdates = true
         }
-        else{
+        else if(facilityImage.facilityImageOne?.fileId!=null && !(facilityImage.facilityImageOne?.data)){
+          let inActiveStatus= 2;
+          let inactiveTheFileId = await file.update({statusId:inActiveStatus},
+            { where:{
+               fileId:facilityImage.facilityImageOne.fileId
+             },
+           transaction}
+           )
+   
+           let inActiveTheFileInFileAttachmentTable = await fileattachment.update({
+             statusId:inActiveStatus
+           },
+         {where:{
+           fileId:facilityImage.facilityImageOne.fileId
+         },
+         transaction
+       }
+       )
+       if(inactiveTheFileId.length == 0 || inActiveTheFileInFileAttachmentTable == 0){
+         await transaction.rollback();
+         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+           message:`Something went wrong`
+         }) 
+        
+        }
+        hasUpdates = true
+      }
+        else {
           let insertionData = {
             id:facilityId,
             name:facilityName,
@@ -784,7 +817,7 @@ const updateFacility = async(req,res)=>{
               hasUpdates = true
             }
             else{
-              if(facilityArrayOfImage?.fileId!=0 && !multipleFacilityImage){
+              if(facilityArrayOfImage?.fileId!=null && !multipleFacilityImage){
                   let [inactiveStatusFileTableCount] = await file.update({statusId:2},{
                     where:{
                       fileId:facilityArrayOfImage.fileId
@@ -831,7 +864,7 @@ const updateFacility = async(req,res)=>{
             }
               
             }
-            i +=1
+            i +=1  // to put this value in the file table
           }
          
         }
