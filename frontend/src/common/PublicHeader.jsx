@@ -352,7 +352,7 @@ export default function PublicHeader() {
               ) : (
                 <li>
                   <Link className="login-button" to="/login-signup">
-                    LOGIN
+                    LOGIN | REGISTER
                   </Link>
                 </li>
               )}
