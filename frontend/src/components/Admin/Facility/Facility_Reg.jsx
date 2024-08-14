@@ -1012,7 +1012,7 @@ const Facility_Reg = () => {
 
                                     </div>
                                 </div>
-                                <div className="HostEvent_Row">
+                                <div className="HostEvent_Row h-[100px]">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Services
@@ -1058,7 +1058,7 @@ const Facility_Reg = () => {
                                         {formErrors.otherServices && <p className="error text-red-700">{formErrors.otherServices}</p>}
                                     </div>
                                 </div>
-                                <div className="HostEvent_Row">
+                                <div className="HostEvent_Row h-[190px]">
                                     <div className="HostEvent_Group" id="AddressBox">
                                         <label htmlFor="input1">
                                             Amenities
