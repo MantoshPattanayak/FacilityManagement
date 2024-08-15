@@ -616,12 +616,15 @@ const updateFacility = async(req,res)=>{
       emailAdress,
       ownerPanCard,
       ownersAddress} = req.body
-      
+
+      let ownerAddress = ownersAddress;
+
       let hasUpdates = false;
 
       let updateFacilityDataVariable = {}
      
       let updateOwnershipDataVariable = {}
+      
    
       if(facilityType){
         updateFacilityDataVariable.facilityTypeId = facilityType
@@ -656,28 +659,29 @@ const updateFacility = async(req,res)=>{
       if(operatingHoursTo){
         updateFacilityDataVariable.operatingHoursTo = operatingHoursTo
       }
-      if(operatingDays){
+      if(Object.keys(operatingDays).length > 0){
         if(operatingDays?.sun){
-          updateFacilityDataVariable.sun = sun 
+          updateFacilityDataVariable.sun = operatingDays.sun 
         }
         if(operatingDays?.mon){
-          updateFacilityDataVariable.mon = mon 
+          updateFacilityDataVariable.mon = operatingDays.mon 
         }
         if(operatingDays?.tue){
-          updateFacilityDataVariable.tue = tue 
+          updateFacilityDataVariable.tue = operatingDays.tue 
         }
         if(operatingDays?.wed){
-          updateFacilityDataVariable.wed = wed 
+          updateFacilityDataVariable.wed = operatingDays.wed 
         }
         if(operatingDays?.thu){
-          updateFacilityDataVariable.thu = thu 
+          updateFacilityDataVariable.thu = operatingDays.thu 
         }
         if(operatingDays?.fri){
-          updateFacilityDataVariable.fri = fri 
+          updateFacilityDataVariable.fri = operatingDays.fri 
         }
         if(operatingDays?.sat){
-          updateFacilityDataVariable.fri = sat 
+          updateFacilityDataVariable.sat = operatingDays.sat 
         }
+        console.log(updateFacilityDataVariable,'updatethefacilitydatavariable')
       }
     if(othergame){
       updateFacilityDataVariable.otherGames = othergame 
@@ -691,9 +695,7 @@ const updateFacility = async(req,res)=>{
     if(otherAmenities){
       updateFacilityDataVariable.otherAmenities = otherAmenities 
     }
-    if(isFacilityByBda){
-      updateOwnershipDataVariable.isFacilityByBda = facilityisownedbBDA 
-    }
+    
     if(othereventCategory){
       updateOwnershipDataVariable.otherEventCategories = othereventCategory 
     }
@@ -703,7 +705,7 @@ const updateFacility = async(req,res)=>{
       })
       let facilityName = updateFacilityDataVariable?.facilityname ? updateFacilityDataVariable.facilityname : findTheFacilityName?.facilityname;
 
-      if(facilityImage?.facilityImageOne){
+      if(Object.keys(facilityImage?.facilityImageOne).length >0){
         let cardFacilityImage = facilityImage.facilityImageOne?.data
         if(facilityImage.facilityImageOne?.fileId!=null && facilityImage.facilityImageOne?.data){
           let findThePreviousFilePath = await file.findOne({
@@ -739,7 +741,10 @@ const updateFacility = async(req,res)=>{
         }
         else if(facilityImage.facilityImageOne?.fileId!=null && !(facilityImage.facilityImageOne?.data)){
           let inActiveStatus= 2;
-          let inactiveTheFileId = await file.update({statusId:inActiveStatus},
+          let inactiveTheFileId = await file.update({statusId:inActiveStatus,
+            updatedBy:userId,
+          updatedDt:updatedDt
+          },
             { where:{
                fileId:facilityImage.facilityImageOne.fileId
              },
@@ -747,7 +752,9 @@ const updateFacility = async(req,res)=>{
            )
    
            let inActiveTheFileInFileAttachmentTable = await fileattachment.update({
-             statusId:inActiveStatus
+             statusId:inActiveStatus,
+             updatedBy:userId,
+            updatedDt:updatedDt
            },
          {where:{
            fileId:facilityImage.facilityImageOne.fileId
@@ -818,13 +825,15 @@ const updateFacility = async(req,res)=>{
             }
             else{
               if(facilityArrayOfImage?.fileId!=null && !multipleFacilityImage){
-                  let [inactiveStatusFileTableCount] = await file.update({statusId:2},{
+                  let [inactiveStatusFileTableCount] = await file.update({statusId:2,updatedBy:userId,
+                    updatedDt:updatedDt},{
                     where:{
                       fileId:facilityArrayOfImage.fileId
                     },
                     transaction
                   }) 
-                  let [inactiveStatusFileAttachementTableCount] = await fileattachment.update({statusId:2},{
+                  let [inactiveStatusFileAttachementTableCount] = await fileattachment.update({statusId:2,updatedBy:userId,
+                    updatedDt:updatedDt},{
                     where:{
                       fileId:facilityArrayOfImage.fileId
                     },
@@ -878,20 +887,21 @@ const updateFacility = async(req,res)=>{
       for (let eachService of service){
         let checkIfTheGivenServicePresent = await serviceFacility.findOne({
           where:{
-            [Op.and]:[{statusId:statusId},{serviceId:eachServiceservice.serviceId},{facilityId:facilityId}]}
+            [Op.and]:[{statusId:statusId},{serviceId:eachService},{facilityId:facilityId}]}
         },
       transaction)
         if(!checkIfTheGivenServicePresent){
-          let insertToServiceFacility = await serviceFacility.insert({
+          
+          let insertToServiceFacility = await serviceFacility.create({
             statusId:statusId,
-            serviceId:eachService.serviceId,
+            serviceId:eachService,
             facilityId:facilityId,
             createdBy:userId,
             updatedBy:userId,
             updatedDt:updatedDt,
             createdDt:createdDt,
           },
-          transaction)
+          {transaction})
           if(!insertToServiceFacility){
             await transaction.rollback();
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -909,14 +919,12 @@ const updateFacility = async(req,res)=>{
       transaction
     })
     for (let eachService of findAllServiceFacility){
-        let checkIfTheGivenServicePresent = await serviceFacility.findOne({
-          where:{
-            [Op.and]:[{statusId:statusId},{serviceId:eachService.serviceId},{facilityId:facilityId}]}
-        },
-      transaction)
-        if(!checkIfTheGivenServicePresent){
+     
+        if(!service.includes(eachService.serviceId)){
           let inactiveTheRecord = await serviceFacility.update({
-            statusId:2
+            statusId:2,
+            updatedBy:userId,
+            updatedDt:updatedDt
           },
       { 
         where:{
@@ -931,10 +939,31 @@ const updateFacility = async(req,res)=>{
           })
         }
         hasUpdates = true
+          // 
+        }
       
-      }
         
       }
+    }
+    if(service.length==0){
+      let inactiveTheRecord = await serviceFacility.update({
+        statusId:2,
+        updatedBy:userId,
+        updatedDt:updatedDt
+      },
+  { 
+    where:{
+      [Op.and]:[{serviceId:eachService.serviceId},{facilityId:facilityId}]
+    },
+    transaction
+    })
+    if(inactiveTheRecord==0){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:"Something went wrong"
+      })
+    }
+    hasUpdates = true
     }
 
 
@@ -947,7 +976,7 @@ const updateFacility = async(req,res)=>{
         },
       transaction)
         if(!checkIfTheGivenInventoryPresent){
-          let insertToInventoryFacility = await inventoryFacilities.insert({
+          let insertToInventoryFacility = await inventoryFacilities.create({
             statusId:statusId,
             equipmentId:eachInventory.equipmentId,
             facilityId:facilityId,
@@ -957,7 +986,7 @@ const updateFacility = async(req,res)=>{
             updatedDt:updatedDt,
             createdDt:createdDt,
           },
-          transaction)
+          {transaction})
           if(!insertToInventoryFacility){
             await transaction.rollback();
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -965,6 +994,28 @@ const updateFacility = async(req,res)=>{
             })
           }
           hasUpdates = true
+      }
+      else{
+        // update the inventory
+        // check the inventory count
+        if(eachInventory.count != checkIfTheGivenInventoryPresent.count){
+          let [updateTheInventoryCount] = await inventoryFacilities.update({
+            count:eachInventory.count,
+            updatedBy:userId,
+            updatedDt:updatedDt
+          },
+        {where:{[Op.and]:[{equipmentId:checkIfTheGivenInventoryPresent.equipmentId},{facilityId:checkIfTheGivenInventoryPresent.facilityId}]
+          
+        }})
+        if(updateTheInventoryCount == 0){
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:`Something went wrong`
+          })
+        }
+
+        hasUpdates = true
+        
+        }
       }
     }
 
@@ -975,14 +1026,12 @@ const updateFacility = async(req,res)=>{
       transaction
     })
     for (let eachInventory of findAllInventoryFacility){
-        let checkIfTheGivenInventoryPresent = await inventoryFacilities.findOne({
-          where:{
-            [Op.and]:[{statusId:statusId},{equipmentId:eachInventory.equipmentId},{facilityId:facilityId}]}
-        },
-      transaction)
-        if(!checkIfTheGivenInventoryPresent){
+        let checkIfIdPresent = parkInventory.every(eachOne=>eachOne.equipmentId == eachInventory.equipmentId);
+        if(!checkIfIdPresent){
           let inactiveTheRecord = await inventoryFacilities.update({
-            statusId:2
+            statusId:2,
+            updatedBy:userId,
+            updatedDt:updatedDt
           },
       { 
         where:{
@@ -998,29 +1047,50 @@ const updateFacility = async(req,res)=>{
         }
         hasUpdates = true
       
-      }
+        }
+        
         
       }
+    }
+    if(parkInventory.length == 0){
+      let inactiveTheRecord = await inventoryFacilities.update({
+        statusId:2,
+        updatedBy:userId,
+        updatedDt:updatedDt
+      },
+  { 
+    where:{
+      [Op.and]:[{equipmentId:eachInventory.equipmentId},{facilityId:facilityId}]
+    },
+    transaction
+    })
+    if(inactiveTheRecord==0){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:"Something went wrong"
+      })
+    }
+    hasUpdates = true
     }
     if(amenity.length>0){
     
       for (let eachAmenity of amenity){
         let checkIfTheGivenAmenityPresent = await amenityFacility.findOne({
           where:{
-            [Op.and]:[{statusId:statusId},{amenityId:eachAmenity.amenityId},{facilityId:facilityId}]}
+            [Op.and]:[{statusId:statusId},{amenityId:eachAmenity},{facilityId:facilityId}]}
         },
       transaction)
         if(!checkIfTheGivenAmenityPresent){
-          let insertToAmenityFacility = await amenityFacility.insert({
+          let insertToAmenityFacility = await amenityFacility.create({
             statusId:statusId,
-            amenityId:eachAmenity.amenityId,
+            amenityId:eachAmenity,
             facilityId:facilityId,
             createdBy:userId,
             updatedBy:userId,
             updatedDt:updatedDt,
             createdDt:createdDt,
           },
-          transaction)
+          {transaction})
           if(!insertToAmenityFacility){
             await transaction.rollback();
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -1039,14 +1109,11 @@ const updateFacility = async(req,res)=>{
       transaction
     })
     for (let eachAmenity of findAllAmenityFacility){
-        let checkIfTheGivenAmenityPresent = await amenityFacility.findOne({
-          where:{
-            [Op.and]:[{statusId:statusId},{amenityId:eachAmenity.amenityId},{facilityId:facilityId}]}
-        },
-      transaction)
-        if(!checkIfTheGivenAmenityPresent){
+        if(!amenity.includes(eachAmenity.amenityId)){
           let inactiveTheRecord = await amenityFacility.update({
-            statusId:2
+            statusId:2,
+            updatedBy:userId,
+            updatedDt:updatedDt
           },
       { 
         where:{
@@ -1061,10 +1128,30 @@ const updateFacility = async(req,res)=>{
           })
         }
         hasUpdates = true
-      
-      }
+        }
+        
         
       }
+    }
+    if(amenity.length==0){
+      let inactiveTheRecord = await amenityFacility.update({
+        statusId:2,
+        updatedBy:userId,
+        updatedDt:updatedDt
+      },
+  { 
+    where:{
+      [Op.and]:[{amenityId:eachAmenity.amenityId},{facilityId:facilityId}]
+    },
+    transaction
+    })
+    if(inactiveTheRecord==0){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:"Something went wrong"
+      })
+    }
+    hasUpdates = true
     }
     if(game.length>0){
       
@@ -1080,14 +1167,14 @@ const updateFacility = async(req,res)=>{
       for (let eachActivity of game){
         let checkIfTheGivenActivityPresent = await facilityAcitivities.findOne({
           where:{
-            [Op.and]:[{statusId:statusId},{activityId:eachActivity.userActivityId},{facilityId:facilityId}]}
+            [Op.and]:[{statusId:statusId},{activityId:eachActivity},{facilityId:facilityId}]}
         },
       transaction)
         if(!checkIfTheGivenActivityPresent){
           
-          let insertToActivityFacility = await facilityAcitivities.insert({
+          let insertToActivityFacility = await facilityAcitivities.create({
             statusId:statusId,
-            activityId:eachActivity.activityId,
+            activityId:eachActivity,
             facilityTypeId:updateFacilityDataVariable.facilityTypeId,
             facilityId:facilityId,
             createdBy:userId,
@@ -1095,7 +1182,7 @@ const updateFacility = async(req,res)=>{
             updatedDt:updatedDt,
             createdDt:createdDt,
           },
-          transaction)
+          {transaction})
 
           if(!insertToActivityFacility){
             await transaction.rollback();
@@ -1103,7 +1190,7 @@ const updateFacility = async(req,res)=>{
               message:"Something went wrong"
             })
           }
-        
+          hasUpdates = true
       }
     }
 
@@ -1114,14 +1201,12 @@ const updateFacility = async(req,res)=>{
       transaction
     })
     for (let eachActivity of findAllActivityFacility){
-        let checkIfTheGivenActivityPresent = await facilityAcitivities.findOne({
-          where:{
-            [Op.and]:[{statusId:statusId},{activityId:eachActivity.activityId},{facilityId:facilityId}]}
-        },
-      transaction)
-        if(!checkIfTheGivenActivityPresent){
+        
+        if(!game.includes(eachActivity.activityId)){
           let inactiveTheRecord = await facilityAcitivities.update({
-            statusId:2
+            statusId:2,
+            updatedBy:userId,
+            updatedDt:updatedDt
           },
       { 
         where:{
@@ -1135,29 +1220,51 @@ const updateFacility = async(req,res)=>{
             message:"Something went wrong"
           })
         }
+        hasUpdates = true
       }
         
       }
+    }
+    if(game.length == 0){
+      let inactiveTheRecord = await facilityAcitivities.update({
+        statusId:2,
+        updatedBy:userId,
+        updatedDt:updatedDt
+      },
+    { 
+      where:{
+        [Op.and]:[{activityId:eachActivity.activityId},{facilityId:facilityId}]
+      },
+      transaction
+      })
+      if(inactiveTheRecord==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:"Something went wrong"
+        })
+      }
+      hasUpdates = true
+
     }
     if(eventCategory.length>0){
         for (let eachEvent of eventCategory){
           let checkIfTheGivenEventPresent = await facilityEvent.findOne({
             where:{
-              [Op.and]:[{statusId:statusId},{eventCategoryId:eachEvent.eventCategoryId},{facilityId:facilityId}]}
+              [Op.and]:[{statusId:statusId},{eventCategoryId:eachEvent},{facilityId:facilityId}]}
           },
         transaction)
           if(!checkIfTheGivenEventPresent){
             
-            let insertToEventFacility = await facilityEvent.insert({
+            let insertToEventFacility = await facilityEvent.create({
               statusId:statusId,
-              eventCategoryId:eachEvent.eventCategoryId,
+              eventCategoryId:eachEvent,
               facilityId:facilityId,
               createdBy:userId,
               updatedBy:userId,
               updatedDt:updatedDt,
               createdDt:createdDt,
             },
-            transaction)
+            {transaction})
             if(!insertToEventFacility){
               await transaction.rollback();
               return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
@@ -1175,14 +1282,12 @@ const updateFacility = async(req,res)=>{
         transaction
       })
       for (let eachEvent of findAllEventFacility){
-          let checkIfTheGivenEventPresent = await facilityEvent.findOne({
-            where:{
-              [Op.and]:[{statusId:statusId},{eventCategoryId:eachEvent.eventCategoryId},{facilityId:facilityId}]}
-          },
-        transaction)
-          if(!checkIfTheGivenEventPresent){
+          
+          if(!eventCategory.includes(eachEvent.eventCategoryId)){
             let inactiveTheRecord = await facilityEvent.update({
-              statusId:2
+              statusId:2,
+              updatedBy:userId,
+              updatedDt:updatedDt
             },
         { 
           where:{
@@ -1200,6 +1305,26 @@ const updateFacility = async(req,res)=>{
         }
           
         }
+    }
+    if(eventCategory.length == 0){
+      let inactiveTheRecord = await facilityEvent.update({
+        statusId:2,
+        updatedBy:userId,
+        updatedDt:updatedDt
+      },
+  { 
+    where:{
+      [Op.and]:[{eventCategoryId:eachEvent.eventCategoryId},{facilityId:facilityId}]
+    },
+    transaction
+    })
+    if(inactiveTheRecord==0){
+      await transaction.rollback();
+      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+        message:"Something went wrong"
+      })
+    }
+    hasUpdates = true
     }
     if(firstName){
       updateOwnershipDataVariable.firstName = firstName
@@ -1227,22 +1352,7 @@ const updateFacility = async(req,res)=>{
           })
         }
     }
-      let findTheOldEmailId = await ownershipdetailsModels.findOne({
-        where:{
-          [Op.and]:[{ownershipDetailId:ownershipDetailId},{statusId:statusId}]
-        },
-        transaction
-      })
-      if(findTheOldEmailId.emailId ==checkIfPhoneNumberExist.emailId){
-        updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
-      }
-      else{
-        await transaction.rollback();
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:"This phone is already allocated"
-        })
-      }
-
+      
     }
     if(emailAdress){
 
@@ -1256,7 +1366,7 @@ const updateFacility = async(req,res)=>{
     }
       if(phoneNumber){
         if(checkIfEmailExist.phoneNo == phoneNumber){
-          updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
+          updateFacilityDataVariable.ownershipDetailId = checkIfEmailExist.ownershipDetailId
         }
         else{
           await transaction.rollback()
@@ -1265,21 +1375,7 @@ const updateFacility = async(req,res)=>{
           })
         }
     }
-      let findTheOldPhoneNo = await ownershipdetailsModels.findOne({
-        where:{
-          [Op.and]:[{ownershipDetailId:ownershipDetailId},{statusId:statusId}]
-        },
-        transaction
-      })
-      if(findTheOldPhoneNo.phoneNo == checkIfEmailExist.phoneNo){
-        updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
-      }
-      else{
-        await transaction.rollback();
-        return res.status(statusCode.BAD_REQUEST.code).json({
-          message:"This email is already allocated"
-        })
-      }
+      
     }
     if(ownerPanCard){
       let checkIfPanCardExist = await ownershipdetailsModels.findOne({
@@ -1308,15 +1404,15 @@ const updateFacility = async(req,res)=>{
     }
 
   }
-    if(ownersAddress){
-      updateOwnershipDataVariable.ownerAddress = ownersAddress
+    if(ownerAddress){
+      updateOwnershipDataVariable.ownerAddress = ownerAddress
     }
     if(facilityisownedbBDA){
       updateOwnershipDataVariable.isFacilityByBda = facilityisownedbBDA
     }
-    if(updateOwnershipDataVariable){
+    if(Object.keys(updateOwnershipDataVariable).length>0){
       updateOwnershipDataVariable.updatedDt = updatedDt
-      updateOwnershipDataVariable.updatedBy = updatedBy
+      updateOwnershipDataVariable.updatedBy = userId
       let [updateOwnershipDataVariableCount] = await ownershipdetailsModels.update(updateOwnershipDataVariable,{where:{
         ownershipDetailId:ownershipDetailId
       },
@@ -1331,12 +1427,15 @@ const updateFacility = async(req,res)=>{
       hasUpdates = true
 
     }
-    if(updateFacilityDataVariable){
+    if(Object.keys(updateFacilityDataVariable).length>0){
       updateFacilityDataVariable.updatedDt = updatedDt
-      updateFacilityDataVariable.updatedBy = updatedBy
+      updateFacilityDataVariable.updatedBy = userId
       let [updateFacilityDataCount] = await facilities.update(updateFacilityDataVariable,{where:{
         facilityId:facilityId
       },transaction})
+
+      console.log(updateFacilityDataVariable,'updatefacilitydata variable')
+
       if(updateFacilityDataCount==0){
         await transaction.rollback();
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
