@@ -40,6 +40,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
             const fileExtension = mime ? mime.split("/")[1] : "txt";
 
             let checkFileRemove = await fs.remove(`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`);
+            console.log('old file path')
 
             console.log(fileExtension,'34 file extension image file buffer',`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`)
 
