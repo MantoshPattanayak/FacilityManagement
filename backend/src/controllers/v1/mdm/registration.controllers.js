@@ -28,7 +28,6 @@ const { Op } = require('sequelize');
 let user = db.usermaster
 let imageUpload = require('../../../utils/imageUpload')
 let imageUpdate= require('../../../utils/imageUpdate');
-const ownershipdetailsModels = require("../../../models/ownershipdetails.models");
 
 let facilityEvent = db.facilityEvents
 // Admin facility registration
@@ -575,7 +574,7 @@ const getFacilityWrtId = async(req,res)=>{
 const updateFacility = async(req,res)=>{
   let transaction;
   try {
-    console.log("Here Response", req.body)
+    console.log("Here req", req.body, 'all req data end')
     let statusId =1;
     let userId = req.user.userId;
     let createdDt = new Date();
@@ -617,7 +616,7 @@ const updateFacility = async(req,res)=>{
       ownerPanCard,
       ownersAddress} = req.body
 
-      let ownerAddress = ownersAddress;
+      let ownerAddress = ownersAddress.ownersAddress;
 
       let hasUpdates = false;
 
@@ -660,25 +659,26 @@ const updateFacility = async(req,res)=>{
         updateFacilityDataVariable.operatingHoursTo = operatingHoursTo
       }
       if(Object.keys(operatingDays).length > 0){
-        if(operatingDays?.sun){
+        if(operatingDays?.sun.toString()){
+          console.log('1')
           updateFacilityDataVariable.sun = operatingDays.sun 
         }
-        if(operatingDays?.mon){
-          updateFacilityDataVariable.mon = operatingDays.mon 
+        if(operatingDays?.mon.toString()){
+          updateFacilityDataVariable.mon = operatingDays.mon
         }
-        if(operatingDays?.tue){
+        if(operatingDays?.tue.toString()){
           updateFacilityDataVariable.tue = operatingDays.tue 
         }
-        if(operatingDays?.wed){
+        if(operatingDays?.wed.toString()){
           updateFacilityDataVariable.wed = operatingDays.wed 
         }
-        if(operatingDays?.thu){
+        if(operatingDays?.thu.toString()){
           updateFacilityDataVariable.thu = operatingDays.thu 
         }
-        if(operatingDays?.fri){
+        if(operatingDays?.fri.toString()){
           updateFacilityDataVariable.fri = operatingDays.fri 
         }
-        if(operatingDays?.sat){
+        if(operatingDays?.sat.toString()){
           updateFacilityDataVariable.sat = operatingDays.sat 
         }
         console.log(updateFacilityDataVariable,'updatethefacilitydatavariable')
@@ -946,24 +946,33 @@ const updateFacility = async(req,res)=>{
       }
     }
     if(service.length==0){
-      let inactiveTheRecord = await serviceFacility.update({
-        statusId:2,
-        updatedBy:userId,
-        updatedDt:updatedDt
-      },
-  { 
-    where:{
-      [Op.and]:[{serviceId:eachService.serviceId},{facilityId:facilityId}]
-    },
-    transaction
-    })
-    if(inactiveTheRecord==0){
-      await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:"Something went wrong"
+      let findAllServiceFacility = await serviceFacility.findAll({
+        where:{
+          [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+        },
+        transaction
       })
-    }
-    hasUpdates = true
+      if(findAllServiceFacility.length > 0){
+        let inactiveTheRecord = await serviceFacility.update({
+          statusId:2,
+          updatedBy:userId,
+          updatedDt:updatedDt
+        },
+    { 
+      where:{
+        [Op.and]:[{facilityId:facilityId},{statusId:statusId}]
+      },
+      transaction
+      })
+      if(inactiveTheRecord==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:"Something went wrong"
+        })
+      }
+      hasUpdates = true
+      }
+     
     }
 
 
@@ -1053,24 +1062,33 @@ const updateFacility = async(req,res)=>{
       }
     }
     if(parkInventory.length == 0){
-      let inactiveTheRecord = await inventoryFacilities.update({
-        statusId:2,
-        updatedBy:userId,
-        updatedDt:updatedDt
-      },
-  { 
-    where:{
-      [Op.and]:[{equipmentId:eachInventory.equipmentId},{facilityId:facilityId}]
-    },
-    transaction
-    })
-    if(inactiveTheRecord==0){
-      await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:"Something went wrong"
+      let findAllInventoryFacility = await inventoryFacilities.findAll({
+        where:{
+          [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+        },
+        transaction
       })
-    }
-    hasUpdates = true
+      if(findAllInventoryFacility.length > 0){
+        let inactiveTheRecord = await inventoryFacilities.update({
+          statusId:2,
+          updatedBy:userId,
+          updatedDt:updatedDt
+        },
+    { 
+      where:{
+        [Op.and]:[{facilityId:facilityId},{statusId:statusId}]
+      },
+      transaction
+      })
+      if(inactiveTheRecord==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:"Something went wrong"
+        })
+      }
+      hasUpdates = true
+      }
+
     }
     if(amenity.length>0){
     
@@ -1134,24 +1152,33 @@ const updateFacility = async(req,res)=>{
       }
     }
     if(amenity.length==0){
-      let inactiveTheRecord = await amenityFacility.update({
-        statusId:2,
-        updatedBy:userId,
-        updatedDt:updatedDt
-      },
-  { 
-    where:{
-      [Op.and]:[{amenityId:eachAmenity.amenityId},{facilityId:facilityId}]
-    },
-    transaction
-    })
-    if(inactiveTheRecord==0){
-      await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:"Something went wrong"
+      let findAllAmenityFacility = await amenityFacility.findAll({
+        where:{
+          [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+        },
+        transaction
       })
-    }
-    hasUpdates = true
+      if(findAllAmenityFacility.length>0){
+        let inactiveTheRecord = await amenityFacility.update({
+          statusId:2,
+          updatedBy:userId,
+          updatedDt:updatedDt
+        },
+    { 
+      where:{
+        [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+      },
+      transaction
+      })
+      if(inactiveTheRecord==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:"Something went wrong"
+        })
+      }
+      hasUpdates = true
+      }
+      
     }
     if(game.length>0){
       
@@ -1226,24 +1253,33 @@ const updateFacility = async(req,res)=>{
       }
     }
     if(game.length == 0){
-      let inactiveTheRecord = await facilityAcitivities.update({
-        statusId:2,
-        updatedBy:userId,
-        updatedDt:updatedDt
-      },
-    { 
-      where:{
-        [Op.and]:[{activityId:eachActivity.activityId},{facilityId:facilityId}]
-      },
-      transaction
+      let findAllActivityFacility = await facilityAcitivities.findAll({
+        where:{
+          [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+        },
+        transaction
       })
-      if(inactiveTheRecord==0){
-        await transaction.rollback();
-        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-          message:"Something went wrong"
+      if(findAllActivityFacility.length >0){
+        let inactiveTheRecord = await facilityAcitivities.update({
+          statusId:2,
+          updatedBy:userId,
+          updatedDt:updatedDt
+        },
+      { 
+        where:{
+          [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+        },
+        transaction
         })
+        if(inactiveTheRecord==0){
+          await transaction.rollback();
+          return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message:"Something went wrong"
+          })
+        }
+        hasUpdates = true
       }
-      hasUpdates = true
+      
 
     }
     if(eventCategory.length>0){
@@ -1307,24 +1343,33 @@ const updateFacility = async(req,res)=>{
         }
     }
     if(eventCategory.length == 0){
-      let inactiveTheRecord = await facilityEvent.update({
-        statusId:2,
-        updatedBy:userId,
-        updatedDt:updatedDt
-      },
-  { 
-    where:{
-      [Op.and]:[{eventCategoryId:eachEvent.eventCategoryId},{facilityId:facilityId}]
-    },
-    transaction
-    })
-    if(inactiveTheRecord==0){
-      await transaction.rollback();
-      return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-        message:"Something went wrong"
+      let findAllEventFacility = await facilityEvent.findAll({
+        where:{
+          [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+        },
+        transaction
       })
-    }
-    hasUpdates = true
+      if(findAllEventFacility.length > 0){
+        let inactiveTheRecord = await facilityEvent.update({
+          statusId:2,
+          updatedBy:userId,
+          updatedDt:updatedDt
+        },
+    { 
+      where:{
+        [Op.and]:[{statusId:statusId},{facilityId:facilityId}]
+      },
+      transaction
+      })
+      if(inactiveTheRecord==0){
+        await transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+          message:"Something went wrong"
+        })
+      }
+      hasUpdates = true
+      }
+      
     }
     if(firstName){
       updateOwnershipDataVariable.firstName = firstName
@@ -1333,7 +1378,7 @@ const updateFacility = async(req,res)=>{
       updateOwnershipDataVariable.lastName = lastName
     }
     if(phoneNumber){
-      let checkIfPhoneNumberExist = await ownershipdetailsModels.findOne({
+      let checkIfPhoneNumberExist = await ownershipDetails.findOne({
         where:{[Op.and]:[{statusId:statusId},{phoneNo:phoneNumber}]},
         transaction
       
@@ -1356,7 +1401,7 @@ const updateFacility = async(req,res)=>{
     }
     if(emailAdress){
 
-      let checkIfEmailExist = await ownershipdetailsModels.findOne({
+      let checkIfEmailExist = await ownershipDetails.findOne({
         where:{[Op.and]:[{statusId:statusId},{emailId:emailAdress}]},
         transaction
       
@@ -1378,7 +1423,7 @@ const updateFacility = async(req,res)=>{
       
     }
     if(ownerPanCard){
-      let checkIfPanCardExist = await ownershipdetailsModels.findOne({
+      let checkIfPanCardExist = await ownershipDetails.findOne({
         where:{
           [Op.and]:[{ownerPanCardNumber:ownerPanCard},{statusId:statusId}]
         },
@@ -1388,7 +1433,7 @@ const updateFacility = async(req,res)=>{
         updateOwnershipDataVariable.ownerPanCardNumber = ownerPanCard
       }
       if(phoneNumber){
-        let checkIfPhoneNumberExist = await ownershipdetailsModels.findOne({
+        let checkIfPhoneNumberExist = await ownershipDetails.findOne({
           where:{[Op.and]:[{statusId:statusId},{phoneNo:phoneNumber}]},
           transaction
         });
@@ -1413,7 +1458,7 @@ const updateFacility = async(req,res)=>{
     if(Object.keys(updateOwnershipDataVariable).length>0){
       updateOwnershipDataVariable.updatedDt = updatedDt
       updateOwnershipDataVariable.updatedBy = userId
-      let [updateOwnershipDataVariableCount] = await ownershipdetailsModels.update(updateOwnershipDataVariable,{where:{
+      let [updateOwnershipDataVariableCount] = await ownershipDetails.update(updateOwnershipDataVariable,{where:{
         ownershipDetailId:ownershipDetailId
       },
       transaction
