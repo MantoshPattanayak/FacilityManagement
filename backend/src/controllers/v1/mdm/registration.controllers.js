@@ -581,43 +581,46 @@ const updateFacility = async(req,res)=>{
     let updatedDt = new Date();
     transaction = await sequelize.transaction();
     let { 
+      facilityData,
       facilityId,
-      facilityType,
-      facilityName,
-      longitude,
-      latitude,
-      address,
-      pin,
-      ownership,
-      area,
-      operatingHoursFrom,
-      operatingHoursTo,
+      facilityTypeId:facilityType,
       operatingDays,  //here operating days will come in the form of array of data i.e. array of  days
       service,  //here services will be given in the form of object 
-      otherServices, //here others will be given in the form of string 
       amenity, // here amenities will be given in the form of form of object 
-      otherAmenities, // here other amenities will be given in the form of string
-      additionalDetails,
       facilityImage,
       eventCategory,
-      othereventCategory,
       game,
-  
-      helpNumber,
-      othergame,
+      
       parkInventory,
       // owner details
       ownersAddress} = req.body
+      
+      // let{ facilityName,
+      // longitude,
+      // latitude,
+      // address,
+      // pin,
+      // otherAmenities,
+      // additionalDetails,
+      // area,
+      // operatingHoursFrom,
+      // operatingHoursTo,
+      // otherServices,
+      // othereventCategory,
+      // ownership,
+      // helpNumber
+      // }
+      // = facilityData
 
       // destructing the owner details
-      let { ownershipDetailId, 
-        firstName,
-        lastName,
-    facilityisownedbBDA,
-        phoneNumber,
-        emailAddress:emailAdress,
-        ownerPanCard,
-        ownersAddress:ownerAddress} = ownersAddress
+    //   let { ownershipDetailId, 
+    //     firstName,
+    //     lastName,
+    // facilityisownedbBDA,
+    //     phoneNumber,
+    //     emailAddress:emailAdress,
+    //     ownerPanCard,
+    //     ownersAddress:ownerAddress} = ownersAddress
 
 
       let hasUpdates = false;
@@ -630,35 +633,36 @@ const updateFacility = async(req,res)=>{
       if(facilityType){
         updateFacilityDataVariable.facilityTypeId = facilityType
       }
-      if(helpNumber){
-        updateFacilityDataVariable.helpNumber = helpNumber
+      if(facilityData?.helpNumber){
+        updateFacilityDataVariable.helpNumber = facilityData?.helpNumber
       }
-      if(facilityName){
-        updateFacilityDataVariable.facilityname = facilityName
+      
+      if(facilityData?.facilityName){
+        updateFacilityDataVariable.facilityname =facilityData?.facilityName
       }
-      if(longitude){
-        updateFacilityDataVariable.longitude = longitude
+      if(facilityData?.longitude){
+        updateFacilityDataVariable.longitude = facilityData?.longitude
       }
-      if(latitude){
-        updateFacilityDataVariable.latitude = latitude
+      if(facilityData?.latitude){
+        updateFacilityDataVariable.latitude = facilityData?.latitude
       }
-      if(address){
-        updateFacilityDataVariable.address = address
+      if(facilityData?.address){
+        updateFacilityDataVariable.address = facilityData?.address
       }
-      if(pin){
-        updateFacilityDataVariable.pin = pin
+      if(facilityData?.pin){
+        updateFacilityDataVariable.pin = facilityData?.pin
       }
-      if(ownership){
-        updateFacilityDataVariable.ownership = ownership
+      if(facilityData?.ownership){
+        updateFacilityDataVariable.ownership = facilityData?.ownership
       }
-      if(area){
-        updateFacilityDataVariable.area = area
+      if(facilityData?.area){
+        updateFacilityDataVariable.area = facilityData?.area
       }
-      if(operatingHoursFrom){
-        updateFacilityDataVariable.operatingHoursFrom = operatingHoursFrom
+      if(facilityData?.operatingHoursFrom){
+        updateFacilityDataVariable.operatingHoursFrom = facilityData?.operatingHoursFrom
       }
-      if(operatingHoursTo){
-        updateFacilityDataVariable.operatingHoursTo = operatingHoursTo
+      if(facilityData?.operatingHoursTo){
+        updateFacilityDataVariable.operatingHoursTo = facilityData?.operatingHoursTo
       }
       if(Object.keys(operatingDays).length > 0){
         if(operatingDays?.sun.toString()){
@@ -685,21 +689,21 @@ const updateFacility = async(req,res)=>{
         }
         console.log(updateFacilityDataVariable,'updatethefacilitydatavariable')
       }
-    if(othergame){
-      updateFacilityDataVariable.otherGames = othergame 
+    if(facilityData?.othergame){
+      updateFacilityDataVariable.otherGames = facilityData?.othergame 
     }
-    if(additionalDetails){
-      updateFacilityDataVariable.additionalDetails = additionalDetails 
+    if(facilityData?.additionalDetails){
+      updateFacilityDataVariable.additionalDetails = facilityData?.additionalDetails 
     }
-    if(otherServices){
-      updateFacilityDataVariable.otherServices = otherServices 
+    if(facilityData?.otherServices){
+      updateFacilityDataVariable.otherServices = facilityData?.otherServices 
     }
-    if(otherAmenities){
-      updateFacilityDataVariable.otherAmenities = otherAmenities 
+    if(facilityData?.otherAmenities){
+      updateFacilityDataVariable.otherAmenities = facilityData?.otherAmenities 
     }
     
-    if(othereventCategory){
-      updateOwnershipDataVariable.otherEventCategories = othereventCategory 
+    if(facilityData?.othereventCategory){
+      updateOwnershipDataVariable.otherEventCategories = facilityData?.othereventCategory 
     }
     if(Object.keys(facilityImage).length > 0){
       let findTheFacilityName = await facilities.findOne({
@@ -1374,23 +1378,23 @@ const updateFacility = async(req,res)=>{
       }
       
     }
-    if(firstName){
-      updateOwnershipDataVariable.firstName = firstName
+    if(ownersAddress?.firstName){
+      updateOwnershipDataVariable.firstName = ownersAddress?.firstName
     }
-    if(lastName){
-      updateOwnershipDataVariable.lastName = lastName
+    if(ownersAddress?.lastName){
+      updateOwnershipDataVariable.lastName = ownersAddress?.lastName
     }
-    if(phoneNumber){
+    if(ownersAddress?.phoneNumber){
       let checkIfPhoneNumberExist = await ownershipDetails.findOne({
-        where:{[Op.and]:[{statusId:statusId},{phoneNo:phoneNumber}]},
+        where:{[Op.and]:[{statusId:statusId},{phoneNo:ownersAddress?.phoneNumber}]},
         transaction
       
       });
       if(!checkIfPhoneNumberExist){ 
-        updateOwnershipDataVariable.phoneNo = phoneNumber
+        updateOwnershipDataVariable.phoneNo = ownersAddress?.phoneNumber
     }
-      if(emailAdress){
-        if(checkIfPhoneNumberExist.emailId == emailAdress){
+      if(ownersAddress?.emailAddress){
+        if(checkIfPhoneNumberExist.emailId == ownersAddress?.emailAddress){
           updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
           ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
         }
@@ -1403,18 +1407,18 @@ const updateFacility = async(req,res)=>{
     }
       
     }
-    if(emailAdress){
+    if(ownersAddress?.emailAddress){
 
       let checkIfEmailExist = await ownershipDetails.findOne({
-        where:{[Op.and]:[{statusId:statusId},{emailId:emailAdress}]},
+        where:{[Op.and]:[{statusId:statusId},{emailId:ownersAddress?.emailAddress}]},
         transaction
       
       });
       if(!checkIfEmailExist){ 
-        updateOwnershipDataVariable.emailId = emailAdress
+        updateOwnershipDataVariable.emailId = ownersAddress?.emailAddress
     }
-      if(phoneNumber){
-        if(checkIfEmailExist.phoneNo == phoneNumber){
+      if(ownersAddress?.phoneNumber){
+        if(checkIfEmailExist.phoneNo == ownersAddress?.phoneNumber){
           updateFacilityDataVariable.ownershipDetailId = checkIfEmailExist.ownershipDetailId
           ownershipDetailId = checkIfEmailExist.ownershipDetailId
         }
@@ -1427,22 +1431,22 @@ const updateFacility = async(req,res)=>{
     }
       
     }
-    if(ownerPanCard){
+    if(ownersAddress?.ownerPanCard){
       let checkIfPanCardExist = await ownershipDetails.findOne({
         where:{
-          [Op.and]:[{ownerPanCardNumber:ownerPanCard},{statusId:statusId}]
+          [Op.and]:[{ownerPanCardNumber:ownersAddress?.ownerPanCard},{statusId:statusId}]
         },
         transaction
       })
       if(!checkIfPanCardExist){
-        updateOwnershipDataVariable.ownerPanCardNumber = ownerPanCard
+        updateOwnershipDataVariable.ownerPanCardNumber = ownersAddress?.ownerPanCard
       }
-      if(phoneNumber){
+      if(ownersAddress?.phoneNumber){
         let checkIfPhoneNumberExist = await ownershipDetails.findOne({
-          where:{[Op.and]:[{statusId:statusId},{phoneNo:phoneNumber}]},
+          where:{[Op.and]:[{statusId:statusId},{phoneNo:ownersAddress?.phoneNumber}]},
           transaction
         });
-          if(checkIfPhoneNumberExist.phoneNo == phoneNumber){
+          if(checkIfPhoneNumberExist.phoneNo == ownersAddress?.phoneNumber){
             updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
             ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
           }
@@ -1455,11 +1459,11 @@ const updateFacility = async(req,res)=>{
     }
 
   }
-    if(ownerAddress){
-      updateOwnershipDataVariable.ownerAddress = ownerAddress
+    if(ownersAddress?.ownersAddress){
+      updateOwnershipDataVariable.ownerAddress = ownersAddress?.ownersAddress
     }
-    if(facilityisownedbBDA){
-      updateOwnershipDataVariable.isFacilityByBda = facilityisownedbBDA
+    if(ownersAddress?.facilityisownedbBDA){
+      updateOwnershipDataVariable.isFacilityByBda = ownersAddress?.facilityisownedbBDA
     }
     if(Object.keys(updateOwnershipDataVariable).length>0){
       updateOwnershipDataVariable.updatedDt = updatedDt
