@@ -42,7 +42,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
             let checkFileRemove = await fs.remove(`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`);
             console.log('old file path')
 
-            console.log(fileExtension,'34 file extension image file buffer',`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`)
+            console.log(checkFileRemove,'34 file extension image file buffer',`${imageFileDir.replace(/\\/g, '/')}${oldFilePath}`)
 
             uploadFilePath = `${imageFileDir}/${insertionData.id}${insertionData.name}_${serialNumber || null}.${fileExtension}`;
 
