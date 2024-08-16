@@ -607,16 +607,18 @@ const updateFacility = async(req,res)=>{
       othergame,
       parkInventory,
       // owner details
-      ownershipDetailId, 
-      firstName,
-      lastName,
-  facilityisownedbBDA,
-      phoneNumber,
-      emailAdress,
-      ownerPanCard,
       ownersAddress} = req.body
 
-      let ownerAddress = ownersAddress.ownersAddress;
+      // destructing the owner details
+      let { ownershipDetailId, 
+        firstName,
+        lastName,
+    facilityisownedbBDA,
+        phoneNumber,
+        emailAddress:emailAdress,
+        ownerPanCard,
+        ownersAddress:ownerAddress} = ownersAddress
+
 
       let hasUpdates = false;
 
@@ -796,6 +798,7 @@ const updateFacility = async(req,res)=>{
       }
       // facility array of images
         if(facilityImage?.facilityArrayOfImages.length>0){
+          console.log('inside facility array of images')
           let i = 0;
           for (let facilityArrayOfImage of facilityImage.facilityArrayOfImages){
             let multipleFacilityImage = facilityArrayOfImage?.data
@@ -1389,6 +1392,7 @@ const updateFacility = async(req,res)=>{
       if(emailAdress){
         if(checkIfPhoneNumberExist.emailId == emailAdress){
           updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
+          ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
         }
         else{
           await transaction.rollback()
@@ -1412,6 +1416,7 @@ const updateFacility = async(req,res)=>{
       if(phoneNumber){
         if(checkIfEmailExist.phoneNo == phoneNumber){
           updateFacilityDataVariable.ownershipDetailId = checkIfEmailExist.ownershipDetailId
+          ownershipDetailId = checkIfEmailExist.ownershipDetailId
         }
         else{
           await transaction.rollback()
@@ -1439,6 +1444,7 @@ const updateFacility = async(req,res)=>{
         });
           if(checkIfPhoneNumberExist.phoneNo == phoneNumber){
             updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
+            ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
           }
           else{
             await transaction.rollback()
