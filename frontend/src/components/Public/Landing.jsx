@@ -160,6 +160,9 @@ const Landing = () => {
   // for google maps
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
+  const language = useSelector(
+    (state) => state.language.language || localStorage.getItem("language") || "EN"
+  );
      
   const handleTogglePlayPause = () => {
     if (isMarqueePaused) {
@@ -540,7 +543,7 @@ const Landing = () => {
     return res;
   }
   // here Update the data-----------------------------------------------
-  useEffect(() => {}, [givenReq, facilityTypeId, showTour]);
+  useEffect(() => {}, [givenReq, facilityTypeId, showTour, language]);
 
   // refresh on user input to show suggestions of facilities
   useEffect(() => {
@@ -788,22 +791,46 @@ const Landing = () => {
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
           <span className="Search-Conatiner">
-            <h1>AMA BHOOMI</h1>
+            <h1>
+              {language == "EN" && "Welcome to AMA BHOOMI!"}
+              {language == "OD" && "ଆମ ଭୂମି କୁ ସ୍ଵାଗତ!"}
+            </h1>
             <span className="about">
               <p className="about_text">
-                Assuring Mass Access through Bhubaneswar Open <br></br>
-                Spaces & Ownership Management Initiative.
+                {language == "EN" && (
+                  <>
+                    <b>Assuring Mass Access through Bhubaneswar Open</b> <br></br>
+                    <b>Spaces & Ownership Management Initiative.</b> <br></br>
+                    Bhubaneswar’s path-breaking initiative to empower residents <br></br> 
+                    to take ownership, shape, & manage open spaces in the city… <br></br>
+                    where every corner will be a thriving hub of activity, connection, and nature.
+                  </>
+                )}
+                {language == "OD" && (
+                  <>
+                    <b>ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା। </b> <br></br>
+                    ଭୁବନେଶ୍ୱରର ଏକ ଉଲ୍ଲେଖନୀୟ ପଦକ୍ଷେପ ଯାହାକି ସହରରେ ଥିବା ଖୋଲା ସ୍ଥାନଗୁଡିକର ମାଲିକାନା ନେବା,<br></br> 
+                    ଏହାକୁ ନୂତନ ଆକାର ଦେବା, ତଥା ଏହାର ପରିଚାଳନା ପାଇଁ ସ୍ଥାନୀୟ ବାସିନ୍ଦାଙ୍କୁ ସଶକ୍ତ କରିବ...<br></br> 
+                    ଯେଉଁଠି ପ୍ରତ୍ୟେକ କୋଣ ଅନୁକୋଣ କାର୍ଯ୍ୟକଳାପ, ସଂଯୋଗ ତଥା ପ୍ରକୃତିର ଏକ ସମୃଦ୍ଧ ସଙ୍ଗମ ହେବ।
+                  </>
+                )}
               </p>
             </span>
             <span className="enjoy_text">
               <p className="about_text">
-                Your one stop destination for Bhubaneswar’s Open Spaces !
+                {language == "EN" && "Your one stop destination for Bhubaneswar’s Open Spaces!"}
+                {language == "OD" && "ଭୁବନେଶ୍ୱରର ଖୋଲା ସ୍ଥାନ ଗୁଡ଼ିକ ପାଇଁ ଆପଣଙ୍କର ଏକମାତ୍ର ଗନ୍ତବ୍ୟସ୍ଥଳ!"}
               </p>
-              <h4>JOIN THE MOVEMENT</h4>
+              <h4>
+                {language == "EN" && "JOIN THE MOVEMENT"}
+                {language == "OD" && "ଆନ୍ଦୋଳନରେ ଯୋଗ ଦିଅନ୍ତୁ, ନିଜର ସହରକୁ ପୁନରୁଦ୍ଧାର କରନ୍ତୁ!"}
+              </h4>
             </span>
 
             <h2 className="typing-animation">
-              Explore, Book and Enjoy Open Spaces{" "}
+              {language == "EN" && "Explore, Book and Enjoy Open Spaces"}
+              {language == "OD" && "ଖୋଲା ସ୍ଥାନଗୁଡିକ ଏକ୍ସପ୍ଲୋର୍ କରନ୍ତୁ, ବୁକ୍ କରନ୍ତୁ ଏବଂ ଉପଭୋଗ କରନ୍ତୁ!"}
+              
             </h2>
             <div className="input-wrapper">
               <div className="search-bar-wrapper">
@@ -846,7 +873,10 @@ const Landing = () => {
             )}
 
             <span className="Reg_text">
-              <h1>REGISTER TO AVAIL THE BENEFITS</h1>
+              <h1>
+                {language == "EN" && "REGISTER TO AVAIL THE BENEFITS"}
+                {language == "OD" && "ସମସ୍ତ ସୁବିଧା ଗୁଡ଼ିକ ପାଇବା ପାଇଁ ନିଜକୁ ପଞ୍ଜିକରଣ କରନ୍ତୁ।"}
+              </h1>
             </span>
           </span>
 
@@ -1498,6 +1528,7 @@ const Landing = () => {
       {showTour == "true" && (
         <TourGuide run={runTour} callback={handleJoyrideCallback} />
       )}
+      <ToastContainer />
     </div>
   );
 };
