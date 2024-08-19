@@ -293,11 +293,13 @@ export default function PublicHeader() {
               </li> */}
               <li>
                 <Link to={"/About"}>
-                  {languageContent
+                {!language || language == "EN" && "About us"}
+                {language == "OD" && "ବିଷୟରେ"}
+                  {/* {languageContent
                     .find(
                       (data) => data.languageResourceKey == "publicHeaderAbout"
                     )
-                    ?.languageResourceValue?.toUpperCase()}
+                    ?.languageResourceValue?.toUpperCase()} */}
                 </Link>
               </li>
               <li>
