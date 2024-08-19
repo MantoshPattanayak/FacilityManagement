@@ -111,8 +111,7 @@ app.use(
   })
 );
 
-//  here to access the public assets like images, folders
-app.use(express.static("public"));
+
 
 //  Here cookie parser is used to do crud operation in the user cookie by the server
 app.use(cookieParser());
@@ -171,7 +170,6 @@ app.use("/userActivity", userActivity)
 // Use error logger middleware after all route handlers
 app.use(errorLogger);
 
-app.use("/static", express.static(uploadDir));
 
 app.use((err,req,res,next)=>{
   if(err){

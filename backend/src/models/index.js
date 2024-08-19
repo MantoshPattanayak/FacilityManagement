@@ -213,7 +213,7 @@ db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 db1.hosteventbookings.sync({
-  alter:true,
+  alter:false,
 });
 
 module.exports = db1;
