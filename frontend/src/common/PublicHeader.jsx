@@ -293,7 +293,7 @@ export default function PublicHeader() {
               </li> */}
               <li>
                 <Link to={"/About"}>
-                {!language || language == "EN" && "About us"}
+                {!language || language == "EN" && "ABOUT"}
                 {language == "OD" && "ବିଷୟରେ"}
                   {/* {languageContent
                     .find(
