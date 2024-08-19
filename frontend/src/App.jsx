@@ -60,6 +60,7 @@ const Organogram = React.lazy(() => import('./components/Public/About_And_FQA_PA
 const Stakeholders = React.lazy(() => import('./components/Public/About_And_FQA_PAGE/StakeHolder'))
 const FqaPage = React.lazy(() => import('./components/Public/About_And_FQA_PAGE/FqaPage'))
 const StandOut = React.lazy(() => import('./components/Public/About_And_FQA_PAGE/StandOut'))
+const ScreenReader = React.lazy(() => import('./components/Public/About_And_FQA_PAGE/ScreenReader'))
 const AddNewNotification = React.lazy(() => import('./components/Admin/Activity/Notifications/AddNewNotification'))
 const ViewNotifications = React.lazy(() => import('./components/Admin/Activity/Notifications/ViewNotifications'))
 const AdminLogin = React.lazy(() => import('./components/Admin/Login'))
@@ -158,6 +159,7 @@ function App() {
                 <Route path="/Sub_Park_Details" element={<React.Suspense fallback={<ClassicLoader/>}><Sub_Park_Details /></React.Suspense>} />
                 <Route path="/BookingDetails" element={<React.Suspense fallback={<ClassicLoader/>}><BookingDetails /></React.Suspense>} />
                 <Route path="/About" element={<React.Suspense fallback={<ClassicLoader/>}><About /></React.Suspense>} />
+                <Route path="/screen-reader-access" element={<React.Suspense fallback={<ClassicLoader/>}><ScreenReader /></React.Suspense>} />
                 <Route path="/History" element={<React.Suspense fallback={<ClassicLoader/>}> <History /></React.Suspense>} />
                 <Route path="/Organogram" element={<React.Suspense fallback={<ClassicLoader/>}><Organogram /></React.Suspense>} />
                 <Route path="/Stakeholders" element={<React.Suspense fallback={<ClassicLoader/>}><Stakeholders /></React.Suspense>} />

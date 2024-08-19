@@ -9,6 +9,7 @@ import {
   faUser,
   faBars,
   faShoppingCart,
+  faTabletScreenButton,
 } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../utils/axios";
 // Import Redux Part ---------------------------------
@@ -200,7 +201,11 @@ export default function PublicHeader() {
                   </>
                 )}
               </li>
-              <li>Screen Reader</li>
+              <li>
+                <Link to={"/screen-reader-access"}>
+                  <FontAwesomeIcon icon={faTabletScreenButton} />&nbsp; Screen Reader |
+                </Link>
+              </li>
             </ul>
             <div className="font-size-adjust">
               <a
