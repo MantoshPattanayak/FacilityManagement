@@ -1,6 +1,6 @@
 let jwt = require('jsonwebtoken');
 let { encrypt } = require('../middlewares/encryption.middlewares')
-let { decrypt } = require('../middlewares/encryption.middlewares')
+let { decrypt } = require('../middlewares/decryption.middlewares')
 
 //Generate an access token and a refresh token for this database user
 async function jwtTokens(userId, userName, emailId, roleId) {
