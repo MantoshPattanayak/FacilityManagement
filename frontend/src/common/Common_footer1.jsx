@@ -76,7 +76,7 @@ const CommonFooter1 = () => {
           <div className="footer-column1">
             <h1 className="Amam_text">AMA BHOOMI</h1>
             <p className="p_text_ama">
-              Assuring Mass Access through BHubaneswar <br></br> Open spaces and
+              Assuring Mass Access through Bhubaneswar <br></br> Open spaces and
               Ownership Management Initiative.
             </p>
             <div className="Downlad_Appp">

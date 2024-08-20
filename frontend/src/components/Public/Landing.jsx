@@ -38,8 +38,8 @@ import badmintonBg from "../../assets/Explore_New_Activity_background.png";
 import cricket_bg from "../../assets/mid-section-of-wicketkeeper.png";
 import cricket_1 from "../../assets/circket222111.png";
 import walking_img from "../../assets/jogging.png"
-import football_bg from "../../assets/fotable2.jpg";
-import football_1 from "../../assets/football_ENA.jpg";
+import football_bg from "../../assets/FootballBackground.jpg";
+import football_1 from "../../assets/FootballFront.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
 import yoga_1 from "../../assets/Yoga__ENA.jpg";
 // import { faBookmark } from "@fortawesome/free-regular-svg-icons";
@@ -86,6 +86,14 @@ import lading_page_image2 from "../../assets/landing2.jpg";
 import laidng5 from "../../assets/landing4.jpg";
 import lading4 from "../../assets/landing5.jpg";
 import lading6 from "../../assets/landing3.jpg";
+import walking_front_image from "../../assets/WalkingFront.jpg";
+import walking_back_image from "../../assets/WalkingBackground.jpg";
+import bas_backend from "../../assets/Basket_bg.jpg";
+import bas_front_page from "../../assets/BasketFront.jpg";
+import football_bas_backend from "../../assets/FootballBackground.jpg";
+import football_bas_front_page from "../../assets/FootballFront.jpg";
+import Open_gym_front from "../../assets/GymFront.jpg";
+import bg_gym from "../../assets/GymBackground.jpg";
 // import "./YourStyles.css";
 // here set the image of lading page
 const backGround_images = [
@@ -175,7 +183,7 @@ const Landing = () => {
 
   const [exploreNewActivities, setExploreNewActivities] = useState([]);
   const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
-  const [currentInnerImage, setCurrentInnerImage] = useState(yoga_1); // Top inner image
+  const [currentInnerImage, setCurrentInnerImage] = useState(); // Top inner image
 
   const handleNextImage = () => {
     console.log(1);
@@ -571,10 +579,29 @@ const Landing = () => {
   // handleGameClick ------------------------------------------------
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
-  
-    if (activity === "Football") {
-      setCurrentImage(football_bg);
-      setCurrentInnerImage(football_1);
+    if(activity==="Jogging/Walking"){
+      setCurrentInnerImage(walking_front_image);
+      setCurrentImage(walking_back_image);
+    }else if(activity==="Jogging"){
+      setCurrentInnerImage(walking_front_image);
+      setCurrentImage(walking_back_image);
+    }else if(activity==="Football"){
+      setCurrentInnerImage(football_bas_front_page);
+      setCurrentImage(football_bas_backend);
+    }else if(activity==="Open Gym"){
+      setCurrentInnerImage(Open_gym_front);
+      setCurrentImage(bg_gym);
+    }else if(activity==="Gym"){
+      setCurrentInnerImage(Open_gym_front);
+      setCurrentImage(bg_gym);
+    }else if(activity==="Gym"){
+      setCurrentInnerImage(Open_gym_front);
+      setCurrentImage(bg_gym);
+    }
+    
+    else if (activity === "Basketball") {
+      setCurrentImage(bas_backend);
+      setCurrentInnerImage(bas_front_page);
     } else if (activity === "Cricket") {
       setCurrentImage(cricket_bg);
       setCurrentInnerImage(cricket_1);
@@ -792,26 +819,26 @@ const Landing = () => {
         <div className="landing-page_contant">
           <span className="Search-Conatiner">
             <h1>
-              {language == "EN" && "Welcome to AMA BHOOMI!"}
+              {language == "EN" && "AMA BHOOMI!"}
               {language == "OD" && "ଆମ ଭୂମି କୁ ସ୍ଵାଗତ!"}
             </h1>
             <span className="about">
               <p className="about_text">
                 {language == "EN" && (
                   <>
-                    <b>Assuring Mass Access through Bhubaneswar Open</b> <br></br>
-                    <b>Spaces & Ownership Management Initiative.</b> <br></br>
-                    Bhubaneswar’s path-breaking initiative to empower residents <br></br> 
+                    Assuring Mass Access through Bhubaneswar Open <br></br>
+                    Spaces & Ownership Management Initiative.<br></br>
+                    {/* Bhubaneswar’s path-breaking initiative to empower residents <br></br> 
                     to take ownership, shape, & manage open spaces in the city… <br></br>
-                    where every corner will be a thriving hub of activity, connection, and nature.
+                    where every corner will be a thriving hub of activity, connection, and nature. */}
                   </>
                 )}
                 {language == "OD" && (
                   <>
-                    <b>ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା। </b> <br></br>
-                    ଭୁବନେଶ୍ୱରର ଏକ ଉଲ୍ଲେଖନୀୟ ପଦକ୍ଷେପ ଯାହାକି ସହରରେ ଥିବା ଖୋଲା ସ୍ଥାନଗୁଡିକର ମାଲିକାନା ନେବା,<br></br> 
+                    ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା। <br></br>
+                    {/* ଭୁବନେଶ୍ୱରର ଏକ ଉଲ୍ଲେଖନୀୟ ପଦକ୍ଷେପ ଯାହାକି ସହରରେ ଥିବା ଖୋଲା ସ୍ଥାନଗୁଡିକର ମାଲିକାନା ନେବା,<br></br> 
                     ଏହାକୁ ନୂତନ ଆକାର ଦେବା, ତଥା ଏହାର ପରିଚାଳନା ପାଇଁ ସ୍ଥାନୀୟ ବାସିନ୍ଦାଙ୍କୁ ସଶକ୍ତ କରିବ...<br></br> 
-                    ଯେଉଁଠି ପ୍ରତ୍ୟେକ କୋଣ ଅନୁକୋଣ କାର୍ଯ୍ୟକଳାପ, ସଂଯୋଗ ତଥା ପ୍ରକୃତିର ଏକ ସମୃଦ୍ଧ ସଙ୍ଗମ ହେବ।
+                    ଯେଉଁଠି ପ୍ରତ୍ୟେକ କୋଣ ଅନୁକୋଣ କାର୍ଯ୍ୟକଳାପ, ସଂଯୋଗ ତଥା ପ୍ରକୃତିର ଏକ ସମୃଦ୍ଧ ସଙ୍ଗମ ହେବ। */}
                   </>
                 )}
               </p>
@@ -1403,7 +1430,7 @@ const Landing = () => {
           </div>
           <div className="image-secondDiv">
             <img
-              className="h-80"
+             className="Current_explore_event_image"
               src={currentInnerImage}
               alt={exploreNewActivities[selectedActivity]?.game}
             />

@@ -376,12 +376,12 @@ const Sub_Park_Details = () => {
             <h1 className="text-park">
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <span className="Location_text_sub_manu">
+            {/* <span className="Location_text_sub_manu">
               <img className="location_icon" src={Location_icon}></img>
               <h1 className="text_location">
                 {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}
               </h1>
-            </span>
+            </span> */}
           </div>
           <div className="back_button">
             <button

@@ -214,14 +214,6 @@
     padding: .35em;
 }
 
-.table_Container table tr a {
-    color: #84d5ff;
-}
-
-.table_Container table tr a:hover {
-    text-decoration: underline;
-    color: #64b3da;
-}
 
 .table_Container table tr:last-child {
     border-bottom: none;

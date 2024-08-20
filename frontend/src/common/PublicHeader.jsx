@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppLogo from "../assets/ama-bhoomi_logo.png";
+import AppLogo_en from "../assets/eng_log_ama_bhoomi.png";
 // import "../components/Public/Landing";
 import "../common/PublicHeader.css";
 // Font Awesome icon --------------------------------
@@ -19,6 +20,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+
 
 export default function PublicHeader() {
   const [showMediaIcon, setShowMediaIcon] = useState(false);
@@ -248,11 +250,18 @@ export default function PublicHeader() {
         <div className="header-content">
           <div className="logo-ama-boomi">
             <Link to={"/"}>
-              <img
+            {!language || language == "EN" &&  <img
+                src={AppLogo_en}
+                alt="App Logo"
+                className= "ama_bhoomi_logo   h-[100%] "
+              />}
+                {language == "OD" && <img
                 src={AppLogo}
                 alt="App Logo"
-                className="h-[100%] top-0 absolute"
-              />
+                className="ama_bhoomi_logo   h-[100%] "
+              />}
+              
+              
             </Link>
           </div>
           <div className="navbar">

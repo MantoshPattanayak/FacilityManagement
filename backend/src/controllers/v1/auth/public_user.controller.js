@@ -538,7 +538,7 @@ const homePage = async (req, res) => {
     let facilityActivitiesFetchQuery = `
       select fa.id, f.facilityId, f.facilityTypeId, f.facilityname, u.userActivityId, u.userActivityName
       from amabhoomi.facilityactivities fa
-      inner join amabhoomi.facilities f on f.facilityId = fa.facilityId
+      inner join amabhoomi.facilities f on f.facilityId = fa.facilityId and fa.statusId = 1
       inner join amabhoomi.useractivitymasters u on fa.activityId = u.userActivityId
     `;
 
