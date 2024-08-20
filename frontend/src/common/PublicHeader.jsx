@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AppLogo from "../assets/ama-bhoomi_logo.png";
-import AppLogo_en from "../assets/eng_log_ama_bhoomi.png";
+import AppLogo from "../assets/AMA Bhoomi Logo_ Eng.svg";
+
+import AppLogo_en from "../assets/AMA Bhoomi Logo_ Odia.svg";
+
 // import "../components/Public/Landing";
 import "../common/PublicHeader.css";
 // Font Awesome icon --------------------------------
