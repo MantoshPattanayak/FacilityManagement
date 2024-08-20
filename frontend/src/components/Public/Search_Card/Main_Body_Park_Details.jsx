@@ -338,11 +338,42 @@ const Main_Body_Park_Details = () => {
         }`}
       >
         <h1 className="name_park_img">
-          {facilityTypeId == 1 && "Parks"}
-          {facilityTypeId == 2 && "Playgrounds"}
-          {facilityTypeId == 3 && "Multi-purpose Grounds"}
-          {facilityTypeId == 4 && "Blueways"}
-          {facilityTypeId == 5 && "Greenways"}
+          {facilityTypeId == 1 && 
+          <span className="park_log_name_on_image">
+           <img className="image_logo_with_name" src={Parks_img}></img>
+           <h1>ESCAPE | EXPLORE | ENJOY</h1>
+           <p><i></i>Unwind where nature thrives</p>
+          </span>
+          
+          }
+          {facilityTypeId == 2 && 
+           <span className="park_log_name_on_image">
+           <img className="image_logo_with_name" src={Playfields_img}></img>
+           <h1>PLAY | TRAIN | COMPETE</h1>
+           <p><i></i>Venture into sports facilities, activities and events</p>
+          </span>
+          }
+          {facilityTypeId == 3 &&
+           <span className="park_log_name_on_image">
+           <img className="image_logo_with_name" src={MultiPark}></img>
+           <h1>PLAN | PERFORM | PARTICIPATE</h1>
+           <p><i></i>Discover specially crafted space that empowers community</p>
+          </span>
+          }
+          {facilityTypeId == 4 && 
+          <span className="park_log_name_on_image">
+          <img className="image_logo_with_name" src={blueway}></img>
+          <h1>PAUSE | CAPTURE | EMBRACE</h1>
+          <p><i></i>Uncover city’s tranquillity hidden in the waterbodies</p>
+         </span>
+          }
+          {facilityTypeId == 5 && 
+          <span className="park_log_name_on_image">
+          <img className="image_logo_with_name" src={greenway}></img>
+          <h1>WALK | BREATHE | CONNECT</h1>
+          <p><i></i>Get Moving: walk or bike around your city’s trail network</p>
+         </span>
+          }
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}

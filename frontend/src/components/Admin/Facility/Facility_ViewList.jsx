@@ -95,7 +95,7 @@ export default function Facility_ViewList() {
                                                 <Link
                                                     to={{
                                                         pathname: '/Facility_Edit_View',
-                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId.toString()))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId.toString()))}&action=View`
+                                                        search: `?facilityId=${encodeURIComponent(encryptDataId(data.facilityId.toString()))}&facilityTypeId=${encodeURIComponent(encryptDataId(data.facilityTypeId))}&action=View`
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faEye} />

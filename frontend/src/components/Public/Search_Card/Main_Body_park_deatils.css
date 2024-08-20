@@ -69,11 +69,20 @@
 }
 
 .name_park_img {
-  padding: 105px;
-  font-size: 48px;
+  padding: 40px;
+  margin-left: 60px;
+  font-size: 18px;
   color: white;
   font-weight: 600;
 }
+.park_log_name_on_image h1{
+  font-size: 35px;
+}
+.image_logo_with_name{
+  height: 12vh;
+  margin-left: 140px;
+}
+
 
 /* Card here ------------------------------------------ */
 

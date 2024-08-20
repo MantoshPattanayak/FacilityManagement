@@ -587,13 +587,17 @@ const updateFacility = async(req,res)=>{
       operatingDays,  //here operating days will come in the form of array of data i.e. array of  days
       service,  //here services will be given in the form of object 
       amenity, // here amenities will be given in the form of form of object 
-      facilityImage,
+      otherAmenities, // here other amenities will be given in the form of string
+      additionalDetails,
+       fileNames:facilityImage,
       eventCategory,
       game,
       
       parkInventory,
       // owner details
       ownersAddress} = req.body
+
+      
       
       // let{ facilityName,
       // longitude,
@@ -1390,13 +1394,17 @@ const updateFacility = async(req,res)=>{
         transaction
       
       });
+      console.log('checkIfPhoneNumberExist ',checkIfPhoneNumberExist)
       if(!checkIfPhoneNumberExist){ 
+        console.log('inside phone number')
         updateOwnershipDataVariable.phoneNo = ownersAddress?.phoneNumber
     }
-      if(ownersAddress?.emailAddress){
+      else if(ownersAddress?.emailAddress){
+        console.log('inside emailAddress change',checkIfPhoneNumberExist)
         if(checkIfPhoneNumberExist.emailId == ownersAddress?.emailAddress){
+          console.log('inside emailAddres', checkIfPhoneNumberExist);
           updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
-          ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
+          ownersAddress.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId 
         }
         else{
           await transaction.rollback()
@@ -1417,10 +1425,10 @@ const updateFacility = async(req,res)=>{
       if(!checkIfEmailExist){ 
         updateOwnershipDataVariable.emailId = ownersAddress?.emailAddress
     }
-      if(ownersAddress?.phoneNumber){
+      else if(ownersAddress?.phoneNumber){
         if(checkIfEmailExist.phoneNo == ownersAddress?.phoneNumber){
           updateFacilityDataVariable.ownershipDetailId = checkIfEmailExist.ownershipDetailId
-          ownershipDetailId = checkIfEmailExist.ownershipDetailId
+          ownersAddress.ownershipDetailId = checkIfEmailExist.ownershipDetailId
         }
         else{
           await transaction.rollback()
@@ -1441,14 +1449,14 @@ const updateFacility = async(req,res)=>{
       if(!checkIfPanCardExist){
         updateOwnershipDataVariable.ownerPanCardNumber = ownersAddress?.ownerPanCard
       }
-      if(ownersAddress?.phoneNumber){
+      else if (ownersAddress?.phoneNumber){
         let checkIfPhoneNumberExist = await ownershipDetails.findOne({
           where:{[Op.and]:[{statusId:statusId},{phoneNo:ownersAddress?.phoneNumber}]},
           transaction
         });
           if(checkIfPhoneNumberExist.phoneNo == ownersAddress?.phoneNumber){
             updateFacilityDataVariable.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
-            ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
+            ownersAddress.ownershipDetailId = checkIfPhoneNumberExist.ownershipDetailId
           }
           else{
             await transaction.rollback()
@@ -1469,7 +1477,7 @@ const updateFacility = async(req,res)=>{
       updateOwnershipDataVariable.updatedDt = updatedDt
       updateOwnershipDataVariable.updatedBy = userId
       let [updateOwnershipDataVariableCount] = await ownershipDetails.update(updateOwnershipDataVariable,{where:{
-        ownershipDetailId:ownershipDetailId
+        ownershipDetailId: ownersAddress?.ownershipDetailId
       },
       transaction
     })

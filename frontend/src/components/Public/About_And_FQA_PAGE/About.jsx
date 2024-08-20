@@ -67,7 +67,6 @@ const About = () => {
                 )
               }
             </h1>
-
           </div>
           {/* <div className="About_us_img">
      
