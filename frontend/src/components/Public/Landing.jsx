@@ -866,7 +866,7 @@ const Landing = () => {
                   className="search-bar"
                   type="text"
                   name="search"
-                  placeholder="Search by Name and Location"
+                  placeholder={language == "EN" ? "Search by Name and Location" : language == "OD" ? "ନାମ ଏବଂ ଅବସ୍ଥାନ ଅନୁଯାୟୀ ସନ୍ଧାନ କରନ୍ତୁ" : ""}
                   value={inputFacility}
                   autoComplete="off"
                   onChange={handleInputFacility}
@@ -994,12 +994,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(1)}
                 >
                   <img src={park_logo} alt="" />
-                  {selectedButton === 1 ? (
-                    <h2 className="clicked-text-icon3">Parks</h2>
+                </button>
+                {selectedButton === 1 ? (
+                    <h2 className="text1selected">Parks</h2>
                   ) : (
                     <h2 className="text1">Parks</h2>
-                  )}
-                </button>
+                )}
               </div>
               <div className="icon1">
                 <button
@@ -1007,12 +1007,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(2)}
                 >
                   <img src={playground_logo} alt="" />
-                  {selectedButton === 2 ? (
-                    <h2 className="clicked-text-icon">Playfields</h2>
+                </button>
+                {selectedButton === 2 ? (
+                    <h2 className="text1selected">Playfields</h2>
                   ) : (
                     <h2 className="text1">Playfields</h2>
                   )}
-                </button>
               </div>
               <div className="icon1">
                 <button
@@ -1020,12 +1020,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(3)}
                 >
                   <img src={mp_ground_logo} alt="" />
-                  {selectedButton === 3 ? (
-                    <h2 className="clicked-text-icon">Multipurpose Grounds</h2>
+                </button>
+                {selectedButton === 3 ? (
+                    <h2 className="text2selected">Multipurpose Grounds</h2>
                   ) : (
                     <h2 className="text2">Multipurpose Grounds</h2>
                   )}
-                </button>
               </div>
               <div className="icon1">
                 <button
@@ -1033,12 +1033,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(5)}
                 >
                   <img src={greenway} alt="" />
-                  {selectedButton === 5 ? (
-                    <h2 className="clicked-text-icon_blue">Greenways</h2>
+                </button>
+                {selectedButton === 5 ? (
+                    <h2 className="text1selected">Greenways</h2>
                   ) : (
                     <h2 className="text1">Greenways</h2>
                   )}
-                </button>
               </div>
               <div className="icon1">
                 <button
@@ -1048,16 +1048,16 @@ const Landing = () => {
                   <div>
                     <img src={Blueway} alt="" />
                   </div>
-                  {selectedButton === 4 ? (
+                </button>
+                {selectedButton === 4 ? (
                     <div>
-                      <h2 className="clicked-text-icon_blue">Blueways</h2>
+                      <h2 className="text1selected">Blueways</h2>
                     </div>
                   ) : (
                     <div>
                       <h2 className="text1">Blueways</h2>
                     </div>
                   )}
-                </button>
               </div>
             </div>
 
