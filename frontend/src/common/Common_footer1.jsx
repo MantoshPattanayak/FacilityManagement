@@ -13,8 +13,12 @@ import {
 import { Link } from "react-router-dom";
 import instance from "../../env";
 import { toast, ToastContainer } from "react-toastify";
-const CommonFooter1 = () => {
+import { useDispatch, useSelector } from "react-redux"; // selector use for Read the data -----------------
 
+const CommonFooter1 = () => {
+  const language = useSelector(
+    (state) => state.language.language || localStorage.getItem("language")
+  );
   //function to seek confirmation
   function handleExternalLinkOpen(e, url) {
     e.preventDefault();
@@ -74,13 +78,20 @@ const CommonFooter1 = () => {
       <footer className="common-footer">
         <div className="footer-content">
           <div className="footer-column1">
-            <h1 className="Amam_text">AMA BHOOMI</h1>
+            <h1 className="Amam_text">
+              {!language || language == "EN" && "AMA BHOOMI"}
+              {language == "OD" && "ଆମ ଭୂମି"}
+            </h1>
             <p className="p_text_ama">
-              Assuring Mass Access through Bhubaneswar <br></br> Open spaces and
-              Ownership Management Initiative.
+              {!language || language == "EN" && (<>Assuring Mass Access through Bhubaneswar <br></br> Open spaces and
+                Ownership Management Initiative.</>)}
+              {language == "OD" && "ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା।"}
             </p>
             <div className="Downlad_Appp">
-              <h1 className="donwload_name"> Download App</h1>
+              <h1 className="donwload_name">
+                {!language || language == "EN" && (<>Download App</>)}
+                {language == "OD" && "ଆପ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ"}
+              </h1>
               <div className="App_download">
                 <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
                   <img className="download_image" src={Download_App} alt="Download Google App" />
@@ -97,23 +108,40 @@ const CommonFooter1 = () => {
                 <Link to="/Advertising_with_us">Advertising with us</Link>
               </li> */}
               <li>
-                <Link to="/ContactUs">Contact Us</Link>
+                <Link to="/ContactUs">
+                  {!language || language == "EN" && "Contact Us"}
+                  {language == "OD" && "ଯୋଗାଯୋଗ"}
+                </Link>
               </li>
               {/* <li>
                 <Link to='/Partnerwithus'>Partner with us</Link>
               </li> */}
               <li>
-                <Link to="/grievance-feedback-form">Grievance</Link>
+                <Link to="/grievance-feedback-form">
+                  {!language || language == "EN" && "Grievance"}
+                  {language == "OD" && "ଅଭିଯୋଗ ଫର୍ମ କ୍ଷେତ୍ର"}
+                </Link>
               </li>
               <li>
-                <Link to="/grievance-feedback-form">Feedback</Link>
+                <Link to="/grievance-feedback-form">
+                  {!language || language == "EN" && "Feedback"}
+                  {language == "OD" && "ମତାମତ ଫର୍ମ କ୍ଷେତ୍ର"}</Link>
               </li>
             </ul>
             <div className="term_condtion_conatiner">
-              <Link to='/DosDont'><p>Do's and Don'ts</p></Link>
-              <Link to='/Disclaimer'><p>Disclaimer</p></Link>
-              <Link to='/Privacy_Policy'> <p>Privacy Policy</p></Link>
-              <Link to='/Terms_ConditionPage'><p> Terms & Condtitions</p></Link>
+              {/* <Link to='/DosDont'><p>Do's and Don'ts</p></Link> */}
+              <Link to='/Disclaimer'><p>
+                {!language || language == "EN" && "Disclaimer"}
+                {language == "OD" && "ଅସ୍ଵୀକରଣ"}
+              </p></Link>
+              <Link to='/Privacy_Policy'><p>
+                {!language || language == "EN" && "Privacy Policy"}
+                {language == "OD" && "ଗୋପନୀୟତା ନୀତି"}
+              </p></Link>
+              <Link to='/Terms_ConditionPage'><p>
+                {!language || language == "EN" && "Terms & Condtitions"}
+                {language == "OD" && "ନିୟମ ଓ ସର୍ତ୍ତାବଳୀ"}
+              </p></Link>
             </div>
             {/* <div className="Socail_media hidden">
               <h1 className="socail_media_text">Social Media</h1>
@@ -140,7 +168,8 @@ const CommonFooter1 = () => {
         </div>
         <div className="footer-bottom font-bold text-white">
           <p>
-            &copy; 2024 AMA BHOOMI, Bhubaneswar, Odisha. All Rights Reserved.
+            {!language || language == "EN" && (<>&copy; 2024 AMA BHOOMI, Bhubaneswar, Odisha. All Rights Reserved.</>)}
+            {language == "OD" && (<>&copy; 2024 ଆମ ଭୂମି, ଭୁବନେଶ୍ୱର, ଓଡ଼ିଶା । ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ ।</>)}
           </p>
         </div>
       </footer>
