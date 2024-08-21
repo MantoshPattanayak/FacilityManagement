@@ -16,7 +16,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
         console.log('base 64 image file line 10')
         const mimeMatch = imageData.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/);
         const mime = mimeMatch ? mimeMatch[1] : null;
-        console.log(mime, mimeMatch,'mime match')
+        // console.log(mime, mimeMatch,'mime match')
         if ([
           "image/jpeg",
           "image/png",
@@ -28,7 +28,7 @@ let  imageUpdate = async (imageData,subDir,insertionData,userId,errors,serialNum
 
           // convert base 64 to buffer for image or document or set to null if not present
           const uploadImageFileBuffer = imageData ? Buffer.from(base64ImageFile, "base64") : null;
-          console.log(uploadImageFileBuffer,'25 upload image file buffer')
+          console.log('25 upload image file buffer')
           if (uploadImageFileBuffer) {
          
             const imageFileDir = path.join(uploadDir,subDir);

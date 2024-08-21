@@ -1,0 +1,270 @@
+.About_Mian_conatiner {
+    height: 200vh;
+}
+
+.Child_about_container {
+    background-image: linear-gradient(10deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1)),
+        url("../../../assets/screen-reader-banner.jpg");
+    height: 45vh;
+    margin-top: 60px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 120px;
+}
+
+.About {
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+
+.About_div {
+    text-align: center;
+}
+
+.About_heading {
+    font-size: 36px;
+    color: rgb(67, 66, 66);
+    position: relative;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.About_heading::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 49%;
+    width: 100px;
+    height: 4px;
+    background-color: #f7c409;
+    transform: translateX(-50%);
+}
+
+.About_us_flex_conatiner {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.About_us_text {
+    display: flex;
+    justify-content: center;
+    /* Centers the text block horizontally */
+    padding: 20px;
+    /* Adds padding around the container */
+    margin: 0 auto;
+    /* Centers the container on the page */
+}
+
+.About_us_text_details {
+    color: #212121;
+    /* Sets the text color */
+    font-size: 20px;
+    /* Sets the font size */
+    line-height: 1.6;
+    /* Increases line height for readability */
+    max-width: 1050px;
+    /* Sets a max width for the text block */
+    text-align: justify;
+    /* Justifies text for even edges */
+    border-radius: 10px;
+    /* Rounds the corners of the text block */
+
+}
+
+.About_us_img {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(5, 97, 2);
+    background-color: #d0ffeb;
+    width: 20%;
+    height: 18vh;
+}
+
+.Heading_text_button {
+    padding: 7px;
+    background-color: red;
+    margin: 3px;
+}
+
+/* CSS */
+.Button_About {
+    background-color: #ffffff;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #404040;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto,
+        "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    margin: 5px;
+    outline: none;
+    padding: 13px 23px;
+    position: relative;
+    text-align: start;
+    text-decoration: none;
+    touch-action: manipulation;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    /* Add transition */
+    user-select: none;
+    -webkit-user-select: none;
+    width: auto;
+}
+
+.Button_About:hover {
+    color: #ffffff;
+    /* Change text color on hover */
+    background-color: #4caf50;
+    /* Change background color on hover */
+}
+
+.Button_About::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    /* Add transition for the 3D effect */
+    transform: perspective(100px) rotateX(20deg) translateY(-4px);
+    /* Apply initial transform */
+}
+
+.Button_About:hover::before {
+    transform: perspective(100px) rotateX(0deg) translateY(0);
+    /* Apply transform on hover */
+}
+
+/* CSS */
+.button-37 {
+    background-color: #13aa52;
+    border: 1px solid #13aa52;
+
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont,
+        sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    outline: none;
+    outline: 0;
+    padding: 10px 25px;
+    text-align: center;
+    transform: translateY(0);
+    transition: transform 150ms, box-shadow 150ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.table_Container {
+    overflow-y: auto;
+    max-height: 700px;
+    width: 100%;
+    margin-top: 20px;
+    /* Ensure table container takes full width */
+}
+
+.table_Container table {
+    /* border: 1px solid #c6c6c6; */
+    border-collapse: separate;
+    border-radius: 5px;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid #c6c6c6;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table_Container table thead {
+    border-top: none;
+}
+
+.table_Container table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    /*#3e82ff*/
+    color: black;
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid rgb(190, 190, 190);
+    width: 33.33%;
+}
+
+.table_Container table tr {
+    /* background-color: #f8f8f8; */
+    border-bottom: 1px solid #c6c6c6;
+    padding: .35em;
+}
+
+
+.table_Container table tr:last-child {
+    border-bottom: none;
+}
+
+.table_Container table tr:nth-child(odd) {
+    background-color: #f8f8f8;
+}
+
+.table_Container table td {
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+    word-wrap: break-word;
+    width: 33.33%;
+}
+
+@media (max-width: 1024px) {
+    .About_us_text_details {
+        color: #212121;
+        font-size: 16px;
+    }
+
+    .Child_about_container {
+        height: 28vh;
+    }
+
+    .About {
+        font-size: 34px;
+    }
+
+    .About_us_img {
+        width: 23%;
+    }
+}
+
+@media (max-width: 667px) {
+    .About_us_img {
+        width: 33%;
+    }
+
+    .About {
+        font-size: 30px;
+    }
+
+    .Child_about_container {
+        padding: 70px 20px;
+    }
+
+    .Child_about_container {
+        height: 20vh;
+    }
+}

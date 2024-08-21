@@ -31,6 +31,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ShimmerUI from "./ShimmerUI";
 import { truncateName } from "../../../utils/utilityFunctions";
 import instance from "../../../../env";
+import { useDispatch, useSelector } from "react-redux";
 const Main_Body_Park_Details = () => {
   const defaultLocation = {
     latitude: 20.3010259,
@@ -62,6 +63,10 @@ const Main_Body_Park_Details = () => {
     EventCategories: new Array(),
     Services: new Array(),
   });
+  // use useSelector for Change the language
+  const language = useSelector(
+    (state) => state.language.language || localStorage.getItem("language")
+  );
 
   // Use Navigate for Navigate the page ----------------------------------------------
   let navigate = useNavigate();
@@ -323,26 +328,94 @@ const Main_Body_Park_Details = () => {
       <PublicHeader className="header" />
       {/* Here Below of header set image ---------------------------------------------------- */}
       <div
-        className={`${
-          facilityTypeId == 1
-            ? "park-body-1"
-            : facilityTypeId == 2
+        className={`${facilityTypeId == 1
+          ? "park-body-1"
+          : facilityTypeId == 2
             ? "park-body-2"
             : facilityTypeId == 3
-            ? "park-body-3"
-            : facilityTypeId == 4
-            ? "park-body-4"
-            : facilityTypeId == 5
-            ? "park-body-5"
-            : ""
-        }`}
+              ? "park-body-3"
+              : facilityTypeId == 4
+                ? "park-body-4"
+                : facilityTypeId == 5
+                  ? "park-body-5"
+                  : ""
+          }`}
       >
         <h1 className="name_park_img">
-          {facilityTypeId == 1 && "Parks"}
-          {facilityTypeId == 2 && "Playgrounds"}
-          {facilityTypeId == 3 && "Multi-purpose Grounds"}
-          {facilityTypeId == 4 && "Blueways"}
-          {facilityTypeId == 5 && "Greenways"}
+          {facilityTypeId === 1 && language === "EN" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={Parks_img} alt="Parks Logo" />
+              <h1>ESCAPE | EXPLORE | ENJOY</h1>
+              <p><i>Unwind where nature thrives</i></p>
+            </span>
+          )}
+          {facilityTypeId === 1 && language === "OD" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={Parks_img} alt="Parks Logo" />
+              <h1>ବିରତ୍ତି ନିଅନ୍ତୁ | ଅନ୍ଵେଷଣ କରନ୍ତୁ | ଉପଭୋଗ କରନ୍ତୁ</h1>
+              <p><i>ବିରାମ ନିଅନ୍ତୁ ଯେଉଁଠି ଚାଲେ ପ୍ରକୃତିର ରାଜ</i></p>
+            </span>
+          )}
+
+          {facilityTypeId == 2 && language === "EN" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={Playfields_img}></img>
+              <h1>PLAY | TRAIN | COMPETE</h1>
+              <p><i>Venture into sports facilities, activities and events</i></p>
+            </span>
+          )}
+          {facilityTypeId == 2 && language === "OD" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={Playfields_img}></img>
+              <h1>ଖେଳନ୍ତୁ | ତାଲିମ ନିଅନ୍ତୁ | ପ୍ରତିଯୋଗିତା କରନ୍ତୁ</h1>
+              <p><i>କ୍ରୀଡ଼ା ଭିତ୍ତିଭୂମି ଓ ସୁବିଧା, କାର୍ଯ୍ୟକଳାପ ଏବଂ ଇଭେଣ୍ଟ ଗୁଡିକୁର ଲାଭ ଉଠାନ୍ତୁ</i></p>
+            </span>
+          )}
+
+          {facilityTypeId == 3 && language === "EN" && (
+
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={MultiPark}></img>
+              <h1>PLAN | PERFORM | PARTICIPATE</h1>
+              <p><i>Discover specially crafted space that empowers community</i></p>
+            </span>
+          )}
+          {facilityTypeId == 3 && language === "OD" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={MultiPark}></img>
+              <h1>ଯୋଜନା କରନ୍ତୁ | ପ୍ରଦର୍ଶନ କରନ୍ତୁ | ଅଂଶଗ୍ରହଣ କରନ୍ତୁ</h1>
+              <p><i>ସମ୍ପ୍ରଦାୟକୁ ସଶକ୍ତ କରୁଥିବା ସ୍ଵତନ୍ତ୍ର ଭାବରେ ନିର୍ମିତ ସ୍ଥାନଗୁଡିକୁ ଉପଭୋଗ କରନ୍ତୁ</i></p>
+            </span>
+          )}
+          {facilityTypeId == 4 && language === "EN" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={blueway}></img>
+              <h1>PAUSE | CAPTURE | EMBRACE</h1>
+              <p><i>Uncover city’s tranquillity hidden in the waterbodies</i></p>
+            </span>
+          )}
+           {facilityTypeId == 4 && language === "OD" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={blueway}></img>
+              <h1>ବିରାମ ନିଅନ୍ତୁ | ଉପଭୋଗ କରନ୍ତୁ | ଅନୁଭବ କରନ୍ତୁ</h1>
+              <p><i>ଜଳରାଶିରେ ଲୁଚି ରହିଥିବା ସହରର ଶାନ୍ତିକୁ ଅନ୍ଵେଷଣ କରନ୍ତୁ</i></p>
+            </span>
+          )}
+          {facilityTypeId == 5 && language === "EN" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={greenway}></img>
+              <h1>WALK | BREATHE | CONNECT</h1>
+              <p><i>Get Moving: walk or bike around your city’s trail network</i></p>
+            </span>
+          )}
+
+          {facilityTypeId == 5 && language === "OD" && (
+            <span className="park_log_name_on_image">
+              <img className="image_logo_with_name" src={greenway}></img>
+              <h1>ଚାଲନ୍ତୁ | ନିଃଶ୍ଵାସ ନିଅନ୍ତୁ | ସଂଯୋଗ ହୁଅନ୍ତୁ</h1>
+              <p><i>ଚଲାବୁଲା କରନ୍ତୁ: ଆପଣଙ୍କ ସହରର କ୍ୟୁରେଟେଡ୍ ପଥ ରେ ଚାଲନ୍ତୁ କିମ୍ବା ସାଇକେଲ ମାଧ୍ୟମରେ ବୁଲାବୁଲି କରନ୍ତୁ</i></p>
+            </span>
+          )}
         </h1>
       </div>
       {/* here Search  Bar  -------------------------------------------------- */}
@@ -368,9 +441,8 @@ const Main_Body_Park_Details = () => {
           {/* Park */}
           <button
             onClick={(e) => handleParkLogoClick(e, 1)}
-            className={`image-button ${
-              facilityTypeId == 1 ? "selected" : null
-            }`}
+            className={`image-button ${facilityTypeId == 1 ? "selected" : null
+              }`}
           >
             <img className="h-20" src={Parks_img} alt="Event" />
             <span className="button-text">Parks</span>
@@ -379,9 +451,8 @@ const Main_Body_Park_Details = () => {
           {/* Sports */}
           <button
             onClick={(e) => handleParkLogoClick(e, 2)}
-            className={`image-button ${
-              facilityTypeId == 2 ? "selected" : null
-            }`}
+            className={`image-button ${facilityTypeId == 2 ? "selected" : null
+              }`}
           >
             <img className="h-20" src={Playfields_img} alt="Sports" />
             <span className="button-text">Playfields</span>
@@ -390,9 +461,8 @@ const Main_Body_Park_Details = () => {
           {/* Multipark */}
           <button
             onClick={(e) => handleParkLogoClick(e, 3)}
-            className={`image-button ${
-              facilityTypeId == 3 ? "selected" : null
-            }`}
+            className={`image-button ${facilityTypeId == 3 ? "selected" : null
+              }`}
           >
             <img className="h-20" src={MultiPark} alt="Multipark" />
             <span className="button-text1">
@@ -403,9 +473,8 @@ const Main_Body_Park_Details = () => {
           {/* blueway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 4)}
-            className={`image-button ${
-              facilityTypeId == 4 ? "selected" : null
-            }`}
+            className={`image-button ${facilityTypeId == 4 ? "selected" : null
+              }`}
           >
             <img className="h-20" src={blueway} alt="Multipark" />
             <span className="button-text">Blueways</span>
@@ -413,9 +482,8 @@ const Main_Body_Park_Details = () => {
           {/* waterway */}
           <button
             onClick={(e) => handleParkLogoClick(e, 5)}
-            className={`image-button ${
-              facilityTypeId == 5 ? "selected" : null
-            }`}
+            className={`image-button ${facilityTypeId == 5 ? "selected" : null
+              }`}
           >
             <img className="h-20" src={greenway} alt="Multipark" />
             <span className="button-text">Greenways</span>
@@ -584,9 +652,8 @@ const Main_Body_Park_Details = () => {
               tabList?.map((tab) => {
                 return (
                   <button
-                    className={`button-59 ${
-                      selectedTab.includes(tab) ? "bg-[#19ba62] text-white" : ""
-                    }`}
+                    className={`button-59 ${selectedTab.includes(tab) ? "bg-[#19ba62] text-white" : ""
+                      }`}
                     role="button"
                     onClick={(e) => {
                       handleTabClick(e, tab);
@@ -653,15 +720,14 @@ const Main_Body_Park_Details = () => {
                 }}
               >
                 <div
-                  className={`${
-                    item.facilityTypeId === 1
-                      ? "park-card-1"
-                      : item.facilityTypeId === 2
+                  className={`${item.facilityTypeId === 1
+                    ? "park-card-1"
+                    : item.facilityTypeId === 2
                       ? "park-card-2"
                       : item.facilityTypeId === 4
-                      ? "park-card-4"
-                      : "park-card-3"
-                  }`}
+                        ? "park-card-4"
+                        : "park-card-3"
+                    }`}
                   title={item.facilityname}
                 >
                   {/* <img className="Card_img" src={  facilityTypeId === 1 ? Cardimg :facilityTypeId === 2 ? sport_image2  : 'park_image'} alt="Park" /> */}
@@ -671,10 +737,10 @@ const Main_Body_Park_Details = () => {
                       item.url
                         ? instance().baseURL + "/static" + item.url
                         : item.facilityTypeId === 1
-                        ? Cardimg
-                        : item.facilityTypeId === 2
-                        ? sport_image2
-                        : park_image
+                          ? Cardimg
+                          : item.facilityTypeId === 2
+                            ? sport_image2
+                            : park_image
                     }
                     alt="Park"
                     onError={(e) => {
@@ -684,18 +750,18 @@ const Main_Body_Park_Details = () => {
                         item.facilityTypeId === 1
                           ? Cardimg
                           : item.facilityTypeId === 2
-                          ? sport_image2
-                          : park_image;
+                            ? sport_image2
+                            : park_image;
                       console.log(
                         "Image Source: ",
                         item.url,
                         item.url
                           ? instance().baseURL + "/static" + item.url
                           : item.facilityTypeId === 1
-                          ? Cardimg
-                          : item.facilityTypeId === 2
-                          ? sport_image2
-                          : park_image
+                            ? Cardimg
+                            : item.facilityTypeId === 2
+                              ? sport_image2
+                              : park_image
                       );
                     }}
                   />
@@ -710,11 +776,10 @@ const Main_Body_Park_Details = () => {
                     </span>
                     <span className="Avil_Dis">
                       <button
-                        className={`Avilable ${
-                          item.status == "open"
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}
+                        className={`Avilable ${item.status == "open"
+                          ? "text-green-500"
+                          : "text-red-500"
+                          }`}
                       >
                         {item.status?.charAt(0).toUpperCase() +
                           item.status?.slice(1)}
@@ -762,11 +827,10 @@ const Main_Body_Park_Details = () => {
                           </td>
                           <td
                             data-label="Park Status"
-                            className={`Avilable ${
-                              table_item.status == "open"
-                                ? "text-green-500"
-                                : "text-red-500"
-                            }`}
+                            className={`Avilable ${table_item.status == "open"
+                              ? "text-green-500"
+                              : "text-red-500"
+                              }`}
                           >
                             {table_item.status?.charAt(0).toUpperCase() +
                               table_item.status?.slice(1)}

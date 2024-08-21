@@ -8,7 +8,7 @@ let  imageUpload = async (imageData,entityType,subDir,filePurpose,insertionData,
     // insertionData is the object whose work is to give the data in the format {id:2, name:'US'}
     try {
       console.log('image upload function entry')
-        console.log(imageData,entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber,'these are all parameters in upload image function')
+        console.log(entityType,subDir,filePurpose,insertionData,userId,errors, serialNumber,'these are all parameters in upload image function')
         let createdDt = new Date();
         let updatedDt = new Date();
         let uploadFilePath = null;

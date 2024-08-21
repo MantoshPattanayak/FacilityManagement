@@ -376,12 +376,12 @@ const Sub_Park_Details = () => {
             <h1 className="text-park">
               {FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityName}
             </h1>
-            <span className="Location_text_sub_manu">
+            {/* <span className="Location_text_sub_manu">
               <img className="location_icon" src={Location_icon}></img>
               <h1 className="text_location">
                 {FacilitiesData?.length > 0 && FacilitiesData[0]?.address}
               </h1>
-            </span>
+            </span> */}
           </div>
           <div className="back_button">
             <button
@@ -694,7 +694,7 @@ const Sub_Park_Details = () => {
         {/* -------------------------Event Available ----------------------------------------------------------- */}
         <div className="Event_Available_main_container">
           <h1 className="Service_text">Event Available</h1>
-          {EventAvailable?.length > 0 ? (
+          {EventAvailable?.length > 20 ? (
             <div className="carousel carousal321">
               <button className="carousel-button2 left" onClick={handleEventPrev}>
                 &lt;

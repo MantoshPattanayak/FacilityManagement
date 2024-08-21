@@ -162,6 +162,9 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 50px;
+ 
+
+
 }
 
 .Search-Conatiner h1 {
@@ -169,6 +172,7 @@ body {
   font-size: 50px;
   font-family: Arial, Helvetica, sans-serif;
   color: #ebe9e9;
+  
 }
 
 .Reg_text h1 {
@@ -982,8 +986,9 @@ body {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  height: 30vh;
+  height: 45vh;
   gap: 6px;
+
   overflow-y: auto;
 }
 
@@ -1110,8 +1115,9 @@ body {
   position: relative;
   width: 100%;
   /* Adjust as needed */
-  height: 300px;
+  height: 50vh;
   /* Adjust as needed */
+
 }
 
 .image-secondDiv img {
@@ -1133,6 +1139,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 
 /*----------------------------------- Gallery section------------------------------------------------------------------------------------------------------- */
 /* .gallery-slider-event{
@@ -1156,6 +1163,7 @@ margin-top: 20px;
   justify-content: center;
   gap: 3vh;
   margin-block: 10vh;
+
 }
 
 .EventDetailsCardSec {

@@ -414,7 +414,7 @@ const viewParkById = async (req,res)=>{
             }
 
         let fetchEventDetailsQuery = `
-        select e.eventName, e.eventCategoryId, e.locationName, e.eventDate, e.eventStartTime,
+        select e.eventId, e.eventName, e.eventCategoryId, e.locationName, e.eventDate, e.eventStartTime,
          e.eventEndTime, e.descriptionOfEvent
         from amabhoomi.eventactivities e where
         e.facilityId=?`;
