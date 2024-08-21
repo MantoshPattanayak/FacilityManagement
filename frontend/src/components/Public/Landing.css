@@ -160,11 +160,9 @@ body {
   height: 560px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   padding: 50px;
- 
-
-
+  column-gap: 5px;
 }
 
 .Search-Conatiner h1 {
@@ -458,6 +456,20 @@ body {
   /* margin-left: 20px; */
 }
 
+.text1selected {
+  position: absolute;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.7;
+  transition: opacity 0.3s ease-in-out;
+  color: green;
+  padding: 0px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .text2 {
   position: absolute;
   top: 110%;
@@ -473,10 +485,24 @@ body {
   /* margin-left: 20px; */
 }
 
+.text2selected {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.7;
+  transition: opacity 0.3s ease-in-out;
+  color: green;
+  padding: 0px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .clicked-text-icon {
   position: absolute;
   top: 70%;
-  left: 0%;
+  left: 50%;
   opacity: 1;
   color: black;
   padding: 10px;
@@ -488,10 +514,8 @@ body {
 
 .clicked-text-icon_blue {
   position: absolute;
-
-  top: 70%;
+  top: 67%;
   left: 15%;
-
   color: #013409;
   padding: 10px;
   border-radius: 5px;
@@ -501,8 +525,8 @@ body {
 
 .clicked-text-icon3 {
   position: absolute;
-  top: 70%;
-  left: 25%;
+  top: 67%;
+  left: 15%;
   color: #013409;
   padding: 10px;
   border-radius: 5px;
@@ -1559,7 +1583,7 @@ margin-top: 20px;
 @media screen and (max-width: 1400px) {
   .Search-Conatiner {
     height: auto;
-    gap: 2vh;
+    gap: 1vh;
   }
 
   .Current_Event_image {
@@ -1825,6 +1849,8 @@ margin-top: 20px;
   }
   .facilitySelecterHome {
     display: block;
+    border: 1px solid #8a8a8a;
+    border-radius: 5px;
   }
 
   /* ----google map------------------------------- */
