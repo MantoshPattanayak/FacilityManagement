@@ -253,14 +253,15 @@ export default function PublicHeader() {
           <div className="logo-ama-boomi">
             <Link to={"/"}>
             {!language || language == "EN" &&  <img
-                src={AppLogo_en}
+              src={AppLogo}
+               
                 alt="App Logo"
-                className= "ama_bhoomi_logo   h-[100%] "
+                className= "ama_bhoomi_logo_Public_header"
               />}
                 {language == "OD" && <img
-                src={AppLogo}
+                 src={AppLogo_en}
                 alt="App Logo"
-                className="ama_bhoomi_logo   h-[100%] "
+                className="ama_bhoomi_logo_Public_header"
               />}
               
               
