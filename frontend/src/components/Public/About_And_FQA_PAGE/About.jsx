@@ -2,7 +2,7 @@
 
 import PublicHeader from "../../../common/PublicHeader";
 import "./About.css"
-import Aboutusimg from "../../../assets/About_us3.png"
+import Aboutusimg from "../../../assets/About_BDA.jpg"
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,7 +21,10 @@ const About = () => {
     <div className="About_Mian_conatiner">
       <PublicHeader />
       <div className="Child_about_container">
-        <h1 className="About">About</h1>
+        <h1 className="About">
+          {!language || language == "EN" && "About"}
+          {language == "OD" && "ବିଷୟରେ"}
+        </h1>
         <img src=""></img>
       </div>
       <div className="About_div">
@@ -31,7 +34,7 @@ const About = () => {
         </h1>
         <div className="About_us_flex_conatiner">
           <div className="About_us_text">
-            <h1 className="About_us_text_details">
+            <h1 className="About_us_text_details font-sans">
               {
                 !language || language == "EN" && (
                   <>

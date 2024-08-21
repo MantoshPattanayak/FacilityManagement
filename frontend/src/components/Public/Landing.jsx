@@ -866,7 +866,7 @@ const Landing = () => {
                   className="search-bar"
                   type="text"
                   name="search"
-                  placeholder="Search by Name and Location"
+                  placeholder={language == "EN" ? "Search by Name and Location" : language == "OD" ? "ନାମ ଏବଂ ଅବସ୍ଥାନ ଅନୁଯାୟୀ ସନ୍ଧାନ କରନ୍ତୁ" : ""}
                   value={inputFacility}
                   autoComplete="off"
                   onChange={handleInputFacility}
@@ -994,12 +994,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(1)}
                 >
                   <img src={park_logo} alt="" />
-                  {selectedButton === 1 ? (
-                    <h2 className="clicked-text-icon3">Parks</h2>
+                </button>
+                {selectedButton === 1 ? (
+                    <h2 className="text1selected">Parks</h2>
                   ) : (
                     <h2 className="text1">Parks</h2>
-                  )}
-                </button>
+                )}
               </div>
               <div className="icon1">
                 <button
@@ -1007,12 +1007,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(2)}
                 >
                   <img src={playground_logo} alt="" />
-                  {selectedButton === 2 ? (
-                    <h2 className="clicked-text-icon">Playfields</h2>
+                </button>
+                {selectedButton === 2 ? (
+                    <h2 className="text1selected">Playfields</h2>
                   ) : (
                     <h2 className="text1">Playfields</h2>
                   )}
-                </button>
               </div>
               <div className="icon1">
                 <button
@@ -1020,12 +1020,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(3)}
                 >
                   <img src={mp_ground_logo} alt="" />
-                  {selectedButton === 3 ? (
-                    <h2 className="clicked-text-icon">Multipurpose Grounds</h2>
+                </button>
+                {selectedButton === 3 ? (
+                    <h2 className="text2selected">Multipurpose Grounds</h2>
                   ) : (
                     <h2 className="text2">Multipurpose Grounds</h2>
                   )}
-                </button>
               </div>
               <div className="icon1">
                 <button
@@ -1033,12 +1033,12 @@ const Landing = () => {
                   onClick={() => handleParkLogoClick(5)}
                 >
                   <img src={greenway} alt="" />
-                  {selectedButton === 5 ? (
-                    <h2 className="clicked-text-icon_blue">Greenways</h2>
+                </button>
+                {selectedButton === 5 ? (
+                    <h2 className="text1selected">Greenways</h2>
                   ) : (
                     <h2 className="text1">Greenways</h2>
                   )}
-                </button>
               </div>
               <div className="icon1">
                 <button
@@ -1048,16 +1048,16 @@ const Landing = () => {
                   <div>
                     <img src={Blueway} alt="" />
                   </div>
-                  {selectedButton === 4 ? (
+                </button>
+                {selectedButton === 4 ? (
                     <div>
-                      <h2 className="clicked-text-icon_blue">Blueways</h2>
+                      <h2 className="text1selected">Blueways</h2>
                     </div>
                   ) : (
                     <div>
                       <h2 className="text1">Blueways</h2>
                     </div>
                   )}
-                </button>
               </div>
             </div>
 
@@ -1252,7 +1252,10 @@ const Landing = () => {
       {/* -----Whats New Section------------------------------------------- */}
       <div className="notice2">
         <div className="notice2-container">
-          <button className="what_new">What's New</button>
+          <button className="what_new">
+            {language == "EN" && "What's New"}
+            {language == "OD" && "ନୂଆ ସମ୍ବାଦ"}
+          </button>
           <marquee
             className="marquee"
             behavior="scroll"
@@ -1271,7 +1274,7 @@ const Landing = () => {
                 return (
                   <p className="notce2para" key={notification.id}>
                     {diffInDays <= 100 && (
-                      <span className="New_text"> New </span>
+                      <span className="New_text">New</span>
                     )}
                     {/* Conditionally render gif */}
                     {/* {diffInDays <= 7 && <img src={gif} alt="New notification" />} */}
@@ -1314,7 +1317,10 @@ const Landing = () => {
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
-            <h1 className="">Current Events</h1>
+            <h1 className="">
+              {language == "EN" && "Current Events"}
+              {language == "OD" && "ବର୍ତ୍ତମାନ କାର୍ଯ୍ୟକ୍ରମ"}
+            </h1>
           </div>
           {eventNameLanding.length > 0 ? (
             <button className="viewMoreGallery">
@@ -1402,7 +1408,7 @@ const Landing = () => {
         </div>
       </div>
       {/*------------ Explore new activities----------- */}
-      <div
+      {exploreNewActivities?.length > 0 && <div
         className="exploreNewAct-Parent-Container"
         style={{
           backgroundImage: `   linear-gradient(10deg, rgba(0, 0, 0, 1.6), rgba(0, 0, 0, 0.5)), url(${currentImage})`,
@@ -1410,7 +1416,10 @@ const Landing = () => {
       >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-          <h1>Explore And Book New Activities</h1>
+          <h1>
+            {language == "EN" && "Explore And Book"}
+            {language == "OD" && "ଏକ୍ସପ୍ଲୋର୍ ଏବଂ ବୁକ୍ କରନ୍ତୁ"}
+          </h1>
         </div>
         {exploreNewActivities.length > 0 ? (
         <div className="exploreNewAct-outer">
@@ -1470,19 +1479,23 @@ const Landing = () => {
         </div>
         ) : (
           <div className="no-data-message_Current_event1">
-            <img
+            {/* <img
               className="Current_Event_image"
               src={No_Current_Event_img}
-            ></img>
+              alt="No events"
+            ></img> */}
           </div>
         )}
-      </div>
+      </div>}
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
       <div className="galleryOuter">
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
-            <h1>Gallery</h1>
+            <h1>
+              {language == "EN" && "Gallery"}
+              {language == "OD" && "ଗ୍ୟାଲେରୀ"}
+            </h1>
           </div>
           {GalleryImage.length > 0 ? (
             <div className="viewMoreGallery">
