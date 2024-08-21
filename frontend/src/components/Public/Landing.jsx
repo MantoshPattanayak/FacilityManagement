@@ -1252,7 +1252,10 @@ const Landing = () => {
       {/* -----Whats New Section------------------------------------------- */}
       <div className="notice2">
         <div className="notice2-container">
-          <button className="what_new">What's New</button>
+          <button className="what_new">
+            {language == "EN" && "What's New"}
+            {language == "OD" && "ନୂଆ ସମ୍ବାଦ"}
+          </button>
           <marquee
             className="marquee"
             behavior="scroll"
@@ -1271,7 +1274,7 @@ const Landing = () => {
                 return (
                   <p className="notce2para" key={notification.id}>
                     {diffInDays <= 100 && (
-                      <span className="New_text"> New </span>
+                      <span className="New_text">New</span>
                     )}
                     {/* Conditionally render gif */}
                     {/* {diffInDays <= 7 && <img src={gif} alt="New notification" />} */}
@@ -1314,7 +1317,10 @@ const Landing = () => {
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
-            <h1 className="">Current Events</h1>
+            <h1 className="">
+              {language == "EN" && "Current Events"}
+              {language == "OD" && "ବର୍ତ୍ତମାନ କାର୍ଯ୍ୟକ୍ରମ"}
+            </h1>
           </div>
           {eventNameLanding.length > 0 ? (
             <button className="viewMoreGallery">
@@ -1402,7 +1408,7 @@ const Landing = () => {
         </div>
       </div>
       {/*------------ Explore new activities----------- */}
-      <div
+      {exploreNewActivities?.length > 0 && <div
         className="exploreNewAct-Parent-Container"
         style={{
           backgroundImage: `   linear-gradient(10deg, rgba(0, 0, 0, 1.6), rgba(0, 0, 0, 0.5)), url(${currentImage})`,
@@ -1410,7 +1416,10 @@ const Landing = () => {
       >
         <div className="exploreNewAct-Header">
           <div className="whiteHeader"></div>
-          <h1>Explore And Book New Activities</h1>
+          <h1>
+            {language == "EN" && "Explore And Book"}
+            {language == "OD" && "ଏକ୍ସପ୍ଲୋର୍ ଏବଂ ବୁକ୍ କରନ୍ତୁ"}
+          </h1>
         </div>
         {exploreNewActivities.length > 0 ? (
         <div className="exploreNewAct-outer">
@@ -1470,19 +1479,23 @@ const Landing = () => {
         </div>
         ) : (
           <div className="no-data-message_Current_event1">
-            <img
+            {/* <img
               className="Current_Event_image"
               src={No_Current_Event_img}
-            ></img>
+              alt="No events"
+            ></img> */}
           </div>
         )}
-      </div>
+      </div>}
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
       <div className="galleryOuter">
         <div className="galleryTitle">
           <div className="galleryTitleLeft">
             <div className="greenHeader"></div>
-            <h1>Gallery</h1>
+            <h1>
+              {language == "EN" && "Gallery"}
+              {language == "OD" && "ଗ୍ୟାଲେରୀ"}
+            </h1>
           </div>
           {GalleryImage.length > 0 ? (
             <div className="viewMoreGallery">

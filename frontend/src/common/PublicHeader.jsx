@@ -13,6 +13,7 @@ import {
   faBars,
   faShoppingCart,
   faTabletScreenButton,
+  faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../utils/axios";
 // Import Redux Part ---------------------------------
@@ -22,7 +23,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Logout } from "../utils/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-
 
 export default function PublicHeader() {
   const [showMediaIcon, setShowMediaIcon] = useState(false);
@@ -153,12 +153,11 @@ export default function PublicHeader() {
   }, []);
 
   // Adjust text size 
-
   function adjustFontSize(change) {
     const root = document.documentElement;
     let currentSize = parseFloat(getComputedStyle(root).fontSize);
 
-    if (change === 0) {
+    if (change == 0) {
       root.style.fontSize = "16px"; // Default font size
     } else if (change) { // && root.style.fontSize < "20px" && root.style.fontSize > "14px"
       if(change > 0 && root.style.fontSize < "18px")
@@ -185,7 +184,7 @@ export default function PublicHeader() {
                         setRefresh((prevState) => !prevState);
                       }}
                     >
-                      ଓଡ଼ିଆ
+                      <FontAwesomeIcon icon={faRotate} /> ଓଡ଼ିଆ
                     </button>{" "}
                     &nbsp; |{" "}
                   </>
@@ -199,7 +198,7 @@ export default function PublicHeader() {
                         setRefresh((prevState) => !prevState);
                       }}
                     >
-                      English
+                      <FontAwesomeIcon icon={faRotate} /> English
                     </button>{" "}
                     &nbsp; |{" "}
                   </>
@@ -320,16 +319,28 @@ export default function PublicHeader() {
                 </Link>
               </li>
               <li>
-                <Link to={"/faqs"}>FAQ</Link>
+                <Link to={"/faqs"}>
+                  {!language || language == "EN" && "FAQs"}
+                  {language == "OD" && "ବାରମ୍ବାର ପଚରାଯାଉଥିବା ପ୍ରଶ୍ନ"}
+                </Link>
               </li>
               <li>
-                <Link to={"/facilities"}>FACILITIES</Link>
+                <Link to={"/facilities"}>
+                  {!language || language == "EN" && "FACILITIES"}
+                  {language == "OD" && "ସୁବିଧା"}
+                </Link>
               </li>
               <li>
-                <Link to={"/events"}>EVENTS</Link>
+                <Link to={"/events"}>
+                  {!language || language == "EN" && "EVENTS"}
+                  {language == "OD" && "କାର୍ଯ୍ୟକ୍ରମ"}
+                </Link>
               </li>
               <li>
-                <Link to={"/ContactUs"}>CONTACT US</Link>
+                <Link to={"/ContactUs"}>
+                  {!language || language == "EN" && "CONTACT US"}
+                  {language == "OD" && "ଯୋଗାଯୋଗ"}
+                </Link>
               </li>
 
               {isUserLoggedIn == 1 ? (
@@ -375,7 +386,8 @@ export default function PublicHeader() {
               ) : (
                 <li>
                   <Link className="login-button" to="/login-signup">
-                    LOGIN | REGISTER
+                    {!language || language == "EN" && "LOGIN | REGISTER"}
+                    {language == "OD" && "ଲଗଇନ୍ | ପଞ୍ଜିକରଣ"}
                   </Link>
                 </li>
               )}
