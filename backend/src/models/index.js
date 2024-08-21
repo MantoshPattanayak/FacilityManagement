@@ -6,6 +6,12 @@ const sequelize = new Sequelize(db.DATABASE, db.USER, db.PASSWORD, {
   host: db.HOST,
   dialect: db.DIALECT,
   logging: false,
+  pool:{
+    max:40,
+    min:0,
+    acquire:30000,
+    idle:10000
+  }
 });
 
 // Test the connection

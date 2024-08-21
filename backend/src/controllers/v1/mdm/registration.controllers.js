@@ -889,7 +889,40 @@ const updateFacility = async(req,res)=>{
          
         }
     
-    
+    // removed array of image
+    if(facilityImage?.removedFacilityImagesArray.length>0){
+      console.log('inside facility removed array of  images')
+      let i = 0;
+      for (let facilityArrayOfImage of facilityImage.removedFacilityImagesArray){
+       
+          if(facilityArrayOfImage?.fileId!=null){
+              let [inactiveStatusFileTableCount] = await file.update({statusId:2,updatedBy:userId,
+                updatedDt:updatedDt},{
+                where:{
+                  fileId:facilityArrayOfImage.fileId
+                },
+                transaction
+              }) 
+              let [inactiveStatusFileAttachementTableCount] = await fileattachment.update({statusId:2,updatedBy:userId,
+                updatedDt:updatedDt},{
+                where:{
+                  fileId:facilityArrayOfImage.fileId
+                },
+                transaction
+              }) 
+              
+              if(inactiveStatusFileAttachementTableCount==0 || inactiveStatusFileTableCount ==0){
+                await transaction.rollback();
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                  message:`something went wrong`
+                })
+              }
+              hasUpdates = true
+          }
+       }
+     
+    }
+    // 
       
   } 
 
