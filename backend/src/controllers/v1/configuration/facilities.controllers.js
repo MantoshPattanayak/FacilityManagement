@@ -117,7 +117,6 @@ function encodeUrls(facilitiesArray) {
 
 
 const viewParkDetails = async(req,res)=>{
-    logger.info('Received a request at /api/example'); // Log info message
     try{
         let userId = req.user?.userId || 1
         let givenReq = req.body.givenReq?req.body.givenReq:null

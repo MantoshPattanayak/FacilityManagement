@@ -14,7 +14,7 @@ const uploadDir = process.env.UPLOAD_DIR;
 //   errorLogger,
 // } = require("./middlewares/logger.middlewares");
 const statusCode = require("./utils/statusCode");
-
+const logger = require('./logger/index.logger')
 // const authRoutes= require('./routes/api/'+api_version+'/auth/user')
 
 const maproute = require("./routes/api/" +
@@ -118,6 +118,11 @@ app.use(cookieParser());
 
 // Use the informational logger middleware before all route handlers
 // app.use(requestLogger);
+app.use((req,res,next)=>{
+  console.log('inside logger info')
+  logger.info(`Received ${req.method} request for ${req.url}`);
+  next();
+})
 
 app.use("/mapData", maproute);
 app.use("/auth", authRoutes);
