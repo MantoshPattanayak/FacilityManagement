@@ -1,5 +1,6 @@
 const db = require('../../../models/index');
 const statusCode = require('../../../utils/statusCode');
+const logger = require('../../../logger/index.logger')
 
 const  QueryTypes= db.QueryTypes
 const sequelize = db.sequelize
@@ -116,6 +117,7 @@ function encodeUrls(facilitiesArray) {
 
 
 const viewParkDetails = async(req,res)=>{
+    logger.info('Received a request at /api/example'); // Log info message
     try{
         let userId = req.user?.userId || 1
         let givenReq = req.body.givenReq?req.body.givenReq:null
@@ -249,6 +251,7 @@ const viewParkDetails = async(req,res)=>{
 
     }
     catch(err){
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
 
     }

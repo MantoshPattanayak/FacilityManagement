@@ -9,10 +9,10 @@ const cors = require("cors");
 var cookieParser = require("cookie-parser");
 let api_version = process.env.API_VERSION;
 const uploadDir = process.env.UPLOAD_DIR;
-const {
-  requestLogger,
-  errorLogger,
-} = require("./middlewares/logger.middlewares");
+// const {
+//   requestLogger,
+//   errorLogger,
+// } = require("./middlewares/logger.middlewares");
 const statusCode = require("./utils/statusCode");
 
 // const authRoutes= require('./routes/api/'+api_version+'/auth/user')
@@ -117,7 +117,7 @@ app.use(
 app.use(cookieParser());
 
 // Use the informational logger middleware before all route handlers
-app.use(requestLogger);
+// app.use(requestLogger);
 
 app.use("/mapData", maproute);
 app.use("/auth", authRoutes);
@@ -168,7 +168,7 @@ app.use("/facilityStaff", facilityStaff)
 // user activity master
 app.use("/userActivity", userActivity)
 // Use error logger middleware after all route handlers
-app.use(errorLogger);
+// app.use(errorLogger);
 
 
 app.use((err,req,res,next)=>{
