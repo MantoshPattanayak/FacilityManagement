@@ -357,7 +357,7 @@ const Facility_Edit_View = () => {
       );
       console.log("Changed Values", ChangesValues);
       // Check if images are updated or not
-      const updatedFacilityImages = {
+      let updatedFacilityImages = {
         facilityImageOne: ChangesValues.fileNames?.facilityImageOne
           ? ChangesValues.fileNames.facilityImageOne
           : {},
@@ -365,6 +365,16 @@ const Facility_Edit_View = () => {
           ? ChangesValues.fileNames.facilityArrayOfImages
           : [],
       };
+
+      let removedFacilityImagesArray = updatedFacilityImages.facilityArrayOfImages.filter((image) => {
+        return image.code == null;
+      }) || [];
+      
+      updatedFacilityImages.facilityArrayOfImages = updatedFacilityImages.facilityArrayOfImages.filter((image) => {
+        return (image.data && image.fileId == null);
+      }) || [];
+
+      updatedFacilityImages.removedFacilityImagesArray = removedFacilityImagesArray;
 
       // owner address send in object
       const payloadfacilityData = {
@@ -551,24 +561,35 @@ const Facility_Edit_View = () => {
     }
     else if (name === "facilityArrayOfImages") {
       // Make a copy of the current array of images
-      const updatedImages = [...PostFacilityData.fileNames.facilityArrayOfImages];
+      console.log("index", index);
+      const updatedImages = deepCopy(PostFacilityData.fileNames.facilityArrayOfImages);
       console.log("Updated Image", updatedImages)
-      const removedImage = updatedImages.splice(index, 1)[0];
-      console.log("Remove image", removedImage)
-      const updatedRemovedImage = {
-        ...removedImage,
-        code: "", // Clear the image code
-        data: "", // Clear the image data URL
-      };
+      const removedImage = updatedImages.slice(index, index+1)[0];
+      console.log("Remove image", removedImage);
+      console.log("updatedImages", updatedImages);
 
+      // const updatedRemovedImage = {
+      //   ...removedImage,
+      //   code: "",
+      //   data: "",
+      // };
 
-      updatedImages.splice(index, 1, updatedRemovedImage);
-       console.log("Updated Remove image", updatedRemovedImage)
+      updatedImages[index] = {
+        fileId: removedImage.fileId,
+        code: null, // Clear the image code
+        data: null, // Clear the image data URL
+        fileType: null,
+        url: null
+      }
+
+      // updatedImages.splice(index, 1, updatedRemovedImage);
+      console.log("Updated Remove image", updatedImages);
+
       setPostFacilityData((prevState) => ({
         ...prevState,
         fileNames: {
           ...prevState.fileNames,
-          facilityArrayOfImages: updatedImages, // Update the array with the modified image data
+          facilityArrayOfImages: updatedImages,
         },
       }));
       toast.warning("Removed Additional Facility Image successfully!");
