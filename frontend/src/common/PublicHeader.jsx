@@ -350,7 +350,8 @@ export default function PublicHeader() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <div style={{ cursor: "pointer" }}>
-                    <FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE
+                    {!language || language == "EN" && (<><FontAwesomeIcon icon={faUser} /> &nbsp; PROFILE</>)}
+                    {language == "OD" && (<><FontAwesomeIcon icon={faUser} /> &nbsp; ପ୍ରୋଫାଇଲ୍</>)}
                   </div>
                   {showProfileMenu && (
                     <ul className="submenu">
@@ -408,7 +409,8 @@ export default function PublicHeader() {
                         className="cart-icon"
                         size="lg"
                       />{" "}
-                      CART
+                      {!language || language == "EN" && "CART"}
+                      {language == "OD" && "କାର୍ଟ"}
                     </span>
                   </Link>
                 </li>
