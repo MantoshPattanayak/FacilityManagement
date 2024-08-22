@@ -128,6 +128,7 @@ const CommonFooter1 = () => {
                   {language == "OD" && "ମତାମତ ଫର୍ମ କ୍ଷେତ୍ର"}</Link>
               </li>
             </ul>
+            <div className="Ul_contact_partner_bottom_line"></div>
             <div className="term_condtion_conatiner">
               {/* <Link to='/DosDont'><p>Do's and Don'ts</p></Link> */}
               <Link to='/Disclaimer'><p>

@@ -1,6 +1,6 @@
 /* Common Footer Styles */
 .common-footer {
-  background-color: rgb(229,226,227);
+  background-color: rgb(229, 226, 227);
   color: #fff;
   padding: 2rem 0;
   position: relative;
@@ -99,7 +99,8 @@
   }
 }
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -192,6 +193,7 @@ body, html {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  margin-inline: 10vw;
 }
 
 .footer-column2 {
@@ -208,20 +210,29 @@ body, html {
 .footer-column2 ul li {
   margin-bottom: 0.5rem;
   border-right: 1px solid rgb(161, 161, 161);
-  padding-right: 7px;
+  /* padding-right: 7px; */
+  padding-right: 32px;
 }
 
 .footer-column2 ul li a {
   color: black;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
+  font-family: monospace;
 }
 
 .Ul_contact_partner {
   display: flex;
   justify-content: space-evenly;
-  border-bottom: 0.5px solid rgb(0, 0, 0);
+  /* border-bottom: 0.5px solid rgb(0, 0, 0); */
+  /* border-bottom: 0.5px solid rgb(161, 161, 161); */
+}
+
+.Ul_contact_partner_bottom_line {
+  width: 32vw;
+  height: 0.5px;
+  background: rgb(161 161 161);
 }
 
 .Socail_media {
@@ -262,24 +273,22 @@ body, html {
 }
 
 .whatsapp-icon {
-  color: #25D366;
+  color: #25d366;
   /* WhatsApp brand color */
 }
-.twitter-icon{
+.twitter-icon {
   color: black;
 }
 
 .instagram-icon {
-  color: #E4405F;
+  color: #e4405f;
   /* Instagram brand color */
 }
 
 .facebook-icon {
-  color: #3B5998;
+  color: #3b5998;
   /* Facebook brand color */
 }
-
-
 
 .term_condtion_conatiner {
   display: flex;
@@ -299,6 +308,7 @@ body, html {
   flex: 2;
   margin: 0 1rem;
   /* border-right: 1px solid white; */
+  border-right: 1px solid rgb(161, 161, 161);
 }
 
 .footer-column ul {
@@ -319,7 +329,7 @@ body, html {
   position: absolute;
   left: 0;
   width: 100%;
-  background-color: #1A351A;
+  background-color: #1a351a;
   display: flex;
   justify-content: center;
   padding: 20px;
@@ -328,4 +338,16 @@ body, html {
 .footer-bottom p {
   color: white;
   font-size: 15px;
+}
+
+
+  /* Updated  */
+  .footer-column2 {
+    flex: 1;
+    margin: 0 1rem;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 22vh;
 }
