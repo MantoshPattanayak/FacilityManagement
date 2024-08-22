@@ -1172,11 +1172,11 @@ const Landing = () => {
         {/* --------Facilities Near me----------------------------------------------------- */}
         <div className="nearByFacilities">
           <div className="nearByFacilities-heading">
-            {selectedButton === 1 && <h1>Parks Near Me</h1>}
-            {selectedButton === 2 && <h1>Playfields Near Me</h1>}
-            {selectedButton === 3 && <h1>Multipurpose Grounds Near Me</h1>}
-            {selectedButton === 5 && <h1>Greenways Near Me</h1>}
-            {selectedButton === 4 && <h1>Blueways Near Me</h1>}
+            {selectedButton === 1 && <h1>&nbsp; Parks Near Me</h1>}
+            {selectedButton === 2 && <h1>&nbsp; Playfields Near Me</h1>}
+            {selectedButton === 3 && <h1>&nbsp; Multipurpose Grounds Near Me</h1>}
+            {selectedButton === 5 && <h1>&nbsp; Greenways Near Me</h1>}
+            {selectedButton === 4 && <h1>&nbsp; Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
               {radiusForSearch.map((radius) => {
                 return (

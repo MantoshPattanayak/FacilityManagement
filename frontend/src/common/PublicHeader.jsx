@@ -184,7 +184,7 @@ export default function PublicHeader() {
                         setRefresh((prevState) => !prevState);
                       }}
                     >
-                      <FontAwesomeIcon icon={faRotate} /> ଓଡ଼ିଆ
+                      ଓଡ଼ିଆ
                     </button>{" "}
                     &nbsp; |{" "}
                   </>
@@ -198,7 +198,7 @@ export default function PublicHeader() {
                         setRefresh((prevState) => !prevState);
                       }}
                     >
-                      <FontAwesomeIcon icon={faRotate} /> English
+                      English
                     </button>{" "}
                     &nbsp; |{" "}
                   </>
