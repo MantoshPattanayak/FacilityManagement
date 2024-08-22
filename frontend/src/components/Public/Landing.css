@@ -829,7 +829,7 @@ body {
   height: 30vh;
 }
 .carousel-image_gallery:hover {
-  height: 32vh;
+  /* height: 31vh; */
 }
 
 .carousel-slide2 {
@@ -1475,6 +1475,7 @@ margin-top: 20px;
   /* Add some spacing between the images */
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .carousel-image {
@@ -1484,31 +1485,39 @@ margin-top: 20px;
   height: auto;
   object-fit: cover;
   /* Ensure images cover the container while maintaining aspect ratio */
-  transition: transform 0.3s ease;
+  /* transition: transform 0.3s ease; */
 }
 
 .carousel-image-container:hover .carousel-image {
+  transform: scale(1.1);
+  height: 32vh;
+  /* Slight zoom effect */
+}
+
+.carousel-image-container:hover {
   transform: scale(1.1);
   /* Slight zoom effect */
 }
 
 .carousel-image-container .description {
   position: absolute;
-  top: 50%;
+  /* top: 50%; */
+  bottom: 10px;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 5px;
-  opacity: 0;
+  padding: 5px;
+  /* border-radius: 5px; */
+  opacity: 0.8;
   transition: opacity 0.3s ease;
   text-align: center;
+  width: 100%;
 }
 
-.carousel-image-container:hover .description {
-  opacity: 1;
-}
+/* .carousel-image-container:hover .description {
+  bottom: 0;
+} */
 
 /* -----------  Advertisement section */
 
