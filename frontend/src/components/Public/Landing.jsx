@@ -182,7 +182,7 @@ const Landing = () => {
   };
 
   const [exploreNewActivities, setExploreNewActivities] = useState([]);
-  const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
+  const [currentImage, setCurrentImage] = useState(); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(); // Top inner image
 
   const handleNextImage = () => {
@@ -284,6 +284,9 @@ const Landing = () => {
         resLanding.data.exploreActivities
       );
       setExploreNewActivities(modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase())));
+      modifiedData = modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase()));
+      handleGameClick(0, modifiedData[0].game);
+      setSelectedActivity(0);
     } catch (error) {
       console.error("Error fetching the Landing Page API data: ", error);
     }
