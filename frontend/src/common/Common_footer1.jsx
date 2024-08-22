@@ -83,7 +83,7 @@ const CommonFooter1 = () => {
               {language == "OD" && "ଆମ ଭୂମି"}
             </h1>
             <p className="p_text_ama">
-              {!language || language == "EN" && (<>Assuring Mass Access through Bhubaneswar <br></br> Open spaces and
+              {!language || language == "EN" && (<>Assuring Mass Access through Bhubaneswar Open spaces and
                 Ownership Management Initiative.</>)}
               {language == "OD" && "ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା।"}
             </p>
@@ -93,12 +93,14 @@ const CommonFooter1 = () => {
                 {language == "OD" && "ଆପ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ"}
               </h1>
               <div className="App_download">
-                <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
-                  <img className="download_image" src={Download_App} alt="Download Google App" />
-                </a>
-                <a onClick={(e) => handleExternalLinkOpen(e, instance().APP_STORE_LINK)} rel="noopener noreferrer">
-                  <img className="download_image" src={Download_OS_App} alt="Download OS App" />
-                </a>
+                <div className="flex gap-x-5">
+                  <a onClick={(e) => handleExternalLinkOpen(e, instance().GOOGLE_APP_LINK)} rel="noopener noreferrer">
+                    <img className="download_image" src={Download_App} alt="Download Google App" />
+                  </a>
+                  <a onClick={(e) => handleExternalLinkOpen(e, instance().APP_STORE_LINK)} rel="noopener noreferrer">
+                    <img className="download_image" src={Download_OS_App} alt="Download OS App" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -109,7 +111,7 @@ const CommonFooter1 = () => {
               </li> */}
               <li>
                 <Link to="/ContactUs">
-                  {!language || language == "EN" && "Contact Us"}
+                  {!language || language == "EN" && (<span className="font-[500]">Contact Us</span>)}
                   {language == "OD" && "ଯୋଗାଯୋଗ"}
                 </Link>
               </li>
@@ -118,13 +120,13 @@ const CommonFooter1 = () => {
               </li> */}
               <li>
                 <Link to="/grievance-feedback-form">
-                  {!language || language == "EN" && "Grievance"}
+                  {!language || language == "EN" && <span className="font-[500]">Grievance</span>}
                   {language == "OD" && "ଅଭିଯୋଗ ଫର୍ମ କ୍ଷେତ୍ର"}
                 </Link>
               </li>
               <li>
                 <Link to="/grievance-feedback-form">
-                  {!language || language == "EN" && "Feedback"}
+                  {!language || language == "EN" && <span className="font-[500]">Feedback</span>}
                   {language == "OD" && "ମତାମତ ଫର୍ମ କ୍ଷେତ୍ର"}</Link>
               </li>
             </ul>

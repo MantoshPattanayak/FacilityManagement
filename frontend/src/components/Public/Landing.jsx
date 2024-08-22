@@ -283,7 +283,7 @@ const Landing = () => {
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
       );
-      setExploreNewActivities(modifiedData);
+      setExploreNewActivities(modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase())));
     } catch (error) {
       console.error("Error fetching the Landing Page API data: ", error);
     }
