@@ -290,7 +290,7 @@
   left: 0;
   width: 100%;
   height: 30px;
-  background-color: #036122; /* Example color */
+  background-color: rgb(53, 148, 53); /* Example color */
   color: #fff;
   display: flex;
   justify-content: end;
