@@ -578,7 +578,7 @@ const homePage = async (req, res) => {
       amenityDetails: fetchAllAmenities,
       servicesDetails: fetchAllServices,
       notificationsList:viewNotificationsListQueryData,
-      exploreActivities: facilityActivitiesData,
+      exploreActivities: facilityActivitiesData.filter((facilityActivity) => {return facilityActivity.facilityTypeId == 2}),
       galleryData: fetchGalleryListData.map((gallery) => {return {...gallery, ['url']: encodeURI(gallery.url)}}),
       fetchActivityMaster
     });
