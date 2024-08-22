@@ -1,59 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 329.01">
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 505.4 329.01">
   <defs>
     <style>
       .cls-1 {
-        letter-spacing: -.01em;
+        letter-spacing: .01em;
       }
 
       .cls-2 {
-        fill: #e8c581;
-      }
-
-      .cls-2, .cls-3, .cls-4, .cls-5 {
-        stroke-width: 0px;
-      }
-
-      .cls-6 {
         letter-spacing: 0em;
       }
 
       .cls-3 {
-        fill: #b25826;
+        fill: #e8c581;
+      }
+
+      .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke-width: 0px;
       }
 
       .cls-7 {
-        letter-spacing: 0em;
-      }
-
-      .cls-8 {
         fill: #231f20;
         font-family: MontserratRoman-Medium, Montserrat;
-        font-size: 26px;
+        font-size: 40.04px;
         font-variation-settings: 'wght' 500;
         font-weight: 500;
       }
 
-      .cls-9 {
-        letter-spacing: .01em;
-      }
-
       .cls-4 {
-        fill: #e69b24;
+        fill: #b25826;
       }
 
       .cls-5 {
+        fill: #e69b24;
+      }
+
+      .cls-8 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-6 {
         fill: #fff;
       }
     </style>
   </defs>
   <g>
-    <path class="cls-3" d="M185.66,139.19h80.55c-.11,44.67-36.02,80.94-80.55,81.61v-81.61Z"/>
-    <path class="cls-2" d="M185.66,57.19c44.6.66,80.55,37.04,80.55,81.8v.2h-80.55V57.19Z"/>
-    <path class="cls-2" d="M185.66,139.19v81.61c-.42.02-.84.02-1.26.02-45.14,0-81.71-36.53-81.82-81.62h83.08ZM179.14,212.19v-66.48h-68.48c7.78,57.98,68.48,66.48,68.48,66.48Z"/>
-    <path class="cls-4" d="M185.66,57.19v82h-83.08v-.2c0-45.18,36.62-81.82,81.82-81.82.42,0,.84,0,1.26.02Z"/>
-    <path class="cls-5" d="M179.14,145.71v66.48s-60.7-8.5-68.48-66.48h68.48ZM172.75,201.91v-49.82h-53.62c8.07,39.95,53.62,49.82,53.62,49.82Z"/>
-    <path class="cls-2" d="M172.75,152.09v49.82s-45.56-9.87-53.62-49.82h53.62Z"/>
+    <path class="cls-3" d="M391.24,136.52v.3h-124.05V10.55c68.7,1.02,124.05,57.04,124.05,125.97Z"/>
+    <path class="cls-4" d="M267.19,136.82h124.05c-.16,68.79-55.45,124.66-124.05,125.67v-125.67Z"/>
+    <path class="cls-3" d="M267.19,136.82v125.67c-.65.02-1.3.02-1.94.02-69.49,0-125.83-56.26-126-125.7h127.94ZM257.17,249.24v-102.38h-105.46c11.98,89.29,105.46,102.38,105.46,102.38Z"/>
+    <path class="cls-5" d="M267.19,10.55v126.27h-127.94v-.3c0-69.58,56.42-126,126-126,.65,0,1.3,0,1.94.02Z"/>
+    <path class="cls-6" d="M257.17,146.86v102.38s-93.47-13.09-105.46-102.38h105.46ZM247.3,233.42v-76.73h-82.56c12.4,61.53,82.56,76.73,82.56,76.73Z"/>
+    <path class="cls-3" d="M247.3,156.69v76.73s-70.16-15.2-82.56-76.73h82.56Z"/>
   </g>
-  <!-- <text class="cls-8" transform="translate(31.49 257.04)"><tspan x="0" y="0">Mu</tspan><tspan class="cls-9" x="42.43" y="0">l</tspan><tspan class="cls-7" x="50.02" y="0">tipu</tspan><tspan class="cls-6" x="103.37" y="0">r</tspan><tspan x="113.85" y="0">pose G</tspan><tspan class="cls-1" x="204.1" y="0">r</tspan><tspan x="214.44" y="0">ounds</tspan></text> -->
+  <!-- <text class="cls-7" transform="translate(24 318.32)"><tspan x="0" y="0">Mu</tspan><tspan class="cls-1" x="65.34" y="0">l</tspan><tspan x="77.04" y="0">tipu</tspan><tspan class="cls-2" x="159.2" y="0">r</tspan><tspan x="175.33" y="0">pose G</tspan><tspan class="cls-8" x="314.31" y="0">r</tspan><tspan x="330.24" y="0">ounds</tspan></text> -->
 </svg>

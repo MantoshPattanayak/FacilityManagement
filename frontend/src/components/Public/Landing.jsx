@@ -951,7 +951,8 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(3)}`,
             }}
           >
-            <div className="iconLogo">
+            <div className="iconLogo1">
+            {/* mp_ground_logo */}
               <img src={mp_ground_logo} alt="" />
               <h2>Multipurpose Grounds</h2>
               {/* <h2>Grounds</h2> */}
@@ -1374,7 +1375,7 @@ const Landing = () => {
                         <div className="carousel-slide-location">
                           <FontAwesomeIcon
                             icon={faLocationDot}
-                            style={{ color: "#fe6f4e" }}
+                            style={{ color: "#cc7a68" }}
                             className="os-icon"
                           />
                           <h1>{event.locationName}</h1>

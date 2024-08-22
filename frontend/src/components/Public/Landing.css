@@ -374,6 +374,11 @@ body {
   height: auto;
 }
 
+.iconLogo1 img {
+  width: 140px;
+  height: auto;
+}
+
 .logo-section {
   display: flex;
   justify-content: center;
@@ -388,7 +393,7 @@ body {
   align-items: center;
 }
 
-.iconLogo {
+.iconLogo, .iconLogo1 {
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
@@ -827,7 +832,7 @@ body {
   /* flex-shrink: 0;
     width: 22vw;
     margin: 10px; */
-  border: 1px solid #fe6f4e;
+  border: 1px solid #cc7a68;
   flex-shrink: 0;
   width: 20vw;
   /* height: 42vh; */
@@ -894,7 +899,7 @@ body {
 
 .carousel-slide-location svg {
   height: 12px;
-  color: #fe6f4e;
+  color: #cc7a68;
 }
 
 .carousel-slide-location h1 {
@@ -1211,7 +1216,7 @@ margin-top: 20px;
 .viewMoreGallery {
   display: flex;
   gap: 2px;
-  background-color: #fe6f4e;
+  background-color: #cc7a68;
   color: white;
   padding: 6px;
   align-items: center;
@@ -1229,7 +1234,7 @@ margin-top: 20px;
   width: 6px;
   height: 49px;
   border-radius: 4px;
-  background-color: #fe6f4e;
+  background-color: #cc7a68;
 }
 
 .gallerySlider svg {
@@ -1839,7 +1844,7 @@ margin-top: 20px;
     width: 32px;
   }
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 12px;
   }
 
@@ -2032,7 +2037,7 @@ margin-top: 20px;
 
   /* {----------Logo sticker------------------------------------------------------------------------} */
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 7px;
   }
 
@@ -2277,7 +2282,7 @@ margin-top: 20px;
 
   /* {----------Logo sticker------------------------------------------------------------------------} */
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 7px;
   }
 
@@ -2534,11 +2539,15 @@ margin-top: 20px;
 
   /* ----------Logo sticker---------------------------------------- */
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 6px;
   }
 
   .iconLogo img {
+    height: 54px;
+  }
+
+  .iconLogo1 img {
     height: 54px;
   }
 
