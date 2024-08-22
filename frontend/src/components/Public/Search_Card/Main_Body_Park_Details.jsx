@@ -771,7 +771,7 @@ const Main_Body_Park_Details = () => {
                         {truncateName(item.facilityname, 25)}
                       </h2>
                       <h3 className="park_location">
-                        {truncateName(item.address, 25)}
+                        {item.address ? truncateName(item.address, 25) : ""}
                       </h3>
                     </span>
                     <span className="Avil_Dis">
