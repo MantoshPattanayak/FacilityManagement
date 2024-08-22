@@ -374,6 +374,11 @@ body {
   height: auto;
 }
 
+.iconLogo1 img {
+  width: 140px;
+  height: auto;
+}
+
 .logo-section {
   display: flex;
   justify-content: center;
@@ -388,7 +393,7 @@ body {
   align-items: center;
 }
 
-.iconLogo {
+.iconLogo, .iconLogo1 {
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
@@ -453,6 +458,7 @@ body {
   border-radius: 5px;
   font-size: 13px;
   font-weight: 700;
+  text-align: center;
   /* margin-left: 20px; */
 }
 
@@ -468,6 +474,7 @@ body {
   border-radius: 5px;
   font-size: 13px;
   font-weight: 700;
+  text-align: center;
 }
 
 .text2 {
@@ -482,6 +489,7 @@ body {
   border-radius: 5px;
   font-size: 13px;
   font-weight: 700;
+  text-align: center;
   /* margin-left: 20px; */
 }
 
@@ -497,6 +505,7 @@ body {
   border-radius: 5px;
   font-size: 13px;
   font-weight: 700;
+  text-align: center;
 }
 
 .clicked-text-icon {
@@ -820,14 +829,14 @@ body {
   height: 30vh;
 }
 .carousel-image_gallery:hover {
-  height: 32vh;
+  /* height: 31vh; */
 }
 
 .carousel-slide2 {
   /* flex-shrink: 0;
     width: 22vw;
     margin: 10px; */
-  border: 1px solid #fe6f4e;
+  border: 1px solid #cc7a68;
   flex-shrink: 0;
   width: 20vw;
   /* height: 42vh; */
@@ -894,7 +903,7 @@ body {
 
 .carousel-slide-location svg {
   height: 12px;
-  color: #fe6f4e;
+  color: #cc7a68;
 }
 
 .carousel-slide-location h1 {
@@ -1211,7 +1220,7 @@ margin-top: 20px;
 .viewMoreGallery {
   display: flex;
   gap: 2px;
-  background-color: #fe6f4e;
+  background-color: #cc7a68;
   color: white;
   padding: 6px;
   align-items: center;
@@ -1229,7 +1238,7 @@ margin-top: 20px;
   width: 6px;
   height: 49px;
   border-radius: 4px;
-  background-color: #fe6f4e;
+  background-color: #cc7a68;
 }
 
 .gallerySlider svg {
@@ -1466,6 +1475,7 @@ margin-top: 20px;
   /* Add some spacing between the images */
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .carousel-image {
@@ -1475,31 +1485,39 @@ margin-top: 20px;
   height: auto;
   object-fit: cover;
   /* Ensure images cover the container while maintaining aspect ratio */
-  transition: transform 0.3s ease;
+  /* transition: transform 0.3s ease; */
 }
 
 .carousel-image-container:hover .carousel-image {
+  transform: scale(1.1);
+  height: 32vh;
+  /* Slight zoom effect */
+}
+
+.carousel-image-container:hover {
   transform: scale(1.1);
   /* Slight zoom effect */
 }
 
 .carousel-image-container .description {
   position: absolute;
-  top: 50%;
+  /* top: 50%; */
+  bottom: 10px;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 5px;
-  opacity: 0;
+  padding: 5px;
+  /* border-radius: 5px; */
+  opacity: 0.8;
   transition: opacity 0.3s ease;
   text-align: center;
+  width: 100%;
 }
 
-.carousel-image-container:hover .description {
-  opacity: 1;
-}
+/* .carousel-image-container:hover .description {
+  bottom: 0;
+} */
 
 /* -----------  Advertisement section */
 
@@ -1839,7 +1857,7 @@ margin-top: 20px;
     width: 32px;
   }
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 12px;
   }
 
@@ -2032,7 +2050,7 @@ margin-top: 20px;
 
   /* {----------Logo sticker------------------------------------------------------------------------} */
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 7px;
   }
 
@@ -2277,7 +2295,7 @@ margin-top: 20px;
 
   /* {----------Logo sticker------------------------------------------------------------------------} */
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 7px;
   }
 
@@ -2534,11 +2552,15 @@ margin-top: 20px;
 
   /* ----------Logo sticker---------------------------------------- */
 
-  .iconLogo h2 {
+  .iconLogo h2, .iconLogo1 h2 {
     font-size: 6px;
   }
 
   .iconLogo img {
+    height: 54px;
+  }
+
+  .iconLogo1 img {
     height: 54px;
   }
 
