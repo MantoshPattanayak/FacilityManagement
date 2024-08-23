@@ -1,1 +1,1 @@
-npm i
+-> NPM i 
