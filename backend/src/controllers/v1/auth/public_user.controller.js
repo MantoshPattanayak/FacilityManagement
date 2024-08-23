@@ -457,7 +457,7 @@ const homePage = async (req, res) => {
     // 6) explore new activities for all
     // 7) Gallery images for all
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
-
+    let facilityTypeIdForActivities = 2;
     let fetchAllTypeOFFacility = await facilityType.findAll({
       attributes: ["facilitytypeId", "code", "description"],
       where: {
@@ -508,7 +508,9 @@ const homePage = async (req, res) => {
       where s.statusCode = 'APPROVED'
       ORDER BY ea.eventDate DESC`;
 
-    let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery);
+    let fetchEventDetailsData = await sequelize.query(fetchEventDetailsQuery,{
+      type:QueryTypes.SELECT
+    });
     console.log(
       fetchAllTypeOFFacility,
       "fetchalltypeoffacilty",
@@ -516,10 +518,14 @@ const homePage = async (req, res) => {
     );
 
     let fetchAllAmenities = await sequelize.query(
-      `select amenityId, amenityName, statusId from amabhoomi.amenitymasters where statusId = 1`
+      `select amenityId, amenityName, statusId from amabhoomi.amenitymasters where statusId = 1`,{
+        type:QueryTypes.SELECT
+      }
     );
     let fetchAllServices = await sequelize.query(
-      `select serviceId,code,description status from amabhoomi.services where statusId = 1`
+      `select serviceId,code,description status from amabhoomi.services where statusId = 1`,{
+        type:QueryTypes.SELECT
+      }
     );
 
     let viewNotificationsListQuery = `
@@ -531,7 +537,7 @@ const homePage = async (req, res) => {
         `;
 
     let viewNotificationsListQueryData = await sequelize.query(viewNotificationsListQuery, {
-      type: Sequelize.QueryTypes.SELECT,
+      type: QueryTypes.SELECT,
       replacements: [new Date()]
     })
 
@@ -539,10 +545,13 @@ const homePage = async (req, res) => {
       select fa.id, f.facilityId, f.facilityTypeId, f.facilityname, u.userActivityId, u.userActivityName
       from amabhoomi.facilityactivities fa
       inner join amabhoomi.facilities f on f.facilityId = fa.facilityId and fa.statusId = 1
-      inner join amabhoomi.useractivitymasters u on fa.activityId = u.userActivityId
+      inner join amabhoomi.useractivitymasters u on fa.activityId = u.userActivityId where f.facilityTypeId = ?
     `;
 
-    let facilityActivitiesData = await sequelize.query(facilityActivitiesFetchQuery);
+    let facilityActivitiesData = await sequelize.query(facilityActivitiesFetchQuery,{
+      type:QueryTypes.SELECT,
+      replacements:[facilityTypeIdForActivities]
+    });
 
     let fetchGalleryListQuery = `
       select g.galleryId, g.description, g.startDate, g.endDate, s.statusCode, f2.fileName, f2.url
@@ -554,19 +563,23 @@ const homePage = async (req, res) => {
       limit 10;
     `;
 
-    let fetchGalleryListData = await sequelize.query(fetchGalleryListQuery);
+    let fetchGalleryListData = await sequelize.query(fetchGalleryListQuery,{
+      type:QueryTypes.SELECT
+    });
 
-    let fetchActivityMaster = await userActivityMaster.findAll();
+    let fetchActivityMaster = await userActivityMaster.findAll({
+      order:['userActivityName']
+    });
 
     return res.status(statusCode.SUCCESS.code).json({
       message: "All home Page Data",
       facilityTypeDetails: fetchAllTypeOFFacility,
-      eventDetailsData: fetchEventDetailsData[0].map((event) => {return { ...event, ['eventMainImage']: encodeURI(event.eventMainImage)}}),
-      amenityDetails: fetchAllAmenities[0],
-      servicesDetails: fetchAllServices[0],
+      eventDetailsData: fetchEventDetailsData.map((event) => {return { ...event, ['eventMainImage']: encodeURI(event.eventMainImage)}}),
+      amenityDetails: fetchAllAmenities,
+      servicesDetails: fetchAllServices,
       notificationsList:viewNotificationsListQueryData,
-      exploreActivities: facilityActivitiesData[0],
-      galleryData: fetchGalleryListData[0].map((gallery) => {return {...gallery, ['url']: encodeURI(gallery.url)}}),
+      exploreActivities: facilityActivitiesData.filter((facilityActivity) => {return facilityActivity.facilityTypeId == 2}),
+      galleryData: fetchGalleryListData.map((gallery) => {return {...gallery, ['url']: encodeURI(gallery.url)}}),
       fetchActivityMaster
     });
   } catch (err) {

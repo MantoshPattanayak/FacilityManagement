@@ -104,7 +104,8 @@
   gap: 14px;
   margin: 20px;
   border-radius: 18px;
-  background-color: #e0f8e5;
+  /* background-color: #e0f8e5; */
+  border: 1.5px solid #53f175;
   overflow: hidden;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -126,7 +127,8 @@
   gap: 14px;
   margin: 20px;
   border-radius: 18px;
-  background-color: #fdc7bc80;
+  /* background-color: #fdc7bc80; */
+  border: 1.5px solid #ff7e6480;
   overflow: hidden;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -148,7 +150,8 @@
   gap: 14px;
   margin: 20px;
   border-radius: 18px;
-  background-color: rgb(255, 240, 209);
+  border: 1.5px solid rgb(249, 198, 96);
+  /* background-color: rgb(255, 240, 209); */
   overflow: hidden;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -169,7 +172,8 @@
   gap: 14px;
   margin: 20px;
   border-radius: 18px;
-  background-color: rgb(238, 250, 254);
+  /* background-color: rgb(238, 250, 254); */
+  border: 1.5px solid rgb(90, 208, 248);
   overflow: hidden;
   transition: background-color 0.3s, box-shadow 0.3s;
 }

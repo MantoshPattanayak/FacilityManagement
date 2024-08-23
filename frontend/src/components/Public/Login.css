@@ -52,7 +52,7 @@
 .public-login-sendotp-btn_login1 {
   width: 100%;
   padding: 12px;
-  background-color: #03b317; /* Blue background */
+  background-color: #CC7A68; /* Blue background */
   color: #ffffff; /* White text color */
   border: none;
   border-radius: 8px;
@@ -63,7 +63,7 @@
 }
 
 .public-login-sendotp-btn_login1:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #d88e7d; /* Darker blue on hover */
 }
 
 .otp-btn {
