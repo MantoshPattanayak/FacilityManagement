@@ -14,13 +14,14 @@
 
 .profile--Main-Box {
   height: auto;
-  padding: 3rem 5rem;
+  padding: 8rem 5rem;
   display: flex;
   /* flex-direction: column; */
   min-height: 100vh;
   column-gap: 4rem;
   /* border: 2px solid red; */
   margin-block: 5vh;
+
 }
 
 .profile-form-Body {
