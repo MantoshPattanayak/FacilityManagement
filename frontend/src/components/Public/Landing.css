@@ -277,6 +277,14 @@ body {
 
 /* ends............................ */
 
+.Search-conatiner-name{
+  display: flex;
+    flex-direction: column;
+}
+.about{
+  margin-top: -15px;
+}
+
 .wrapper-search-suggestion{
   display: flex;
     flex-direction: column;

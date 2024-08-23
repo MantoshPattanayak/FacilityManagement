@@ -826,6 +826,7 @@ const Landing = () => {
         {/*----------------- Landing Page contant -----------------------------------------------------------------------*/}
         <div className="landing-page_contant">
           <span className="Search-Conatiner">
+            <div className="Search-conatiner-name">
             <h1>
               {language == "EN" && "AMA BHOOMI!"}
               {language == "OD" && "ଆମ ଭୂମି କୁ ସ୍ଵାଗତ!"}
@@ -852,6 +853,7 @@ const Landing = () => {
                 )}
               </p>
             </span>
+            </div>
             <span className="enjoy_text">
               <p className="about_text">
                 {language == "EN" &&
