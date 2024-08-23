@@ -391,6 +391,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 10px;
 }
 
 .iconLogo, .iconLogo1 {
@@ -1195,7 +1196,7 @@ margin-top: 20px;
   align-items: center;
   justify-content: center;
   gap: 3vh;
-  margin-block: 10vh;
+  margin-block: 1vh;
 
 }
 
@@ -1845,6 +1846,7 @@ margin-top: 20px;
   /* --Logo sticker---------------------------------- */
   .logos {
     height: 100px;
+    padding-top: 20px
   }
 
   .icon img {

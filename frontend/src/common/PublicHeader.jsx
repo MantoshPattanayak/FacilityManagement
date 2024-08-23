@@ -206,7 +206,9 @@ export default function PublicHeader() {
               </li>
               <li>
                 <Link to={"/screen-reader-access"}>
-                  <FontAwesomeIcon icon={faTabletScreenButton} />&nbsp; Screen Reader |
+                  <FontAwesomeIcon icon={faTabletScreenButton} />&nbsp; 
+                  {language == "EN" && "Screen Reader |"}
+                  {language == "OD" && "ସ୍କ୍ରିନ୍ ରିଡର୍ |"}
                 </Link>
               </li>
             </ul>
@@ -217,7 +219,8 @@ export default function PublicHeader() {
                 id="btn-decrease"
                 onClick={() => adjustFontSize(-1)}
               >
-                A-
+                {language == "EN" && "A-"}
+                {language == "OD" && "ଅ-"}
               </a>
               <a
                 title="Normalize Font Size"
@@ -225,7 +228,8 @@ export default function PublicHeader() {
                 id="btn-orig"
                 onClick={() => adjustFontSize(0)}
               >
-                A
+                {language == "EN" && "A"}
+                {language == "OD" && "ଅ"}
               </a>
               <a
                 title="Increase Font Size"
@@ -233,7 +237,8 @@ export default function PublicHeader() {
                 id="btn-increase"
                 onClick={() => adjustFontSize(1)}
               >
-                A+
+                {language == "EN" && "A+"}
+                {language == "OD" && "ଅ+"}
               </a>
             </div>
           </div>
