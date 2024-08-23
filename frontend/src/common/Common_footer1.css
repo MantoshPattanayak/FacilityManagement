@@ -182,7 +182,10 @@ html {
 }
 
 .download_image {
-  height: 150px;
+  /* height: 150px; */
+  height: 40px;
+    width: auto;
+    margin-top: 10px;
 }
 
 .download_image:hover {
@@ -348,6 +351,6 @@ html {
     padding-top: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    height: 22vh;
+    justify-content: space-between;
+    height: 16vh;
 }
