@@ -13,7 +13,7 @@
     animation: l24 1s infinite alternate linear;
   }
   .loader::before {
-    content: "Loading...";
+    content: "Loading AMA BHOOMI...";
     line-height: 1em;
     color: #0000;
     background: inherit;

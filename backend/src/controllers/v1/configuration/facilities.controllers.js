@@ -302,50 +302,50 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
 
         //  find in facility name, facility location
         let matchedFacilitiesData = fetchFacilitiesData.map((facility) => {
-            if(facility.facilityname.toLowerCase().includes(givenReq)) {
+            if(facility.facilityname?.toLowerCase().includes(givenReq)) {
                 facility['suggestion'] = facility.facilityname;
                 return facility['suggestion'];
             }
-            if(facility.address.toLowerCase().includes(givenReq)){
+            if(facility.address?.toLowerCase().includes(givenReq)){
                 facility['suggestion'] = facility.address;
                 return facility['suggestion'];
             }
         });
         //  find in event name, event location
         let matchedEventsData = await fetchEventsData.map((event) => {
-            if(event.eventName.toLowerCase().includes(givenReq)) {
+            if(event.eventName?.toLowerCase().includes(givenReq)) {
                 event['suggestion'] = event.eventName;
                 return event['suggestion'];
             }
-            if(event.locationName.toLowerCase().includes(givenReq)) {
+            if(event.locationName?.toLowerCase().includes(givenReq)) {
                 event['suggestion'] = event.locationName;
                 return event['suggestion'];
             }
         });
         //  find in activity master
         let matchedActivitiesData = await fetchActivitiesData.map((activity) => {
-            if(activity.userActivityName.toLowerCase().includes(givenReq)) {
+            if(activity.userActivityName?.toLowerCase().includes(givenReq)) {
                 activity['suggestion'] = activity.userActivityName;
                 return activity['suggestion'];
             }
         });
         //  find in services master
         let matchedServicesData = await fetchServicesData.map((service) => {
-            if(service.description.toLowerCase().includes(givenReq)) {
+            if(service.description?.toLowerCase().includes(givenReq)) {
                 service['suggestion'] = service.description;
                 return service['suggestion'];
             }
         });
         //  find in amenity master
         let matchedAmenitiesData = await fetchAmenitiesData.map((amenity) => {
-            if(amenity.amenityName.toLowerCase().includes(givenReq)) {
+            if(amenity.amenityName?.toLowerCase().includes(givenReq)) {
                 amenity['suggestion'] = amenity.amenityName;
                 return amenity['suggestion'];
             }
         });
         //  find in event category master
         let matchedEventCategoriesData = await fetchEventCategoriesData.map((eventCategory) => {
-            if(eventCategory.eventCategoryName.toLowerCase().includes(givenReq)) {
+            if(eventCategory.eventCategoryName?.toLowerCase().includes(givenReq)) {
                 eventCategory['suggestion'] = eventCategory.eventCategoryName;
                 return eventCategory['suggestion'];
             }
