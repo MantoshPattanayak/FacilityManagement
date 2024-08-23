@@ -37,7 +37,7 @@ import badminton from "../../assets/badminton_ENA.png";
 import badmintonBg from "../../assets/Explore_New_Activity_background.png";
 import cricket_bg from "../../assets/mid-section-of-wicketkeeper.png";
 import cricket_1 from "../../assets/circket222111.png";
-import walking_img from "../../assets/jogging.png"
+import walking_img from "../../assets/jogging.png";
 import football_bg from "../../assets/FootballBackground.jpg";
 import football_1 from "../../assets/FootballFront.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
@@ -169,9 +169,10 @@ const Landing = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const language = useSelector(
-    (state) => state.language.language || localStorage.getItem("language") || "EN"
+    (state) =>
+      state.language.language || localStorage.getItem("language") || "EN"
   );
-     
+
   const handleTogglePlayPause = () => {
     if (isMarqueePaused) {
       marqueeRef.current.start();
@@ -283,8 +284,14 @@ const Landing = () => {
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
       );
-      setExploreNewActivities(modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase())));
-      modifiedData = modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase()));
+      setExploreNewActivities(
+        modifiedData.sort((a, b) =>
+          a.game.toLowerCase().localeCompare(b.game.toLowerCase())
+        )
+      );
+      modifiedData = modifiedData.sort((a, b) =>
+        a.game.toLowerCase().localeCompare(b.game.toLowerCase())
+      );
       handleGameClick(0, modifiedData[0].game);
       setSelectedActivity(0);
     } catch (error) {
@@ -582,27 +589,25 @@ const Landing = () => {
   // handleGameClick ------------------------------------------------
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
-    if(activity==="Jogging/Walking"){
+    if (activity === "Jogging/Walking") {
       setCurrentInnerImage(walking_front_image);
       setCurrentImage(walking_back_image);
-    }else if(activity==="Jogging"){
+    } else if (activity === "Jogging") {
       setCurrentInnerImage(walking_front_image);
       setCurrentImage(walking_back_image);
-    }else if(activity==="Football"){
+    } else if (activity === "Football") {
       setCurrentInnerImage(football_bas_front_page);
       setCurrentImage(football_bas_backend);
-    }else if(activity==="Open Gym"){
+    } else if (activity === "Open Gym") {
       setCurrentInnerImage(Open_gym_front);
       setCurrentImage(bg_gym);
-    }else if(activity==="Gym"){
+    } else if (activity === "Gym") {
       setCurrentInnerImage(Open_gym_front);
       setCurrentImage(bg_gym);
-    }else if(activity==="Gym"){
+    } else if (activity === "Gym") {
       setCurrentInnerImage(Open_gym_front);
       setCurrentImage(bg_gym);
-    }
-    
-    else if (activity === "Basketball") {
+    } else if (activity === "Basketball") {
       setCurrentImage(bas_backend);
       setCurrentInnerImage(bas_front_page);
     } else if (activity === "Cricket") {
@@ -838,7 +843,8 @@ const Landing = () => {
                 )}
                 {language == "OD" && (
                   <>
-                    ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା। <br></br>
+                    ଭୁବନେଶ୍ୱର ଖୋଲା ସ୍ଥାନରେ ମାଲିକାନା ଏବଂ ପରିଚାଳନା ପଦକ୍ଷେପ
+                    ମାଧ୍ୟମରେ ଜନ ପ୍ରବେଶକୁ ନିଶ୍ଚିତ କରିବା। <br></br>
                     {/* ଭୁବନେଶ୍ୱରର ଏକ ଉଲ୍ଲେଖନୀୟ ପଦକ୍ଷେପ ଯାହାକି ସହରରେ ଥିବା ଖୋଲା ସ୍ଥାନଗୁଡିକର ମାଲିକାନା ନେବା,<br></br> 
                     ଏହାକୁ ନୂତନ ଆକାର ଦେବା, ତଥା ଏହାର ପରିଚାଳନା ପାଇଁ ସ୍ଥାନୀୟ ବାସିନ୍ଦାଙ୍କୁ ସଶକ୍ତ କରିବ...<br></br> 
                     ଯେଉଁଠି ପ୍ରତ୍ୟେକ କୋଣ ଅନୁକୋଣ କାର୍ଯ୍ୟକଳାପ, ସଂଯୋଗ ତଥା ପ୍ରକୃତିର ଏକ ସମୃଦ୍ଧ ସଙ୍ଗମ ହେବ। */}
@@ -848,19 +854,30 @@ const Landing = () => {
             </span>
             <span className="enjoy_text">
               <p className="about_text">
-                {language == "EN" && "Your one stop destination for Bhubaneswar’s Open Spaces!"}
-                {language == "OD" && "ଭୁବନେଶ୍ୱରର ଖୋଲା ସ୍ଥାନ ଗୁଡ଼ିକ ପାଇଁ ଆପଣଙ୍କର ଏକମାତ୍ର ଗନ୍ତବ୍ୟସ୍ଥଳ!"}
+                {language == "EN" &&
+                  "Your one stop destination for Bhubaneswar’s Open Spaces!"}
+                {language == "OD" &&
+                  "ଭୁବନେଶ୍ୱରର ଖୋଲା ସ୍ଥାନ ଗୁଡ଼ିକ ପାଇଁ ଆପଣଙ୍କର ଏକମାତ୍ର ଗନ୍ତବ୍ୟସ୍ଥଳ!"}
               </p>
               <h4>
                 {language == "EN" && "JOIN THE MOVEMENT"}
-                {language == "OD" && "ଆନ୍ଦୋଳନରେ ଯୋଗ ଦିଅନ୍ତୁ, ନିଜର ସହରକୁ ପୁନରୁଦ୍ଧାର କରନ୍ତୁ!"}
+                {language == "OD" &&
+                  "ଆନ୍ଦୋଳନରେ ଯୋଗ ଦିଅନ୍ତୁ, ନିଜର ସହରକୁ ପୁନରୁଦ୍ଧାର କରନ୍ତୁ!"}
               </h4>
             </span>
 
+            <a href="/ama-bhoomi/login-signup" className="Reg_text">
+              <h1>
+                {language == "EN" && "REGISTER TO AVAIL THE BENEFITS"}
+                {language == "OD" &&
+                  "ସମସ୍ତ ସୁବିଧା ଗୁଡ଼ିକ ପାଇବା ପାଇଁ ନିଜକୁ ପଞ୍ଜିକରଣ କରନ୍ତୁ।"}
+              </h1>
+            </a>
+
             <h2 className="typing-animation">
               {language == "EN" && "Explore, Book and Enjoy Open Spaces"}
-              {language == "OD" && "ଖୋଲା ସ୍ଥାନଗୁଡିକ ଏକ୍ସପ୍ଲୋର୍ କରନ୍ତୁ, ବୁକ୍ କରନ୍ତୁ ଏବଂ ଉପଭୋଗ କରନ୍ତୁ!"}
-              
+              {language == "OD" &&
+                "ଖୋଲା ସ୍ଥାନଗୁଡିକ ଏକ୍ସପ୍ଲୋର୍ କରନ୍ତୁ, ବୁକ୍ କରନ୍ତୁ ଏବଂ ଉପଭୋଗ କରନ୍ତୁ!"}
             </h2>
             <div className="input-wrapper">
               <div className="search-bar-wrapper">
@@ -869,7 +886,13 @@ const Landing = () => {
                   className="search-bar"
                   type="text"
                   name="search"
-                  placeholder={language == "EN" ? "Search by Name and Location" : language == "OD" ? "ନାମ ଏବଂ ଅବସ୍ଥାନ ଅନୁଯାୟୀ ସନ୍ଧାନ କରନ୍ତୁ" : ""}
+                  placeholder={
+                    language == "EN"
+                      ? "Search by Name and Location"
+                      : language == "OD"
+                      ? "ନାମ ଏବଂ ଅବସ୍ଥାନ ଅନୁଯାୟୀ ସନ୍ଧାନ କରନ୍ତୁ"
+                      : ""
+                  }
                   value={inputFacility}
                   autoComplete="off"
                   onChange={handleInputFacility}
@@ -901,13 +924,6 @@ const Landing = () => {
                 )}
               </ul>
             )}
-
-            <span className="Reg_text">
-              <h1>
-                {language == "EN" && "REGISTER TO AVAIL THE BENEFITS"}
-                {language == "OD" && "ସମସ୍ତ ସୁବିଧା ଗୁଡ଼ିକ ପାଇବା ପାଇଁ ନିଜକୁ ପଞ୍ଜିକରଣ କରନ୍ତୁ।"}
-              </h1>
-            </span>
           </span>
 
           <div className="abBgButton">
@@ -955,7 +971,7 @@ const Landing = () => {
             }}
           >
             <div className="iconLogo1">
-            {/* mp_ground_logo */}
+              {/* mp_ground_logo */}
               <img src={mp_ground_logo} alt="" />
               <h2>Multipurpose Grounds</h2>
               {/* <h2>Grounds</h2> */}
@@ -1000,9 +1016,9 @@ const Landing = () => {
                   <img src={park_logo} alt="" />
                 </button>
                 {selectedButton === 1 ? (
-                    <h2 className="text1selected">Parks</h2>
-                  ) : (
-                    <h2 className="text1">Parks</h2>
+                  <h2 className="text1selected">Parks</h2>
+                ) : (
+                  <h2 className="text1">Parks</h2>
                 )}
               </div>
               <div className="icon1">
@@ -1013,10 +1029,10 @@ const Landing = () => {
                   <img src={playground_logo} alt="" />
                 </button>
                 {selectedButton === 2 ? (
-                    <h2 className="text1selected">Playfields</h2>
-                  ) : (
-                    <h2 className="text1">Playfields</h2>
-                  )}
+                  <h2 className="text1selected">Playfields</h2>
+                ) : (
+                  <h2 className="text1">Playfields</h2>
+                )}
               </div>
               <div className="icon1">
                 <button
@@ -1026,10 +1042,10 @@ const Landing = () => {
                   <img src={mp_ground_logo} alt="" />
                 </button>
                 {selectedButton === 3 ? (
-                    <h2 className="text2selected">Multipurpose Grounds</h2>
-                  ) : (
-                    <h2 className="text2">Multipurpose Grounds</h2>
-                  )}
+                  <h2 className="text2selected">Multipurpose Grounds</h2>
+                ) : (
+                  <h2 className="text2">Multipurpose Grounds</h2>
+                )}
               </div>
               <div className="icon1">
                 <button
@@ -1039,10 +1055,10 @@ const Landing = () => {
                   <img src={greenway} alt="" />
                 </button>
                 {selectedButton === 5 ? (
-                    <h2 className="text1selected">Greenways</h2>
-                  ) : (
-                    <h2 className="text1">Greenways</h2>
-                  )}
+                  <h2 className="text1selected">Greenways</h2>
+                ) : (
+                  <h2 className="text1">Greenways</h2>
+                )}
               </div>
               <div className="icon1">
                 <button
@@ -1054,14 +1070,14 @@ const Landing = () => {
                   </div>
                 </button>
                 {selectedButton === 4 ? (
-                    <div>
-                      <h2 className="text1selected">Blueways</h2>
-                    </div>
-                  ) : (
-                    <div>
-                      <h2 className="text1">Blueways</h2>
-                    </div>
-                  )}
+                  <div>
+                    <h2 className="text1selected">Blueways</h2>
+                  </div>
+                ) : (
+                  <div>
+                    <h2 className="text1">Blueways</h2>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1177,7 +1193,9 @@ const Landing = () => {
           <div className="nearByFacilities-heading">
             {selectedButton === 1 && <h1>&nbsp; Parks Near Me</h1>}
             {selectedButton === 2 && <h1>&nbsp; Playfields Near Me</h1>}
-            {selectedButton === 3 && <h1>&nbsp; Multipurpose Grounds Near Me</h1>}
+            {selectedButton === 3 && (
+              <h1>&nbsp; Multipurpose Grounds Near Me</h1>
+            )}
             {selectedButton === 5 && <h1>&nbsp; Greenways Near Me</h1>}
             {selectedButton === 4 && <h1>&nbsp; Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
@@ -1277,9 +1295,7 @@ const Landing = () => {
 
                 return (
                   <p className="notce2para" key={notification.id}>
-                    {diffInDays <= 100 && (
-                      <span className="New_text">New</span>
-                    )}
+                    {diffInDays <= 100 && <span className="New_text">New</span>}
                     {/* Conditionally render gif */}
                     {/* {diffInDays <= 7 && <img src={gif} alt="New notification" />} */}
                     {notification.publicNotificationsContent}&nbsp;
@@ -1412,85 +1428,87 @@ const Landing = () => {
         </div>
       </div>
       {/*------------ Explore new activities----------- */}
-      {exploreNewActivities?.length > 0 && <div
-        className="exploreNewAct-Parent-Container"
-        style={{
-          backgroundImage: `   linear-gradient(10deg, rgba(0, 0, 0, 1.6), rgba(0, 0, 0, 0.5)), url(${currentImage})`,
-        }}
-      >
-        <div className="exploreNewAct-Header">
-          <div className="whiteHeader"></div>
-          <h1>
-            {language == "EN" && "Explore And Book"}
-            {language == "OD" && "ଏକ୍ସପ୍ଲୋର୍ ଏବଂ ବୁକ୍ କରନ୍ତୁ"}
-          </h1>
-        </div>
-        {exploreNewActivities.length > 0 ? (
-        <div className="exploreNewAct-outer">
-          {/* Mapping through the exploreNewActivities data */}
-          <div className="exploreNewAct-firstDiv">
-            {exploreNewActivities.map((activity, index) => (
-              <button
-                key={index}
-                className={`activity  ${
-                  selectedActivity === index ? "selected" : ""
-                }`}
-                onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
-              >
-                {activity.game}
-              </button>
-            ))}
+      {exploreNewActivities?.length > 0 && (
+        <div
+          className="exploreNewAct-Parent-Container"
+          style={{
+            backgroundImage: `   linear-gradient(10deg, rgba(0, 0, 0, 1.6), rgba(0, 0, 0, 0.5)), url(${currentImage})`,
+          }}
+        >
+          <div className="exploreNewAct-Header">
+            <div className="whiteHeader"></div>
+            <h1>
+              {language == "EN" && "Explore And Book"}
+              {language == "OD" && "ଏକ୍ସପ୍ଲୋର୍ ଏବଂ ବୁକ୍ କରନ୍ତୁ"}
+            </h1>
           </div>
-          <div className="image-secondDiv">
-            <img
-             className="Current_explore_event_image"
-              src={currentInnerImage}
-              alt={exploreNewActivities[selectedActivity]?.game}
-            />
-            <div className="exploreNewAct-secondDiv">
-              {exploreNewActivities?.length > 0 &&
-                exploreNewActivities?.map(
-                  (activity, index) =>
-                    selectedActivity === index && (
-                      <div className="parkList" key={index}>
-                        {activity.parks.map((park, idx) => (
-                          <div className="parkItem" key={idx}>
-                            <p>{park.facilityname}</p>
-                            <button
-                              className="bookButton"
-                              onClick={(e) => {
-                                navigate(
-                                  "/Sub_Park_Details" +
-                                    `?facilityId=${encryptDataId(
-                                      park.facilityId
-                                    )}`
-                                );
-                              }}
-                            >
-                              Book
-                            </button>
-                            <FontAwesomeIcon
-                              icon={faBookmark}
-                              className="bookmarkIcon"
-                            />
+          {exploreNewActivities.length > 0 ? (
+            <div className="exploreNewAct-outer">
+              {/* Mapping through the exploreNewActivities data */}
+              <div className="exploreNewAct-firstDiv">
+                {exploreNewActivities.map((activity, index) => (
+                  <button
+                    key={index}
+                    className={`activity  ${
+                      selectedActivity === index ? "selected" : ""
+                    }`}
+                    onClick={() => handleGameClick(index, activity.game)} // Set selected activity on click
+                  >
+                    {activity.game}
+                  </button>
+                ))}
+              </div>
+              <div className="image-secondDiv">
+                <img
+                  className="Current_explore_event_image"
+                  src={currentInnerImage}
+                  alt={exploreNewActivities[selectedActivity]?.game}
+                />
+                <div className="exploreNewAct-secondDiv">
+                  {exploreNewActivities?.length > 0 &&
+                    exploreNewActivities?.map(
+                      (activity, index) =>
+                        selectedActivity === index && (
+                          <div className="parkList" key={index}>
+                            {activity.parks.map((park, idx) => (
+                              <div className="parkItem" key={idx}>
+                                <p>{park.facilityname}</p>
+                                <button
+                                  className="bookButton"
+                                  onClick={(e) => {
+                                    navigate(
+                                      "/Sub_Park_Details" +
+                                        `?facilityId=${encryptDataId(
+                                          park.facilityId
+                                        )}`
+                                    );
+                                  }}
+                                >
+                                  Book
+                                </button>
+                                <FontAwesomeIcon
+                                  icon={faBookmark}
+                                  className="bookmarkIcon"
+                                />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )
-                )}
+                        )
+                    )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        ) : (
-          <div className="no-data-message_Current_event1">
-            {/* <img
+          ) : (
+            <div className="no-data-message_Current_event1">
+              {/* <img
               className="Current_Event_image"
               src={No_Current_Event_img}
               alt="No events"
             ></img> */}
-          </div>
-        )}
-      </div>}
+            </div>
+          )}
+        </div>
+      )}
       {/* -------------Gallery section----------------------------------------------------------------------------------------------- */}
       <div className="galleryOuter">
         <div className="galleryTitle">
