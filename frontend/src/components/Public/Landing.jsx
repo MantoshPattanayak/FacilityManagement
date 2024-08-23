@@ -182,7 +182,7 @@ const Landing = () => {
   };
 
   const [exploreNewActivities, setExploreNewActivities] = useState([]);
-  const [currentImage, setCurrentImage] = useState(yoga_bg); //background Image of explore new activity
+  const [currentImage, setCurrentImage] = useState(); //background Image of explore new activity
   const [currentInnerImage, setCurrentInnerImage] = useState(); // Top inner image
 
   const handleNextImage = () => {
@@ -283,7 +283,10 @@ const Landing = () => {
       let modifiedData = handleExploreActivitiesData(
         resLanding.data.exploreActivities
       );
-      setExploreNewActivities(modifiedData);
+      setExploreNewActivities(modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase())));
+      modifiedData = modifiedData.sort((a, b) => a.game.toLowerCase().localeCompare(b.game.toLowerCase()));
+      handleGameClick(0, modifiedData[0].game);
+      setSelectedActivity(0);
     } catch (error) {
       console.error("Error fetching the Landing Page API data: ", error);
     }
@@ -951,7 +954,8 @@ const Landing = () => {
               search: `?facilityTypeId=${encryptDataId(3)}`,
             }}
           >
-            <div className="iconLogo">
+            <div className="iconLogo1">
+            {/* mp_ground_logo */}
               <img src={mp_ground_logo} alt="" />
               <h2>Multipurpose Grounds</h2>
               {/* <h2>Grounds</h2> */}
@@ -1171,11 +1175,11 @@ const Landing = () => {
         {/* --------Facilities Near me----------------------------------------------------- */}
         <div className="nearByFacilities">
           <div className="nearByFacilities-heading">
-            {selectedButton === 1 && <h1>Parks Near Me</h1>}
-            {selectedButton === 2 && <h1>Playfields Near Me</h1>}
-            {selectedButton === 3 && <h1>Multipurpose Grounds Near Me</h1>}
-            {selectedButton === 5 && <h1>Greenways Near Me</h1>}
-            {selectedButton === 4 && <h1>Blueways Near Me</h1>}
+            {selectedButton === 1 && <h1>&nbsp; Parks Near Me</h1>}
+            {selectedButton === 2 && <h1>&nbsp; Playfields Near Me</h1>}
+            {selectedButton === 3 && <h1>&nbsp; Multipurpose Grounds Near Me</h1>}
+            {selectedButton === 5 && <h1>&nbsp; Greenways Near Me</h1>}
+            {selectedButton === 4 && <h1>&nbsp; Blueways Near Me</h1>}
             <div className="nearByFacilities-buttons">
               {radiusForSearch.map((radius) => {
                 return (
@@ -1374,7 +1378,7 @@ const Landing = () => {
                         <div className="carousel-slide-location">
                           <FontAwesomeIcon
                             icon={faLocationDot}
-                            style={{ color: "#fe6f4e" }}
+                            style={{ color: "#cc7a68" }}
                             className="os-icon"
                           />
                           <h1>{event.locationName}</h1>

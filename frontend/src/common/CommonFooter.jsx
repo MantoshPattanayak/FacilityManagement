@@ -2,8 +2,8 @@ import React from 'react'
 import './CommonFooter.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import playstoreIMG from '../assets/google-play-badge.svg'
-import appstoreIMG from '../assets/app-store-badge.svg'
+import playstoreIMG from '../assets/google-play-badge-logo.svg'
+import appstoreIMG from '../assets/app-store-apple-logo.svg'
 
 const CommonFooter = () => {
   return (

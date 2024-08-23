@@ -3,50 +3,57 @@
   <defs>
     <style>
       .cls-1 {
-        letter-spacing: -.02em;
-      }
-
-      .cls-2 {
-        letter-spacing: -.01em;
-      }
-
-      .cls-3 {
         fill: #57af69;
       }
 
-      .cls-3, .cls-4, .cls-5 {
+      .cls-1, .cls-2, .cls-3, .cls-4 {
         stroke-width: 0px;
       }
 
-      .cls-6 {
-        letter-spacing: 0em;
-      }
-
-      .cls-4 {
+      .cls-2 {
         fill: #109e49;
       }
 
-      .cls-7 {
+      .cls-5 {
         fill: #231f20;
         font-family: MontserratRoman-Medium, Montserrat;
-        font-size: 26px;
+        font-size: 40.04px;
         font-variation-settings: 'wght' 500;
         font-weight: 500;
       }
 
+      .cls-6 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-7 {
+        letter-spacing: 0em;
+      }
+
       .cls-8 {
+        letter-spacing: 0em;
+      }
+
+      .cls-9 {
         letter-spacing: -.01em;
       }
 
-      .cls-5 {
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
         fill: #337639;
       }
     </style>
   </defs>
   <g>
-    <path class="cls-5" d="M264.47,123.67c.96,5.01,1.46,10.17,1.46,15.47,0,17.38-5.42,33.48-14.64,46.72-26.53-2.78-39.3,19.27-44.36,31.82-.38.1-.75.21-1.14.31-3.23-10.91-8.49-37.18,4.89-63.43,0,0,18.91-35.42,53.79-30.89Z"/>
-    <path class="cls-3" d="M184.4,57.45c28.9,0,54.29,15.07,68.78,37.8-60.92,6.11-64.11,68.25-64.11,68.25-9.76-52.14-53.6-67.14-71.52-71.13,14.73-21.1,39.18-34.91,66.86-34.91Z"/>
-    <path class="cls-4" d="M169.02,142.4c24.06,31.34,19.83,66.61,17.49,78.39-.71.01-1.4.03-2.11.03-45.04,0-81.55-36.59-81.55-81.69,0-8.87,1.42-17.41,4.02-25.41,39.37-3.16,62.15,28.67,62.15,28.67Z"/>
+    <ellipse class="cls-3" cx="183.84" cy="136.96" rx="125.71" ry="125.89"/>
+    <g>
+      <path class="cls-4" d="M306.93,112.92c1.48,7.72,2.25,15.67,2.25,23.82,0,26.76-8.34,51.56-22.55,71.94-40.85-4.28-60.52,29.67-68.31,49.01-.59.16-1.16.32-1.75.48-4.98-16.81-13.07-57.25,7.52-97.68,0,0,29.12-54.54,82.84-47.57Z"/>
+      <path class="cls-1" d="M183.62,10.94c44.51,0,83.61,23.21,105.92,58.21-93.82,9.41-98.73,105.1-98.73,105.1-15.03-80.3-82.55-103.39-110.14-109.54,22.69-32.5,60.33-53.77,102.96-53.77Z"/>
+      <path class="cls-2" d="M159.93,141.78c37.06,48.26,30.53,102.57,26.94,120.72-1.09.02-2.16.05-3.25.05-69.36,0-125.58-56.34-125.58-125.8,0-13.66,2.18-26.8,6.18-39.13,60.63-4.87,95.71,44.16,95.71,44.16Z"/>
+    </g>
   </g>
-  <!-- <text class="cls-7" transform="translate(116.7 257.04)"><tspan x="0" y="0">G</tspan><tspan class="cls-2" x="20.07" y="0">r</tspan><tspan x="30.42" y="0">ee</tspan><tspan class="cls-8" x="62.24" y="0">n</tspan><tspan class="cls-1" x="79.69" y="0">w</tspan><tspan class="cls-8" x="102.62" y="0">a</tspan><tspan class="cls-6" x="117.91" y="0">y</tspan><tspan x="132.26" y="0">s</tspan></text> -->
+  <!-- <text class="cls-5" transform="translate(71.93 318.32)"><tspan x="0" y="0">G</tspan><tspan class="cls-9" x="30.91" y="0">r</tspan><tspan x="46.85" y="0">ee</tspan><tspan class="cls-7" x="95.85" y="0">n</tspan><tspan class="cls-6" x="122.72" y="0">w</tspan><tspan class="cls-7" x="158.04" y="0">a</tspan><tspan class="cls-8" x="181.58" y="0">y</tspan><tspan x="203.68" y="0">s</tspan></text> -->
 </svg>
