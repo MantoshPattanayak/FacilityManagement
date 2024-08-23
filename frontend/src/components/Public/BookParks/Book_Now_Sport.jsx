@@ -19,6 +19,8 @@ import "./Book_Now_Sport.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 import RazorpayButton from "../../../common/RazorpayButton";
+import DosDont from "../FooterPages/DosDont";
+
 const Book_Now_Sport = () => {
     // UseSate for post data -------------------------------------
     const [formData, setFormData] = useState({
@@ -266,18 +268,19 @@ const Book_Now_Sport = () => {
     useEffect(() => {
         console.log("formData", formData);
         let err = validation(formData);
-        if(Object.keys(err).length > 0)
+        if (Object.keys(err).length > 0)
             setIsDisabled(true);
         else
             setIsDisabled(false);
     }, [formData])
 
-    useEffect(() => {console.log("isDisabled in useEffect", isDisabled)}, [isDisabled]);
+    useEffect(() => { console.log("isDisabled in useEffect", isDisabled) }, [isDisabled]);
     //  Return (jsx) -------------------------------------------------------------
     return (
         <div className="Book_sport_Main_conatiner">
             <ToastContainer />
             <PublicHeader />
+            <DosDont />
             <div className="Book_sport_Child_conatiner">
                 <div className="Add_sport_form">
                     <div className="sport_name_Book">
@@ -344,7 +347,7 @@ const Book_Now_Sport = () => {
                                 </div>
                             </div>
 
-                       
+
                             <div class="formGroup">
                                 <span class="fieldName">Amount</span>
                                 <FontAwesomeIcon icon={faIndianRupeeSign} /><h1 className="price_Sport">&nbsp; {amount * formData.facilityPreference.playersLimit}/-</h1>
@@ -359,7 +362,7 @@ const Book_Now_Sport = () => {
                             <FontAwesomeIcon icon={faShoppingCart} className="Icon" />
                             Add to Cart
                         </button>
-                     
+
                         {
                             isDisabled ?
                                 <button
@@ -397,4 +400,5 @@ const Book_Now_Sport = () => {
         </div>
     );
 };
+
 export default Book_Now_Sport;
