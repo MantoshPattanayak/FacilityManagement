@@ -7,6 +7,18 @@
   width: 100%;
   box-sizing: border-box;
 }
+.footer_set_logo{
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid rgb(23, 23, 23);
+
+}
+.ama_footer_logo{
+ margin: 2px;
+}
+.p_tag_last_Updated{
+  color: black;
+}
 
 @media screen and (max-width: 420px) {
   .common-footer {

@@ -6,6 +6,11 @@ import Download_App from "../assets/google-play-badge-logo-updated.png";
 // import Download_App from "../assets/Ama_Bhoomi_Assets_Logo/google-play-badge-logo-updated.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import footer1_image from "../assets/footer_logo_BDA_logo.svg";
+import footer2_image from "../assets/Footer_logo1.svg";
+import foooter3_image from "../assets/footer_logo2.svg";
+import footer4_image from "../assets/footer_logo3BMC_Logo.svg"
+
 import {
   faWhatsapp,
   faInstagram,
@@ -77,7 +82,17 @@ const CommonFooter1 = () => {
   }
   return (
     <div>
+        <div className="footer_set_logo">
+        <img  className="ama_footer_logo  h-20  " src={foooter3_image}></img>
+          <img className="ama_footer_logo  h-20 " src={footer1_image}></img>
+          <img className="ama_footer_logo h-20 "  src={footer4_image}></img>
+         <img  className="ama_footer_logo h-20 " src={footer2_image}></img>
+     
+    
+        
+        </div>
       <footer className="common-footer">
+      
         <div className="footer-content">
           <div className="footer-column1">
             <h1 className="Amam_text">
@@ -147,7 +162,11 @@ const CommonFooter1 = () => {
                 {!language || language == "EN" && "Terms & Condtitions"}
                 {language == "OD" && "ନିୟମ ଓ ସର୍ତ୍ତାବଳୀ"}
               </p></Link>
+
             </div>
+            <span>
+              <p className="p_tag_last_Updated">Last Reviewed & Updated on : XX August XXXX XX:XX PM</p>
+            </span>
             {/* <div className="Socail_media hidden">
               <h1 className="socail_media_text">Social Media</h1>
               <div className="social-icons">
