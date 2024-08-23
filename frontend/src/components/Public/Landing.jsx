@@ -879,51 +879,55 @@ const Landing = () => {
               {language == "OD" &&
                 "ଖୋଲା ସ୍ଥାନଗୁଡିକ ଏକ୍ସପ୍ଲୋର୍ କରନ୍ତୁ, ବୁକ୍ କରନ୍ତୁ ଏବଂ ଉପଭୋଗ କରନ୍ତୁ!"}
             </h2>
-            <div className="input-wrapper">
-              <div className="search-bar-wrapper">
-                <input
-                  ref={searchInputRef}
-                  className="search-bar"
-                  type="text"
-                  name="search"
-                  placeholder={
-                    language == "EN"
-                      ? "Search by Name and Location"
-                      : language == "OD"
-                      ? "ନାମ ଏବଂ ଅବସ୍ଥାନ ଅନୁଯାୟୀ ସନ୍ଧାନ କରନ୍ତୁ"
-                      : ""
-                  }
-                  value={inputFacility}
-                  autoComplete="off"
-                  onChange={handleInputFacility}
-                  onKeyDown={handleKeyDown}
-                />
-                <div className="search-icon">
-                  <FontAwesomeIcon icon={faSearch} className="os-icon" />
+            <div className="wrapper-search-suggestion">
+              <div className="input-wrapper">
+                <div className="search-bar-wrapper">
+                  <input
+                    ref={searchInputRef}
+                    className="search-bar"
+                    type="text"
+                    name="search"
+                    placeholder={
+                      language == "EN"
+                        ? "Search by Name and Location"
+                        : language == "OD"
+                        ? "ନାମ ଏବଂ ଅବସ୍ଥାନ ଅନୁଯାୟୀ ସନ୍ଧାନ କରନ୍ତୁ"
+                        : ""
+                    }
+                    value={inputFacility}
+                    autoComplete="off"
+                    onChange={handleInputFacility}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <div className="search-icon">
+                    <FontAwesomeIcon icon={faSearch} className="os-icon" />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {suggestions?.length > 0 && inputFacility && (
-              <ul className="suggestions1">
-                {suggestions.length > 0 ? (
-                  suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      onClick={(e) =>
-                        navigate(
-                          `/Search_card?query=${encodeURIComponent(suggestion)}`
-                        )
-                      }
-                    >
-                      {suggestion}
-                    </li>
-                  ))
-                ) : (
-                  <li>No suggestions available</li>
-                )}
-              </ul>
-            )}
+              {suggestions?.length > 0 && inputFacility && (
+                <ul className="suggestions1">
+                  {suggestions.length > 0 ? (
+                    suggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        onClick={(e) =>
+                          navigate(
+                            `/Search_card?query=${encodeURIComponent(
+                              suggestion
+                            )}`
+                          )
+                        }
+                      >
+                        {suggestion}
+                      </li>
+                    ))
+                  ) : (
+                    <li>No suggestions available</li>
+                  )}
+                </ul>
+              )}
+            </div>
           </span>
 
           <div className="abBgButton">
