@@ -1,7 +1,9 @@
 import "./Common_footer1.css";
 import Logo from "../assets/ama-bhoomi_logo.png";
-import Download_OS_App from "../assets/app-store-apple-logo.svg";
-import Download_App from "../assets/google-play-badge-logo.svg";
+import Download_OS_App from "../assets/app-store-apple-logo-updated.png";
+import Download_App from "../assets/google-play-badge-logo-updated.png";
+// import Download_OS_App from "../assets/Ama_Bhoomi_Assets_Logo/app-store-apple-logo-updated.png";
+// import Download_App from "../assets/Ama_Bhoomi_Assets_Logo/google-play-badge-logo-updated.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import {
