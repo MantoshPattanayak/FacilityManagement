@@ -329,7 +329,7 @@ const Book_Now_Sport = () => {
                                     </button>
                                     <input
                                         type="text"
-                                        className="formInput_Add_member"
+                                        className="formInput_Add_member1"
                                         value={formData.facilityPreference.playersLimit}
                                         name="playersLimit"
                                         onChange={handleChangeInput}

@@ -69,8 +69,8 @@
 }
 
 .name_park_img {
-  padding: 40px;
-  margin-left: 60px;
+  padding: 40px 40px 40px 0px;
+  margin-left: 0px;
   font-size: 18px;
   color: white;
   font-weight: 600;
@@ -80,7 +80,7 @@
 }
 .image_logo_with_name{
   height: 12vh;
-  margin-left: 140px;
+  margin-left: 0px;
 }
 
 
@@ -232,7 +232,7 @@
 /* Adjust styling to make it resemble Google's search input */
 .search-container1 {
   position: relative;
-  width: 300px;
+  width: 400px;
   /* Adjust width as needed */
 }
 
@@ -240,34 +240,27 @@
 .Search_input {
   width: 100%;
   padding: 8px;
-  /* Add padding to top and bottom */
   padding-left: 40px;
-  /* Add more padding on the left to accommodate the icon */
-  border: 2px solid #ccc;
-  /* Increase border thickness */
-  border-radius: 8px;
-  /* Increase border radius for rounded corners */
+  border: 1px solid #ccc;
+  border-radius: 12px;
   font-size: 16px;
-  color: #333;
-  /* Text color */
-  background-color: #f9f9f9;
-  /* Background color */
+  color: black;
+  background-color: #fffdfd;
   transition: border-color 0.3s;
-  /* Smooth transition for border color */
 }
 
 /* Style the search icon */
-.search-icon {
+.search-icon-facilities {
   position: absolute;
   top: 55%;
   left: 10px;
   /* Adjust the position to the left */
   transform: translateY(-50%);
-  color: #888;
+  color: #919191;
 }
 
 /* Style the icon */
-.search-icon svg {
+.search-icon-facilities svg {
   width: 20px;
   height: auto;
 }
@@ -282,6 +275,7 @@
 
 .Button_Container {
   display: flex;
+  gap: 20px;
 }
 
 .image-button {

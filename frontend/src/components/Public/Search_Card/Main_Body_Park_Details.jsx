@@ -431,7 +431,7 @@ const Main_Body_Park_Details = () => {
               value={givenReq}
               onChange={(e) => setGivenReq(e.target.value)}
             />
-            <div className="search-icon">
+            <div className="search-icon-facilities">
               <FontAwesomeIcon icon={faSearch} />
             </div>
           </div>
@@ -466,8 +466,7 @@ const Main_Body_Park_Details = () => {
           >
             <img className="h-20" src={MultiPark} alt="Multipark" />
             <span className="button-text1">
-              Multipurpose
-              <br /> Grounds
+              Multipurpose Grounds
             </span>
           </button>
           {/* blueway */}
