@@ -1524,7 +1524,6 @@ margin-top: 20px;
 .carousel-image-container .description {
   position: absolute;
   /* top: 50%; */
-  bottom: 10px;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
@@ -1536,6 +1535,7 @@ margin-top: 20px;
   text-align: center;
   width: 100%;
 }
+
 
 /* .carousel-image-container:hover .description {
   bottom: 0;
@@ -1604,6 +1604,9 @@ margin-top: 20px;
 /* ----------------------------------Responsiveness------------------------------------------------------------------------------------------------------------------- */
 
 @media screen and (min-width: 1401px) {
+  .carousel-image-container .description {
+    bottom: 10px;
+  }
   .image-secondDiv img {
     height: 100%;
   }
@@ -1621,6 +1624,10 @@ margin-top: 20px;
 }
 
 @media screen and (max-width: 1400px) {
+  .carousel-image-container .description {
+    bottom: 53px;
+    word-wrap: break-word;
+  }
   .Search-Conatiner {
     height: auto;
     gap: 1vh;
@@ -1668,6 +1675,11 @@ margin-top: 20px;
 }
 
 @media screen and (max-width: 1200px) {
+  .carousel-image-container .description {
+    bottom: -17px;
+    width: 392px;
+  }
+
   .Search-Conatiner {
     height: auto;
     gap: 2vh;
@@ -1763,6 +1775,13 @@ margin-top: 20px;
   /*------------ Explore new activities----------- */
   .exploreNewAct-Parent-Container {
     height: 100%;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .carousel-image-container .description {
+    bottom: 10px;
+    word-wrap: break-word;
   }
 }
 
@@ -2040,6 +2059,11 @@ margin-top: 20px;
 }
 
 @media screen and (max-width: 875px) {
+  .carousel-image-container .description {
+    bottom: 10px;
+    width: 392px;
+  }
+
   .landing-page_contant {
     align-items: flex-start;
     margin-left: -12vw;
@@ -2264,6 +2288,11 @@ margin-top: 20px;
 }
 
 @media screen and (max-width: 575px) {
+  .carousel-image-container .description {
+    bottom: -15px;
+    width: 392px;
+  }
+
   .iconPlayApple img{
     margin: 0 0px;
     width: 15px;
