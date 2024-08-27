@@ -3,6 +3,7 @@
 import PublicHeader from "../../../common/PublicHeader";
 import "./About.css"
 import Aboutusimg from "../../../assets/About_BDA.jpg"
+import BMC_Logo from "../../../assets/footer_logo3BMC_Logo.svg";
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,7 +22,8 @@ const About = () => {
     <div className="About_Mian_conatiner">
       <PublicHeader />
       <div className="Child_about_container">
-        <h1 className="About">
+        <h1 className="About flex flex-col justify-start">
+        <img src={BMC_Logo} className="w-[50px] sm:w-14 md:w-20 lg:w-20"/>
           {!language || language == "EN" && "About"}
           {language == "OD" && "ବିଷୟରେ"}
         </h1>
