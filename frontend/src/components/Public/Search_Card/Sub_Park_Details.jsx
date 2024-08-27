@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
-import "../../Public/Search_card.css"
-import "..//Landing.css"
+import "../../Public/Search_card.css";
+import "..//Landing.css";
 
 import CommonFooter from "../../../common/CommonFooter";
 import AdminHeader from "../../../common/AdminHeader";
@@ -80,7 +80,7 @@ const Sub_Park_Details = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [imagesFetch, setImagesFetch] = useState(false);
-  useEffect(() => { }, [facilityId]);
+  useEffect(() => {}, [facilityId]);
   // Book Mark Funcation ----------------------------------------
   async function handleBookmarkStatus(e) {
     e.preventDefault();
@@ -138,22 +138,18 @@ const Sub_Park_Details = () => {
       console.log("facility details data fetch", res.data);
       // Set images data
       if (res.data.facilitiesData.length > 0) {
-        if (res.data.facilitiesData[0].url && res.data.facilitiesData[0].url.split(";").length > 0) {
+        if (
+          res.data.facilitiesData[0].url &&
+          res.data.facilitiesData[0].url.split(";").length > 0
+        ) {
           let imagesData = res.data.facilitiesData[0].url
             .split(";")
             .filter((url) => url.trim() !== "");
           setImagesList(imagesData);
           setImagesFetch(true);
-        }
-        else {
+        } else {
           setImagesFetch(false);
-          setImagesList([
-            Park_img,
-            amabhoomi,
-            Park_img,
-            amabhoomi,
-            Park_img,
-          ]);
+          setImagesList([Park_img, amabhoomi, Park_img, amabhoomi, Park_img]);
         }
       }
 
@@ -213,7 +209,7 @@ const Sub_Park_Details = () => {
     }
   }
 
-  useEffect(() => { }, [isBookmarked]);
+  useEffect(() => {}, [isBookmarked]);
 
   useEffect(() => {
     getSub_park_details();
@@ -284,19 +280,19 @@ const Sub_Park_Details = () => {
       try {
         let mapResponse = await axiosHttpClient("GOOGLE_MAPS_API", "post", {
           apiKey: encryptData(apiKey),
-          callbackName: encryptData(callbackName)
+          callbackName: encryptData(callbackName),
         });
 
         if (window.google && window.google.maps) {
-          console.log("window.google.maps")
+          console.log("window.google.maps");
           // resolve();
           return;
         }
 
         // Create and append script element
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.text = mapResponse.data;
-        script.type = 'text/javascript';
+        script.type = "text/javascript";
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
@@ -325,26 +321,27 @@ const Sub_Park_Details = () => {
           document.head.appendChild(script);
         });
         */
-      }
-      catch (error) {
-        console.error('Error loading Google Maps:', error);
+      } catch (error) {
+        console.error("Error loading Google Maps:", error);
         setLoadError(true);
       }
     };
 
     // Load Google Maps
-    loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, 'initMap')
+    loadGoogleMaps(instance().REACT_APP_GOOGLE_MAPS_API_KEY, "initMap")
       .then(() => {
         setIsLoaded(true);
       })
       .catch((error) => {
-        console.error('Error loading Google Maps:', error);
+        console.error("Error loading Google Maps:", error);
         setLoadError(true);
       });
 
     // Cleanup function to remove the script when the component unmounts
     return () => {
-      const script = document.querySelector(`script[src*="maps.googleapis.com"]`);
+      const script = document.querySelector(
+        `script[src*="maps.googleapis.com"]`
+      );
       if (script) {
         script.remove();
       }
@@ -352,6 +349,12 @@ const Sub_Park_Details = () => {
     };
   }, []);
 
+  // console.log("timming data---",JSON.stringify(FacilitiesData.timing))
+  console.log("timming data---", FacilitiesData[0]?.timing);
+
+  const entries = FacilitiesData[0]?.timing
+    ? Object.entries(FacilitiesData[0]?.timing)
+    : [];
 
   return (
     <div className="Sub_Manu_Conatiner">
@@ -362,13 +365,14 @@ const Sub_Park_Details = () => {
           FacilitiesData?.length > 0 && FacilitiesData[0]?.facilityTypeId === 1
             ? "Header_Img"
             : FacilitiesData[0]?.facilityTypeId === 2
-              ? "playground_header_image"
-              : FacilitiesData[0]?.facilityTypeId === 3
-                ? "MulitGroud"
-                : FacilitiesData[0]?.facilityTypeId === 4
-                  ? "BlueWays"
-                  : FacilitiesData[0]?.facilityTypeId === 5
-                    ? "Greenways" : ""
+            ? "playground_header_image"
+            : FacilitiesData[0]?.facilityTypeId === 3
+            ? "MulitGroud"
+            : FacilitiesData[0]?.facilityTypeId === 4
+            ? "BlueWays"
+            : FacilitiesData[0]?.facilityTypeId === 5
+            ? "Greenways"
+            : ""
         }
       >
         <div className="park_Name1">
@@ -398,17 +402,17 @@ const Sub_Park_Details = () => {
       <div className="map_img_main_conatiner">
         <div className="carousel-container1">
           <div className="carousel1">
-            {
-              imagesFetch ? <img
+            {imagesFetch ? (
+              <img
                 src={instance().baseURL + "/static" + images[currentIndex1]}
                 alt={`Slide ${currentIndex1 + 1}`}
               />
-                : <img
-                  src={images[currentIndex1]}
-                  alt={`Slide ${currentIndex1 + 1}`}
-                />
-            }
-
+            ) : (
+              <img
+                src={images[currentIndex1]}
+                alt={`Slide ${currentIndex1 + 1}`}
+              />
+            )}
           </div>
           <button className="carousel1-button1 left1" onClick={handlePrev}>
             &lt;
@@ -461,11 +465,12 @@ const Sub_Park_Details = () => {
 
                 <div className="open-close-btn">
                   <button
-                    className={`Open_Button ${FacilitiesData.length > 0 &&
-                        FacilitiesData[0].status === "open"
+                    className={`Open_Button ${
+                      FacilitiesData.length > 0 &&
+                      FacilitiesData[0].status === "open"
                         ? "open"
                         : "closed"
-                      }`}
+                    }`}
                   >
                     {FacilitiesData?.length > 0 &&
                       FacilitiesData[0]?.status.toUpperCase()}
@@ -485,21 +490,23 @@ const Sub_Park_Details = () => {
               ) : FacilitiesData[0]?.facilityTypeId == 2 ? (
                 <Link
                   to={{
-                    pathname: `${isUserLoggedIn == 1
+                    pathname: `${
+                      isUserLoggedIn == 1
                         ? "/BookParks/Book_Now_Sport"
                         : "/login-signup"
-                      }`,
-                    search: `${isUserLoggedIn == 1
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
                         ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
+                            FacilitiesData[0]?.facilityId
+                          )}`
                         : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` +
-                        `&redirect=${encryptDataId(
-                          "/BookParks/Book_Now_Sport"
-                        )}`
-                      }`,
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/BookParks/Book_Now_Sport"
+                          )}`
+                    }`,
                   }}
                   className="button-9"
                 >
@@ -508,17 +515,23 @@ const Sub_Park_Details = () => {
               ) : FacilitiesData[0]?.facilityTypeId == 3 ? (
                 <Link
                   to={{
-                    pathname: `${isUserLoggedIn == 1
+                    pathname: `${
+                      isUserLoggedIn == 1
                         ? "/Book_Now_Multipurposeground"
                         : "/login-signup"
-                      }`,
-                    search: `${isUserLoggedIn == 1
-                        ? `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}`
-                        : `?facilityId=${encryptDataId(FacilitiesData[0]?.facilityId)}` +
-                        `&redirect=${encryptDataId(
-                          "/Book_Now_Multipurposeground"
-                        )}`
-                      }`,
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
+                        ? `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}`
+                        : `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/Book_Now_Multipurposeground"
+                          )}`
+                    }`,
                   }}
                   className="button-9"
                 >
@@ -527,21 +540,23 @@ const Sub_Park_Details = () => {
               ) : (
                 <Link
                   to={{
-                    pathname: `${isUserLoggedIn == 1
+                    pathname: `${
+                      isUserLoggedIn == 1
                         ? "/BookParks/Book_Now_Sport"
                         : "/login-signup"
-                      }`,
-                    search: `${isUserLoggedIn == 1
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
                         ? `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}`
+                            FacilitiesData[0]?.facilityId
+                          )}`
                         : `?facilityId=${encryptDataId(
-                          FacilitiesData[0]?.facilityId
-                        )}` +
-                        `&redirect=${encryptDataId(
-                          "/BookParks/Book_Now_Sport"
-                        )}`
-                      }`,
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/BookParks/Book_Now_Sport"
+                          )}`
+                    }`,
                   }}
                   className="button-9"
                 >
@@ -553,16 +568,18 @@ const Sub_Park_Details = () => {
 
               <Link
                 to={{
-                  pathname: `${isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
-                    }`,
-                  search: `${isUserLoggedIn == 1
+                  pathname: `${
+                    isUserLoggedIn == 1 ? "/Event_hostPage" : "/login-signup"
+                  }`,
+                  search: `${
+                    isUserLoggedIn == 1
                       ? `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}`
+                          FacilitiesData[0]?.facilityId
+                        )}`
                       : `?facilityId=${encryptDataId(
-                        FacilitiesData[0]?.facilityId
-                      )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
-                    }`,
+                          FacilitiesData[0]?.facilityId
+                        )}` + `&redirect=${encryptDataId("/Event_hostPage")}`
+                  }`,
                 }}
                 className="button-10"
               >
@@ -574,34 +591,32 @@ const Sub_Park_Details = () => {
           </div>
 
           <div className="Map_image">
-            {
-              loadError ? (
-                <div>Error loading maps</div>
-              ) : !isLoaded ? (
-                <div>Loading Maps...</div>
-              ) : (
-                <GoogleMap
-                  ClassName="Map_image_Goole"
-                  mapContainerStyle={{ height: "200px", width: "100%" }}
-                  center={{
-                    lat: FacilitiesData[0]?.latitude,
-                    lng: FacilitiesData[0]?.longitude
-                  }}
-                  zoom={15}
-                >
-                  {/* Render markers */}
-                  {FacilitiesData?.map((location, index) => (
-                    <Marker
-                      key={index}
-                      position={{
-                        lat: location.latitude,
-                        lng: location.longitude,
-                      }}
-                    />
-                  ))}
-                </GoogleMap>
-              )
-            }
+            {loadError ? (
+              <div>Error loading maps</div>
+            ) : !isLoaded ? (
+              <div>Loading Maps...</div>
+            ) : (
+              <GoogleMap
+                ClassName="Map_image_Goole"
+                mapContainerStyle={{ height: "200px", width: "100%" }}
+                center={{
+                  lat: FacilitiesData[0]?.latitude,
+                  lng: FacilitiesData[0]?.longitude,
+                }}
+                zoom={15}
+              >
+                {/* Render markers */}
+                {FacilitiesData?.map((location, index) => (
+                  <Marker
+                    key={index}
+                    position={{
+                      lat: location.latitude,
+                      lng: location.longitude,
+                    }}
+                  />
+                ))}
+              </GoogleMap>
+            )}
             {/* <LoadScript googleMapsApiKey={apiKey}>
               <GoogleMap
                 ClassName="Map_image_Goole"
@@ -640,6 +655,30 @@ const Sub_Park_Details = () => {
         </div> */}
       </div>
       <div className="other-contents">
+        {/* {------------timting-------------------------------------------------------} */}
+        {entries.length > 0 && (
+          <div className="Service_Now_container">
+            <h1 className="Service_text">Schedule</h1>
+            <div className="Timing-Data">
+              <table border="1" style={{ width: "100%", textAlign: "left" }}>
+                <thead>
+                  <tr>
+                    <th>Timing</th>
+                    <th>Activity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entries.map(([time, activity], index) => (
+                    <tr key={index}>
+                      <td>{time}</td>
+                      <td>{activity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
         {/* -----------------------------services------------------------------------------ */}
         <div className="Service_Now_container">
           <h1 className="Service_text">Services</h1>
@@ -668,7 +707,8 @@ const Sub_Park_Details = () => {
               .flatMap((group) => group) // Flatten the array of arrays
               .filter(
                 (item, index, self) =>
-                  self.findIndex((t) => t.amenityName === item.amenityName) === index
+                  self.findIndex((t) => t.amenityName === item.amenityName) ===
+                  index
               ) // Filter unique items
               .map((item, index) => (
                 <span className="flex gap-2" key={index}>
@@ -696,7 +736,10 @@ const Sub_Park_Details = () => {
           <h1 className="Service_text">Event Available</h1>
           {EventAvailable?.length > 20 ? (
             <div className="carousel carousal321">
-              <button className="carousel-button2 left" onClick={handleEventPrev}>
+              <button
+                className="carousel-button2 left"
+                onClick={handleEventPrev}
+              >
                 &lt;
               </button>
               <div className="carousel-container">
@@ -713,7 +756,9 @@ const Sub_Park_Details = () => {
                       key={i}
                       onClick={() => {
                         navigate(
-                          `/Sub_Park_Details?facilityId=${encryptData(d.facilityId)}&action=view`
+                          `/Sub_Park_Details?facilityId=${encryptData(
+                            d.facilityId
+                          )}&action=view`
                         );
                       }}
                     >
@@ -735,7 +780,10 @@ const Sub_Park_Details = () => {
                   ))}
                 </div>
               </div>
-              <button className="carousel-button2 right" onClick={handleEventNext}>
+              <button
+                className="carousel-button2 right"
+                onClick={handleEventNext}
+              >
                 &gt;
               </button>
             </div>
@@ -745,7 +793,6 @@ const Sub_Park_Details = () => {
         </div>
         {/* <Book_Now/> */}
       </div>
-
 
       {/*-------------------------------------------- Here Footer---------------------------------------------- */}
 
@@ -768,5 +815,3 @@ const Sub_Park_Details = () => {
 
 // Export Sub_Park_details ------------------------
 export default Sub_Park_Details;
-
-
