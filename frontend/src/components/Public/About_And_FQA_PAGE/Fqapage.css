@@ -8,8 +8,8 @@
 }
 
 .Fqa_Child_Ask_QUESTION {
- height: 50vh;
-
+  height: 50vh;
+  width: 100%;
 }
 
 .Fqa_Child_Ask_QUESTION_text {
@@ -52,7 +52,7 @@
 }
 
 .fqa-body {
-  background-image: url('../../../assets/faq_ing.png');
+  /* background-image: url('../../../assets/faq_ing.png'); */
   width: 100%;
   /* height: 100vh; */
   min-height: 50vh;
