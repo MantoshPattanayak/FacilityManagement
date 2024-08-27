@@ -128,11 +128,19 @@ const viewParkDetails = async(req,res)=>{
         let facility = `select facilityId, facilityname,facilityTypeId,case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
-        end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership, fl.url
-        from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId `
+        end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership
+        from amabhoomi.facilities f `
         
+         let fetchTheFacilityImageQuery = `select fl.url as url from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
+            where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`
+
+
         let facilities;
-        let fileStatusId = 1;
+        let fetchTheFacilityImageData;
+        let imageEntityType = 'facilities';
+        let imageFilePurpose = 'singleFacilityImage'
+        let imageStatusId = 1
+
         if (selectedFilter) {
             console.log('selected filter')
             let filterConditions = [];
@@ -168,16 +176,17 @@ const viewParkDetails = async(req,res)=>{
             console.log('24')
             if (filterConditions.length > 0 && !facilityTypeId) {
                 console.log('filter condn', filterConditions,facility)
-                facility += ` WHERE ${filterConditions.join(' AND ')} and ft.filePurpose = ?`;
+                facility += ` WHERE ${filterConditions.join(' AND ')}`;
                 console.log('facility',facility)
                  facilities = await sequelize.query(facility,{
-                    replacements:[new Date(),facilityImagePurpose]
+                    replacements:[new Date()],
+                    type:QueryTypes.SELECT
                 })
             }
             if (facilityTypeId) {
                 console.log('25')
 
-                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? and fl.statusId = ? and ft.statusId = ?`;
+                facility += ` WHERE f.facilityTypeId=? `;
             
                 if (filterConditions.length) {
                     // Add selected filter conditions
@@ -185,35 +194,57 @@ const viewParkDetails = async(req,res)=>{
                 }
             
                 facilities = await sequelize.query(facility, {
-                    replacements: [new Date(),facilityTypeId,facilityImagePurpose,fileStatusId, fileStatusId]
+                    replacements: [new Date(),facilityTypeId],
+                    type:QueryTypes.SELECT
                 });
             }
         }
         if (facilityTypeId && !selectedFilter) {
             console.log('25')
 
-            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? and fl.statusId = ? and ft.statusId = ?`;   
+            facility += ` WHERE f.facilityTypeId=? `;   
         
             facilities = await sequelize.query(facility, {
-                replacements: [new Date(),facilityTypeId,facilityImagePurpose,fileStatusId, fileStatusId]
+                replacements: [new Date(),facilityTypeId],
+                type:QueryTypes.SELECT
             });
         }
 
         if (!facilityTypeId && !selectedFilter) {
             console.log('25')
-            facility += ` WHERE  ft.filePurpose = ? and fl.statusId = ? and ft.statusId = ?`;   
             console.log('facility query', facility)
             facilities = await sequelize.query(facility, {
-                replacements: [new Date(),facilityImagePurpose,fileStatusId, fileStatusId]
+                replacements: [new Date()],
+                type:QueryTypes.SELECT
             });
+            
         }
     
+        if(facilities.length > 0){
+            for(let i of facilities){
+                 fetchTheFacilityImageData = await sequelize.query(fetchTheFacilityImageQuery,
+                    {
+                        replacements:[i.facilityId, imageEntityType, imageFilePurpose, imageStatusId, imageStatusId],
+                        type:QueryTypes.SELECT
+                    })
+                    console.log('fetchFacilityImageData', fetchTheFacilityImageData)
+                    if(fetchTheFacilityImageData.length > 0){
+                        i.url = fetchTheFacilityImageData[0].url
+                    }
+                    else{
+                        i.url = null
+                    }
+                   
 
+            }
     
-        let matchedData = facilities[0];
+        }
+       
+    
+        let matchedData = facilities;
         console.log('givenReq',givenReq)
         if(givenReq){
-             matchedData = facilities[0].filter((mapData)=>
+             matchedData = facilities.filter((mapData)=>
                 (mapData.facilityname && mapData.facilityname.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Scheme && mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Ownership && mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase()))||
@@ -387,7 +418,7 @@ const viewParkById = async (req,res)=>{
             let fetchTheFacilitiesDetailsQuery = `select facilityId,facilityName,facilityTypeId,case 
             when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
             else 'closed'
-            end as status,address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo, f.timing, f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat
+            end as status,address,latitude,longitude,areaAcres,helpNumber,additionalDetails as about,operatingHoursFrom, operatingHoursTo,f.sun,f.mon, f.tue, f.wed, f.thu, f.fri, f.sat
             from amabhoomi.facilities f where f.facilityId = ?
       
        `
@@ -829,10 +860,9 @@ function convertImagesToBase64(dataArray) {
 const nearByDataInMap = async (req, res) => {
     try {
         let { latitude, longitude, facilityTypeId, range, popular, free, paid, order,selectedFilter } = req.body;
-        let filePurpose = 'singleFacilityImage'
-        let entityType = 'facilities'
+        
         // Default range is set to 20 if not provided
-        range = range ? range : 20;
+        range = range ? range : 100;
         order = order ? order : 2;
 
         // Initialize query and replacements array
@@ -853,14 +883,20 @@ const nearByDataInMap = async (req, res) => {
             f.longitude, 
             f.areaAcres, 
             f.ownership,
-            f.sun, f.mon, f.tue, f.wed, f.thu, f.fri, f.sat, 
-            fl.url AS imageURL
+            f.sun, f.mon, f.tue, f.wed, f.thu, f.fri, f.sat
         FROM 
             amabhoomi.facilities f 
-        LEFT JOIN 
-            amabhoomi.fileattachments fa ON fa.entityId = f.facilityId 
-        LEFT JOIN 
-            amabhoomi.files fl ON fl.fileId = fa.fileId`;
+        `;
+
+        let fetchTheFacilityImageQuery = `select fl.url as url from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
+            where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`
+
+
+      
+        let fetchTheFacilityImageData;
+        let imageEntityType = 'facilities';
+        let imageFilePurpose = 'singleFacilityImage'
+        let imageStatusId = 1
 
         // if (free && paid && popular ) {
         //     console.log('free paid popular')
@@ -938,22 +974,21 @@ const nearByDataInMap = async (req, res) => {
             console.log('24')
             if (filterConditions.length > 0 && !facilityTypeId) {
                 console.log('filter condn', filterConditions)
-                fetchFacilitiesQuery += ` WHERE fa.filePurpose = ? and fa.entityType=? and ${filterConditions.join(' AND ')}`;
+                fetchFacilitiesQuery += ` WHERE  ${filterConditions.join(' AND ')}`;
                 console.log('facility')
-                replacements.push(filePurpose,entityType);
 
             }
             if (facilityTypeId) {
                 console.log('791')
 
-                fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? and fa.filePurpose = ? and fa.entityType=?`;
+                fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? `;
             
                 if (filterConditions.length) {
                     // Add selected filter conditions
                     fetchFacilitiesQuery += ` AND ${filterConditions.join(' AND ')}`;
                 }
             
-                replacements.push(facilityTypeId,filePurpose,entityType);
+                replacements.push(facilityTypeId);
 
             }
         }
@@ -973,21 +1008,15 @@ const nearByDataInMap = async (req, res) => {
         if (facilityTypeId && !selectedFilter) {
             console.log('818')
 
-            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? and fa.filePurpose = ? and fa.entityType=?`;
-            replacements.push(facilityTypeId,filePurpose,entityType);
+            fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? `;
+            replacements.push(facilityTypeId);
 
         }
-        if (!facilityTypeId && !selectedFilter) {
-            console.log('826')
-
-            fetchFacilitiesQuery += ` WHERE fa.filePurpose = ? and fa.entityType=?`;
-            replacements.push(filePurpose,entityType);
-
-        }
+       
         
 
         // Group by facilityId
-        fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
+        // fetchFacilitiesQuery += ` GROUP BY f.facilityId, imageURL`;
         // console.log(fetchFacilitiesQuery,'fetchFacilitiesQuery')
         // Sort order
         // if (order == 1) {
@@ -999,11 +1028,28 @@ const nearByDataInMap = async (req, res) => {
         // }
 
         // Execute the constructed query
-        const fetchFacilities = await sequelize.query(fetchFacilitiesQuery, {
+        let fetchFacilities = await sequelize.query(fetchFacilitiesQuery, {
             replacements: replacements,
             type:Sequelize.QueryTypes.SELECT
         });
+        if(fetchFacilities.length > 0){
+            for(let i of fetchFacilities){
+                 fetchTheFacilityImageData = await sequelize.query(fetchTheFacilityImageQuery,
+                    {
+                        replacements:[i.facilityId, imageEntityType, imageFilePurpose, imageStatusId, imageStatusId],
+                        type:QueryTypes.SELECT
+                    })
+                    console.log('fetchFacilityImageData', fetchTheFacilityImageData)
+                    if(fetchTheFacilityImageData.length > 0){
+                        i.imageURL = fetchTheFacilityImageData[0].url
+                    }
+                    else{
+                        i.imageURL = null
+                    }
+                   
 
+            }
+        }
         // Process the fetched data as needed
         console.log('fetchFacilities',fetchFacilities)
                 let getNearByData = [];
