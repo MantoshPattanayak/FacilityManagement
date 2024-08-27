@@ -73,6 +73,7 @@ import {
   formatDate,
   formatDateYYYYMMDD,
   formatTime,
+  truncateName,
 } from "../../utils/utilityFunctions.js";
 // import for slider
 
@@ -1556,8 +1557,9 @@ const Landing = () => {
                         alt={`carousel-img${index}`}
                         className="carousel-image_gallery"
                         // Hide broken images
+                        title={item.description}
                       />
-                      <div className="description">{item.description}</div>
+                      <div className="description">{truncateName(item.description, 30)}</div>
                     </div>
                   </div>
                 );
