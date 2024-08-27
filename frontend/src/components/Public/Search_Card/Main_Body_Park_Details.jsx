@@ -1,6 +1,7 @@
 // Function of Main Container ---------------------------------------
 import Cardimg from "../../../assets/Park_image.jpg";
 import sport_image2 from "../../../assets/Sport_image.jpg";
+import mp_ground from "../../../assets/mp_ground_base.jpeg";
 import "./Main_Body_park_deatils.css";
 // Font Awesome icon --------------------------------
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -394,7 +395,7 @@ const Main_Body_Park_Details = () => {
               <p><i>Uncover city’s tranquillity hidden in the waterbodies</i></p>
             </span>
           )}
-           {facilityTypeId == 4 && language === "OD" && (
+          {facilityTypeId == 4 && language === "OD" && (
             <span className="park_log_name_on_image">
               <img className="image_logo_with_name" src={blueway}></img>
               <h1>ବିରାମ ନିଅନ୍ତୁ | ଉପଭୋଗ କରନ୍ତୁ | ଅନୁଭବ କରନ୍ତୁ</h1>
@@ -735,11 +736,17 @@ const Main_Body_Park_Details = () => {
                     src={
                       item.url
                         ? instance().baseURL + "/static" + item.url
-                        : item.facilityTypeId === 1
+                        : item.facilityTypeId === 1 //parks
                           ? Cardimg
-                          : item.facilityTypeId === 2
+                          : item.facilityTypeId === 2 //playfields
                             ? sport_image2
-                            : park_image
+                            : item.facilityTypeId === 3 //mp grounds
+                              ? mp_ground
+                              : item.facilityTypeId === 4 //blueways
+                                ? mp_ground
+                                : item.facilityTypeId === 5 //greenways
+                                  ? mp_ground
+                                  : Cardimg
                     }
                     alt="Park"
                     onError={(e) => {
@@ -750,7 +757,13 @@ const Main_Body_Park_Details = () => {
                           ? Cardimg
                           : item.facilityTypeId === 2
                             ? sport_image2
-                            : park_image;
+                            : item.facilityTypeId === 3 //mp grounds
+                              ? mp_ground
+                              : item.facilityTypeId === 4 //blueways
+                                ? mp_ground
+                                : item.facilityTypeId === 5 //greenways
+                                  ? mp_ground
+                                  : Cardimg;
                       console.log(
                         "Image Source: ",
                         item.url,
