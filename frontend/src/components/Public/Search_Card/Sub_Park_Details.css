@@ -299,6 +299,48 @@ background-repeat: no-repeat;
   background-color: green;
 }
 
+/* --------------------------------------------------- Schedule Conatiner start--------------------------------------------------- */
+
+/* .Timing_Main_Container{
+  display: flex;
+    gap: 10px 10px;
+    flex-direction: column;
+} */
+.Timing-Data {
+  margin: 20px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.Timing-Data table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+  background-color: #ffffff;
+}
+
+.Timing-Data th, .Timing-Data td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #dddddd;
+}
+
+.Timing-Data th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #333333;
+}
+
+.Timing-Data tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.Timing-Data tr:hover {
+  background-color: #f1f1f1;
+}
 /* --------------------------------------------------- Service Conatiner start--------------------------------------------------- */
 .Service_Now_conatiner {
   /* padding: 40px;
@@ -827,6 +869,9 @@ background-repeat: no-repeat;
   }
   .Amenities_name {
     font-size: 14px;
+  }
+  other-contents{
+    margin-top: 22vh;
   }
 }
 
