@@ -132,7 +132,7 @@ const viewParkDetails = async(req,res)=>{
         from amabhoomi.facilities f left join amabhoomi.fileattachments ft on f.facilityId = ft.entityId left join amabhoomi.files fl on fl.fileId= ft.fileId `
         
         let facilities;
-
+        let fileStatusId = 1;
         if (selectedFilter) {
             console.log('selected filter')
             let filterConditions = [];
@@ -177,7 +177,7 @@ const viewParkDetails = async(req,res)=>{
             if (facilityTypeId) {
                 console.log('25')
 
-                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ?`;
+                facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? and fl.statusId = ? and ft.statusId = ?`;
             
                 if (filterConditions.length) {
                     // Add selected filter conditions
@@ -185,26 +185,26 @@ const viewParkDetails = async(req,res)=>{
                 }
             
                 facilities = await sequelize.query(facility, {
-                    replacements: [new Date(),facilityTypeId,facilityImagePurpose]
+                    replacements: [new Date(),facilityTypeId,facilityImagePurpose,fileStatusId, fileStatusId]
                 });
             }
         }
         if (facilityTypeId && !selectedFilter) {
             console.log('25')
 
-            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? `;   
+            facility += ` WHERE f.facilityTypeId=? and ft.filePurpose = ? and fl.statusId = ? and ft.statusId = ?`;   
         
             facilities = await sequelize.query(facility, {
-                replacements: [new Date(),facilityTypeId,facilityImagePurpose]
+                replacements: [new Date(),facilityTypeId,facilityImagePurpose,fileStatusId, fileStatusId]
             });
         }
 
         if (!facilityTypeId && !selectedFilter) {
             console.log('25')
-            facility += ` WHERE  ft.filePurpose = ?`;   
+            facility += ` WHERE  ft.filePurpose = ? and fl.statusId = ? and ft.statusId = ?`;   
             console.log('facility query', facility)
             facilities = await sequelize.query(facility, {
-                replacements: [new Date(),facilityImagePurpose]
+                replacements: [new Date(),facilityImagePurpose,fileStatusId, fileStatusId]
             });
         }
     
