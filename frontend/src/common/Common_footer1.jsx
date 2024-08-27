@@ -165,7 +165,7 @@ const CommonFooter1 = () => {
 
             </div>
             <span>
-              <p className="p_tag_last_Updated">Last Reviewed & Updated on : XX August XXXX XX:XX PM</p>
+              <p className="p_tag_last_Updated">Last Reviewed & Updated on : {new Date().toLocaleString()}</p>
             </span>
             {/* <div className="Socail_media hidden">
               <h1 className="socail_media_text">Social Media</h1>
