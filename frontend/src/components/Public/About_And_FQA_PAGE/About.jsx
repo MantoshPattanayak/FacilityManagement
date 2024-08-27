@@ -23,7 +23,7 @@ const About = () => {
       <PublicHeader />
       <div className="Child_about_container">
         <h1 className="About flex flex-col justify-start">
-        <img src={BMC_Logo} className="w-[50px] sm:w-14 md:w-20 lg:w-20"/>
+        {/* <img src={BMC_Logo} className="w-[50px] sm:w-14 md:w-20 lg:w-20"/> */}
           {!language || language == "EN" && "About"}
           {language == "OD" && "ବିଷୟରେ"}
         </h1>
