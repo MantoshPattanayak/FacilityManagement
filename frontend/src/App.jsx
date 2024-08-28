@@ -129,6 +129,8 @@ const ViewStaffAllocation = React.lazy(() => import('./components/Admin/Activity
 const CreateStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/CreateStaffAllocation'))
 const EditStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/EditStaffAllocation'))
 const GreenwaysBookingPage=React.lazy(()=>import('./components/Public/BookParks/GreenWaysBookingPage'))
+// Emp_Attendance 
+const Emp_Attendance=React.lazy(()=>import("./components/Admin/Emp_Attendance/Emp_Attendance"))
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
 // import provider for connect to our app
@@ -281,6 +283,7 @@ function App() {
                 <Route path="/EditActivities" element={<React.Suspense fallback={<ClassicLoader/>}><EditActivities /> </React.Suspense>} />
                 <Route path="/ViewActivityList" element={<React.Suspense fallback={<ClassicLoader/>}><ViewActivityList /> </React.Suspense>} />
                 <Route path="/CreateNewActivity" element={<React.Suspense fallback={<ClassicLoader/>}><CreateNewActivity /> </React.Suspense>} />
+                <Route path="/Emp_Attendance" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Attendance/></React.Suspense>} />
               </Routes>
               <CommonFooter1 />
             </div>
