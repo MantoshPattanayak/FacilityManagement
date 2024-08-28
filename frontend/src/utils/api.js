@@ -159,6 +159,7 @@ const api = {
    UPDATE_STAFF_ALLOCATION_LIST_API: '/facilityStaff/updateFacilityStaffAllocation',   //post
    UPLOAD_STAFF_ATTENDANCE_API: '/facilityStaff/uploadStaffAttendance', //post
    FETCH_INITIAL_DATA_FOR_STAFFALLOCATION: '/facilityStaff/initialData',   // get
+   VIEW_STAFF_ATTENDANCE_LIST_API: '/facilityStaff/viewStaffAttendanceData',  //post givenReq, page_size, page_number, facilityStaffAttendanceId
    // User activity master
    VIEW_USER_ACTIVITY_LIST_API: '/userActivity/viewUserActivitiesList',  //post page_size, page_number, givenReq
    VIEW_USER_ACTIVITY_DATA_API: '/userActivity/viewUserActivityById',  //get
