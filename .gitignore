@@ -24,4 +24,4 @@ accesslog
 *.njsproj
 *.sln
 *.sw?
-.backend/public
+backend/public
