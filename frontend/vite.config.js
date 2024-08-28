@@ -1,10 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { createHtmlPlugin } from 'vite-plugin-html';
+import inspect from 'vite-plugin-inspect';
 import instance from './env'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    inspect(),
+    createHtmlPlugin({
+      inject: {
+        injectScript: `
+          <script>
+            // Custom script or analytics logic
+          </script>
+        `,
+      },
+    }),
+  ],
   server: {
     host: '0.0.0.0',
     port: '5173'
