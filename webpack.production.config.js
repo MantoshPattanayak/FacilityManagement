@@ -67,6 +67,13 @@ module.exports = {
             RAZORPAY_APT_SECRET     : JSON.stringify(process.env.RAZORPAY_APT_SECRET),
             ACCESS_TOKEN_SECRET     : JSON.stringify(process.env.ACCESS_TOKEN_SECRET),
             REFRESH_TOKEN_SECRET    : JSON.stringify(process.env.REFRESH_TOKEN_SECRET),
+            VERIFY_URL              : JSON.stringify(process.env.VERIFY_URL),
+            MAIL_USERNAME           : JSON.stringify(process.env.MAIL_USERNAME),
+            MAIL_PASSWORD           : JSON.stringify(process.env.MAIL_PASSWORD),
+            EMAIL_TOKEN             : JSON.stringify(process.env.EMAIL_TOKEN),
+            RAZORPAY_SECRET_WEBHOOK : JSON.stringify(process.env.RAZORPAY_SECRET_WEBHOOK),
+            GOOGLE_MAPS_BASE_URL    : JSON.stringify(process.env.GOOGLE_MAPS_BASE_URL),
+            NODE_ENV                : JSON.stringify(process.env.NODE_ENV)
         })
     ]
 };
