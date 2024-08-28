@@ -24,3 +24,4 @@ accesslog
 *.njsproj
 *.sln
 *.sw?
+public
