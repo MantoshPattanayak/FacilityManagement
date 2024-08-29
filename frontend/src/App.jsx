@@ -291,7 +291,7 @@ function App() {
                 <Route path="/Emp_Attendance" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Attendance/></React.Suspense>} />
                 <Route path="/Emp_Details_List" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Details_List/></React.Suspense>} />
                 {/* Report section  */}
-                <Route path="Emp_List_Report" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_List_Report/></React.Suspense>} />
+                <Route path="/Emp_List_Report" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_List_Report/></React.Suspense>} />
               </Routes>
               <CommonFooter1 />
             </div>
