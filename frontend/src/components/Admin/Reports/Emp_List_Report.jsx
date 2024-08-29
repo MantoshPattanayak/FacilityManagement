@@ -7,17 +7,15 @@ import { encryptData } from "../../../utils/encryptData";
 import axiosHttpClient from "../../../utils/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {formatDate,formatTime} from "../../../utils/utilityFunctions"
-import "./Emp_Details_List.css"
+import "./Emp_List_Report.css"
 
-const Emp_Details_List=()=>{
-
+const Emp_List_Report=()=>{
   let navigate = useNavigate();
   let limit = 10;
   let page = 1;
 
   const [tableData, setTableData] = useState([]);
   const [givenReq, setGivenReq] = useState('');
-
   // API call to fetch list of saved amenities
   async function fetchAmenitiesList(givenReq = null) {
     try {
@@ -30,7 +28,8 @@ const Emp_Details_List=()=>{
       setTableData([]);
     }
   }
-
+  // Generate the CSV file of Report....
+  
   // function to manage API calls while user search input entry
   function debounce(fn, delay) {
     let timeoutId;
@@ -41,7 +40,6 @@ const Emp_Details_List=()=>{
       }, delay);
     }
   }
-
   //Debounced fetchFacilityList function while searching
   const debouncedFetchUserList = useCallback(debounce(fetchAmenitiesList, 1000), []);
 
@@ -66,15 +64,8 @@ const Emp_Details_List=()=>{
       <div className='ViewAmenitiesList'>
         <div className="Main_Conatiner_table">
           <div className='table-heading'>
-            <h2 className="">Staff Attendance List </h2>
+            <h2 className="">Staff Attendance Report </h2>
           </div>
-
-          <div className="search_text_conatiner">
-            <button className='search_field_button' onClick={() => navigate('/Emp_Attendance')}><FontAwesomeIcon icon={faPlus} /> Upload Attendance Sheet</button>
-            <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
-            {/* <SearchDropdown /> */}
-          </div>
-
           <div className="table_Container">
             <table >
               <thead>
@@ -86,7 +77,7 @@ const Emp_Details_List=()=>{
                 <th scope="col">attendance Date</th>
                 <th scope="col">checkIn Time</th>
                 <th scope="col">checkOut Time</th>
-                {/* <th scope="col">View</th> */}
+                <th scope="col">View</th>
                
                 </tr>
               </thead>
@@ -102,15 +93,15 @@ const Emp_Details_List=()=>{
                         <td data-label="attendanceDate">{formatDate(data.attendanceDate)}</td>
                         <td>{formatTime(data.checkInTime)}</td>
                         <td>{formatTime(data.checkOutTime)}</td>
-                        {/* <td data-label="View">
+                        <td data-label="View">
                           <Link
                             to={{
-                              pathname: '/mdm/edit-amenities',
+                              pathname: '/',
                               search: `?a=${encodeURIComponent(encryptDataId(data.facilityStaffAttendanceId))}&action=view`}}
                           >
                             <FontAwesomeIcon icon={faEye} />
                           </Link>
-                        </td> */}
+                        </td>
                       
                       </tr>
                     )
@@ -124,4 +115,4 @@ const Emp_Details_List=()=>{
         </div>
     )
 }
-export default Emp_Details_List;
+export default Emp_List_Report;
