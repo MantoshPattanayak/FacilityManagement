@@ -10,12 +10,14 @@ import {formatDate,formatTime} from "../../../utils/utilityFunctions"
 import "./Emp_List_Report.css"
 
 const Emp_List_Report=()=>{
+
   let navigate = useNavigate();
   let limit = 10;
   let page = 1;
 
   const [tableData, setTableData] = useState([]);
   const [givenReq, setGivenReq] = useState('');
+
   // API call to fetch list of saved amenities
   async function fetchAmenitiesList(givenReq = null) {
     try {
@@ -28,7 +30,6 @@ const Emp_List_Report=()=>{
       setTableData([]);
     }
   }
-  // Generate the CSV file of Report....
   
   // function to manage API calls while user search input entry
   function debounce(fn, delay) {
@@ -40,6 +41,7 @@ const Emp_List_Report=()=>{
       }, delay);
     }
   }
+
   //Debounced fetchFacilityList function while searching
   const debouncedFetchUserList = useCallback(debounce(fetchAmenitiesList, 1000), []);
 
@@ -66,6 +68,18 @@ const Emp_List_Report=()=>{
           <div className='table-heading'>
             <h2 className="">Staff Attendance Report </h2>
           </div>
+
+          <div className="search_text_conatiner">
+            {/* <button className='search_field_button' onClick={() => navigate('/Emp_Attendance')}><FontAwesomeIcon icon={faPlus} /> Upload Attendance Sheet</button> */}
+            <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
+            <span>
+            <button className='search_field_button mr-10'>Download Csv</button>
+            <button className='search_field_button ml-4'>Download pdf</button>
+            </span>
+            
+           
+          </div>
+
           <div className="table_Container">
             <table >
               <thead>
@@ -96,7 +110,7 @@ const Emp_List_Report=()=>{
                         <td data-label="View">
                           <Link
                             to={{
-                              pathname: '/',
+                              pathname: '/mdm/edit-amenities',
                               search: `?a=${encodeURIComponent(encryptDataId(data.facilityStaffAttendanceId))}&action=view`}}
                           >
                             <FontAwesomeIcon icon={faEye} />
