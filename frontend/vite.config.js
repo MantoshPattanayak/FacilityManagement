@@ -42,21 +42,22 @@ export default defineConfig({
     outDir: '../dist/frontend',
     emptyOutDir: true,
     chunkSizeWarningLimit: 1000, // Set the limit in KB
-    // rollupOptions: {
-    //   output: {
-    //     manualChunks(id) {
-    //       if (id.includes('node_modules')) {
-    //         if (id.includes('react') || id.includes('react-dom')) {
-    //           return 'react-vendors';
-    //         }
-    //         if (id.includes('lodash')) {
-    //           return 'lodash';
-    //         }
-    //         return 'vendor';
-    //       }
-    //     },
-    //   },
-    // },
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // if (id.includes('react') || id.includes('react-dom')) {
+            //   return 'react-vendors';
+            // }
+            // if (id.includes('lodash')) {
+            //   return 'lodash';
+            // }
+            // return 'vendor';
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        },
+      },
+    },
   },
   optimizeDeps: {
     exclude: ['node_modules', 'dist', 'build'], // Exclude directories from being watched
