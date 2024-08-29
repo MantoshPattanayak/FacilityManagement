@@ -23,7 +23,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: '5173'
   },
-  
+
   preview: {
     port: 5173
   },
@@ -42,21 +42,21 @@ export default defineConfig({
     outDir: '../dist/frontend',
     emptyOutDir: true,
     chunkSizeWarningLimit: 1000, // Set the limit in KB
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendors';
-            }
-            if (id.includes('lodash')) {
-              return 'lodash';
-            }
-            return 'vendor';
-          }
-        },
-      },
-    },
+    // rollupOptions: {
+    //   output: {
+    //     manualChunks(id) {
+    //       if (id.includes('node_modules')) {
+    //         if (id.includes('react') || id.includes('react-dom')) {
+    //           return 'react-vendors';
+    //         }
+    //         if (id.includes('lodash')) {
+    //           return 'lodash';
+    //         }
+    //         return 'vendor';
+    //       }
+    //     },
+    //   },
+    // },
   },
   optimizeDeps: {
     exclude: ['node_modules', 'dist', 'build'], // Exclude directories from being watched
