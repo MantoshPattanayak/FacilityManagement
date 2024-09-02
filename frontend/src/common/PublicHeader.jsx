@@ -51,7 +51,7 @@ export default function PublicHeader() {
   useEffect(() => {
     setIsUserLoggedIn(sessionStorage?.getItem("isUserLoggedIn") || 0);
     // if (!isLanguageContentFetched) {
-    getWebContent();
+    // getWebContent();
     // }
   }, [refresh]);
 
@@ -90,7 +90,7 @@ export default function PublicHeader() {
   }
 
   useEffect(() => {
-    getWebContent();
+    // getWebContent();
     if (isUserLoggedIn) GetTotalNumberofCart();
   }, []);
 

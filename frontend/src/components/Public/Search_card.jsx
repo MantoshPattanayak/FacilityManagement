@@ -256,8 +256,8 @@ function Search_Card() {
                     src={`${instance().baseURL}/static${d.url}`} alt={"image"} /> {/* Updated to use imageURL from data */}
                     <div className="card_text">
                       <span className="Name_location">
-                        <h2 className="park_name">{d.facilityname}</h2>
-                        <h3 className="park_location">{d.address}</h3>
+                        <h2 className="park_name">{d.facilityname || d.eventName}</h2>
+                        <h3 className="park_location">{d.address || d.locationName}</h3>
 
                       </span>
                       <span className="Avil_Dis">
