@@ -467,7 +467,7 @@ let viewTariff = async (req, res) => {
         // `, {
         //     type: QueryTypes.SELECT
         // })
-        let fetchTheFacilityNameWRTTariffType = await sequelize.query(` select f.facilityname,t.tariffTypeId, t.entityId  from facilities f 
+        let fetchTheFacilityNameWRTTariffType = await sequelize.query(` select f.facilityname,t.tariffTypeId, t.entityId, f.facilityId  from facilities f 
                 inner join tariffmasters t       
                 on f.facilityId = t.facilityId where t.statusId = ? 
                             `,{
@@ -482,7 +482,7 @@ let viewTariff = async (req, res) => {
                                 replacements:[statusId,statusId]
                             })
 
-        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryId as activityId ,fa.facilityname,  fa.facilityTypeId, e2.eventCategoryName as tariffType,e.facilityId  from amabhoomi.eventactivities e 
+        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryName as tariffType, fa.facilityname,  fa.facilityTypeId, e2.eventCategoryId as activityId , e.facilityId  from amabhoomi.eventactivities e 
                             inner join amabhoomi.eventcategorymasters e2 
                             on e2.eventCategoryId = e.eventCategoryId 
                             inner join facilities fa on fa.facilityId = e.facilityId
@@ -506,14 +506,15 @@ let viewTariff = async (req, res) => {
         // console.log('fetchTheFacilityNameWRTTariffType', fetchTheFacilityNameWRTTariffType)
         if(fetchTheFacilityNameWRTTariffType.length > 0){
            wholeFacilityData = wholeFacilityData.map(eachData=>{
-            let matchedItem = fetchTheFacilityNameWRTTariffType.find(eachItem=>eachData.tariffTypeId == eachItem.tariffTypeId)
+            let matchedItem = fetchTheFacilityNameWRTTariffType.find(eachItem=>eachData.tariffTypeId == eachItem.tariffTypeId && eachItem.entityId == eachData.activityId && eachItem.facilityId == eachData.facilityId)
+            console.log('matchedItem',matchedItem)
             return matchedItem ? { ...eachData, tariffCheck: 1 } : eachData
            })
             
         }
 
      
-        console.log(wholeFacilityData,'wholefacilityData')
+        // console.log(wholeFacilityData,'wholefacilityData')
 
         let paginatedTariff = wholeFacilityData.slice(offset, offset + limit);
 
