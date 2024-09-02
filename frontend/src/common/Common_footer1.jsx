@@ -83,10 +83,10 @@ const CommonFooter1 = () => {
   return (
     <div>
         <div className="footer_set_logo">
-        <img  className="ama_footer_logo  h-20  " src={foooter3_image}></img>
-          <img className="ama_footer_logo  h-20 " src={footer1_image}></img>
-          <img className="ama_footer_logo h-24 "  src={footer4_image}></img>
-         <img  className="ama_footer_logo h-20 " src={footer2_image}></img>
+        <img  className="ama_footer_logo  h-20" src={foooter3_image}></img>
+          <img className="ama_footer_logo  h-20" src={footer1_image}></img>
+          <img className="ama_footer_logo h-24"  src={footer4_image}></img>
+         <img  className="ama_footer_logo h-20" src={footer2_image}></img>
      
     
         
