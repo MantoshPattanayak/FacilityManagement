@@ -8,12 +8,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import Grivance_image from '../../../assets/Gri12.png'
 import Feedback from  '../../../assets/Feedback1.jpg'
+import { useSelector } from "react-redux";
+
 const Grievance = () => {
   const [selectedForm, setSelectedForm] = useState("Grievance");
 
   const handleFormChange = (event) => {
     setSelectedForm(event.target.value);
   };
+  const language = useSelector(
+    (state) => state.language.language || localStorage.getItem("language")
+  );
 
   return (
     <div>
@@ -29,8 +34,10 @@ const Grievance = () => {
       <div className="grievenceForm">
     
         <p className="p_text_Grievance_feedback">
-          If you want to lodge a {selectedForm.toLowerCase()}, kindly fill the
-          following {selectedForm.toLowerCase()} registration form!
+          { language == "EN" && <>If you want to lodge a {selectedForm.toLowerCase()}, 
+          kindly fill the following {selectedForm.toLowerCase()} registration form!</> }
+          { language == "OD" && selectedForm == "Grievance" && <>ଯଦି ଆପଣ ଏକ ଅଭିଯୋଗ ଦାଖଲ କରିବାକୁ ଚାହାଁନ୍ତି, ଦୟାକରି ନିମ୍ନଲିଖିତ ଅଭିଯୋଗ ପଞ୍ଜୀକରଣ ଫର୍ମ ପୂରଣ କରନ୍ତୁ!</> }
+          { language == "OD" && selectedForm == "Feedback" && <>ଯଦି ଆପଣ ଏକ ମତାମତ ଦେବାକୁ ଚାହୁଁଛନ୍ତି, ଦୟାକରି ନିମ୍ନଲିଖିତ ମତାମତ ପଞ୍ଜୀକରଣ ଫର୍ମ ପୂରଣ କରନ୍ତୁ!</> }
         </p>
 
         <div className="radiobutton">
@@ -92,6 +99,9 @@ const GrievanceForm = () => {
     useState(true);
   const [isValidCaptcha, setIsValidCaptcha] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const language = useSelector(
+    (state) => state.language.language || localStorage.getItem("language")
+  );
 
   const characters = "abc123";
 

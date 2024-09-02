@@ -21,8 +21,9 @@ const ViewTariffList = () => {
                 givenReq: givenReq,
                 facilityTypeId: null,
             });
-            setTableData(res.data.tariffData);
             console.log("Table Data:", res);
+            setTableData(res.data.tariffData);
+           
         }
         catch (error) {
             console.error(error);
@@ -84,8 +85,8 @@ const ViewTariffList = () => {
                                     return (
                                         <tr key={data.index}>
                                             {/* <td data-label="Sl No.">{index + 1}</td> */}
-                                            <td data-label="Facility Name">{data.facilityName}</td>
-                                            <td data-label="Tariff for">{data.activitiesEventName}</td>
+                                            <td data-label="Facility Name">{data.facilityname}</td>
+                                            <td data-label="Tariff for">{data.tariffType}</td>
                                             {data.tariffCheck == 0 ? (
                                                 <td data-label="View">
                                                     <Link
@@ -109,9 +110,8 @@ const ViewTariffList = () => {
                                                     <Link
                                                         to={{
                                                             pathname: '/mdm/Tariff_View_Details',
-                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=Edit`
-                                                        }}
-                                                        title='Edit'
+
+                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&activityId=${encryptDataId(data.activityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=Edit`}}title='Edit'
                                                     >
                                                         <FontAwesomeIcon icon={faPenToSquare} />
                                                     </Link>
@@ -125,7 +125,7 @@ const ViewTariffList = () => {
                                                     <Link
                                                         to={{
                                                             pathname: '/mdm/Tariff_View_Details',
-                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&entityId=${encryptDataId(data.entityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=View`
+                                                            search: `?facilityId=${encryptDataId(data.facilityId)}&facilityTypeId=${encryptDataId(data.facilityTypeId)}&activityId=${encryptDataId(data.activityId)}&tariffTypeId=${encryptDataId(data.tariffTypeId)}&action=View`
                                                         }}
                                                         title='View'
                                                     >
