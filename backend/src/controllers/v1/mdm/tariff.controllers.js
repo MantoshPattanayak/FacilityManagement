@@ -131,7 +131,7 @@ let createTariff = async (req, res) => {
 
             if (!createTariffData) {
                 await transaction.rollback();
-                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(`failed to create the tariff for operating hours from ${operatingHoursFrom} `)
+                return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`failed to create the tariff for operating hours from ${operatingHoursFrom}`} )
 
             }
 
@@ -389,7 +389,8 @@ let viewTariff = async (req, res) => {
         let offset = (page - 1) * limit;
         let givenReq = req.body.givenReq ? req.body.givenReq.toString().toLowerCase() : null;
         let statusId = 1;
-        let findViewTariff
+        // let findViewTariff
+        let wholeFacilityData = [];
         // if(givenReq){
         //      findViewTariff = await facilities.findAll({
         //         where:{
@@ -410,75 +411,121 @@ let viewTariff = async (req, res) => {
         //     });
         // }
 
-        findViewTariff = await sequelize.query(`
-        select query.* from
-        (
-            SELECT f.facilityName, f.facilityId, t2.tariffTypeId, t2.name as tariffType,f.facilityTypeId,
-                uam.userActivityId AS entityId, uam.userActivityName AS activitiesEventName,
-                CASE
-                WHEN EXISTS (SELECT 1 FROM tarifftypes tt
-                        JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
-                        WHERE tt.code = 'ACTIVITIES' AND tm.facilityId = f.facilityId
-                    ) THEN 1
-                    ELSE 0
-                END AS tariffCheck
-            FROM facilities f
-            LEFT JOIN
-                facilityactivities fa ON f.facilityId = fa.facilityId
-            LEFT JOIN
-                useractivitymasters uam ON fa.activityId = uam.userActivityId
-            left join tariffmasters t on t.facilityId = f.facilityId
-            left join tarifftypes t2 on t2.tariffTypeId = t.tariffTypeId
-            WHERE
-                fa.id IS NOT null
-            group by f.facilityname, f.facilityId, t2.tariffTypeId,f.facilityTypeId,uam.userActivityId,uam.userActivityName,tariffCheck
-            union all
-            SELECT
-                f.facilityname AS facilityName,
-                f.facilityId,
-                t2.tariffTypeId,
-                t2.name as tariffType,
-                f.facilityTypeId,
-                ecm.eventCategoryId as entityId,
-                ecm.eventCategoryName AS activitiesEventName,
-                CASE
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM tarifftypes tt
-                        JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
-                        WHERE tt.code = 'HOST_EVENT'
-                        AND tm.facilityId = f.facilityId
-                    ) THEN 1
-                    ELSE 0
-                END AS tariffCheck
-            FROM
-                facilities f
-            LEFT JOIN
-                facilityevents fe ON f.facilityId = fe.facilityId
-            LEFT JOIN
-                eventcategorymasters ecm ON fe.eventCategoryId = ecm.eventCategoryId
-            left join tariffmasters t on t.facilityId = f.facilityId
-            left join tarifftypes t2 on t2.tariffTypeId = t.tariffTypeId
-            WHERE
-                fe.facilityEventId IS NOT null
-            group by f.facilityname, f.facilityId, t2.tariffTypeId,f.facilityTypeId,ecm.eventCategoryId,ecm.eventCategoryName,tariffCheck
-        ) query
-        `, {
-            type: QueryTypes.SELECT
+        // findViewTariff = await sequelize.query(`
+        // select query.* from
+        // (
+        //     SELECT f.facilityName, f.facilityId, t2.tariffTypeId, t2.name as tariffType,f.facilityTypeId,
+        //         uam.userActivityId AS entityId, uam.userActivityName AS activitiesEventName,
+        //         CASE
+        //         WHEN EXISTS (SELECT 1 FROM tarifftypes tt
+        //                 JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
+        //                 WHERE tt.code = 'ACTIVITIES' AND tm.facilityId = f.facilityId
+        //             ) THEN 1
+        //             ELSE 0
+        //         END AS tariffCheck
+        //     FROM facilities f
+        //     LEFT JOIN
+        //         facilityactivities fa ON f.facilityId = fa.facilityId
+        //     LEFT JOIN
+        //         useractivitymasters uam ON fa.activityId = uam.userActivityId
+        //     left join tariffmasters t on t.facilityId = f.facilityId
+        //     left join tarifftypes t2 on t2.tariffTypeId = t.tariffTypeId
+        //     WHERE
+        //         fa.id IS NOT null
+        //     group by f.facilityname, f.facilityId, t2.tariffTypeId,f.facilityTypeId,uam.userActivityId,uam.userActivityName,tariffCheck
+        //     union all
+        //     SELECT
+        //         f.facilityname AS facilityName,
+        //         f.facilityId,
+        //         t2.tariffTypeId,
+        //         t2.name as tariffType,
+        //         f.facilityTypeId,
+        //         ecm.eventCategoryId as entityId,
+        //         ecm.eventCategoryName AS activitiesEventName,
+        //         CASE
+        //             WHEN EXISTS (
+        //                 SELECT 1
+        //                 FROM tarifftypes tt
+        //                 JOIN tariffmasters tm ON tm.tariffTypeId = tt.tariffTypeId
+        //                 WHERE tt.code = 'HOST_EVENT'
+        //                 AND tm.facilityId = f.facilityId
+        //             ) THEN 1
+        //             ELSE 0
+        //         END AS tariffCheck
+        //     FROM
+        //         facilities f
+        //     LEFT JOIN
+        //         facilityevents fe ON f.facilityId = fe.facilityId
+        //     LEFT JOIN
+        //         eventcategorymasters ecm ON fe.eventCategoryId = ecm.eventCategoryId
+        //     left join tariffmasters t on t.facilityId = f.facilityId
+        //     left join tarifftypes t2 on t2.tariffTypeId = t.tariffTypeId
+        //     WHERE
+        //         fe.facilityEventId IS NOT null
+        //     group by f.facilityname, f.facilityId, t2.tariffTypeId,f.facilityTypeId,ecm.eventCategoryId,ecm.eventCategoryName,tariffCheck
+        // ) query
+        // `, {
+        //     type: QueryTypes.SELECT
+        // })
+        let fetchTheFacilityNameWRTTariffType = await sequelize.query(` select f.facilityname,t.tariffTypeId, t.entityId  from facilities f 
+                inner join tariffmasters t       
+                on f.facilityId = t.facilityId where t.statusId = ? 
+                            `,{
+            replacements:[statusId],
+            type:QueryTypes.SELECT
         })
+        let findTheActivityDetails = await sequelize.query(` select u.userActivityName as tariffType,fa.facilityname, u.userActivityId as activityId, f.facilityId, f.facilityTypeId as tariffTypeId  from amabhoomi.facilityactivities f inner 
+                            join useractivitymasters u on u.userActivityId = f.activityId
+                            inner join facilities fa on fa.facilityId = f.facilityId
+                            where f.statusId = ?  and u.statusId = ? `,{
+                                type:QueryTypes.SELECT,
+                                replacements:[statusId,statusId]
+                            })
 
-        let paginatedTariff = findViewTariff.slice(offset, offset + limit);
+        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryId as activityId ,fa.facilityname, e2.eventCategoryName as tariffType,e.facilityId  from amabhoomi.eventactivities e 
+                            inner join amabhoomi.eventcategorymasters e2 
+                            on e2.eventCategoryId = e.eventCategoryId 
+                            inner join facilities fa on fa.facilityId = e.facilityId
+                            where e.statusId = ? and e2.statusId = ?`,{
+                                type:QueryTypes.SELECT,
+                                replacements:[statusId,statusId] 
+                            })
+        
+        if(findTheEventDetails.length>0){
+            for(let i of findTheEventDetails){
+                i.tariffTypeId = 3
+            }
+        }
+        wholeFacilityData = findTheActivityDetails.concat(findTheEventDetails)
+
+        if(wholeFacilityData.length>0){
+            for(let i of wholeFacilityData){
+                i.tariffCheck = 0
+            }
+        }
+        // console.log('fetchTheFacilityNameWRTTariffType', fetchTheFacilityNameWRTTariffType)
+        if(fetchTheFacilityNameWRTTariffType.length > 0){
+           wholeFacilityData = wholeFacilityData.map(eachData=>{
+            let matchedItem = fetchTheFacilityNameWRTTariffType.find(eachItem=>eachData.tariffTypeId == eachItem.tariffTypeId)
+            return matchedItem ? { ...eachData, tariffCheck: 1 } : eachData
+           })
+            
+        }
+
+     
+        console.log(wholeFacilityData,'wholefacilityData')
+
+        let paginatedTariff = wholeFacilityData.slice(offset, offset + limit);
 
         if(givenReq) {
             paginatedTariff = paginatedTariff.filter((data) => {
-               if ( data.facilityName?.toLowerCase().includes(givenReq) 
-                || data.tariffType?.toLowerCase().includes(givenReq)
-                || data.activitiesEventName?.toLowerCase().includes(givenReq) )
+               if ( data.facilityname?.toLowerCase().includes(givenReq) 
+                || data.tariffType?.toLowerCase().includes(givenReq))
                     return data; 
             });
         }
 
-        return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: paginatedTariff })
+        return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: wholeFacilityData })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message

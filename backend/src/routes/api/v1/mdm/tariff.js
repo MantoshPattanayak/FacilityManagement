@@ -10,7 +10,7 @@ router.post("/getTariffById", authenticateToken,tariffData.getTariffById);
 
 router.put("/updateTariff", authenticateToken,tariffData.updateTariff);
 
-router.post("/viewTariff", authenticateToken,tariffData.viewTariff);
+router.post("/viewTariff",authenticateToken,tariffData.viewTariff);
 
 router.post("/initialDataForTariffSelectionWRTCategory", authenticateToken,tariffData.initialDataForTariffSelectionWRTCategory);
 

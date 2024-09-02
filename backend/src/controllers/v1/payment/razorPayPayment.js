@@ -221,6 +221,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
     console.log('all data')
        // removed the cart items table
        if(userCartId){
+        console.log('usercartid', userCartId)
         let removeCartItems = await cartItemTable.update({
           statusId:removeCartStatus,
           updatedBy:userId,
@@ -234,6 +235,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
       }
       )
       if(removeCartItems.length==0){
+        console.log('inside remove cart status of verification function')
         await transaction.rollback();
         return ({
           error:`Something went wrong`
@@ -418,6 +420,7 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
           )
           console.log('bookingDetals',findTheBookingDetails)
         if(findTheBookingDetails.length == 0){
+          console.log('inside booking Details ')
           await transaction.rollback();
           return ({
             error:`Something went wrong`
@@ -434,10 +437,12 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
   
           // console.log(findFacilityInformation,'findFacilityInformation')
           if(!findFacilityInformation){
+            console.log('facilityDetails information is not present')
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
               message:`Something went wrong `
             })
           }
+              console.log('if facility details is present')
               let title = findFacilityInformation.facilityname;
                   let bookingRef = findTheBookingDetails[0].bookingReference;
                   let location = findFacilityInformation.address;
@@ -447,17 +452,20 @@ let verificationWithTicketGenerate = async (userCartId,removeCartStatus,insertTo
                   let totalMembers = findTheBookingDetails[0].totalMembers;
                   let combinedData = `${findTheBookingDetails[0].facilityBookingId},${findTheBookingDetails[0].facilityTypeId},${findTheBookingDetails[0].facilityId}`
                   let facilityBookingId = findTheBookingDetails[0].facilityBookingId
-  
+
                   let entityType = 'facilityBooking'
+                  console.log('457 line')
                    ticketUploadAndGeneratePdf = await uploadTicket(title, bookingRef, location, date, time, cost, totalMembers, combinedData, facilityBookingId, userId, entityType)
-  
+                   console.log('459 line')
                   if (ticketUploadAndGeneratePdf?.error) {
+                    console.log('461 line')
                     await transaction.rollback();
                     return ({
                       error: ticketUploadAndGeneratePdf.error
                     })
                       
                   }
+                  console.log('467 line')
                 ticketUploadArray.push({
                   shareableLink:ticketUploadAndGeneratePdf.shareableLink,
                   entityId:findTheBookingDetails[0].facilityId,

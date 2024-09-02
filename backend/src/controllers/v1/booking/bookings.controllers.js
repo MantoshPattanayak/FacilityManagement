@@ -247,7 +247,7 @@ let uploadTicket = async (title, bookingRef, location, date, time, cost, totalMe
 
         let createdDt = new Date();
         let updatedDt = new Date();
-        console.log(title, bookingRef, location, date, time, cost, totalMembers, combinedData, 'all data')
+        console.log(title, bookingRef, location,'location', date, time, cost, totalMembers, combinedData, 'all upload ticket data')
         const pdfBytes = await generatePDF({ title, bookingRef, location, date, time, cost, totalMembers, qrData });
         console.log(pdfBytes, 'pdf bytes')
         // generate pdf and share the link
@@ -1322,7 +1322,7 @@ let generatePDF = async ({ title, bookingRef, location, date, time, cost, totalM
         color: rgb(0.36, 0.4, 0.45),
     });
 
-
+    console.log('1325')
     // Add location
     page.drawText('Location:', {
         x: 50,
@@ -1339,6 +1339,7 @@ let generatePDF = async ({ title, bookingRef, location, date, time, cost, totalM
         color: rgb(0.11, 0.11, 0.11),
     });
 
+    console.log('1342')
 
     // Add date and time
     page.drawText(`Date`, {
