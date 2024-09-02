@@ -19,7 +19,7 @@ const Tariff_View_Details = () => {
     new URLSearchParams(location.search).get("facilityId")
   );
   const entityId = decryptData(
-    new URLSearchParams(location.search).get("entityId")
+    new URLSearchParams(location.search).get("activityId")
   );
   const tariffTypeId = decryptData(
     new URLSearchParams(location.search).get("tariffTypeId")
