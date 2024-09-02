@@ -525,7 +525,7 @@ let viewTariff = async (req, res) => {
             });
         }
 
-        return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: wholeFacilityData })
+        return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: paginatedTariff })
     } catch (err) {
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
