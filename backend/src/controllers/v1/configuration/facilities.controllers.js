@@ -505,7 +505,8 @@ const viewParkById = async (req,res)=>{
                 model:facilitiesTable
                 },
                 {
-                    model:userActivity
+                    model:userActivity,
+                    as: 'activityData'
                 }
             ]
         })
