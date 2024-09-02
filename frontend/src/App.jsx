@@ -129,6 +129,14 @@ const ViewStaffAllocation = React.lazy(() => import('./components/Admin/Activity
 const CreateStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/CreateStaffAllocation'))
 const EditStaffAllocation = React.lazy(() => import('./components/Admin/Activity/FacilityStaffAllocation/EditStaffAllocation'))
 const GreenwaysBookingPage=React.lazy(()=>import('./components/Public/BookParks/GreenWaysBookingPage'))
+// Emp_Attendance 
+const Emp_Attendance=React.lazy(()=>import("./components/Admin/Emp_Attendance/Emp_Attendance"))
+const Emp_Details_List=React.lazy(()=>import('./components/Admin/Emp_Attendance/Emp_Details_List'))
+// Report section ----------------------
+const Emp_List_Report=React.lazy(()=>import('./components/Admin/Reports/Emp_List_Report'))
+
+
+///
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
 // import provider for connect to our app
@@ -223,7 +231,6 @@ function App() {
                 <Route path="/UAC/Users/ListOfUsers" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><ListOfUsers /></ProtectedRoute></React.Suspense>} />
                 <Route path="/UAC/Users/Create" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <CreateNewUser /></ProtectedRoute></React.Suspense>} />
                 <Route path="/UAC/Users/Edit" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <EditUser /> </ProtectedRoute></React.Suspense>} />
-                
                 {/* Facility regd. */}
                 <Route path="/Facility/Facility_Reg" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_Reg /> </ProtectedRoute></React.Suspense>} />
                 <Route path="/Facility/Facility_ViewList" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Facility_ViewList /></ProtectedRoute></React.Suspense>} />
@@ -281,6 +288,10 @@ function App() {
                 <Route path="/EditActivities" element={<React.Suspense fallback={<ClassicLoader/>}><EditActivities /> </React.Suspense>} />
                 <Route path="/ViewActivityList" element={<React.Suspense fallback={<ClassicLoader/>}><ViewActivityList /> </React.Suspense>} />
                 <Route path="/CreateNewActivity" element={<React.Suspense fallback={<ClassicLoader/>}><CreateNewActivity /> </React.Suspense>} />
+                <Route path="/Emp_Attendance" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Attendance/></React.Suspense>} />
+                <Route path="/Emp_Details_List" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Details_List/></React.Suspense>} />
+                {/* Report section  */}
+                <Route path="/Emp_List_Report" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_List_Report/></React.Suspense>} />
               </Routes>
               <CommonFooter1 />
             </div>

@@ -39,7 +39,7 @@ const createResource = async (req, res) => {
       parentResourceId,
       remarks,
     } = req.body;
-    console.log("heee ", req.body)
+    console.log("req body data ", req.body)
     // check if the request body is empty
     // if (
     //   name &&
@@ -53,27 +53,40 @@ const createResource = async (req, res) => {
     //   status &&
     //   remarks
     // ) {
-      createResource = await resource.create({
-        name: name,
-        description: description,
-        hasSubMenu: hasSubMenu,
-        icon: icon || null,
-        iconId: iconId || null,
-        iconType: iconType || null,
-        orderIn: orderIn,
-        path: path,
-        statusId: status || 1,
-        remarks: remarks || null,
-        parentResourceId:parentResourceId || null
-      });
-      if (createResource) {
-        return res.status(statusCode.SUCCESS.code).json({
-          message: "Resource created successfully",
-        });
+    let checkDuplicateQuery = await resource.findOne({
+      where: {
+        name: name
       }
-      return res.status(statusCode.BAD_REQUEST.code).json({
-        message: "Resource is not created",
+    });
+    console.log("checkDuplicateQuery", checkDuplicateQuery);
+    
+    if(checkDuplicateQuery) {
+      return res.status(statusCode.CONFLICT.code).json({
+        message: "Resoure with entered name already exists."
+      })
+    }
+
+    createResource = await resource.create({
+      name: name,
+      description: description,
+      hasSubMenu: hasSubMenu,
+      icon: icon || null,
+      iconId: iconId || null,
+      iconType: iconType || null,
+      orderIn: orderIn,
+      path: path,
+      statusId: status || 1,
+      remarks: remarks || null,
+      parentResourceId: parentResourceId || null
+    });
+    if (createResource) {
+      return res.status(statusCode.SUCCESS.code).json({
+        message: "Resource created successfully",
       });
+    }
+    return res.status(statusCode.BAD_REQUEST.code).json({
+      message: "Resource is not created",
+    });
     // } else {
     //   return res.status(statusCode.BAD_REQUEST.code).json({
     //     message: "please provide all required details",
@@ -100,63 +113,63 @@ const updateResource = async (req, res) => {
       isParent
     } = req.body;
 
-    let params={}
-    
+    let params = {}
+
     let findResourcWithTheGivenId = await resource.findOne({
-      where:{
-        resourceId:resourceId
+      where: {
+        resourceId: resourceId
       }
     })
-    
-    if(findResourcWithTheGivenId.name!=name){
+
+    if (findResourcWithTheGivenId.name != name) {
       console.log('1')
-      params.name=name
+      params.name = name
     }
-    else if(findResourcWithTheGivenId.description!=description){
-      params.description=description
+    else if (findResourcWithTheGivenId.description != description) {
+      params.description = description
     }
-    else if(findResourcWithTheGivenId.parentResourceId!=parentResourceId && isParent){
+    else if (findResourcWithTheGivenId.parentResourceId != parentResourceId && isParent) {
       params.parentResourceId = parentResourceId
     }
-    else if(findResourcWithTheGivenId.hasSubMenu!=hasSubMenu){
+    else if (findResourcWithTheGivenId.hasSubMenu != hasSubMenu) {
       params.hasSubMenu = hasSubMenu
 
     }
-    else if(findResourcWithTheGivenId.path!=path){
+    else if (findResourcWithTheGivenId.path != path) {
       params.path = path
     }
-    else if(findResourcWithTheGivenId.orderIn!=orderIn){
+    else if (findResourcWithTheGivenId.orderIn != orderIn) {
       params.orderIn = orderIn
     }
-    else if(findResourcWithTheGivenId.statusId != statusId){
+    else if (findResourcWithTheGivenId.statusId != statusId) {
       params.statusId = statusId
     }
 
-// console.log('resource',findResourcWithTheGivenId)
+    // console.log('resource',findResourcWithTheGivenId)
 
-    let [updateResourceCount,updateResourceData] =  await resource
-    .update(
-      params,
-      {
-        where: { resourceId: resourceId }
-      }
-    )
+    let [updateResourceCount, updateResourceData] = await resource
+      .update(
+        params,
+        {
+          where: { resourceId: resourceId }
+        }
+      )
 
-    if(updateResourceCount>=0){
+    if (updateResourceCount >= 0) {
       return res.status(statusCode.SUCCESS.code).json({
-        message:"Data is updated successfully"
+        message: "Data is updated successfully"
       })
     }
-    else{
+    else {
       return res.status(statusCode.BAD_REQUEST.code).json({
-        message:"Data is not updated "
+        message: "Data is not updated "
       })
     }
 
-    
-    console.log(updateResourceData,'fsdfsd',updateResourceCount)
 
-     
+    console.log(updateResourceData, 'fsdfsd', updateResourceCount)
+
+
   } catch (error) {
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
@@ -193,17 +206,17 @@ ORDER BY
 
     `);
 
-  console.log(showAllResources,'all resources')
+    console.log(showAllResources, 'all resources')
     let givenReq = req.body.givenReq ? req.body.givenReq : null;
     console.log("Given req", givenReq);
     if (givenReq) {
       showAllResources = showAllResources.filter(
         (resourceData) => {
           return resourceData.name?.toLowerCase().includes(givenReq) ||
-          resourceData.description?.toLowerCase().includes(givenReq) ||
-          resourceData.parentResourceName?.toLowerCase().includes(givenReq) ||
-          resourceData.status?.toLowerCase().includes(givenReq)
-      });
+            resourceData.description?.toLowerCase().includes(givenReq) ||
+            resourceData.parentResourceName?.toLowerCase().includes(givenReq) ||
+            resourceData.status?.toLowerCase().includes(givenReq)
+        });
     }
     let paginatedshowAllResources = showAllResources.slice(
       offset,
@@ -224,46 +237,46 @@ ORDER BY
 let dataLoadResource = async (req, res) => {
   let client;
   try {
-      try {
-          const query1 = await resource.findAll({
-            attributes: [
-              [Sequelize.fn('DISTINCT', Sequelize.col('parentResourceId')), 'parentResourceId']
-              // Replace 'columnName' with the actual column name you want to find distinct values for
-            ]
-          });
-          const query2 = await resource.findAll({
-            attributes: [
-              [Sequelize.fn('DISTINCT', Sequelize.col('hasSubMenu')), 'hasSubMenu']
-              // Replace 'columnName' with the actual column name you want to find distinct values for
-            ]
-          });
-          const query3 = await resource.findAll({
-            attributes: [
-              [Sequelize.fn('DISTINCT', Sequelize.col('icon')), 'icon']
-              // Replace 'columnName' with the actual column name you want to find distinct values for
-            ]
-          });
-          const query4 = await resource.findAll({
-            attributes: [
-              [Sequelize.fn('DISTINCT', Sequelize.col('statusId')), 'statusId']
-              // Replace 'columnName' with the actual column name you want to find distinct values for
-            ]
-          });
+    try {
+      const query1 = await resource.findAll({
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('parentResourceId')), 'parentResourceId']
+          // Replace 'columnName' with the actual column name you want to find distinct values for
+        ]
+      });
+      const query2 = await resource.findAll({
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('hasSubMenu')), 'hasSubMenu']
+          // Replace 'columnName' with the actual column name you want to find distinct values for
+        ]
+      });
+      const query3 = await resource.findAll({
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('icon')), 'icon']
+          // Replace 'columnName' with the actual column name you want to find distinct values for
+        ]
+      });
+      const query4 = await resource.findAll({
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('statusId')), 'statusId']
+          // Replace 'columnName' with the actual column name you want to find distinct values for
+        ]
+      });
 
 
-          res.status(statusCode.SUCCESS.code).json({ parentResourceId: query1, hasSubMenu: query2, icon: query3, status: query4 });
+      res.status(statusCode.SUCCESS.code).json({ parentResourceId: query1, hasSubMenu: query2, icon: query3, status: query4 });
 
-      } catch (err) {
-          res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
-      }
+    } catch (err) {
+      res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
+    }
   } catch (e) {
-      res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: e.message });
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: e.message });
   }
   finally {
-      // Always release the connection, whether there was an error or not
-      if (client) {
-          client.release();
-      }
+    // Always release the connection, whether there was an error or not
+    if (client) {
+      client.release();
+    }
   }
 }
 
@@ -271,27 +284,27 @@ let dataLoadResource = async (req, res) => {
 let isParent = async (req, res) => {
   let client;
   try {
-    
-      const query1 = await resource.findAll({
-        where: {
-          parentResourceId: null
-        },
-        order: [
-          ['orderIn', 'ASC']
-        ]
-      });    
 
-  if (query1.length> 0) {
-          res.status(statusCode.SUCCESS.code).json({ message: 'parent data', data: query1 });
-      }
+    const query1 = await resource.findAll({
+      where: {
+        parentResourceId: null
+      },
+      order: [
+        ['orderIn', 'ASC']
+      ]
+    });
+
+    if (query1.length > 0) {
+      res.status(statusCode.SUCCESS.code).json({ message: 'parent data', data: query1 });
+    }
   } catch (err) {
-      res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
+    res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
   }
   finally {
-      // Always release the connection, whether there was an error or not
-      if (client) {
-          client.release();
-      }
+    // Always release the connection, whether there was an error or not
+    if (client) {
+      client.release();
+    }
   }
 }
 

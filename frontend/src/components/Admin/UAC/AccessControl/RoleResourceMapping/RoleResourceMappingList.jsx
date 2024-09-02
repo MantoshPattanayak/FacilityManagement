@@ -52,7 +52,7 @@ const RoleResourceMappingList = () => {
         <div className="search_text_conatiner">
           <button
             className="search_field_button"
-            onClick={() => navigate("/UAC/RoleResource/View")}
+            onClick={() => navigate("/UAC/RoleResource/CreateRoleResourceMapping")}
           >
             <FontAwesomeIcon icon={faPlus} /> Create Role-Resource
           </button>

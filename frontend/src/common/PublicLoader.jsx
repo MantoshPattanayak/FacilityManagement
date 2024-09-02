@@ -2,8 +2,8 @@
 import "./PublicLoader.css"
 const PublicLoader=()=>{
     return(
-        <div className="Loader_Public">
-      <   div class="hourglass"></div>
+      <div className="loader-overlay">
+            <div className="custom-loader"></div>
         </div>
        
     )
