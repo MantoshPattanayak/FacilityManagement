@@ -482,7 +482,7 @@ let viewTariff = async (req, res) => {
                                 replacements:[statusId,statusId]
                             })
 
-        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryName as tariffType, fa.facilityname,  fa.facilityTypeId, e2.eventCategoryId as activityId , e.facilityId  from amabhoomi.eventactivities e 
+        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryName as tariffType, fa.facilityname,  fa.facilityTypeId, e2.eventCategoryId as activityId , e.facilityId  from amabhoomi.facilityevents e 
                             inner join amabhoomi.eventcategorymasters e2 
                             on e2.eventCategoryId = e.eventCategoryId 
                             inner join facilities fa on fa.facilityId = e.facilityId

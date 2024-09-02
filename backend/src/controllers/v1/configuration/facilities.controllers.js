@@ -1266,14 +1266,27 @@ let findOverallSearch = async (req,res)=>{
                 let facilityIdsAfterNearByData = getNearByData.map(id => id.facilityId);
                 if(facilityIdsAfterNearByData.length>0){
                     console.log('inside facilityIds',facilityIds)
-                    eventQuery = await sequelize.query(`select e.*, fl.url from amabhoomi.eventactivities e inner join fileattachments fa on fa.entityId = e.eventId inner join files fl on fa.fileId = fl.fileId where e.facilityId in (:facilityIdsAfterNearByData) and fa.filePurpose = :filePurpose and fa.entityType = :entityType `,{
+                    eventQuery = await sequelize.query(`select * from amabhoomi.eventactivities facilityId in (:facilityIdsAfterNearByData)  `,{
                         type:QueryTypes.SELECT,
-                        replacements:{facilityIdsAfterNearByData,
-                            filePurpose:eventFilePurpose,
-                            entityType:eventEntityType
+                        replacements:{facilityIdsAfterNearByData
                         }
                     })
-                    console.log(eventQuery,'data')
+                    for(let eventData of eventQuery){
+                        let fetchTheEventImageQuery = await sequelize.query(`select fl.url from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
+                            where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`,{
+                                type:QueryTypes.SELECT,
+                                replacements:[eventData.eventId, eventEntityType ,eventFilePurpose,statusId,statusId]
+                            })
+                            if(fetchTheEventImageQuery.length > 0){
+                                eventData.url = fetchTheEventImageQuery[0].url
+                            }
+                            else{
+                                eventData.url = null
+                            }
+
+                    }
+                   
+
                 }
                 let findPark = getNearByData.filter(result=>result.facilityTypeId==1)
                 let findPlayground = getNearByData.filter(result=>result.facilityTypeId==2)
