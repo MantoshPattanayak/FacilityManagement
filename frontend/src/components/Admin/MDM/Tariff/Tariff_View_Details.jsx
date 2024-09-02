@@ -34,7 +34,7 @@ const Tariff_View_Details = () => {
   // Post Tariff Data and set Rows ------------------------------------------------
   const [tariffRows, setTariffRows] = useState([
     {
-      facilityId: '',
+      facilityId: facilityId,
       operatingHoursFrom: "",
       operatingHoursTo: "",
       dayWeek: {
@@ -46,8 +46,8 @@ const Tariff_View_Details = () => {
         fri: '',
         sat: ''
       },
-      tariffTypeId: '',
-      entityId: ''
+      tariffTypeId: tariffTypeId,
+      entityId: entityId
     }
   ]);
   // Get Initial Data here (Call api) -----------------------
@@ -110,14 +110,14 @@ const Tariff_View_Details = () => {
         autoClose: 2000,
         onClose: () => {
           setTimeout(() => {
-            navigate('/ViewTariffList');
+            navigate('/mdm/ViewTariffList');
           }, 1000);
         }
       });
       console.log("Here Response Post Tariff Data", res);
 
     } catch (err) {
-      toast.error('Faild to  Updated Tariff. Try agin22 !')
+      toast.error('Faild to  Updated Tariff. Try agin !')
       console.log("Here Error of Tariff Post data", err);
     }
   }
@@ -136,15 +136,7 @@ const Tariff_View_Details = () => {
       let res = await axiosHttpClient('Update_Tariff_Data', 'put', {
         facilityTariffData: existingRows
       })
-      toast.success('Tariff Updated has been done successfully.', {
-        autoClose: 2000,
-        onClose: () => {
-          setTimeout(() => {
-            navigate('/ViewTariffList');
-          }, 1000);
-        }
-      });
-      console.log("here Response of Tariff Updated", res)
+ 
 
     }
     catch (err) {
@@ -196,7 +188,7 @@ const Tariff_View_Details = () => {
     setTariffRows([
       ...tariffRows,
       {
-        facilityId: '',
+        facilityId:facilityId,
         operatingHoursFrom: '',
         operatingHoursTo: '',
         dayWeek: {
@@ -208,8 +200,8 @@ const Tariff_View_Details = () => {
           fri: '',
           sat: ''
         },
-        tariffTypeId:'',
-        entityId:'',
+        tariffTypeId:tariffTypeId,
+        entityId:entityId,
         isNew: true
       }
     ]);
