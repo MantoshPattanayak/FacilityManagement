@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import axiosHttpClient from "../../../utils/axios";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
-
+import { useSelector } from "react-redux";
 
 const ContactUs = () => {
     const [ContactwithUs, setContactwithUs] = useState({
@@ -27,6 +27,10 @@ const ContactUs = () => {
         emailId: '',
         message: ''
     }); // State to manage validation errors
+
+    const language = useSelector(
+        (state) => state.language.language || localStorage.getItem("language")
+    );
 
     // Function to handle form submission
     const HandleContactwithUsPage = async (e) => {
@@ -43,8 +47,8 @@ const ContactUs = () => {
 
         try {
             // Make API call
-            const res = await axiosHttpClient("contact_with_us_api",'post', {
-                patner:0,
+            const res = await axiosHttpClient("contact_with_us_api", 'post', {
+                patner: 0,
                 fullName: ContactwithUs.fullName,
                 mobileNo: ContactwithUs.mobileNo,
                 emailId: ContactwithUs.emailId,
@@ -84,7 +88,7 @@ const ContactUs = () => {
         }
         if (!values.emailId.trim()) {
             errors.emailId = "Please enter your email address";
-        } 
+        }
         if (!values.message.trim()) {
             errors.message = "Please write your message";
         }
@@ -96,29 +100,45 @@ const ContactUs = () => {
             <PublicHeader />
             <div className="ContactUs_Child">
                 <span className="ContactUs_Text">
-                    <h1 className="Contact_us_text"> Contact Us </h1>
-                    <p className="p_tag_contact">Feel Free to Contact us and we will get back to you as soon as it possible</p>
+                    <h1 className="Contact_us_text">
+                         { language == "EN" && <>Contact Us</> }
+                         { language == "OD" && <>ଯୋଗାଯୋଗ କରନ୍ତୁ</> }
+                    </h1>
+                    <p className="p_tag_contact">
+                        { language == "EN" && <>Feel free to contact us and we will get back to you as soon possible</> }
+                        { language == "OD" && <>ଦୟ।କରି ଆମ ସହ ଯୋଗାଯୋଗ କରନ୍ତୁ ଏବଂ ଆମେ ଆପଣଙ୍କୁ ଶୀଘ୍ର ଉତ୍ତର ଦେବୁ।</> }
+                        
+                    </p>
                 </span>
                 <span className="Contact_us_image">
                     <img className="Contact_image" src={ContactUsImage}></img>
                 </span>
             </div>
             <div className="Container_Contact">
-                <h1 className="Contact_us_text_name">Contact Us</h1>
+                <h1 className="Contact_us_text_name">
+                    { language == "EN" && <>Contact Us</> }
+                    { language == "OD" && <>ଯୋଗାଯୋଗ କରନ୍ତୁ</> }
+                </h1>
                 <div className="Child_Container_Contact">
                     <div className="Contact_Info_Container">
-                        <h1 className="get_touch">Get In Touch With Us.</h1>
+                        <h1 className="get_touch">
+                            { language == "EN" && <>Get In Touch With Us.</> }
+                            { language == "OD" && <>ଆମ ସହିତ ଯୋଗାଯୋଗ କରନ୍ତୁ |</> }
+                        </h1>
                         <div className="Contact_Info_Box">
                             <FontAwesomeIcon className="icon_contact" icon={faMapMarkerAlt} />
-                            <span className="Contact_Info_Text">Bhubaneswar Development Authority(BDA)</span>
+                            <span className="Contact_Info_Text">
+                                { language == "EN" && <>Bhubaneswar Development Authority (BDA)</> }
+                                { language == "OD" && <>ଭୁବନେଶ୍ୱର ଉନ୍ନୟନ କତ୍ତୃପକ୍ଷ (BDA)</> }
+                            </span>
                         </div>
                         <div className="Contact_Info_Box">
                             <FontAwesomeIcon className="icon_contact" icon={faEnvelope} />
-                            <span className="Contact_Info_Text">hello@example.com</span>
+                            <span className="Contact_Info_Text">bdabbsr1983@gmail.com</span>
                         </div>
                         <div className="Contact_Info_Box">
                             <FontAwesomeIcon className="icon_contact" icon={faPhone} />
-                            <span className="Contact_Info_Text">+1234567890</span>
+                            <span className="Contact_Info_Text">0674-2396437</span>
                         </div>
                     </div>
                     <div className="Form_Container">
@@ -130,7 +150,7 @@ const ContactUs = () => {
                                     onChange={handleChange}
                                     value={ContactwithUs.fullName}
                                 />
-                                  {showError.fullName && <div className="error text-red-800">{showError.fullName}</div>}
+                                {showError.fullName && <div className="error text-red-800">{showError.fullName}</div>}
                             </div>
                             <div className="Form_Field_contact">
                                 <label htmlFor="mobileNo">Mobile Number</label>
@@ -139,7 +159,7 @@ const ContactUs = () => {
                                     onChange={handleChange}
                                     value={ContactwithUs.mobileNo}
                                 />
-                                 {showError.mobileNo && <div className="error text-red-800">{showError.mobileNo}</div>}
+                                {showError.mobileNo && <div className="error text-red-800">{showError.mobileNo}</div>}
                             </div>
                             <div className="Form_Field_contact">
                                 <label htmlFor="emailId">Email ID</label>
@@ -148,7 +168,7 @@ const ContactUs = () => {
                                     onChange={handleChange}
                                     value={ContactwithUs.emailId}
                                 />
-                                 {showError.emailId && <div className="error text-red-800">{showError.emailId}</div>}
+                                {showError.emailId && <div className="error text-red-800">{showError.emailId}</div>}
                             </div>
 
                             <div className="Form_Field_contact">
@@ -158,7 +178,7 @@ const ContactUs = () => {
                                     onChange={handleChange}
                                     value={ContactwithUs.message}
                                 ></textarea>
-                                 {showError.message && <div className="error text-red-800">{showError.message}</div>}
+                                {showError.message && <div className="error text-red-800">{showError.message}</div>}
                             </div>
                             <button className="button-3" role="button">Submit</button>
                             <ToastContainer />
