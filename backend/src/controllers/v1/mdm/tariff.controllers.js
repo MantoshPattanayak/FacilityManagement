@@ -474,7 +474,7 @@ let viewTariff = async (req, res) => {
             replacements:[statusId],
             type:QueryTypes.SELECT
         })
-        let findTheActivityDetails = await sequelize.query(` select u.userActivityName as tariffType,fa.facilityname, u.userActivityId as activityId, f.facilityId, f.facilityTypeId as tariffTypeId  from amabhoomi.facilityactivities f inner 
+        let findTheActivityDetails = await sequelize.query(` select u.userActivityName as tariffType,fa.facilityname, fa.facilityTypeId, u.userActivityId as activityId, f.facilityId, f.facilityTypeId as tariffTypeId  from amabhoomi.facilityactivities f inner 
                             join useractivitymasters u on u.userActivityId = f.activityId
                             inner join facilities fa on fa.facilityId = f.facilityId
                             where f.statusId = ?  and u.statusId = ? `,{
@@ -482,7 +482,7 @@ let viewTariff = async (req, res) => {
                                 replacements:[statusId,statusId]
                             })
 
-        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryId as activityId ,fa.facilityname, e2.eventCategoryName as tariffType,e.facilityId  from amabhoomi.eventactivities e 
+        let findTheEventDetails = await sequelize.query(` select e2.eventCategoryId as activityId ,fa.facilityname,  fa.facilityTypeId, e2.eventCategoryName as tariffType,e.facilityId  from amabhoomi.eventactivities e 
                             inner join amabhoomi.eventcategorymasters e2 
                             on e2.eventCategoryId = e.eventCategoryId 
                             inner join facilities fa on fa.facilityId = e.facilityId
