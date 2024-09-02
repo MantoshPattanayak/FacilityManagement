@@ -1151,6 +1151,7 @@ let findOverallSearch = async (req,res)=>{
         let facilityEntityType = 'facilities'
         let eventFilePurpose = 'Event Image'
         let eventEntityType = 'events'
+        let statusId = 1;
         console.log('givenReq',givenReq)
         givenReq = givenReq.toLowerCase();
         let findFacilityData = await sequelize.query(`select f.facilityId,f.facilityname, f.address from amabhoomi.facilities f `,{type:QueryTypes.SELECT
@@ -1228,22 +1229,31 @@ let findOverallSearch = async (req,res)=>{
         // Fetch facility data based on matched facilityIds
         if(facilityIds.length>0){
             const facilities = await sequelize.query(`
-                SELECT f.*,fl.url as imageURL
-                FROM amabhoomi.facilities f  
-                inner join fileattachments fa on fa.entityId = f.facilityId 
-                inner join files fl on fa.fileId = fl.fileId 
-                where facilityId IN (:facilityIds) and fa.filePurpose = :filePurpose and fa.entityType = :entityType
+                SELECT *
+                FROM amabhoomi.facilities   
+                where facilityId IN (:facilityIds) 
                  
             `, {
-                replacements: { facilityIds,
-                    filePurpose:facilityFilePurpose,
-                    entityType:facilityEntityType
+                replacements: { facilityIds
                  },
                 type: Sequelize.QueryTypes.SELECT
             });
             if(facilities.length>0){
-                for (const data of facilities) {
-                    console.log('data',data,'fetchFacilitiesData')
+                for (let data of facilities) {
+                    // console.log('datafacility',data.facilityId)
+                    let fetchTheFacilityImageQuery = await sequelize.query(`select fl.url as imageURL from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
+                    where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`,{
+                        type:QueryTypes.SELECT,
+                        replacements:[data.facilityId, facilityEntityType ,facilityFilePurpose,statusId,statusId]
+                    })
+                    console.log(fetchTheFacilityImageQuery,'fetchTheimagefacilityQuery')
+                    if(fetchTheFacilityImageQuery.length > 0){
+                        data.imageURL = fetchTheFacilityImageQuery[0].imageURL
+                    }
+                    else{
+                        data.imageURL = null
+                    }
+                    // console.log('data',data,'fetchFacilitiesData')
                     let distance = calculateDistance(latitude, longitude, data.latitude, data.longitude);
                     if (distance <= range) {
                         console.log('distance', distance)
