@@ -1266,7 +1266,7 @@ let findOverallSearch = async (req,res)=>{
                 let facilityIdsAfterNearByData = getNearByData.map(id => id.facilityId);
                 if(facilityIdsAfterNearByData.length>0){
                     console.log('inside facilityIds',facilityIds)
-                    eventQuery = await sequelize.query(`select * from amabhoomi.eventactivities facilityId in (:facilityIdsAfterNearByData)  `,{
+                    eventQuery = await sequelize.query(`select * from amabhoomi.eventactivities where facilityId in (:facilityIdsAfterNearByData)  `,{
                         type:QueryTypes.SELECT,
                         replacements:{facilityIdsAfterNearByData
                         }
