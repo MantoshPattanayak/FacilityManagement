@@ -30,10 +30,10 @@ const About = () => {
         <img src=""></img>
       </div>
       <div className="About_div">
-        <h1 className="About_heading">
+        {/* <h1 className="About_heading">
           {!language || language == "EN" && "About"}
           {language == "OD" && "ବିଷୟରେ"}
-        </h1>
+        </h1> */}
         <div className="About_us_flex_conatiner">
           <div className="About_us_text">
             <h1 className="About_us_text_details font-sans">
