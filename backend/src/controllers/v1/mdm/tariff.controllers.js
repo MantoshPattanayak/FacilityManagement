@@ -537,6 +537,7 @@ let viewTariff = async (req, res) => {
 let initialDataForTariffSelectionWRTCategory = async (req, res) => {
     try {
         let { facilityId, tariffTypeId } = req.body
+        console.log('tariffType',facilityId, tariffTypeId)
         let statusId = 1;
         let findTheNameOfThoseActivities;
         let findTheNameOfThoseSports;
@@ -546,14 +547,16 @@ let initialDataForTariffSelectionWRTCategory = async (req, res) => {
         let tariffTypeQuery = await tarifftype.findAll({ where: { statusId: statusId } })
 
         if (facilityId) {
+            console.log('facilityId')
             findFacilityTypeIdFromFacilityTable = await facilities.findOne({
                 where: {
                     [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
                 }
             })
         }
-
+        console.log(facilityId,tariffTypeId,'data')
         if (facilityId && tariffTypeId == 1) {
+            console.log('tariffTypeId43',tariffTypeId)
             findTheNameOfThoseActivities = await faciltyActivity.findAll({
                 where: {
                     [Op.and]: [{ facilityTypeId: { [Op.ne]: 2 } }, { statusId: statusId }, { facilityId: facilityId }]
@@ -575,8 +578,10 @@ let initialDataForTariffSelectionWRTCategory = async (req, res) => {
                 activityData: findTheNameOfThoseActivities
             })
         }
-        if (findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId == 2) {
+        console.log('inside tariff',findFacilityTypeIdFromFacilityTable.facilityTypeId)
 
+        if (findFacilityTypeIdFromFacilityTable?.facilityTypeId == 2 && facilityId && tariffTypeId == 2) {
+            console.log('tariffTypeId = 2 ',tariffTypeId)
             findTheNameOfThoseSports = await faciltyActivity.findAll({
                 where: {
                     [Op.and]: [{ facilityTypeId: { [Op.eq]: 2 } }, { statusId: statusId }, { facilityId: facilityId }]
@@ -584,7 +589,7 @@ let initialDataForTariffSelectionWRTCategory = async (req, res) => {
                 include: [
                     {
                         model: useractivitymaster,
-                        as: 'activityDetails',
+                        as: 'activityData',
 
                         attributes: [['userActivityId', 'activityId'], ['userActivityName', 'activityName']]
                         // Add any additional options for the included model here if needed
@@ -602,7 +607,7 @@ let initialDataForTariffSelectionWRTCategory = async (req, res) => {
             })
         }
         if (facilityId && tariffTypeId == 3) {
-
+            console.log('tariffTypeId = 3')
             findTheNameOfThoseEvents = await facilityEvents.findAll({
                 where: {
                     [Op.and]: [{ statusId: statusId }, { facilityId: facilityId }]
