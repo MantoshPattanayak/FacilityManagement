@@ -30,7 +30,7 @@ const TariffDetails = () => {
 
   // Post tariff type data
   const [PostTraifftype, setPostTraiffType] = useState({
-    tariffTypeId: "",
+    tariffTypeId:'',
   });
   // Post Tariff Data
   const [tariffRows, setTariffRows] = useState([
@@ -54,7 +54,9 @@ const TariffDetails = () => {
   // Handle OnChange of Get initial Data
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log("Name and Value", name, value)
     setPostTraiffType({ ...PostTraifftype, [name]: value });
+    setTariffRows([{ ...tariffRows[0], tariffTypeId: parseInt(value) }]);
     console.log("PostData", PostTraifftype);
   };
   // Get Initial Data here (Call api)
@@ -65,7 +67,7 @@ const TariffDetails = () => {
         facilityId,
         tariffTypeId: PostTraifftype.tariffTypeId,
       });
-      console.log("initial fetch data", res.data.tariffTypeData)
+      console.log("initial fetch data", res)
       console.log("initial data fetch 2", res.data);
       setGetInitailData(res.data.tariffTypeData);
     
@@ -135,8 +137,8 @@ const TariffDetails = () => {
           fri: '',
           sat: ''
         },
-        tariffTypeId: '',
-        entityId: ''
+        tariffTypeId: PostTraifftype.tariffTypeId,
+        entityId: PostTraifftype.entityId
       }
     ]);
   };
@@ -272,6 +274,7 @@ const TariffDetails = () => {
                 value={tariffRows[0]?.entityId}
                 onChange={(e) => {
                   const { value } = e.target;
+                  setPostTraiffType({ ...PostTraifftype, ["entityId"]: value });
                   setTariffRows([{ ...tariffRows[0], entityId: parseInt(value, 10) || 0 }]);
                 }}
               >
