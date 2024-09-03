@@ -94,7 +94,7 @@ const searchParkFacilities = async (req, res) => {
 
 // Function to URL-encode file paths in the array
 function encodeUrls(facilitiesArray) {
-    console.log(facilitiesArray,'facilities Array')
+    // console.log(facilitiesArray,'facilities Array')
     return facilitiesArray.map(facility => {
         // Check if the facility object has a "url" property
         if (facility.url) {
@@ -140,11 +140,12 @@ const viewParkDetails = async(req,res)=>{
         let imageEntityType = 'facilities';
         let imageFilePurpose = 'singleFacilityImage'
         let imageStatusId = 1
+        let filterConditions = [];
+        let selectedFilterFlag = 0;
 
         if (selectedFilter) {
             console.log('selected filter')
-            let filterConditions = [];
-        
+    
             if (selectedFilter.Amenities.length > 0) {
                 console.log('1')
                 filterConditions.push(`f.facilityId IN (SELECT facilityId FROM facilityamenities WHERE amenityId IN (${selectedFilter.Amenities.join(',')}))`);
@@ -173,22 +174,27 @@ const viewParkDetails = async(req,res)=>{
                 filterConditions.push(`f.facilityId IN (SELECT facilityId FROM servicefacilities WHERE serviceId IN (${selectedFilter.Services.join(',')}))`);
             }
             
-            console.log('24')
+            // console.log('24',filterConditions,!facilityTypeId, filterConditions.join(' AND '))
             if (filterConditions.length > 0 && !facilityTypeId) {
-                console.log('filter condn', filterConditions,facility)
+                selectedFilterFlag = 1;
+                // console.log('filter condn', filterConditions)
                 facility += ` WHERE ${filterConditions.join(' AND ')}`;
-                console.log('facility',facility)
+                // console.log('facility',facility)
+                console.log('181')
                  facilities = await sequelize.query(facility,{
                     replacements:[new Date()],
                     type:QueryTypes.SELECT
                 })
+                console.log('facilities32')
             }
             if (facilityTypeId) {
-                console.log('25')
+                selectedFilterFlag = 1;
+                console.log('189')
 
                 facility += ` WHERE f.facilityTypeId=? `;
             
-                if (filterConditions.length) {
+                if (filterConditions.length > 0) {
+                    console.log('26')
                     // Add selected filter conditions
                     facility += ` AND ${filterConditions.join(' AND ')}`;
                 }
@@ -199,20 +205,20 @@ const viewParkDetails = async(req,res)=>{
                 });
             }
         }
-        if (facilityTypeId && !selectedFilter) {
-            console.log('25')
+        if (facilityTypeId && filterConditions.length==0 && selectedFilterFlag ==0) {
+            console.log('206',facilityTypeId)
 
             facility += ` WHERE f.facilityTypeId=? `;   
-        
+            console.log('facility query', facility)
             facilities = await sequelize.query(facility, {
                 replacements: [new Date(),facilityTypeId],
                 type:QueryTypes.SELECT
             });
         }
-
-        if (!facilityTypeId && !selectedFilter) {
-            console.log('25')
-            console.log('facility query', facility)
+        // console.log('215',facilityTypeId , !selectedFilter)
+        if (!facilityTypeId && filterConditions.length==0 && selectedFilterFlag ==0) {
+            console.log('217')
+            // console.log('facility query', facility)
             facilities = await sequelize.query(facility, {
                 replacements: [new Date()],
                 type:QueryTypes.SELECT
@@ -972,7 +978,7 @@ const nearByDataInMap = async (req, res) => {
                 filterConditions.push(`f.facilityId IN (SELECT facilityId FROM servicefacilities WHERE serviceId IN (${selectedFilter.Services.join(',')}))`);
             }
             
-            console.log('24')
+            console.log('24',filterConditions.length ,facilityTypeId)
             if (filterConditions.length > 0 && !facilityTypeId) {
                 console.log('filter condn', filterConditions)
                 fetchFacilitiesQuery += ` WHERE  ${filterConditions.join(' AND ')}`;
@@ -984,7 +990,7 @@ const nearByDataInMap = async (req, res) => {
 
                 fetchFacilitiesQuery += ` WHERE f.facilityTypeId=? `;
             
-                if (filterConditions.length) {
+                if (filterConditions.length > 0) {
                     // Add selected filter conditions
                     fetchFacilitiesQuery += ` AND ${filterConditions.join(' AND ')}`;
                 }
