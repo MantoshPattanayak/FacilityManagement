@@ -117,9 +117,9 @@ export default function EditAmenity() {
       toast.error('Please enter proper values.');
       return;
     }
-
+    let modifiedFormData = { ...formData, ["amenityId"]: amenityId };
     try {
-      let res = await axiosHttpClient('UPDATE_AMENITY_API', 'put', formData);
+      let res = await axiosHttpClient('UPDATE_AMENITY_API', 'put', modifiedFormData);
 
       console.log('form submit response', res.data);
       toast.dismiss();
