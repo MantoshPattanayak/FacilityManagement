@@ -20,7 +20,7 @@ export default function ViewServicesList() {
         try {
             let res = await axiosHttpClient('VIEW_SERVICES_LIST_API', 'post', { givenReq });
             setTableData(res.data.data);
-            console.log(res.data.data);
+            console.log("services list", res.data.data);
         }
         catch (error) {
             console.error(error);
@@ -95,7 +95,8 @@ export default function ViewServicesList() {
                                                 <td data-label="Created On">{formatDate(data.createdOn)}</td>
                                                 <td data-label="Status">
                                                     <p className={data.statusId == '1' ? 'text-green-500' : data.statusId == '2' ? 'text-red-500' : ''}>
-                                                        {data.statusId == '1' ? 'ACTIVE' : data.status == '2' ? 'INACTIVE' : ''}
+                                                        {data.statusId == '1' ? 'ACTIVE' : data.statusId == '2' ? 'INACTIVE' : ''}
+                                                        {/* {data.status} */}
                                                     </p>
                                                 </td>
                                                 <td data-label="View">
@@ -112,7 +113,7 @@ export default function ViewServicesList() {
                                                     <Link
                                                         to={{
                                                             pathname: '/mdm/edit-services',
-                                                            search: `?s=${encodeURIComponent(encryptDataId(data.serviceId))}${data.statusId == '1' ? '&action=edit' : data.statusId == '2' ? '&action=view' : '&action=view'}`
+                                                            search: `?s=${encodeURIComponent(encryptDataId(data.serviceId))}${data.statusId == '1' ? '&action=edit' : data.statusId == '2' ? '&action=edit' : '&action=view'}`
                                                         }}
                                                     >
                                                         <FontAwesomeIcon icon={faPenToSquare} />

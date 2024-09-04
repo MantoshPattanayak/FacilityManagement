@@ -18,11 +18,11 @@ let viewAmenitiesList = async (req, res) => {
         let matchedData = fetchAmenitiesList[0];
         console.log("fetch amenities data", matchedData);
 
-        if(givenReq) {
+        if (givenReq) {
             console.log(2)
             matchedData = matchedData.filter((data) => {
-                if(data.amenityName?.toLowerCase()?.includes(givenReq) 
-                    || data.status?.toLowerCase()?.includes(givenReq) 
+                if (data.amenityName?.toLowerCase()?.includes(givenReq)
+                    || data.status?.toLowerCase()?.includes(givenReq)
                     || data.createdOn?.toString()?.includes(givenReq))
                     return data;
             })
@@ -34,13 +34,13 @@ let viewAmenitiesList = async (req, res) => {
                 message: "services list",
                 data: matchedData.sort((a, b) => { return new Date(b.createdOn) - new Date(a.createdOn) })
             })
-        :
+            :
             res.status(statusCode.NOTFOUND.code).json({
                 message: "no services found",
                 data: []
             })
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -58,7 +58,7 @@ let createAmenity = async (req, res) => {
             }
         });
 
-        if(checkExistingData.length > 0) {
+        if (checkExistingData.length > 0) {
             return res.status(statusCode.CONFLICT.code).json({
                 message: "Same service details data already exist! Kindly try again."
             })
@@ -77,7 +77,7 @@ let createAmenity = async (req, res) => {
             data: createAmenityService
         });
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -103,20 +103,20 @@ let viewAmenityById = async (req, res) => {
 
         console.log('fetchAmenityDetailsById', fetchAmenityDetailsById.dataValues);
 
-        if(fetchAmenityDetailsById.dataValues) {
+        if (fetchAmenityDetailsById.dataValues) {
             res.status(statusCode.SUCCESS.code).json({
                 message: "Amenity details",
                 data: fetchAmenityDetailsById
             })
         }
-        else{
+        else {
             res.status(statusCode.NOTFOUND.code).json({
                 message: "Amenity details not found!",
                 data: []
             })
         }
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -128,7 +128,7 @@ let updateAmenity = async (req, res) => {
         let { amenityName, amenityId, statusId } = req.body;
         let paramsForUpdate = new Array();
         let userId = req.user.userId;
-        console.log({ amenityName, amenityId, statusId });
+        console.log("req.body", { amenityName, amenityId, statusId });
 
         //fetch previously saved details
         let fetchAmenitiesDetailsById = await amenintiesMaster.findOne({
@@ -142,25 +142,26 @@ let updateAmenity = async (req, res) => {
         // check if entered data already exists
         let fetchExistingData = await amenintiesMaster.findAll({
             where: {
-                [Op.or]: [{ code: code }, { description: description }]
+                [Op.and]: [{ amenityName: amenityName }, { statusId: statusId }]
             }
         })
+        console.log("fetchExistingData", fetchExistingData);
 
-        if(fetchExistingData.length > 0) {
+        if (fetchExistingData.length > 0) {
             return res.status(statusCode.CONFLICT.code).json({
                 message: 'Entered data already exists.'
             })
         }
 
         // compare each param and push to update params array
-        if(amenityName && fetchAmenitiesDetailsById.amenityName != amenityName) {
+        if (amenityName && fetchAmenitiesDetailsById.amenityName != amenityName) {
             paramsForUpdate.amenityName = amenityName;
         }
-        if(statusId && fetchAmenitiesDetailsById.statusId != statusId) {
+        if (statusId && fetchAmenitiesDetailsById.statusId != statusId) {
             paramsForUpdate.statusId = statusId;
         }
         console.log('params', paramsForUpdate);
-        if(Object.keys(paramsForUpdate).length == 0){
+        if (Object.keys(paramsForUpdate).length == 0) {
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message: "No changes made!"
             })
@@ -178,18 +179,18 @@ let updateAmenity = async (req, res) => {
             }
         );
         console.log("updateAmenitiesCount", updateAmenitiesCount);
-        if(updateAmenitiesCount > 0) {
+        if (updateAmenitiesCount > 0) {
             res.status(statusCode.SUCCESS.code).json({
                 message: 'Amenity details updated successfully!'
             });
         }
-        else{
+        else {
             res.status(statusCode.BAD_REQUEST.code).json({
                 message: 'Failed to update amenity details!'
             });
         }
     }
-    catch(error) {
+    catch (error) {
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
