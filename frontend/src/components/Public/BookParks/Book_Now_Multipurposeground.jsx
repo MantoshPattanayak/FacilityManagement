@@ -228,7 +228,7 @@ const Book_Now_Multipurposeground = () => {
     let bookingId = res.data.shareableLink[0].bookingId;
     let entityTypeId = res.data.shareableLink[0].entityTypeId;
 
-    toast.success("Event has been booked successfully.", {
+    toast.success("Multipurpose ground has been booked successfully.", {
       autoClose: 2000,
       onClose: () => {
         setTimeout(() => {
