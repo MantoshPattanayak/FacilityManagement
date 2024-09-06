@@ -111,7 +111,7 @@ export default function ViewAmenitiesList() {
                           <Link
                             to={{
                               pathname: '/mdm/edit-amenities',
-                              search: `?a=${encodeURIComponent(encryptDataId(data.amenityId))}${data.status == 'ACTIVE' ? '&action=edit' : data.status == 'INACTIVE' ? '&action=view' : '&action=view'}`
+                              search: `?a=${encodeURIComponent(encryptDataId(data.amenityId))}${data.status == 'ACTIVE' ? '&action=edit' : data.status == 'INACTIVE' ? '&action=edit' : '&action=view'}`
                             }}
                           >
                             <FontAwesomeIcon icon={faPenToSquare} />

@@ -125,11 +125,11 @@ const viewParkDetails = async(req,res)=>{
         console.log(givenReq,'givenReq ')
         console.log("fileid", facilityTypeId,'selected filter',selectedFilter)
         let facilityImagePurpose = 'singleFacilityImage'
-        let facility = `select facilityId, facilityname,facilityTypeId,case 
+        let facility = `select facilityId, facilityname,f.facilityTypeId, fty.description as facilityType, case 
         when Time(?) between operatingHoursFrom and operatingHoursTo then 'open'
         else 'closed'
         end as status, sun, mon, tue, wed, thu, fri, sat, address,latitude,longitude,areaAcres,ownership
-        from amabhoomi.facilities f `
+        from amabhoomi.facilities f inner join amabhoomi.facilitytypes fty on fty.facilitytypeId = f.facilityTypeId`
         
          let fetchTheFacilityImageQuery = `select fl.url as url from amabhoomi.files fl inner join fileattachments ft on fl.fileId = ft.fileId 
             where ft.entityId = ? and ft.entityType = ? and ft.filePurpose = ? and ft.statusId = ? and fl.statusId = ?`
@@ -255,6 +255,7 @@ const viewParkDetails = async(req,res)=>{
                 (mapData.Scheme && mapData.Scheme.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.Ownership && mapData.Ownership.toLowerCase().includes(givenReq.toLowerCase()))||
                 (mapData.status && mapData.status.toLowerCase().includes(givenReq.toLowerCase()))||
+                (mapData.facilityType && mapData.facilityType.toLowerCase().includes(givenReq.toLowerCase()))||
                 (!isNaN(Number(givenReq)) && (
                     (mapData.areaAcres && Math.abs(parseFloat(mapData.areaAcres) - parseFloat(givenReq)) < 0.1) ||
                     (mapData.latitude && Math.abs(parseFloat(mapData.latitude) - parseFloat(givenReq)) < 0.1) ||

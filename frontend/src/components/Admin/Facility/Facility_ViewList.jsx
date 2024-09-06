@@ -73,6 +73,7 @@ export default function Facility_ViewList() {
                         <thead>
                             {/* <th scope="col">Sl No.</th> */}
                             <th scope="col">Facility Name</th>
+                            <th scope="col">Facility Type</th>
                             <th scope="col">Facility Address</th>
                             <th scope="col">Location (Latitude, Longitude)</th>
                             <th scope="col">Ownership</th>
@@ -87,6 +88,7 @@ export default function Facility_ViewList() {
                                         <tr key={data.index}>
                                             {/* <td data-label="Sl No.">{index + 1}</td> */}
                                             <td data-label="Facility Name">{data.facilityname}</td>
+                                            <td data-label="Facility Type">{data.facilityType}</td>
                                             <td data-label="Address">{data.address}</td>
                                             <td data-label="Location">{data.latitude}, {data.longitude}</td>
                                             <td data-label="Ownership">{data.ownership}</td>
