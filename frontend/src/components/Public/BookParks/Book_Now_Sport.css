@@ -4,7 +4,6 @@
 }
 
 .Book_sport_Child_conatiner {
-
   display: flex;
   justify-content: center;
   /* Center children vertically */
@@ -30,9 +29,6 @@
   max-width: 400px;
   margin: 0 auto;
   padding: 30px;
-
-
-
 }
 
 .price_Sport {
@@ -40,7 +36,6 @@
   color: #232323;
   font-weight: 500;
 }
-
 
 .bookingForm {
   display: flex;
@@ -74,7 +69,6 @@
   padding: 20px;
 }
 
-
 /* Styles for both buttons */
 .Add_to_Cart {
   padding: 10px 20px;
@@ -100,9 +94,7 @@
   /* Darker green */
 }
 
-
 .Proceed_to_Payment {
-
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -125,7 +117,6 @@
   background-color: #45a049;
   /* Darker green */
 }
-
 
 /*  */
 .increament_decrement_conatiner {
@@ -154,7 +145,6 @@
   left: 0;
   padding: 8px;
   border-radius: 5px 0 0 5px;
-
 }
 
 .increment-button {
@@ -165,7 +155,6 @@
 
 .Faclity_Name {
   text-align: center;
-
 }
 
 .Faclity_adress {
@@ -197,33 +186,30 @@
   border: 1px solid #c6c6c6;
   border-radius: 10px;
   background-color: aliceblue;
-  width:fit-content;
+  width: fit-content;
   height: 600px;
   overflow-y: scroll;
 }
-
 
 .dosdonts-container {
   width: 80%;
   margin: 50px auto;
   padding: 40px;
 
-
   border-radius: 15px;
   animation: fadeIn 1s ease-in-out;
 }
 
 .dosdont_div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
 }
 
-
 .dosdont-header {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 2.0em;
+  font-family: "Montserrat", sans-serif;
+  font-size: 2em;
   color: #444;
   text-align: center;
   /* margin-bottom: 30px; */
@@ -238,7 +224,7 @@
 }
 
 .dosdont-content h2 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.8em;
   color: #555;
   margin-top: 30px;
@@ -266,7 +252,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #CC7A68;
+  background-color: #cc7a68;
   color: #ffffff;
 }
 
@@ -294,4 +280,177 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Pop up CSS  */
+
+/* .popup-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+} */
+
+.All_Sports_Schedule {
+  z-index: 100;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.popup-header h5 {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.popup-header button {
+  background: #ff4d4d;
+  border: none;
+  padding: 8px 12px;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.section-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-button {
+  background: #f0f0f0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.section-button.selected {
+  background: #4caf50; /* Green highlight for selected section */
+  color: white;
+}
+
+.section-button:hover {
+  background: #ddd;
+}
+
+.schedule-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Space between boxes */
+}
+
+.schedule-item {
+  background: #e0e0e0;
+  padding: 15px;
+  border-radius: 8px;
+  width: calc(50% - 10px); /* Two items per row */
+  box-sizing: border-box;
+}
+
+.schedule-item .occupancy {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.schedule-item .time {
+  color: #666;
+}
+
+/* // New  */
+
+.schedule-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns per row */
+  gap: 10px; /* Space between boxes */
+}
+
+.item_schedule_box {
+  background: #e0e0e0;
+  padding: 15px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.item_occupancy {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.item_occupancy.occupied {
+  color: #ff4d4d; /* Red for "Occupied" */
+}
+
+.item_occupancy.high-occupancy {
+  color: #ff9800; /* Orange for "High occupancy" */
+}
+
+.item_occupancy.low-occupancy {
+  color: #4caf50; /* Green for "Low occupancy" */
+}
+
+.scheduleTime {
+  color: #666;
+}
+
+.section-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-buttons button {
+  position: relative;
+  background: none;
+  border: none;
+  color: #383b4c; /* Default text color */
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bolder;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: color 0.3s;
+}
+
+.section-buttons button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px; /* Adjust the vertical position */
+  width: 100%;
+  height: 2px;
+  background-color: #383b4c; /* Default underline color */
+  transition: background-color 0.3s;
+}
+
+.section-buttons button.selected::after {
+  background-color: #4caf50; /* Green underline for selected state */
+}
+
+.section-buttons button.selected {
+  color: #4caf50; /* Green text color for selected state */
 }
