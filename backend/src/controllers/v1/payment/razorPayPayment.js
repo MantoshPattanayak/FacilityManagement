@@ -1306,7 +1306,48 @@ let refundData = async (req, res) => {
 
 
 
+let checkAvailabilityOfSpace = async(req,res)=>{
+  try {
+    // No of peoples, entityId, tariffTypeId, Date, facilityId
+    let {noOfPeoples, entityId, tariffTypeId, Date, facilityId} = req.body
+    let statusId = 1;
+    let findOutTheTariffDetails = [];
+      let findOutTheTariffMasterDetails = await sequelize.query(`select tariffMasterId, facilityId, statusId from amabhoomi.tariffmasters where
+        entityId = ? and tariffTypeId = ? and statusId = ? and facilityId `,
+      {replacements:[entityId, tariffTypeId, statusId, facilityId],
+        type:QueryTypes.SELECT
+      })
+      
+      if(findOutTheTariffMasterDetails.length > 0){
 
+         findOutTheTariffDetails = await sequelize.query(`select tariffDetailId, facilityId, operatingHoursFrom, operatingTo, sun, mon, tue,
+          wed, thu, fri, sat, statusId from amabhoomi.facilitytariffdetails 
+          where statusId =  ? and tariffMasterId = ?  `,{
+            type:QueryTypes.SELECT,
+            replacements:[statusId,findOutTheTariffMasterDetails.tariffMasterId]
+          })
+         
+      }
+      return res.status(statusCode.SUCCESS.code).json({
+        messageL
+      })
+      // // let find the hostbooking, eventbooking and facilityBooking
+      // let findTheHostBookings = await sequelize.query(`select hostBookingId, bookingDate from 
+      //   amabhoomi.hostbookings where statusId = ? and startDate <= ? and endDate >= ? and facilityId = ?`)
+      
+      // let findTheEventBookings = await sequelize.query(`select * from amabhoomi.eventbookings where
+      //   statusId = ? and startDate <= ? and endDate >= ? and facilityId = ?`)
+
+      // let findTheFacilityBookings = await sequelize.query(`select * from amabhoomi.facilitybookings where
+      //   statusId = ? and startDate <=? and endDate >= ? and facilityId = ?`)
+
+
+  } catch (err) {
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
 
 
 
@@ -1325,6 +1366,7 @@ module.exports = {
   verifyWebhook,
   webhook,
   getDetailsWrtRazorpayOrderId,
-  refundData
+  refundData,
+  checkAvailabilityOfSpace
 }
 
