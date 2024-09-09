@@ -42,6 +42,15 @@ import football_bg from "../../assets/FootballBackground.jpg";
 import football_1 from "../../assets/FootballFront.jpg";
 import yoga_bg from "../../assets/Yoga_bg_ENA.jpg";
 import yoga_1 from "../../assets/Yoga__ENA.jpg";
+// import kabaddi image
+import kabaddi_bg_img from "../../assets/kabaddi_Background.jpg";
+import kabaddi_font_img from "../../assets/kabaddi _Front.jpg";
+// kho_kho
+import kho_kho_bg from "../../assets/Kho_Kho_Background.jpg";
+import kho_kho_font from "../../assets/Kho_Kho_Front.jpg"
+//  Volleyball image -----
+import  Volleyball_font from "../../assets/Volleyball_Front.jpg"
+import  Volleyball_bg from "../../assets/Volleyball_Background.jpg"
 // import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -590,7 +599,19 @@ const Landing = () => {
   // handleGameClick ------------------------------------------------
   const handleGameClick = (index, activity) => {
     setSelectedActivity(index === selectedActivity ? null : index);
-    if (activity === "Jogging/Walking") {
+    if(activity==="Volleyball"){
+      setCurrentInnerImage(Volleyball_font);
+      setCurrentImage(Volleyball_bg);
+    }
+   else if(activity === "Kho-Kho"){
+      setCurrentInnerImage(kho_kho_font);
+      setCurrentImage(kho_kho_bg);
+    }
+   else if(activity === "Kabaddi"){
+      setCurrentInnerImage(kabaddi_font_img);
+      setCurrentImage(kabaddi_bg_img);
+    }
+     else if (activity === "Jogging/Walking") {
       setCurrentInnerImage(walking_front_image);
       setCurrentImage(walking_back_image);
     } else if (activity === "Jogging") {
