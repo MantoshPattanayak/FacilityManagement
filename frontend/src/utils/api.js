@@ -80,7 +80,8 @@ const api = {
    VIEW_BOOKMARKS_LIST_API: '/userDetails/viewBookmarks',      //post - facilityType, fromDate, toDate
    //PARK-BOOK API
    PARK_BOOK_PAGE_SUBMIT_API: '/booking/park',  //post 
-   PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park-book-initialdata',   //get
+   PARK_BOOK_PAGE_INITIALDATA_API: '/booking/park-book-initialdata', //get
+   FETCH_AVAILABILITY_API: '/razorPayPayment/checkAvailabilityOfSpace', //post   entityId (activityMasterId, eventCategoryId), tariffTypeId (1 - activities, 2 - sports, 3 - host event), facilityId, eventId, Date
    // User Loging/singUp-------------------------------
    User_Login: '/auth/publicLogin',    // Post
    User_SingUp: '/auth/signUp',
