@@ -92,6 +92,12 @@ module.exports = (sequelize,DataTypes)=>{
         facilityRegistrationNumber: {
             type: DataTypes.STRING(255)
         },
+        capacity:{
+            type: DataTypes.INTEGER
+        },
+        timing:{
+            type:DataTypes.JSON
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },

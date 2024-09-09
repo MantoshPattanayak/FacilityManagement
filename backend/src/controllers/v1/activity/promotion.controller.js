@@ -3,6 +3,7 @@ const statusCode = require("../../../utils/statusCode");
 const db = require("../../../models");
 const statusMasters = db.statusmaster;
 const promotion = db.promotions
+const logger = require('../../../logger/index.logger')
 
 const createPromotion = async (req, res) => {
     try {
@@ -105,6 +106,8 @@ const createPromotion = async (req, res) => {
           }
       
         } catch (error) {
+          logger.error(`An error occurred: ${error.message}`); // Log the error
+
           return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message,
           });
@@ -237,6 +240,8 @@ const createPromotion = async (req, res) => {
   
        
     } catch (error) {
+      logger.error(`An error occurred: ${error.message}`); // Log the error
+
       res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message: "Internal Server Error",
         error: error.message,
@@ -258,6 +263,8 @@ const createPromotion = async (req, res) => {
         })
     }
     catch (error) {
+      logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })

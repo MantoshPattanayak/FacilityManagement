@@ -26,6 +26,8 @@ const moment = require('moment');
 const fs = require('fs')
 const path = require('path');
 const checkForCancellation = require("../../../utils/bookingCancellation");
+const logger = require('../../../logger/index.logger')
+
 let eventactivites = db.eventActivities
 let file = db.file;
 let fileAttachment = db.fileattachment
@@ -177,6 +179,8 @@ let parkBookingFormInitialData = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -1041,6 +1045,8 @@ let addToCart = async (req, res) => {
         }
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -1189,6 +1195,8 @@ let viewCartByUserId = async (req, res) => {
 
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -1242,6 +1250,8 @@ let updateCart = async (req, res) => {
         })
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message })
     }
 }
@@ -1265,6 +1275,8 @@ let viewCartItemsWRTCartItemId = async (req, res) => {
             data: viewTheCartItemData
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -1649,6 +1661,8 @@ let generateQRCode = async (req, res) => {
 
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -1661,7 +1675,9 @@ let verifyTheQRCode = async (req, res) => {
         let { QrCodeData } = req.body
 
 
-    } catch (err) {
+    } catch (err) {    
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -1720,6 +1736,8 @@ let cancelBooking = async (req, res) => {
         async function cancelEventHostBooking() { }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })

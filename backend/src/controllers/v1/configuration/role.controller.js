@@ -4,6 +4,8 @@ const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const role = db.rolemaster;
+const logger = require('../../../logger/index.logger')
+
 //get
 const roleId = async (req, res) => {
   try {
@@ -22,6 +24,8 @@ const roleId = async (req, res) => {
       data: rolemasters,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -64,6 +68,8 @@ const createRole = async (req, res) => {
       });
     }
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });
@@ -105,6 +111,8 @@ const updateRole = async (req, res) => {
       });
     }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message,
     });
@@ -133,6 +141,8 @@ const viewRole = async (req, res) => {
       Role: paginatedShowAllRoles,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message,
     });

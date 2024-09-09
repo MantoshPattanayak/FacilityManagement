@@ -28,6 +28,7 @@ const { Op } = require('sequelize');
 let user = db.usermaster
 let imageUpload = require('../../../utils/imageUpload')
 let imageUpdate= require('../../../utils/imageUpdate');
+const logger = require('../../../logger/index.logger')
 
 let facilityEvent = db.facilityEvents
 // Admin facility registration
@@ -80,12 +81,15 @@ const registerFacility = async (req, res) => {
       emailAdress,
       ownerPanCard,
       ownersAddress,
-      helpNumber
+      helpNumber,
+      capacity
     } = req.body;
     console.log("here facility Req ", req.body)
 
 
     helpNumber = helpNumber ? helpNumber : null
+    capacity = capacity ? capacity : 100;
+
     let createFacilities;
     let findOwnerId;
      console.log("here Req", 
@@ -186,6 +190,7 @@ const registerFacility = async (req, res) => {
       operatingHoursFrom:operatingHoursFrom,
       operatingHoursTo:operatingHoursTo,
       areaAcres:area,
+      capacity:capacity,
       sun:operatingDays?.sun || 0,
       mon:operatingDays?.mon || 0,
       tue:operatingDays?.tue || 0,
@@ -406,6 +411,8 @@ const registerFacility = async (req, res) => {
   
  } catch (error) {
   if(transaction) await transaction.rollback();
+  logger.error(`An error occurred: ${error.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });
@@ -475,6 +482,8 @@ const initialDataFetch = async (req,res)=>{
         }
         )
     } catch (err) {
+      logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -566,6 +575,8 @@ const getFacilityWrtId = async(req,res)=>{
       ownersAddress:findOwnerDetails
     })
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -592,7 +603,7 @@ const updateFacility = async(req,res)=>{
        fileNames:facilityImage,
       eventCategory,
       game,
-      
+      capacity,
       parkInventory,
       // owner details
       ownersAddress} = req.body
@@ -649,6 +660,9 @@ const updateFacility = async(req,res)=>{
       }
       if(facilityData?.latitude){
         updateFacilityDataVariable.latitude = facilityData?.latitude
+      }
+      if(facilityData?.capacity){
+        updateFacilityDataVariable.capacity = facilityData?.capacity
       }
       if(facilityData?.address){
         updateFacilityDataVariable.address = facilityData?.address
@@ -1554,6 +1568,8 @@ const updateFacility = async(req,res)=>{
 
 }catch (err) {
   if(transaction) await transaction.rollback();
+  logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })

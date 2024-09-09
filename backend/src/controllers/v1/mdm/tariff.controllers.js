@@ -15,6 +15,8 @@ let faciltyActivity = db.facilityactivities;
 let facilityEvents = db.facilityEvents;
 let useractivitymaster = db.useractivitymasters
 let eventcategorymaster = db.eventCategoryMaster
+const logger = require('../../../logger/index.logger')
+
 // create tariff api
 let createTariff = async (req, res) => {
     let transaction
@@ -147,6 +149,7 @@ let createTariff = async (req, res) => {
 
     } catch (err) {
         if (transaction) await transaction.rollback();
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -184,6 +187,8 @@ let getTariffById = async (req, res) => {
             message: "Invalid Request"
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -345,7 +350,8 @@ let updateTariff = async (req, res) => {
 
     } catch (err) {
         if (transaction) await transaction.rollback();
-
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+        
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         });
@@ -376,6 +382,8 @@ let inActiveEachTariffData = async (req, res) => {
             message: `Data is not updated`
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -528,6 +536,7 @@ let viewTariff = async (req, res) => {
 
         return res.status(statusCode.SUCCESS.code).json({ message: "All Tariff Data", tariffData: paginatedTariff })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         })
@@ -638,6 +647,7 @@ let initialDataForTariffSelectionWRTCategory = async (req, res) => {
 
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json(err.message)
     }
 }

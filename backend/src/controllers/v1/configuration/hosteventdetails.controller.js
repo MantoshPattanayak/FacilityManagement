@@ -15,6 +15,8 @@ const mailToken= require('../../../middlewares/mailToken.middlewares');
 let imageUpload = require('../../../utils/imageUpload')
 const {Op} = require('sequelize')
 let user = db.usermaster
+const logger = require('../../../logger/index.logger')
+
 let {encrypt} = require('../.../../../../middlewares/encryption.middlewares')
 
 const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,userId,transaction) => {
@@ -410,6 +412,7 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
     }
 
   } catch (error) {
+    
     if(transaction) await transaction.rollback();
     return {
       error:"Something went wrong"
@@ -434,6 +437,7 @@ const bankService = async (req, res) => {
       .status(statusCode.SUCCESS.code)
       .json({ message: "These are the dropdown data", bankServiceData: bankService[0], eventCategoryData:findEventCategory[0] });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -473,6 +477,7 @@ const eventDropdownData = async (req, res) => {
       .json({ message: "Event Category data", data: findEventCategory, faciltyData:facilityDetails });
     
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -512,6 +517,7 @@ let findEventHostDetailsData = async (req,res)=>{
     })
 
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })

@@ -2,6 +2,8 @@ const { sequelize, Sequelize } = require("../../../models");
 const statusCode = require("../../../utils/statusCode");
 const db = require("../../../models");
 const faq = db.faq;
+const logger = require('../../../logger/index.logger')
+
 const createFaq = async (req, res) => {
   try {
     console.log("12");
@@ -49,6 +51,8 @@ const createFaq = async (req, res) => {
       message: "FAQ is not created",
     });
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });

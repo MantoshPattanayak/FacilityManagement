@@ -6,6 +6,7 @@ const { decrypt } = require('../../../middlewares/decryption.middlewares')
 const { encrypt } = require('../../../middlewares/encryption.middlewares')
 const publicNotifications = db.publicnotifications;
 const imageUpload = require('../../../utils/imageUpload');
+const logger = require('../../../logger/index.logger')
 
 let addNewNotification = async (req, res) => {
     try {
@@ -81,6 +82,8 @@ let addNewNotification = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -133,6 +136,8 @@ let viewNotifications = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -177,6 +182,8 @@ let viewNotificationById = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -269,6 +276,8 @@ let editNotification = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })

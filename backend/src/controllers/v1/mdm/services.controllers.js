@@ -5,6 +5,7 @@ const sequelize = db.sequelize;
 let serviceMaster = db.services;
 let statusmaster = db.statusmaster;
 const { Op, where } = require('sequelize');
+const logger = require('../../../logger/index.logger')
 
 let viewServicesList = async (req, res) => {
     try {
@@ -42,6 +43,8 @@ let viewServicesList = async (req, res) => {
             })
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -84,6 +87,8 @@ let createService = async (req, res) => {
         });
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -136,6 +141,8 @@ let viewServiceById = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -197,6 +204,8 @@ let updateService = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })

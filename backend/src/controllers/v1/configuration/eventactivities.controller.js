@@ -4,6 +4,8 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const eventactivites = db.eventActivities;
 const Sequelize = db.Sequelize;
+const logger = require('../../../logger/index.logger')
+
 const viewEventactivities = async (req, res) => {
   try {
     let limit = req.body.page_size ? req.body.page_size : 50;
@@ -138,6 +140,7 @@ const viewEventactivities = async (req, res) => {
       Eventactivities: paginatedshowAllEventactivities,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message,
     });
@@ -205,6 +208,7 @@ const viewEventactivitiesById = async (req, res) => {
       eventActivityDetails: eventActivity,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message,
     });

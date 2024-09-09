@@ -4,6 +4,7 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 let eventCategoriesMaster = db.eventCategoryMaster;
 const { Op, where } = require('sequelize');
+const logger = require('../../../logger/index.logger')
 
 let viewEventCategoriesList = async (req, res) => {
     try {
@@ -41,6 +42,8 @@ let viewEventCategoriesList = async (req, res) => {
             })
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -79,6 +82,8 @@ let createEventCategory = async (req, res) => {
         });
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         });
@@ -112,6 +117,8 @@ let viewEventCategoryById = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -188,6 +195,8 @@ let updateEventCategory = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })

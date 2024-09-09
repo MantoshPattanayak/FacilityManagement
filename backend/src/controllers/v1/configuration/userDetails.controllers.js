@@ -18,6 +18,7 @@ let authSessions = db.authsessions
 let deviceLogin = db.device
 let QueryTypes = db.QueryTypes
 let userActivityPreference = db.userActivityPreference
+const logger = require('../../../logger/index.logger')
 
 let autoSuggestionForUserSearch = async (req, res) => {
   try {
@@ -76,6 +77,8 @@ let autoSuggestionForUserSearch = async (req, res) => {
       data: matchedSuggestions,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -170,6 +173,8 @@ let viewList = async (req, res) => {
       data: paginatedUsers,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -337,6 +342,8 @@ let createUser = async (req, res) => {
 
     }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -705,6 +712,7 @@ let verifyOTPHandlerWithGenerateTokenForAdmin = async (req, res) => {
       return res.status(statusCode.BAD_REQUEST.code).json({ message: 'Please provide the mobileNo and otp' });
     }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
 
     return res.status(statusCode.BAD_REQUEST.code).json({ message: err.message });
 
@@ -836,6 +844,7 @@ let updateUserData = async (req, res) => {
         .json({ message: "This user doesn't  exist in our record" });
     }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -872,6 +881,8 @@ let getUserById = async (req, res) => {
       .status(statusCode.SUCCESS.code)
       .json({ message: "Required User", data: specificUser });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -921,6 +932,8 @@ let fetchInitialData = async (req, res) => {
       gender: genderData,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -1175,6 +1188,8 @@ let viewBookings = async (req, res) => {
       }
     }
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });
@@ -1203,6 +1218,7 @@ let initalFilterDataForBooking = async (req, res) => {
       data: { facilityTypeQueryResult, statusCodeMasterQueryResult },
     });
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });
@@ -1305,6 +1321,8 @@ let bookmarkingAddAction = async (req, res) => {
       });
     }
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });
@@ -1333,6 +1351,7 @@ let bookmarkingRemoveAction = async (req, res) => {
       });
     }
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });
@@ -1451,6 +1470,8 @@ let viewBookmarksListForUser = async (req, res) => {
       });
     }*/
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });

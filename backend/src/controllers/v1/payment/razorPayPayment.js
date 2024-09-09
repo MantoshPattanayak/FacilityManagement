@@ -18,6 +18,7 @@ const { v4: uuidv4 } = require('uuid');
 let eventactivites = db.eventActivities
 let {parkBooking,uploadTicket} = require('../booking/bookings.controllers.js')
 let {createHosteventdetails} = require('../configuration/hosteventdetails.controller.js')
+const logger = require('../../../logger/index.logger')
 
 let paymentItems = db.paymentItems
 const getRazorpayApiKeys = async (req, res) => {
@@ -35,6 +36,8 @@ const getRazorpayApiKeys = async (req, res) => {
     })
   }
   catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error
     })
@@ -172,6 +175,8 @@ const paymentVerification = async (req, res) => {
       }
       
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
   }
 };
@@ -191,6 +196,8 @@ const fetchOrder = async (req, res) => {
     })
   }
   catch(error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message
     })
@@ -210,6 +217,8 @@ const fetchPayment = async (req, res) => {
     })
   }
   catch(error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message
     })
@@ -891,6 +900,7 @@ const checkout =  async (req, res) => {
     })
   } catch (error) {
     if(transaction) await transaction.rollback();
+    logger.error(`An error occurred: ${error.message}`); // Log the error
     console.error('Error creating order with Razorpay:', error);
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:error.message
@@ -1070,6 +1080,8 @@ let webhook =  async (req, res) => {
     }
 
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`});
   }
 
@@ -1128,6 +1140,8 @@ let getDetailsWrtRazorpayOrderId = async (req,res)=>{
       orderData:newData
     })
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1296,6 +1310,8 @@ let refundData = async (req, res) => {
 
   } catch (err) {
     console.error('Error processing refund:', err);
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message
     });
@@ -1306,7 +1322,106 @@ let refundData = async (req, res) => {
 
 
 
+let checkAvailabilityOfSpace = async(req,res)=>{
+  try {
+    // No of peoples, entityId, tariffTypeId, Date, facilityId
+    let {noOfPeoples, entityId, tariffTypeId, Date, facilityId,facilityTypeId, eventId} = req.body
+    let statusId = 1;
+    let bookingStatus = 4;
+    let findOutTheTariffDetails = [];
+    let findOutTheBookingDetails = [];
+    let findOutTheHostBookingDetails = [];
+    let findTheEventBookingDetails = [];
+    let findNoOfEventBooking = [];
+    if(!eventId){
 
+      let findOutTheTariffMasterDetails = await sequelize.query(`select t.tariffMasterId, t.facilityId, t.statusId,f.capacity from amabhoomi.tariffmasters t inner join facilities f
+        on f.facilityId = t.facilityId where
+        t.entityId = ? and t.tariffTypeId = ? and t.statusId = ? and t.facilityId= ?  `,
+      {replacements:[entityId, tariffTypeId, statusId, facilityId],
+        type:QueryTypes.SELECT
+      })
+      console.log('findOutTheTariffMasterDetails', findOutTheTariffMasterDetails)
+      if(findOutTheTariffMasterDetails.length > 0 && !eventId){
+
+         findOutTheTariffDetails = await sequelize.query(`select tariffDetailId, facilityId, operatingHoursFrom, operatingHoursTo, sun, mon, tue,
+          wed, thu, fri, sat, statusId from amabhoomi.facilitytariffdetails 
+          where statusId =  ? and tariffMasterId = ? and facilityId = ? `,{
+            type:QueryTypes.SELECT,
+            replacements:[statusId,findOutTheTariffMasterDetails[0].tariffMasterId,facilityId]
+          })
+          console.log('findOutTheTariffDetails', findOutTheTariffDetails)
+          findOutTheBookingDetails = await sequelize.query(`select count(*), startDate , endDate , facilityId , bookingDate  from amabhoomi.facilitybookings
+          where  facilityId = ? and statusId = ? and bookingDate = ?
+          group by startDate , endDate , facilityId, bookingDate`,
+          {type:QueryTypes.SELECT,
+          replacements:[facilityId, bookingStatus, Date]})
+
+          findOutTheHostBookingDetails = await sequelize.query(`select count(*),
+            facilityId, bookingDate, startDate, endDate from amabhoomi.hostbookings
+            where statusId = ? and bookingDate = ? and facilityId = ? 
+            group by startDate, endDate, facilityId, bookingDate`,
+            {type:QueryTypes.SELECT,
+              replacements:[bookingStatus, Date, facilityId]})
+
+         
+      }
+      return res.status(statusCode.SUCCESS.code).json({
+        message:"Here are the details",
+        tariffDetails: findOutTheTariffDetails,
+        bookingDetails:findOutTheBookingDetails,
+        hostDetails : findOutTheHostBookingDetails
+      })
+    }
+    else if(eventId){
+      findTheEventBookingDetails = await sequelize.query(`select ticketPrice, eventId, numberOfTickets
+        facilityId, statusId, eventDate from amabhoomi.eventactivities where
+        eventId = ? and statusId = ?`,{
+          type:QueryTypes.SELECT,
+            replacements:[eventId, statusId]
+        })
+
+        if(findTheEventBookingDetails.length > 0){
+          findNoOfEventBooking = await sequelize.query(
+            `select count(*), bookingDate, startDate, endDate, eventId, totalMembers from amabhoomi.eventbookings
+            where statusId = ? and bookingDate = ? and eventId = ? 
+            group by startDate, endDate, bookingDate, eventId, totalMembers`,
+            {type:QueryTypes.SELECT,
+              replacements:[bookingStatus, findTheEventBookingDetails[0].eventDate, findTheEventBookingDetails[0].eventId]}
+          )
+      
+        }
+        return res.status(statusCode.SUCCESS.code).json({
+          message:'Here the event booking details',
+          eventBookingWithTicketPrice: findTheEventBookingDetails,
+          eventBookingWithTotalMembers:findNoOfEventBooking
+        })
+     
+    }
+    else {
+      return res.status(statusCode.BAD_REQUEST.code).json({
+        message:`Invalid Request`
+      })
+    }
+      // // let find the hostbooking, eventbooking and facilityBooking
+      // let findTheHostBookings = await sequelize.query(`select hostBookingId, bookingDate from 
+      //   amabhoomi.hostbookings where statusId = ? and startDate <= ? and endDate >= ? and facilityId = ?`)
+      
+      // let findTheEventBookings = await sequelize.query(`select * from amabhoomi.eventbookings where
+      //   statusId = ? and startDate <= ? and endDate >= ? and facilityId = ?`)
+
+      // let findTheFacilityBookings = await sequelize.query(`select * from amabhoomi.facilitybookings where
+      //   statusId = ? and startDate <=? and endDate >= ? and facilityId = ?`)
+
+
+  } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
+    return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+      message:err.message
+    })
+  }
+}
 
 
 
@@ -1325,6 +1440,7 @@ module.exports = {
   verifyWebhook,
   webhook,
   getDetailsWrtRazorpayOrderId,
-  refundData
+  refundData,
+  checkAvailabilityOfSpace
 }
 

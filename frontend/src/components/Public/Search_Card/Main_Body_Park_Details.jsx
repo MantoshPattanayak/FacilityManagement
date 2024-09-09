@@ -185,7 +185,7 @@ const Main_Body_Park_Details = () => {
   // filter the data according to filter options -----------------------------------------------------
   async function getNearbyFacilities() {
     let bodyParams = {
-      facilityTypeId: facilityTypeId,
+      facilityTypeId: facilityTypeId || 1,
       latitude: userLocation?.latitude || defaultLocation.latitude,
       longitude: userLocation?.longitude || defaultLocation.longitude,
     };
@@ -275,7 +275,7 @@ const Main_Body_Park_Details = () => {
       getNearbyFacilities();
     } else {
       // fetch facility details based on selected facility type or searching value
-      GetParkDetails();
+      getNearbyFacilities();
     }
     console.log("selectedFilter", selectedFilter);
   }, [givenReq, facilityTypeId, selectedTab, selectedFilter]);
