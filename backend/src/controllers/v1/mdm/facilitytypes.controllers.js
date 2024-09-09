@@ -5,6 +5,7 @@ const sequelize = db.sequelize;
 let facilityTypeMaster = db.facilitytype;
 let statusmaster = db.statusmaster;
 const { Op, where } = require('sequelize');
+const logger = require('../../../logger/index.logger')
 
 let viewFacilityTypeList = async (req, res) => {
     try {
@@ -43,6 +44,8 @@ let viewFacilityTypeList = async (req, res) => {
             })
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -83,6 +86,8 @@ let createFacilityType = async (req, res) => {
         });
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -122,6 +127,8 @@ let viewFacilityTypeById = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -196,6 +203,8 @@ let updateFacilityType = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })

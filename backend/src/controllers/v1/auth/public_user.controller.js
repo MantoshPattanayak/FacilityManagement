@@ -16,6 +16,8 @@ let imageUpdate = require('../../../utils/imageUpdate');
 let imageUpload = require('../../../utils/imageUpload')
 
 const fileattachmentModels = db.fileattachment;
+const logger = require('../../../logger/index.logger')
+
 const updatepublic_user = async (req, res) => {
   let transaction;
   try {
@@ -316,6 +318,8 @@ const updatepublic_user = async (req, res) => {
     
   } catch (error) {
     if(transaction) await transaction.rollback();
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
       error: error.message,
@@ -441,6 +445,8 @@ const viewpublicUser = async (req, res) => {
       activityDetails:showActivities
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message,
     });
@@ -583,6 +589,8 @@ const homePage = async (req, res) => {
       fetchActivityMaster
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -606,6 +614,8 @@ let fetchGoogleMap = async (req, res) => {
     res.status(statusCode.SUCCESS.code).json(scriptContent);
   }
   catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message
     })

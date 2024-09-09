@@ -94,6 +94,8 @@ let dataload = async (req, res) => {
             res.status(statusCode.NOTFOUND.code).json({ message2: 'role data not found' });
         }
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
     }
 }
@@ -211,6 +213,8 @@ const insertRoleResource = async (req, res) => {
             return res.status(statusCode.NOTFOUND.code).json({ message: 'Some resources were not inserted due to conflicts or errors' });
         }
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).send({ message: err.message });
     }
 
@@ -245,6 +249,8 @@ let updateRoleResource = async (req, res) => {
         }
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).send({ message: err.message });
     }
 
@@ -291,6 +297,8 @@ let viewId = async (req, res) => {
             return res.status(statusCode.NOTFOUND.code).send({ message: 'Role Resource Data not found' });
     }
     catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).send({ message: err.message });
     }
 
@@ -351,6 +359,8 @@ let viewRoleResource = async (req, res) => {
             res.status(statusCode.NOTFOUND.code).json({ mesaage: 'No role resource mapping list data', data: [] });
     }
     catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
     }
 }
@@ -399,6 +409,8 @@ let autoSuggestionForRoleResourceSearch = async (req, res) => {
         return res.status(statusCode.SUCCESS.code).json({ mesaage: 'role resource mapping list data', data: findMatchRes });
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
     }
 };

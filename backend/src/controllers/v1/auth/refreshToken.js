@@ -1,5 +1,6 @@
 let statusCode = require('../../../utils/statusCode');
 let jwt = require('jsonwebtoken');
+const logger = require('../../../logger/index.logger')
 
 let refresh = async (req, res) => {
     try {
@@ -47,6 +48,8 @@ let refresh = async (req, res) => {
         res.status(statusCode.SUCCESS.code).json({ accessToken: newAccessToken });
     } catch (error) {
         // Handle invalid tokens or other errors
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         return res.status(statusCode.FORBIDDEN.code).json({ message: error.message });
     }
 }

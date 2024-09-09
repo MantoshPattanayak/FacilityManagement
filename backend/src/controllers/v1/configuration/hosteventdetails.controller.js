@@ -412,6 +412,7 @@ const createHosteventdetails = async (entityTypeId,facilityPreference,orderId,us
     }
 
   } catch (error) {
+    
     if(transaction) await transaction.rollback();
     return {
       error:"Something went wrong"

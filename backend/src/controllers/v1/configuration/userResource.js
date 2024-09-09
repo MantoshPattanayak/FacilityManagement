@@ -104,6 +104,7 @@ let dataload = async (req, res) => {
             res.status(statusCode.NOTFOUND.code).json({ message2: 'user data not found' });
         }
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
     }
  
@@ -224,6 +225,7 @@ let insertUserResource = async (req, res) => {
         }
       
     } catch (err) {
+      logger.error(`An error occurred: ${err.message}`); // Log the error
       res.status(statusCode.UNAUTHORIZED.code).send({ message: err.message });
     }
 }
@@ -306,6 +308,7 @@ let viewUserResource = async (req, res) => {
    
     }
     catch (err) {
+      logger.error(`An error occurred: ${err.message}`); // Log the error
         res.status(statusCode.BAD_REQUEST.code).json({ message: err.message });
     }
  
@@ -388,6 +391,7 @@ let autoSuggestionUserResource = async (req, res) => {
    
     }
     catch (err) {
+      logger.error(`An error occurred: ${err.message}`); // Log the error
         res.status(statusCode.BAD_REQUEST.code).json({ message: err.message });
     }
  

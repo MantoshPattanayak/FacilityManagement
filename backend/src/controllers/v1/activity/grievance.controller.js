@@ -17,6 +17,7 @@ let partnerUs = db.partnerwithus
 let advertisementTariff = db.advertisementTariff
 let advertisementdetail = db.advertisementDetails
 let advertisementMasters = db.advertisementMasters
+const logger = require('../../../logger/index.logger')
 
 // insert grievance - start
 const addGrievance = async (req, res) => {
@@ -132,6 +133,7 @@ const addGrievance = async (req, res) => {
         });
     } catch (error) {
         if(transaction) await transaction.rollback();
+        logger.error(`An error occurred: ${error.message}`); // Log the error
 
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message,
@@ -156,6 +158,8 @@ const fetchInitialData = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -219,6 +223,8 @@ let viewGrievanceList = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -252,6 +258,8 @@ let viewGrievanceById = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -344,6 +352,8 @@ let actionTaken = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -393,6 +403,8 @@ const createFeedback = async (req, res) => {
         });
 
     } catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message,
         });
@@ -481,6 +493,8 @@ let contactRequest = async (req,res)=>{
     //   })
     } catch (err) {
         if(transaction) await transaction.rollback();
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:err.message
       })
@@ -517,6 +531,8 @@ let viewFeedbackList = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -547,6 +563,8 @@ let viewFeedbackById = async (req, res) => {
         }
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -598,6 +616,8 @@ let advertisementTariffInsert = async (req,res)=>{
         }
         return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -645,6 +665,8 @@ let advertisementMasterInsert = async (req,res)=>{
         }
         return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -724,6 +746,8 @@ let updateAdvertisementInsert = async (req,res)=>{
             message:`Data is not updated`
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -764,6 +788,8 @@ let viewAdvertisementMaster = async (req,res)=>{
         }
        
      catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -810,6 +836,8 @@ let viewAdvertisementTariffData = async (req,res)=>{
         }
        
      catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -912,6 +940,8 @@ let updateAdvertisementTariffData = async (req,res)=>{
       
        
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -979,6 +1009,8 @@ let insertToAdvertisementDetails = async (req,res)=>{
         return res.status(statusCode.SUCCESS.code).json({message:`Created successfully`})
     } catch (err) {
         if(transaction) await transaction.rollback()
+            logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -1006,6 +1038,8 @@ let actionForAdvertisement = async (req,res)=>{
             message:`Data successfully updated`
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
             return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
                 message:err.message
             })
@@ -1089,6 +1123,8 @@ let initialTariffDropdownData = async(req,res)=>{
             data: findAllDropDownData
         })
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })

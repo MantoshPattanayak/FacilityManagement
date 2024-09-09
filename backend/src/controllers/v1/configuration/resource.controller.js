@@ -276,9 +276,11 @@ let dataLoadResource = async (req, res) => {
       res.status(statusCode.SUCCESS.code).json({ parentResourceId: query1, hasSubMenu: query2, icon: query3, status: query4 });
 
     } catch (err) {
+      
       res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
     }
-  } catch (err) {    
+  } catch (err) { 
+       
     logger.error(`An error occurred: ${err.message}`); // Log the error
 
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
@@ -309,6 +311,8 @@ let isParent = async (req, res) => {
       res.status(statusCode.SUCCESS.code).json({ message: 'parent data', data: query1 });
     }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
   }
   finally {

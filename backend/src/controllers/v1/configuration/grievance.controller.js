@@ -95,7 +95,7 @@ const createGrievance = async (req, res) => {
         message: "Grivance is not created",
       });
   } catch (error) {
-    logger.error(`An error occurred: ${err.message}`); // Log the error
+    logger.error(`An error occurred: ${error.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });

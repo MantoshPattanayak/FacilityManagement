@@ -89,7 +89,7 @@ const searchParkFacilities = async (req, res) => {
         
      
     } catch (error) {
-        logger.error(`An error occurred: ${err.message}`); // Log the error
+        logger.error(`An error occurred: ${error.message}`); // Log the error
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

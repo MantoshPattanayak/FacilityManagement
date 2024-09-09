@@ -22,8 +22,8 @@ let viewLanguageContent = async (req, res) => {
         })
     }
     catch(error) {    
-        logger.error(`An error occurred: ${err.message}`); // Log the error
-        
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -54,7 +54,7 @@ let insertLanguageContent = async (req, res) => {
         })
     }
     catch(error) {
-        logger.error(`An error occurred: ${err.message}`); // Log the error
+        logger.error(`An error occurred: ${error.message}`); // Log the error
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
