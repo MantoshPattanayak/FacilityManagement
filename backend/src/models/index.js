@@ -218,7 +218,7 @@ db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 
-db1.hosteventbookings.sync({
+db1.faq.sync({
   alter:false,
 });
 

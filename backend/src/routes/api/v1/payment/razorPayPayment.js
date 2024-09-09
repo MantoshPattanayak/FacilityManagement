@@ -21,5 +21,6 @@ router.get('/getDetailsWrtRazorpayOrderId', razorPayPayment.getDetailsWrtRazorpa
 
 router.post("/refundPayment", authenticateToken, razorPayPayment.refundData);
 
+router.post("/checkAvailabilityOfSpace",authenticateToken, razorPayPayment.checkAvailabilityOfSpace);
 
 module.exports = router

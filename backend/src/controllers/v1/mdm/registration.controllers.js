@@ -80,12 +80,15 @@ const registerFacility = async (req, res) => {
       emailAdress,
       ownerPanCard,
       ownersAddress,
-      helpNumber
+      helpNumber,
+      capacity
     } = req.body;
     console.log("here facility Req ", req.body)
 
 
     helpNumber = helpNumber ? helpNumber : null
+    capacity = capacity ? capacity : 100;
+
     let createFacilities;
     let findOwnerId;
      console.log("here Req", 
@@ -186,6 +189,7 @@ const registerFacility = async (req, res) => {
       operatingHoursFrom:operatingHoursFrom,
       operatingHoursTo:operatingHoursTo,
       areaAcres:area,
+      capacity:capacity,
       sun:operatingDays?.sun || 0,
       mon:operatingDays?.mon || 0,
       tue:operatingDays?.tue || 0,
@@ -592,7 +596,7 @@ const updateFacility = async(req,res)=>{
        fileNames:facilityImage,
       eventCategory,
       game,
-      
+      capacity,
       parkInventory,
       // owner details
       ownersAddress} = req.body
@@ -649,6 +653,9 @@ const updateFacility = async(req,res)=>{
       }
       if(facilityData?.latitude){
         updateFacilityDataVariable.latitude = facilityData?.latitude
+      }
+      if(facilityData?.capacity){
+        updateFacilityDataVariable.capacity = facilityData?.capacity
       }
       if(facilityData?.address){
         updateFacilityDataVariable.address = facilityData?.address
