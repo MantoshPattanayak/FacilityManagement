@@ -4,6 +4,7 @@ const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const facilites = db.facilities
+const logger = require('../../../logger/index.logger')
 
 
 const viewParkDetails = async(req,res)=>{
@@ -48,6 +49,8 @@ const viewParkDetails = async(req,res)=>{
 
     }
     catch(err){
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
 
     }

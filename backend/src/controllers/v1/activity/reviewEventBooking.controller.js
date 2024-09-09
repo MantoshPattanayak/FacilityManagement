@@ -9,6 +9,7 @@ const sendEmail = require('../../../utils/generateEmail');
 const mailToken = require('../../../middlewares/mailToken.middlewares');
 const hosteventdetails = db.hosteventdetails;
 const hostBookings = db.hosteventbookings;
+const logger = require('../../../logger/index.logger')
 
 let viewList = async (req, res) => {
     try {
@@ -65,6 +66,7 @@ let viewList = async (req, res) => {
             return res.status(statusCode.NOTFOUND.code).send({ message: 'Event Detail Data not found' });
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
         res.status(statusCode.BAD_REQUEST.code).send({ message: error.message });
     }
 }
@@ -115,6 +117,8 @@ let viewId = async (req, res) => {
             return res.status(statusCode.NOTFOUND.code).send({ message: 'Event Detail Data not found' });
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.BAD_REQUEST.code).send({ message: error.message });
     }
 }
@@ -197,6 +201,8 @@ let performAction = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).send({ message: error.message });
     }
 }
@@ -206,6 +212,7 @@ let modifyAction = async (req, res) => {
 
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
 
     }
 }

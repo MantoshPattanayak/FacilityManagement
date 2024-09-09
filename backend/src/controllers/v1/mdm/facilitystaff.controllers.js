@@ -10,7 +10,9 @@ let facilityStaffAttendance = db.facilityStaffAttendance;
 let usermaster = db.usermaster;
 let rolemaster = db.rolemaster;
 let xlsx = require('xlsx');
+
 const { decrypt } = require('../../../middlewares/decryption.middlewares');
+const logger = require('../../../logger/index.logger')
 
 let intialData = async (req, res) => {
     try {
@@ -42,6 +44,8 @@ let intialData = async (req, res) => {
         });
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         });
@@ -73,6 +77,8 @@ let createFacilityStaffAllocation = async (req, res) => {
         })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -137,6 +143,8 @@ let updateFacilityStaffAllocation = async (req, res) => {
     }
     catch (error) {
         transaction.rollback();
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -191,6 +199,8 @@ let viewStaffAllocation = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -248,6 +258,8 @@ let viewStaffAllocationById = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -440,6 +452,8 @@ let uploadStaffAttendance = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -502,6 +516,8 @@ let viewStaffAttendanceData = async (req, res) => {
         });
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })

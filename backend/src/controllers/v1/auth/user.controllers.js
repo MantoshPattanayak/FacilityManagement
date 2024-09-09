@@ -23,6 +23,8 @@ const mailToken= require('../../../middlewares/mailToken.middlewares')
 
 const { Op } = require("sequelize");
 const sendEmail = require('../../../utils/generateEmail')
+const logger = require('../../../logger/index.logger')
+
 // Initialize Firebase Admin SDK
 // var serviceAccount = require("D:/AmaBhoomiProject/amabhoomi-25a8a-firebase-adminsdk-ggc8d-a61a7fdad5.json");
 
@@ -137,6 +139,8 @@ let generateOTPHandler = async (req,res)=> {
       
   } catch (error) {
       console.error('Error generating OTP:', error);
+      logger.error(`An error occurred: ${error.message}`); // Log the error
+
       // Handle error
       return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message: 'Error generating OTP. Please try again later.'
@@ -298,7 +302,8 @@ let verifyOTPHandlerWithGenerateToken = async (req,res)=>{
           return res.status(statusCode.BAD_REQUEST.code).json({message:'Please provide the mobileNo and otp'});   
         }
   } catch (err) {
-   
+      logger.error(`An error occurred: ${err.message}`); // Log the error
+
       return res.status(statusCode.BAD_REQUEST.code).json({message:err.message}); 
  
    
@@ -364,6 +369,7 @@ let sendEmailToUser = async(req,res)=>{
       }
     
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -430,6 +436,8 @@ let verifyEmail = async(req,res)=>{
       }
     }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -503,6 +511,8 @@ let forgotPassword = async(req,res)=>{
       // }
     // }
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -700,6 +710,7 @@ let signUp = async (req,res)=>{
     // Handle errors
 
     if(transaction) await transaction.rollback();
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1064,6 +1075,8 @@ let publicLogin = async(req,res)=>{
     }
 }
   catch(err){
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1227,6 +1240,8 @@ let privateLogin = async(req,res)=>{
     }
 }
   catch(err){
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1254,6 +1269,8 @@ let logout = async (req, res) => {
  
    res.status(statusCode.SUCCESS.code).json({ message: 'Logged out successfully', sessionExpired: true });
    } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message, sessionExpired: true });
 
    }
@@ -1448,6 +1465,8 @@ let adminDashboard = async (req, res) => {
     })
   }
   catch(error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message: error.message});
   }
 }

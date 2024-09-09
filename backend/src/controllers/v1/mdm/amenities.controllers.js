@@ -4,6 +4,7 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 let amenintiesMaster = db.amenitiesmaster;
 const { Op, where } = require('sequelize');
+const logger = require('../../../logger/index.logger')
 
 let viewAmenitiesList = async (req, res) => {
     try {
@@ -41,6 +42,8 @@ let viewAmenitiesList = async (req, res) => {
             })
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -78,6 +81,8 @@ let createAmenity = async (req, res) => {
         });
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -117,6 +122,8 @@ let viewAmenityById = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })
@@ -191,6 +198,8 @@ let updateAmenity = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error
         })

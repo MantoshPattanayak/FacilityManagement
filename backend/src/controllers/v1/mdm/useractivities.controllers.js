@@ -6,6 +6,7 @@ let statusmaster = db.statusmaster;
 let activitymaster = db.useractivitymasters;
 let facilityTypeMaster = db.facilitytype;
 const { Op, where } = require("sequelize");
+const logger = require('../../../logger/index.logger')
 
 let viewUserActivitiesList = async (req, res) => {
   try {
@@ -41,6 +42,8 @@ let viewUserActivitiesList = async (req, res) => {
       data: matchedData,
     });
   } catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: error.message });
@@ -92,6 +95,8 @@ let createUserActivity = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -120,6 +125,8 @@ let viewUserActivityById = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         });
@@ -191,6 +198,8 @@ let updateUserActivity = async (req, res) => {
         }
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -213,6 +222,8 @@ let initialData = async (req, res) => {
         });
     }
     catch (error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })

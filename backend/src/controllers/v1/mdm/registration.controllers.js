@@ -28,6 +28,7 @@ const { Op } = require('sequelize');
 let user = db.usermaster
 let imageUpload = require('../../../utils/imageUpload')
 let imageUpdate= require('../../../utils/imageUpdate');
+const logger = require('../../../logger/index.logger')
 
 let facilityEvent = db.facilityEvents
 // Admin facility registration
@@ -410,6 +411,8 @@ const registerFacility = async (req, res) => {
   
  } catch (error) {
   if(transaction) await transaction.rollback();
+  logger.error(`An error occurred: ${error.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });
@@ -479,6 +482,8 @@ const initialDataFetch = async (req,res)=>{
         }
         )
     } catch (err) {
+      logger.error(`An error occurred: ${err.message}`); // Log the error
+
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })
@@ -570,6 +575,8 @@ const getFacilityWrtId = async(req,res)=>{
       ownersAddress:findOwnerDetails
     })
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1561,6 +1568,8 @@ const updateFacility = async(req,res)=>{
 
 }catch (err) {
   if(transaction) await transaction.rollback();
+  logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })

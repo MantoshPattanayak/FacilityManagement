@@ -18,6 +18,7 @@ const { v4: uuidv4 } = require('uuid');
 let eventactivites = db.eventActivities
 let {parkBooking,uploadTicket} = require('../booking/bookings.controllers.js')
 let {createHosteventdetails} = require('../configuration/hosteventdetails.controller.js')
+const logger = require('../../../logger/index.logger')
 
 let paymentItems = db.paymentItems
 const getRazorpayApiKeys = async (req, res) => {
@@ -35,6 +36,8 @@ const getRazorpayApiKeys = async (req, res) => {
     })
   }
   catch (error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error
     })
@@ -172,6 +175,8 @@ const paymentVerification = async (req, res) => {
       }
       
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
   }
 };
@@ -191,6 +196,8 @@ const fetchOrder = async (req, res) => {
     })
   }
   catch(error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message
     })
@@ -210,6 +217,8 @@ const fetchPayment = async (req, res) => {
     })
   }
   catch(error) {
+    logger.error(`An error occurred: ${error.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message
     })
@@ -891,6 +900,7 @@ const checkout =  async (req, res) => {
     })
   } catch (error) {
     if(transaction) await transaction.rollback();
+    logger.error(`An error occurred: ${error.message}`); // Log the error
     console.error('Error creating order with Razorpay:', error);
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:error.message
@@ -1070,6 +1080,8 @@ let webhook =  async (req, res) => {
     }
 
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:`Something went wrong`});
   }
 
@@ -1128,6 +1140,8 @@ let getDetailsWrtRazorpayOrderId = async (req,res)=>{
       orderData:newData
     })
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })
@@ -1296,6 +1310,8 @@ let refundData = async (req, res) => {
 
   } catch (err) {
     console.error('Error processing refund:', err);
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message
     });
@@ -1399,6 +1415,8 @@ let checkAvailabilityOfSpace = async(req,res)=>{
 
 
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message:err.message
     })

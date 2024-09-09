@@ -7,6 +7,7 @@ const fs = require('fs');
 const imageUpload = require('../../../utils/imageUpload');
 let { Op } =require('sequelize');
 const imageUpdate = require("../../../utils/imageUpdate");
+const logger = require('../../../logger/index.logger')
 
 let insertNewGalleryRecord = async (req, res) => {
     try {
@@ -57,6 +58,8 @@ let insertNewGalleryRecord = async (req, res) => {
         return res.status(statusCode.SUCCESS.code).json({ message: "New gallery record saved successfully!" });
     } 
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -107,6 +110,8 @@ let fetchGalleryList = async (req, res) => {
         })
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -193,6 +198,8 @@ let updateGalleryRecord = async (req, res) => {
         return res.status(statusCode.SUCCESS.code).json({ message: "Gallery record updated successfully!" });
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -225,6 +232,8 @@ let fetchGalleryById = async (req, res) => {
         })
     }
     catch(error) {
+        logger.error(`An error occurred: ${error.message}`); // Log the error
+
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
