@@ -4,6 +4,7 @@ const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const resource = db.resourcemaster;
 const Sequelize = db.Sequelize
+const logger = require('../../../logger/index.logger')
 
 const resourceId = async (req, res) => {
   try {
@@ -18,6 +19,8 @@ const resourceId = async (req, res) => {
       data: resourcemasters,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res
       .status(statusCode.INTERNAL_SERVER_ERROR.code)
       .json({ message: err.message });
@@ -92,9 +95,11 @@ const createResource = async (req, res) => {
     //     message: "please provide all required details",
     //   });
     // }
-  } catch (error) {
+  } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
-      message: error.message,
+      message: err.message,
     });
   }
 };
@@ -170,10 +175,12 @@ const updateResource = async (req, res) => {
     console.log(updateResourceData, 'fsdfsd', updateResourceCount)
 
 
-  } catch (error) {
+  } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: "Internal Server Error",
-      error: error.message,
+      error: err.message,
     });
   }
 };
@@ -227,6 +234,8 @@ ORDER BY
       Resource: paginatedshowAllResources,
     });
   } catch (err) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: err.message,
     });
@@ -269,8 +278,10 @@ let dataLoadResource = async (req, res) => {
     } catch (err) {
       res.status(statusCode.UNAUTHORIZED.code).json({ message: err.message });
     }
-  } catch (e) {
-    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: e.message });
+  } catch (err) {    
+    logger.error(`An error occurred: ${err.message}`); // Log the error
+
+    res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
   }
   finally {
     // Always release the connection, whether there was an error or not

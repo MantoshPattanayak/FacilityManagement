@@ -4,6 +4,7 @@ const db = require('../../../models');
 const bcrypt = require('bcrypt');
 const { where } = require('sequelize');
 const languageresources = db.languageresources;
+const logger = require('../../../logger/index.logger')
 
 let viewLanguageContent = async (req, res) => {
     try {
@@ -20,7 +21,9 @@ let viewLanguageContent = async (req, res) => {
             languageContentResultData
         })
     }
-    catch(error) {
+    catch(error) {    
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+        
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -51,6 +54,7 @@ let insertLanguageContent = async (req, res) => {
         })
     }
     catch(error) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })

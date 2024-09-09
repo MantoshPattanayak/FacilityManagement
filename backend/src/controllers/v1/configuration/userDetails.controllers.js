@@ -18,6 +18,7 @@ let authSessions = db.authsessions
 let deviceLogin = db.device
 let QueryTypes = db.QueryTypes
 let userActivityPreference = db.userActivityPreference
+const logger = require('../../../logger/index.logger')
 
 let autoSuggestionForUserSearch = async (req, res) => {
   try {

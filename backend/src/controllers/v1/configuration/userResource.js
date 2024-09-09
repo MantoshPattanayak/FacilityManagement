@@ -10,6 +10,7 @@ const resourcemaster = db.resourcemaster
 const user = db.privateuser
 const userresource = db.userresource;
 const QueryTypes = db.QueryTypes
+const logger = require('../../../logger/index.logger')
 
 
 let dataload = async (req, res) => {

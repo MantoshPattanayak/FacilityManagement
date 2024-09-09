@@ -6,6 +6,7 @@ const sequelize = db.sequelize;
 const Sequelize = db.Sequelize
 const sendEmail = require('../../../utils/generateEmail')
 const mailToken = require('../../../middlewares/mailToken.middlewares')
+const logger = require('../../../logger/index.logger')
 
 const createGrievance = async (req, res) => {
   try {
@@ -94,6 +95,7 @@ const createGrievance = async (req, res) => {
         message: "Grivance is not created",
       });
   } catch (error) {
+    logger.error(`An error occurred: ${err.message}`); // Log the error
     return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
       message: error.message,
     });

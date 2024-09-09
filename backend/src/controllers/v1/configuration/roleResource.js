@@ -8,6 +8,8 @@ const roleresource = db.roleresource
 const resourcemaster = db.resourcemaster
 const QueryTypes = db.QueryTypes
 let { Op } = require('sequelize')
+const logger = require('../../../logger/index.logger')
+
 let dataload = async (req, res) => {
     try {
         let roleData = await role.findAll({
