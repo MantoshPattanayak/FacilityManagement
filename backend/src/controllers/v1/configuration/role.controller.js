@@ -4,6 +4,8 @@ const statusCode = require("../../../utils/statusCode");
 const QueryTypes = db.QueryTypes;
 const sequelize = db.sequelize;
 const role = db.rolemaster;
+const logger = require('../../../logger/index.logger')
+
 //get
 const roleId = async (req, res) => {
   try {

@@ -61,6 +61,7 @@ const displayMapData = async(req,res)=>{
 
     }
     catch(err){
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({ message: err.message });
 
     }
@@ -88,6 +89,7 @@ const searchParkFacilities = async (req, res) => {
         
      
     } catch (error) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -398,6 +400,7 @@ const autoSuggestionForOverallSearch = async (req,res)=>{
         });
 
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
         message:err.message
        });
@@ -505,7 +508,8 @@ const viewParkById = async (req,res)=>{
         
         let fetchfacilitiesActivities = await facilitiesActivities.findAll({
             where:{
-                facilityTypeId:findFacilityTypeId.facilityTypeId
+                facilityTypeId:findFacilityTypeId.facilityTypeId,
+                facilityId:findFacilityTypeId.facilityId
             },
             include:[
                { 
@@ -546,6 +550,7 @@ const viewParkById = async (req,res)=>{
         }
     }
     catch(err){
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({message:err.message})
 
     }
@@ -1115,6 +1120,7 @@ const nearByDataInMap = async (req, res) => {
             data: encodedFacilities // Assuming fetchFacilities is an array with the result at index 0
         });
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: err.message
         });
@@ -1123,7 +1129,8 @@ const nearByDataInMap = async (req, res) => {
 
 // api to fetch filter option based on facility type
 const facilityFilterOption = async (req, res) => {
-    let facilityTypeId = req.params.facilityTypeId;
+    try{
+        let facilityTypeId = req.params.facilityTypeId;
     
     let fetchActivityMaster = await sequelize.query(`
         select * from amabhoomi.useractivitymasters u
@@ -1147,6 +1154,12 @@ const facilityFilterOption = async (req, res) => {
         message: 'Activity, Amenity, Services List',
         fetchActivityMaster, fetchAmenitiesMaster, fetchServicesMaster, fetchEventCategories
     })
+    }
+    catch(err){
+        logger.error(`An error occurred: ${err.message}`); // Log the error
+        return res.status(stausCode.INTERNAL_SERVER_ERROR.code).json({message: err.message})
+    }
+    
 }
 
 let findOverallSearch = async (req,res)=>{
@@ -1338,6 +1351,7 @@ let findOverallSearch = async (req,res)=>{
        
       
     } catch (err) {
+        logger.error(`An error occurred: ${err.message}`); // Log the error
         return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message:err.message
         })

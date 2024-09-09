@@ -95,6 +95,9 @@ module.exports = (sequelize,DataTypes)=>{
         capacity:{
             type: DataTypes.INTEGER
         },
+        timing:{
+            type:DataTypes.JSON
+        },
         createdBy:{
             type:DataTypes.INTEGER
         },
