@@ -291,7 +291,7 @@ const Bokking_Bill = () => {
                         </span>
                         <span className="Ticekt_time">
                             <h1>Time</h1>
-                            <h2>{formatTime(Bill_Data.createdOn)}</h2>
+                            <h2>{formatTime(Bill_Data.startDate)}</h2>
                         </span>
                     </div>
                     <div className="Date_Time_tciket">
