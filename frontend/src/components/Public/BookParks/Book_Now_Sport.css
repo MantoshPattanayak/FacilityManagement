@@ -70,6 +70,34 @@
   margin-left: 100px;
 }
 
+/* For button  */
+.scheduleButton {
+  float: right; 
+  margin-left: auto; 
+  margin-right: 0; 
+  padding: 6px 9px; 
+  background-color: #007bff; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  margin-bottom: 14px;
+}
+
+.scheduleButton:hover {
+  background-color: #0056b3; 
+}
+
+.scheduleButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.scheduleButton:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+
 /* Styles for both buttons */
 .Add_to_Cart {
   padding: 10px 20px;
