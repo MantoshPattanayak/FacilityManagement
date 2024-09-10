@@ -23,12 +23,14 @@ import "./Book_Now_Sport.css";
 import axiosHttpClient from "../../../utils/axios";
 import RazorpayButton from "../../../common/RazorpayButton";
 import DosDont from "../FooterPages/DosDont";
+import { convertTimeToMinutes, defineOccupancyStatus, formatDateYYYYMMDD } from "../../../utils/utilityFunctions";
 
 const Book_Now_Sport = () => {
   // UseSate for post data -------------------------------------
   const [formData, setFormData] = useState({
     entityId: "",
     entityTypeId: "",
+    capacity: "",
     facilityPreference: {
       playersLimit: 1,
       sports: "",
@@ -41,28 +43,28 @@ const Book_Now_Sport = () => {
   const [sportsList, setSportsList] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
-  const amount = 10;
+  const [amount, setAmount] = useState(0.00);
   const [isDisabled, setIsDisabled] = useState(true);
   const [errors, setErrors] = useState({});
   const [showSchedule, setShowschedule] = useState(false);
 
   //Time schedule of sports
-  const sportsSchedule = [
-    { occupancy: "Low occupancy", startTime: "06:00 AM", endTime: "07:00 AM" },
-    { occupancy: "High occupancy", startTime: "07:00 AM", endTime: "08:00 AM" },
-    { occupancy: "Occupied", startTime: "08:00 AM", endTime: "09:00 AM" },
-    { occupancy: "Low occupancy", startTime: "09:00 AM", endTime: "10:00 AM" },
-    { occupancy: "High occupancy", startTime: "10:00 AM", endTime: "11:00 AM" },
-    { occupancy: "Occupied", startTime: "11:00 AM", endTime: "12:00 PM" },
-    { occupancy: "Low occupancy", startTime: "12:00 PM", endTime: "01:00 PM" },
-    { occupancy: "High occupancy", startTime: "01:00 PM", endTime: "02:00 PM" },
-    { occupancy: "Occupied", startTime: "02:00 PM", endTime: "03:00 PM" },
-    { occupancy: "Low occupancy", startTime: "03:00 AM", endTime: "04:00 PM" },
-    { occupancy: "High occupancy", startTime: "04:00 PM", endTime: "05:00 PM" },
-    { occupancy: "Occupied", startTime: "05:00 PM", endTime: "06:00 PM" },
-    { occupancy: "High occupancy", startTime: "06:00 PM", endTime: "07:00 PM" },
-    { occupancy: "Occupied", startTime: "07:00 PM", endTime: "08:00 PM" },
-  ];
+  const [sportsSchedule, setSportsSchedule] = useState([
+    { occupancy: "Low occupancy", operatingHoursFrom: "06:00:00", operatingHoursTo: "07:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "High occupancy", operatingHoursFrom: "07:00:00", operatingHoursTo: "08:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Occupied", operatingHoursFrom: "08:00:00", operatingHoursTo: "09:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Low occupancy", operatingHoursFrom: "09:00:00", operatingHoursTo: "10:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "High occupancy", operatingHoursFrom: "10:00:00", operatingHoursTo: "11:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Occupied", operatingHoursFrom: "11:00:00", operatingHoursTo: "12:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Low occupancy", operatingHoursFrom: "12:00:00", operatingHoursTo: "13:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "High occupancy", operatingHoursFrom: "13:00:00", operatingHoursTo: "14:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Occupied", operatingHoursFrom: "14:00:00", operatingHoursTo: "15:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Low occupancy", operatingHoursFrom: "15:00:00", operatingHoursTo: "16:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "High occupancy", operatingHoursFrom: "16:00:00", operatingHoursTo: "17:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Occupied", operatingHoursFrom: "17:00:00", operatingHoursTo: "18:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "High occupancy", operatingHoursFrom: "18:00:00", operatingHoursTo: "19:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    { occupancy: "Occupied", operatingHoursFrom: "19:00:00", operatingHoursTo: "20:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+  ]);
 
   // Here Increment ------------------------------------------------
   const handleDecrement = () => {
@@ -104,6 +106,10 @@ const Book_Now_Sport = () => {
 
     // Set showSchedule to true when bookingDate changes
     if (name === "bookingDate" && value) {
+      //if facilityId, bookingDate and sports data available, then fetch availability data
+      if (formData.entityId && formData.facilityPreference.bookingDate && formData.facilityPreference.sports) {
+        getAvailabilityOfSpace(formData.entityId, formData.facilityPreference.bookingDate, formData.facilityPreference.sports);
+      }
       setShowschedule(true);
     }
   };
@@ -112,11 +118,11 @@ const Book_Now_Sport = () => {
     setShowschedule(false);
   };
 
-  const setTimes = (startTime, endTime) => {
-    // Convert times from "03:00 PM" to "15:00"
+  const setTimes = (startTime, endTime, amount) => {
+    // Convert times from "03:00 :00" to "15:00"
     const formattedStartTime = convertTo24HourFormat(startTime);
     const formattedEndTime = convertTo24HourFormat(endTime);
-
+    setAmount(amount);
     setFormData((prevState) => ({
       ...prevState,
       facilityPreference: {
@@ -130,15 +136,15 @@ const Book_Now_Sport = () => {
   };
 
   const convertTo24HourFormat = (time) => {
-    const [timePart, modifier] = time.split(" "); // Split the time and AM/PM
+    const [timePart, modifier] = time.split(" "); // Split the time and:00/:00
     let [hours, minutes] = timePart.split(":"); // Split hours and minutes
 
     if (hours === "12") {
-      hours = "00"; // Adjust for 12 AM case
+      hours = "00"; // Adjust for 12:00 case
     }
 
-    if (modifier === "PM") {
-      hours = String(parseInt(hours, 10) + 12); // Convert to 24-hour format for PM times
+    if (modifier === ":00") {
+      hours = String(parseInt(hours, 10) + 12); // Convert to 24-hour format for :00 times
     }
 
     return `${hours.padStart(2, "0")}:${minutes}`; // Return the time in "HH:MM" format
@@ -267,32 +273,95 @@ const Book_Now_Sport = () => {
         ["entityTypeId"]: res.data.facilitiesData[0].facilityTypeId,
         ["facilityId"]: facilityId,
         ["entityId"]: facilityId,
+        ["capacity"]: res.data.facilitiesData[0].capacity || 100,
       });
+
+      setSportsList(
+        res.data.fetchfacilitiesActivities.map((sports) => {
+          return sports;
+        })
+      );
     } catch (err) {
       console.log("here Error", err);
     }
   }
-  //  here Get types of Sport ----------------------
-  async function GetSportType() {
+
+  //get booking availability
+  async function getAvailabilityOfSpace(facilityId, bookingDate, entityId, tariffTypeId = 2) {
+    console.log("getAvailabilityOfSpace", { facilityId, bookingDate, entityId, tariffTypeId });
     try {
-      let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
-      console.log("here Response of Get sport type in dropdown", res.data.data);
-      setSportsList(
-        res.data.data.filter((sports) => {
-          return sports.facilityTypeId == 2;
-        })
-      );
-    } catch (err) {
-      console.error("here Error of get sport types in dropdown");
+      let res = await axiosHttpClient('FETCH_AVAILABILITY_API', 'post', {
+        facilityId, Date: bookingDate, entityId, tariffTypeId
+      });
+      console.log("getAvailabilityOfSpace", res.data);
+      let result;
+      if(res.data.tariffDetails.length == 0) {
+        res.data.tariffDetails = sportsSchedule;
+      }
+
+      // to determine the number of matching bookings
+      result = res.data.tariffDetails.map(tariff => {
+        // Convert operating hours to Date objects for comparison
+        const operatingFrom = new Date(`1970-01-01T${tariff.operatingHoursFrom}`);
+        const operatingTo = new Date(`1970-01-01T${tariff.operatingHoursTo}`);
+        
+        // Filter matching bookings for each tariff detail
+        const matchingBookings = res.data.bookingDetails.filter(booking => {
+          // Ensure matching facilityId
+          if (tariff.facilityId !== booking.facilityId) return false;
+
+          // Convert booking start and end times to Date objects for comparison
+          const startDate = new Date(`1970-01-01T${booking.startDate}`);
+          const endDate = new Date(`1970-01-01T${booking.endDate}`);
+          // console.log({operatingFrom, operatingTo, startDate, endDate, boolean: startDate >= operatingFrom || endDate <= operatingTo});
+          // Check if the booking times are within the operating hours
+          return startDate >= operatingFrom && endDate <= operatingTo;
+        });
+
+        // Return the tariff detail object with an additional count property
+        return {
+          ...tariff,
+          bookingCount: matchingBookings.length // Count of matching bookings
+        };
+      });
+
+      result = result.map((data) => {
+        return {
+          ...data, ["occupancy"]: defineOccupancyStatus(data.bookingCount, formData.capacity), 
+        }
+      })
+
+      if (result.length > 0) {
+        setSportsSchedule(result);
+      }
+
+      // console.log("sports schedule", result);
+    }
+    catch (error) {
+      console.error("error at fetching availability", error);
     }
   }
+  //  here Get types of Sport ----------------------
+  // async function GetSportType() {
+  //   try {
+  //     let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
+  //     console.log("here Response of Get sport type in dropdown", res.data.data);
+  //     setSportsList(
+  //       res.data.data.filter((sports) => {
+  //         return sports.facilityTypeId == 2;
+  //       })
+  //     );
+  //   } catch (err) {
+  //     console.error("here Error of get sport types in dropdown");
+  //   }
+  // }
   // function to handle payment success
   const handlePaymentSuccess = ({ response, res }) => {
     // console.log("Book park payment success", response);
     let bookingId = res.data.shareableLink[0].bookingId;
     let entityTypeId = res.data.shareableLink[0].entityTypeId;
 
-    toast.success("Event has been booked successfully.", {
+    toast.success("Playfield has been booked successfully.", {
       autoClose: 2000,
       onClose: () => {
         setTimeout(() => {
@@ -320,7 +389,7 @@ const Book_Now_Sport = () => {
       new URLSearchParams(location.search).get("facilityId")
     );
     console.log("facilityId", facilityId);
-    GetSportType();
+    // GetSportType();
     getSub_Sport_details(facilityId);
   }, []);
 
@@ -356,6 +425,11 @@ const Book_Now_Sport = () => {
     let err = validation(formData);
     if (Object.keys(err).length > 0) setIsDisabled(true);
     else setIsDisabled(false);
+
+    //if facilityId, bookingDate and sports data available, then fetch availability data
+    if (formData.entityId && formData.facilityPreference.bookingDate && formData.facilityPreference.sports) {
+      getAvailabilityOfSpace(formData.entityId, formData.facilityPreference.bookingDate, formData.facilityPreference.sports);
+    }
   }, [formData]);
 
   useEffect(() => {
@@ -396,10 +470,10 @@ const Book_Now_Sport = () => {
                 >
                   <option value="">Select</option>
                   {sportsList?.length > 0 &&
-                    sportsList.map((sports) => {
+                    sportsList.map((sports, index) => {
                       return (
-                        <option value={sports.userActivityId}>
-                          {sports.userActivityName}
+                        <option key={index} value={sports.activityData.userActivityId}>
+                          {sports.activityData.userActivityName}
                         </option>
                       );
                     })}
@@ -413,6 +487,7 @@ const Book_Now_Sport = () => {
                   type="date"
                   class="formInput"
                   name="bookingDate"
+                  min={formatDateYYYYMMDD(new Date().toISOString().split('T')[0])}
                   value={formData.facilityPreference.bookingDate}
                   onChange={handleChangeInput}
                 />
@@ -421,6 +496,7 @@ const Book_Now_Sport = () => {
                 <All_Sports_Schedule
                   closePopup={closePopup}
                   schedule={sportsSchedule}
+                  bookingDate={formData.facilityPreference.bookingDate}
                   setTimes={setTimes}
                 />
               )}
@@ -501,7 +577,7 @@ const Book_Now_Sport = () => {
             </button>
 
             {isDisabled ? (
-              <button className="add-to-cart-button" disabled={isDisabled}>
+              <button className="razorpay-button" disabled={isDisabled}>
                 <FontAwesomeIcon icon={faCreditCard} /> Pay Now{" "}
                 <FontAwesomeIcon icon={faIndianRupeeSign} />{" "}
                 {parseFloat(
@@ -554,42 +630,47 @@ const Book_Now_Sport = () => {
   );
 };
 
-const All_Sports_Schedule = ({ closePopup, schedule, setTimes }) => {
+const All_Sports_Schedule = ({ closePopup, schedule, setTimes, bookingDate }) => {
   const [selectedSection, setSelectedSection] = useState("morning");
-
+  bookingDate = new Date(bookingDate);
+  let weekDaysArray = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];      
+  let day = weekDaysArray[bookingDate.getDay()];
+  console.log("schedule", schedule);
   // Filter schedule based on selected section
   const filteredSchedule = schedule.filter((item) => {
-    const startTime = parseTime(item.startTime);
-
+    // console.log(item);
+    const startTime = convertTimeToMinutes(item.operatingHoursFrom);
+    const endTime = convertTimeToMinutes(item.operatingHoursTo);
+    // console.log({ startTime, endTime });
     if (selectedSection === "morning") {
       return (
-        startTime >= parseTime("06:00 AM") && startTime <= parseTime("11:00 AM")
+        startTime >= convertTimeToMinutes("06:00:00") && endTime <= convertTimeToMinutes("11:59:00")
       );
     }
     if (selectedSection === "afternoon") {
       return (
-        startTime >= parseTime("12:00 PM") && startTime <= parseTime("03:00 PM")
+        startTime >= convertTimeToMinutes("12:00:00") && endTime <= convertTimeToMinutes("15:59:00")
       );
     }
     if (selectedSection === "evening") {
       return (
-        startTime >= parseTime("04:00 PM") && startTime <= parseTime("08:00 PM")
+        startTime >= convertTimeToMinutes("16:00:00") && endTime <= convertTimeToMinutes("20:00:00")
       );
     }
     return false;
   });
-
+  console.log("filteredSchedule", filteredSchedule);
   // Parse time strings into comparable values
-  function parseTime(time) {
-    const [hour, minute, period] = time.match(/(\d+):(\d+)\s(AM|PM)/).slice(1);
-    let hours = parseInt(hour, 10);
-    if (period === "PM" && hours !== 12) {
-      hours += 12;
-    } else if (period === "AM" && hours === 12) {
-      hours = 0;
-    }
-    return hours * 60 + parseInt(minute, 10); // Return total minutes for comparison
-  }
+  // function convertTimeToMinutes(time) {
+  //   const [hour, minute, period] = time?.match(/(\d+):(\d+)\s(AM|:00)/).slice(1);
+  //   let hours = parseInt(hour, 10);
+  //   if (period === ":00" && hours !== 12) {
+  //     hours += 12;
+  //   } else if (period === "AM" && hours === 12) {
+  //     hours = 0;
+  //   }
+  //   return hours * 60 + parseInt(minute, 10); // Return total minutes for comparison
+  // }
 
   const getOccupancyClass = (occupancy) => {
     switch (occupancy) {
@@ -604,8 +685,8 @@ const All_Sports_Schedule = ({ closePopup, schedule, setTimes }) => {
     }
   };
 
-  const handleSelect = (startTime, endTime) => {
-    setTimes(startTime, endTime); // Pass selected times to parent
+  const handleSelect = (startTime, endTime, amount) => {
+    setTimes(startTime, endTime, amount); // Pass selected times to parent
     closePopup(); // Close the popup after selection
   };
 
@@ -647,7 +728,7 @@ const All_Sports_Schedule = ({ closePopup, schedule, setTimes }) => {
                 <div
                   className="item_schedule_box"
                   key={index}
-                  onClick={() => handleSelect(item.startTime, item.endTime)}
+                  onClick={() => handleSelect(item.operatingHoursFrom, item.operatingHoursTo, item[`${day}`])}
                 >
                   <div
                     className={`item_occupancy ${getOccupancyClass(
@@ -657,7 +738,7 @@ const All_Sports_Schedule = ({ closePopup, schedule, setTimes }) => {
                     {item.occupancy}
                   </div>
                   <div className="scheduleTime">
-                    {item.startTime} - {item.endTime}
+                    {item.operatingHoursFrom.slice(0, 5)} - {item.operatingHoursTo.slice(0, 5)}
                   </div>
                 </div>
               ))}
