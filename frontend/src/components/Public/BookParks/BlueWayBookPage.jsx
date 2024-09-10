@@ -19,6 +19,7 @@ import "./BlueWayBookPage.css";
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 import RazorpayButton from "../../../common/RazorpayButton";
+import { formatDateYYYYMMDD } from "../../../utils/utilityFunctions";
 const BlueWayBookPage = () => {
     // UseSate for post data -------------------------------------
     const [formData, setFormData] = useState({
@@ -193,7 +194,7 @@ const BlueWayBookPage = () => {
         const err = {}
 
         if (!value.facilityPreference.sports) {
-            err.sports = "Please Select Sport Name"
+            err.sports = "Please Select Activity Name"
         }
         if (!value.facilityPreference.bookingDate) {
             err.bookingDate = "Please Select Booking Date"
@@ -256,7 +257,7 @@ const BlueWayBookPage = () => {
                             </div>
                             <div class="formGroup">
                                 <span class="fieldName">Date<span className="required-asterisk">*</span>:</span>
-                                <input type="date" class="formInput" name="bookingDate" value={formData.facilityPreference.bookingDate} onChange={handleChangeInput} />
+                                <input type="date" class="formInput" name="bookingDate" min={formatDateYYYYMMDD(new Date().toISOString().split('T')[0])} value={formData.facilityPreference.bookingDate} onChange={handleChangeInput} />
                             </div>
                             <div class="formGroup">
                                 <span class="fieldName">Start Time<span className="required-asterisk">*</span>:</span>

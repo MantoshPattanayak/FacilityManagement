@@ -23,6 +23,7 @@ import "./Book_Now_Multipurposeground.css"
 // fecth /post data -----------------------------------------------------
 import axiosHttpClient from "../../../utils/axios";
 import RazorpayButton from "../../../common/RazorpayButton";
+import { formatDateYYYYMMDD } from "../../../utils/utilityFunctions";
 const Book_Now_Multipurposeground = () => {
   // UseSate for post data -------------------------------------
   const [formData, setFormData] = useState({
@@ -214,7 +215,7 @@ const Book_Now_Multipurposeground = () => {
       console.log("here Response of Get sport type in dropdown", res.data.data);
       setSportsList(
         res.data.data.filter((sports) => {
-          return sports.facilityTypeId == 2;
+          return sports;
         })
       );
     } catch (err) {
@@ -265,7 +266,7 @@ const Book_Now_Multipurposeground = () => {
     const err = {};
 
     if (!value.facilityPreference.sports) {
-      err.sports = "Please Select Sport Name";
+      err.sports = "Please Select Activity Name";
     }
     if (!value.facilityPreference.bookingDate) {
       err.bookingDate = "Please Select Booking Date";
@@ -320,7 +321,7 @@ const Book_Now_Multipurposeground = () => {
             <form class="bookingForm">
               <div class="formGroup">
                 <span class="fieldName">
-                  Sport<span className="required-asterisk">*</span>:
+                  Activity<span className="required-asterisk">*</span>:
                 </span>
                 <select
                   class="formSelect"
@@ -347,6 +348,7 @@ const Book_Now_Multipurposeground = () => {
                   type="date"
                   class="formInput"
                   name="bookingDate"
+                  min={formatDateYYYYMMDD(new Date().toISOString().split('T')[0])}
                   value={formData.facilityPreference.bookingDate}
                   onChange={handleChangeInput}
                 />

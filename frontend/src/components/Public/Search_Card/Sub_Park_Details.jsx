@@ -537,6 +537,56 @@ const Sub_Park_Details = () => {
                 >
                   <button role="button_by">Book Ticket</button>
                 </Link>
+              ) : FacilitiesData[0]?.facilityTypeId == 4 ? (
+                <Link
+                  to={{
+                    pathname: `${
+                      isUserLoggedIn == 1
+                        ? "/BluewaysBookPage"
+                        : "/login-signup"
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
+                        ? `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}`
+                        : `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/BluewaysBookPage"
+                          )}`
+                    }`,
+                  }}
+                  className="button-9"
+                >
+                  <button role="button_by">Book Ticket</button>
+                </Link>
+              ) : FacilitiesData[0]?.facilityTypeId == 5 ? (
+                <Link
+                  to={{
+                    pathname: `${
+                      isUserLoggedIn == 1
+                        ? "/GreenwaysBookingPage"
+                        : "/login-signup"
+                    }`,
+                    search: `${
+                      isUserLoggedIn == 1
+                        ? `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}`
+                        : `?facilityId=${encryptDataId(
+                            FacilitiesData[0]?.facilityId
+                          )}` +
+                          `&redirect=${encryptDataId(
+                            "/GreenwaysBookingPage"
+                          )}`
+                    }`,
+                  }}
+                  className="button-9"
+                >
+                  <button role="button_by">Book Ticket</button>
+                </Link>
               ) : (
                 <Link
                   to={{
