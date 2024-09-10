@@ -1351,11 +1351,13 @@ let checkAvailabilityOfSpace = async(req,res)=>{
             replacements:[statusId,findOutTheTariffMasterDetails[0].tariffMasterId,facilityId]
           })
           console.log('findOutTheTariffDetails', findOutTheTariffDetails)
-          findOutTheBookingDetails = await sequelize.query(`select count(*), startDate , endDate , facilityId , bookingDate  from amabhoomi.facilitybookings
-          where  facilityId = ? and statusId = ? and bookingDate = ?
-          group by startDate , endDate , facilityId, bookingDate`,
+          findOutTheBookingDetails = await sequelize.query(`
+            select count(*) as count, startDate , endDate , facilityId , bookingDate  
+            from amabhoomi.facilitybookings
+            where  facilityId = ? and statusId = ? and bookingDate = ? and sportsName = ?
+            group by startDate , endDate , facilityId, bookingDate, sportsName`,
           {type:QueryTypes.SELECT,
-          replacements:[facilityId, bookingStatus, Date]})
+          replacements:[facilityId, bookingStatus, Date, entityId]})
 
           findOutTheHostBookingDetails = await sequelize.query(`select count(*),
             facilityId, bookingDate, startDate, endDate from amabhoomi.hostbookings
