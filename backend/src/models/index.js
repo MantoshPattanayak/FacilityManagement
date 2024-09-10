@@ -151,6 +151,9 @@ db1.facilityStaffAllocation = require('./facilitystaffallocation.models')(sequel
 db1.facilityStaffAttendance = require("./facilitystaffattendances.models")(sequelize, DataTypes)
 // advertisement details end
 // end partner with us
+// start rate limit 
+db1.rateLimitModel = require('./rateLimiter.models')(sequelize,DataTypes)
+// end limit model
 // join operations start
 db1.facilities.hasMany(db1.facilitybookings,{foreignKey:"facilityId"})
 db1.facilitybookings.belongsTo(db1.facilities,{foreignKey:'facilityId'})
@@ -218,7 +221,7 @@ db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 
-db1.faq.sync({
+db1.rateLimitModel.sync({
   alter:false,
 });
 

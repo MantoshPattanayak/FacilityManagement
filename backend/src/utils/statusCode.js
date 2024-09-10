@@ -31,6 +31,10 @@ module.exports = {
     code: 409,
     message: "Conflict",
   },
+  TOO_MANY_REQUESTS: {
+    code: 429,
+    message: "Too Many Requests",
+  },
   INTERNAL_SERVER_ERROR: {
     code: 500,
     message: "Internal Server Error",
