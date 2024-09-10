@@ -23,7 +23,11 @@ import "./Book_Now_Sport.css";
 import axiosHttpClient from "../../../utils/axios";
 import RazorpayButton from "../../../common/RazorpayButton";
 import DosDont from "../FooterPages/DosDont";
-import { convertTimeToMinutes, defineOccupancyStatus, formatDateYYYYMMDD } from "../../../utils/utilityFunctions";
+import {
+  convertTimeToMinutes,
+  defineOccupancyStatus,
+  formatDateYYYYMMDD,
+} from "../../../utils/utilityFunctions";
 
 const Book_Now_Sport = () => {
   // UseSate for post data -------------------------------------
@@ -43,27 +47,183 @@ const Book_Now_Sport = () => {
   const [sportsList, setSportsList] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
-  const [amount, setAmount] = useState(0.00);
+  const [amount, setAmount] = useState(0.0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [errors, setErrors] = useState({});
   const [showSchedule, setShowschedule] = useState(false);
+  const [isDateChanged, setIsDateChanged] = useState(false);
+
 
   //Time schedule of sports
   const [sportsSchedule, setSportsSchedule] = useState([
-    { occupancy: "Low occupancy", operatingHoursFrom: "06:00:00", operatingHoursTo: "07:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "High occupancy", operatingHoursFrom: "07:00:00", operatingHoursTo: "08:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Occupied", operatingHoursFrom: "08:00:00", operatingHoursTo: "09:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Low occupancy", operatingHoursFrom: "09:00:00", operatingHoursTo: "10:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "High occupancy", operatingHoursFrom: "10:00:00", operatingHoursTo: "11:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Occupied", operatingHoursFrom: "11:00:00", operatingHoursTo: "12:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Low occupancy", operatingHoursFrom: "12:00:00", operatingHoursTo: "13:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "High occupancy", operatingHoursFrom: "13:00:00", operatingHoursTo: "14:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Occupied", operatingHoursFrom: "14:00:00", operatingHoursTo: "15:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Low occupancy", operatingHoursFrom: "15:00:00", operatingHoursTo: "16:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "High occupancy", operatingHoursFrom: "16:00:00", operatingHoursTo: "17:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Occupied", operatingHoursFrom: "17:00:00", operatingHoursTo: "18:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "High occupancy", operatingHoursFrom: "18:00:00", operatingHoursTo: "19:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
-    { occupancy: "Occupied", operatingHoursFrom: "19:00:00", operatingHoursTo: "20:00:00", sun: 0.00, mon: 0.00, tue: 0.00, wed: 0.00, thu: 0.00, fri: 0.00, sat: 0.00, },
+    {
+      occupancy: "Low occupancy",
+      operatingHoursFrom: "06:00:00",
+      operatingHoursTo: "07:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "High occupancy",
+      operatingHoursFrom: "07:00:00",
+      operatingHoursTo: "08:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Occupied",
+      operatingHoursFrom: "08:00:00",
+      operatingHoursTo: "09:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Low occupancy",
+      operatingHoursFrom: "09:00:00",
+      operatingHoursTo: "10:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "High occupancy",
+      operatingHoursFrom: "10:00:00",
+      operatingHoursTo: "11:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Occupied",
+      operatingHoursFrom: "11:00:00",
+      operatingHoursTo: "12:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Low occupancy",
+      operatingHoursFrom: "12:00:00",
+      operatingHoursTo: "13:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "High occupancy",
+      operatingHoursFrom: "13:00:00",
+      operatingHoursTo: "14:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Occupied",
+      operatingHoursFrom: "14:00:00",
+      operatingHoursTo: "15:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Low occupancy",
+      operatingHoursFrom: "15:00:00",
+      operatingHoursTo: "16:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "High occupancy",
+      operatingHoursFrom: "16:00:00",
+      operatingHoursTo: "17:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Occupied",
+      operatingHoursFrom: "17:00:00",
+      operatingHoursTo: "18:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "High occupancy",
+      operatingHoursFrom: "18:00:00",
+      operatingHoursTo: "19:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
+    {
+      occupancy: "Occupied",
+      operatingHoursFrom: "19:00:00",
+      operatingHoursTo: "20:00:00",
+      sun: 0.0,
+      mon: 0.0,
+      tue: 0.0,
+      wed: 0.0,
+      thu: 0.0,
+      fri: 0.0,
+      sat: 0.0,
+    },
   ]);
 
   // Here Increment ------------------------------------------------
@@ -103,13 +263,45 @@ const Book_Now_Sport = () => {
       },
     }));
     console.log("formData", formData);
+    setIsDateChanged(true);
 
     // Set showSchedule to true when bookingDate changes
     if (name === "bookingDate" && value) {
       //if facilityId, bookingDate and sports data available, then fetch availability data
-      if (formData.entityId && formData.facilityPreference.bookingDate && formData.facilityPreference.sports) {
-        getAvailabilityOfSpace(formData.entityId, formData.facilityPreference.bookingDate, formData.facilityPreference.sports);
+      if (
+        formData.entityId &&
+        formData.facilityPreference.bookingDate &&
+        formData.facilityPreference.sports
+      ) {
+        getAvailabilityOfSpace(
+          formData.entityId,
+          formData.facilityPreference.bookingDate,
+          formData.facilityPreference.sports
+        );
       }
+      setShowschedule(false);
+      
+    }
+  };
+
+  const handleOpenSchedule = (event) => {
+    event.preventDefault();
+
+    const name = event.target.name;
+
+    if (
+      name === "timeSlot" &&
+      formData.entityId &&
+      formData.facilityPreference.bookingDate &&
+      formData.facilityPreference.sports
+    ) {
+      setShowschedule(true);
+      getAvailabilityOfSpace(
+        formData.entityId,
+        formData.facilityPreference.bookingDate,
+        formData.facilityPreference.sports
+      );
+    } else {
       setShowschedule(true);
     }
   };
@@ -287,26 +479,41 @@ const Book_Now_Sport = () => {
   }
 
   //get booking availability
-  async function getAvailabilityOfSpace(facilityId, bookingDate, entityId, tariffTypeId = 2) {
-    console.log("getAvailabilityOfSpace", { facilityId, bookingDate, entityId, tariffTypeId });
+  async function getAvailabilityOfSpace(
+    facilityId,
+    bookingDate,
+    entityId,
+    tariffTypeId = 2
+  ) {
+    console.log("getAvailabilityOfSpace", {
+      facilityId,
+      bookingDate,
+      entityId,
+      tariffTypeId,
+    });
     try {
-      let res = await axiosHttpClient('FETCH_AVAILABILITY_API', 'post', {
-        facilityId, Date: bookingDate, entityId, tariffTypeId
+      let res = await axiosHttpClient("FETCH_AVAILABILITY_API", "post", {
+        facilityId,
+        Date: bookingDate,
+        entityId,
+        tariffTypeId,
       });
       console.log("getAvailabilityOfSpace", res.data);
       let result;
-      if(res.data.tariffDetails.length == 0) {
+      if (res.data.tariffDetails.length == 0) {
         res.data.tariffDetails = sportsSchedule;
       }
 
       // to determine the number of matching bookings
-      result = res.data.tariffDetails.map(tariff => {
+      result = res.data.tariffDetails.map((tariff) => {
         // Convert operating hours to Date objects for comparison
-        const operatingFrom = new Date(`1970-01-01T${tariff.operatingHoursFrom}`);
+        const operatingFrom = new Date(
+          `1970-01-01T${tariff.operatingHoursFrom}`
+        );
         const operatingTo = new Date(`1970-01-01T${tariff.operatingHoursTo}`);
-        
+
         // Filter matching bookings for each tariff detail
-        const matchingBookings = res.data.bookingDetails.filter(booking => {
+        const matchingBookings = res.data.bookingDetails.filter((booking) => {
           // Ensure matching facilityId
           if (tariff.facilityId !== booking.facilityId) return false;
 
@@ -321,23 +528,26 @@ const Book_Now_Sport = () => {
         // Return the tariff detail object with an additional count property
         return {
           ...tariff,
-          bookingCount: matchingBookings.length // Count of matching bookings
+          bookingCount: matchingBookings.length, // Count of matching bookings
         };
       });
 
       result = result.map((data) => {
         return {
-          ...data, ["occupancy"]: defineOccupancyStatus(data.bookingCount, formData.capacity), 
-        }
-      })
+          ...data,
+          ["occupancy"]: defineOccupancyStatus(
+            data.bookingCount,
+            formData.capacity
+          ),
+        };
+      });
 
       if (result.length > 0) {
         setSportsSchedule(result);
       }
 
       // console.log("sports schedule", result);
-    }
-    catch (error) {
+    } catch (error) {
       console.error("error at fetching availability", error);
     }
   }
@@ -427,8 +637,16 @@ const Book_Now_Sport = () => {
     else setIsDisabled(false);
 
     //if facilityId, bookingDate and sports data available, then fetch availability data
-    if (formData.entityId && formData.facilityPreference.bookingDate && formData.facilityPreference.sports) {
-      getAvailabilityOfSpace(formData.entityId, formData.facilityPreference.bookingDate, formData.facilityPreference.sports);
+    if (
+      formData.entityId &&
+      formData.facilityPreference.bookingDate &&
+      formData.facilityPreference.sports
+    ) {
+      getAvailabilityOfSpace(
+        formData.entityId,
+        formData.facilityPreference.bookingDate,
+        formData.facilityPreference.sports
+      );
     }
   }, [formData]);
 
@@ -456,14 +674,14 @@ const Book_Now_Sport = () => {
               </p>
             </span>
           </div>
-          <div class="bookingFormWrapper">
-            <form class="bookingForm">
-              <div class="formGroup">
-                <span class="fieldName">
+          <div className="bookingFormWrapper">
+            <form className="bookingForm">
+              <div className="formGroup">
+                <span className="fieldName">
                   Sport<span className="required-asterisk">*</span>:
                 </span>
                 <select
-                  class="formSelect"
+                  className="formSelect"
                   name="sports"
                   value={formData.facilityPreference.sports}
                   onChange={handleChangeInput}
@@ -472,22 +690,27 @@ const Book_Now_Sport = () => {
                   {sportsList?.length > 0 &&
                     sportsList.map((sports, index) => {
                       return (
-                        <option key={index} value={sports.activityData.userActivityId}>
+                        <option
+                          key={index}
+                          value={sports.activityData.userActivityId}
+                        >
                           {sports.activityData.userActivityName}
                         </option>
                       );
                     })}
                 </select>
               </div>
-              <div class="formGroup">
-                <span class="fieldName">
+              <div className="formGroup">
+                <span className="fieldName">
                   Date<span className="required-asterisk">*</span>:
                 </span>
                 <input
                   type="date"
-                  class="formInput"
+                  className="formInput"
                   name="bookingDate"
-                  min={formatDateYYYYMMDD(new Date().toISOString().split('T')[0])}
+                  min={formatDateYYYYMMDD(
+                    new Date().toISOString().split("T")[0]
+                  )}
                   value={formData.facilityPreference.bookingDate}
                   onChange={handleChangeInput}
                 />
@@ -500,35 +723,53 @@ const Book_Now_Sport = () => {
                   setTimes={setTimes}
                 />
               )}
-              <div class="formGroup">
-                <span class="fieldName">
+
+              <button
+                name="timeSlot"
+                onClick={handleOpenSchedule}
+                className="scheduleButton"
+                disabled={!isDateChanged}
+              >
+                Change Schedule
+              </button>
+
+              {/* {showSchedule && (
+                <All_Sports_Schedule
+                  closePopup={closePopup}
+                  schedule={sportsSchedule}
+                  bookingDate={formData.facilityPreference.bookingDate}
+                  setTimes={setTimes}
+                />
+              )} */}
+              <div className="formGroup">
+                <span className="fieldName">
                   Start Time<span className="required-asterisk">*</span>:
                 </span>
                 <input
                   type="time"
-                  class="formInput"
+                  className="formInput"
                   name="startTime"
                   value={formData.facilityPreference.startTime}
                   onChange={handleChangeInput}
+                  disabled
                 />
               </div>
-              <div class="formGroup">
-                <span class="fieldName">
+              <div className="formGroup">
+                <span className="fieldName">
                   End Time<span className="required-asterisk">*</span>:
                 </span>
                 <input
                   type="time"
-                  class="formInput"
+                  className="formInput"
                   name="endTime"
                   //   value={formData.facilityPreference.endTime}
-                  value={(
-                    formData.facilityPreference.endTime
-                  )}
+                  value={formData.facilityPreference.endTime}
                   onChange={handleChangeInput}
+                  disabled
                 />
               </div>
-              <div class="formGroup">
-                <span class="fieldName">
+              <div className="formGroup">
+                <span className="fieldName">
                   No of Player<span className="required-asterisk">*</span>
                 </span>
                 <div className="increament_decrement_conatiner">
@@ -556,8 +797,8 @@ const Book_Now_Sport = () => {
                 </div>
               </div>
 
-              <div class="formGroup">
-                <span class="fieldName">Amount</span>
+              <div className="formGroup">
+                <span className="fieldName">Amount</span>
                 <FontAwesomeIcon icon={faIndianRupeeSign} />
                 <h1 className="price_Sport">
                   &nbsp; {amount * formData.facilityPreference.playersLimit}/-
@@ -568,7 +809,7 @@ const Book_Now_Sport = () => {
           <div className="Button_Conatiner_Sport">
             <button
               type="submit"
-              class="add-to-cart-button"
+              className="add-to-cart-button"
               onClick={HandleAddtoCart}
               disabled={isDisabled}
             >
@@ -630,10 +871,15 @@ const Book_Now_Sport = () => {
   );
 };
 
-const All_Sports_Schedule = ({ closePopup, schedule, setTimes, bookingDate }) => {
+const All_Sports_Schedule = ({
+  closePopup,
+  schedule,
+  setTimes,
+  bookingDate,
+}) => {
   const [selectedSection, setSelectedSection] = useState("morning");
   bookingDate = new Date(bookingDate);
-  let weekDaysArray = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];      
+  let weekDaysArray = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   let day = weekDaysArray[bookingDate.getDay()];
   console.log("schedule", schedule);
   // Filter schedule based on selected section
@@ -644,17 +890,20 @@ const All_Sports_Schedule = ({ closePopup, schedule, setTimes, bookingDate }) =>
     // console.log({ startTime, endTime });
     if (selectedSection === "morning") {
       return (
-        startTime >= convertTimeToMinutes("06:00:00") && endTime <= convertTimeToMinutes("11:59:00")
+        startTime >= convertTimeToMinutes("06:00:00") &&
+        endTime <= convertTimeToMinutes("11:59:00")
       );
     }
     if (selectedSection === "afternoon") {
       return (
-        startTime >= convertTimeToMinutes("12:00:00") && endTime <= convertTimeToMinutes("15:59:00")
+        startTime >= convertTimeToMinutes("12:00:00") &&
+        endTime <= convertTimeToMinutes("15:59:00")
       );
     }
     if (selectedSection === "evening") {
       return (
-        startTime >= convertTimeToMinutes("16:00:00") && endTime <= convertTimeToMinutes("20:00:00")
+        startTime >= convertTimeToMinutes("16:00:00") &&
+        endTime <= convertTimeToMinutes("20:00:00")
       );
     }
     return false;
@@ -728,7 +977,13 @@ const All_Sports_Schedule = ({ closePopup, schedule, setTimes, bookingDate }) =>
                 <div
                   className="item_schedule_box"
                   key={index}
-                  onClick={() => handleSelect(item.operatingHoursFrom, item.operatingHoursTo, item[`${day}`])}
+                  onClick={() =>
+                    handleSelect(
+                      item.operatingHoursFrom,
+                      item.operatingHoursTo,
+                      item[`${day}`]
+                    )
+                  }
                 >
                   <div
                     className={`item_occupancy ${getOccupancyClass(
@@ -738,7 +993,8 @@ const All_Sports_Schedule = ({ closePopup, schedule, setTimes, bookingDate }) =>
                     {item.occupancy}
                   </div>
                   <div className="scheduleTime">
-                    {item.operatingHoursFrom.slice(0, 5)} - {item.operatingHoursTo.slice(0, 5)}
+                    {item.operatingHoursFrom.slice(0, 5)} -{" "}
+                    {item.operatingHoursTo.slice(0, 5)}
                   </div>
                 </div>
               ))}
