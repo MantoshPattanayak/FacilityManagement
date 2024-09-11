@@ -5,6 +5,8 @@ let api_version = process.env.API_VERSION;
 let facilities = require('../../../../controllers/'+api_version+'/configuration/facilities.controllers')
 let authenticateToken = require('../../../../middlewares/authToken.middlewares')
 
+let rateLimitMiddleware = require('../../../../middlewares/rateLimiter.middlewares')
+
 router.post('/displayMapData',facilities.displayMapData)  
 
 router.get('/searchParkFacilities',facilities.searchParkFacilities)
