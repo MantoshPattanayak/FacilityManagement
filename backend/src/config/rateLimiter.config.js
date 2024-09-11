@@ -11,7 +11,7 @@ const rateLimitStore = {
     async get(key){
         const entry = await rateLimitModel.findOne({
             where:{
-                key:{key}
+                key:key
             }
         })
         if(entry){
@@ -25,7 +25,7 @@ const rateLimitStore = {
     async set(key,points,expiry){
         // insert a new record or update the existing one
         await rateLimitModel.upsert({
-            key,
+            key:key,
             points:points,
             expiry:expiry
         });

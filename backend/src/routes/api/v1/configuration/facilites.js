@@ -11,7 +11,7 @@ router.post('/displayMapData',facilities.displayMapData)
 
 router.get('/searchParkFacilities',facilities.searchParkFacilities)
 
-router.post('/viewParkDetails',rateLimitMiddleware,facilities.viewParkDetails)
+router.post('/viewParkDetails',facilities.viewParkDetails)
 
 router.get('/viewParkById/:facilityId',facilities.viewParkById)
 
