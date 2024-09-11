@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === 'uat') {
 }
 
 if (process.env.NODE_ENV === 'dev') {
+    console.log('2')
     logger = devLogger();
 }
 
