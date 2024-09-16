@@ -1317,8 +1317,8 @@ const Event_hostPage = () => {
                                 <div class="parent-container">
                                     <div class="Order_summary">
                                    <span className="order_summary_text">
-                                       <h1>Event Tittle:</h1>
-                                       <p >{formData.organisationName}</p>
+                                       <h1>Event Title:</h1>
+                                       <p >{formData.eventTitle}</p>
                                    </span>
                                    <span className="order_summary_text">
                                         <h1>Event Category:</h1>
@@ -1347,7 +1347,7 @@ const Event_hostPage = () => {
                                         </span>
                                         <span className="order_summary_text">
                                             <h1>Number of tickets:</h1>
-                                            <p> {formData.numberofTicket}</p>
+                                            <p> {formData.numberofTicket || '0'}</p>
                                         </span>
                                         <span className="order_summary_text">
                                             <h1>Price of each event ticket</h1>
