@@ -30,11 +30,11 @@ let viewList = async (req, res) => {
         left join amabhoomi.hosteventdetails h on e.eventId = h.eventId
         inner join amabhoomi.facilities f on f.facilityId = e.facilityId
         inner join amabhoomi.facilitytypes f2 on f2.facilitytypeId = f.facilityId
-        left join amabhoomi.statusmasters s on s.statusId = e.statusId and s.parentStatusCode = 'HOSTING_STATUS'
+        inner join amabhoomi.hostbookings h2 on h2.hostId = h.hostId
+        left join amabhoomi.statusmasters s on s.statusId = h2.statusId and s.parentStatusCode = 'HOSTING_STATUS'
         left join amabhoomi.fileattachments fa on fa.entityId = e.eventId and fa.entityType = 'events' and fa.filePurpose = 'Event Image'
         left join amabhoomi.files f3 on f3.fileId = fa.fileId
-        where s.statusCode = :statusInput
-        or s.statusCode IS NULL`;
+        where h2.statusId = :statusInput`;
 
         let viewEventListData = await sequelize.query(fetchEventListQuery, {
             type: Sequelize.QueryTypes.SELECT,

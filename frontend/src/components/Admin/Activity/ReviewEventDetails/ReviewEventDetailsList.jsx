@@ -41,14 +41,17 @@ export default function ReviewEventDetailsList() {
   // here Get the data -----------------------------------
   async function GetDisplayReviewEvents() {
     try {
+      console.log("tab active", tab.filter((data) => { return data.active == true })[0].statusInput);
       let res = await axiosHttpClient(
         "REVIEW_EVENTS_VIEWLIST_API",
-        "post", { statusCode: tabList.filter((data) => { return data.active == true })[0].statusInput, givenReq }
+        "post", { statusCode: tab.filter((data) => { return data.active == true })[0].statusInput, givenReq }
       );
-      console.log("Get data of ResourceEvent", res);
-      setEventDetails(res.data.data);
+      console.log("Get data of GetDisplayReviewEvents", res.data.data);
+      if (res.data.data.length > 0) setEventDetails(res.data.data);
+      else setEventDetails([]);
     } catch (err) {
       console.log("here Error", err);
+      setEventDetails([]);
     }
   }
 
@@ -80,13 +83,14 @@ export default function ReviewEventDetailsList() {
   }
 
   function manageCurrentTab(e, name) {
-    // e.preventDefault();
+    e.preventDefault();
+    console.log("manageCurrentTab", name);
     let tabListCopy = JSON.parse(JSON.stringify(tab));
     tabListCopy.forEach((tab) => {
       if (tab.tabName == name) tab.active = true;
       else tab.active = false;
     });
-    // console.log('tabListCopy', tabListCopy);
+    console.log('tabListCopy', tabListCopy);
     setTab(tabListCopy);
     return;
   }
@@ -113,6 +117,7 @@ export default function ReviewEventDetailsList() {
       // setEventDetails(); // Reset to all events if no date selected
     }
   }, [selectedDate]);
+  
   function formatTime(time24) {
     if (!time24) return;
     const [hours, minutes] = time24.split(":").map(Number);
