@@ -204,6 +204,7 @@ select {
     position: fixed;
     top: 30%;
     left: 40%;
+    transform: var(-50%, -50%);
     /* right: 0;
     bottom: 0; */
     /* background: rgba(0, 0, 0, 0.75); */
