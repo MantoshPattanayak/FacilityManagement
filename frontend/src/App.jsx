@@ -288,8 +288,8 @@ function App() {
                 <Route path="/EditActivities" element={<React.Suspense fallback={<ClassicLoader/>}><EditActivities /> </React.Suspense>} />
                 <Route path="/ViewActivityList" element={<React.Suspense fallback={<ClassicLoader/>}><ViewActivityList /> </React.Suspense>} />
                 <Route path="/CreateNewActivity" element={<React.Suspense fallback={<ClassicLoader/>}><CreateNewActivity /> </React.Suspense>} />
-                <Route path="/Emp_Attendance" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Attendance/></React.Suspense>} />
-                <Route path="/Emp_Details_List" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Details_List/></React.Suspense>} />
+                <Route path="/activity/Emp_Attendance" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Attendance/></React.Suspense>} />
+                <Route path="/activity/Emp_Details_List" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Details_List/></React.Suspense>} />
                 {/* Report section  */}
                 <Route path="/Emp_List_Report" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_List_Report/></React.Suspense>} />
               </Routes>

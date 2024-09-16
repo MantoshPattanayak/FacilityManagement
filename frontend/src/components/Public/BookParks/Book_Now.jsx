@@ -11,6 +11,7 @@ import { decryptData, encryptData } from "../../../utils/encryptData";
 import { ToastContainer, toast } from "react-toastify";
 import PublicHeader from "../../../common/PublicHeader";
 import RazorpayButton from "../../../common/RazorpayButton";
+import { formatDateYYYYMMDD } from "../../../utils/utilityFunctions";
 
 const Book_Now = () => {
   const location = useLocation();
@@ -419,6 +420,7 @@ const Book_Now = () => {
                   type="date"
                   id="bookingDate"
                   name="bookingDate"
+                  min={formatDateYYYYMMDD(new Date().toISOString().split('T')[0])}
                   value={formData.bookingDate}
                   onChange={handleChangeInput}
                   className="custom-input"

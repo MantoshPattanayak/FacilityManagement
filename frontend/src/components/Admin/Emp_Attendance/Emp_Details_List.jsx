@@ -70,7 +70,7 @@ const Emp_Details_List=()=>{
           </div>
 
           <div className="search_text_conatiner">
-            <button className='search_field_button' onClick={() => navigate('/Emp_Attendance')}><FontAwesomeIcon icon={faPlus} /> Upload Attendance Sheet</button>
+            <button className='search_field_button' onClick={() => navigate('/activity/Emp_Attendance')}><FontAwesomeIcon icon={faPlus} /> Upload Attendance Sheet</button>
             <input type="text" className="search_input_field" value={givenReq} placeholder="Search..." onChange={(e) => setGivenReq(e.target.value)} />
             {/* <SearchDropdown /> */}
           </div>
