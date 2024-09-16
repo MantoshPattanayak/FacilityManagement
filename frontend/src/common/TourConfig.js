@@ -41,11 +41,11 @@ const tourSteps = [
   },
   {
     target: '.iconPlayApple',
-    content: '<h3>Get the App</h3><p>Download our app from the Google Play Store or Apple Store.</p>',
+    content: 'Get the App. Download our app from the Google Play Store or Apple Store.',
   },
   {
     target: '.Search-Conatiner',
-    content: '<h3>Search</h3><p>Use the search bar to find facilities by name and location.</p>',
+    content: 'Search. Use the search bar to find facilities by name and location.',
   }
 ];
 
