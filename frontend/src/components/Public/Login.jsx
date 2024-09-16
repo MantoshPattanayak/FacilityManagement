@@ -213,21 +213,21 @@ const Login = () => {
             </div>
           )}
           {!otpGenerated && (
-            <div className="otp-btn" onClick={handleGenerateOTP}>
+            <div className="public-login-otp-btn" onClick={handleGenerateOTP}>
               <button className="public-login-sendotp-btn_login1" type="submit">
                 Send OTP
               </button>
             </div>
           )}
           {otpGenerated && (
-            <div className="otp-btn" onClick={HandleSubmit}>
+            <div className="public-login-otp-btn" onClick={HandleSubmit}>
               <button className="public-login-sendotp-btn_login1" type="submit">
                 Submit
               </button>
             </div>
           )}
           {otpGenerated && timer === 0 && (
-            <div className="otp-btn" onClick={handleGenerateOTP}>
+            <div className="public-login-otp-btn" onClick={handleGenerateOTP}>
               <button
                 className="public-login-sendotp-btn_login1"
                 type="submit"
@@ -237,10 +237,10 @@ const Login = () => {
             </div>
           )}
           {otpGenerated && timer > 0 && (
-            // <div className="otp-btn bg-gray-400 cursor-not-allowed">
+            // <div className="public-login-otp-btn bg-gray-400 cursor-not-allowed">
             //   <p>Resend OTP in {timer} seconds.</p>
             // </div>
-            <div className="otp-btn cursor-not-allowed">
+            <div className="public-login-otp-btn cursor-not-allowed">
               <p>Resend OTP in {timer} seconds.</p>
             </div>
           )}
