@@ -265,7 +265,7 @@ function App() {
                 <Route path="/Privacy_Policy" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Privacy_Policy /> </ProtectedRoute> </React.Suspense>} />
                 <Route path="/DosDont" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><DosDont /> </ProtectedRoute> </React.Suspense>}/>
                 <Route path="/Partnerwithus" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><Partnerwithus /></ProtectedRoute></React.Suspense>} />
-                <Route path="/SpecialEvent" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><SpecialEvent /></ProtectedRoute></React.Suspense>} />
+                <Route path="/activity/special-event-booking" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><SpecialEvent /></ProtectedRoute></React.Suspense>} />
                 {/** Master Data Management */}
                 <Route path="/mdm/view-services" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewServicesList /></ProtectedRoute></React.Suspense>} />
                 <Route path="/mdm/edit-services" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><EditService /></ProtectedRoute> </React.Suspense>} />
