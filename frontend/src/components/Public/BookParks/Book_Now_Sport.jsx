@@ -53,7 +53,6 @@ const Book_Now_Sport = () => {
   const [showSchedule, setShowschedule] = useState(false);
   const [isDateChanged, setIsDateChanged] = useState(false);
 
-
   //Time schedule of sports
   const [sportsSchedule, setSportsSchedule] = useState([
     {
@@ -280,7 +279,6 @@ const Book_Now_Sport = () => {
         );
       }
       setShowschedule(false);
-      
     }
   };
 
