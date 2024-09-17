@@ -12,7 +12,7 @@ const sendEmail = require('../utils/generateEmail')
 let {encrypt} = require('../middlewares/encryption.middlewares')
 let {decrypt} = require('../middlewares/decryption.middlewares')
 
-const cronSchedule = '* 10 * * * ' // At every 10 am
+const cronSchedule = '0 10 * * * ' // At every 10 am
 
 let checkTheAttendance = async ()=>{
     try {
