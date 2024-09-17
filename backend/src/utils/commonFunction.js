@@ -77,7 +77,38 @@ function validateTimeFormat(timeString) {
     return isValid;
 }
 
+function calculateDistance (lat1, long1, lat2, long2) {
+   
+    console.log('Input Coordinates:', lat1, long1, lat2, long2);
 
+    const earthRadius = 6371; // Earth's radius in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180; // Convert degrees to radians
+    const dLong = (long2 - long1) * Math.PI / 180; // Convert degrees to radians
+
+    // console.log('Delta Longitude (radians):', dLong);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+
+    // console.log('Intermediate Calculation:', a);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c; // Distance in kilometers
+
+    // console.log('Calculated Distance:', distance);
+    console.log(distance, "distance")
+    return distance;
+
+};
+
+function formatDateYYYYMMDD(date) { //format input date as DD-MM-YYYY
+    if (!date) return;
+
+    const [year, month, day] = date.split('-');
+    console.log(`${year}-${month}-${day}`);
+    return `${year}-${month}-${day}`;
+}
 
 
 // let utilFunction = (fn)=>{
@@ -92,4 +123,6 @@ module.exports ={
     ,excelSerialToTime
     ,validateAndConvertDate
     ,validateTimeFormat
+    ,calculateDistance
+    ,formatDateYYYYMMDD
 }

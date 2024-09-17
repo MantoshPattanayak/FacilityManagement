@@ -120,8 +120,8 @@ export default function ActionAgainstGrievance() {
     e.preventDefault();
     toast.dismiss();
     // Disable interactions with the background
-    document.querySelectorAll('.grievance-action')[0].style.pointerEvents = 'none';
-    document.querySelectorAll('.grievance-action')[0].style.opacity = 0.4;
+    // document.querySelectorAll('.grievance-action')[0].style.pointerEvents = 'none';
+    // document.querySelectorAll('.grievance-action')[0].style.opacity = 0.4;
 
     toast.warn(
       <div>
@@ -130,7 +130,7 @@ export default function ActionAgainstGrievance() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleSubmit();
+              handleSubmit(e);
               // Re-enable interactions with the background
               document.querySelectorAll('.grievance-action')[0].style.pointerEvents = 'auto';
               document.querySelectorAll('.grievance-action')[0].style.opacity = 1;

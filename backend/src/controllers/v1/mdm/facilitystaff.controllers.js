@@ -1,6 +1,6 @@
 const moment = require('moment');
 const db = require('../../../models/index');
-const { excelSerialToTime, validateTimeFormat, validateAndConvertDate } = require('../../../utils/commonFunction');
+const { excelSerialToTime, validateTimeFormat, validateAndConvertDate, formatDateYYYYMMDD } = require('../../../utils/commonFunction');
 const statusCode = require('../../../utils/statusCode');
 const QueryTypes = db.QueryTypes
 const sequelize = db.sequelize
@@ -10,9 +10,19 @@ let facilityStaffAttendance = db.facilityStaffAttendance;
 let usermaster = db.usermaster;
 let rolemaster = db.rolemaster;
 let xlsx = require('xlsx');
+const { calculateDistance } = require('../../../utils/commonFunction');
 
 const { decrypt } = require('../../../middlewares/decryption.middlewares');
-const logger = require('../../../logger/index.logger')
+const logger = require('../../../logger/index.logger');
+const { Op, where } = require('sequelize');
+
+let formatDate = (currentDate) => {
+    // Extract year, month, and day
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
 let intialData = async (req, res) => {
     try {
@@ -110,8 +120,8 @@ let updateFacilityStaffAllocation = async (req, res) => {
         if (allocationEndDate && allocationEndDate != fetchFacilityStaffAllocationData.allocationEndDate) {
             paramsForUpdate.allocationEndDate = allocationEndDate;
         }
-        
-        if(Object.keys(paramsForUpdate).length == 0) {
+
+        if (Object.keys(paramsForUpdate).length == 0) {
             return res.status(statusCode.BAD_REQUEST.code).json({
                 message: "No changes made"
             })
@@ -171,21 +181,21 @@ let viewStaffAllocation = async (req, res) => {
         let fetchStaffAllocationData = await sequelize.query(fetchStaffAllocationQuery);
         let matchedData = fetchStaffAllocationData[0];
 
-        if(givenReq) {
+        if (givenReq) {
             matchedData = matchedData.filter((data) => {
                 return data.fullName.toLowerCase().includes(givenReq) ||
-                data.facilityname.toLowerCase().includes(givenReq) ||
-                data.allocationStartDate.includes(givenReq) ||
-                data.allocationEndDate.includes(givenReq)
+                    data.facilityname.toLowerCase().includes(givenReq) ||
+                    data.allocationStartDate.includes(givenReq) ||
+                    data.allocationEndDate.includes(givenReq)
             });
         }
 
-        let paginatedMatchedData= matchedData.slice(
+        let paginatedMatchedData = matchedData.slice(
             offset,
             limit + offset
         );
 
-        if(paginatedMatchedData.length > 0) {
+        if (paginatedMatchedData.length > 0) {
             res.status(statusCode.SUCCESS.code).json({
                 message: "Facility staff allocation",
                 paginatedMatchedData
@@ -227,24 +237,24 @@ let viewStaffAllocationById = async (req, res) => {
         let fetchStaffAllocationData = await sequelize.query(fetchStaffAllocationQuery, {
             replacements: [staffAllocationId]
         });
-        
+
         let matchedData = fetchStaffAllocationData[0];
 
-        if(givenReq) {
+        if (givenReq) {
             matchedData = matchedData.filter((data) => {
                 return data.fullName.toLowerCase().includes(givenReq) ||
-                data.facilityname.toLowerCase().includes(givenReq) ||
-                data.allocationStartDate.includes(givenReq) ||
-                data.allocationEndDate.includes(givenReq)
+                    data.facilityname.toLowerCase().includes(givenReq) ||
+                    data.allocationStartDate.includes(givenReq) ||
+                    data.allocationEndDate.includes(givenReq)
             });
         }
 
-        let paginatedMatchedData= matchedData.slice(
+        let paginatedMatchedData = matchedData.slice(
             offset,
             limit + offset
         );
 
-        if(paginatedMatchedData.length > 0) {
+        if (paginatedMatchedData.length > 0) {
             res.status(statusCode.SUCCESS.code).json({
                 message: "Facility staff allocation",
                 paginatedMatchedData
@@ -424,7 +434,7 @@ let uploadStaffAttendance = async (req, res) => {
             let transaction = await sequelize.transaction();    // start a transaction
             try {
                 // loop through each row to check and insert data record
-                data.forEach(async(row) => {
+                data.forEach(async (row) => {
                     // insert attendance details
                     let insertStaffAttendance = await facilityStaffAttendance.create({
                         userId: row["EmpId"],
@@ -466,7 +476,7 @@ let viewStaffAttendanceData = async (req, res) => {
         let limit = req.body.page_size ? req.body.page_size : 50;
         let page = req.body.page_number ? req.body.page_number : 1;
         let offset = (page - 1) * limit;
-        let facilityStaffAttendanceId = req.body.facilityStaffAttendanceId ? req.body.facilityStaffAttendanceId: null;
+        let facilityStaffAttendanceId = req.body.facilityStaffAttendanceId ? req.body.facilityStaffAttendanceId : null;
 
         let fetchStaffAttendanceDataQuery = `
             select f.facilityStaffAttendanceId, f.facilityId, f2.facilityname as facilityName, 
@@ -493,12 +503,12 @@ let viewStaffAttendanceData = async (req, res) => {
         if (givenReq) { // if user provided querty string
             matchedData = matchedData.filter((data) => {
                 return data.facilityName?.toLowerCase().includes(givenReq) ||
-                data.facilityType?.toLowerCase().includes(givenReq) ||
-                data.firstName?.toLowerCase().includes(givenReq) ||
-                data.lastName?.toLowerCase().includes(givenReq) ||
-                data.attendanceDate?.toString().includes(givenReq) ||
-                data.checkInTime?.toString().includes(givenReq) ||
-                data.checkOutTime?.toString().includes(givenReq)
+                    data.facilityType?.toLowerCase().includes(givenReq) ||
+                    data.firstName?.toLowerCase().includes(givenReq) ||
+                    data.lastName?.toLowerCase().includes(givenReq) ||
+                    data.attendanceDate?.toString().includes(givenReq) ||
+                    data.checkInTime?.toString().includes(givenReq) ||
+                    data.checkOutTime?.toString().includes(givenReq)
             })
         }
 
@@ -524,6 +534,192 @@ let viewStaffAttendanceData = async (req, res) => {
     }
 }
 
+let checkinAttendance = async (req, res) => {
+    let transaction = await sequelize.transaction();
+    try {
+        let userId = req.user?.userId || 10;
+        let { userLatitude, userLongitude } = req.body;
+        console.log({ userLatitude, userLongitude, userId });
+        let distanceRange = 0.2;    // permissible radius from facility within that staff to register check-in
+        let currentDate = new Date();
+
+        if (!userLatitude && !userLongitude) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "User location not provided."
+            });
+        }
+
+        // fetch facility allocated to staff
+        let fetchFacilityStaffAllocationData = await facilityStaffAllocation.findAll({
+            where: {
+                userId: userId,
+                statusId: 1
+            },
+            type: QueryTypes.SELECT
+        });
+
+        console.log("fetchFacilityStaffAllocationData ", fetchFacilityStaffAllocationData);
+
+        if (fetchFacilityStaffAllocationData.length > 1) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "Multiple facilities allocated for duty! Kindly contact administrator."
+            });
+        }
+
+        if(fetchFacilityStaffAllocationData.length == 0) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "No facility allocated. Kindly contact administrator.",
+            });
+        }
+
+        fetchFacilityStaffAllocationData = fetchFacilityStaffAllocationData[0].dataValues;
+
+        console.log("fetchFacilityStaffAllocationData ", fetchFacilityStaffAllocationData);
+
+        let fetchFacilityDetails = await db.facilities.findOne({
+            where: {
+                facilityId: fetchFacilityStaffAllocationData.facilityId
+            }
+        });
+
+        // distance calculation between facility coordinates and staff coordinates while registering check-in
+        let staffDistance = calculateDistance(userLatitude, userLongitude, fetchFacilityDetails.latitude, fetchFacilityDetails.longitude);
+
+        if (staffDistance > distanceRange) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "Check-in time not registered as staff is not near the facility.",
+                staffDistance,
+                attendanceDate: formatDate(currentDate),
+                checkInTime: currentDate.toLocaleTimeString('en-GB', { hour12: false }),
+                fetchFacilityDetails
+            });
+        }
+
+        let checkForcheckIn = await facilityStaffAttendance.findOne({
+            where: {
+                userId: userId,
+                attendanceDate: formatDate(currentDate),
+                checkInTime: {
+                    [Op.ne]: null
+                }
+            }
+        })
+
+        console.log("checkForcheckIn", checkForcheckIn);
+
+        if (checkForcheckIn) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "Check-in time already registered for today!",
+                checkForcheckIn
+            })
+        }
+
+        // insert check-in time for attendance
+        let insertCheckinAttendance = await facilityStaffAttendance.create({
+            userId: userId,
+            facilityId: fetchFacilityStaffAllocationData.facilityId,
+            attendanceDate: formatDate(currentDate),
+            checkInTime: currentDate.toLocaleTimeString('en-GB', { hour12: false }),
+            checkOutTime: null,
+            createdBy: userId,
+            statusId: 1
+        })
+
+        if (insertCheckinAttendance) {
+            transaction.commit();
+            return res.status(statusCode.SUCCESS.code).json({
+                message: "Check-in time registered successfully!",
+                checkInData: insertCheckinAttendance
+            });
+        }
+        else {
+            return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+                message: "Something went wrong."
+            })
+        }
+    }
+    catch (error) {
+        if (transaction) transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
+
+let checkoutAttendance = async (req, res) => {
+    let transaction = await sequelize.transaction();
+    try {
+        let userId = req.user?.userId || 10;
+        let currentDate = new Date();
+
+        // fetch facility allocated to staff
+        let fetchFacilityStaffAllocationData = await facilityStaffAllocation.findAll({
+            where: {
+                userId: userId,
+                statusId: 1
+            },
+            type: QueryTypes.SELECT
+        });
+
+        console.log("fetchFacilityStaffAllocationData ", fetchFacilityStaffAllocationData);
+
+        if (fetchFacilityStaffAllocationData.length > 1) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "Multiple facilities allocated for duty! Kindly contact administrator."
+            });
+        }
+
+        if(fetchFacilityStaffAllocationData.length == 0) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "No facility allocated. Kindly contact administrator.",
+            });
+        }
+
+        fetchFacilityStaffAllocationData = fetchFacilityStaffAllocationData[0].dataValues;
+
+        console.log("fetchFacilityStaffAllocationData ", fetchFacilityStaffAllocationData);
+
+        let checkForcheckOut = await facilityStaffAttendance.findOne({
+            where: {
+                userId: userId,
+                attendanceDate: formatDate(currentDate),
+                checkOutTime: {
+                    [Op.ne]: null
+                }
+            }
+        })
+
+        if(checkForcheckOut) {
+            return res.status(statusCode.BAD_REQUEST.code).json({
+                message: "Check-out time already registered for today!"
+            })
+        }
+
+        let [updateAttendanceCount] = await facilityStaffAttendance.update({
+            checkOutTime: currentDate.toLocaleTimeString('en-GB', { hour12: false }),
+            updatedBy: userId,
+            updatedOn: currentDate,
+        }, {
+            where: {
+                userId: userId,
+                facilityId: fetchFacilityStaffAllocationData.facilityId,
+            }
+        }, { transaction });
+
+        if(updateAttendanceCount) {
+            transaction.commit();
+            return res.status(statusCode.SUCCESS.code).json({
+                message: "Check-out time registered successfully!"
+            })
+        }
+    }
+    catch (error) {
+        if (transaction) transaction.rollback();
+        return res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
     intialData
@@ -533,4 +729,6 @@ module.exports = {
     , viewStaffAllocation
     , viewStaffAllocationById
     , viewStaffAttendanceData
+    , checkinAttendance
+    , checkoutAttendance
 }

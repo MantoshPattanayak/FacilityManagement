@@ -110,9 +110,9 @@
     align-items: center;
     justify-content: flex-start;
     gap: 24px;
-    width: 100%;
+    width: 90%;
     border: none;
-    max-height: 1000px;
+    max-height: 900px;
     height: fit-content;
     overflow-y: scroll;
 }
@@ -174,8 +174,16 @@
     cursor: pointer;
     background-color: green;
     color: white;
-    width: 20%;
-    height: 100%
+    width: max-content;
+    /* height: 100% */
+    padding: 0.6em 1.5em;
+    margin: 0.2em;
+}
+
+.red_buttonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 @media screen and (max-width: 768px) {
