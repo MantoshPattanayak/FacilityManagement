@@ -174,8 +174,16 @@
     cursor: pointer;
     background-color: green;
     color: white;
-    width: 20%;
-    height: 100%
+    width: max-content;
+    /* height: 100% */
+    padding: 0.6em 1.5em;
+    margin: 0.2em;
+}
+
+.red_buttonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 @media screen and (max-width: 768px) {
