@@ -69,7 +69,7 @@ export default function EventDetailsPage() {
         }
         catch (err) {
             console.log("here Error of Approved and Reject Api", err)
-            toast.err("Event action faild. Try agin.!")
+            toast.error("Event action faild. Try agin.!")
         }
     }
     // here Open Image on new tabe------------------------
