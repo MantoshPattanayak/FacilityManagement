@@ -11,4 +11,6 @@ router.post("/uploadStaffAttendance", authenticateToken, facilityStaff.uploadSta
 router.post("/viewStaffAllocation", authenticateToken, facilityStaff.viewStaffAllocation);
 router.post("/viewStaffAllocationById/:id", authenticateToken, facilityStaff.viewStaffAllocationById);
 router.post("/viewStaffAttendanceData", authenticateToken, facilityStaff.viewStaffAttendanceData);
+router.post("/checkinAttendance", authenticateToken, facilityStaff.checkinAttendance);
+router.post("/checkoutAttendance", authenticateToken, facilityStaff.checkoutAttendance);
 module.exports = router;
