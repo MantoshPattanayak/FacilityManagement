@@ -91,6 +91,7 @@ const facilityStaff = require('./routes/api/' + api_version + '/mdm/facilitystaf
 const userActivity = require('./routes/api/' + api_version + '/mdm/useractivities')
 console.log(port, "port");
 
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
@@ -175,6 +176,7 @@ app.use("/userActivity", userActivity)
 // Use error logger middleware after all route handlers
 // app.use(errorLogger);
 
+require('./utils/cronJob')
 
 app.use((err,req,res,next)=>{
   if(err){
