@@ -1054,6 +1054,11 @@ let initialTariffDropdownData = async(req,res)=>{
         let statusId = 1;
 
         let findAllDropDownData = ["day","month","week","campaign","issue","post"]
+        let fetchAllAdvertisementData = await advertisementMasters.findAll({
+            where:{
+                statusId:statusId
+            }
+        })
            if(startDate && endDate && advertisementTypeId ){
             let amount = 0;
             // calculate the amount
@@ -1132,7 +1137,8 @@ let initialTariffDropdownData = async(req,res)=>{
         }
         return res.status(statusCode.SUCCESS.code).json({
             message:"These are all dropdown data",
-            data: findAllDropDownData
+            data : findAllDropDownData,
+            advertisementData : fetchAllAdvertisementData
         })
     } catch (err) {
         logger.error(`An error occurred: ${err.message}`); // Log the error
