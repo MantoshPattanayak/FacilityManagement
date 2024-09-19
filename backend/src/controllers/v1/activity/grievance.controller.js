@@ -809,7 +809,7 @@ let viewAdvertisementTariffData = async (req,res)=>{
         let viewAdvertisementMaster = await sequelize.query(
             `SELECT am.advertisementTypeId, am.advertisementType, am.description, 
                     atm.durationOption, atm.minDuration, atm.maxDuration, atm.advertisementTariffId,
-                    atm.amount 
+                    atm.amount, atm.statusId 
              FROM amabhoomi.advertisementtypemasters am
              INNER JOIN advertisementtariffmasters atm ON atm.advertisementTypeId = am.advertisementTypeId
              where atm.statusId = ? and am.statusId = ?`,{
