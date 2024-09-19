@@ -1066,8 +1066,18 @@ let initialTariffDropdownData = async(req,res)=>{
             })
            let amountCheck =  findTheTariffType.filter((eachData)=>{
                 if(eachData.durationOption==='day'){
-                    console.log('eachdata amount',eachData.amount*days)
-                   return eachData.amount = Math.ceil(days*eachData.amount)
+                    let predefinedDays =  eachData.maxDuration - eachData.minDuration
+                    if(predefinedDays == days){
+                        return eachData.amount = eachData.amount
+                    }
+                    else{
+                        
+                            let findEachDayAmount =  Math.ceil((eachData.amount/predefinedDays))
+                            return eachData.amount = Math.ceil(days * findEachDayAmount)
+                        
+                      
+                    }
+                 
                 }
                 else if(eachData.durationOption ==='week'){
                    return eachData.amount = Math.ceil((days/7)*eachData.amount)
