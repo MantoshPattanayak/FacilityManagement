@@ -167,6 +167,13 @@ const api = {
    CREATE_USER_ACTIVITY_API: '/userActivity/createUserActivity',  //post   userActivityName, facilityTypeId
    UPDATE_USER_ACTIVITY_LIST_API: '/userActivity/updateUserActivity',   //post  userActivityName, facilityTypeId, userActivityId, statusId
    FETCH_INITIAL_DATA_FOR_USER_ACTIVITY: '/userActivity/initialData',   // get
+
+   // Advatrtisement
+   CREATE_ADVARTISEMENT_API: '/grievance/advertisementMasterInsert',   // post
+   VIEW_ADVARTISEMENT_API: '/grievance/viewAdvertisementMaster',   // post
+   UPDATE_ADVARTISEMENT_API: '/grievance/updateAdvertisementInsert',   // put
+
+  
 }
 
 export default api;
