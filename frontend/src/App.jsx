@@ -135,6 +135,11 @@ const Emp_Details_List=React.lazy(()=>import('./components/Admin/Emp_Attendance/
 // Report section ----------------------
 const Emp_List_Report=React.lazy(()=>import('./components/Admin/Reports/Emp_List_Report'))
 
+//Advertisement
+const CreateAdvertisement = React.lazy(() => import('./components/Admin/MDM/Advertisement/CreateAdvertisement'))
+const ViewAdvertisements = React.lazy(() => import('./components/Admin/MDM/Advertisement/ViewAdvertisements'))
+const UpdateAdvertisement = React.lazy(() => import('./components/Admin/MDM/Advertisement/UpdateAdvertisement'))
+
 
 ///
 import { ToastContainer } from "react-toastify";
@@ -219,6 +224,10 @@ function App() {
                 <Route path="/activity/grievance-action" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute></React.Suspense>} />
                 <Route path="/grievance-feedback-form" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><Grievance /></ProtectedRoute></React.Suspense>} />
                 <Route path="/Advertising_with_us" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Advertising_with_us /></ProtectedRoute></React.Suspense>} />
+                {/* Advertisement */}
+                <Route path="/MDM/CreateAdvertisement" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CreateAdvertisement /></ProtectedRoute></React.Suspense>} />
+                <Route path="/MDM/ViewAdvertisements" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewAdvertisements /></ProtectedRoute></React.Suspense>} />
+                <Route path="/MDM/UpdateAdvertisement" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><UpdateAdvertisement /></ProtectedRoute></React.Suspense>} />
                 {/* Activity - Grievance END */}
                 <Route path="/activity/gallery" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><CreateNewGallery /></ProtectedRoute></React.Suspense>} />
                 <Route path="/activity/ViewGalleryList" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <ViewGalleryList /></ProtectedRoute></React.Suspense>} />
