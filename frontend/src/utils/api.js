@@ -174,6 +174,11 @@ const api = {
    UPDATE_ADVARTISEMENT_API: '/grievance/updateAdvertisementInsert',   // put
 
   
+   //Advertisement Tariff
+   VIEW_ADVERTISEMENT_TARIFF_LIST_API: '/grievance/viewAdvertisementTariffData', //post   givenReq, page_size, page_number
+   CREATE_ADVERTISEMENT_TARIFF_API: '/grievance/advertisementTariffInsert',   //post   advertisementTypeId, amount, durationOption, minDuration, maxDuration
+   EDIT_ADVERTISEMENT_TARIFF_API: '/grievance/updateAdvertisementTariffData',  //put advertisementTariffId, advertisementTypeId, durationOption, minDuration, maxDuration, statusId, amount
+   INITIAL_AD_TARIFF_API: '/grievance/initialTariffDropdownData', //post   advertisementTypeId
 }
 
 export default api;
