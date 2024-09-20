@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import AdminHeader from "../../../../common/AdminHeader";
 import Footer from "../../../../common/Footer";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisVertical, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisVertical, faClock, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import "./ReviewEventDetailsList.css";
 import "./EventDetailsPage.css";
 import eventPhoto from "../../../../assets/ama_bhoomi_bg.jpg";
@@ -14,6 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 // import { decryptData, encryptData } from "../../../utils/encryptData";
 import { decryptData, encryptData } from "../../../../utils/encryptData";
 import instance from "../../../../../env";
+import { formatDate } from "../../../../utils/utilityFunctions";
 export default function ReviewEventDetailsList() {
   const tabList = [
     {
@@ -51,8 +52,18 @@ export default function ReviewEventDetailsList() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // function to debounce fetching eventHostingRequest
+  function debounce (fn, delay) {
+    let timeoutId;
+    return function(...args) {
+      setTimeout(() => {
+        fn(...args)
+      }, delay)
+    }
+  }
+
   // here Get the data -----------------------------------
-  async function GetDisplayReviewEvents() {
+  async function GetDisplayReviewEvents(tab, givenReq = null) {
     try {
       console.log(
         "tab active",
@@ -75,14 +86,16 @@ export default function ReviewEventDetailsList() {
     }
   }
 
+  let debouncedGetDisplayReviewEvents = useCallback(debounce(GetDisplayReviewEvents, 500), []);
+
   useEffect(() => {
-    GetDisplayReviewEvents();
+    debouncedGetDisplayReviewEvents();
   }, []);
 
   useEffect(() => {
     console.log("useEffect triggered");
-    GetDisplayReviewEvents();
-  }, [tab, givenReq]);
+    debouncedGetDisplayReviewEvents(tab, givenReq);
+  }, [tab, givenReq, debouncedGetDisplayReviewEvents]);
 
   // Cal the time and data --------------------------------
   function calculateTime(dataTime) {
@@ -134,6 +147,7 @@ export default function ReviewEventDetailsList() {
       setEventDetails(filteredEvents);
     } else {
       // setEventDetails(); // Reset to all events if no date selected
+      debouncedGetDisplayReviewEvents(tab, givenReq)
     }
   }, [selectedDate]);
 
@@ -145,6 +159,7 @@ export default function ReviewEventDetailsList() {
     return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
   }
   const handleDateChange = (event) => {
+    console.log(event.target.value)
     setSelectedDate(event.target.value); // Update selected date on change
   };
 
@@ -298,14 +313,14 @@ export default function ReviewEventDetailsList() {
                     <div className="eventdetails-details-eventAddress">
                       {event.address || "NA"}
                     </div>
-                    <div className="flex eventdetails-details-eventTime">
+                    <div className="flex eventdetails-details-eventTime gap-x-5">
                       <div>
                         {" "}
-                        Booked at : {formatTime(event.eventEndTime || "NA")}
+                        Booked at : <FontAwesomeIcon icon={faCalendar} /> {formatDate(event.requestDate?.substring(0, 10)) || "NA"}
                       </div>
                       <div>
                         <FontAwesomeIcon icon={faClock} />{" "}
-                        {event.requestDate?.substring(0, 10) || "NA"}
+                        {formatTime(event.eventEndTime || "NA")}
                       </div>
                     </div>
 
