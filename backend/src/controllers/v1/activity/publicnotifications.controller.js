@@ -267,8 +267,13 @@ let editNotification = async (req, res) => {
                     else {
                         transaction.commit();
                         console.log(8)
-                        return;
+                        // return;
                     }
+                }
+                else {
+                    transaction.commit();
+                    console.log(8)
+                    // return;
                 }
             }
             catch (error) {
