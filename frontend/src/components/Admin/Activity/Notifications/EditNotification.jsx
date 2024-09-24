@@ -129,9 +129,9 @@ export default function EditNotification() {
                 notificationContent: res.data.notificationDetails.publicNotificationsContent,
                 validFromDate: new Date(res.data.notificationDetails.validFromDate),
                 validToDate: new Date(res.data.notificationDetails.validToDate),
-                fileUrl: res.data.fileAttachmentDetails.url,
+                fileUrl: res.data.fileAttachmentDetails?.url,
                 fileAttachment: {
-                    name: res.data.fileAttachmentDetails.fileName,
+                    name: res.data.fileAttachmentDetails?.fileName,
                     data: ''
                 }
             });
