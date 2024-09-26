@@ -76,13 +76,13 @@ export default function ViewAdvertisements() {
           <table>
             <thead>
               <tr>
-                <th>Sl No.</th>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Status</th>
+                <th className="th-col">Sl No.</th>
+                <th className="th-col">Type</th>
+                <th className="th-col">Description</th>
+                <th className="th-col">Status</th>
                 {/* <th>URL</th> */}
-                <th>View</th>
-                <th>Edit</th>
+                <th className="th-col">View</th>
+                <th className="th-col">Edit</th>
               </tr>
             </thead>
             <tbody>
