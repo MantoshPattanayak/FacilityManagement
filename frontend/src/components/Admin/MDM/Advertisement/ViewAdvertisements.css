@@ -7,6 +7,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    border: 2px solid #ddd; /* Outer border */
   }
   
   .table-heading h2 {
@@ -139,6 +140,15 @@ table td {
   font-size: 14px;
 }
 
+.th-col{
+  background-color: white;
+  color: black;
+}
+
+.tbody tr:nth-child(even) {
+  background-color: transparent;
+}
+
 
   
   /* Responsive Styles */
@@ -157,4 +167,7 @@ table td {
       padding: 6px 10px;
     }
   }
-  
+
+  table th, table td {
+    border: none; /* Remove inner borders */
+  }
