@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const facilitytariff = sequelize.define('tariffMaster', {
+    const facilitytariff = sequelize.define('tariffmaster', {
         // Model attributes are defined here
         tariffMasterId: {
             type: DataTypes.INTEGER,
