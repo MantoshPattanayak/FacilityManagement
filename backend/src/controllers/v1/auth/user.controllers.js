@@ -522,6 +522,7 @@ let forgotPassword = async(req,res)=>{
 let signUp = async (req,res)=>{
   let transaction;
  try{
+  console.log('sign up')
   transaction = await sequelize.transaction();
   console.log('1')
   let roleId = 4; //user roleId
@@ -643,7 +644,7 @@ let signUp = async (req,res)=>{
       }
       if(activities){
            // insert to prefered activity first
-        activities.forEach(async(activity)=>{
+        for(let activity of activities){
           let insertToPreferedActivity  = await userActivityPreference.create({
             userId:newUser.userId,
             userActivityId: activity,
@@ -664,7 +665,7 @@ let signUp = async (req,res)=>{
             message:`Something went wrong`
           })
         }
-        }) 
+        } 
       }
    
       
