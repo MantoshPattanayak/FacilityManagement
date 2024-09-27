@@ -1,0 +1,298 @@
+.ViewAdvertisementTariffList {
+    margin: 60px auto 10px auto;
+    width: 100%; /* Content width excluding AdminHeader and Footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 50vh;
+    padding: 0 20px; /* Added padding for better spacing */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* .ViewAdvertisementTariffList {
+    display: flex;
+    font-size: large;
+} */
+
+.ViewAdvertisementTariffList .search_text_conatiner {
+    margin-top: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 10px 0;
+}
+
+.ViewAdvertisementTariffList .search_input_field {
+    padding: 5px;
+    width: 30vh;
+    border: 2px solid #c6c6c6;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    outline: #c6c6c6;
+}
+
+/* Style the input field border when it's focused */
+.ViewAdvertisementTariffList .search_input_field:focus {
+    border-color: #3e82ff;
+}
+
+/* Style the placeholder text */
+.ViewAdvertisementTariffList .search_input_field::placeholder {
+    color: #999;
+}
+
+.ViewAdvertisementTariffList .search_field_button {
+    border: 1px solid #00000033;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 16px;
+    padding: 15px;
+    padding: 10px;
+    background-color: #176BFB;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.ViewAdvertisementTariffList .search_field_button:hover {
+    background-color: #0144B7;
+}
+
+/* Table styles */
+.ViewAdvertisementTariffList .Main_Conatiner_table {
+    width: 100%;
+    margin: 75px auto 75px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /* min-height: 100vh; */
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.ViewAdvertisementTariffList .table-heading {
+    /* padding-left: 10px; */
+    /* margin-left: 10vw; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.ViewAdvertisementTariffList .table-heading h2{
+    width: 100%;
+    align-items: center;
+    font-weight: bold;
+    height: 5vh;
+    display: flex;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+    padding-left: 2vh;
+    color: black;
+    min-width: 70vw;
+}
+
+.ViewAdvertisementTariffList .table_Container {
+    overflow-y: auto;
+    max-height: 700px;
+    width: 100%;
+    /* Ensure table container takes full width */
+}
+
+.ViewAdvertisementTariffList table {
+    /* border: 1px solid #c6c6c6; */
+    border-collapse: separate;
+    border-radius: 5px;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid #c6c6c6;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.ViewAdvertisementTariffList table thead {
+    border-top: none;
+}
+
+.ViewAdvertisementTariffList table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    background-color: white; /*#3e82ff*/
+    color: black;
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+}
+
+.ViewAdvertisementTariffList table tr {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #c6c6c6;
+    padding: .35em;
+}
+
+.ViewAdvertisementTariffList table tr:last-child {
+    border-bottom: none;
+}
+
+.ViewAdvertisementTariffList table td {
+    padding: .625em;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+}
+
+
+/* .ViewAdvertisementTariffList tbody tr:nth-child(even) {
+    background-color: #9e5353;
+} */
+
+/* Pagination styles */
+.ViewAdvertisementTariffList .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ViewAdvertisementTariffList .pagination button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ViewAdvertisementTariffList .pagination button:hover {
+    background-color: #ddd;
+}
+
+.ViewAdvertisementTariffList .pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ViewAdvertisementTariffList .pagination button.active {
+    background-color: #00b562;
+    color: white;
+    border: 1px solid #00b562;
+}
+
+/* only to set table column width for larger screen */
+@media screen and (min-width: 893px) {
+    .ViewAdvertisementTariffList table td:nth-child(1), .ViewAdvertisementTariffList table tr > th:nth-child(1) {
+        width: 20%;
+    }
+    
+    .ViewAdvertisementTariffList table td:nth-child(2), .ViewAdvertisementTariffList table tr > th:nth-child(2) {
+        width: 15%;
+    }
+    
+    .ViewAdvertisementTariffList table td:nth-child(n+3), .ViewAdvertisementTariffList table tr > th:nth-child(n+3) {
+        width: 10%;
+    }
+    
+    .ViewAdvertisementTariffList tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+}
+
+@media screen and (max-width:1150px) {
+    .ViewAdvertisementTariffList {
+        margin: 50px auto 10px auto;
+    }
+}
+
+@media screen and (max-width:993px) {
+    .ViewAdvertisementTariffList {
+        margin: 80px auto 10px auto;
+    }
+}
+
+
+/* Media queries */
+@media screen and (max-width: 768px) {
+    .ViewAdvertisementTariffList {
+        flex-direction: column;
+        align-items: center;
+        margin: 50px auto 10px auto;
+    }
+
+    .ViewAdvertisementTariffList .search_text_conatiner {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ViewAdvertisementTariffList .search_input_field {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .ViewAdvertisementTariffList .search_field_button {
+        margin-bottom: 20px;
+    }
+
+    .ViewAdvertisementTariffList .create-role-btn {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .ViewAdvertisementTariffList .Main_Conatiner_table {
+        width: 90%;
+        padding: 0 10px;
+        /* Adjusted padding for smaller screens */
+    }
+
+    .ViewAdvertisementTariffList .table_Container {
+        overflow-x: auto;
+        /* Added horizontal scroll for small screens */
+        max-width: 100%;
+    }
+
+    .ViewAdvertisementTariffList .pagination {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ViewAdvertisementTariffList .pagination button {
+        margin: 5px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .ViewAdvertisementTariffList {
+        margin: 50px auto 10px auto;
+    }
+
+    .ViewAdvertisementTariffList .search_input_field {
+        width: 100%;
+    }
+
+    .ViewAdvertisementTariffList table th,
+    .ViewAdvertisementTariffList table td {
+        padding: .5em;
+    }
+
+    .ViewAdvertisementTariffList table caption {
+        font-size: 1.3em;
+    }
+
+    .ViewAdvertisementTariffList .search_field_button {
+        margin-bottom: 20px;
+    }
+}

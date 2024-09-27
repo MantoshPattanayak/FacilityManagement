@@ -24,7 +24,7 @@ const addGrievance = async (req, res) => {
     let transaction;
     try {
         transaction = await sequelize.transaction();
-        let userId = req.user.userId || null;
+        let userId = req.user?.userId || null;
         let createGrievance;
         const {
             fullname,

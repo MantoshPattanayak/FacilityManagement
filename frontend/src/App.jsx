@@ -134,8 +134,14 @@ const Emp_Attendance=React.lazy(()=>import("./components/Admin/Emp_Attendance/Em
 const Emp_Details_List=React.lazy(()=>import('./components/Admin/Emp_Attendance/Emp_Details_List'))
 // Report section ----------------------
 const Emp_List_Report=React.lazy(()=>import('./components/Admin/Reports/Emp_List_Report'))
-
-
+//Advertisement
+const CreateAdvertisement = React.lazy(() => import('./components/Admin/MDM/Advertisement/CreateAdvertisement'))
+const ViewAdvertisements = React.lazy(() => import('./components/Admin/MDM/Advertisement/ViewAdvertisements'))
+const UpdateAdvertisement = React.lazy(() => import('./components/Admin/MDM/Advertisement/UpdateAdvertisement'))
+//Advertisement Tariff
+const ViewAdvertisementTariffList = React.lazy(() => import('./components/Admin/MDM/AdvertisementTariffMaster/ViewAdvertisementTariffList'))
+const CreateAdvertisementTariff = React.lazy(() => import('./components/Admin/MDM/AdvertisementTariffMaster/CreateAdvertisementTariff'))
+const EditAdvertisementTariff = React.lazy(() => import('./components/Admin/MDM/AdvertisementTariffMaster/EditAdvertisementTariff'))
 ///
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, withAuth } from "./utils/ContextProvider/AuthContext";
@@ -219,6 +225,10 @@ function App() {
                 <Route path="/activity/grievance-action" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ActionAgainstGrievance /></ProtectedRoute></React.Suspense>} />
                 <Route path="/grievance-feedback-form" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><Grievance /></ProtectedRoute></React.Suspense>} />
                 <Route path="/Advertising_with_us" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><Advertising_with_us /></ProtectedRoute></React.Suspense>} />
+                {/* Advertisement */}
+                <Route path="/MDM/CreateAdvertisement" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><CreateAdvertisement /></ProtectedRoute></React.Suspense>} />
+                <Route path="/MDM/ViewAdvertisements" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><ViewAdvertisements /></ProtectedRoute></React.Suspense>} />
+                <Route path="/MDM/UpdateAdvertisement" element={<React.Suspense fallback={<ClassicLoader/>}><ProtectedRoute><UpdateAdvertisement /></ProtectedRoute></React.Suspense>} />
                 {/* Activity - Grievance END */}
                 <Route path="/activity/gallery" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute><CreateNewGallery /></ProtectedRoute></React.Suspense>} />
                 <Route path="/activity/ViewGalleryList" element={<React.Suspense fallback={<ClassicLoader/>}> <ProtectedRoute> <ViewGalleryList /></ProtectedRoute></React.Suspense>} />
@@ -292,6 +302,9 @@ function App() {
                 <Route path="/activity/Emp_Details_List" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_Details_List/></React.Suspense>} />
                 {/* Report section  */}
                 <Route path="/Emp_List_Report" element={<React.Suspense fallback={<ClassicLoader/>}><Emp_List_Report/></React.Suspense>} />
+                <Route path="/mdm/ViewAdvertisementTariffList" element={<React.Suspense fallback={<ClassicLoader />}><ViewAdvertisementTariffList/></React.Suspense>} />
+                <Route path="/mdm/CreateAdvertisementTariff" element={<React.Suspense fallback={<ClassicLoader />}><CreateAdvertisementTariff/></React.Suspense>} />
+                <Route path="/mdm/EditAdvertisementTariff" element={<React.Suspense fallback={<ClassicLoader />}><EditAdvertisementTariff/></React.Suspense>} />
               </Routes>
               <CommonFooter1 />
             </div>

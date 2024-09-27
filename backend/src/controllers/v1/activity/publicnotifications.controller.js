@@ -9,6 +9,7 @@ const imageUpload = require('../../../utils/imageUpload');
 const logger = require('../../../logger/index.logger')
 
 let addNewNotification = async (req, res) => {
+    let transaction = await sequelize.transaction();
     try {
         let { notificationTitle, notificationContent, validFromDate, validToDate, fileAttachment } = req.body;
         let userId = req.user?.userId || 1;
@@ -21,10 +22,8 @@ let addNewNotification = async (req, res) => {
         }
         console.log(3);
         async function addNewNotificationDetails() {
-            let transaction;
             try {
                 console.log(4)
-                transaction = await sequelize.transaction();
 
                 let addNotification = await publicNotifications.create({
                     publicNotificationsTitle: notificationTitle,
@@ -32,7 +31,8 @@ let addNewNotification = async (req, res) => {
                     validFromDate: validFromDate,
                     validToDate: validToDate,
                     createdBy: userId,
-                    createdOn: new Date()
+                    createdOn: new Date(),
+                    statusId: 1
                 }, { transaction });
 
                 console.log("addNotification", addNotification);
@@ -61,8 +61,13 @@ let addNewNotification = async (req, res) => {
                     else {
                         transaction.commit();
                         console.log(9)
-                        return;
+                        // return;
                     }
+                }
+                else {
+                    transaction.commit();
+                    console.log(19)
+                    // return;
                 }
             }
             catch (error) {
@@ -82,8 +87,8 @@ let addNewNotification = async (req, res) => {
         })
     }
     catch (error) {
+        if (transaction) await transaction.rollback();
         logger.error(`An error occurred: ${error.message}`); // Log the error
-
         res.status(statusCode.INTERNAL_SERVER_ERROR.code).json({
             message: error.message
         })
@@ -262,8 +267,13 @@ let editNotification = async (req, res) => {
                     else {
                         transaction.commit();
                         console.log(8)
-                        return;
+                        // return;
                     }
+                }
+                else {
+                    transaction.commit();
+                    console.log(8)
+                    // return;
                 }
             }
             catch (error) {

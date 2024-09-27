@@ -167,6 +167,18 @@ const api = {
    CREATE_USER_ACTIVITY_API: '/userActivity/createUserActivity',  //post   userActivityName, facilityTypeId
    UPDATE_USER_ACTIVITY_LIST_API: '/userActivity/updateUserActivity',   //post  userActivityName, facilityTypeId, userActivityId, statusId
    FETCH_INITIAL_DATA_FOR_USER_ACTIVITY: '/userActivity/initialData',   // get
+
+   // Advatrtisement
+   CREATE_ADVARTISEMENT_API: '/grievance/advertisementMasterInsert',   // post
+   VIEW_ADVARTISEMENT_API: '/grievance/viewAdvertisementMaster',   // post
+   UPDATE_ADVARTISEMENT_API: '/grievance/updateAdvertisementInsert',   // put
+
+  
+   //Advertisement Tariff
+   VIEW_ADVERTISEMENT_TARIFF_LIST_API: '/grievance/viewAdvertisementTariffData', //post   givenReq, page_size, page_number
+   CREATE_ADVERTISEMENT_TARIFF_API: '/grievance/advertisementTariffInsert',   //post   advertisementTypeId, amount, durationOption, minDuration, maxDuration
+   EDIT_ADVERTISEMENT_TARIFF_API: '/grievance/updateAdvertisementTariffData',  //put advertisementTariffId, advertisementTypeId, durationOption, minDuration, maxDuration, statusId, amount
+   INITIAL_AD_TARIFF_API: '/grievance/initialTariffDropdownData', //post   advertisementTypeId
 }
 
 export default api;

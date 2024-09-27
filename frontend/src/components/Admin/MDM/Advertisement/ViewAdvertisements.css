@@ -1,0 +1,173 @@
+.AdvertisementList {
+    margin: 20px;
+  }
+  
+  .table-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 2px solid #ddd; /* Outer border */
+  }
+  
+  .table-heading h2 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+  }
+  
+  .search_text_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .search_input_field {
+    width: 300px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .search_field_button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .search_field_button:hover {
+    background-color: #218838;
+  }
+  
+  .table_Container {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  table th,
+  table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    /* white-space: nowrap; */
+  }
+  
+  table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+  }
+  
+  .active-status {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .inactive-status {
+    color: #dc3545;
+    font-weight: bold;
+  }
+  
+  .pagination {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pagination button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .pagination button:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .pagination button:disabled {
+    cursor: not-allowed;
+    background-color: #e9ecef;
+  }
+  
+  .pagination span {
+    font-size: 14px;
+  }
+  
+  .fa-eye, .fa-pen-to-square {
+    cursor: pointer;
+    color: #007bff;
+    font-size: 16px;
+  }
+  
+  .fa-eye:hover, .fa-pen-to-square:hover {
+    color: #0056b3;
+  }
+
+  /* Specific styles for the Description column */
+table th.description-column,
+table td.description-column {
+  width: 300px; /* Adjust the width as needed */
+  max-width: 300px; /* Ensure the content wraps when reaching the maximum width */
+  word-wrap: break-word; /* Break long words */
+  white-space: normal; /* Allow the content to wrap to the next line */
+}
+
+/* General table styles */
+table {
+  table-layout: fixed; /* Ensure columns have fixed width, helps with text wrapping */
+}
+
+table th,
+table td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.th-col{
+  background-color: white;
+  color: black;
+}
+
+.tbody tr:nth-child(even) {
+  background-color: transparent;
+}
+
+
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .search_input_field {
+      width: 100%;
+    }
+  
+    table th,
+    table td {
+      font-size: 12px;
+      padding: 8px;
+    }
+  
+    .pagination button {
+      padding: 6px 10px;
+    }
+  }
+
+  table th, table td {
+    border: none; /* Remove inner borders */
+  }

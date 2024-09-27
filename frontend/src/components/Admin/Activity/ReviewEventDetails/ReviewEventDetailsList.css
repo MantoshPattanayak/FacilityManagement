@@ -30,7 +30,7 @@
 
 .ReviewEventRequest .search_text_conatiner {
     margin-top: 15px;
-    width: 100%;
+    width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -136,10 +136,10 @@
     height: 100%;
 }
 
-/* .ReviewEventRequest .eventdetails-photo img {
-    width: 25%;
-    height: 100%;
-} */
+.ReviewEventRequest .eventdetails-photo img {
+    width: 60%;
+    /* height: 100%; */
+}
 
 .ReviewEventRequest .eventdetails-details {
     width: 75%;
@@ -257,7 +257,7 @@
 
     .ReviewEventRequest .eventdetails-photo img {
         width: 25%;
-        height: 100%;
+        /* height: 50%; */
     }
 
     .ReviewEventRequest .eventdetails-details-eventname {

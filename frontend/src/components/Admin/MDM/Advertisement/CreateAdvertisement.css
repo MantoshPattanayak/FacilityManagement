@@ -1,0 +1,102 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 10vh;
+    background-color: #F7F7F7;
+    overflow-y: auto;
+  }
+  
+  .form-heading {
+    padding: 2.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 100%;
+  }
+  
+  .form-heading h2 {
+    margin-bottom: 1.5vw;
+    width: 100%;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2vh;
+    background: linear-gradient(to right, #00B562 0.7vw, rgb(196, 239, 196) 0.5vw);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5vw;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    margin-bottom: 0.5vw;
+    font-weight: bold;
+    color: #595959;
+  }
+  
+  .form-group input[type="text"],
+  .form-group textarea {
+    width: 100%;
+    padding: 0.625vw;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ECECEE;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 0.5vw;
+  }
+  
+  .buttons-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 2vh;
+    padding-left: 7vw;
+  }
+  
+  .submit-button,
+  .cancel-button {
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button {
+    background-color: #28a745;
+  }
+  
+  .cancel-button {
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+  
+  .back-button {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+  
