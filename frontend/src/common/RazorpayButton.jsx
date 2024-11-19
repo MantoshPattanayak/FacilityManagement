@@ -36,82 +36,67 @@ const RazorpayButton = ({ amount, currency, description, onSuccess, onFailure, i
 
     console.log("data in razorpay btn", data);
     // create RAZORPAY order
-    if (parseFloat(decryptData(data.facilityPreference.amount)) > 0) {
-      const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { 
-        data
-      });
-      console.log("order", order);
-  
-      //proceed for RAZORPAY checkout
-      const options = {
-        key: decryptData(key),
-        amount: decryptData(order.amount),
-        currency: decryptData(order.currency )|| currency,
-        name: "AMA BHOOMI",
-        description: description,
-        // image: Logo,
-        order_id: decryptData(order.id),
-        handler: async function (response) {
-          try {
-            console.log('razorpay response', response);
-            let encryptedResponse = {
-              razorpay_payment_id  : encryptData(response.razorpay_payment_id),
-              razorpay_order_id    : encryptData(response.razorpay_order_id),
-              razorpay_signature   : encryptData(response.razorpay_signature)
-            };
-  
-            let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', encryptedResponse);
-            // mantosh added code
-            // let res = await fetch('https://c6c7-122-187-160-238.ngrok-free.app/razorPayPayment/webHook', {
-            //   method: 'POST',
-            //   headers: {
-            //     'Content-Type': 'application/json',
-            //   },
-            //   body: JSON.stringify(response),
-            // });
-  
-            // mantosh added code
-            // console.log(res,'razorpayData');
-            onSuccess({ response, res });
-          }
-          catch (error) {
-            console.error(error);
-            toast.error(error.response.data.message);
-          }
-        },
-        prefill: {
-          name: "Test",
-          email: "test@email.com",
-          contact: 9876543210,
-        },
-        notes: {
-          address: "AMA BHOOMI, BDA, Ashok Seva Bhawan",
-        },
-        theme: {
-          color: "#121212",
-        },
-      };
-      const razor = new window.Razorpay(options);
-      razor.on('payment.failed', function (response) {
-        toast.error("Payment failed. Try again!");
-        // console.log('payment failed in razorpay button', response.error);
-        onFailure(response.error);
-      })
-      razor.open();
-    }
-    else {
-      try {
-        const res = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", { 
-          data
-        });
-        console.log("response", res);
+    const { data: { order }, } = await axiosHttpClient("CREATE_RAZORPAY_ORDER_API", "post", {
+      data
+    });
+    console.log("order", order);
 
-        onSuccess({ response: null, res });
-      }
-      catch (error) {
-        onFailure(error.message);
-      }
-    }
+    //proceed for RAZORPAY checkout
+    const options = {
+      key: decryptData(key),
+      amount: decryptData(order.amount),
+      currency: decryptData(order.currency) || currency,
+      name: "AMA BHOOMI",
+      description: description,
+      // image: Logo,
+      order_id: decryptData(order.id),
+      handler: async function (response) {
+        try {
+          console.log('razorpay response', response);
+          let encryptedResponse = {
+            razorpay_payment_id: encryptData(response.razorpay_payment_id),
+            razorpay_order_id: encryptData(response.razorpay_order_id),
+            razorpay_signature: encryptData(response.razorpay_signature)
+          };
+
+          let res = await axiosHttpClient('RAZORPAY_PAYMENT_VERIFICATION', 'post', encryptedResponse);
+          // mantosh added code
+          // let res = await fetch('https://c6c7-122-187-160-238.ngrok-free.app/razorPayPayment/webHook', {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          //   body: JSON.stringify(response),
+          // });
+
+          // mantosh added code
+          // console.log(res,'razorpayData');
+          onSuccess({ response, res });
+        }
+        catch (error) {
+          console.error(error);
+          toast.error(error.response.data.message);
+        }
+      },
+      prefill: {
+        name: "Test",
+        email: "test@email.com",
+        contact: 9876543210,
+      },
+      notes: {
+        address: "AMA BHOOMI, BDA, Ashok Seva Bhawan",
+      },
+      theme: {
+        color: "#121212",
+      },
+    };
+    const razor = new window.Razorpay(options);
+    razor.on('payment.failed', function (response) {
+      toast.error("Payment failed. Try again!");
+      // console.log('payment failed in razorpay button', response.error);
+      onFailure(response.error);
+    })
+    razor.open();
   };
 
   return (
