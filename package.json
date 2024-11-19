@@ -12,7 +12,8 @@
     "build-backend-prod": "npm install && webpack --config webpack.production.config.js --mode production",
     "build-backend-dev": "npm install &&webpack --config webpack.development.config.js --mode development",
     "start-backend-prod": "node ./dist/backend/main.js",
-    "start-frontend": "cd frontend && npm run preview"
+    "start-frontend": "cd frontend && npm run preview",
+    "start-amabhoomi": "npm-run-all -p start-frontend start-backend-prod"
   },
   "author": "",
   "license": "ISC",
