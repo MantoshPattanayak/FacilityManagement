@@ -3,7 +3,7 @@
     /* width: 75%; */
     width: 94vw;
     margin: auto;
-    margin-top: 80px;
+    margin-top: 18vh;
   }
 
   /* .mt-20 .slick-slider .slick-list .slick-track{
@@ -21,6 +21,9 @@
   /* .carousel-images{
     width: auto;
   } */
+   .carousel{
+    display: flex;
+   }
   
   .heading-text {
     text-align: center;
