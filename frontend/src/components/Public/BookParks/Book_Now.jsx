@@ -4,7 +4,15 @@ import Visiting_People from "./Popups_Book_now/Visiting_People";
 import AdminHeader from "../../../common/AdminHeader";
 import CommonFooter from "../../../common/CommonFooter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faXmark, faCreditCard, faPlus, faMinus, faIndianRupeeSign, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartShopping,
+  faXmark,
+  faCreditCard,
+  faPlus,
+  faMinus,
+  faIndianRupeeSign,
+  faArrowLeftLong,
+} from "@fortawesome/free-solid-svg-icons";
 import axiosHttpClient from "../../../utils/axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
@@ -35,12 +43,13 @@ const Book_Now = () => {
         console.log("Decrypted Data: ", decryptedData);
         setFormData(decryptedData);
         setSelectedGames(decryptedData.activityPreference); // Set selectedGames initially
+        setActivityPreferenceData(formData.activityPreference.data);
+        console.log("the alutimate data :", formData.activityPreference.data);
       } catch (error) {
         // console.error("Error decrypting data", error);
       }
     }
   }, [location.search]);
-
 
   let facilityId = decryptData(formData.facilityId);
   const [refresh, setRefresh] = useState(false);
@@ -49,7 +58,7 @@ const Book_Now = () => {
     if (facilityId) {
       getSub_park_details(facilityId);
     }
-    getParkBookingInitialData();
+    // getParkBookingInitialData();
   }, [facilityId]);
 
   useEffect(() => {
@@ -70,7 +79,7 @@ const Book_Now = () => {
     }
   }, [formData]);
 
-  useEffect(() => { }, [isDisabled]);
+  useEffect(() => {}, [isDisabled]);
 
   async function getSub_park_details(facilityId) {
     try {
@@ -88,14 +97,14 @@ const Book_Now = () => {
     }
   }
 
-  async function getParkBookingInitialData() {
-    try {
-      let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
-      setActivityPreferenceData(res.data.data);
-    } catch (err) {
-      // console.error("Error fetching initial data", err);
-    }
-  }
+  // async function getParkBookingInitialData() {
+  //   try {
+  //     let res = await axiosHttpClient("PARK_BOOK_PAGE_INITIALDATA_API", "get");
+  //     setActivityPreferenceData(res.data.data);
+  //   } catch (err) {
+  //     console.error("Error fetching initial data", err);
+  //   }
+  // }
 
   const handleGameClick = (game) => {
     setSelectedGames((prevGames) =>
@@ -168,7 +177,11 @@ const Book_Now = () => {
       try {
         const facilityPreference = {
           totalMembers: encryptData(modifiedFormData.totalMembers),
-          amount: encryptData(parseFloat(formData.amount * formData.adults) ? (formData.amount * formData.adults) : "0"),
+          amount: encryptData(
+            parseFloat(formData.amount * formData.adults)
+              ? formData.amount * formData.adults
+              : "0"
+          ),
           activityPreference: encryptData(modifiedFormData.activityPreference),
           otherActivities: encryptData(modifiedFormData.otherActivities),
           bookingDate: encryptData(modifiedFormData.bookingDate),
@@ -209,7 +222,10 @@ const Book_Now = () => {
     };
     console.log("modifiedFormData", modifiedFormData);
 
-    if (!validateForm(modifiedFormData) && modifiedFormData.totalMembers <= 40) {
+    if (
+      !validateForm(modifiedFormData) &&
+      modifiedFormData.totalMembers <= 40
+    ) {
       try {
         const facilityPreference = {
           totalMembers: encryptData(modifiedFormData.totalMembers),
@@ -244,7 +260,7 @@ const Book_Now = () => {
             }, 1000);
           },
         });
-        console.log("response bookingData, entityId, entityTypeId")
+        console.log("response bookingData, entityId, entityTypeId");
       } catch (error) {
         console.error("Error booking park", error);
         toast.error("Booking details submission failed.");
@@ -288,8 +304,10 @@ const Book_Now = () => {
       errors.totalMembers = "Please provide number of members between 0 and 40";
     if (!formData?.bookingDate) errors.date = "Please provide date.";
     if (!formData?.startTime) errors.startTime = "Please provide Start time.";
-    if (!formData?.durationInHours) errors.durationInHours = "Please provide duration.";
-    if (formData.activityPreference?.length < 1 || selectedGames.length < 1) errors.activityPreference = "Please select an activity.";
+    if (!formData?.durationInHours)
+      errors.durationInHours = "Please provide duration.";
+    if (formData.activityPreference?.length < 1 || selectedGames.length < 1)
+      errors.activityPreference = "Please select an activity.";
     console.log("errors", errors);
     setErrors(errors);
     return Object.keys(errors).length === 0 ? false : true;
@@ -411,7 +429,6 @@ const Book_Now = () => {
               </div>
             </div>
 
-
             {/* booking details................................................... */}
             <div className="booking-details">
               <div className="booking-details-inside">
@@ -420,7 +437,9 @@ const Book_Now = () => {
                   type="date"
                   id="bookingDate"
                   name="bookingDate"
-                  min={formatDateYYYYMMDD(new Date().toISOString().split('T')[0])}
+                  min={formatDateYYYYMMDD(
+                    new Date().toISOString().split("T")[0]
+                  )}
                   value={formData.bookingDate}
                   onChange={handleChangeInput}
                   className="custom-input"
@@ -471,21 +490,26 @@ const Book_Now = () => {
             <div className="activity-preference">
               <span>Activity Preference</span>
               <div className="games">
-                {activityPreferenceData?.length > 0 &&
+                {activityPreferenceData?.length > 0 ? (
                   activityPreferenceData.map((activity) => (
                     <button
                       key={activity.userActivityId}
-                      className={`game-btn ${selectedGames.includes(activity.userActivityId)
-                        ? "selected"
-                        : ""
-                        }`}
+                      className={`game-btn ${
+                        selectedGames.includes(activity.userActivityId)
+                          ? "selected"
+                          : ""
+                      }`}
                       onClick={() => handleGameClick(activity.userActivityId)}
                     >
                       {activity.userActivityName}
                     </button>
-                  ))}
+                  ))
+                ) : (
+                  <p>No activity found</p>
+                )}
               </div>
             </div>
+
             <div className="other-activities">
               <label htmlFor="activities">Other Activities(if any)</label>
               <input
@@ -512,50 +536,61 @@ const Book_Now = () => {
               <button
                 className="add-to-cart-button"
                 onClick={handleAddtoCart}
-                disabled={formData.totalMembers > 0 && formData.totalMembers < 40 ? false : true}
+                disabled={
+                  formData.totalMembers > 0 && formData.totalMembers < 40
+                    ? false
+                    : true
+                }
               >
                 <FontAwesomeIcon icon={faCartShopping} /> Add to Cart
               </button>
-              {
-                isDisabled ?
-                  <button
-                    className="add-to-cart-button"
-                    disabled={isDisabled}
-                  >
-                    <FontAwesomeIcon icon={faCreditCard} /> Pay Now <FontAwesomeIcon icon={faIndianRupeeSign} /> {parseFloat(price).toFixed(2)}
-                  </button>
-                  : <RazorpayButton
-                    amount={parseFloat(price) ? (price) : "0"}
-                    currency={"INR"}
-                    description={"Book now"}
-                    onSuccess={handlePaymentSuccess}
-                    onFailure={handlePaymentFailure}
-                    disabled={formData.totalMembers > 0 && formData.totalMembers < 40 ? false : true}
-                    data={{
-                      entityId: encryptData(formData.entityId),
-                      entityTypeId: encryptData(formData.entityTypeId),
-                      facilityPreference: {
-                        totalMembers: encryptData(formData.totalMembers),
-                        amount: encryptData(parseFloat(formData.amount * formData.adults) ? (formData.amount * formData.adults) : "0"),
-                        activityPreference: encryptData(formData.activityPreference),
-                        otherActivities: encryptData(formData.otherActivities),
-                        bookingDate: encryptData(formData.bookingDate),
-                        startTime: encryptData(formData.startTime),
-                        durationInHours: encryptData(formData.durationInHours),
-                      },
-                      userCartId: null
-                    }}
-                  />
-              }
-              {
-                /* <button
+              {isDisabled ? (
+                <button className="add-to-cart-button" disabled={isDisabled}>
+                  <FontAwesomeIcon icon={faCreditCard} /> Pay Now{" "}
+                  <FontAwesomeIcon icon={faIndianRupeeSign} />{" "}
+                  {parseFloat(price).toFixed(2)}
+                </button>
+              ) : (
+                <RazorpayButton
+                  amount={parseFloat(price) ? price : "0"}
+                  currency={"INR"}
+                  description={"Book now"}
+                  onSuccess={handlePaymentSuccess}
+                  onFailure={handlePaymentFailure}
+                  disabled={
+                    formData.totalMembers > 0 && formData.totalMembers < 40
+                      ? false
+                      : true
+                  }
+                  data={{
+                    entityId: encryptData(formData.entityId),
+                    entityTypeId: encryptData(formData.entityTypeId),
+                    facilityPreference: {
+                      totalMembers: encryptData(formData.totalMembers),
+                      amount: encryptData(
+                        parseFloat(formData.amount * formData.adults)
+                          ? formData.amount * formData.adults
+                          : "0"
+                      ),
+                      activityPreference: encryptData(
+                        formData.activityPreference
+                      ),
+                      otherActivities: encryptData(formData.otherActivities),
+                      bookingDate: encryptData(formData.bookingDate),
+                      startTime: encryptData(formData.startTime),
+                      durationInHours: encryptData(formData.durationInHours),
+                    },
+                    userCartId: null,
+                  }}
+                />
+              )}
+              {/* <button
                   className="submit-and-proceed-button"
                   onClick={handleSubmitAndProceed}
                   disabled={isDisabled}
                 >
                   <FontAwesomeIcon icon={faCreditCard} /> Submit & Proceed
-                </button> */
-              }
+                </button> */}
             </div>
           </div>
         </div>
