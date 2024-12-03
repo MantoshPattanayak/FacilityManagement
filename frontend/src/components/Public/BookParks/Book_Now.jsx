@@ -43,7 +43,7 @@ const Book_Now = () => {
         console.log("Decrypted Data: ", decryptedData);
         setFormData(decryptedData);
         setSelectedGames(decryptedData.activityPreference); // Set selectedGames initially
-        setActivityPreferenceData(formData.activityPreference.data);
+        // setActivityPreferenceData(formData.activityPreference.data);
         console.log("the alutimate data :", formData.activityPreference.data);
       } catch (error) {
         // console.error("Error decrypting data", error);
@@ -84,7 +84,7 @@ const Book_Now = () => {
   async function getSub_park_details(facilityId) {
     try {
       let res = await axiosHttpClient("View_By_ParkId", "get", "", facilityId);
-      // console.log("view park details", res.data.facilitiesData[0]);
+      console.log("view park details", res.data);
       setFacilitiesData(res.data.facilitiesData[0]);
       setFormData((prevData) => ({
         ...prevData,
@@ -92,6 +92,7 @@ const Book_Now = () => {
         facilityId,
         entityId: facilityId,
       }));
+      setActivityPreferenceData(res.data.fetchfacilitiesActivities);
     } catch (err) {
       // console.error("Error fetching park data", err);
     }
@@ -491,17 +492,17 @@ const Book_Now = () => {
               <span>Activity Preference</span>
               <div className="games">
                 {activityPreferenceData?.length > 0 ? (
-                  activityPreferenceData.map((activity) => (
+                  activityPreferenceData.map((activity, index) => (
                     <button
-                      key={activity.userActivityId}
+                      key={index}
                       className={`game-btn ${
-                        selectedGames.includes(activity.userActivityId)
+                        selectedGames.includes(activity.activityData.userActivityId)
                           ? "selected"
                           : ""
                       }`}
-                      onClick={() => handleGameClick(activity.userActivityId)}
+                      onClick={() => handleGameClick(activity.activityData.userActivityId)}
                     >
-                      {activity.userActivityName}
+                      {activity.activityData.userActivityName}
                     </button>
                   ))
                 ) : (

@@ -9,12 +9,11 @@ import { decryptData } from "../../../../utils/encryptData";
 import Booking_Schedule from "./Booking_Schedule";
 
 const Activity_Preference_popup = ({ closePopup, formData }) => {
-  console.log("Received formData:", formData);
+  // console.log("Received formData:", formData);
   const [showPeople, setShowPeople] = useState(false);
   const [localFormData, setLocalFormData] = useState(formData);
   const [activityPreferenceData, setActivityPreferenceData] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
-
   const location = useLocation();
 
   //Decrypting the facility id
@@ -24,10 +23,13 @@ const Activity_Preference_popup = ({ closePopup, formData }) => {
     const fetchData = async () => {
       try {
         const res = await axiosHttpClient(
-          "PARK_BOOK_PAGE_INITIALDATA_API",
-          "get"
+          "View_By_ParkId",
+          "get",
+          null,
+          facilityId
         );
-        // setActivityPreferenceData(res.data.data);
+        console.log("res.data.fetchfacilitiesActivities", res.data.fetchfacilitiesActivities);
+        setActivityPreferenceData(res.data.fetchfacilitiesActivities);
         console.log("park data::  ", res);
         // console.log("activity data::  ", res.data.data);
       } catch (err) {
@@ -97,20 +99,18 @@ const Activity_Preference_popup = ({ closePopup, formData }) => {
           <span>Activity Preference</span>
           <div className="games">
         {/* Check if activityPreference is empty */}
-        {activityPreferenceData.length > 0 ? (
-          activityPreferenceData.map((activity) => (
+        {activityPreferenceData?.length > 0 && (
+          activityPreferenceData?.map((activity, index) => (
             <button
-              key={activity.userActivityId}
+              key={index}
               className={`game-btn ${
-                selectedGames.includes(activity.userActivityId) ? "selected" : ""
+                selectedGames.includes(activity.activityData.userActivityId) ? "selected" : ""
               }`}
-              onClick={() => handleGameClick(activity.userActivityId)}
+              onClick={() => handleGameClick(activity.activityData.userActivityId)}
             >
-              {activity.userActivityName}
+              {activity.activityData.userActivityName}
             </button>
           ))
-        ) : (
-          <p>{localFormData.activityPreference}</p> // Show the fallback string
         )}
       </div>
         </div>
