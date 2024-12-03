@@ -21,7 +21,7 @@ import greenway from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_GREENWAY
 import blueway from "../../../assets/Ama_Bhoomi_Assets_Logo/AMA_BHOOMI_BLUEWAYS.svg";
 // Data Not available Icon ---------------------------------------------------------------
 import No_Data_icon from "../../../assets/No_Data.png";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 // Import here to encrptData ------------------------------------------
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { decryptData, encryptData } from "../../../utils/encryptData";
@@ -183,7 +183,7 @@ const Main_Body_Park_Details = () => {
   }
 
   // filter the data according to filter options -----------------------------------------------------
-  async function getNearbyFacilities() {
+  async function getNearbyFacilities(givenReq, facilityTypeId, selectedTab, selectedFilter) {
     let bodyParams = {
       facilityTypeId: facilityTypeId || 1,
       latitude: userLocation?.latitude || defaultLocation.latitude,
@@ -222,7 +222,12 @@ const Main_Body_Park_Details = () => {
         bodyParams
       );
       console.log(res.data.message, res.data.data);
-      setDisPlayParkData(res.data.data);
+      let filterData = res.data.data;
+      if(givenReq) {
+        filterData = filterData.filter((park) => {
+          return park.facilityname.toLowerCase().includes(givenReq.toLowerCase()) || park.address.toLowerCase().includes(givenReq.toLowerCase()) || park.status.toLowerCase().includes(givenReq.toLowerCase())})
+      }
+      setDisPlayParkData(filterData);
       setIsLoding(false);
     } catch (error) {
       console.error(error);
@@ -267,15 +272,27 @@ const Main_Body_Park_Details = () => {
     else setGivenReq("");
   }, []);
 
+  function debounce(fn, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args)
+      }, delay);
+    }
+  }
+
+  const debouncedGetNearbyFacilities = useCallback(debounce(getNearbyFacilities, 1000), []);
+
   // refresh page on searching, change in facility type or selecting filter options
   useEffect(() => {
     if (selectedTab.length > 0) {
       //fetch facility details based on filter options
       console.log(selectedTab.length);
-      getNearbyFacilities();
+      debouncedGetNearbyFacilities(givenReq, facilityTypeId, selectedTab, selectedFilter);
     } else {
       // fetch facility details based on selected facility type or searching value
-      getNearbyFacilities();
+      debouncedGetNearbyFacilities(givenReq, facilityTypeId, selectedTab, selectedFilter);
     }
     console.log("selectedFilter", selectedFilter);
   }, [givenReq, facilityTypeId, selectedTab, selectedFilter]);
