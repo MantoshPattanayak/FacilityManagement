@@ -80,6 +80,7 @@ const Sub_Park_Details = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [imagesFetch, setImagesFetch] = useState(false);
+  const [activityPreferanceData, setActivityPreferenceData] = useState("");
   useEffect(() => {}, [facilityId]);
   // Book Mark Funcation ----------------------------------------
   async function handleBookmarkStatus(e) {
@@ -135,6 +136,7 @@ const Sub_Park_Details = () => {
       setEventAvailable(res.data.eventDetails);
       setFacilitiesData(res.data.facilitiesData);
       setOperatingDaysFromRes(res);
+      setActivityPreferenceData(res.data.fetchfacilitiesActivities);
       console.log("facility details data fetch", res.data);
       // Set images data
       if (res.data.facilitiesData.length > 0) {
@@ -854,6 +856,7 @@ const Sub_Park_Details = () => {
             facilityName={FacilitiesData[0]?.facilityName}
             operatingHoursFrom={FacilitiesData[0]?.operatingHoursFrom}
             operatingHoursTo={FacilitiesData[0]?.operatingHoursTo}
+            activityPreferanceData = {activityPreferanceData}
           />
         ) : (
           // <Link to={{ pathname: `${"/login-signup"}` }}></Link>

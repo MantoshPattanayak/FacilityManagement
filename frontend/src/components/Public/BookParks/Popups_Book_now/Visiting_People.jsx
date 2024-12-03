@@ -6,8 +6,10 @@ import { decryptData } from "../../../../utils/encryptData";
 import Activity_Preference_popup from "./Activity_Preference_popup";
 import { encryptData } from "../../../../utils/encryptData";
 import { Link, useNavigate} from "react-router-dom";
+import { useEffect } from "react";
 
-const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursFrom, operatingHoursTo }) => {
+const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursFrom, operatingHoursTo, activityPreferanceData }) => {
+  console.log("Activity Preference Data:", activityPreferanceData);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     totalMembers: 0,
@@ -15,7 +17,9 @@ const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursF
     seniorCitizen: 0,
     adults: 0,
     amount: "10.00",
-    activityPreference: [],
+    activityPreference: activityPreferanceData && activityPreferanceData.length > 0
+      ? activityPreferanceData
+      : "no activity found",
     otherActivities: "",
     bookingDate: new Date().toISOString().split("T")[0],
     startTime: new Date().toTimeString().split(" ")[0],
@@ -30,6 +34,16 @@ const Visiting_People = ({ closePopup, facilityId, facilityName, operatingHoursF
     facilityPreference: "",
     priceBook: 0,
   });
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      activityPreference:
+        activityPreferanceData && activityPreferanceData.length > 0
+          ? activityPreferanceData
+          : "no activity found", 
+    }));
+  }, [activityPreferanceData]);
 
   console.log("facility id is here", formData.facilityId);
 

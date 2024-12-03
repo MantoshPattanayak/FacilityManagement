@@ -22,7 +22,8 @@ const Booking_Schedule = ({
   const navigate = useNavigate();
   const [bookingData, setBookingData] = useState({
     bookingDate: formData.bookingDate,
-    startTime: formData.operatingHoursFrom.slice(0, 5),
+    // startTime: formData.operatingHoursFrom.slice(0, 5),
+    startTime: moment().format("HH:mm"),
     endTime: formData.operatingHoursTo.slice(0, 5),
     durationInHours: formData.durationInHours,
     totalMembers: totalMembers,
@@ -38,6 +39,8 @@ const Booking_Schedule = ({
     facilityPreference: formData.facilityPreference,
     priceBook: formData.priceBook,
   });
+
+  console.log("all data  :" , formData)
 
   const [bookingDate, setBookingDate] = useState(formData.bookingDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -122,8 +125,13 @@ const Booking_Schedule = ({
   };
 
   const handleBookingData = (e) => {
-    e.preventDefault();
-    const encryptedData = encryptData(JSON.stringify(bookingData));
+    const bookingDataWithActivity = {
+      ...bookingData,
+      activityPreferenceData: formData.activityPreference || [], // Add activityPreferenceData here
+    };
+  
+    // Encrypt the data
+    const encryptedData = encryptData(JSON.stringify(bookingDataWithActivity));
     const encryptedFacilityId = encryptData(bookingData.facilityId);
     navigate(
       `/BookParks/Book_Now?d=${encodeURIComponent(

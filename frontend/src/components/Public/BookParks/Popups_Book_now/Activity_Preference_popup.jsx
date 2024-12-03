@@ -27,7 +27,9 @@ const Activity_Preference_popup = ({ closePopup, formData }) => {
           "PARK_BOOK_PAGE_INITIALDATA_API",
           "get"
         );
-        setActivityPreferenceData(res.data.data);
+        // setActivityPreferenceData(res.data.data);
+        console.log("park data::  ", res);
+        // console.log("activity data::  ", res.data.data);
       } catch (err) {
         console.error("Error fetching initial data", err);
       }
@@ -36,13 +38,31 @@ const Activity_Preference_popup = ({ closePopup, formData }) => {
     fetchData();
   }, []);
 
-  const handleGameClick = (game) => {
-    setSelectedGames((prevGames) =>
-      prevGames.includes(game)
-        ? prevGames.filter((item) => item !== game)
-        : [...prevGames, game]
+  // const handleGameClick = (game) => {
+  //   setSelectedGames((prevGames) =>
+  //     prevGames.includes(game)
+  //       ? prevGames.filter((item) => item !== game)
+  //       : [...prevGames, game]
+  //   );
+  // };
+
+  const handleGameClick = (userActivityId) => {
+    setSelectedGames((prevSelectedGames) =>
+      prevSelectedGames.includes(userActivityId)
+        ? prevSelectedGames.filter((id) => id !== userActivityId)
+        : [...prevSelectedGames, userActivityId]
     );
   };
+
+  useEffect(() => {
+    if (Array.isArray(localFormData.activityPreference)) {
+      setActivityPreferenceData(localFormData.activityPreference);
+    } else {
+      setActivityPreferenceData([]);
+    }
+  }, [localFormData]);
+
+
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -76,21 +96,23 @@ const Activity_Preference_popup = ({ closePopup, formData }) => {
           </button>
           <span>Activity Preference</span>
           <div className="games">
-            {activityPreferenceData?.length > 0 &&
-              activityPreferenceData.map((activity) => (
-                <button
-                  key={activity.userActivityId}
-                  className={`game-btn ${
-                    selectedGames.includes(activity.userActivityId)
-                      ? "selected"
-                      : ""
-                  }`}
-                  onClick={() => handleGameClick(activity.userActivityId)}
-                >
-                  {activity.userActivityName}
-                </button>
-              ))}
-          </div>
+        {/* Check if activityPreference is empty */}
+        {activityPreferenceData.length > 0 ? (
+          activityPreferenceData.map((activity) => (
+            <button
+              key={activity.userActivityId}
+              className={`game-btn ${
+                selectedGames.includes(activity.userActivityId) ? "selected" : ""
+              }`}
+              onClick={() => handleGameClick(activity.userActivityId)}
+            >
+              {activity.userActivityName}
+            </button>
+          ))
+        ) : (
+          <p>{localFormData.activityPreference}</p> // Show the fallback string
+        )}
+      </div>
         </div>
         <div className="other-activities">
           <label htmlFor="otherActivities">Other Activities (if any)</label>
