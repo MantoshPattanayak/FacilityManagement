@@ -188,6 +188,7 @@ const Main_Body_Park_Details = () => {
       facilityTypeId: facilityTypeId || 1,
       latitude: userLocation?.latitude || defaultLocation.latitude,
       longitude: userLocation?.longitude || defaultLocation.longitude,
+      selectedFilter
     };
     console.log("body params before", bodyParams);
 
@@ -198,19 +199,19 @@ const Main_Body_Park_Details = () => {
         ...bodyParams,
         latitude: userLocation.latitude || defaultLocation.latitude,
         longitude: userLocation.longitude || defaultLocation.latitude,
-        range: "",
-        selectedFilter,
+        range: 5,
+        // selectedFilter,
       };
     }
     if (selectedTab.includes("Popular")) {
       bodyParams = { ...bodyParams, popular: 1 };
     }
-    if (selectedTab.includes("Free")) {
-      bodyParams = { ...bodyParams, free: 1 };
-    }
-    if (selectedTab.includes("Paid")) {
-      bodyParams = { ...bodyParams, paid: 1 };
-    }
+    // if (selectedTab.includes("Free")) {
+    //   bodyParams = { ...bodyParams, free: 1 };
+    // }
+    // if (selectedTab.includes("Paid")) {
+    //   bodyParams = { ...bodyParams, paid: 1 };
+    // }
 
     console.log("body params after", bodyParams);
 
