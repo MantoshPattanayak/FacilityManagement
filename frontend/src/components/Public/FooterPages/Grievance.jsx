@@ -9,6 +9,7 @@ import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import Grivance_image from '../../../assets/Gri12.png'
 import Feedback from  '../../../assets/Feedback1.jpg'
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Grievance = () => {
   const [selectedForm, setSelectedForm] = useState("Grievance");
@@ -104,6 +105,7 @@ const GrievanceForm = () => {
   );
 
   const characters = "abc123";
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchInitialData();
@@ -123,7 +125,7 @@ const GrievanceForm = () => {
   // console.log("grievance categorylist 999", grievanceCategoryList);
 
   const handleSubmitForm = async () => {
-    validateFeedback();
+    // validateFeedback();
     try {
       let res = await axiosHttpClient("USER_SUBMIT_GRIEVANCE_API", "post", {
         fullname: user.fullname,
@@ -138,19 +140,27 @@ const GrievanceForm = () => {
         grievanceCategoryId: user.grievanceCategoryId,
       });
       console.log("here Grievance Response", res);
-      toast.success("Form submitted successfully!");
-      setUser({
-        fullname: "",
-        emailId: "",
-        phoneNo: "",
-        subject: "",
-        details: "",
-        statusId: 15,
-        filepath: "",
-        category: "",
-        isWhatsappNumber: false,
-        grievanceCategoryId: "",
-        captchaInput: "",
+      toast.success("Form submitted successfully!", {
+        onClose: () => {
+          setTimeout(
+            () => {
+              setUser({
+                fullname: "",
+                emailId: "",
+                phoneNo: "",
+                subject: "",
+                details: "",
+                statusId: 15,
+                filepath: "",
+                category: "",
+                isWhatsappNumber: false,
+                grievanceCategoryId: "",
+                captchaInput: "",
+              });
+              navigate(0);
+            }
+          , 500);
+        }
       });
     } catch (error) {
       console.error(error);
@@ -254,6 +264,7 @@ const GrievanceForm = () => {
   // }, [user.mobile, user.emailId, user.filepath, user.captchaInput]);
 
   const validateFeedback = () => {
+    console.log("validate", user);
     const isValidMobileTemp = /^\d{10}$/.test(user.phoneNo);
     const isValidEmailTemp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.emailId);
     const isValidNameTemp = user.fullname.trim() !== "";
@@ -262,9 +273,11 @@ const GrievanceForm = () => {
     const isValidFileTemp = user.filepath !== null;
     const isValidCaptchaTemp = user.captchaInput === captcha;
     const isValidGrievanceCategory = user.grievanceCategoryId !== "";
-
+    console.log({isValidMobileTemp, isValidEmailTemp, isValidNameTemp, isValidSubjectTemp, 
+      isValidGrievanceTemp, isValidFileTemp, isValidCaptchaTemp, isValidGrievanceCategory});
     setIsValidMobile(isValidMobileTemp);
-    setIsValidEmail(isValidEmailTemp);
+    console.log("isValidEmailTemp", isValidEmailTemp);
+    user.emailId ? setIsValidEmail(isValidEmailTemp) : setIsValidEmail(true);
     setIsValidName(isValidNameTemp);
     setIsValidSubject(isValidSubjectTemp);
     setIsValidGrievance(isValidGrievanceTemp);
@@ -274,7 +287,7 @@ const GrievanceForm = () => {
 
     return (
       isValidMobileTemp &&
-      isValidEmailTemp &&
+      (user.emailId ? isValidEmailTemp : true) &&
       isValidNameTemp &&
       isValidSubjectTemp &&
       isValidGrievanceTemp &&
@@ -469,6 +482,7 @@ const GrievanceForm = () => {
           Submit
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };
