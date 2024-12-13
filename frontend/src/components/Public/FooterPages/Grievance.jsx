@@ -6,10 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosHttpClient from "../../../utils/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
-import Grivance_image from '../../../assets/Gri12.png'
-import Feedback from  '../../../assets/Feedback1.jpg'
+import Grivance_image from "../../../assets/Gri12.png";
+import Feedback from "../../../assets/Feedback1.jpg";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 const Grievance = () => {
   const [selectedForm, setSelectedForm] = useState("Grievance");
@@ -25,20 +27,32 @@ const Grievance = () => {
     <div>
       <PublicHeader />
       <div className="Bg_Grivence">
-      {selectedForm === "Grievance" ? (
-         <img  className="bg_image_grivence" src={Grivance_image}></img>
-      ):(
-        <img  className="bg_image_grivence" src={Feedback}></img>
-      )}
-        
-        </div>
+        {selectedForm === "Grievance" ? (
+          <img className="bg_image_grivence" src={Grivance_image}></img>
+        ) : (
+          <img className="bg_image_grivence" src={Feedback}></img>
+        )}
+      </div>
       <div className="grievenceForm">
-    
         <p className="p_text_Grievance_feedback">
-          { language == "EN" && <>If you want to lodge a {selectedForm.toLowerCase()}, 
-          kindly fill the following {selectedForm.toLowerCase()} registration form!</> }
-          { language == "OD" && selectedForm == "Grievance" && <>ଯଦି ଆପଣ ଏକ ଅଭିଯୋଗ ଦାଖଲ କରିବାକୁ ଚାହାଁନ୍ତି, ଦୟାକରି ନିମ୍ନଲିଖିତ ଅଭିଯୋଗ ପଞ୍ଜୀକରଣ ଫର୍ମ ପୂରଣ କରନ୍ତୁ!</> }
-          { language == "OD" && selectedForm == "Feedback" && <>ଯଦି ଆପଣ ଏକ ମତାମତ ଦେବାକୁ ଚାହୁଁଛନ୍ତି, ଦୟାକରି ନିମ୍ନଲିଖିତ ମତାମତ ପଞ୍ଜୀକରଣ ଫର୍ମ ପୂରଣ କରନ୍ତୁ!</> }
+          {language == "EN" && (
+            <>
+              If you want to lodge a {selectedForm.toLowerCase()}, kindly fill
+              the following {selectedForm.toLowerCase()} registration form!
+            </>
+          )}
+          {language == "OD" && selectedForm == "Grievance" && (
+            <>
+              ଯଦି ଆପଣ ଏକ ଅଭିଯୋଗ ଦାଖଲ କରିବାକୁ ଚାହାଁନ୍ତି, ଦୟାକରି ନିମ୍ନଲିଖିତ ଅଭିଯୋଗ
+              ପଞ୍ଜୀକରଣ ଫର୍ମ ପୂରଣ କରନ୍ତୁ!
+            </>
+          )}
+          {language == "OD" && selectedForm == "Feedback" && (
+            <>
+              ଯଦି ଆପଣ ଏକ ମତାମତ ଦେବାକୁ ଚାହୁଁଛନ୍ତି, ଦୟାକରି ନିମ୍ନଲିଖିତ ମତାମତ
+              ପଞ୍ଜୀକରଣ ଫର୍ମ ପୂରଣ କରନ୍ତୁ!
+            </>
+          )}
         </p>
 
         <div className="radiobutton">
@@ -65,6 +79,44 @@ const Grievance = () => {
         </div>
 
         {selectedForm === "Grievance" ? <GrievanceForm /> : <FeedbackForm />}
+      </div>
+    </div>
+  );
+};
+
+const CaptchaWithCanvas = ({ captcha, handleCaptchaRefresh }) => {
+  useEffect(() => {
+    const canvas = document.getElementById("captchaCanvas");
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+      ctx.fillStyle = "#f3f3f3";
+      ctx.fillRect(0, 0, canvas.width, canvas.height); // Background
+      ctx.font = "bold 20px Arial";
+      ctx.fillStyle = getRandomColor();
+      ctx.fillText(captcha, 10, 30); // Draw CAPTCHA
+
+      // Add random lines for obfuscation
+      for (let i = 0; i < 5; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.strokeStyle = getRandomColor();
+        ctx.stroke();
+      }
+    }
+  }, [captcha]);
+
+  const getRandomColor = () =>
+    `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+      Math.random() * 255
+    )}, ${Math.floor(Math.random() * 255)})`;
+
+  return (
+    <div className="captcha">
+      <canvas id="captchaCanvas" width="120" height="40"></canvas>
+      <div onClick={handleCaptchaRefresh} style={{ cursor: "pointer" }}>
+        <FontAwesomeIcon icon={faRotateRight} />
       </div>
     </div>
   );
@@ -142,25 +194,23 @@ const GrievanceForm = () => {
       console.log("here Grievance Response", res);
       toast.success("Form submitted successfully!", {
         onClose: () => {
-          setTimeout(
-            () => {
-              setUser({
-                fullname: "",
-                emailId: "",
-                phoneNo: "",
-                subject: "",
-                details: "",
-                statusId: 15,
-                filepath: "",
-                category: "",
-                isWhatsappNumber: false,
-                grievanceCategoryId: "",
-                captchaInput: "",
-              });
-              navigate(0);
-            }
-          , 500);
-        }
+          setTimeout(() => {
+            setUser({
+              fullname: "",
+              emailId: "",
+              phoneNo: "",
+              subject: "",
+              details: "",
+              statusId: 15,
+              filepath: "",
+              category: "",
+              isWhatsappNumber: false,
+              grievanceCategoryId: "",
+              captchaInput: "",
+            });
+            navigate(0);
+          }, 500);
+        },
       });
     } catch (error) {
       console.error(error);
@@ -273,8 +323,16 @@ const GrievanceForm = () => {
     const isValidFileTemp = user.filepath !== null;
     const isValidCaptchaTemp = user.captchaInput === captcha;
     const isValidGrievanceCategory = user.grievanceCategoryId !== "";
-    console.log({isValidMobileTemp, isValidEmailTemp, isValidNameTemp, isValidSubjectTemp, 
-      isValidGrievanceTemp, isValidFileTemp, isValidCaptchaTemp, isValidGrievanceCategory});
+    console.log({
+      isValidMobileTemp,
+      isValidEmailTemp,
+      isValidNameTemp,
+      isValidSubjectTemp,
+      isValidGrievanceTemp,
+      isValidFileTemp,
+      isValidCaptchaTemp,
+      isValidGrievanceCategory,
+    });
     setIsValidMobile(isValidMobileTemp);
     console.log("isValidEmailTemp", isValidEmailTemp);
     user.emailId ? setIsValidEmail(isValidEmailTemp) : setIsValidEmail(true);
@@ -334,7 +392,9 @@ const GrievanceForm = () => {
                 onChange={handleChange}
                 checked={user.isWhatsappNumber}
               />
-              <label htmlFor="checkBox1" className="check_whats">Is WhatsApp Number?</label>
+              <label htmlFor="checkBox1" className="check_whats">
+                Is WhatsApp Number?
+              </label>
             </div>
           </div>
           <input
@@ -458,17 +518,20 @@ const GrievanceForm = () => {
 
         <div className="form-group">
           <label htmlFor="captchaInput">Captcha *</label>
-          <div className="captcha">
-            <div>{captcha}</div>
+          <div className="captcha-container">
+            <CaptchaWithCanvas
+              captcha={captcha}
+              handleCaptchaRefresh={handleCaptchaRefresh}
+            />
             <input
               type="text"
               id="captchaInput"
               name="captchaInput"
               onChange={handleChange}
-              value={user.captchaInput}
+              value={user.captchaInput || ""}
               placeholder="Enter Captcha"
             />
-            <div onClick={handleCaptchaRefresh} style={{ cursor: "pointer" }}>
+            <div onClick={handleCaptchaRefresh} className="refresh-icon">
               <FontAwesomeIcon icon={faRotateRight} />
             </div>
           </div>
@@ -546,9 +609,12 @@ const FeedbackForm = () => {
 
   const validateFeedback = () => {
     const mobileValid = /^\d{10}$/.test(mobileNumber);
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailValid = user.email
+      ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)
+      : true;
     setIsValidMobile(mobileValid);
-    setIsValidEmail(emailValid);
+    user.email ? setIsValidEmail(emailValid) : setIsValidEmail(true);
     return mobileValid && emailValid;
   };
 
