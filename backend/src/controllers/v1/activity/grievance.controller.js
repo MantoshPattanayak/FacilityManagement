@@ -12,7 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const imageUpload = require('../../../utils/imageUpload');
 let { generateOtp,veriftyOtp } = require("../../../utils/generateandVerifyOtp");
-let {Op} =require('sequelize')
+let { Op } =require('sequelize')
 let partnerUs = db.partnerwithus
 let advertisementTariff = db.advertisementTariff
 let advertisementdetail = db.advertisementDetails
@@ -34,7 +34,9 @@ const addGrievance = async (req, res) => {
             details,
             statusId,
             filepath,
-            isWhatsappNumber
+            isWhatsappNumber,
+            assetId,
+            assetTypeId
         } = req.body;
       
         createGrievance = await grievanceMasters.create({
@@ -46,7 +48,9 @@ const addGrievance = async (req, res) => {
             statusId: statusId,
             isWhatsappNumber: isWhatsappNumber,
             createdOn: new Date(),
-            createdBy: userId
+            createdBy: userId,
+            assetId: assetId,
+            assetTypeId: assetTypeId
         },{
             transaction
         }
@@ -123,13 +127,13 @@ const addGrievance = async (req, res) => {
         if (createGrievance) {
             await transaction.commit();
             return res.status(statusCode.SUCCESS.code).json({
-                message: "Grievance created successfully",
+                message: "Grievance is received successfully!",
             });
         }
         await transaction.rollback();
 
         return res.status(statusCode.BAD_REQUEST.code).json({
-            message: "Grivance is not created",
+            message: "Grievance is not submitted",
         });
     } catch (error) {
         if(transaction) await transaction.rollback();
@@ -373,7 +377,9 @@ const createFeedback = async (req, res) => {
             email,
             subject,
             feedback,
-            isWhatsappNumber
+            isWhatsappNumber,
+            assetId,
+            assetTypeId
         } = req.body;
         console.log({
             name,
@@ -381,7 +387,9 @@ const createFeedback = async (req, res) => {
             email,
             subject,
             feedback,
-            isWhatsappNumber
+            isWhatsappNumber,
+            assetId,
+            assetTypeId
         })
         createFeedback = await feedbacks.create({
             name: name,
@@ -391,15 +399,17 @@ const createFeedback = async (req, res) => {
             feedback: feedback,
             isWhatsappNumber: isWhatsappNumber,
             createdOn: new Date(),
-            createdBy: userId
+            createdBy: userId,
+            assetId: assetId,
+            assetTypeId: assetTypeId
         });
         if (createFeedback) {
             return res.status(statusCode.SUCCESS.code).json({
-                message: "Feedback created successfully",
+                message: "Feedback is received successfully.",
             });
         }
         return res.status(statusCode.BAD_REQUEST.code).json({
-            message: "Feedback is not created",
+            message: "Feedback is not submitted.",
         });
 
     } catch (error) {

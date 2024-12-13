@@ -80,7 +80,7 @@ const EditUserResourceMapping = () => {
   }, [id]);
 
   return (
-    <div>
+    <div className="EditUserResource">
       <div className="form-heading11">
         <div className="headingHeader">
           <div className="headingHeader11">
