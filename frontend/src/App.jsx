@@ -4,7 +4,7 @@ import instance from "../env";
 import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./utils/ProtectedRoutes";
-import { BookingProvider } from "../src/common/BookingContext";
+// import { BookingProvider } from "../src/common/BookingContext";
 const ListOfRoles = React.lazy(() =>
   import("./components/Admin/UAC/Role/ListOfRoles")
 );
