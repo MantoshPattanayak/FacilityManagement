@@ -144,7 +144,7 @@ const CreateRoleResourceMapping = () => {
           <div className="right-container">
             <div className="row">
               <div className="form-group">
-                <label htmlFor="grievanceCategory">Select Role *</label>
+                {/* <label htmlFor="grievanceCategory">Select Role *</label> */}
                 <select
                   value={selectedRole}
                   onChange={handleRoleChange}

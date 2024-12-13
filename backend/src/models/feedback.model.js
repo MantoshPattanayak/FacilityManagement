@@ -28,6 +28,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(250),
             allowNull: false
         },
+        assetTypeId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        assetId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
         createdOn: {
             type: DataTypes.DATE,
         },

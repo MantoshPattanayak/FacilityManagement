@@ -31,6 +31,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
             allowNull: true
         },
+        assetTypeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        assetId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         actionTakeBy: {
             type: DataTypes.INTEGER,
             allowNull: true
