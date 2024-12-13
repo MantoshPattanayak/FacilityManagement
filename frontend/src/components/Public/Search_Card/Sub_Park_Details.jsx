@@ -486,6 +486,7 @@ const Sub_Park_Details = () => {
                 <button
                   onClick={() => setShowPeople(true)}
                   className="button-9"
+                  disabled
                 >
                   Book Ticket
                 </button>
@@ -512,7 +513,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by">Book Ticket</button>
+                  <button role="button_by" disabled>Book Ticket</button>
                 </Link>
               ) : FacilitiesData[0]?.facilityTypeId == 3 ? (
                 <Link
@@ -537,7 +538,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by">Book Ticket</button>
+                  <button role="button_by" disabled>Book Ticket</button>
                 </Link>
               ) : FacilitiesData[0]?.facilityTypeId == 4 ? (
                 <Link
@@ -562,7 +563,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by">Book Ticket</button>
+                  <button role="button_by" disabled>Book Ticket</button>
                 </Link>
               ) : FacilitiesData[0]?.facilityTypeId == 5 ? (
                 <Link
@@ -587,7 +588,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by">Book Ticket</button>
+                  <button role="button_by" disabled>Book Ticket</button>
                 </Link>
               ) : (
                 <Link
@@ -612,7 +613,7 @@ const Sub_Park_Details = () => {
                   }}
                   className="button-9"
                 >
-                  <button role="button_by" onClick={() => setShowPeople(true)}>
+                  <button role="button_by" onClick={() => setShowPeople(true)} disabled>
                     Book Ticket
                   </button>
                 </Link>

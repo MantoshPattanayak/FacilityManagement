@@ -240,3 +240,41 @@ label{
     color: white;
     border-radius: 6px;
 }
+
+
+/* /extra */
+
+
+.captcha-container {
+    display: flex;
+    align-items: center; /* Vertically centers items */
+    gap: 10px; /* Adds space between items */
+  }
+  
+  .captcha canvas {
+    display: block; /* Ensure canvas behaves like a block-level element */
+  }
+  
+  .captcha-container input {
+    height: 40px; /* Match input height with canvas */
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .refresh-icon {
+    font-size: 20px;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .refresh-icon:hover {
+    color: #0056b3;
+  }
+
+  .captcha-container .canvas-refresh {
+    display: none; /* Replace `.canvas-refresh` with the actual class for the refresh button in the canvas */
+  }
+  
+  
