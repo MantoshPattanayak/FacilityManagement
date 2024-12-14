@@ -221,7 +221,7 @@ db1.eventActivities.belongsTo(db1.facilities,{foreignKey:'facilityId'})
 
 
 
-db1.feedback.sync({
+db1.grievanceDetails.sync({
   alter:false,
 });
 
